@@ -1,5 +1,4 @@
-# edusemi
-Basic Semiconductor Education Materials
+
 # edusemi v0.4 - 半導体・SoC設計の基礎教育資料
 
 **edusemi** は、半導体デバイス、プロセス技術、SoC設計、パッケージ・テスト、デザインレビューまで、実務的な視点と教育的構成を両立したオープンな基礎教材群です。
