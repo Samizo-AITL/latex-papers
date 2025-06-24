@@ -68,7 +68,6 @@ chapter2_process_history/
 ├── 2.3_scaling_issues.md
 ├── 2.4_finfet_gaa.md
 └── README.md
-
 ```
 
 ---
