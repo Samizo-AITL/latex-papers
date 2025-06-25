@@ -29,7 +29,7 @@ PDKは、アナログ／デジタル／ミックスドシグナル／RF／フォ
 ## 4. 実際のPDKディレクトリ構成例
 
 130nm CMOSのオープンPDK（SkyWater SKY130）の例：
-
+```
 sky130A/
 ├── libs.tech/
 │   ├── calibre/
@@ -41,7 +41,7 @@ sky130A/
 ├── libs.tech/ngspice/
 ├── tech/
 │   └── sky130A.tech
-
+```
 各ディレクトリは、**EDAツール別の設定情報**や**素子ライブラリ**を保持しています。
 
 ## 5. PDKの利用形態とライセンス
