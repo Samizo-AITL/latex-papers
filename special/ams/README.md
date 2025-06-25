@@ -67,7 +67,7 @@
 ---
 
 ## 📂 ディレクトリ構成
-
+```
 edusemi/special/ams/
 ├── README.md
 ├── part1_process_fundamentals.md
@@ -75,7 +75,7 @@ edusemi/special/ams/
 ├── appendix.md
 ├── images/
 └── toc.yaml
-
+```
 ---
 
 内容の修正・追加の提案は、リポジトリ管理者までご連絡ください。
