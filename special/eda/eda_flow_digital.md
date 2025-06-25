@@ -48,7 +48,7 @@
 - **ファイル形式**：SDC（Synopsys Design Constraints）形式
 - **記述例**：
 
-tcl
+```tcl
 create_clock -name clk -period 10.0 [get_ports clk]
 set_input_delay 2.0 -clock clk [get_ports in*]
 set_output_delay 2.0 -clock clk [get_ports out*]
