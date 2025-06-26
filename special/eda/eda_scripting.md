@@ -72,7 +72,7 @@ print(“a is greater than 5”)
 ---
 
 ## 6．実装例:OpenROADバッチスクリプト(Tcl)
-
+```
 read_verilog mydesign.v
 read_liberty mycell.lib
 read_lef myprocess.lef
@@ -82,7 +82,7 @@ clock_tree_synthesis
 route_design
 write_def output.def
 write_gds output.gds
-
+```
 ---
 
 ## 7．スクリプト活用のポイント
