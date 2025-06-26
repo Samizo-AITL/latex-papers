@@ -34,6 +34,7 @@ EDAツールは多数のパラメータや操作を伴うため、手動操作�
 	•	レイアウト図形の作成・編集
 	•	カスタムGUIボタン作成
 ```
+---
 
 ## 4. Tcl基礎(EDA標準)
 
@@ -51,13 +52,13 @@ puts “a is greater than 5”
 	•	フローの一括管理
 ```
 
-⸻
+---
 
-##5. Python基礎（近年注目）
+## 5．Python基礎(近年注目)
 
 - **基本構文**：
 
-
+```lisp
 print(“Hello, Python!”)
 a = 10
 if a > 5:
@@ -66,8 +67,9 @@ print(“a is greater than 5”)
 	•	データ解析（波形、ログ）
 	•	EDAツールのAPI制御（例：OpenROAD Python bindings）
 	•	自動化ツールのラッパー開発
+```
 
-⸻
+---
 
 ##6. 実務例：OpenROADバッチスクリプト（Tcl）
 
@@ -81,7 +83,7 @@ route_design
 write_def output.def
 write_gds output.gds
 
-⸻
+---
 
 ##7. スクリプト活用のポイント
 	•	処理の再現性向上
@@ -89,14 +91,14 @@ write_gds output.gds
 	•	複数ファイル・条件分岐の一括管理
 	•	チーム内共有・標準化
 
-⸻
+---
 
 ##8. 学習リソース
 	•	Cadence SKILL公式ドキュメント
 	•	Tcl公式サイト・EDAツールマニュアル
 	•	Python EDAコミュニティ（GitHub, StackOverflow）
 
-⸻
+---
 
 ##参考リンク
 	•	Cadence SKILL：https://support.cadence.com/skill/
