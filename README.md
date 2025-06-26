@@ -44,8 +44,7 @@
 ---
 
 ## 🔧 v2.0更新情報
-
-## special/ 特別編追加
+## special/   特別編追加
 
 - **memory/**  
   DRAM、SRAM、FeRAM、MRAM、3D NANDなど多様なメモリ技術の基礎から応用までを包括的に収録。  
