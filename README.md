@@ -43,7 +43,7 @@
 
 ---
 
-## 🔧 v2.0
+## 🔧 v2.0更新情報
 
 - `memory/`：DRAM, SRAM, FeRAM, MRAM, 3D NAND などのメモリ技術
 - `inkjet/`：インクジェット技術と薄膜応用（材料／MEMS応用との連携）
