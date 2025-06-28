@@ -1,5 +1,5 @@
 
-
+```
 FinFET Process Flow
 
 Step 1: Substrate Preparation
@@ -268,5 +268,5 @@ Step 48: Packaging
 	•	Processes: Die attach, wire bonding or flip chip bonding, encapsulation, underfill application.
 	•	Objectives: Provide mechanical protection, electrical connectivity, and thermal management for finished devices.
 
-
+```
 
