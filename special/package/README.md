@@ -53,14 +53,13 @@
 | ノイズ対策設計 | EMI/ESD/クロストーク問題の回避策の設計反映 |
 | 教育研修 | 若手技術者向けの包括的な演習教材に最適 |
 
----
 
 ## 🔗 関連セクション
 
 - 📘 本編教材：[edusemi](../README.md)  
-- 📜 パッケージ歴史的背景：[半導体の歴史](../history/)  
-- ⚙️ Sky130演習教材（準備中）：[`Sky130 RTL→GDS設計`](../sky130_design/)  
-- 📂 PDK解説：[`special/pdk/`](../special/pdk/)
+- 📜 パッケージ歴史的背景：[半導体の歴史](../history/README.md)  
+- ⚙️ Sky130演習教材（準備中）：[Sky130 RTL→GDS設計](../sky130_design/README.md)  
+- 📂 PDK解説：[PDK Documentation Hub](../special/pdk/README.md)
 
 ---
 
