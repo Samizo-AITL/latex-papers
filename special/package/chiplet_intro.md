@@ -95,4 +95,21 @@
 |     Microbump / TSV     |
 |         ↓    ↓          |
 |     Interposer Layer    |
-+--------------------------+
++--------------------------
+```
+
+## 🧠 演習課題（任意）
+
+次のトピックについて、調査・比較を行ってみましょう：
+
+	•	TSMC CoWoS、Intel Foveros、AMD Infinity Fabric のチップレット接続方式の違い
+	•	「モノリシックSoC vs チップレット化」の設計・製造コストの比較
+	•	将来的にUCleTなどの標準規格が持つ業界的意義
+
+---
+
+## 📝 参考リンク
+	•	Open Compute Project - UCleT
+	•	TSMC CoWoS技術概要 (TSMC公式)
+	•	IEEE Spectrum – Why Chiplets Are the Future
+
