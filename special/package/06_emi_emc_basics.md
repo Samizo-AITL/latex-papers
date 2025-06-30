@@ -93,7 +93,7 @@
 
 ## 🔗 関連ファイル・資料
 
-- 応力と熱の影響 → [`stress_simulation.md`](./stress_simulation.md), [`thermal_analysis.md`](./thermal_analysis.md)
+- 応力と熱の影響 → [`05_stress_simulation.md`](./05_stress_simulation.md), [`04_thermal_analysis.md`](./04_thermal_analysis.md)
 - パッケージ構造と電源設計 → [`chapter5_test_package/`](../../chapter5_test_package/)
 
 ---
