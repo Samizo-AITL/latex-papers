@@ -105,8 +105,8 @@
 
 ## 🔗 関連章リンク
 
-- 熱応力の起点 → [`thermal_analysis.md`](./thermal_analysis.md)
-- EMI/EMCとの複合解析 → [`emi_emc_basics.md`](./emi_emc_basics.md)
+- 熱応力の起点 → [`04_thermal_analysis.md`](./04_thermal_analysis.md)
+- EMI/EMCとの複合解析 → [`06_emi_emc_basics.pkg_layout.md`](./06_emi_emc_basics.md)
 
 ---
 
