@@ -61,6 +61,15 @@
 - 📜 パッケージ歴史的背景：[半導体の歴史](../../../history/)
 - ⚙️ Sky130演習教材（準備中）：[Sky130 RTL→GDS設計](../../../sky130_design/README.md)  
 - 📂 PDK解説：[PDK Documentation Hub](../pdk/README.md)
+
+## 🔗 関連セクション
+
+- 📘 本編教材：[edusemi（トップ）](https://github.com/Samizo-AITL/edusemi/blob/main/README.md)  
+- 📜 パッケージ歴史的背景：[半導体の歴史](https://github.com/Samizo-AITL/edusemi/blob/main/history/README.md)  
+- ⚙️ Sky130演習教材（準備中）：[Sky130 RTL→GDS設計](https://github.com/Samizo-AITL/edusemi/blob/main/sky130_design/README.md)  
+- 📂 PDK解説：[PDK Documentation Hub](https://github.com/Samizo-AITL/edusemi/blob/main/special/pdk/README.md)
+
+  
 ---
 
 ## 📝 ライセンス
