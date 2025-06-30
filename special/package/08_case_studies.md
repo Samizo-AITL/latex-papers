@@ -108,9 +108,9 @@
 
 ## 🔗 関連資料リンク
 
-- [`stress_simulation.md`](./stress_simulation.md) – 材料応力のFEM解析入門  
-- [`thermal_analysis.md`](./thermal_analysis.md) – 熱設計と冷却構造  
-- [`emi_emc_basics.md`](./emi_emc_basics.md) – 電磁干渉とパッケージ設計対策  
-- [`pkg_layout.md`](./pkg_layout.md) – 配線構造と対称設計の基礎
+- [`05_stress_simulation.md`](./05_stress_simulation.md) – 材料応力のFEM解析入門  
+- [`04_thermal_analysis.md`](./04_thermal_analysis.md) – 熱設計と冷却構造  
+- [`06_emi_emc_basics.md`](./06_emi_emc_basics.md) – 電磁干渉とパッケージ設計対策  
+- [`03_pkg_layout.md`](./03_pkg_layout.md) – 配線構造と対称設計の基礎
 
 ---
