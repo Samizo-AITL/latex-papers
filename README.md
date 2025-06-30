@@ -92,26 +92,55 @@
 <a name="special"></a> 
 ## 🌟 特別編（special）
 
-- [`pdk/`](./special/pdk)  
-  PDKの構成、バリエーション、オープンPDK事例と活用法
+半導体技術の応用・発展領域に関する教材です。基礎教材に加え、先端プロセス・EDA自動化・メモリ・制御理論・材料応用まで幅広くカバーしています。
 
-- [`eda/`](./special/eda)  
-  EDA（Electronic Design Automation）のスクリプト・検証・自動化技術に関する教材  
+⸻
 
-- [`ams/`](./special/ams)  
-  アナログ・ミックスドシグナル設計（ADC、LNA、RF回路など）に関する実践的資料  
+🔧 [PDK Documentation Hub](./special/pdk/)  
+PDKの構成、バリエーション、オープンPDK（Sky130など）事例とその活用法を体系的に解説。  
+📂 フォルダ: `special/pdk/`
 
-- [`memory/`](./special/memory)  
-  DRAM、SRAM、FeRAM、MRAM、3D NANDなどの構造・動作・設計・製造技術を体系的に解説  
+⸻
 
-- [`advanced_process/`](./special/advanced_process)  
-  FinFETやGAAなどの最新プロセス構造と製造技術、技術課題の詳細  
+🛠️ [EDA（Electronic Design Automation）](./special/eda/)  
+EDAツールの構成、スクリプト自動化、検証フローの基礎と活用法。Verilogから物理設計への橋渡し。  
+📂 フォルダ: `special/eda/`
 
-- [`llm_control_asic/`](./special/llm_control_asic)  
-  LLM（大規模言語モデル）と制御理論を融合したハイブリッド設計  
+⸻
 
-- [`inkjet/`](./special/inkjet)  
-  インクジェット技術の半導体応用（材料特性、薄膜プロセス、MEMS制御など）  
+📡 [アナログ／ミックスドシグナル／RF設計カリキュラム](./special/ams/)  
+ADC、LNA、PLL、RF回路など、アナログ回路とミックスドシグナル設計の基本と応用演習を網羅。  
+📂 フォルダ: `special/ams/`
+
+⸻
+
+💾 [メモリ技術入門](./special/memory/)  
+DRAM、SRAM、FeRAM、MRAM、3D NANDなど、不揮発／揮発性メモリの原理・構造・製造技術を包括的に整理。  
+📂 フォルダ: `special/memory/`
+
+⸻
+
+🧪 [Advanced Semiconductor Process Analysis](./special/advanced_process/)  
+FinFET、GAA、EUVなど先端プロセス構造の製造技術、信頼性、材料特性の詳細解説。  
+📂 フォルダ: `special/advanced_process/`
+
+⸻
+
+📦 [パッケージ技術と実装解析](./special/package/)  
+チップレット、2.5D/3D実装、インターポーザ、ユニバーサルチップレット（UCIe）対応、  
+さらに熱・応力・EMI/EMC・ノイズといった実装信頼性解析を含む総合教材。  
+📂 フォルダ: `special/package/`
+
+
+🧠 [LLM×制御ハイブリッドASIC設計 教育資料](./special/llm_control_asic/)  
+大規模言語モデル（LLM）と制御理論を融合した次世代の設計アーキテクチャと思考法。  
+📂 フォルダ: `special/llm_control_asic/`
+
+⸻
+
+🖨️ [インクジェット技術 (Inkjet Technology)](./special/inkjet/)  
+インクジェット方式による半導体応用（材料、薄膜形成、MEMS制御）の基礎と応用展開。  
+📂 フォルダ: `special/inkjet/`
 
 ---
 
