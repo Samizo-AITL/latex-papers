@@ -57,8 +57,8 @@
 
 ## 🔗 関連セクション
 
-- 📘 本編教材：[edusemi](../../../README.md)  
-- 📜 パッケージ歴史的背景：[半導体の歴史](../../../history/README.md)  
+- 📘 本編教材：[edusemi](../../../)  
+- 📜 パッケージ歴史的背景：[半導体の歴史](../../../history/)
 - ⚙️ Sky130演習教材（準備中）：[Sky130 RTL→GDS設計](../../../sky130_design/README.md)  
 - 📂 PDK解説：[PDK Documentation Hub](../pdk/README.md)
 ---
