@@ -105,9 +105,9 @@ SoCや高密度パッケージでは、**電気・熱・応力・電磁界**と�
 
 ## 📎 関連リンク
 
-- [`thermal_analysis.md`](./thermal_analysis.md) – 熱分布の基本と実装設計への反映  
-- [`stress_simulation.md`](./stress_simulation.md) – 材料応力とシミュレーション基礎  
-- [`emi_emc_basics.md`](./emi_emc_basics.md) – 電磁干渉とノイズ対策設計
+- [`04_thermal_analysis.md`](./04_thermal_analysis.md) – 熱分布の基本と実装設計への反映  
+- [`05_stress_simulation.md`](./05_stress_simulation.md) – 材料応力とシミュレーション基礎  
+- [`06_emi_emc_basics.md`](./06_emi_emc_basics.md) – 電磁干渉とノイズ対策設計
 
 ---
 
