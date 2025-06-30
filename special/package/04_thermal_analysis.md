@@ -99,7 +99,7 @@
 
 ## 🔗 関連章リンク
 
-- 応力との関係 → [`stress_simulation.md`](./stress_simulation.md)
+- 応力との関係 → [`05_stress_simulation.md`](./05_stress_simulation.md)
 - 放熱・パッケージ材料設計 → [`chapter5_test_package/`](../../chapter5_test_package/)
 
 ---
