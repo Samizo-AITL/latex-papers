@@ -70,25 +70,32 @@
 
 ---
 
-## 🔧 v2.0更新情報 - 特別編（`special/`）
+## 🔧 特別編（`special/`）
 
-- `memory/`  
-  DRAM、SRAM、FeRAM、MRAM、3D NANDなどの構造・動作・設計・製造技術を体系的に解説  
+- `pdk/`  
+  PDKの構成、バリエーション、オープンPDK事例と活用法
 
-- `inkjet/`  
-  インクジェット技術の半導体応用（材料特性、薄膜プロセス、MEMS制御など）  
-
-- `advanced_process/`  
-  FinFETやGAAなどの最新プロセス構造と製造技術、技術課題の詳細解説  
-
+ - `eda/`  
+  EDA（Electronic Design Automation）のスクリプト・検証・自動化技術に関する教材  
+ 
 - `ams/`  
   アナログ・ミックスドシグナル設計（ADC、LNA、RF回路など）に関する実践的資料  
 
-- `eda/`  
-  EDA（Electronic Design Automation）のスクリプト・検証・自動化技術に関する教材  
+- `memory/`  
+  DRAM、SRAM、FeRAM、MRAM、3D NANDなどの構造・動作・設計・製造技術を体系的に解説   
 
-- `pdk/`  
-  PDKの構成、バリエーション、オープンPDK事例と活用法  
+- `advanced_process/`  
+  FinFETやGAAなどの最新プロセス構造と製造技術、技術課題の詳細
+
+- `llm_control_asic/`
+   LLM（大規模言語モデル）と制御理論を融合したハイブリッド設計
+
+- `inkjet/`  
+  インクジェット技術の半導体応用（材料特性、薄膜プロセス、MEMS制御など）    
+
+---
+
+## 🔧 半導体の歴史（`history/`）
 
 ---
 
