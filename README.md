@@ -193,7 +193,7 @@ FinFET、GAA、EUVなど先端プロセス構造の製造技術、信頼性、�
 
 ---
 
-## 🧩 応用展開：Edusemi-Plus
+## 🧩 応用展開：edusemi-plus
 
 基礎教育教材（edusemi）に加えて、産業応用・人材育成・政策提言を扱う教材群 **「Edusemi-Plus」** も展開中です。
 
@@ -202,7 +202,7 @@ FinFET、GAA、EUVなど先端プロセス構造の製造技術、信頼性、�
 - スマート農業、地域DX、災害対応などへの応用事例
 - 教育政策との連携提案（経産省・文科省向け）
 
-👉 [Edusemi-Plus GitHubページはこちら](https://samizo-aitl.github.io/edusemi-Plus/)
+👉 [edusemi-plus GitHubページはこちら](https://samizo-aitl.github.io/edusemi-Plus/)
 
 ---
 
