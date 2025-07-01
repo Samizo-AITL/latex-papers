@@ -53,7 +53,7 @@ edusemi は、半導体デバイス、プロセス技術、SoC設計、パッケ
 - トランジスタ構造、設計ルール、DRC例  
 - バラツキと信頼性の設計対応  
 🔗 関連資料: [chapter3_cmos018/](chapter3_cmos018/)  
-🔗 実測データ・解析資料: [data/](data/)
+🔗 実測データ・解析資料: [data/](chapter3_cmos018/data/)
 
 ---
 
