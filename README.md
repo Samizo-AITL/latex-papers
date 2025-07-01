@@ -1,3 +1,5 @@
+---
+
 # 📘 edusemi v2.0 - 半導体基礎教育資料
 
 edusemi は、半導体デバイス、プロセス技術、SoC設計、パッケージ・テスト、デザインレビューまで、  
@@ -157,3 +159,6 @@ edusemi は、半導体デバイス、プロセス技術、SoC設計、パッケ
 - GitHub: [https://github.com/Samizo-AITL](https://github.com/Samizo-AITL)  
 - Email: shin3t72@gmail.com  
 - Twitter: [@shin3t72](https://twitter.com/shin3t72)
+
+---
+
