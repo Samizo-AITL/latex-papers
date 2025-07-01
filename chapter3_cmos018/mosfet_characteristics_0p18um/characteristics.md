@@ -1,19 +1,57 @@
-## MOSFET特性図（0.18um 1.8V）
+# MOSFET特性図（0.18µm, 1.8V CMOS）
 
-### 1. Vg–Id 特性（しきい値・gmmax評価用）
-![Vg–Id](./mosfet_characteristics_0p18um/01_vg_id.png)
+本資料は、0.18µmプロセス・1.8V動作のNMOS/PMOSデバイスにおける基本電気特性をまとめたものです。
 
-### 2. Vd–Id 特性（飽和・リニア領域）
-![Vd–Id](./mosfet_characteristics_0p18um/02_vd_id.png)
+---
 
-### 3. Ioff（サブスレッショルドリーク電流、25°C/85°C）
-![Ioff](./mosfet_characteristics_0p18um/03_ioff.png)
+## 1. Vg–Id 特性（しきい値・gmmax評価用）
 
-### 4. BVDS（ドレイン–ソース耐圧特性）
-![BVDS](./mosfet_characteristics_0p18um/04_bvds.png)
+![Vg–Id](./01_vg_id.png)
 
-### 5. Isub（ボディリーク電流・HCI評価）
-![Isub](./mosfet_characteristics_0p18um/05_isub.png)
+- nMOS, pMOSのしきい値（Vth）とgm最大点が視覚的に分かる。
+- 実測/シミュレーション比較用。
 
-### 6. C–V特性（MOS容量とVg依存性）
-![C–V](./mosfet_characteristics_0p18um/06_cv.png)
+---
+
+## 2. Vd–Id 特性（飽和・リニア領域）
+
+![Vd–Id](./02_vd_id.png)
+
+- Vds変化によるId挙動を確認。
+- 飽和領域とリニア領域の分離が可能。
+
+---
+
+## 3. Ioff（サブスレッショルドリーク電流）
+
+![Ioff](./03_ioff.png)
+
+- 25°Cと85°Cにおけるオフリーク電流。
+- 数nA〜μAオーダー、温度依存を確認可能。
+
+---
+
+## 4. BVDS（ドレイン–ソース耐圧）
+
+![BVDS](./04_bvds.png)
+
+- パワーMOS設計時のブレークダウン特性の目安。
+- 通常、5V以上が確保される。
+
+---
+
+## 5. Isub（ボディリーク電流・ホットキャリア評価）
+
+![Isub](./05_isub.png)
+
+- Vds依存の基板電流を評価。
+- ホットキャリア劣化（HCI）検討用にも有用。
+
+---
+
+## 6. C–V特性（MOS容量とVg依存性）
+
+![C–V](./06_cv.png)
+
+- ゲート電圧に対するMOS容量の変化。
+- しきい値電圧やチャネル形成を評価可能。
