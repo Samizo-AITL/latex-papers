@@ -17,7 +17,7 @@
 7. [🌟 特別編（special/）](#special)
 8. [📜 半導体の歴史（history/）](#history)
 9. [🧭 今後の展開（v2.x以降）](#future)
-10. 
+10. [🧩 応用展開：edusemi-plus](#edusemi-plus)
 11. [🎯 対象読者](#audience)
 12. [📝 ライセンスと引用について](#license)
 13. [👤 作成者・連絡先](#author)
@@ -192,7 +192,7 @@ FinFET、GAA、EUVなど先端プロセス構造の製造技術、信頼性、�
 - 教育機関・企業研修講師  
 
 ---
-
+<a id="edusemi-plus"></a>
 ## 🧩 応用展開：edusemi-plus
 
 基礎教育教材（edusemi）に加えて、産業応用・人材育成・政策提言を扱う教材群 **「Edusemi-Plus」** も展開中です。
