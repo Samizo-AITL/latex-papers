@@ -67,7 +67,7 @@ I = I₀ × (exp(qV / nkT) − 1)
 
 以下は、理想ダイオードのI-Vカーブを描画するPythonスクリプトです：
 
-### 🔧 `plot_diode_iv.py`
+`plot_diode_iv.py`
 
 ```python
 import numpy as np
