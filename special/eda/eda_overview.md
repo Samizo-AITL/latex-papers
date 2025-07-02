@@ -1,4 +1,3 @@
-# 🛠️ eda_overview.md
 
 ## EDA（Electronic Design Automation）とは？
 
