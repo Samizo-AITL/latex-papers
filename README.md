@@ -95,7 +95,7 @@ edusemi は、半導体デバイス、プロセス技術、SoC設計、パッケ
 - 🧪 [Advanced Process Analysis](special/advanced_process/)  
 - 📦 [パッケージ技術と実装解析](special/package/)  
 - 🧠 [LLM×制御ハイブリッドASIC設計](special/llm_control_asic/)  
-- 🖨️ [インクジェット応用](special/inkjet/)
+- 🖨️ [インクジェット技術](special/inkjet/)
 
 ---
 
