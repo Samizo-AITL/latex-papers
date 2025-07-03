@@ -16,7 +16,7 @@
 - → キャリアは**熱励起によってわずかに生成**される（抵抗率は高い）。
 
 ### 【図解】Siの結晶構造  
-![Si Crystal Lattice](imgs/si_crystal_lattice.png)
+![Si Crystal Lattice](imgs/si_crystal_lattice.png
 
 ---
 
@@ -36,7 +36,7 @@
 ---
 
 ## 【図解】シリコンの抵抗率制御とドーピング  
-![Si Doping Comparison](imgs/si_doping_comparison.png)
+![Si Doping Comparison](imgs/si_doping_comparison.png
 
 - 左：ホウ素を加えた **P型半導体**（電子欠乏 → 正孔発生）  
 - 中央：添加なしの **真性Si**（電気的中性で高抵抗）  
