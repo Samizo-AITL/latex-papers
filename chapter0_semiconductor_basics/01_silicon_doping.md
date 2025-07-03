@@ -16,7 +16,7 @@
 - → キャリアは**熱励起によってわずかに生成**される（抵抗率は高い）。
 
 ### 【図解】Siの結晶構造  
-![Si Crystal Lattice](imgs/si_crystal_lattice.png
+![Si Crystal Lattice](imgs/si_crystal_lattice_generated.png)
 
 ---
 
