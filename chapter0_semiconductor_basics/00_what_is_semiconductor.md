@@ -29,6 +29,7 @@
 ## 【図解】バンド構造の比較
 
 ![バンド構造の比較](imgs/band_structure_comparison.png)
+金属：Eg=0    半導体：Eg=1.1eV     絶縁体：Eg=7eV
 
 ---
 
