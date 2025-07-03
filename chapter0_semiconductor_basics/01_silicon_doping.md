@@ -8,14 +8,8 @@
 - 各Si原子は、周囲の4個のSi原子と共有結合
 - 共有結合によって安定した格子を形成（結晶性が高い）
 
-### 【図解】Siの結晶格子構造（※図は後で挿入）
-```
-    Si
-   /  \
-Si — Si
-   \  /
-    Si
-```
+## 【図解】Siの結晶格子構造
+![Si Crystal Lattice](imgs/si_crystal_lattice.png)
 
 ---
 
