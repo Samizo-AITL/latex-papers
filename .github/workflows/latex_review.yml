@@ -1,15 +1,17 @@
+# .github/workflows/latex_review.yml
 name: Build LaTeX (review_dram_feram)
 
 on:
   push:
     paths:
-      - "special/review_dram_feram/**"
-      - ".github/workflows/latex_review.yml"
+      - 'special/review_dram_feram/**'
+      - '.github/workflows/latex_review.yml'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: special/review_dram_feram
@@ -18,44 +20,57 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: DEBUG - show where we are
+      # 進捗が見えやすいように軽く状況出力（任意）
+      - name: DEBUG — show where we are
         run: |
-          echo "GITHUB_WORKSPACE = $GITHUB_WORKSPACE"
-          echo "pwd:" && pwd
-          echo "ls -la (repo root):" && ls -la
-          echo "ls -la special/review_dram_feram:" && ls -la special/review_dram_feram || true
-          echo "cat special/review_dram_feram/main.tex | head -n 20"
+          echo "PWD        : $(pwd)"
+          echo "Repo root  : $GITHUB_WORKSPACE"
+          echo "Tree here  :"
+          ls -la
+          echo "Head of main.tex:"
+          sed -n '1,40p' main.tex || true
 
+      # TeX Live のユーザキャッシュ（フォント生成など）を使って高速化
       - name: Cache TeX Live home
         uses: actions/cache@v3
         with:
           path: ~/.texlive
           key: ${{ runner.os }}-texhome-v1
 
-      - name: Install minimal TeX Live
+      # 必要な TeX Live パッケージを APT から導入
+      # siunitx は texlive-science に含まれる
+      - name: Install TeX Live
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             latexmk \
             texlive-latex-base \
             texlive-latex-recommended \
-            texlive-publishers \
-            texlive-bibtex-extra
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            texlive-pictures \
+            texlive-plain-generic \
+            texlive-bibtex-extra \
+            texlive-science \
+            ghostscript
 
+      # PDF ビルド（bib も latexmk に任せる）
       - name: Build PDF
         run: |
           latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 
+      # 生成物のアップロード
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: review_dram_feram_pdf
           path: special/review_dram_feram/*.pdf
-          if-no-files-found: ignore
 
+      # 失敗時はログも拾う
       - name: Upload LaTeX logs
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: latex-logs
@@ -64,4 +79,3 @@ jobs:
             special/review_dram_feram/*.blg
             special/review_dram_feram/*.fls
             special/review_dram_feram/*.fdb_latexmk
-          if-no-files-found: ignore
