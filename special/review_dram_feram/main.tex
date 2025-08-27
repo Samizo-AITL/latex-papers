@@ -1,0 +1,56 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+
+\graphicspath{{./}}
+
+\title{A Comparative Review of DRAM and FeRAM: The Boundary between Volatile and Non-Volatile Memory and Future Perspectives}
+
+\author{Shinichi~Samizo%
+\thanks{S. Samizo is with Project Design Hub (Samizo-AITL), Japan. E-mail: \texttt{samizo-aitl@example.org}.}
+}
+
+\markboth{Draft for IEEE-style submission}{Samizo: DRAM vs FeRAM Comparative Review}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Dynamic Random-Access Memory (DRAM) is the workhorse of volatile memory, while ferroelectric memories (FeRAM and FeFET) offer CMOS-compatible non-volatility. This paper reviews DRAM and FeRAM from technology scaling and device reliability to system-level use. We summarize key metrics (speed, retention, endurance, and energy/bit) and discuss hybrid hierarchies that combine DRAM performance with FeRAM persistence.
+\end{abstract}
+
+\begin{IEEEkeywords}
+DRAM, FeRAM, FeFET, HfO2, retention, endurance, scaling, memory hierarchy.
+\end{IEEEkeywords}
+
+\section{Introduction}
+\input{sections/intro.tex}
+
+\section{DRAM Technology and Scaling}
+\input{sections/dram.tex}
+
+\section{FeRAM Technology and Advances}
+\input{sections/feram.tex}
+
+\section{Comparative Analysis: DRAM vs FeRAM}
+\label{sec:comparison}
+\input{sections/comparison.tex}
+
+\section{Hybrid Perspectives and Future Memory Hierarchies}
+\input{sections/hybrid.tex}
+
+\section{Conclusion and Outlook}
+\input{sections/conclusion.tex}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
