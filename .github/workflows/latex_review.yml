@@ -1,4 +1,4 @@
-name: Build LaTeX (review_dram_feram) 
+name: Build LaTeX (review_dram_feram)  
 
 on:
   push:
