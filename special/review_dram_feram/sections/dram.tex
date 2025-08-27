@@ -1,3 +1,11 @@
-DRAM technology progressed via high-k dielectrics, deep trench or stacked capacitors, and continual process innovations. A key challenge is to maintain sufficient capacitance while suppressing leakage and variability at extremely small dimensions \cite{choi2022}. Device and array proposals investigate capacitor aspect-ratio increases and layout optimizations, yet refresh power and timing margins remain system concerns \cite{kim2021_dram}.
+DRAM scaling progressed via high-k dielectrics and deep trench or stacked capacitors. Maintaining capacitance while limiting leakage below deep sub-20 nm nodes is challenging \cite{choi2022}. 3D stacking and array layering are investigated to extend density \cite{kim2021_dram,iedm2023_dram}.
 
-To extend scaling, the community studies directions analogous to 3D NAND, such as stacking capacitor arrays or exploring 3D DRAM architectures. These ideas may relieve planar density pressure but add significant integration complexity and do not remove the need for refresh \cite{iedm2023_dram}. From a metric viewpoint, DRAM offers sub-ns class access, very low read energy per bit, and effectively unlimited endurance (refresh-limited rather than wear-out limited), but short data retention that mandates periodic refresh \cite{choi2022}.
+From a metrics view, DRAM provides sub-10 ns access, very low energy/bit for reads and writes, and effectively unlimited endurance (refresh-limited). Retention is short and necessitates periodic refresh.
+
+\begin{figure}[!t]
+  \centering
+  % Placeholder box (no image dependency)
+  \fbox{\rule{0pt}{1.10in}\rule{0.95\linewidth}{0pt}}
+  \caption{Speed vs. retention (placeholder). DRAM at high-speed/low-retention; non-volatile options trade speed for retention.}
+  \label{fig:speed_retention}
+\end{figure}
