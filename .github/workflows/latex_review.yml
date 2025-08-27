@@ -24,7 +24,7 @@ jobs:
           path: ~/.texlive
           key: ${{ runner.os }}-texhome-v3
 
-      - name: Install TeX Live (with IEEEtran)
+      - name: Install TeX Live (with IEEEtran + BibTeX)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -36,8 +36,8 @@ jobs:
             texlive-fonts-recommended \
             texlive-fonts-extra \
             texlive-science \
-            texlive-bibtex-extra \
-            texlive-publishers   # ← これに IEEEtran.cls が含まれる
+            texlive-bibtex-extra \   # ← IEEEtran.bst が入る
+            texlive-publishers       # ← IEEEtran.cls が入る
 
       - name: Build PDF with latexmk
         run: |
