@@ -12,60 +12,59 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash
         working-directory: special/review_dram_feram
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # どのディレクトリを見ているか確認（必要なければ削ってOK）
-      - name: DEBUG — show where we are
+      # デバッグ: リポジトリと main.tex 確認
+      - name: DEBUG – show where we are
         run: |
-          echo "pwd = $(pwd)"
-          echo "repo root listing:" && ls -la ..
-          echo "target dir listing:" && ls -la
+          echo "GITHUB_WORKSPACE = $GITHUB_WORKSPACE"
+          pwd
+          ls -la
+          ls -la special/review_dram_feram || true
+          head -n 20 special/review_dram_feram/main.tex || true
 
-      # TeX Live をインストール（IEEEtran を含む texlive-publishers を必ず入れる）
+      # TeX Live キャッシュ
+      - name: Cache TeX Live home
+        uses: actions/cache@v3
+        with:
+          path: ~/.texlive
+          key: ${{ runner.os }}-texhome-v1
+
+      # 必要な TeX Live をインストール
       - name: Install TeX Live (minimal but sufficient)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             latexmk \
+            texlive-base \
             texlive-latex-base \
             texlive-latex-recommended \
             texlive-latex-extra \
             texlive-fonts-recommended \
-            texlive-fonts-extra \
             texlive-pictures \
             texlive-science \
-            texlive-bibtex-extra \
-            texlive-publishers \
-            ghostscript
+            texlive-publishers \        # IEEEtran.cls が含まれる
+            texlive-bibtex-extra        # IEEEtran.bst など BibTeX スタイル
 
-      # ビルド
+      # PDF ビルド
       - name: Build PDF with latexmk
         run: |
           latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 
-      # PDF を成果物にアップロード
+      # PDF アーティファクトをアップロード
       - name: Upload PDF
-        if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: paper-pdf
+          name: review_dram_feram-pdf
           path: special/review_dram_feram/*.pdf
 
-      # ログもアップロード（失敗時の解析用）
+      # LaTeX ログをアップロード
       - name: Upload LaTeX logs
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: latex-logs
-          path: |
-            special/review_dram_feram/*.log
-            special/review_dram_feram/*.blg
-            special/review_dram_feram/*.bbl
-            special/review_dram_feram/*.aux
-            special/review_dram_feram/*.fls
-            special/review_dram_feram/*.fdb_latexmk
+          path: special/review_dram_feram/*.log
