@@ -1,45 +1,33 @@
-# .github/workflows/latex_review.yml
 name: Build LaTeX (review_dram_feram)
 
 on:
   push:
     paths:
-      - 'special/review_dram_feram/**'
-      - '.github/workflows/latex_review.yml'
+      - "special/review_dram_feram/**"
+      - ".github/workflows/latex_review.yml"
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     defaults:
       run:
+        shell: bash
         working-directory: special/review_dram_feram
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 進捗が見えやすいように軽く状況出力（任意）
+      # どのディレクトリを見ているか確認（必要なければ削ってOK）
       - name: DEBUG — show where we are
         run: |
-          echo "PWD        : $(pwd)"
-          echo "Repo root  : $GITHUB_WORKSPACE"
-          echo "Tree here  :"
-          ls -la
-          echo "Head of main.tex:"
-          sed -n '1,40p' main.tex || true
+          echo "pwd = $(pwd)"
+          echo "repo root listing:" && ls -la ..
+          echo "target dir listing:" && ls -la
 
-      # TeX Live のユーザキャッシュ（フォント生成など）を使って高速化
-      - name: Cache TeX Live home
-        uses: actions/cache@v3
-        with:
-          path: ~/.texlive
-          key: ${{ runner.os }}-texhome-v1
-
-      # 必要な TeX Live パッケージを APT から導入
-      # siunitx は texlive-science に含まれる
-      - name: Install TeX Live
+      # TeX Live をインストール（IEEEtran を含む texlive-publishers を必ず入れる）
+      - name: Install TeX Live (minimal but sufficient)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -50,32 +38,34 @@ jobs:
             texlive-fonts-recommended \
             texlive-fonts-extra \
             texlive-pictures \
-            texlive-plain-generic \
-            texlive-bibtex-extra \
             texlive-science \
+            texlive-bibtex-extra \
+            texlive-publishers \
             ghostscript
 
-      # PDF ビルド（bib も latexmk に任せる）
-      - name: Build PDF
+      # ビルド
+      - name: Build PDF with latexmk
         run: |
           latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 
-      # 生成物のアップロード
+      # PDF を成果物にアップロード
       - name: Upload PDF
-        if: always()
+        if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: review_dram_feram_pdf
+          name: paper-pdf
           path: special/review_dram_feram/*.pdf
 
-      # 失敗時はログも拾う
+      # ログもアップロード（失敗時の解析用）
       - name: Upload LaTeX logs
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: latex-logs
           path: |
             special/review_dram_feram/*.log
             special/review_dram_feram/*.blg
+            special/review_dram_feram/*.bbl
+            special/review_dram_feram/*.aux
             special/review_dram_feram/*.fls
             special/review_dram_feram/*.fdb_latexmk
