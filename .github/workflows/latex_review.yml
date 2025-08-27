@@ -1,47 +1,46 @@
-name: Build LaTeX 
+name: Build LaTeX (review_dram_feram)
 
 on:
   push:
     paths:
-      - "edusemi/special/review_dram_feram/**"
+      - "special/review_dram_feram/**"
       - ".github/workflows/latex.yml"
-  pull_request:
-    paths:
-      - "edusemi/special/review_dram_feram/**"
-      - ".github/workflows/latex.yml"
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: special/review_dram_feram
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install TeX Live (with IEEEtran)
-        env:
-          DEBIAN_FRONTEND: noninteractive
+      # TeX Live の個人キャッシュ（フォントやfmt）を使って高速化
+      - name: Cache TeX Live home
+        uses: actions/cache@v3
+        with:
+          path: ~/.texlive
+          key: ${{ runner.os }}-texhome-v1
+
+      - name: Install minimal TeX Live
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             latexmk \
             texlive-latex-base \
             texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-science \
-            texlive-publishers
+            texlive-publishers \
+            texlive-bibtex-extra
 
       - name: Build PDF
-        working-directory: edusemi/special/review_dram_feram
         run: |
           latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
-          # 生成物を一箇所に集める
-          mkdir -p build_out
-          cp -f main.pdf build_out/
 
-      - name: Upload PDF artifact
+      - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
           name: review_dram_feram_pdf
-          path: edusemi/special/review_dram_feram/build_out/main.pdf
-          if-no-files-found: error
+          path: special/review_dram_feram/*.pdf
