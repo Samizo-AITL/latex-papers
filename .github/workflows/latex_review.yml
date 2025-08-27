@@ -22,9 +22,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.texlive
-          key: ${{ runner.os }}-texhome-v2
+          key: ${{ runner.os }}-texhome-v3
 
-      - name: Install TeX Live (minimal but sufficient)
+      - name: Install TeX Live (with IEEEtran)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -36,7 +36,8 @@ jobs:
             texlive-fonts-recommended \
             texlive-fonts-extra \
             texlive-science \
-            texlive-bibtex-extra
+            texlive-bibtex-extra \
+            texlive-publishers   # ← これに IEEEtran.cls が含まれる
 
       - name: Build PDF with latexmk
         run: |
