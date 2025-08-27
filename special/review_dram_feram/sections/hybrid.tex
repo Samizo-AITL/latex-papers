@@ -1,0 +1,22 @@
+Hybrid hierarchies aim to combine DRAM performance with FeRAM persistence. By placing FeRAM near the memory controller or as a near-memory store (e.g., NVDIMM-like), systems can reduce refresh energy, enable instant-on features, and accelerate checkpointing and recovery \cite{noheda2023,martin2020}.
+
+\textbf{Benefits:}
+\begin{itemize}
+  \item Reduced refresh overhead by parking cold pages in FeRAM.
+  \item Fast persistence for OS and application state with microsecond-scale latency.
+  \item Data resilience for metadata and write-back buffers.
+\end{itemize}
+
+\textbf{Constraints and trade-offs:}
+\begin{itemize}
+  \item Endurance and variability: FeRAM endurance ($10^{12}$--$10^{13}$ cycles) is high but below DRAM refresh activity.
+  \item Write energy and latency: higher than DRAM; policies should bias read-mostly or cold data to FeRAM.
+  \item Integration cost: additional process and reliability risks (e.g., TDDB under high fields).
+\end{itemize}
+
+\textbf{System directions:}
+\begin{itemize}
+  \item Tiering policies using intensity/retention-aware placement.
+  \item Refresh co-optimization: shrink DRAM refresh for regions shadowed by FeRAM.
+  \item Controller support for wear, retention, and error telemetry.
+\end{itemize}
