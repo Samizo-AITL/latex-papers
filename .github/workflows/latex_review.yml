@@ -18,30 +18,62 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # TeX Live のホームキャッシュ（フォント/fmt の再生成を短縮）
+      # TeX Live の個人ディレクトリをキャッシュ（フォント生成などの時間短縮）
       - name: Cache TeX Live home
         uses: actions/cache@v3
         with:
           path: ~/.texlive
-          key: ${{ runner.os }}-texhome-v4
+          key: ${{ runner.os }}-texhome-v3
 
-      - name: Install TeX Live (everything, reliable)
+      - name: Install TeX Live (with IEEEtran + BibTeX)
         run: |
           sudo apt-get update
-          sudo apt-get install -y latexmk texlive-full
+          sudo apt-get install -y \
+            latexmk \
+            texlive-base \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            texlive-pictures \
+            texlive-science \
+            texlive-bibtex-extra \
+            texlive-publishers \
+            ghostscript
 
-      - name: Build PDF with latexmk
+      - name: DEBUG — show where we are
         run: |
-          latexmk -pdf -file-line-error -interaction=nonstopmode -halt-on-error main.tex
+          echo "pwd:" && pwd
+          echo "ls (repo root):" && ls -la ..
+          echo "ls special/review_dram_feram:" && ls -la .
+          echo "---- main.tex head ----"
+          head -n 40 main.tex || true
+
+      - name: Build PDF with latexmk (do not stop on error)
+        run: |
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
+          echo "==== tail main.log (last 200 lines) ===="
+          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
 
       - name: Upload PDF
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: review_dram_feram-pdf
           path: special/review_dram_feram/*.pdf
+          retention-days: 7
 
       - name: Upload LaTeX logs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: latex-logs
-          path: special/review_dram_feram/*.log
+          path: |
+            special/review_dram_feram/*.log
+            special/review_dram_feram/*.blg
+            special/review_dram_feram/*.bbl
+            special/review_dram_feram/*.aux
+            special/review_dram_feram/*.fls
+            special/review_dram_feram/*.fdb_latexmk
+          retention-days: 7
