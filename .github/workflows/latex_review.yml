@@ -1,42 +1,47 @@
 name: Build LaTeX
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - "edusemi/special/review_dram_feram/**"
+      - ".github/workflows/latex.yml"
+  pull_request:
+    paths:
+      - "edusemi/special/review_dram_feram/**"
+      - ".github/workflows/latex.yml"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      # まずディレクトリを確認（デバッグ用）
-      - name: Show tree
-        run: |
-          pwd
-          ls -la
-          echo "--- special ---"
-          ls -la special || true
-          echo "--- review_dram_feram ---"
-          ls -la special/review_dram_feram || true
-
-      - name: Install TeX Live (needed pkgs)
+      - name: Install TeX Live (with IEEEtran)
+        env:
+          DEBIAN_FRONTEND: noninteractive
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            texlive-latex-recommended texlive-latex-extra \
-            texlive-fonts-recommended texlive-bibtex-extra \
-            latexmk biber
+            latexmk \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-science \
+            texlive-publishers
 
       - name: Build PDF
-        working-directory: ${{ github.workspace }}/special/review_dram_feram
-        shell: bash
+        working-directory: edusemi/special/review_dram_feram
         run: |
-          pwd
-          ls -la
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
+          latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+          # 生成物を一箇所に集める
+          mkdir -p build_out
+          cp -f main.pdf build_out/
 
-      - name: Upload PDF
+      - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: review_dram_feram_pdf
-          path: special/review_dram_feram/main.pdf
+          path: edusemi/special/review_dram_feram/build_out/main.pdf
+          if-no-files-found: error
