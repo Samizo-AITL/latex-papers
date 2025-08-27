@@ -1,7 +1,18 @@
-This section summarizes practical trade-offs between DRAM and FeRAM based on published reports \cite{choi2022,kim2021_dram,iedm2023_dram,noheda2023,martin2020}.
+\section{Comparative Analysis: DRAM vs FeRAM}
+\label{sec:comparison}
 
-DRAM excels as working memory: sub-ns access, very low read energy per bit, and effectively unlimited endurance. Its primary drawback is limited retention (tens of milliseconds at typical conditions), which requires periodic refresh and incurs energy and timing overheads.
+Table~\ref{tab:comparison} summarizes representative literature values for DRAM and FeRAM. Figures~\ref{fig:speed_retention} and \ref{fig:energy_speed} illustrate key trade-offs.
 
-FeRAM provides non-volatility and fast writes compared with many other NVMs, with endurance reported up to the low $10^{13}$ cycles and retention beyond $10^5$ s. Write energy per bit is generally higher than DRAM and device variability must be managed. Consequently, DRAM is favored for high-speed working sets, while FeRAM suits low-power state retention, fast checkpointing, and embedded non-volatile storage.
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig_speed_retention}
+  \caption{Speed vs.\ retention trade-off (representative, schematic).}
+  \label{fig:speed_retention}
+\end{figure}
 
-System designers can exploit these differences by placing hot, frequently updated data in DRAM and directing cold or persistent data to FeRAM, reducing refresh traffic and standby power without sacrificing performance for active workloads.
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig_energy_speed}
+  \caption{Write energy per bit vs.\ write speed (representative, schematic).}
+  \label{fig:energy_speed}
+\end{figure}
