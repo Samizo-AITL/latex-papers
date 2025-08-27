@@ -1,22 +1,22 @@
-Hybrid hierarchies aim to combine DRAM performance with FeRAM persistence. By placing FeRAM near the memory controller or as a near-memory store (e.g., NVDIMM-like), systems can reduce refresh energy, enable instant-on features, and accelerate checkpointing and recovery \cite{noheda2023,martin2020}.
+Hybrid memory hierarchies aim to combine DRAM performance with FeRAM persistence. Placing FeRAM near the memory controller or as a near-memory store (for example, an NVDIMM-like role) can reduce refresh energy, enable instant-on features, and accelerate checkpointing and recovery \cite{noheda2023,kim2021_dram}.
 
-\textbf{Benefits:}
+\subsection*{Benefits}
 \begin{itemize}
-  \item Reduced refresh overhead by parking cold pages in FeRAM.
-  \item Fast persistence for OS and application state with microsecond-scale latency.
-  \item Data resilience for metadata and write-back buffers.
+  \item Reduced refresh overhead: cold pages can be parked in FeRAM, cutting DRAM refresh and standby power.
+  \item Fast persistence: OS and application state can be checkpointed to FeRAM with microsecond-scale latency.
+  \item Data resilience: FeRAM can provide crash-consistent buffers and metadata persistence.
 \end{itemize}
 
-\textbf{Constraints and trade-offs:}
+\subsection*{Constraints and trade-offs}
 \begin{itemize}
-  \item Endurance and variability: FeRAM endurance ($10^{12}$--$10^{13}$ cycles) is high but below DRAM refresh activity.
-  \item Write energy and latency: higher than DRAM; policies should bias read-mostly or cold data to FeRAM.
-  \item Integration cost: additional process and reliability risks (e.g., TDDB under high fields).
+  \item Endurance and variability: FeRAM endurance ($10^{12}$--$10^{13}$ cycles) is high but below DRAM refresh activity; variability and aging must be monitored.
+  \item Write cost: per-bit write energy and sometimes latency exceed DRAM; policies should bias read-mostly or cold data to FeRAM.
+  \item Integration cost: adding ferroelectric layers or FeFETs introduces process compatibility and reliability risks that require qualification.
 \end{itemize}
 
-\textbf{System directions:}
+\subsection*{System directions}
 \begin{itemize}
-  \item Tiering policies using intensity/retention-aware placement.
-  \item Refresh co-optimization: shrink DRAM refresh for regions shadowed by FeRAM.
-  \item Controller support for wear, retention, and error telemetry.
+  \item Tiering policies using intensity and retention awareness to migrate cold or persistent objects to FeRAM.
+  \item Refresh co-optimization that shrinks DRAM refresh in regions shadowed by FeRAM.
+  \item Controller and OS support for wear tracking, retention-aware placement, and error telemetry.
 \end{itemize}
