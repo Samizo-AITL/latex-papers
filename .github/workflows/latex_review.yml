@@ -6,9 +6,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install TeX Live (minimal set)
+      # まずディレクトリを確認（デバッグ用）
+      - name: Show tree
+        run: |
+          pwd
+          ls -la
+          echo "--- special ---"
+          ls -la special || true
+          echo "--- review_dram_feram ---"
+          ls -la special/review_dram_feram || true
+
+      - name: Install TeX Live (needed pkgs)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -17,9 +28,12 @@ jobs:
             latexmk biber
 
       - name: Build PDF
-        working-directory: ./special/review_dram_feram
+        working-directory: ${{ github.workspace }}/special/review_dram_feram
+        shell: bash
         run: |
-          latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+          pwd
+          ls -la
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
 
       - name: Upload PDF
         uses: actions/upload-artifact@v4
