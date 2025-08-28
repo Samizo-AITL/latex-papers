@@ -1,4 +1,3 @@
-# .github/workflows/latex_review.yml
 name: Build LaTeX (review_dram_feram)
 
 on:
@@ -16,19 +15,19 @@ jobs:
         working-directory: special/review_dram_feram
 
     steps:
+      # 1) ソース取得
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Cache TeX Live user tree (fonts, formats, etc.) to speed up subsequent runs
+      # 2) TeX Live 個人キャッシュ（フォント生成などの時間短縮）
       - name: Cache TeX Live home
         uses: actions/cache@v3
         with:
           path: ~/.texlive
           key: ${{ runner.os }}-texhome-v3
 
-      # Install TeX Live pieces needed for IEEEtran + BibTeX + TikZ/pgfplots
-      # NOTE: tikz/pgfplots は texlive-pictures に含まれる。texlive-pgf は不要（パッケージなし）。
-      - name: Install TeX Live (with IEEEtran + BibTeX + TikZ/pgfplots)
+      # 3) 必要パッケージのインストール（IEEEtran / BibTeX / TikZ / PGFPlots 等）
+      - name: Install TeX Live (with IEEEtran + BibTeX + TikZ/PGFPlots)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -40,24 +39,35 @@ jobs:
             texlive-fonts-recommended \
             texlive-fonts-extra \
             texlive-pictures \
+            texlive-pgfplots \
             texlive-science \
             texlive-bibtex-extra \
             texlive-publishers \
             ghostscript
 
+      # 4) 位置確認（デバッグ）
       - name: DEBUG — show where we are
         run: |
           echo "pwd:" && pwd
           echo "ls (repo root):" && ls -la ..
           echo "ls special/review_dram_feram:" && ls -la .
-          echo "---- main.tex head ----"
+          echo "---- head main.tex ----"
           head -n 60 main.tex || true
 
-      # Build even if there are LaTeX warnings; stop on true errors
-      - name: Build PDF with latexmk
+      # 5) 一度クリーンして古い .aux / .bbl 等を除去（undefined citation対策）
+      - name: Clean old LaTeX files
         run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
+          latexmk -C || true
+          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
 
+      # 6) BibTeX込みでビルド（エラーでもログ採取のため true）
+      - name: Build PDF with latexmk (BibTeX)
+        run: |
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
+          echo "==== tail main.log (last 200 lines) ===="
+          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
+
+      # 7) PDF をアップロード（失敗時でも）
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
@@ -66,6 +76,7 @@ jobs:
           path: special/review_dram_feram/*.pdf
           retention-days: 7
 
+      # 8) LaTeX ログ一式もアップロード（失敗時でも）
       - name: Upload LaTeX logs
         if: always()
         uses: actions/upload-artifact@v4
