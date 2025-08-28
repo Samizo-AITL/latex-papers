@@ -1,3 +1,4 @@
+# .github/workflows/latex_review.yml
 name: Build LaTeX (review_dram_feram)
 
 on:
@@ -18,13 +19,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # TeX Live の個人ディレクトリをキャッシュ（フォント生成などの時間短縮）
+      # Cache TeX Live user tree (fonts, formats, etc.) to speed up subsequent runs
       - name: Cache TeX Live home
         uses: actions/cache@v3
         with:
           path: ~/.texlive
           key: ${{ runner.os }}-texhome-v3
 
+      # Install TeX Live pieces needed for IEEEtran + BibTeX + TikZ/pgfplots
+      # NOTE: tikz/pgfplots は texlive-pictures に含まれる。texlive-pgf は不要（パッケージなし）。
       - name: Install TeX Live (with IEEEtran + BibTeX + TikZ/pgfplots)
         run: |
           sudo apt-get update
@@ -36,8 +39,7 @@ jobs:
             texlive-latex-extra \
             texlive-fonts-recommended \
             texlive-fonts-extra \
-            texlive-pictures \        # ← TikZ/pgfplots を含む
-            texlive-pgf \             # ← 念のため（環境差吸収用）
+            texlive-pictures \
             texlive-science \
             texlive-bibtex-extra \
             texlive-publishers \
@@ -49,13 +51,12 @@ jobs:
           echo "ls (repo root):" && ls -la ..
           echo "ls special/review_dram_feram:" && ls -la .
           echo "---- main.tex head ----"
-          head -n 40 main.tex || true
+          head -n 60 main.tex || true
 
-      - name: Build PDF with latexmk (do not stop on error)
+      # Build even if there are LaTeX warnings; stop on true errors
+      - name: Build PDF with latexmk
         run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
-          echo "==== tail main.log (last 200 lines) ===="
-          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
 
       - name: Upload PDF
         if: always()
