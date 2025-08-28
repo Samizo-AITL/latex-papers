@@ -1,37 +1,33 @@
-% sections/hybrid.tex
-\section{Hybrid Perspectives and Future Memory Hierarchies}
+% sections/hybrid.tex  ← 全置換（\section は置かない）
+Hybrid memory hierarchies aim to combine DRAM performance with FeRAM persistence.
+By placing FeRAM near the controller or adjacent to DRAM, systems can reduce refresh
+energy, enable instant-on features, and accelerate checkpointing and recovery
+for critical state.
 
-Hybrid memory hierarchies aim to combine DRAM performance with FeRAM persistence. By placing FeRAM near the controller or adjacent to DRAM, systems can reduce refresh energy, enable instant-on features, and accelerate checkpointing and recovery for critical state.
-
-% --- Fig.5: Hybrid hierarchy schematic (TikZ actual figure) ---
 \begin{figure}[!t]
   \centering
   \begin{tikzpicture}[
     font=\footnotesize,
-    box/.style={rounded corners, draw, minimum width=38mm, minimum height=9mm, align=center},
-    >={Latex},
-    node distance=6mm
+    box/.style={
+      rounded corners, draw,
+      minimum height=5.5mm,
+      inner xsep=2mm, inner ysep=1mm,
+      text width=.78\linewidth,
+      align=center
+    },
+    small/.style={font=\scriptsize}
   ]
-    % Blocks
-    \node[box, fill=gray!18] (cpu)  {CPU Registers / Cache};
-    \node[box, fill=blue!12,  below=of cpu]  (dram) {DRAM\\(high-speed working set)};
-    \node[box, fill=green!12, below=of dram] (feram){FeRAM / FeFET\\(near-memory, persistent)};
-    \node[box, fill=yellow!18,below=of feram] (ssd)  {SSD / HDD\\(block storage)};
+    \node[small, align=center, text width=.85\linewidth, yshift=1mm]
+      (cap) {\textbf{CPU Registers / SRAM (volatile)}};
 
-    % Vertical data path
-    \draw[->] (cpu)  -- (dram);
-    \draw[->] (dram) -- (feram);
-    \draw[->] (feram) -- (ssd);
+    \node[box, fill=blue!6, below=2mm of cap] (dram)
+      {\textbf{DRAM} (high-speed working set)};
 
-    % Side/bypass flows
-    \draw[dashed,->] (cpu.east)  .. controls +(1,0.3)  and +(1,0.3)  .. (feram.east);
-    \draw[dashed,->] (dram.east) .. controls +(1,0.3)  and +(1,-0.3) .. (ssd.east);
+    \node[box, fill=green!6, below=2mm of dram] (feram)
+      {\textbf{FeRAM / FeFET} (near-memory, persistent)};
 
-    % Notes
-    \node[align=left, anchor=west] at ($(dram.east)+(1.2,0)$)
-      {Refresh reduction\\Hot/Cold tiering};
-    \node[align=left, anchor=west] at ($(feram.east)+(1.2,0)$)
-      {Instant-on \& checkpoints\\Wear/retention mgmt.};
+    \node[box, fill=yellow!10, below=2mm of feram] (ssd)
+      {\textbf{SSD / HDD} (block storage)};
   \end{tikzpicture}
   \caption{Hybrid memory hierarchy where FeRAM near DRAM provides persistence and reduces refresh pressure.}
   \label{fig:hybrid_hierarchy}
@@ -40,20 +36,20 @@ Hybrid memory hierarchies aim to combine DRAM performance with FeRAM persistence
 \subsection*{Benefits}
 \begin{itemize}
   \item Reduced refresh overhead: cold pages and metadata can reside in FeRAM, cutting DRAM refresh traffic and standby power.
-  \item Fast persistence: OS and application state can be checkpointed to FeRAM with microsecond-scale latency.
+  \item Fast persistence: OS/app state can be checkpointed to FeRAM with $\mu$s–ms latency.
   \item Data resilience: FeRAM provides crash consistency for critical metadata and write-back buffers.
 \end{itemize}
 
 \subsection*{Constraints and trade-offs}
 \begin{itemize}
-  \item Endurance and variability: FeRAM endurance ($10^{12}$--$10^{13}$ cycles) is high but below effective DRAM activity levels.
-  \item Write energy and latency: typically higher than DRAM; placement should bias read-mostly or cold data to FeRAM.
-  \item Integration cost: ferroelectric layer/FeFET adoption adds process and reliability risks (e.g., high-field stress).
+  \item Endurance/variability: FeRAM endurance ($10^{12}$--$10^{13}$ cycles) is high but below effective DRAM activity.
+  \item Write energy/latency: typically higher than DRAM; bias read-mostly or cold data to FeRAM.
+  \item Integration cost: ferroelectric layer/FeFET adds process and reliability risks (e.g., high-field stress).
 \end{itemize}
 
 \subsection*{System directions}
 \begin{itemize}
-  \item Tiering policies using intensity/retention-aware placement and migration.
-  \item Refresh co-optimization: shrink DRAM refresh for regions shadowed or backed by FeRAM.
+  \item Intensity/retention-aware placement and migration.
+  \item Refresh co-optimization for DRAM regions shadowed/backed by FeRAM.
   \item Controller/OS support for wear tracking, retention-aware placement, and error telemetry.
 \end{itemize}
