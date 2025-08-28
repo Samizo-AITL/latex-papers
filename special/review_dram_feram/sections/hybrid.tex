@@ -3,11 +3,37 @@
 
 Hybrid memory hierarchies aim to combine DRAM performance with FeRAM persistence. By placing FeRAM near the controller or adjacent to DRAM, systems can reduce refresh energy, enable instant-on features, and accelerate checkpointing and recovery for critical state.
 
-% --- Fig.5: Hybrid hierarchy schematic (placeholder) ---
+% --- Fig.5: Hybrid hierarchy schematic (TikZ actual figure) ---
 \begin{figure}[!t]
   \centering
-  \fbox{\rule{0pt}{50mm}\rule{0.95\linewidth}{0pt}}
-  \caption{Conceptual hybrid hierarchy integrating DRAM (working set) and FeRAM (persistent/near-memory).}
+  \begin{tikzpicture}[
+    font=\footnotesize,
+    box/.style={rounded corners, draw, minimum width=38mm, minimum height=9mm, align=center},
+    >={Latex},
+    node distance=6mm
+  ]
+    % Blocks
+    \node[box, fill=gray!18] (cpu)  {CPU Registers / Cache};
+    \node[box, fill=blue!12,  below=of cpu]  (dram) {DRAM\\(high-speed working set)};
+    \node[box, fill=green!12, below=of dram] (feram){FeRAM / FeFET\\(near-memory, persistent)};
+    \node[box, fill=yellow!18,below=of feram] (ssd)  {SSD / HDD\\(block storage)};
+
+    % Vertical data path
+    \draw[->] (cpu)  -- (dram);
+    \draw[->] (dram) -- (feram);
+    \draw[->] (feram) -- (ssd);
+
+    % Side/bypass flows
+    \draw[dashed,->] (cpu.east)  .. controls +(1,0.3)  and +(1,0.3)  .. (feram.east);
+    \draw[dashed,->] (dram.east) .. controls +(1,0.3)  and +(1,-0.3) .. (ssd.east);
+
+    % Notes
+    \node[align=left, anchor=west] at ($(dram.east)+(1.2,0)$)
+      {Refresh reduction\\Hot/Cold tiering};
+    \node[align=left, anchor=west] at ($(feram.east)+(1.2,0)$)
+      {Instant-on \& checkpoints\\Wear/retention mgmt.};
+  \end{tikzpicture}
+  \caption{Hybrid memory hierarchy where FeRAM near DRAM provides persistence and reduces refresh pressure.}
   \label{fig:hybrid_hierarchy}
 \end{figure}
 
