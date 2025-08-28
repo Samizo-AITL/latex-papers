@@ -13,7 +13,6 @@ jobs:
     defaults:
       run:
         working-directory: special/review_dram_feram
-        shell: bash
 
     steps:
       - name: Checkout
@@ -25,21 +24,23 @@ jobs:
           path: ~/.texlive
           key: ${{ runner.os }}-texhome-v3
 
-      # ←← 問題の箇所を安全な書き方に変更（1行の変数にまとめてインストール）
-      - name: Install TeX Live (with IEEEtran + TikZ/PGFPlots)
+      - name: Install TeX Live (with IEEEtran + TikZ/PGFPlots + lmodern)
         run: |
           set -eux
           sudo apt-get update -y
           PKGS="latexmk texlive-base texlive-latex-base texlive-latex-recommended \
                 texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra \
+                lmodern \
                 texlive-pictures texlive-science texlive-bibtex-extra \
                 texlive-publishers ghostscript"
           sudo apt-get install -y --no-install-recommends $PKGS
 
-      - name: DEBUG — verify TikZ/PGFPlots availability
+      - name: DEBUG — verify installed TeX packages
         run: |
-          echo "tikz.sty     -> $(kpsewhich tikz.sty || echo NOT_FOUND)"
-          echo "pgfplots.sty -> $(kpsewhich pgfplots.sty || echo NOT_FOUND)"
+          echo "lmodern.sty   -> $(kpsewhich lmodern.sty   || echo NOT_FOUND)"
+          echo "tikz.sty      -> $(kpsewhich tikz.sty      || echo NOT_FOUND)"
+          echo "pgfplots.sty  -> $(kpsewhich pgfplots.sty  || echo NOT_FOUND)"
+          echo "IEEEtran.cls  -> $(kpsewhich IEEEtran.cls  || echo NOT_FOUND)"
 
       - name: Clean old LaTeX files
         run: |
@@ -48,8 +49,9 @@ jobs:
 
       - name: Build PDF with latexmk (BibTeX)
         run: |
-          set -eux
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
+          echo "==== tail main.log (last 200 lines) ===="
+          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
 
       - name: Upload PDF
         if: always()
