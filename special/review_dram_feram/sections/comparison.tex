@@ -1,6 +1,9 @@
 \label{sec:comparison}
 
-Table~\ref{tab:comparison} summarizes representative literature values for DRAM and FeRAM. DRAM provides high speed and very low energy/bit but requires periodic refresh due to short intrinsic retention \cite{choi2022,kim2021_dram,iedm2023_dram}. FeRAM offers non-volatility with retention beyond $10^{5}$\,s and endurance reported in the $10^{12}$--$10^{13}$ range for optimized HfO$_2$ stacks, typically at higher write energy per bit \cite{boscke2011,mueller2012,noheda2023,martin2020}.
+Table~\ref{tab:comparison} summarizes representative literature values for DRAM and FeRAM. 
+DRAM provides high speed and very low energy/bit but requires periodic refresh due to short intrinsic retention~\cite{choi2022,kim2021_dram,iedm2023_dram}. 
+FeRAM offers non-volatility with retention beyond $10^{5}$\,s and endurance reported in the $10^{12}$--$10^{13}$ range for optimized HfO$_2$ stacks, 
+typically at higher write energy per bit~\cite{boscke2011,mueller2012,noheda2023,martin2020}.
 
 \begin{table}[!t]
 \centering
@@ -27,21 +30,21 @@ FeRAM & $\le 50$  & $\ge 10^{5}$                & $10^{12}$--$10^{13}$ & $10^{2}
   xlabel={Access time (ns)},
   ylabel={Retention (s)},
   xmin=1e0, xmax=1e3,
-  ymin=5e-3, ymax=1e7,
+  ymin=1e-4, ymax=1e6,  % ★修正: 10^{-4}～10^{6}
   grid=both,
-  legend style={at={(0.05,0.05)},anchor=south west, font=\scriptsize},
   label style={font=\footnotesize},
   tick label style={font=\footnotesize},
   clip=false
 ]
 
-% typical points
-\addplot+[only marks, mark=*, mark size=2.6pt,
+% DRAM point
+\addplot+[only marks, mark=*, mark size=2.8pt,
           mark options={fill=white,draw=black,thick}]
           coordinates {(5, 1e-2)};
 \node[above left, font=\scriptsize] at (axis cs:5,1e-2){DRAM};
 
-\addplot+[only marks, mark=square*, mark size=2.8pt,
+% FeRAM point
+\addplot+[only marks, mark=square*, mark size=3.0pt,
           mark options={fill=black!70}]
           coordinates {(30, 1e5)};
 \node[below right, font=\scriptsize] at (axis cs:30,1e5){FeRAM};
@@ -52,10 +55,7 @@ coordinates {(2,1e-3) (15,1e-3) (15,5e-2) (2,5e-2)} -- cycle;
 
 % FeRAM region
 \addplot [draw=black, fill=black!10, opacity=0.15]
-coordinates {(10,1e3) (80,1e3) (80,1e7) (10,1e7)} -- cycle;
-
-\node[anchor=north west, font=\scriptsize] at (axis cs:2,5e-2) {DRAM region};
-\node[anchor=south east, font=\scriptsize] at (axis cs:80,1e3) {FeRAM region};
+coordinates {(10,1e3) (80,1e3) (80,1e6) (10,1e6)} -- cycle;
 
 \end{loglogaxis}
 \end{tikzpicture}
@@ -73,20 +73,21 @@ coordinates {(10,1e3) (80,1e3) (80,1e7) (10,1e7)} -- cycle;
   xlabel={Write time (ns)},
   ylabel={Write energy/bit (fJ)},
   xmin=1e0, xmax=1e3,
-  ymin=2e1, ymax=1e5,
+  ymin=1e0, ymax=1e4,  % ★修正: 10^{0}～10^{4}
   grid=both,
-  legend style={at={(0.05,0.95)},anchor=north west, font=\scriptsize},
   label style={font=\footnotesize},
   tick label style={font=\footnotesize},
   clip=false
 ]
 
-\addplot+[only marks, mark=*, mark size=2.6pt,
+% DRAM point
+\addplot+[only marks, mark=*, mark size=2.8pt,
           mark options={fill=white,draw=black,thick}]
           coordinates {(5, 30)};
 \node[above left, font=\scriptsize] at (axis cs:5,30){DRAM};
 
-\addplot+[only marks, mark=square*, mark size=2.8pt,
+% FeRAM point
+\addplot+[only marks, mark=square*, mark size=3.0pt,
           mark options={fill=black!70}]
           coordinates {(50, 1000)};
 \node[below right, font=\scriptsize] at (axis cs:50,1000){FeRAM};
@@ -98,9 +99,6 @@ coordinates {(2,10) (15,10) (15,200) (2,200)} -- cycle;
 % FeRAM region
 \addplot [draw=black, fill=black!10, opacity=0.15]
 coordinates {(20,400) (150,400) (150,1e4) (20,1e4)} -- cycle;
-
-\node[anchor=south west, font=\scriptsize] at (axis cs:2,200) {DRAM region};
-\node[anchor=north east, font=\scriptsize] at (axis cs:150,400) {FeRAM region};
 
 \end{loglogaxis}
 \end{tikzpicture}
