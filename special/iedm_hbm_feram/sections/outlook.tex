@@ -1,23 +1,19 @@
+\section{Future Outlook: Toward HBM+FeFET}
+In the near term, chiplet integration of HBM and FeRAM offers a practical solution for mobile edge AI, balancing bandwidth and persistence. 
+Future prospects include replacing FeRAM with FeFET:
+\begin{itemize}
+  \item \textbf{Non-destructive read}, reducing wear-out,
+  \item \textbf{Higher density}, fitting within HBM logic base,
+  \item \textbf{CMOS compatibility}, easing scaling to advanced nodes.
+\end{itemize}
 
-\section{Future Outlook}
-Our process evaluation indicates that \textbf{chiplet-based integration} of HBM and FeRAM/FeFET
-is the most practical near-term approach. DRAM capacitors require high-temperature annealing ($>700^\circ$C)
-for stable high-$k$ phases, whereas FeFETs demand low-temperature ferroelectric crystallization ($<400^\circ$C).
-Reliability limits also diverge (leakage vs. wake-up/fatigue).
+Nevertheless, true monolithic integration faces process conflicts: DRAM capacitors require high-$T$ anneals, while FeFETs demand low-$T$ stabilization. 
+Overcoming this is an active research challenge.
 
-Thus, monolithic HBM+FeFET is not feasible today. However, \textbf{true monolithic integration}
-remains an attractive long-term research challenge. Localized annealing, dopant modulation, or stress capping
-may eventually allow DRAM and FeFET to coexist on the same wafer.
-
+% Fig.3
 \begin{figure}[!t]
 \centering
-\begin{tikzpicture}[node distance=1cm,>=stealth,thick]
-\node (stack) [draw, minimum width=3.5cm, minimum height=0.8cm] {HBM DRAM capacitor (t/c phase)};
-\node (layer) [draw, minimum width=3.5cm, minimum height=0.8cm, below=of stack] {FeFET channel (o-phase HfO$_2$)};
-\node (pkg) [below=of layer] {Challenge: thermal/phase incompatibility};
-
-\draw[->] (stack) -- (layer);
-\draw[->] (pkg.north) -- (layer.south);
-\end{tikzpicture}
-\caption{Monolithic challenge: DRAM vs. FeFET phase/thermal conflicts.}
+\includegraphics[width=0.9\linewidth]{figs/fig3_package.pdf}
+\caption{Package cross-section: CPU/Controller, HBM stack, and FeRAM chiplet co-integrated on interposer. SystemDK supervises system co-design. Monolithic FeFET is a future research goal.}
+\label{fig:package_cross}
 \end{figure}
