@@ -18,14 +18,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # TeX Liveの個人キャッシュ（フォント生成など短縮）
       - name: Cache TeX Live home
         uses: actions/cache@v3
         with:
           path: ~/.texlive
           key: ${{ runner.os }}-texhome-v3
 
-      # 必要パッケージ（IEEEtran + TikZ/PGFPlots + BibTeX）
       - name: Install TeX Live (with IEEEtran + TikZ/PGFPlots)
         run: |
           sudo apt-get update
@@ -37,24 +35,22 @@ jobs:
             texlive-latex-extra \
             texlive-fonts-recommended \
             texlive-fonts-extra \
-            texlive-pictures \        # ← TikZ/PGF + pgfplots が入る
+            texlive-pictures \
             texlive-science \
             texlive-bibtex-extra \
             texlive-publishers \
+            pgf \
             ghostscript
 
-      # 旧ビルド生成物をクリーン
       - name: Clean old LaTeX files
         run: |
           latexmk -C || true
           rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
 
-      # BibTeX込みでビルド
       - name: Build PDF with latexmk (BibTeX)
         run: |
           latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
 
-      # 生成物アップロード
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
