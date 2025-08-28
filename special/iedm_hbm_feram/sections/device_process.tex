@@ -1,0 +1,19 @@
+
+\section{Device and Process Considerations}
+HBM relies on DRAM capacitors using high-$k$ dielectrics, while FeRAM/FeFET exploit ferroelectric HfO$_2$.
+Conflicts in thermal budgets and phase requirements limit monolithic integration.
+
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[node distance=1cm,>=stealth,thick]
+\node (cpu) [draw, rounded corners, minimum width=2.6cm, minimum height=0.8cm] {CPU/Accelerator};
+\node (hbm) [draw, rounded corners, below=of cpu, minimum width=2.6cm, minimum height=0.8cm] {HBM (DRAM)};
+\node (feram) [draw, rounded corners, below=of hbm, minimum width=2.6cm, minimum height=0.8cm] {FeRAM / FeFET};
+\node (note) [below=of feram] {SystemDK top-down design integration};
+
+\draw[->] (cpu) -- (hbm);
+\draw[->] (hbm) -- (feram);
+\draw[->] (note.north) -- (feram.south);
+\end{tikzpicture}
+\caption{System-level view: HBM+FeRAM integration under SystemDK co-design.}
+\end{figure}
