@@ -11,12 +11,19 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{cite}
 
+% ---- TikZ/PGFPlots for conceptual figures ----
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ---- Graphics path ----
 \graphicspath{{./}{figs/}}
 
 \title{A Comparative Review of DRAM and FeRAM: The Boundary between Volatile and Non-Volatile Memory and Future Perspectives}
 
 \author{Shinichi~Samizo%
-\thanks{S. Samizo is with Project Design Hub (Samizo–AITL), Japan. E-mail: \texttt{samizo-aitl@example.org}.}
+\thanks{S. Samizo is with Project Design Hub (Samizo--AITL), Japan. E-mail: \texttt{samizo-aitl@example.org}.}
 }
 
 \markboth{Draft for IEEE-style submission}{Samizo: DRAM vs FeRAM Comparative Review}
@@ -54,4 +61,5 @@ DRAM, FeRAM, FeFET, HfO2, retention, endurance, scaling, memory hierarchy.
 % --- References ---
 \bibliographystyle{IEEEtran}
 \bibliography{references}
+
 \end{document}
