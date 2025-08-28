@@ -1,24 +1,33 @@
+% sections/hybrid.tex
 \section{Hybrid Perspectives and Future Memory Hierarchies}
 
-Hybrid memory hierarchies aim to combine DRAM performance with FeRAM persistence. Benefits include reduced refresh energy, fast checkpointing, and resilience for critical metadata.
+Hybrid memory hierarchies aim to combine DRAM performance with FeRAM persistence. By placing FeRAM near the controller or adjacent to DRAM, systems can reduce refresh energy, enable instant-on features, and accelerate checkpointing and recovery for critical state.
 
+% --- Fig.5: Hybrid hierarchy schematic (placeholder) ---
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=\linewidth]{figs/fig_hybrid}
-  \caption{Conceptual hybrid memory hierarchy integrating DRAM and FeRAM.}
+  \fbox{\rule{0pt}{50mm}\rule{0.95\linewidth}{0pt}}
+  \caption{Conceptual hybrid hierarchy integrating DRAM (working set) and FeRAM (persistent/near-memory).}
   \label{fig:hybrid_hierarchy}
 \end{figure}
 
-\textbf{Benefits:}
+\subsection*{Benefits}
 \begin{itemize}
-  \item Reduced refresh overhead by parking cold pages in FeRAM.
-  \item Microsecond-scale persistence for OS/app state.
-  \item Crash consistency for metadata and write-back buffers.
+  \item Reduced refresh overhead: cold pages and metadata can reside in FeRAM, cutting DRAM refresh traffic and standby power.
+  \item Fast persistence: OS and application state can be checkpointed to FeRAM with microsecond-scale latency.
+  \item Data resilience: FeRAM provides crash consistency for critical metadata and write-back buffers.
 \end{itemize}
 
-\textbf{Constraints and trade-offs:}
+\subsection*{Constraints and trade-offs}
 \begin{itemize}
-  \item FeRAM endurance is high but below DRAM refresh activity.
-  \item Write energy/latency generally higher than DRAM.
-  \item Integration and reliability risks in advanced nodes.
+  \item Endurance and variability: FeRAM endurance ($10^{12}$--$10^{13}$ cycles) is high but below effective DRAM activity levels.
+  \item Write energy and latency: typically higher than DRAM; placement should bias read-mostly or cold data to FeRAM.
+  \item Integration cost: ferroelectric layer/FeFET adoption adds process and reliability risks (e.g., high-field stress).
+\end{itemize}
+
+\subsection*{System directions}
+\begin{itemize}
+  \item Tiering policies using intensity/retention-aware placement and migration.
+  \item Refresh co-optimization: shrink DRAM refresh for regions shadowed or backed by FeRAM.
+  \item Controller/OS support for wear tracking, retention-aware placement, and error telemetry.
 \end{itemize}
