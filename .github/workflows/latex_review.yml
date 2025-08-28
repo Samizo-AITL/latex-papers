@@ -39,7 +39,6 @@ jobs:
             texlive-science \
             texlive-bibtex-extra \
             texlive-publishers \
-            pgf \
             ghostscript
 
       - name: Clean old LaTeX files
@@ -49,7 +48,9 @@ jobs:
 
       - name: Build PDF with latexmk (BibTeX)
         run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
+          echo "==== tail main.log (last 200 lines) ===="
+          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
 
       - name: Upload PDF
         if: always()
