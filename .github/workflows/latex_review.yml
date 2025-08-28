@@ -19,35 +19,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # TeX Live の個人キャッシュ（フォント生成・fmt短縮）
       - name: Cache TeX Live home
         uses: actions/cache@v3
         with:
           path: ~/.texlive
           key: ${{ runner.os }}-texhome-v3
 
+      # ←← 問題の箇所を安全な書き方に変更（1行の変数にまとめてインストール）
       - name: Install TeX Live (with IEEEtran + TikZ/PGFPlots)
         run: |
           set -eux
-          sudo apt-get update
-          sudo apt-get install -y \
-            latexmk \
-            texlive-base \
-            texlive-latex-base \
-            texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-fonts-recommended \
-            texlive-fonts-extra \
-            texlive-pictures \    # TikZ + PGF + PGFPlots を含む
-            texlive-science \
-            texlive-bibtex-extra \
-            texlive-publishers \  # IEEEtran.cls
-            ghostscript
+          sudo apt-get update -y
+          PKGS="latexmk texlive-base texlive-latex-base texlive-latex-recommended \
+                texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra \
+                texlive-pictures texlive-science texlive-bibtex-extra \
+                texlive-publishers ghostscript"
+          sudo apt-get install -y --no-install-recommends $PKGS
 
       - name: DEBUG — verify TikZ/PGFPlots availability
         run: |
-          echo "tikz.sty -> $(kpsewhich tikz.sty || echo 'NOT FOUND')"
-          echo "pgfplots.sty -> $(kpsewhich pgfplots.sty || echo 'NOT FOUND')"
+          echo "tikz.sty     -> $(kpsewhich tikz.sty || echo NOT_FOUND)"
+          echo "pgfplots.sty -> $(kpsewhich pgfplots.sty || echo NOT_FOUND)"
 
       - name: Clean old LaTeX files
         run: |
