@@ -1,19 +1,28 @@
+\section{Device and Process Integration}
+HBM DRAM stacks are fabricated with high-temperature capacitor anneals ($>700~^\circ$C), 
+while FeRAM/FeFET requires lower-temperature processing ($\sim$400~^\circ$C) to preserve ferroelectric o-phase in HfO$_2$.
+This incompatibility makes monolithic integration difficult at present.
 
-\section{Device and Process Considerations}
-HBM relies on DRAM capacitors using high-$k$ dielectrics, while FeRAM/FeFET exploit ferroelectric HfO$_2$.
-Conflicts in thermal budgets and phase requirements limit monolithic integration.
+\subsection{Chiplet-based Integration (Practical Solution)}
+The most feasible near-term path is chiplet integration:
+HBM stacks and FeRAM/FeFET dies are fabricated in their respective optimized flows and co-integrated on a silicon interposer with $\mu$-bump connections.
+This allows:
+\begin{itemize}
+  \item HBM to deliver bandwidth $>$300 GB/s,
+  \item FeRAM to hold checkpoints, metadata, and cold data persistently,
+  \item Refresh traffic reduction in DRAM.
+\end{itemize}
 
+\subsection{Monolithic Integration (Research Challenge)}
+A future direction is embedding FeFET arrays inside the HBM logic base die.
+Both DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ coexist, but require conflicting anneals.
+Possible research enablers include selective annealing, dopant modulation, or stress engineering.
+Today, monolithic HBM+FeFET remains a research challenge.
+
+% Fig.1
 \begin{figure}[!t]
 \centering
-\begin{tikzpicture}[node distance=1cm,>=stealth,thick]
-\node (cpu) [draw, rounded corners, minimum width=2.6cm, minimum height=0.8cm] {CPU/Accelerator};
-\node (hbm) [draw, rounded corners, below=of cpu, minimum width=2.6cm, minimum height=0.8cm] {HBM (DRAM)};
-\node (feram) [draw, rounded corners, below=of hbm, minimum width=2.6cm, minimum height=0.8cm] {FeRAM / FeFET};
-\node (note) [below=of feram] {SystemDK top-down design integration};
-
-\draw[->] (cpu) -- (hbm);
-\draw[->] (hbm) -- (feram);
-\draw[->] (note.north) -- (feram.south);
-\end{tikzpicture}
-\caption{System-level view: HBM+FeRAM integration under SystemDK co-design.}
+\includegraphics[width=0.9\linewidth]{figs/fig1_systemdk.pdf}
+\caption{Chiplet integration: CPU/accelerator with HBM and FeRAM chiplet on an interposer, supervised by SystemDK for top-down architecture/interface/package co-design.}
+\label{fig:system_schematic}
 \end{figure}
