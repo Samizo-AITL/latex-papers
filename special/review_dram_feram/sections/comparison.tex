@@ -27,25 +27,31 @@ FeRAM & $\le 50$  & $\ge 10^{5}$                & $10^{12}$--$10^{13}$ & $10^{2}
   xlabel={Access time (ns)},
   ylabel={Retention (s)},
   xmin=1e0, xmax=1e3,
-  ymin=1e-2, ymax=1e7,
+  ymin=5e-3, ymax=1e7,
   grid=both,
   legend style={at={(0.05,0.05)},anchor=south west, font=\scriptsize},
   label style={font=\footnotesize},
-  tick label style={font=\footnotesize}
+  tick label style={font=\footnotesize},
+  clip=false
 ]
 
 % typical points
-\addplot+[only marks, mark=*, mark size=1.6pt] coordinates {(5, 1e-2)};     
-\addlegendentry{DRAM (typ.)}
-\addplot+[only marks, mark=square*, mark size=1.8pt] coordinates {(30, 1e5)}; 
-\addlegendentry{FeRAM (typ.)}
+\addplot+[only marks, mark=*, mark size=2.6pt,
+          mark options={fill=white,draw=black,thick}]
+          coordinates {(5, 1e-2)};
+\node[above left, font=\scriptsize] at (axis cs:5,1e-2){DRAM};
+
+\addplot+[only marks, mark=square*, mark size=2.8pt,
+          mark options={fill=black!70}]
+          coordinates {(30, 1e5)};
+\node[below right, font=\scriptsize] at (axis cs:30,1e5){FeRAM};
 
 % DRAM region
-\addplot [draw=black, fill=black!10, opacity=0.3] 
+\addplot [draw=black, fill=black!10, opacity=0.15]
 coordinates {(2,1e-3) (15,1e-3) (15,5e-2) (2,5e-2)} -- cycle;
 
 % FeRAM region
-\addplot [draw=black, fill=black!10, opacity=0.2] 
+\addplot [draw=black, fill=black!10, opacity=0.15]
 coordinates {(10,1e3) (80,1e3) (80,1e7) (10,1e7)} -- cycle;
 
 \node[anchor=north west, font=\scriptsize] at (axis cs:2,5e-2) {DRAM region};
@@ -67,24 +73,30 @@ coordinates {(10,1e3) (80,1e3) (80,1e7) (10,1e7)} -- cycle;
   xlabel={Write time (ns)},
   ylabel={Write energy/bit (fJ)},
   xmin=1e0, xmax=1e3,
-  ymin=1e1, ymax=1e5,
+  ymin=2e1, ymax=1e5,
   grid=both,
   legend style={at={(0.05,0.95)},anchor=north west, font=\scriptsize},
   label style={font=\footnotesize},
-  tick label style={font=\footnotesize}
+  tick label style={font=\footnotesize},
+  clip=false
 ]
 
-\addplot+[only marks, mark=*, mark size=1.6pt] coordinates {(5, 30)};     
-\addlegendentry{DRAM (typ.)}
-\addplot+[only marks, mark=square*, mark size=1.8pt] coordinates {(50, 1000)};  
-\addlegendentry{FeRAM (typ.)}
+\addplot+[only marks, mark=*, mark size=2.6pt,
+          mark options={fill=white,draw=black,thick}]
+          coordinates {(5, 30)};
+\node[above left, font=\scriptsize] at (axis cs:5,30){DRAM};
+
+\addplot+[only marks, mark=square*, mark size=2.8pt,
+          mark options={fill=black!70}]
+          coordinates {(50, 1000)};
+\node[below right, font=\scriptsize] at (axis cs:50,1000){FeRAM};
 
 % DRAM region
-\addplot [draw=black, fill=black!10, opacity=0.3] 
+\addplot [draw=black, fill=black!10, opacity=0.15]
 coordinates {(2,10) (15,10) (15,200) (2,200)} -- cycle;
 
 % FeRAM region
-\addplot [draw=black, fill=black!10, opacity=0.2] 
+\addplot [draw=black, fill=black!10, opacity=0.15]
 coordinates {(20,400) (150,400) (150,1e4) (20,1e4)} -- cycle;
 
 \node[anchor=south west, font=\scriptsize] at (axis cs:2,200) {DRAM region};
