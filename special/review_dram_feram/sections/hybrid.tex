@@ -12,9 +12,11 @@ reduce refresh energy, enable instant-on, and support fast checkpointing and rec
   \begin{tikzpicture}[font=\footnotesize, >=Stealth]
     % styles
     \tikzset{
-      layer/.style={rounded corners, draw=black, fill=black!6, minimum width=7.6cm, minimum height=6mm},
+      layer/.style={rounded corners, draw=black, fill=black!6,
+                    minimum width=7.6cm, minimum height=6mm},
       arrow/.style={->, thick},
-      note/.style={align=left, draw=black, fill=black!3, rounded corners, inner sep=3pt}
+      note/.style={align=left, draw=black, fill=black!3,
+                   rounded corners, inner sep=3pt, text width=7.2cm}
     }
 
     % y positions
@@ -22,6 +24,7 @@ reduce refresh energy, enable instant-on, and support fast checkpointing and rec
     \def\yferam{0.5}
     \def\ydram{1.6}
     \def\ycpu{2.7}
+    \def\ynote{-1.6}
 
     % boxes
     \node[layer] (cpu)  at (0,\ycpu)  {CPU Registers / Cache (volatile)};
@@ -34,12 +37,10 @@ reduce refresh energy, enable instant-on, and support fast checkpointing and rec
     \draw[arrow] (dram.south) -- (fram.north);
     \draw[arrow] (fram.south) -- (ssd.north);
 
-    % SystemDK annotation (落ち着いたモノクロ注釈)
-    \node[note, anchor=west] (sdk) at (4.0, \yferam+0.55)
-      {\textbf{SystemDK} top-down co-design\\(chiplets / controllers / OS)};
-    \draw[arrow] (sdk.west)++(-0.2,0.35) -- ++(-1.4,0.0);
-    \draw[arrow] (sdk.west)++(-0.2,-0.30) -- ++(-1.4,0.0);
-
+    % SystemDK note（図の下部に収めて本文と衝突しない配置）
+    \node[note] (sdk) at (0,\ynote)
+      {\textbf{SystemDK} top-down co-design: holistic optimization across chiplets, controllers, and OS.};
+    \draw[arrow] (sdk.north) -- (fram.south);
   \end{tikzpicture}
   \caption{Hybrid memory hierarchy: DRAM provides high-speed capacity, while FeRAM
   supplies persistent, instant-resume storage close to the controller. SystemDK enables
