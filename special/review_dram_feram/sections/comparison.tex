@@ -1,18 +1,38 @@
+% sections/comparison.tex
 \section{Comparative Analysis: DRAM vs FeRAM}
 \label{sec:comparison}
 
-Table~\ref{tab:comparison} summarizes representative literature values for DRAM and FeRAM. Figures~\ref{fig:speed_retention} and \ref{fig:energy_speed} illustrate key trade-offs.
+Table~\ref{tab:comparison} summarizes representative literature values for DRAM and FeRAM. DRAM provides high speed and very low energy/bit but requires periodic refresh due to short intrinsic retention \cite{choi2022,kim2021_dram,iedm2023_dram}. FeRAM offers non-volatility with retention beyond 10^5 s and endurance reported in the 10^{12}--10^{13} range for optimized HfO2 stacks, typically at higher write energy per bit \cite{boscke2011,mueller2012,noheda2023,martin2020}.
 
+\begin{table}[!t]
+\centering
+\caption{Representative metrics (order-of-magnitude, literature indications).}
+\label{tab:comparison}
+\begin{tabular}{lcccc}
+\toprule
+Tech. & Speed (ns) & Retention (s) & Endurance & Energy/bit \\
+\midrule
+DRAM  & $\le 10$  & $\sim 10^{-2}$ to $10^{-1}$ & $\ge 10^{16}$ & $10$--$100$ fJ \\
+FeRAM & $\le 50$  & $\ge 10^{5}$                & $10^{12}$--$10^{13}$ & $10^{2}$--$10^{3}$ fJ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Figures~\ref{fig:speed_retention} and \ref{fig:energy_speed} conceptually illustrate the speed--retention and energy--speed trade-offs, respectively.
+
+% --- Fig.1: Speed vs. retention (placeholder, no external image needed) ---
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=\linewidth]{figs/fig_speed_retention}
-  \caption{Speed vs.\ retention trade-off (representative, schematic).}
+  % Gray box placeholder (about 95% of line width, ~45mm height)
+  \fbox{\rule{0pt}{45mm}\rule{0.95\linewidth}{0pt}}
+  \caption{Speed vs.\ retention trade-off (conceptual placeholder).}
   \label{fig:speed_retention}
 \end{figure}
 
+% --- Fig.2: Write energy vs. write speed (placeholder) ---
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=\linewidth]{figs/fig_energy_speed}
-  \caption{Write energy per bit vs.\ write speed (representative, schematic).}
+  \fbox{\rule{0pt}{45mm}\rule{0.95\linewidth}{0pt}}
+  \caption{Write energy per bit vs.\ write speed (conceptual placeholder).}
   \label{fig:energy_speed}
 \end{figure}
