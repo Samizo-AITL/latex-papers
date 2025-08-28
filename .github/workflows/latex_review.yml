@@ -15,19 +15,16 @@ jobs:
         working-directory: special/review_dram_feram
 
     steps:
-      # 1) ソース取得
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2) TeX Live 個人キャッシュ（フォント生成などの時間短縮）
       - name: Cache TeX Live home
         uses: actions/cache@v3
         with:
           path: ~/.texlive
           key: ${{ runner.os }}-texhome-v3
 
-      # 3) 必要パッケージのインストール（IEEEtran / BibTeX / TikZ / PGFPlots 等）
-      - name: Install TeX Live (with IEEEtran + BibTeX + TikZ/PGFPlots)
+      - name: Install TeX Live (with IEEEtran + BibTeX)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -38,14 +35,12 @@ jobs:
             texlive-latex-extra \
             texlive-fonts-recommended \
             texlive-fonts-extra \
-            texlive-pictures \
-            texlive-pgfplots \
+            texlive-pictures \   # ← pgfplots含まれる
             texlive-science \
             texlive-bibtex-extra \
             texlive-publishers \
             ghostscript
 
-      # 4) 位置確認（デバッグ）
       - name: DEBUG — show where we are
         run: |
           echo "pwd:" && pwd
@@ -54,20 +49,17 @@ jobs:
           echo "---- head main.tex ----"
           head -n 60 main.tex || true
 
-      # 5) 一度クリーンして古い .aux / .bbl 等を除去（undefined citation対策）
       - name: Clean old LaTeX files
         run: |
           latexmk -C || true
           rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
 
-      # 6) BibTeX込みでビルド（エラーでもログ採取のため true）
       - name: Build PDF with latexmk (BibTeX)
         run: |
           latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
           echo "==== tail main.log (last 200 lines) ===="
           if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
 
-      # 7) PDF をアップロード（失敗時でも）
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
@@ -76,7 +68,6 @@ jobs:
           path: special/review_dram_feram/*.pdf
           retention-days: 7
 
-      # 8) LaTeX ログ一式もアップロード（失敗時でも）
       - name: Upload LaTeX logs
         if: always()
         uses: actions/upload-artifact@v4
