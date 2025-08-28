@@ -25,7 +25,7 @@ jobs:
           path: ~/.texlive
           key: ${{ runner.os }}-texhome-v3
 
-      - name: Install TeX Live (with IEEEtran + BibTeX)
+      - name: Install TeX Live (with IEEEtran + BibTeX + TikZ/pgfplots)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -36,7 +36,8 @@ jobs:
             texlive-latex-extra \
             texlive-fonts-recommended \
             texlive-fonts-extra \
-            texlive-pictures \
+            texlive-pictures \        # ← TikZ/pgfplots を含む
+            texlive-pgf \             # ← 念のため（環境差吸収用）
             texlive-science \
             texlive-bibtex-extra \
             texlive-publishers \
