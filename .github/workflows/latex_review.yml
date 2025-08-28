@@ -24,7 +24,7 @@ jobs:
           path: ~/.texlive
           key: ${{ runner.os }}-texhome-v3
 
-      - name: Install TeX Live (with IEEEtran + BibTeX)
+      - name: Install TeX Live (with IEEEtran + BibTeX + TikZ)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -35,19 +35,11 @@ jobs:
             texlive-latex-extra \
             texlive-fonts-recommended \
             texlive-fonts-extra \
-            texlive-pictures \   # ← pgfplots含まれる
+            texlive-pictures \        # ← TikZ/PGFPlots含む
             texlive-science \
             texlive-bibtex-extra \
             texlive-publishers \
             ghostscript
-
-      - name: DEBUG — show where we are
-        run: |
-          echo "pwd:" && pwd
-          echo "ls (repo root):" && ls -la ..
-          echo "ls special/review_dram_feram:" && ls -la .
-          echo "---- head main.tex ----"
-          head -n 60 main.tex || true
 
       - name: Clean old LaTeX files
         run: |
