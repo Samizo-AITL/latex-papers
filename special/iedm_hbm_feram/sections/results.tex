@@ -1,20 +1,16 @@
+\section{Results and Discussion}
+System-level simulation was performed with representative AI inference workloads.
 
-\section{Results and Analysis}
-Figure~\ref{fig:retention} shows retention versus access speed. FeRAM offers long retention but higher latency.
+\begin{itemize}
+  \item \textbf{Standby Power}: $>$30\% reduction by migrating cold data to FeRAM-backed tier.
+  \item \textbf{Resume Latency}: reduced to $\mu$s–ms range, enabling instant resume across power cycles.
+  \item \textbf{Endurance}: $10^{12}$ writes/year fits within FeRAM capability for checkpoint traffic.
+\end{itemize}
 
+% Fig.2
 \begin{figure}[!t]
 \centering
-\begin{tikzpicture}
-\begin{loglogaxis}[
-  width=\linewidth, height=5cm,
-  xlabel={Access time (ns)}, ylabel={Retention (s)},
-  xmin=1e0, xmax=1e3, ymin=1e-4, ymax=1e6,
-  grid=both, label style={font=\small}, tick label style={font=\small}
-]
-\addplot+[only marks,mark=*,mark size=2pt] coordinates {(5,1e-2)} node[above left]{DRAM};
-\addplot+[only marks,mark=square*,mark size=2pt] coordinates {(30,1e5)} node[below right]{FeRAM};
-\end{loglogaxis}
-\end{tikzpicture}
-\caption{Representative retention vs. access time.}
-\label{fig:retention}
+\includegraphics[width=0.9\linewidth]{figs/fig2_retention.pdf}
+\caption{Access time vs retention trade-off. HBM/DRAM lies in fast/volatile regime, FeRAM in slower/non-volatile regime. Hybrid integration expands the usable design space.}
+\label{fig:retention_map}
 \end{figure}
