@@ -2,11 +2,11 @@ name: Build LaTeX (special folders)
 
 on:
   push:
-    branches: [ main ]
+    # どのブランチでも起動（main限定にしたい場合は branches: [ main ] を戻す）
     paths:
       - "special/review_dram_feram/**"
       - "special/iedm_hbm_feram/**"
-      - ".github/workflows/latex_build.yml"
+      - ".github/workflows/latex_review.yml"   # ← 自分自身
   workflow_dispatch:
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
           path: ~/.texlive
           key: ${{ runner.os }}-texhome-v3
 
-      - name: Install TeX Live (with IEEEtran + TikZ/PGFPlots)
+      - name: Install TeX Live (IEEEtran + TikZ/PGFPlots)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -81,4 +81,3 @@ jobs:
             ${{ matrix.dir }}/*.fls
             ${{ matrix.dir }}/*.fdb_latexmk
           retention-days: 7
-          
