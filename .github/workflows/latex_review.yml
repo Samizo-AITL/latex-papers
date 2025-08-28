@@ -13,11 +13,13 @@ jobs:
     defaults:
       run:
         working-directory: special/review_dram_feram
+        shell: bash
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # TeX Live の個人キャッシュ（フォント生成・fmt短縮）
       - name: Cache TeX Live home
         uses: actions/cache@v3
         with:
@@ -26,6 +28,7 @@ jobs:
 
       - name: Install TeX Live (with IEEEtran + TikZ/PGFPlots)
         run: |
+          set -eux
           sudo apt-get update
           sudo apt-get install -y \
             latexmk \
@@ -35,11 +38,16 @@ jobs:
             texlive-latex-extra \
             texlive-fonts-recommended \
             texlive-fonts-extra \
-            texlive-pictures \        # ← TikZ / PGFPlots 含む
+            texlive-pictures \    # TikZ + PGF + PGFPlots を含む
             texlive-science \
             texlive-bibtex-extra \
-            texlive-publishers \
+            texlive-publishers \  # IEEEtran.cls
             ghostscript
+
+      - name: DEBUG — verify TikZ/PGFPlots availability
+        run: |
+          echo "tikz.sty -> $(kpsewhich tikz.sty || echo 'NOT FOUND')"
+          echo "pgfplots.sty -> $(kpsewhich pgfplots.sty || echo 'NOT FOUND')"
 
       - name: Clean old LaTeX files
         run: |
@@ -48,9 +56,8 @@ jobs:
 
       - name: Build PDF with latexmk (BibTeX)
         run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
-          echo "==== tail main.log (last 200 lines) ===="
-          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
+          set -eux
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
 
       - name: Upload PDF
         if: always()
