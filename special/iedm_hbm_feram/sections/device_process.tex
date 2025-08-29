@@ -19,44 +19,28 @@ In principle, DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ could coexist;
 Possible enablers include selective or dual-step annealing, dopant modulation, or stress engineering.  
 At present, monolithic HBM+FeFET integration remains an open challenge for device and process research.
 
-% ===== Fig.1: Minimal chiplet schematic =====
 \begin{figure}[!t]
 \centering
-\resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}[font=\footnotesize, >=Stealth]
-  \tikzset{
-    blk/.style={draw, rounded corners, fill=black!7,
-                minimum width=28mm, minimum height=8mm, align=center},
-    big/.style={draw, rounded corners, fill=black!10,
-                minimum width=86mm, minimum height=8mm, align=center},
-    arr/.style={->, thick}
-  }
+  % CPU
+  \node[draw, rounded corners, minimum width=1.8cm, minimum height=8mm, fill=black!5] (cpu) {CPU/Accel};
 
-  % 行1: SystemDK
-  \node[big] (sysdk) { \textbf{SystemDK} (Architecture / Interfaces / Package / OS policies) };
+  % HBM
+  \node[draw, rounded corners, right=2.5cm of cpu, minimum width=1.8cm, minimum height=8mm, fill=black!5] (hbm) {HBM DRAM};
 
-  % 行2: CPU - HBM - FeRAM
-  \matrix[column sep=14mm, row sep=10mm] at (sysdk.south) [below] {
-    \node[blk] (cpu)  {CPU / Accelerator}; &
-    \node[blk] (hbm)  {HBM (DRAM)\\High bandwidth}; &
-    \node[blk] (nvm)  {FeRAM Chiplet\\Persistent tier}; \\
-  };
+  % FeRAM
+  \node[draw, rounded corners, right=2.5cm of hbm, minimum width=1.8cm, minimum height=8mm, fill=black!5] (feram) {FeRAM Chiplet};
 
-  % 行3: Controller
-  \node[big, below=12mm of hbm] (ctrl) {Memory Controller \& Policy Engine};
+  % Policy Controller (上)
+  \node[draw, rounded corners, above=1.0cm of hbm, minimum width=6.5cm, minimum height=6mm, fill=black!10] (ctrl) {Memory Ctrl \& Policy Engine};
 
-  % 矢印
-  \draw[arr] (cpu) -- (hbm);
-  \draw[arr] (hbm) -- (nvm);
-  \draw[arr] (ctrl.north) -- (cpu.south);
-  \draw[arr] (ctrl.north) -- (hbm.south);
-  \draw[arr] (ctrl.north) -- (nvm.south);
-
-  % SystemDK supervision
-  \draw[arr] (sysdk.south) -- (hbm.north);
-  \draw[arr] ([xshift=-28mm]sysdk.south) .. controls +(0,-6mm) .. (cpu.north);
-  \draw[arr] ([xshift=+28mm]sysdk.south) .. controls +(0,-6mm) .. (nvm.north);
-\end{tikzpicture}}
-\caption{Minimal chiplet integration view: HBM provides bandwidth, FeRAM holds persistent data, and the controller enforces tiering/checkpoints under SystemDK supervision.}
-\label{fig:minimal_chiplet}
+  % Arrows
+  \draw[->, thick] (cpu) -- (hbm);
+  \draw[->, thick] (hbm) -- (feram);
+  \draw[->, thick] (ctrl) -- (cpu);
+  \draw[->, thick] (ctrl) -- (hbm);
+  \draw[->, thick] (ctrl) -- (feram);
+\end{tikzpicture}
+\caption{Minimal chiplet integration: CPU connects to HBM for bandwidth; FeRAM holds persistent data; policies manage tiering/checkpoints.}
+\label{fig:chiplet_minimal}
 \end{figure}
