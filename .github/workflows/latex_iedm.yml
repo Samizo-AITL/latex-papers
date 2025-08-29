@@ -19,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install TeX Live (minimal but with fonts)
+      - name: Install TeX Live (with BibTeX + fonts)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -33,6 +33,7 @@ jobs:
             texlive-science \
             texlive-bibtex-extra \
             texlive-publishers \
+            texlive-lang-cjk \
             ghostscript
 
       - name: Clean old LaTeX files
@@ -42,16 +43,20 @@ jobs:
 
       - name: Build PDF (BibTeX, 4-pass)
         run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
-          echo "==== ls -l (build dir) ===="
+          echo "==== current directory ===="
+          pwd
           ls -l
+          echo "==== start build ===="
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
+          echo "==== tail main.log (last 200 lines) ===="
+          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
 
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: iedm_hbm_feram-pdf
-          path: main.pdf
+          path: ${{ matrix.dir }}/*.pdf
           retention-days: 7
 
       - name: Upload LaTeX logs
@@ -60,9 +65,10 @@ jobs:
         with:
           name: iedm_hbm_feram-logs
           path: |
-            main.log
-            main.blg
-            main.bbl
-            main.aux
-            main.fls
-            main.fdb_latexmk
+            *.log
+            *.blg
+            *.bbl
+            *.aux
+            *.fls
+            *.fdb_latexmk
+          retention-days: 7
