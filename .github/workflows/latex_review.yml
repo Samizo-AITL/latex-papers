@@ -11,15 +11,12 @@ jobs:
   build-review:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    defaults:
-      run:
-        working-directory: special/review_dram_feram
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install TeX Live (minimal but with fonts)
+      - name: Install TeX Live (with BibTeX + fonts)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -33,25 +30,29 @@ jobs:
             texlive-science \
             texlive-bibtex-extra \
             texlive-publishers \
+            texlive-lang-cjk \
             ghostscript
 
-      - name: Clean old LaTeX files
+      - name: Clean old build
+        working-directory: special/review_dram_feram
         run: |
           latexmk -C || true
           rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
+          ls -la
 
       - name: Build PDF (BibTeX, 4-pass)
+        working-directory: special/review_dram_feram
         run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
-          echo "==== ls -l (build dir) ===="
-          ls -l
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
+          echo "==== tail main.log (last 200 lines) ===="
+          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
 
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: review_dram_feram-pdf
-          path: main.pdf
+          path: special/review_dram_feram/*.pdf
           retention-days: 7
 
       - name: Upload LaTeX logs
@@ -60,9 +61,10 @@ jobs:
         with:
           name: review_dram_feram-logs
           path: |
-            main.log
-            main.blg
-            main.bbl
-            main.aux
-            main.fls
-            main.fdb_latexmk
+            special/review_dram_feram/*.log
+            special/review_dram_feram/*.blg
+            special/review_dram_feram/*.bbl
+            special/review_dram_feram/*.aux
+            special/review_dram_feram/*.fls
+            special/review_dram_feram/*.fdb_latexmk
+          retention-days: 7
