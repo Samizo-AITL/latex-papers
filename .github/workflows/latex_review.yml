@@ -40,11 +40,11 @@ jobs:
           latexmk -C || true
           rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
 
-      - name: Build PDF (4-pass with BibTeX)
+      - name: Build PDF (BibTeX, 4-pass)
         run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
-          echo "==== tail main.log (last 200 lines) ===="
-          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
+          echo "==== ls -l (build dir) ===="
+          ls -l
 
       - name: Upload PDF
         if: always()
@@ -66,4 +66,3 @@ jobs:
             main.aux
             main.fls
             main.fdb_latexmk
-          retention-days: 7
