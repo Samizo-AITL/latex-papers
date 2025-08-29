@@ -19,35 +19,16 @@ In principle, DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ could coexist;
 Possible enablers include selective or dual-step annealing, dopant modulation, or stress engineering.  
 At present, monolithic HBM+FeFET integration remains an open challenge for device and process research.
 
-% ===== Fig.1: Minimal chiplet view (no overlap) =====
 \begin{figure}[!t]
 \centering
-\begin{tikzpicture}[font=\footnotesize, >=Stealth]
-  % sizes
-  \def\W{7.6cm}
-  \def\H{0.75cm}
-  % styles
-  \tikzset{
-    box/.style={draw, rounded corners, fill=black!7, minimum height=\H, align=center},
-    head/.style={draw, fill=black!4, minimum height=0.55cm, align=center},
-    arrow/.style={->, thick}
-  }
-
-  % header
-  \node[head, minimum width=\W] (head) {Memory Ctrl \& Policies};
-
-  % three blocks in a row (fixed coordinates to avoid overlap)
-  \node[box, anchor=north west, minimum width=2.4cm] (cpu)  at ([yshift=-3mm]head.south west) {CPU / Accel};
-  \node[box, anchor=north,      minimum width=2.8cm] (hbm)  at ([yshift=-3mm]head.south)       {HBM (DRAM)};
-  \node[box, anchor=north east, minimum width=2.4cm] (feram)at ([yshift=-3mm]head.south east)  {FeRAM Chiplet};
-
-  % arrows
-  \draw[arrow] (cpu) -- (hbm) node[midway, above]{req/data};
-  \draw[arrow] (hbm) -- (feram) node[midway, above]{ckpt/meta};
-  \draw[arrow] (head.south west)++(0.3,0) |- (cpu.north);
-  \draw[arrow] (head.south)                    -- (hbm.north);
-  \draw[arrow] (head.south east)++(-0.3,0) |- (feram.north);
+\begin{tikzpicture}[font=\footnotesize, >=Stealth, node distance=2.0cm]
+  \tikzset{blk/.style={draw, rounded corners, minimum width=2.6cm, minimum height=8mm, align=center}}
+  \node[blk] (cpu) {CPU / Accelerator};
+  \node[blk, right=of cpu] (hbm) {HBM (DRAM)};
+  \node[blk, right=of hbm] (feram) {FeRAM Chiplet};
+  \draw[->] (cpu) -- (hbm) node[midway,above]{high BW};
+  \draw[->] (hbm) -- (feram) node[midway,above]{ckpt/metadata};
 \end{tikzpicture}
-\caption{Minimal chiplet view: HBM provides bandwidth, FeRAM holds persistent data; the controller enforces tiering/checkpoints.}
-\label{fig:system_schematic_sdk}
+\caption{Minimal chiplet-level view: CPU connects to HBM for bandwidth, FeRAM holds persistent data.}
+\label{fig:minimal_chiplet}
 \end{figure}
