@@ -9,29 +9,38 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      build_review: ${{ steps.filter.outputs.review_dram_feram }}
+      build_iedm:   ${{ steps.filter.outputs.iedm_hbm_feram }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect changed folders
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            review_dram_feram:
+              - 'special/review_dram_feram/**'
+            iedm_hbm_feram:
+              - 'special/iedm_hbm_feram/**'
+
+  build-review:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.build_review == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    strategy:
-      matrix:
-        include:
-          - dir: special/review_dram_feram
-            art: review_dram_feram
-          - dir: special/iedm_hbm_feram
-            art: iedm_hbm_feram
-
     defaults:
       run:
-        working-directory: ${{ matrix.dir }}
-
+        working-directory: special/review_dram_feram
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Install TeX Live (minimal but with fonts)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            latexmk \
             texlive-latex-base \
             texlive-latex-recommended \
             texlive-latex-extra \
@@ -43,48 +52,87 @@ jobs:
             texlive-publishers \
             texlive-lang-cjk \
             ghostscript
-
       - name: Clean old LaTeX files
         run: |
-          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot *.log || true
-
-      # ---- ここがポイント：4パス強制 & BibTeX 明示実行 ----
-      - name: Build PDF (force 4-pass with BibTeX)
+          latexmk -C || true
+          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
+      - name: Build PDF (4-pass BibTeX, fail on undefined refs)
         run: |
-          set -e
-          pdflatex -interaction=nonstopmode -file-line-error main.tex
-          bibtex main
-          pdflatex -interaction=nonstopmode -file-line-error main.tex
-          pdflatex -interaction=nonstopmode -file-line-error main.tex
-          echo "==== tail main.log (last 200 lines) ===="
-          tail -n 200 main.log || true
-
-      # 未解決の引用/参照が残っていたら失敗させる
-      - name: Fail if undefined citations remain
-        run: |
-          if grep -E "Citation `.+` on page .* undefined|There were undefined references" main.log; then
-            echo "ERROR: Undefined citations/references remain."
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
+          # 参照未解決チェック（見つかったら失敗）
+          if grep -q "LaTeX Warning: Citation.*undefined" main.log || grep -q "Label(s) may have changed" main.log; then
+            echo "::error::Undefined citations or labels remain. See main.log"
             exit 1
           fi
-
-      - name: Upload PDF
-        if: always()
-        uses: actions/upload-artifact@v4
+          echo "==== tail main.log ===="; tail -n 200 main.log || true
+      - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.art }}-pdf
-          path: ${{ matrix.dir }}/*.pdf
+          name: review_dram_feram-pdf
+          path: special/review_dram_feram/*.pdf
           retention-days: 7
-
-      - name: Upload LaTeX logs
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.art }}-logs
+          name: review_dram_feram-logs
           path: |
-            ${{ matrix.dir }}/*.log
-            ${{ matrix.dir }}/*.blg
-            ${{ matrix.dir }}/*.bbl
-            ${{ matrix.dir }}/*.aux
-            ${{ matrix.dir }}/*.fls
-            ${{ matrix.dir }}/*.fdb_latexmk
+            special/review_dram_feram/*.log
+            special/review_dram_feram/*.blg
+            special/review_dram_feram/*.bbl
+            special/review_dram_feram/*.aux
+            special/review_dram_feram/*.fls
+            special/review_dram_feram/*.fdb_latexmk
+
+  build-iedm:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.build_iedm == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: special/iedm_hbm_feram
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install TeX Live (minimal but with fonts)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            latexmk \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            texlive-pictures \
+            texlive-science \
+            texlive-bibtex-extra \
+            texlive-publishers \
+            texlive-lang-cjk \
+            ghostscript
+      - name: Clean old LaTeX files
+        run: |
+          latexmk -C || true
+          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
+      - name: Build PDF (4-pass BibTeX, fail on undefined refs)
+        run: |
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
+          if grep -q "LaTeX Warning: Citation.*undefined" main.log || grep -q "Label(s) may have changed" main.log; then
+            echo "::error::Undefined citations or labels remain. See main.log"
+            exit 1
+          fi
+          echo "==== tail main.log ===="; tail -n 200 main.log || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: iedm_hbm_feram-pdf
+          path: special/iedm_hbm_feram/*.pdf
           retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: iedm_hbm_feram-logs
+          path: |
+            special/iedm_hbm_feram/*.log
+            special/iedm_hbm_feram/*.blg
+            special/iedm_hbm_feram/*.bbl
+            special/iedm_hbm_feram/*.aux
+            special/iedm_hbm_feram/*.fls
+            special/iedm_hbm_feram/*.fdb_latexmk
