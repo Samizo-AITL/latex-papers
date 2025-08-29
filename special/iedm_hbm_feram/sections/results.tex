@@ -7,31 +7,35 @@ System-level simulation was performed with representative AI inference workloads
   \item \textbf{Endurance}: $10^{12}$ writes/year fits within FeRAM capability for checkpoint traffic.
 \end{itemize}
 
-% ===== Fig.2: Access vs retention (minimal, robust) =====
+% ===== Fig.2: Access vs retention (clear colored markers) =====
 \begin{figure}[!t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
   width=\linewidth, height=4.8cm,
   xmode=log, ymode=log,
+  xmin=1e0, xmax=1e3, ymin=1e-2, ymax=1e3,
   xlabel={Access time (ns)}, ylabel={Retention (s)},
-  grid=both, xmin=1e0, xmax=1e3, ymin=1e-2, ymax=1e3,
-  tick align=outside, clip=false,
-  legend style={at={(0.02,0.02)}, anchor=south west, font=\scriptsize}
+  grid=both, tick align=outside, clip=false,
+  legend style={font=\scriptsize, at={(0.98,0.02)}, anchor=south east}
 ]
-% FeRAM（例）
-\addplot+[only marks, mark=*, mark size=1pt] coordinates {(2,10) (4,20) (6,30)};
+
+% --- FeRAM (blue circles) ---
+\addplot+[only marks, mark=*, mark size=1.6pt, blue]
+  coordinates {(2,10) (4,25) (6,40)};
 \addlegendentry{FeRAM (typ.)}
 
-% HBM/DRAM（確実に描画される単一点）
-\addplot+[only marks, mark=*, mark size=1.2pt] coordinates {(3,0.2)};
+% --- HBM/DRAM (red squares) ---
+\addplot+[only marks, mark=square*, mark size=2.2pt, red]
+  coordinates {(3,0.2)};
 \addlegendentry{HBM/DRAM (typ.)}
 
-% 目標領域（破線＝“設計ターゲット領域”の意味）
-\addplot+[black, dashed, thick]
+% --- Optional "target window" (dashed box). DELETE this block if not wanted. ---
+\addplot+[black, dashed, very thick]
   coordinates {(20,30) (200,30) (200,300) (20,300) (20,30)};
+
 \end{axis}
 \end{tikzpicture}
-\caption{Access time vs.\ retention. Dashed box indicates the target region for future HBM+FeRAM.}
+\caption{Access time vs.\ retention. **Red square: HBM**, **blue circles: FeRAM**. The dashed box indicates a \emph{future co-design target window} where fast \& persistent operation overlap. Remove the dashed box by deleting the last \texttt{\textbackslash addplot} block.}
 \label{fig:retention_access}
 \end{figure}
