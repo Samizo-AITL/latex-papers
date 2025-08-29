@@ -18,7 +18,7 @@ FeRAM endurance of $10^{12}$~writes/year fits within FeRAM capability for checkp
 \begin{tikzpicture}
 \begin{axis}[
     width=0.95\linewidth,
-    height=8cm,
+    height=8.5cm,
     xlabel={Access time (ns)},
     ylabel={Retention (s)},
     xmode=log, ymode=log,
@@ -38,17 +38,17 @@ FeRAM endurance of $10^{12}$~writes/year fits within FeRAM capability for checkp
     label style={font=\footnotesize}
 ]
 
-% HBM: 赤四角（塗りつぶし赤）
-\addplot+[only marks, mark=square*, mark size=3pt, red, fill=red]
-coordinates {(1, 10) (5, 50) (10, 200) (50, 1000)};
+% --- HBM: 赤四角 (塗りつぶしも赤) ---
+\addplot+[only marks, mark=square*, mark size=3.5pt, red, fill=red]
+coordinates {(1, 10) (5, 50) (10, 200) (50, 1000) (90, 10000)};
 
-% FeRAM: 青丸（塗りつぶし青）
-\addplot+[only marks, mark=*, mark size=3pt, blue, fill=blue]
-coordinates {(2, 100) (5, 1000) (20, 5000) (50, 10000)};
+% --- FeRAM: 青丸 (塗りつぶしも青) ---
+\addplot+[only marks, mark=*, mark size=3.5pt, blue, fill=blue]
+coordinates {(2, 100) (5, 1000) (20, 5000) (50, 8000) (80, 10000)};
 
 \legend{HBM DRAM (typ), FeRAM (typ)}
 \end{axis}
 \end{tikzpicture}
-\caption{Access time vs. retention. Red squares: HBM; blue circles: FeRAM. Wider and taller view for clarity ($10^0$--$10^2$ ns, $10^0$--$10^4$ s).}
+\caption{Access time vs. retention. HBM: red filled squares; FeRAM: blue filled circles. Wider and taller view for clarity ($10^0$--$10^2$ ns, $10^0$--$10^4$ s).}
 \label{fig:retention}
 \end{figure}
