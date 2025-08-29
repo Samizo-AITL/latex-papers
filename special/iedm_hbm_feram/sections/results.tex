@@ -12,35 +12,35 @@ Resume latency is reduced to the $\mu$s range, enabling near-instant resume afte
 \subsection{Endurance}
 FeRAM endurance of $10^{12}$~writes/year fits within FeRAM capability for checkpoint traffic.
 
-% ===== Fig.2: Access time vs. Retention (pgfplots) =====
+% ==== Fig.2: Access time vs retention（x:10^0-10^2 ns, y:10^0-10^4 s）====
 \begin{figure}[!t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.75\linewidth, height=6.0cm,
-  xlabel={Access time (ns)}, ylabel={Retention (s)},
+  width=0.78\linewidth, height=5.0cm,
   xmode=log, ymode=log,
-  xmin=1e0, xmax=1e2,
-  ymin=1e0, ymax=1e4,
+  xmin=1e0, xmax=1e2, ymin=1e0, ymax=1e4,
+  xlabel={Access time (ns)}, ylabel={Retention (s)},
+  tick align=inside,            % ← 目盛りを内側へ
   grid=both,
-  tick align=inside,            % ★ 目盛りを内側に
-  major grid style={line width=.2pt, draw=black!20},
-  minor grid style={line width=.2pt, draw=black!10},
-  legend style={at={(0.02,0.02)}, anchor=south west, font=\footnotesize, fill=white, draw=black!30},
-  label style={font=\footnotesize},
-  tick label style={font=\footnotesize},
+  minor grid style={opacity=0.15},
+  major grid style={opacity=0.30},
+  legend style={
+    draw=none, fill=white, fill opacity=0.85, text opacity=1,
+    at={(0.03,0.03)}, anchor=south west, font=\footnotesize
+  },
+  mark size=2.5pt
 ]
-  % FeRAM (blue circles)
-  \addplot+[only marks, mark=o] coordinates
-    {(1,10) (2,50) (5,200) (10,1000) (30,3000) (80,8000)};
-  \addlegendentry{FeRAM (typ)}
-
-  % HBM DRAM (red squares)
-  \addplot+[only marks, mark=square*, mark size=2.2pt] coordinates
-    {(1,2) (3,5) (10,20) (30,80) (80,300)};
-  \addlegendentry{HBM DRAM (typ)}
+  % FeRAM（青○）
+  \addplot[only marks, mark=o, blue]
+    coordinates {(2,1) (5,2) (10,20) (20,60) (50,600) (100,3000)};
+  % HBM DRAM（赤■）
+  \addplot[only marks, mark=square*, red]
+    coordinates {(1,10) (2,30) (5,80) (10,150) (20,250) (50,400)};
+  \legend{FeRAM (typ), HBM DRAM (typ)}
 \end{axis}
 \end{tikzpicture}
-\caption{Access time vs. retention. Red squares: HBM; blue circles: FeRAM. Axes restricted to the practical design window ($10^0\!\sim\!10^2$~ns, $10^0\!\sim\!10^4$~s). Legend is kept inside the plot and away from data points.}
-\label{fig:retention_vs_access}
+\caption{Access time vs.\ retention. 赤■: HBM、青○: FeRAM。目盛りは\emph{内向き}。%
+表示範囲は $10^0\!\sim\!10^2$ ns, $10^0\!\sim\!10^4$ s。}
+\label{fig:access_retention}
 \end{figure}
