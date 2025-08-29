@@ -11,9 +11,6 @@ jobs:
   build-iedm:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    defaults:
-      run:
-        working-directory: special/iedm_hbm_feram
 
     steps:
       - name: Checkout
@@ -36,17 +33,16 @@ jobs:
             texlive-lang-cjk \
             ghostscript
 
-      - name: Clean old LaTeX files
+      - name: Clean old build
+        working-directory: special/iedm_hbm_feram
         run: |
           latexmk -C || true
           rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
+          ls -la
 
       - name: Build PDF (BibTeX, 4-pass)
+        working-directory: special/iedm_hbm_feram
         run: |
-          echo "==== current directory ===="
-          pwd
-          ls -l
-          echo "==== start build ===="
           latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
           echo "==== tail main.log (last 200 lines) ===="
           if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
@@ -56,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: iedm_hbm_feram-pdf
-          path: ${{ matrix.dir }}/*.pdf
+          path: special/iedm_hbm_feram/*.pdf
           retention-days: 7
 
       - name: Upload LaTeX logs
@@ -65,10 +61,10 @@ jobs:
         with:
           name: iedm_hbm_feram-logs
           path: |
-            *.log
-            *.blg
-            *.bbl
-            *.aux
-            *.fls
-            *.fdb_latexmk
+            special/iedm_hbm_feram/*.log
+            special/iedm_hbm_feram/*.blg
+            special/iedm_hbm_feram/*.bbl
+            special/iedm_hbm_feram/*.aux
+            special/iedm_hbm_feram/*.fls
+            special/iedm_hbm_feram/*.fdb_latexmk
           retention-days: 7
