@@ -49,16 +49,20 @@ jobs:
 
       - name: Build PDF with latexmk (BibTeX)
         run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
-          echo "==== tail main.log (last 200 lines) ===="
-          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
+          set -e
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex
+          echo "==== ls after build ===="
+          ls -lah
+          echo "==== tail main.log (last 300 lines) ===="
+          if [ -f main.log ]; then tail -n 300 main.log; else echo "main.log not found"; fi
+          test -f main.pdf || { echo "ERROR: main.pdf not created"; exit 1; }
 
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.art }}-pdf
-          path: ${{ matrix.dir }}/*.pdf
+          path: ${{ matrix.dir }}/main.pdf
           retention-days: 7
 
       - name: Upload LaTeX logs
