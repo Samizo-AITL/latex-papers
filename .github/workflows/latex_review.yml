@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # TeXLive を手動aptせず、latex-actionでビルド（キャッシュ付き）
+      # 安定・高速な LaTeX Action を使用（TeXLive導入とキャッシュ込み）
       - name: Build PDF with LaTeX Action
         uses: xu-cheng/latex-action@v3
         with:
@@ -36,7 +36,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.art }}-pdf     # ← スラッシュ無し
+          name: ${{ matrix.art }}-pdf     # ← スラッシュなしの安全名
           path: ${{ matrix.dir }}/main.pdf
           retention-days: 7
 
@@ -44,7 +44,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.art }}-logs    # ← スラッシュ無し
+          name: ${{ matrix.art }}-logs    # ← スラッシュなしの安全名
           path: |
             ${{ matrix.dir }}/*.log
             ${{ matrix.dir }}/*.blg
