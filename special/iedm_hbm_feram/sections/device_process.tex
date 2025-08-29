@@ -26,7 +26,7 @@ At present, monolithic HBM+FeFET integration remains an open challenge for devic
   % Styles
   \tikzset{
     blk/.style={draw=black, rounded corners, fill=black!6, minimum width=3.0cm, minimum height=7mm, align=center},
-    note/.style={draw=black, rounded corners, fill=black!2, align=left, inner sep=3pt, text width=6.8cm},
+    note/.style={draw=black, rounded corners, fill=black!2, align=left, inner sep=3pt, text width=6.0cm},
     arrow/.style={->, thick},
     sysdk/.style={draw=black, thick, rounded corners, fill=black!4, align=center, inner sep=3pt, minimum width=9.5cm}
   }
@@ -43,9 +43,13 @@ At present, monolithic HBM+FeFET integration remains an open challenge for devic
   % Controller
   \node[blk, below=1.2cm of hbm, minimum width=7.5cm] (ctrl) {Memory Controller \& Policy Engine};
 
-  % Policies note（簡略化）
+  % Policies note（中央に短く表示）
   \node[note, below=0.8cm of ctrl] (pol) {
-    Policies: tiering (hot/warm/cold), checkpoint$\to$FeRAM, refresh reduction, wear/ECC mgmt.
+    \textbf{Policies:}\\
+    • Tiering (Hot/Warm/Cold)\\
+    • Checkpoints $\to$ FeRAM\\
+    • Refresh reduction\\
+    • Wear/ECC mgmt.
   };
 
   % Data arrows
@@ -60,6 +64,6 @@ At present, monolithic HBM+FeFET integration remains an open challenge for devic
   \draw[arrow] (sdk.south) -- (hbm.north);
   \draw[arrow] (sdk.east) .. controls +(0.8,-0.2) and +(0.6,0.6) .. (feram.north);
 \end{tikzpicture}
-\caption{Chiplet-level integration supervised by \textbf{SystemDK}. CPU/Accelerator, HBM, and FeRAM chiplet co-integrated on an interposer.}
+\caption{Chiplet-level integration supervised by \textbf{SystemDK}. CPU/Accelerator with HBM and FeRAM chiplet co-integrated on an interposer.}
 \label{fig:system_schematic_sdk}
 \end{figure}
