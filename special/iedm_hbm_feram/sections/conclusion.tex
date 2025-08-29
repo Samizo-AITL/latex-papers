@@ -1,4 +1,13 @@
 \section{Conclusion}
-We presented a roadmap from HBM+FeRAM chiplet integration (near-term) to HBM+FeFET monolithic integration (long-term). 
-Chiplets offer practical standby power reduction and instant resume for mobile edge AI. 
-Monolithic HBM+FeFET remains a compelling research target to achieve non-volatile, high-bandwidth memory in one stack.
+We evaluated the integration of HBM with FeRAM for mobile edge AI. 
+Although monolithic HBM+FeRAM/FeFET integration was initially considered, 
+the thermal budget conflict between DRAM capacitors (high-$T$ anneals $>700^\circ$C) 
+and HfO$_2$ ferroelectrics (low-$T$ stabilization $\sim400^\circ$C) makes such an approach impractical.  
+
+Therefore, chiplet-based integration emerges as the realistic and effective solution. 
+By co-packaging HBM and FeRAM dies on a silicon interposer and enabling holistic optimization with \textit{SystemDK}, 
+this architecture can deliver high bandwidth, substantially reduced standby power, 
+instant resume after power gating, and sufficient endurance for checkpoint traffic.  
+
+In conclusion, chiplet-based HBM+FeRAM integration provides a practical pathway for next-generation mobile edge AI, 
+balancing bandwidth, non-volatility, and energy efficiency.
