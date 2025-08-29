@@ -10,6 +10,7 @@
 \usepackage{booktabs}
 \usepackage{cite}
 \usepackage[hidelinks]{hyperref} % keep links, no colored boxes
+\usepackage{balance}             % ← 参考文献の2段バランス用
 
 % --- title/author ---
 \title{HBM+FeRAM/FeFET for Mobile Edge AI:\\
@@ -35,11 +36,22 @@ Chiplet Integration and Monolithic Prospects}
 % 初回は強制出力して確実に表示（本文 \cite が揃ったら削除してOK）
 \nocite{ChoiIEDM2022,KimIEDM2021,MuellerIEDM2012,MartinVLSI2020,NohedaNature2023}
 
-\clearpage
+% --- ここが肝：参考文献の段バランスと改ページ制御 ---
+% 1) 参考文献を2段でバランス
+\balance
+% 2) 参照番号(例:3)の直前で段落分割を狙って空白を抑える
+%    数字は文献数に応じて微調整（2〜4あたりで調整）
+\IEEEtriggercmd{\enlargethispage{-\baselineskip}}
+\IEEEtriggeratref{3}
+
+% ※ \clearpage は空白の原因になるので削除
+
 \bibliographystyle{IEEEtran}
 \bibliography{references} % ./ は不要
 
 % ===== Author Biography (no photo) =====
+% 参考文献直後に配置して余白を潰す。不要な大きな間隔を避けるため詰め気味。
+\vspace{0.5\baselineskip}
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
 received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
 He joined Seiko Epson Corporation in 1997, where he worked as an engineer in semiconductor memory and mixed-signal device development.
