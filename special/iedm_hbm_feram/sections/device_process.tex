@@ -19,10 +19,38 @@ Both DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ coexist, but require co
 Possible research enablers include selective annealing, dopant modulation, or stress engineering.
 Today, monolithic HBM+FeFET remains a research challenge.
 
-% Fig.1
+% ===== Fig.1: System-level schematic with SystemDK (TikZ) =====
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.9\linewidth]{figs/fig1_systemdk.pdf}
-\caption{Chiplet integration: CPU/accelerator with HBM and FeRAM chiplet on an interposer, supervised by SystemDK for top-down architecture/interface/package co-design.}
-\label{fig:system_schematic}
+\begin{tikzpicture}[font=\footnotesize, >=Stealth, node distance=1.2cm]
+  \tikzset{
+    blk/.style={draw=black, rounded corners, fill=black!6, minimum width=3.2cm, minimum height=8mm, align=center},
+    note/.style={draw=black, rounded corners, fill=black!3, align=left, inner sep=3pt},
+    arrow/.style={->, thick},
+    sysdk/.style={draw=black, rounded corners, fill=black!2, align=center, inner sep=4pt, minimum width=10.4cm}
+  }
+  % SystemDK box on top
+  \node[sysdk] (sdk) { \textbf{SystemDK Top-down Co-Design}\\
+  \scriptsize (Architecture / Interfaces / Package / OS Policies) };
+  % main blocks
+  \node[blk, below=1.0cm of sdk, xshift=-4.0cm] (cpu) {CPU / Accelerator\\(power-gated)};
+  \node[blk, right=2.2cm of cpu] (hbm) {HBM (DRAM)\\High Bandwidth};
+  \node[blk, right=2.2cm of hbm] (feram) {FeRAM Chiplet\\Persistent Tier};
+  \node[blk, below=1.2cm of hbm, minimum width=7.6cm] (ctrl) {Memory Controller \& Policy Engine};
+  % policies note
+  \node[note, below=0.9cm of ctrl, text width=7.9cm] (pol) {Policies: tiering (Hot/Warm/Cold), checkpoint $\rightarrow$ FeRAM, refresh reduction for FeRAM-backed regions, wear/ECC/telemetry.};
+  % data arrows
+  \draw[arrow] (cpu) -- node[above]{data/requests} (hbm);
+  \draw[arrow] (hbm) -- node[above]{ckpt/metadata} (feram);
+  \draw[arrow] (ctrl.north) -- ++(-3.4,0.0) |- (cpu.south);
+  \draw[arrow] (ctrl.north) -- (hbm.south);
+  \draw[arrow] (ctrl.north) -- ++(3.4,0.0) |- (feram.south);
+  % SystemDK supervision arrows
+  \draw[arrow] (sdk.south) |- (cpu.north);
+  \draw[arrow] (sdk.south) -- (hbm.north);
+  % 「右側から回す」スタイルの矢印
+  \draw[arrow] (sdk.east) .. controls +(1.0,-0.1) and +(0.8,0.6) .. (feram.north);
+\end{tikzpicture}
+\caption{Chiplet-level integration supervised by \textbf{SystemDK}: CPU/Accelerator with HBM and FeRAM chiplet on an interposer.}
+\label{fig:system_schematic_sdk}
 \end{figure}
