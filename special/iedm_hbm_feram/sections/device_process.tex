@@ -19,50 +19,52 @@ In principle, DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ could coexist;
 Possible enablers include selective or dual-step annealing, dopant modulation, or stress engineering.  
 At present, monolithic HBM+FeFET integration remains an open challenge for device and process research.
 
-% ===== Fig.1: System-level schematic with SystemDK (TikZ) =====
+% ===== Fig.1: System-level schematic with SystemDK (column-safe) =====
 \begin{figure}[!t]
 \centering
-\begin{tikzpicture}[font=\scriptsize, >=Stealth, node distance=1.0cm]
-  % Styles
+\begin{tikzpicture}[font=\scriptsize, >=Stealth, node distance=8mm]
+  % ===== styles (1-column safe sizes) =====
   \tikzset{
-    blk/.style={draw=black, rounded corners, fill=black!6, minimum width=3.0cm, minimum height=7mm, align=center},
-    note/.style={draw=black, rounded corners, fill=black!2, align=left, inner sep=3pt, text width=6.0cm},
+    blk/.style={draw, rounded corners, fill=black!6,
+                minimum width=2.6cm, minimum height=6mm, align=center},
+    ctrlblk/.style={draw, rounded corners, fill=black!6,
+                minimum width=7.6cm, minimum height=6mm, align=center},
+    note/.style={draw, rounded corners, fill=black!2, align=left,
+                inner sep=3pt, text width=6.8cm},
     arrow/.style={->, thick},
-    sysdk/.style={draw=black, thick, rounded corners, fill=black!4, align=center, inner sep=3pt, minimum width=9.5cm}
+    sysdk/.style={draw, thick, rounded corners, fill=black!4, align=center,
+                inner sep=3pt, minimum width=7.8cm}
   }
 
-  % SystemDK box
+  % ===== SystemDK box (top) =====
   \node[sysdk] (sdk) {\textbf{SystemDK Co-Design Framework}\\
   (Architecture / Interfaces / Package / OS Policies)};
 
-  % Main blocks
-  \node[blk, below=1.0cm of sdk, xshift=-3.5cm] (cpu) {CPU / Accelerator\\(Power-gated)};
-  \node[blk, right=2.0cm of cpu] (hbm) {HBM (DRAM)\\High Bandwidth};
-  \node[blk, right=2.0cm of hbm] (feram) {FeRAM Chiplet\\Persistent Tier};
+  % ===== main blocks (中央基準で左右対称に) =====
+  \node[blk, below=10mm of sdk, xshift=-2.8cm] (cpu)  {CPU / Accelerator\\(power-gated)};
+  \node[blk, right=1.9cm of cpu]                  (hbm)  {HBM (DRAM)\\High bandwidth};
+  \node[blk, right=1.9cm of hbm]                  (feram){FeRAM chiplet\\Persistent tier};
 
-  % Controller
-  \node[blk, below=1.2cm of hbm, minimum width=7.5cm] (ctrl) {Memory Controller \& Policy Engine};
+  % ===== controller =====
+  \node[ctrlblk, below=10mm of hbm] (ctrl) {Memory Controller \& Policy Engine};
 
-  % Policies note（中央に短く表示）
-  \node[note, below=0.8cm of ctrl] (pol) {
-    \textbf{Policies:}\\
-    • Tiering (Hot/Warm/Cold)\\
-    • Checkpoints $\to$ FeRAM\\
-    • Refresh reduction\\
-    • Wear/ECC mgmt.
+  % ===== short policies note =====
+  \node[note, below=6mm of ctrl] (pol) {
+    \textbf{Policies:} Tiering (Hot/Warm/Cold); checkpoints $\to$ FeRAM;
+    DRAM refresh reduction; wear/ECC/telemetry management.
   };
 
-  % Data arrows
+  % ===== data arrows =====
   \draw[arrow] (cpu) -- node[above]{req/data} (hbm);
   \draw[arrow] (hbm) -- node[above]{ckpt/meta} (feram);
-  \draw[arrow] (ctrl.north) -- ++(-3.0,0) |- (cpu.south);
+  \draw[arrow] (ctrl.north) -- ++(-2.6,0) |- (cpu.south);
   \draw[arrow] (ctrl.north) -- (hbm.south);
-  \draw[arrow] (ctrl.north) -- ++(3.0,0) |- (feram.south);
+  \draw[arrow] (ctrl.north) -- ++(2.6,0) |- (feram.south);
 
-  % SystemDK supervision arrows
+  % ===== supervision arrows (欄外に出ない直線経路) =====
   \draw[arrow] (sdk.south) |- (cpu.north);
   \draw[arrow] (sdk.south) -- (hbm.north);
-  \draw[arrow] (sdk.east) .. controls +(0.8,-0.2) and +(0.6,0.6) .. (feram.north);
+  \draw[arrow] (sdk.south) |- (feram.north);
 \end{tikzpicture}
 \caption{Chiplet-level integration supervised by \textbf{SystemDK}. CPU/Accelerator with HBM and FeRAM chiplet co-integrated on an interposer.}
 \label{fig:system_schematic_sdk}
