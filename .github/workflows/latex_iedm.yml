@@ -1,0 +1,53 @@
+name: Build LaTeX (iedm_hbm_feram)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "special/iedm_hbm_feram/**"
+      - ".github/workflows/latex_iedm.yml"
+  workflow_dispatch:
+
+jobs:
+  build-iedm:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: special/iedm_hbm_feram
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install TeX Live
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            latexmk texlive-latex-base texlive-latex-recommended \
+            texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra \
+            texlive-pictures texlive-science texlive-bibtex-extra \
+            texlive-publishers ghostscript
+
+      - name: Clean
+        run: latexmk -C || true
+
+      - name: Build PDF (4-pass with BibTeX)
+        run: |
+          pdflatex -interaction=nonstopmode main.tex || true
+          bibtex main || true
+          pdflatex -interaction=nonstopmode main.tex || true
+          pdflatex -interaction=nonstopmode main.tex || true
+          echo "==== tail main.log ===="; tail -n 200 main.log || true
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: iedm_hbm_feram-pdf
+          path: special/iedm_hbm_feram/*.pdf
+          retention-days: 7
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: iedm_hbm_feram-logs
+          path: special/iedm_hbm_feram/*.{log,aux,bbl,blg,fls,fdb_latexmk}
