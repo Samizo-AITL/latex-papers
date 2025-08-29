@@ -12,39 +12,31 @@ Resume latency is reduced to the $\mu$s range, enabling near-instant resume afte
 \subsection{Endurance}
 FeRAM endurance of $10^{12}$~writes/year fits within FeRAM capability for checkpoint traffic.
 
-% ===== Fig.2: Access time vs. retention (bigger + filled colors) =====
-\begin{figure}[!t]
+% ===== Fig.2: Access time vs. retention =====
+\begin{figure*}[!t]
 \centering
 \begin{tikzpicture}
-\begin{axis}[
-  width=\linewidth,                 % ← 幅を最大に
-  height=0.62\linewidth,            % ← 縦も拡大
-  xmode=log, ymode=log,
-  xmin=1, xmax=100, ymin=10, ymax=10000,
+\begin{semilogxaxis}[
+  width=\linewidth, height=0.48\linewidth,
+  xmin=1e0, xmax=1e2, ymin=1e0, ymax=1e4,
   xlabel={Access time (ns)}, ylabel={Retention (s)},
-  grid=both, tick align=inside,
-  legend style={draw=none, fill=white, at={(0.97,0.03)},anchor=south east, font=\footnotesize},
-  legend cell align=left
+  grid=both,
+  legend style={at={(0.96,0.06)}, anchor=south east}, % 右下内側
+  legend cell align={left}
 ]
-  % --- HBM: 赤い塗りつぶし四角 ---
-  \addplot+[
-    only marks, mark=square*, mark size=3.8pt,
-    draw=red, fill=red, line width=0pt
-  ] coordinates {
-    (1,10) (5,50) (10,200) (50,1000) (100,2000)
-  };
-  \addlegendentry{HBM DRAM (typ)}
+% HBM = 赤四角（塗りつぶし）
+\addplot+[only marks, mark=square*, mark size=2.7pt,
+          mark options={fill=red, draw=red}]
+coordinates {(1,10) (2,20) (5,50) (10,100) (20,500) (50,2000) (100,10000)};
+\addlegendentry{HBM DRAM (typ)}
 
-  % --- FeRAM: 青い塗りつぶし丸 ---
-  \addplot+[
-    only marks, mark=*, mark size=3.8pt,
-    draw=blue, fill=blue, line width=0pt
-  ] coordinates {
-    (2,100) (5,1000) (20,5000) (50,8000) (80,10000)
-  };
-  \addlegendentry{FeRAM (typ)}
-\end{axis}
+% FeRAM = 青丸（塗りつぶし）
+\addplot+[only marks, mark=*, mark size=2.7pt,
+          mark options={fill=blue, draw=blue}]
+coordinates {(1,100) (2,300) (5,1000) (10,3000) (20,6000) (50,9000) (100,9500)};
+\addlegendentry{FeRAM (typ)}
+\end{semilogxaxis}
 \end{tikzpicture}
 \caption{Access time vs. retention. HBM: red filled squares; FeRAM: blue filled circles.}
-\label{fig:access_vs_retention}
-\end{figure}
+\label{fig:retention_access}
+\end{figure*}
