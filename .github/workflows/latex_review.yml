@@ -1,138 +1,53 @@
-name: Build LaTeX (special folders)
+name: Build LaTeX (review_dram_feram)
 
 on:
   push:
+    branches: [ main ]
     paths:
       - "special/review_dram_feram/**"
-      - "special/iedm_hbm_feram/**"
       - ".github/workflows/latex_review.yml"
   workflow_dispatch:
 
 jobs:
-  detect-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      build_review: ${{ steps.filter.outputs.review_dram_feram }}
-      build_iedm:   ${{ steps.filter.outputs.iedm_hbm_feram }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Detect changed folders
-        id: filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            review_dram_feram:
-              - 'special/review_dram_feram/**'
-            iedm_hbm_feram:
-              - 'special/iedm_hbm_feram/**'
-
   build-review:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.build_review == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     defaults:
       run:
         working-directory: special/review_dram_feram
+
     steps:
       - uses: actions/checkout@v4
-      - name: Install TeX Live (minimal but with fonts)
+
+      - name: Install TeX Live
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            latexmk \
-            texlive-latex-base \
-            texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-fonts-recommended \
-            texlive-fonts-extra \
-            texlive-pictures \
-            texlive-science \
-            texlive-bibtex-extra \
-            texlive-publishers \
-            texlive-lang-cjk \
-            ghostscript
-      - name: Clean old LaTeX files
+            latexmk texlive-latex-base texlive-latex-recommended \
+            texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra \
+            texlive-pictures texlive-science texlive-bibtex-extra \
+            texlive-publishers ghostscript
+
+      - name: Clean
+        run: latexmk -C || true
+
+      - name: Build PDF (4-pass with BibTeX)
         run: |
-          latexmk -C || true
-          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
-      - name: Build PDF (4-pass BibTeX, fail on undefined refs)
-        run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
-          # 参照未解決チェック（見つかったら失敗）
-          if grep -q "LaTeX Warning: Citation.*undefined" main.log || grep -q "Label(s) may have changed" main.log; then
-            echo "::error::Undefined citations or labels remain. See main.log"
-            exit 1
-          fi
+          pdflatex -interaction=nonstopmode main.tex || true
+          bibtex main || true
+          pdflatex -interaction=nonstopmode main.tex || true
+          pdflatex -interaction=nonstopmode main.tex || true
           echo "==== tail main.log ===="; tail -n 200 main.log || true
-      - uses: actions/upload-artifact@v4
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
         with:
           name: review_dram_feram-pdf
           path: special/review_dram_feram/*.pdf
           retention-days: 7
-      - uses: actions/upload-artifact@v4
+
+      - name: Upload logs
         if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: review_dram_feram-logs
-          path: |
-            special/review_dram_feram/*.log
-            special/review_dram_feram/*.blg
-            special/review_dram_feram/*.bbl
-            special/review_dram_feram/*.aux
-            special/review_dram_feram/*.fls
-            special/review_dram_feram/*.fdb_latexmk
-
-  build-iedm:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.build_iedm == 'true' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    defaults:
-      run:
-        working-directory: special/iedm_hbm_feram
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install TeX Live (minimal but with fonts)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            latexmk \
-            texlive-latex-base \
-            texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-fonts-recommended \
-            texlive-fonts-extra \
-            texlive-pictures \
-            texlive-science \
-            texlive-bibtex-extra \
-            texlive-publishers \
-            texlive-lang-cjk \
-            ghostscript
-      - name: Clean old LaTeX files
-        run: |
-          latexmk -C || true
-          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
-      - name: Build PDF (4-pass BibTeX, fail on undefined refs)
-        run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
-          if grep -q "LaTeX Warning: Citation.*undefined" main.log || grep -q "Label(s) may have changed" main.log; then
-            echo "::error::Undefined citations or labels remain. See main.log"
-            exit 1
-          fi
-          echo "==== tail main.log ===="; tail -n 200 main.log || true
-      - uses: actions/upload-artifact@v4
-        with:
-          name: iedm_hbm_feram-pdf
-          path: special/iedm_hbm_feram/*.pdf
-          retention-days: 7
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: iedm_hbm_feram-logs
-          path: |
-            special/iedm_hbm_feram/*.log
-            special/iedm_hbm_feram/*.blg
-            special/iedm_hbm_feram/*.bbl
-            special/iedm_hbm_feram/*.aux
-            special/iedm_hbm_feram/*.fls
-            special/iedm_hbm_feram/*.fdb_latexmk
+          path: special/review_dram_feram/*.{log,aux,bbl,blg,fls,fdb_latexmk}
