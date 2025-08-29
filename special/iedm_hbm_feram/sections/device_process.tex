@@ -1,56 +1,64 @@
 \section{Device and Process Integration}
-HBM DRAM stacks are fabricated with high-temperature capacitor anneals ($>700~^\circ$C), 
-while FeRAM/FeFET requires lower-temperature processing ($\sim$400~^\circ$C) to preserve ferroelectric o-phase in HfO$_2$.
-This incompatibility makes monolithic integration difficult at present.
+HBM DRAM stacks are typically fabricated with high-temperature capacitor anneals ($>700~^\circ$C), 
+whereas FeRAM/FeFET devices require lower-temperature processing ($\sim$400~^\circ$C) to stabilize the ferroelectric o-phase in HfO$_2$. 
+This thermal budget mismatch currently hinders monolithic integration.
 
 \subsection{Chiplet-based Integration (Practical Solution)}
-The most feasible near-term path is chiplet integration:
-HBM stacks and FeRAM/FeFET dies are fabricated in their respective optimized flows and co-integrated on a silicon interposer with $\mu$-bump connections.
-This allows:
+The most practical near-term approach is chiplet-based integration:  
+HBM stacks and FeRAM/FeFET dies are fabricated in their respective optimized flows and co-integrated on a silicon interposer using $\mu$-bump connections.  
+This architecture enables:
 \begin{itemize}
-  \item HBM to deliver bandwidth $>$300 GB/s,
-  \item FeRAM to hold checkpoints, metadata, and cold data persistently,
-  \item Refresh traffic reduction in DRAM.
+  \item High-bandwidth operation from HBM ($>$300~GB/s),
+  \item Persistent storage of checkpoints, metadata, and cold data in FeRAM,
+  \item Reduction of refresh-induced traffic in DRAM.
 \end{itemize}
 
 \subsection{Monolithic Integration (Research Challenge)}
-A future direction is embedding FeFET arrays inside the HBM logic base die.
-Both DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ coexist, but require conflicting anneals.
-Possible research enablers include selective annealing, dopant modulation, or stress engineering.
-Today, monolithic HBM+FeFET remains a research challenge.
+A longer-term research direction is embedding FeFET arrays within the HBM logic base die.  
+In principle, DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ could coexist; however, their annealing requirements are incompatible.  
+Potential enablers include selective/dual annealing, dopant modulation, or stress engineering.  
+At present, monolithic HBM+FeFET integration remains an open challenge for device and process research.
 
 % ===== Fig.1: System-level schematic with SystemDK (TikZ) =====
 \begin{figure}[!t]
 \centering
-\begin{tikzpicture}[font=\footnotesize, >=Stealth, node distance=1.2cm]
+\begin{tikzpicture}[font=\footnotesize, >=Stealth, node distance=1.0cm]
+  % Styles
   \tikzset{
-    blk/.style={draw=black, rounded corners, fill=black!6, minimum width=3.2cm, minimum height=8mm, align=center},
-    note/.style={draw=black, rounded corners, fill=black!3, align=left, inner sep=3pt},
+    blk/.style={draw=black, rounded corners, fill=black!6, minimum width=3.4cm, minimum height=9mm, align=center},
+    note/.style={draw=black, rounded corners, fill=black!2, align=left, inner sep=3pt, text width=7.8cm},
     arrow/.style={->, thick},
-    sysdk/.style={draw=black, rounded corners, fill=black!2, align=center, inner sep=4pt, minimum width=10.4cm}
+    sysdk/.style={draw=black, thick, rounded corners, fill=black!4, align=center, inner sep=4pt, minimum width=11.2cm}
   }
-  % SystemDK box on top
-  \node[sysdk] (sdk) { \textbf{SystemDK Top-down Co-Design}\\
+
+  % SystemDK box
+  \node[sysdk] (sdk) { \textbf{SystemDK Co-Design Framework}\\
   \scriptsize (Architecture / Interfaces / Package / OS Policies) };
-  % main blocks
-  \node[blk, below=1.0cm of sdk, xshift=-4.0cm] (cpu) {CPU / Accelerator\\(power-gated)};
-  \node[blk, right=2.2cm of cpu] (hbm) {HBM (DRAM)\\High Bandwidth};
-  \node[blk, right=2.2cm of hbm] (feram) {FeRAM Chiplet\\Persistent Tier};
-  \node[blk, below=1.2cm of hbm, minimum width=7.6cm] (ctrl) {Memory Controller \& Policy Engine};
-  % policies note
-  \node[note, below=0.9cm of ctrl, text width=7.9cm] (pol) {Policies: tiering (Hot/Warm/Cold), checkpoint $\rightarrow$ FeRAM, refresh reduction for FeRAM-backed regions, wear/ECC/telemetry.};
-  % data arrows
+
+  % Main blocks
+  \node[blk, below=1.1cm of sdk, xshift=-4.0cm] (cpu) {CPU / Accelerator\\(Power-gated)};
+  \node[blk, right=2.5cm of cpu] (hbm) {HBM (DRAM)\\High Bandwidth};
+  \node[blk, right=2.5cm of hbm] (feram) {FeRAM Chiplet\\Persistent Tier};
+
+  % Controller
+  \node[blk, below=1.3cm of hbm, minimum width=8.6cm] (ctrl) {Memory Controller \& Policy Engine};
+
+  % Policies note
+  \node[note, below=0.9cm of ctrl] (pol) {Policies: tiering (Hot/Warm/Cold), checkpoint $\rightarrow$ FeRAM, 
+  refresh reduction for FeRAM-backed regions, wear/ECC/telemetry.};
+
+  % Data arrows
   \draw[arrow] (cpu) -- node[above]{data/requests} (hbm);
   \draw[arrow] (hbm) -- node[above]{ckpt/metadata} (feram);
   \draw[arrow] (ctrl.north) -- ++(-3.4,0.0) |- (cpu.south);
   \draw[arrow] (ctrl.north) -- (hbm.south);
   \draw[arrow] (ctrl.north) -- ++(3.4,0.0) |- (feram.south);
+
   % SystemDK supervision arrows
   \draw[arrow] (sdk.south) |- (cpu.north);
   \draw[arrow] (sdk.south) -- (hbm.north);
-  % 「右側から回す」スタイルの矢印
-  \draw[arrow] (sdk.east) .. controls +(1.0,-0.1) and +(0.8,0.6) .. (feram.north);
+  \draw[arrow] (sdk.east) .. controls +(1.0,-0.2) and +(0.8,0.6) .. (feram.north);
 \end{tikzpicture}
-\caption{Chiplet-level integration supervised by \textbf{SystemDK}: CPU/Accelerator with HBM and FeRAM chiplet on an interposer.}
+\caption{Chiplet-level integration supervised by \textbf{SystemDK}: CPU/Accelerator with HBM and FeRAM chiplet co-integrated on an interposer.}
 \label{fig:system_schematic_sdk}
 \end{figure}
