@@ -1,12 +1,12 @@
 \section{Device and Process Integration}
 HBM DRAM stacks are typically fabricated with high-temperature capacitor anneals ($>700~^\circ$C),
-whereas FeRAM/FeFET devices require lower-temperature processing ($\sim$400~^\circ$C) to stabilize
-the ferroelectric o-phase in HfO$_2$. This thermal budget mismatch currently hinders monolithic integration.
+whereas FeRAM/FeFET devices require lower-temperature processing ($\sim$400~^\circ$C$) to stabilize the ferroelectric o-phase in HfO$_2$.
+This thermal budget mismatch currently hinders monolithic integration.
 
 \subsection{Chiplet-based Integration (Practical Solution)}
 The most practical near-term approach is chiplet-based integration:
-HBM stacks and FeRAM/FeFET dies are fabricated in their respective optimized flows
-and co-integrated on a silicon interposer using $\mu$-bump connections. This architecture enables:
+HBM stacks and FeRAM/FeFET dies are fabricated in their respective optimized flows and co-integrated on a silicon interposer using $\mu$-bump connections.
+This architecture enables:
 \begin{itemize}
   \item High-bandwidth operation from HBM ($>$300~GB/s),
   \item Persistent storage of checkpoints, metadata, and cold data in FeRAM,
@@ -15,39 +15,46 @@ and co-integrated on a silicon interposer using $\mu$-bump connections. This arc
 
 \subsection{Monolithic Integration (Research Challenge)}
 A longer-term research direction is embedding FeFET arrays within the HBM logic base die.
-In principle, DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ could coexist; however,
-their annealing requirements remain incompatible. Potential enablers include selective/dual-step annealing,
-dopant modulation, or stress engineering. At present, monolithic HBM+FeFET integration
-remains an open challenge for device and process research.
+In principle, DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ could coexist; however, their annealing requirements remain incompatible.
+Potential enablers include selective or dual-step annealing, dopant modulation, or stress engineering.
+At present, monolithic HBM+FeFET integration remains an open challenge for device and process research.
 
-% ===== Fig.1: Minimal chiplet view (no overlap) =====
-\begin{figure}[t]
+% ===== Fig.1: Minimal chiplet view (TikZ) =====
+\begin{figure}[!t]
 \centering
-\begin{tikzpicture}[>=Stealth, font=\footnotesize]
-  % styles
+\begin{tikzpicture}[font=\footnotesize, >=Stealth, node distance=0.9cm]
+  % Styles
   \tikzset{
-    blk/.style   ={draw, rounded corners, fill=black!6, minimum height=7mm, align=center},
-    ctrl/.style  ={draw, rounded corners, fill=black!10, minimum height=6mm, align=center},
-    arr/.style   ={->, thick}
+    blk/.style={draw=black, rounded corners, fill=black!6, minimum width=3.4cm, minimum height=9mm, align=center},
+    arrow/.style={->, thick},
+    frame/.style={draw=black, rounded corners, fill=black!2, minimum width=10.5cm, minimum height=11mm, align=center}
   }
 
-  % controller/policy (上段に独立配置)
-  \node[ctrl, minimum width=7.5cm] (pol) {Memory Ctl \& Policy Engine};
+  % --- Top: memory controller/policy block (だけ上に持ち上げる) ---
+  % 以前は HBM の下側に置いていたが、上に 0.5cm シフトして配置
+  \node[blk, yshift=+0.5cm] (ctrl) {Memory Controller \& Policy Engine};
 
-  % 下段の3ブロック（左右に間隔を空けて固定座標で配置）
-  \node[blk, below=7mm of pol, xshift=-3.2cm, minimum width=3.0cm] (cpu)  {CPU / Accelerator};
-  \node[blk, below=7mm of pol, minimum width=3.0cm]                  (hbm)  {HBM (DRAM)};
-  \node[blk, below=7mm of pol, xshift=+3.2cm, minimum width=3.0cm] (feram){FeRAM Chiplet};
+  % --- Middle: three main blocks in a row ---
+  \node[blk, below=1.1cm of ctrl, xshift=-3.6cm] (cpu)  {CPU / Accelerator};
+  \node[blk, right=2.4cm of cpu]                  (hbm)  {HBM (DRAM)};
+  \node[blk, right=2.4cm of hbm]                  (feram){FeRAM Chiplet\\Persistent Tier};
 
-  % データ/制御の矢印（重ならないよう一直線）
-  \draw[arr] (cpu.east) -- node[above]{bandwidth} (hbm.west);
-  \draw[arr] (hbm.east) -- node[above]{ckpt/metadata} (feram.west);
+  % --- Outer frame with simple label ---
+  \node[frame, below=0.6cm of ctrl, minimum height=1.0cm, yshift=+0.3cm] (frame) { };
 
-  % ポリシーから各ブロックへ（上から真下に）
-  \draw[arr] (pol.south) |- (cpu.north);
-  \draw[arr] (pol.south) -- (hbm.north);
-  \draw[arr] (pol.south) |- (feram.north);
+  % --- Data/policy arrows ---
+  \draw[arrow] (cpu) -- (hbm);
+  \draw[arrow] (hbm) -- node[above, yshift=1pt]{ckpt/metadata} (feram);
+
+  % Controller supervision (上から三者へ)
+  \draw[arrow] (ctrl.south) |- (cpu.north);
+  \draw[arrow] (ctrl.south) -- (hbm.north);
+  \draw[arrow] (ctrl.south) |- (feram.north);
+
+  % Caption text inside the frame (うすい注釈)
+  \node[font=\scriptsize, align=center] at ($(frame.north)+(0,0.35)$) {Minimal chiplet integration view};
+  \node[font=\scriptsize, align=center] at ($(frame.south)+(0,-0.25)$) {CPU connects to HBM for bandwidth; FeRAM holds persistent data; policies manage tiering/checkpoints.};
 \end{tikzpicture}
-\caption{Minimal chiplet integration view: CPU connects to HBM for bandwidth; FeRAM holds persistent data; policies manage tiering/checkpoints.}
-\label{fig:system_minimal}
+\caption{Minimal chiplet integration schematic. Only the \emph{Memory Controller \& Policy Engine} is lifted above the data path; CPU/Accelerator, HBM, and FeRAM chiplet are on one row.}
+\label{fig:system_schematic_sdk}
 \end{figure}
