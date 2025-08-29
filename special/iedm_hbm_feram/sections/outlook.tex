@@ -10,10 +10,53 @@ Future prospects include replacing FeRAM with FeFET:
 Nevertheless, true monolithic integration faces process conflicts: DRAM capacitors require high-$T$ anneals, while FeFETs demand low-$T$ stabilization. 
 Overcoming this is an active research challenge.
 
-% Fig.3
+% ===== Fig.3: Package cross-section with SystemDK (TikZ) =====
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.9\linewidth]{figs/fig3_package.pdf}
-\caption{Package cross-section: CPU/Controller, HBM stack, and FeRAM chiplet co-integrated on interposer. SystemDK supervises system co-design. Monolithic FeFET is a future research goal.}
-\label{fig:package_cross}
+\begin{tikzpicture}[font=\footnotesize, x=1cm, y=1cm, >=Stealth]
+  \tikzset{
+    layer/.style={draw=black, fill=black!5, rounded corners},
+    die/.style={draw=black, fill=black!8, rounded corners},
+    stack/.style={draw=black, fill=black!12},
+    bump/.style={circle, draw=black, fill=black!40, minimum size=2pt, inner sep=0pt},
+    tsv/.style={draw=black, line width=0.3pt},
+    sysdk/.style={draw=black, rounded corners, fill=black!2, align=center, inner sep=3pt}
+  }
+  % SystemDK label
+  \node[sysdk] (sdk) at (0,1.2) {\textbf{SystemDK Co-design Framework}\\
+    \scriptsize Architecture / Interfaces / Package / OS policies};
+  % substrate & interposer
+  \draw[layer] (-4.5,-2.2) rectangle (4.5,-1.6);
+  \node at (0,-2.35) {\scriptsize Package Substrate};
+  \draw[layer] (-4.2,-1.6) rectangle (4.2,-1.1);
+  \node at (0,-0.95) {\scriptsize Silicon Interposer};
+  % micro-bumps
+  \foreach \x in {-3.5,-3.2,...,-1.5} \node[bump] at (\x,-1.1) {};
+  \foreach \x in {-0.5,-0.2,...,1.5}  \node[bump] at (\x,-1.1) {};
+  \foreach \x in {2.5,2.8,...,3.9}     \node[bump] at (\x,-1.1) {};
+  % dies
+  \draw[die] (-3.8,-0.6) rectangle (-1.2,-1.1);
+  \node[align=center] at (-2.5,-0.85) {\scriptsize CPU /\\ \scriptsize Controller};
+  \draw[die] (-0.8,-0.6) rectangle (1.8,-1.1);
+  \node at (0.5,-0.85) {\scriptsize HBM Base Die};
+  % HBM stacks + TSVs
+  \foreach \y in {0.0,0.25,0.50,0.75} {
+    \draw[stack] (-0.6,\y-0.6) rectangle (1.6,\y-0.35);
+  }
+  \foreach \x in {-0.3, 0.2, 0.7, 1.2}{
+    \draw[tsv] (\x,-0.6) -- (\x,0.15);
+  }
+  \node[align=center] at (0.5,0.05) {\scriptsize DRAM layers\\ \scriptsize (TSVs)};
+  \draw[die] (2.1,-0.6) rectangle (4.0,-1.1);
+  \node[align=center] at (3.05,-0.85) {\scriptsize FeRAM\\ \scriptsize Chiplet};
+  % data direction
+  \draw[->, thick] (-1.2,-0.85) -- (-0.8,-0.85);
+  \draw[->, thick] (1.8,-0.85) -- (2.1,-0.85);
+  % SystemDK arrows（右側から回す）
+  \draw[->] (sdk.east) .. controls +(1.0,-0.1) and +(0.8,0.6) .. (3.05,-0.6); % to FeRAM
+  \draw[->] (sdk.south) -- (0.5,0.2);                                        % to HBM
+  \draw[->] (sdk.west) .. controls +(-1.0,-0.1) and +(-0.8,0.6) .. (-2.5,-0.6); % to CPU
+\end{tikzpicture}
+\caption{Package cross-section: CPU/Controller, HBM DRAM stack, and FeRAM chiplet co-integrated on an interposer with \textbf{SystemDK} supervision.}
+\label{fig:package_cross_section_sdk}
 \end{figure}
