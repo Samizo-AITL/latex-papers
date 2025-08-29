@@ -17,8 +17,8 @@ FeRAM endurance of $10^{12}$~writes/year fits within FeRAM capability for checkp
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-    width=0.95\linewidth,   % 横幅をページ幅の95%に拡大
-    height=8cm,             % 高さも拡大
+    width=0.95\linewidth,
+    height=8cm,
     xlabel={Access time (ns)},
     ylabel={Retention (s)},
     xmode=log, ymode=log,
@@ -28,7 +28,7 @@ FeRAM endurance of $10^{12}$~writes/year fits within FeRAM capability for checkp
     major grid style={gray!40},
     minor grid style={gray!20},
     legend style={
-        at={(0.95,0.05)},     % グラフの右下
+        at={(0.95,0.05)},
         anchor=south east,
         font=\footnotesize,
         fill=white,
@@ -38,12 +38,12 @@ FeRAM endurance of $10^{12}$~writes/year fits within FeRAM capability for checkp
     label style={font=\footnotesize}
 ]
 
-% HBM: 赤四角
+% HBM: 赤四角 (塗りつぶし)
 \addplot+[only marks, mark=square*, mark size=3pt, red]
 coordinates {(1, 10) (5, 50) (10, 200)};
 
-% FeRAM: 青丸
-\addplot+[only marks, mark=o, mark size=3.2pt, blue, thick]
+% FeRAM: 青丸 (塗りつぶし)
+\addplot+[only marks, mark=*, mark size=3pt, blue]
 coordinates {(5, 1e3) (20, 5e3) (50, 1e4)};
 
 \legend{HBM DRAM (typ), FeRAM (typ)}
