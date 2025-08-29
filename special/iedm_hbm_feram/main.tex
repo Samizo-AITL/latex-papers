@@ -10,11 +10,11 @@
 \usepackage{booktabs}
 \usepackage{cite}
 \usepackage[hidelinks]{hyperref} % keep links, no colored boxes
-\usepackage{balance}             % （必要なら使うが今回は未使用）
+\usepackage{balance}
 
 % --- title/author ---
-\title{HBM+FeRAM/FeFET for Mobile Edge AI:\\
-Chiplet Integration and Monolithic Prospects}
+\title{HBM+FeRAM for Mobile Edge AI:\\
+Chiplet Integration as the Practical Path}
 
 \author{%
   \IEEEauthorblockN{Shinichi Samizo}%
@@ -27,43 +27,38 @@ Chiplet Integration and Monolithic Prospects}
 
 % ===== Abstract =====
 \begin{abstract}
-High-bandwidth memory (HBM) provides the throughput required by mobile edge AI accelerators but suffers from high standby power due to periodic refresh and volatility.
-Ferroelectric memories (FeRAM/FeFET), based on HfO$_2$, offer non-volatility, low-voltage operation, and fast rewriting, making them suitable for checkpointing and persistent data management.
-
-This work initially considered monolithic integration of HBM and FeRAM; however, the thermal budget conflict between HfO$_2$ ferroelectrics (low-temperature stabilization at $\sim$400~$^\circ$C) and DRAM capacitors (high-temperature anneals $>$700~$^\circ$C) makes such integration impractical.
-
-Therefore, as a practical near-term solution, we propose chiplet-based integration of HBM and FeRAM on a silicon interposer. Results show that FeRAM integration can substantially reduce standby power, enable instant resume after power gating, and improve overall system efficiency for mobile edge AI.
+High-bandwidth memory (HBM) provides the throughput required by mobile edge AI accelerators but suffers from high standby power due to refresh and volatility.
+Ferroelectric RAM (FeRAM), based on HfO$_2$, offers non-volatility, low-voltage operation, and fast rewriting.
+Monolithic integration of HBM and FeRAM was initially examined, but the process mismatch --- DRAM capacitor requiring $>$700$^\circ$C anneal versus FeRAM requiring $\sim$400$^\circ$C --- makes it infeasible.
+Therefore, this work proposes \textbf{chiplet-based HBM+FeRAM integration} on a silicon interposer.
+System-level analysis shows that FeRAM chiplets reduce standby power by suppressing DRAM refresh, enable instant resume, and enhance overall efficiency for mobile edge AI workloads.
 \end{abstract}
 
 % ===== Sections =====
 \input{sections/introduction}
-\input{sections/device_process}
+\input{sections/device_process} % ← 内部もモノリシック部分は削除/整理済み
 \input{sections/results}
 \input{sections/outlook}
 \input{sections/conclusion}
 
 % ===== References =====
-% 初回は強制出力して確実に表示（本文 \cite が揃ったら削除してOK）
 \nocite{ChoiIEDM2022,KimIEDM2021,MuellerIEDM2012,MartinVLSI2020,NohedaNature2023}
 
-% --- 右段頭で参考文献を開始（両段バランスは用いない） ---
+% --- 右段頭で参考文献を開始 ---
 \IEEEtriggercmd{\columnbreak}
 \IEEEtriggeratref{1}
-
-% \enlargethispage{-\baselineskip} % ページ末の余白を微調整したい場合のみ有効化
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 
 % ===== Author Biography (no photo) =====
-% 参考文献の直後に右段で詰めて配置
 \begingroup\small
 \vspace{0.25\baselineskip}
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
 received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
 He joined Seiko Epson Corporation in 1997, where he worked as an engineer in semiconductor memory and mixed-signal device development.
 He currently leads the Project Design Hub (Samizo-AITL), focusing on semiconductor process/device education, memory architecture, and AI system integration.
-His recent work explores hybrid memory architectures such as HBM+FeRAM/FeFET for mobile edge AI.
+His recent work explores hybrid memory architectures such as HBM+FeRAM chiplet integration for mobile edge AI.
 
 \textbf{Contact:}\\
 Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\
