@@ -24,6 +24,7 @@ Chiplet Integration and Monolithic Prospects}
 \begin{document}
 \maketitle
 
+% ===== Sections =====
 \input{sections/introduction}
 \input{sections/device_process}
 \input{sections/results}
@@ -31,11 +32,12 @@ Chiplet Integration and Monolithic Prospects}
 \input{sections/conclusion}
 
 % ===== References =====
-% 初回は強制出力して確実に表示。出たら \nocite は削除してもOK
+% 初回は強制出力して確実に表示（本文 \cite が揃ったら削除してOK）
 \nocite{ChoiIEDM2022,KimIEDM2021,MuellerIEDM2012,MartinVLSI2020,NohedaNature2023}
 
+\clearpage
 \bibliographystyle{IEEEtran}
-\bibliography{./references}
+\bibliography{references} % ./ は不要
 
 % ===== Author Biography (no photo) =====
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
