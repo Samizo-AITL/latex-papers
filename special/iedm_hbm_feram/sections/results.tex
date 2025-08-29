@@ -38,13 +38,13 @@ FeRAM endurance of $10^{12}$~writes/year fits within FeRAM capability for checkp
     label style={font=\footnotesize}
 ]
 
-% HBM: 赤四角 (塗りつぶし)
-\addplot+[only marks, mark=square*, mark size=3pt, red]
-coordinates {(1, 10) (5, 50) (10, 200)};
+% HBM: 赤四角（塗りつぶし赤）
+\addplot+[only marks, mark=square*, mark size=3pt, red, fill=red]
+coordinates {(1, 10) (5, 50) (10, 200) (50, 1000)};
 
-% FeRAM: 青丸 (塗りつぶし)
-\addplot+[only marks, mark=*, mark size=3pt, blue]
-coordinates {(5, 1e3) (20, 5e3) (50, 1e4)};
+% FeRAM: 青丸（塗りつぶし青）
+\addplot+[only marks, mark=*, mark size=3pt, blue, fill=blue]
+coordinates {(2, 100) (5, 1000) (20, 5000) (50, 10000)};
 
 \legend{HBM DRAM (typ), FeRAM (typ)}
 \end{axis}
