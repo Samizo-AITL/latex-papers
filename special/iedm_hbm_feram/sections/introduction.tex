@@ -1,19 +1,36 @@
 \begin{abstract}
-High-bandwidth memory (HBM) provides the throughput required by mobile edge AI accelerators but suffers from high standby power due to periodic refresh and volatility. 
-Ferroelectric memories (FeRAM/FeFET), based on HfO$_2$, offer non-volatility and fast switching, though at higher energy cost. 
-This work investigates hybrid integration of HBM and FeRAM/FeFET: a near-term solution based on chiplet co-packaging and a long-term direction toward monolithic integration. 
-Results indicate that FeRAM can substantially reduce standby power and enable instant resume, while FeFET provides a pathway toward scalable, dense, non-volatile HBM.
+High-bandwidth memory (HBM) provides the throughput required by mobile edge AI accelerators, 
+but suffers from high standby power due to periodic refresh and complete data volatility. 
+Ferroelectric RAM (FeRAM), based on HfO$_2$, offers non-volatility, low-voltage operation, and fast rewriting, 
+making it suitable for checkpointing and persistent data management in mobile edge AI. 
+This work investigates the integration of HBM and FeRAM using chiplet co-packaging on a silicon interposer. 
+Results indicate that FeRAM integration can substantially reduce standby power, enable instant resume after power gating, 
+and improve system-level efficiency for mobile edge AI workloads.
 \end{abstract}
 
 \section{Introduction}
-Mobile edge AI demands memory subsystems that simultaneously provide:
+Mobile edge AI requires memory subsystems that simultaneously provide:
 (1) multi-hundred GB/s bandwidth, 
 (2) ultra-low standby power, 
 (3) near-instant resume after power gating, and 
-(4) sufficient endurance for frequent checkpoints.
-HBM DRAM is effective for (1), but its reliance on periodic refresh causes significant standby power overhead and resume latency, which increasingly limit scalability \cite{ChoiIEDM2022,KimIEDM2021}.  
+(4) sufficient endurance for frequent checkpoints.  
 
-Ferroelectric memories based on HfO$_2$---including FeRAM and FeFET devices---naturally address (2) and (3), while exhibiting endurance of $10^{12}$–$10^{13}$ cycles \cite{MuellerIEDM2012,MartinVLSI2020}. 
-Recent advances in HfO$_2$-based ferroelectrics also demonstrate improved retention, reliability, and compatibility with advanced CMOS nodes \cite{NohedaNature2023}.  
+HBM DRAM is effective for (1), but its reliance on periodic refresh leads to high standby power and resume latency, 
+which limit efficiency at scale \cite{ChoiIEDM2022,KimIEDM2021}.  
+To mitigate these drawbacks, integration with non-volatile memory is considered.  
 
-This paper evaluates hybrid HBM+FeRAM/FeFET integration, with emphasis on practical chiplet-based co-packaging for near-term deployment, and an assessment of the challenges and opportunities of monolithic process integration for future high-density, non-volatile HBM.
+Among candidate technologies, MRAM suffers from relatively high write energy, 
+and 3D NAND, though dense, has slow write latency.  
+FeRAM, in contrast, provides low-voltage operation and fast rewriting capability, 
+making it an attractive choice for integration with HBM in mobile edge AI systems \cite{MuellerIEDM2012,MartinVLSI2020,NohedaNature2023}.  
+
+An initial approach of monolithic HBM+FeRAM integration was examined, 
+but process incompatibilities prevent practical implementation:  
+ferroelectric HfO$_2$ requires low-temperature annealing ($\sim$400~$^\circ$C), 
+while DRAM capacitors demand high-temperature anneals ($>700~^\circ$C), 
+destroying ferroelectric properties.  
+As a result, this work focuses on chiplet-based integration, 
+in which HBM and FeRAM dies are fabricated in their optimized processes and co-packaged on a silicon interposer.  
+
+In addition, system-level co-design using \textbf{SystemDK} enables holistic optimization across architecture, interfaces, and memory control policies, 
+realizing checkpoint migration, refresh suppression, and tiered memory management.  
