@@ -12,44 +12,46 @@ Resume latency is reduced to the $\mu$s range, enabling near-instant resume afte
 \subsection{Endurance}
 FeRAM endurance of $10^{12}$~writes/year fits within FeRAM capability for checkpoint traffic.
 
-% --- Fig.2: Access time vs. retention ---
-\begin{figure}[t]
+% ===== Fig.2: Access time vs. retention (FeRAM > HBM at all x) =====
+\begin{figure*}[t]
 \centering
 \begin{tikzpicture}
-\begin{axis}[
-  width=\columnwidth,            % 二段組のカラム幅にフィット
-  height=0.70\columnwidth,       % 見やすく縦も拡大
-  xmode=log, ymode=log,
-  xmin=1, xmax=100,
-  ymin=1, ymax=1e4,
-  log ticks with fixed,
-  scaled ticks=false,
-  xtick={1,10,100},
-  ytick={1,10,100,1000,10000},
-  xticklabels={$10^0$,$10^1$,$10^2$},
-  yticklabels={$10^0$,$10^1$,$10^2$,$10^3$,$10^4$},
+\begin{loglogaxis}[
+  width=\textwidth, height=6.8cm,
+  xmin=1, xmax=100, ymin=1, ymax=1e4,
+  xlabel={Access time (ns)}, ylabel={Retention (s)},
+  xtick={1,10,100}, ytick={1,10,100,1000,10000},
   grid=both, tick align=inside,
-  legend style={at={(0.97,0.08)},anchor=south east,
-                fill=white,draw=none},
-  legend cell align=left
+  legend style={draw=none, fill=white, at={(0.98,0.05)}, anchor=south east,
+                font=\footnotesize},
+  label style={font=\small}, tick label style={font=\small},
+  clip=false
 ]
 
-% HBM: 赤塗りつぶし四角（10^2 ns で FeRAM より上）
-\addplot+[only marks, mark=square*, mark size=2.4pt, draw=red, fill=red]
+% HBM: red filled squares (lower retention)
+\addplot+[only marks, mark=square*, mark size=2.5pt, color=red, fill=red]
   coordinates {
-    (1,10) (5,100) (10,1000) (30,4000) (100,10000)
+    (1, 1e0)
+    (2, 5e0)
+    (5, 2e1)
+    (20, 7e1)
+    (100, 3e2)
   };
 
-% FeRAM: 青塗りつぶし丸（10^2 ns で HBM より下）
-\addplot+[only marks, mark=*, mark size=2.4pt, draw=blue, fill=blue]
+% FeRAM: blue filled circles (higher retention)
+\addplot+[only marks, mark=*, mark size=2.5pt, color=blue, fill=blue]
   coordinates {
-    (1,10) (5,20) (10,100) (30,500) (100,8000)
+    (1, 1e1)
+    (2, 1e2)
+    (5, 6e2)
+    (20, 2e3)
+    (100, 8e3)
   };
 
 \legend{HBM DRAM (typ), FeRAM (typ)}
-\end{axis}
+\end{loglogaxis}
 \end{tikzpicture}
-\vspace{-2mm}
-\caption{Access time vs. retention. HBM: red filled squares; FeRAM: blue filled circles.}
+\caption{Access time vs. retention. HBM: red filled squares; FeRAM: blue filled circles.
+Axes: $10^0\!\sim\!10^2$ ns, $10^0\!\sim\!10^4$ s. Legend is inside (bottom-right).}
 \label{fig:retention}
-\end{figure}
+\end{figure*}
