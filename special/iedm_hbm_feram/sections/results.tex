@@ -12,27 +12,36 @@ Resume latency is reduced to the $\mu$s range, enabling near-instant resume afte
 \subsection{Endurance}
 FeRAM endurance of $10^{12}$~writes/year fits within FeRAM capability for checkpoint traffic.
 
-% ===== Fig.2: Access time vs. retention (final) =====
+% ===== Fig.2: Access time vs. retention (bigger + filled colors) =====
 \begin{figure}[!t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.86\linewidth, height=0.58\linewidth,
+  width=\linewidth,                 % ← 幅を最大に
+  height=0.62\linewidth,            % ← 縦も拡大
   xmode=log, ymode=log,
   xmin=1, xmax=100, ymin=10, ymax=10000,
   xlabel={Access time (ns)}, ylabel={Retention (s)},
   grid=both, tick align=inside,
-  legend style={draw=none, fill=white, font=\footnotesize},
-  legend cell align=left, legend pos=south east
+  legend style={draw=none, fill=white, at={(0.97,0.03)},anchor=south east, font=\footnotesize},
+  legend cell align=left
 ]
-  % --- HBM: 赤い塗りつぶし四角（低い保持）---
-  \addplot+[only marks, mark=square*, mark size=3.5pt, draw=red, fill=red]
-    coordinates {(1,10) (5,50) (10,200) (50,1000) (100,2000)};
+  % --- HBM: 赤い塗りつぶし四角 ---
+  \addplot+[
+    only marks, mark=square*, mark size=3.8pt,
+    draw=red, fill=red, line width=0pt
+  ] coordinates {
+    (1,10) (5,50) (10,200) (50,1000) (100,2000)
+  };
   \addlegendentry{HBM DRAM (typ)}
 
-  % --- FeRAM: 青い塗りつぶし丸（高い保持）---
-  \addplot+[only marks, mark=*, mark size=3.5pt, draw=blue, fill=blue]
-    coordinates {(2,100) (5,1000) (20,5000) (50,8000) (80,10000)};
+  % --- FeRAM: 青い塗りつぶし丸 ---
+  \addplot+[
+    only marks, mark=*, mark size=3.8pt,
+    draw=blue, fill=blue, line width=0pt
+  ] coordinates {
+    (2,100) (5,1000) (20,5000) (50,8000) (80,10000)
+  };
   \addlegendentry{FeRAM (typ)}
 \end{axis}
 \end{tikzpicture}
