@@ -11,6 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       matrix:
         include:
@@ -19,32 +20,52 @@ jobs:
           - dir: special/iedm_hbm_feram
             art: iedm_hbm_feram
 
+    defaults:
+      run:
+        working-directory: ${{ matrix.dir }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 安定・高速な LaTeX Action を使用（TeXLive導入とキャッシュ込み）
-      - name: Build PDF with LaTeX Action
-        uses: xu-cheng/latex-action@v3
-        with:
-          root_file: main.tex
-          working_directory: ${{ matrix.dir }}
-          latexmk_use_lualatex: false
-          latexmk_shell_escape: true
+      - name: Install TeX Live (minimal but enough)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            latexmk \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-pictures \
+            texlive-science \
+            texlive-bibtex-extra \
+            texlive-publishers \
+            ghostscript
+
+      - name: Clean old LaTeX files
+        run: |
+          latexmk -C || true
+          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
+
+      - name: Build PDF with latexmk (BibTeX)
+        run: |
+          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
+          echo "==== tail main.log (last 200 lines) ===="
+          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
 
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.art }}-pdf     # ← スラッシュなしの安全名
-          path: ${{ matrix.dir }}/main.pdf
+          name: ${{ matrix.art }}-pdf
+          path: ${{ matrix.dir }}/*.pdf
           retention-days: 7
 
       - name: Upload LaTeX logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.art }}-logs    # ← スラッシュなしの安全名
+          name: ${{ matrix.art }}-logs
           path: |
             ${{ matrix.dir }}/*.log
             ${{ matrix.dir }}/*.blg
