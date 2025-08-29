@@ -19,16 +19,31 @@ In principle, DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ could coexist;
 Possible enablers include selective or dual-step annealing, dopant modulation, or stress engineering.  
 At present, monolithic HBM+FeFET integration remains an open challenge for device and process research.
 
-\begin{figure}[!t]
+% ===== Fig.1 (シンプル＆幅いっぱい) =====
+\begin{figure}[t]
 \centering
-\begin{tikzpicture}[font=\footnotesize, >=Stealth, node distance=2.0cm]
-  \tikzset{blk/.style={draw, rounded corners, minimum width=2.6cm, minimum height=8mm, align=center}}
-  \node[blk] (cpu) {CPU / Accelerator};
-  \node[blk, right=of cpu] (hbm) {HBM (DRAM)};
-  \node[blk, right=of hbm] (feram) {FeRAM Chiplet};
-  \draw[->] (cpu) -- (hbm) node[midway,above]{high BW};
-  \draw[->] (hbm) -- (feram) node[midway,above]{ckpt/metadata};
-\end{tikzpicture}
-\caption{Minimal chiplet-level view: CPU connects to HBM for bandwidth, FeRAM holds persistent data.}
-\label{fig:minimal_chiplet}
+\resizebox{0.96\columnwidth}{!}{%
+\begin{tikzpicture}[font=\footnotesize,>=Stealth,node distance=8mm]
+  % styles
+  \tikzset{
+    box/.style={draw,rounded corners,fill=black!6,minimum height=7mm,align=center},
+    head/.style={draw,rounded corners,fill=black!10,minimum height=6mm,align=center,thick},
+    bus/.style={-Latex,thick}
+  }
+  % head
+  \node[head,minimum width=110mm] (pol) {Memory Ctrl \& Policies};
+  % main blocks
+  \node[box,below left=of pol, xshift=-17mm, minimum width=28mm] (cpu) {CPU / Accelerator};
+  \node[box,below=of pol, minimum width=28mm] (hbm) {HBM (DRAM)};
+  \node[box,below right=of pol, xshift=17mm, minimum width=28mm] (feram) {FeRAM Chiplet};
+  % arrows
+  \draw[bus] (cpu) -- node[above]{req/data} (hbm);
+  \draw[bus] (hbm) -- node[above]{ckpt/meta} (feram);
+  \draw[bus] (pol.south) |- (cpu.north);
+  \draw[bus] (pol.south) -- (hbm.north);
+  \draw[bus] (pol.south) |- (feram.north);
+\end{tikzpicture}%
+}
+\caption{Minimal chiplet view: HBM provides bandwidth, FeRAM holds persistent data; policy engine handles tiering/checkpointing.}
+\label{fig:system_schematic_sdk}
 \end{figure}
