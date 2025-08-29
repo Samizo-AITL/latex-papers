@@ -12,35 +12,30 @@ Resume latency is reduced to the $\mu$s range, enabling near-instant resume afte
 \subsection{Endurance}
 FeRAM endurance of $10^{12}$~writes/year fits within FeRAM capability for checkpoint traffic.
 
-% ===== Fig.2: Access time vs. retention =====
+% ===== Fig.2: Access time vs. retention (final) =====
 \begin{figure}[!t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-    width=0.95\linewidth, height=8.5cm,
-    xlabel={Access time (ns)}, ylabel={Retention (s)},
-    xmode=log, ymode=log,
-    xmin=1e0, xmax=1e2, ymin=1e0, ymax=1e4,
-    grid=both,
-    major grid style={gray!40}, minor grid style={gray!20},
-    legend style={at={(0.95,0.05)},anchor=south east,fill=white,draw=black,font=\footnotesize},
-    tick label style={font=\footnotesize}, label style={font=\footnotesize},
-    % 念のためサイクルリスト無効化
-    cycle list name={}
+  width=0.86\linewidth, height=0.58\linewidth,
+  xmode=log, ymode=log,
+  xmin=1, xmax=100, ymin=10, ymax=10000,
+  xlabel={Access time (ns)}, ylabel={Retention (s)},
+  grid=both, tick align=inside,
+  legend style={draw=none, fill=white, font=\footnotesize},
+  legend cell align=left, legend pos=south east
 ]
+  % --- HBM: 赤い塗りつぶし四角（低い保持）---
+  \addplot+[only marks, mark=square*, mark size=3.5pt, draw=red, fill=red]
+    coordinates {(1,10) (5,50) (10,200) (50,1000) (100,2000)};
+  \addlegendentry{HBM DRAM (typ)}
 
-% --- HBM: 赤四角（塗りつぶしも赤） ---
-\addplot+[only marks, mark=square*, mark size=3.5pt, draw=red, fill=red]
-coordinates {(1,10) (5,50) (10,200) (50,1000) (90,10000)};
-\addlegendentry{HBM DRAM (typ)}
-
-% --- FeRAM: 青丸（塗りつぶしも青） ---
-\addplot+[only marks, mark=*, mark size=3.5pt, draw=blue, fill=blue]
-coordinates {(2,100) (5,1000) (20,5000) (50,8000) (95,10000)};
-\addlegendentry{FeRAM (typ)}
-
+  % --- FeRAM: 青い塗りつぶし丸（高い保持）---
+  \addplot+[only marks, mark=*, mark size=3.5pt, draw=blue, fill=blue]
+    coordinates {(2,100) (5,1000) (20,5000) (50,8000) (80,10000)};
+  \addlegendentry{FeRAM (typ)}
 \end{axis}
 \end{tikzpicture}
-\caption{Access time vs. retention. HBM: red filled squares; FeRAM: blue filled circles. Wider and taller view for clarity ($10^0$–$10^2$ ns, $10^0$–$10^4$ s).}
-\label{fig:retention}
+\caption{Access time vs. retention. HBM: red filled squares; FeRAM: blue filled circles.}
+\label{fig:access_vs_retention}
 \end{figure}
