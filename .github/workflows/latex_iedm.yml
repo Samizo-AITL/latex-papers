@@ -20,32 +20,31 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            latexmk \
-            texlive-latex-base \
-            texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-fonts-recommended \
-            texlive-fonts-extra \
-            texlive-pictures \
-            texlive-science \
-            texlive-bibtex-extra \
-            texlive-publishers \
-            texlive-lang-cjk \
-            ghostscript
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-fonts-extra \
+            texlive-pictures texlive-science texlive-bibtex-extra \
+            texlive-publishers texlive-lang-cjk ghostscript
 
       - name: Clean old build
         working-directory: special/iedm_hbm_feram
         run: |
-          latexmk -C || true
-          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
+          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot *.log *.pdf || true
           ls -la
 
-      - name: Build PDF (BibTeX, 4-pass)
+      - name: Build PDF (forced 4-pass with BibTeX)
         working-directory: special/iedm_hbm_feram
         run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
+          pdflatex -file-line-error -interaction=nonstopmode main.tex || true
+          bibtex main || true
+          pdflatex -file-line-error -interaction=nonstopmode main.tex || true
+          pdflatex -file-line-error -interaction=nonstopmode main.tex || true
           echo "==== tail main.log (last 200 lines) ===="
           if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
+          # fail if citations/refs are unresolved
+          if grep -q "Undefined citations" main.log || grep -q "LaTeX Warning: Reference.*undefined" main.log ; then
+            echo "::error::Undefined citations or references remain."
+            exit 1
+          fi
 
       - name: Upload PDF
         if: always()
