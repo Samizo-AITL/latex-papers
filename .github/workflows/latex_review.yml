@@ -32,7 +32,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            latexmk \
             texlive-latex-base \
             texlive-latex-recommended \
             texlive-latex-extra \
@@ -47,14 +46,26 @@ jobs:
 
       - name: Clean old LaTeX files
         run: |
-          latexmk -C || true
-          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot || true
+          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot *.log || true
 
-      - name: Build PDF with latexmk (BibTeX)
+      # ---- ここがポイント：4パス強制 & BibTeX 明示実行 ----
+      - name: Build PDF (force 4-pass with BibTeX)
         run: |
-          latexmk -pdf -bibtex -file-line-error -interaction=nonstopmode main.tex || true
+          set -e
+          pdflatex -interaction=nonstopmode -file-line-error main.tex
+          bibtex main
+          pdflatex -interaction=nonstopmode -file-line-error main.tex
+          pdflatex -interaction=nonstopmode -file-line-error main.tex
           echo "==== tail main.log (last 200 lines) ===="
-          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
+          tail -n 200 main.log || true
+
+      # 未解決の引用/参照が残っていたら失敗させる
+      - name: Fail if undefined citations remain
+        run: |
+          if grep -E "Citation `.+` on page .* undefined|There were undefined references" main.log; then
+            echo "ERROR: Undefined citations/references remain."
+            exit 1
+          fi
 
       - name: Upload PDF
         if: always()
