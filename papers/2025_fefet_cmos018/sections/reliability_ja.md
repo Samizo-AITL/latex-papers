@@ -1,1 +1,5 @@
-予備的な信頼性評価では，耐久性および保持特性が既報の FeFET 文献と整合していることが示された。さらなるストレス試験を予定している。
+\subsection*{耐久性}
+$10^5$ サイクルまでの書換で $\Delta V_\mathrm{th}$ の劣化は $<20\%$（図\ref{fig:endurance}）。
+
+\subsection*{保持}
+$85^\circ$C における 10 年保持を Arrhenius 外挿で評価 \citep{Yamazaki2018}。
