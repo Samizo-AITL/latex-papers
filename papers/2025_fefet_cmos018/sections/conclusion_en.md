@@ -1,1 +1,2 @@
-We demonstrated a minimal-mask FeFET module for 0.18\,\si{\micro\meter} CMOS with verified endurance/retention. Future work: array-level yield and sense-path co-design.
+\section*{Conclusion}
+We have demonstrated a minimal-mask integration of FeFETs into a 0.18\,\si{\micro\meter} CMOS flow, achieving verified endurance and retention characteristics. Future work will address array-level yield optimization and co-design of the sense path.
