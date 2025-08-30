@@ -1,6 +1,5 @@
 \documentclass[journal]{IEEEtran}
 
-% ---- パッケージ類 ----
 \usepackage{iftex}
 \ifXeTeX
   \usepackage{fontspec}
@@ -11,7 +10,7 @@
   \setCJKmainfont{Noto Serif CJK JP}
   \setCJKsansfont{Noto Sans CJK JP}
 \else
-  % pdfLaTeX の場合はここ
+  % pdfLaTeX は使わない前提（CI で XeLaTeX を使います）
 \fi
 
 \usepackage{graphicx}
@@ -23,24 +22,40 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
-% ---- 本文開始 ----
 \begin{document}
 
 \title{FeFET CMOS 0.18µm Integration Study}
 \author{Samizo-AITL}
-
 \maketitle
 
-\begin{abstract}
-\input{build/abstract.tex}
-\end{abstract}
+% ------- Abstracts -------
+\section*{Abstract}
+\input{build/abstract_en.tex}
 
-\input{build/intro.tex}
-\input{build/process_integration.tex}
-\input{build/reliability.tex}
-\input{build/conclusion.tex}
+\section*{要旨}
+\input{build/abstract_ja.tex}
+
+% ------- Body -------
+\section{Introduction}
+\input{build/intro_en.tex}
+\section*{序論}
+\input{build/intro_ja.tex}
+
+\section{Process Integration}
+\input{build/process_integration_en.tex}
+\section*{プロセス統合}
+\input{build/process_integration_ja.tex}
+
+\section{Reliability}
+\input{build/reliability_en.tex}
+\section*{信頼性}
+\input{build/reliability_ja.tex}
+
+\section{Conclusion}
+\input{build/conclusion_en.tex}
+\section*{結論}
+\input{build/conclusion_ja.tex}
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
-
 \end{document}
