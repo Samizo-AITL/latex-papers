@@ -1,6 +1,6 @@
-HfZrO\textsubscript{x} 系 FeFET は CMOS 互換の不揮発動作を提供する \citep{Mulaosmanovic2017}。本研究はレガシー 0.18\,\si{\micro\meter} プロセスへの実装を目的とする。
+HfZrO\textsubscript{x} 系 FeFET は，CMOS に適合した不揮発動作を実現するデバイスである~\citep{Mulaosmanovic2017}。本研究では，広く利用されているレガシー 0.18\,\si{\micro\meter} ロジックプロセスへの統合を目的とする。  
 
-\textbf{本論文の貢献：}
-(i) 既存ロジックフローへのドロップイン統合，
-(ii) 追加マスク最小化，
-(iii) 信頼性指標の定量化。
+\textbf{本論文の主な貢献点は以下のとおりである：}  
+(i) 既存ロジックフローへのドロップイン統合，  
+(ii) 追加マスク数の最小化，  
+(iii) リテンションおよびエンデュランスを含む信頼性指標の定量評価。  
