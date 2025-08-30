@@ -1,8 +1,8 @@
 \noindent
-\textbf{Context:} Ferroelectric FETs (FeFETs) based on Hf$_{0.5}$Zr$_{0.5}$O$_2$ offer CMOS-compatible nonvolatile memory for embedded applications.\\
-\textbf{Approach:} We integrate a gate-last FeFET module into a 0.18\,\si{\micro\meter} CMOS logic baseline with only one additional mask.\\
-\textbf{Results:} The fabricated devices show a threshold-voltage window of about 0.8--1.0\,V, endurance exceeding $10^5$ program/erase cycles, and retention projected beyond 10 years at 85\,$^\circ$C.\\
-\textbf{Implications:} These results enable instant-on functionality, SRAM backup, and secure key storage in automotive and IoT systems using mature 0.18\,\si{\micro\meter} manufacturing lines.
+\textbf{Context:} Ferroelectric field-effect transistors (FeFETs) based on Hf$_{0.5}$Zr$_{0.5}$O$_2$ provide a CMOS-compatible option for embedded nonvolatile memory.\\
+\textbf{Approach:} We demonstrate integration of a gate-last FeFET module into a 0.18\,\si{\micro\meter} CMOS logic baseline with only one additional mask step.\\
+\textbf{Results:} The fabricated devices exhibit a threshold-voltage window of 0.8--1.0\,V, endurance beyond $10^5$ program/erase cycles, and retention exceeding 10 years at 85\,$^\circ$C.\\
+\textbf{Implications:} These features enable instant-on operation, SRAM backup, and secure key storage in automotive and IoT applications using mature 0.18\,\si{\micro\meter} technology nodes.
 
 \vspace{0.5em}
-\noindent\textit{Index Terms—} FeFET, ferroelectric HfZrO\textsubscript{x}, 0.18\,\si{\micro\meter} CMOS, reliability, process integration.
+\noindent\textit{Index Terms—} FeFET, HfZrO$_x$, 0.18\,\si{\micro\meter} CMOS, reliability, process integration
