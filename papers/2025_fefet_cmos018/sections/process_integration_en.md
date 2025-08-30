@@ -1,0 +1,1 @@
+The process integration flow includes baseline CMOS steps, ferroelectric gate-stack formation, and module split strategies. Critical conditions for compatibility with existing CMOS design rules are discussed.
