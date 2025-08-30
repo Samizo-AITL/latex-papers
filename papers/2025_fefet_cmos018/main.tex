@@ -1,5 +1,6 @@
 \documentclass[journal]{IEEEtran}
 
+% ---- パッケージ類 ----
 \usepackage{iftex}
 \ifXeTeX
   \usepackage{fontspec}
@@ -10,7 +11,7 @@
   \setCJKmainfont{Noto Serif CJK JP}
   \setCJKsansfont{Noto Sans CJK JP}
 \else
-  % ← pdflatexは使わない想定。inputencは入れないでOK
+  % pdfLaTeX の場合はここ
 \fi
 
 \usepackage{graphicx}
@@ -21,3 +22,25 @@
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{caption}
 \usepackage{subcaption}
+
+% ---- 本文開始 ----
+\begin{document}
+
+\title{FeFET CMOS 0.18µm Integration Study}
+\author{Samizo-AITL}
+
+\maketitle
+
+\begin{abstract}
+\input{build/abstract.tex}
+\end{abstract}
+
+\input{build/intro.tex}
+\input{build/process_integration.tex}
+\input{build/reliability.tex}
+\input{build/conclusion.tex}
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}
