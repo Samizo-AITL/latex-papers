@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install TeX Live + Pandoc
+      - name: Install TeX Live + Pandoc + XeTeX (CJK fonts)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -24,7 +24,8 @@ jobs:
             texlive-latex-base texlive-latex-recommended texlive-latex-extra \
             texlive-fonts-recommended texlive-fonts-extra \
             texlive-pictures texlive-science texlive-bibtex-extra \
-            texlive-publishers texlive-lang-cjk ghostscript
+            texlive-publishers texlive-lang-cjk texlive-xetex \
+            fonts-noto-cjk ghostscript
 
       - name: Clean old build
         working-directory: papers/2025_fefet_cmos018
@@ -44,13 +45,13 @@ jobs:
           done
           ls -la build
 
-      - name: Build PDF (4-pass with BibTeX)
+      - name: Build PDF with XeLaTeX (3-pass + BibTeX)
         working-directory: papers/2025_fefet_cmos018
         run: |
-          pdflatex -file-line-error -interaction=nonstopmode main.tex || true
+          xelatex -file-line-error -interaction=nonstopmode main.tex || true
           bibtex main || true
-          pdflatex -file-line-error -interaction=nonstopmode main.tex || true
-          pdflatex -file-line-error -interaction=nonstopmode main.tex || true
+          xelatex -file-line-error -interaction=nonstopmode main.tex || true
+          xelatex -file-line-error -interaction=nonstopmode main.tex || true
           echo "==== tail main.log (last 200 lines) ===="
           if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
           # fail if citations/refs are unresolved OR PDF missing
