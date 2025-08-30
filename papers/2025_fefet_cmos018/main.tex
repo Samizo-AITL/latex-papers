@@ -1,16 +1,32 @@
 \documentclass[journal]{IEEEtran}
 
-% ====== Packages ======
+% --- add: engine-safe font setup for Japanese ---
+\usepackage{iftex}
+\ifXeTeX
+  \usepackage{fontspec}
+  \usepackage{xeCJK}
+  % Latin fonts (IEEEtranはTimes系推奨)
+  \setmainfont{Times New Roman}
+  \setsansfont{Arial}
+  \setmonofont{Courier New}
+  % CJK fonts（インストールするフォント名に合わせて）
+  \setCJKmainfont{Noto Serif CJK JP}
+  \setCJKsansfont{Noto Sans CJK JP}
+\else
+  % pdflatex 経路は使わない（日本語が壊れるため）
+  \usepackage[utf8]{inputenc} % ←保険だがXeLaTeX使用を推奨
+\fi
+% -----------------------------------------------
+
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{siunitx}
 \usepackage{booktabs}
 \usepackage{hyperref}
-\usepackage[numbers,sort&compress]{natbib} % \cite{...}
+\usepackage[numbers,sort&compress]{natbib}
 \usepackage{caption}
 \usepackage{subcaption}
 
-% ====== Metadata ======
 \title{Gate-Last Integration of 1.8\,V FeFETs on Legacy 0.18\,\textmu m CMOS: 
 A Reliability-Aware Auxiliary NVM Strategy}
 \author{<Your Name>}
@@ -18,15 +34,12 @@ A Reliability-Aware Auxiliary NVM Strategy}
 \begin{document}
 \maketitle
 
-% ====== Sections (converted from Markdown) ======
 \input{build/abstract.tex}
 \input{build/intro.tex}
 \input{build/process_integration.tex}
 \input{build/reliability.tex}
 \input{build/conclusion.tex}
 
-% ====== Bibliography ======
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
-
 \end{document}
