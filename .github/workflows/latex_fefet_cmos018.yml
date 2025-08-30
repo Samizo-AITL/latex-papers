@@ -16,16 +16,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install TeX Live + Pandoc + XeTeX (CJK fonts)
+      - name: Install TeX Live + Pandoc (XeLaTeX & CJK)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             pandoc \
-            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            latexmk \
+            texlive-xetex texlive-latex-base texlive-latex-recommended texlive-latex-extra \
             texlive-fonts-recommended texlive-fonts-extra \
             texlive-pictures texlive-science texlive-bibtex-extra \
-            texlive-publishers texlive-lang-cjk texlive-xetex \
-            fonts-noto-cjk ghostscript
+            texlive-publishers texlive-lang-cjk ghostscript \
+            fonts-noto-cjk fonts-noto-cjk-extra
 
       - name: Clean old build
         working-directory: papers/2025_fefet_cmos018
@@ -41,19 +42,25 @@ jobs:
           for f in sections/*.md; do
             fname=$(basename "$f" .md)
             echo "Converting $f -> build/$fname.tex"
+            # すべて UTF-8 想定
             pandoc "$f" -o "build/$fname.tex" -t latex --wrap=none
           done
           ls -la build
 
       - name: Build PDF with XeLaTeX (3-pass + BibTeX)
         working-directory: papers/2025_fefet_cmos018
+        env:
+          LANG: C.UTF-8
         run: |
+          # 1st pass (XeLaTeX) -> BibTeX -> 2nd/3rd pass
           xelatex -file-line-error -interaction=nonstopmode main.tex || true
           bibtex main || true
           xelatex -file-line-error -interaction=nonstopmode main.tex || true
           xelatex -file-line-error -interaction=nonstopmode main.tex || true
+
           echo "==== tail main.log (last 200 lines) ===="
           if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
+
           # fail if citations/refs are unresolved OR PDF missing
           if grep -q "Undefined citations" main.log || grep -q "LaTeX Warning: Reference.*undefined" main.log ; then
             echo "::error::Undefined citations or references remain."
