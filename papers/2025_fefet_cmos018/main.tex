@@ -5,15 +5,13 @@
 \ifXeTeX
   \usepackage{fontspec}
   \usepackage{xeCJK}
-  % 英文は TeX Gyre 系フォント
+  % 英文は TeX Gyre 系
   \setmainfont{TeX Gyre Termes}   % Times 互換
   \setsansfont{TeX Gyre Heros}    % Helvetica 互換
   \setmonofont{TeX Gyre Cursor}   % Courier 互換
   % 日本語は Noto CJK
   \setCJKmainfont{Noto Serif CJK JP}
   \setCJKsansfont{Noto Sans CJK JP}
-\else
-  % CI は XeLaTeX 前提
 \fi
 
 % --- Packages ---
@@ -24,16 +22,14 @@
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{hyperref}
 
-% --- Safe input helper: \maybeinput{path} ---
+% --- Safe input helper ---
 \makeatletter
-\newcommand{\maybeinput}[1]{%
-  \IfFileExists{#1}{\input{#1}}{}%
+\newcommand{\maybeinput}[2]{%
+  \IfFileExists{#1}{\input{#1}}{\textit{#2}}%
 }
 \makeatother
-
-% hyperref は最後
-\usepackage{hyperref}
 
 \begin{document}
 
@@ -42,38 +38,40 @@
 \maketitle
 
 % ------- Abstracts -------
-\section*{Abstract}
-\maybeinput{build/abstract_en.tex}
+\begin{abstract}
+\maybeinput{build/abstract_en.tex}{(Abstract will appear here once build/abstract_en.tex is generated.)}
 
-\vspace{1em} % ENとJPの間に余白を追加
+\vspace{0.5em}
+\textit{Index Terms}—FeFET, HfZrO$_x$, 0.18\,$\mu$m CMOS, reliability, process integration.
+\end{abstract}
 
 \section*{要旨}
-\maybeinput{build/abstract_ja.tex}
+\maybeinput{build/abstract_ja.tex}{（要旨は build/abstract_ja.tex 生成後に表示されます。）}
 
 % ------- Body -------
 \section{Introduction}
-\maybeinput{build/intro_en.tex}
+\maybeinput{build/intro_en.tex}{(Introduction EN placeholder.)}
 
 \section*{序論}
-\maybeinput{build/intro_ja.tex}
+\maybeinput{build/intro_ja.tex}{（序論 日本語プレースホルダ。）}
 
 \section{Process Integration}
-\maybeinput{build/process_integration_en.tex}
+\maybeinput{build/process_integration_en.tex}{(Process Integration EN placeholder.)}
 
 \section*{プロセス統合}
-\maybeinput{build/process_integration_ja.tex}
+\maybeinput{build/process_integration_ja.tex}{（プロセス統合 日本語プレースホルダ。）}
 
 \section{Reliability}
-\maybeinput{build/reliability_en.tex}
+\maybeinput{build/reliability_en.tex}{(Reliability EN placeholder.)}
 
 \section*{信頼性}
-\maybeinput{build/reliability_ja.tex}
+\maybeinput{build/reliability_ja.tex}{（信頼性 日本語プレースホルダ。）}
 
 \section{Conclusion}
-\maybeinput{build/conclusion_en.tex}
+\maybeinput{build/conclusion_en.tex}{(Conclusion EN placeholder.)}
 
 \section*{結論}
-\maybeinput{build/conclusion_ja.tex}
+\maybeinput{build/conclusion_ja.tex}{（結論 日本語プレースホルダ。）}
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
