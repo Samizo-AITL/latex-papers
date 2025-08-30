@@ -16,10 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install TeX Live (with BibTeX + fonts)
+      - name: Install TeX Live + Pandoc
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            pandoc \
             texlive-latex-base texlive-latex-recommended texlive-latex-extra \
             texlive-fonts-recommended texlive-fonts-extra \
             texlive-pictures texlive-science texlive-bibtex-extra \
@@ -29,9 +30,21 @@ jobs:
         working-directory: papers/2025_fefet_cmos018
         run: |
           rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot *.log *.pdf || true
+          rm -rf build || true
+          mkdir -p build
           ls -la
 
-      - name: Build PDF (forced 4-pass with BibTeX)
+      - name: Convert Markdown to TeX (sections -> build)
+        working-directory: papers/2025_fefet_cmos018
+        run: |
+          for f in sections/*.md; do
+            fname=$(basename "$f" .md)
+            echo "Converting $f -> build/$fname.tex"
+            pandoc "$f" -o "build/$fname.tex" -t latex --wrap=none
+          done
+          ls -la build
+
+      - name: Build PDF (4-pass with BibTeX)
         working-directory: papers/2025_fefet_cmos018
         run: |
           pdflatex -file-line-error -interaction=nonstopmode main.tex || true
@@ -40,9 +53,13 @@ jobs:
           pdflatex -file-line-error -interaction=nonstopmode main.tex || true
           echo "==== tail main.log (last 200 lines) ===="
           if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
-          # fail if citations/refs are unresolved
+          # fail if citations/refs are unresolved OR PDF missing
           if grep -q "Undefined citations" main.log || grep -q "LaTeX Warning: Reference.*undefined" main.log ; then
             echo "::error::Undefined citations or references remain."
+            exit 1
+          fi
+          if [ ! -f main.pdf ]; then
+            echo "::error::PDF was not generated."
             exit 1
           fi
 
