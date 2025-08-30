@@ -3,7 +3,7 @@ name: Build LaTeX (fefet_cmos018)
 on:
   push:
     paths:
-      - "papers/2025_fefet_cmos018/**"
+      - "papers/2025_fefet_cmos018/**"          # ここに refs.bib も含まれる
       - ".github/workflows/latex_fefet_cmos018.yml"
   workflow_dispatch:
 
@@ -34,7 +34,6 @@ jobs:
           rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot *.log *.pdf || true
           rm -rf build || true
           mkdir -p build
-          ls -la
 
       - name: Convert Markdown to TeX (sections -> build)
         working-directory: papers/2025_fefet_cmos018
@@ -42,7 +41,6 @@ jobs:
           for f in sections/*.md; do
             fname=$(basename "$f" .md)
             echo "Converting $f -> build/$fname.tex"
-            # すべて UTF-8 想定
             pandoc "$f" -o "build/$fname.tex" -t latex --wrap=none
           done
           ls -la build
@@ -52,20 +50,38 @@ jobs:
         env:
           LANG: C.UTF-8
         run: |
-          # 1st pass (XeLaTeX) -> BibTeX -> 2nd/3rd pass
+          set -e
+          # 1st LaTeX で .aux を作成
           xelatex -file-line-error -interaction=nonstopmode main.tex || true
+
+          # BibTeX 実行（.aux が無い/refs.bib が無い場合は明示的に失敗）
+          if [ ! -f main.aux ]; then
+            echo "::error::main.aux が生成されていません（LaTeX 1st pass 失敗）"; exit 1
+          fi
+          if ! grep -q "\citation" main.aux; then
+            echo "No citations found in main.aux -> それでも BibTeX を実行します"
+          fi
           bibtex main || true
+
+          # 追加の安全チェック：refs.bib を開けなかったら落とす
+          if grep -q "I couldn't open database file" main.blg; then
+            echo "::error::BibTeX が refs.bib を開けませんでした"; exit 1
+          fi
+
+          # 2nd/3rd pass
           xelatex -file-line-error -interaction=nonstopmode main.tex || true
           xelatex -file-line-error -interaction=nonstopmode main.tex || true
 
           echo "==== tail main.log (last 200 lines) ===="
-          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
+          tail -n 200 main.log || true
 
-          # fail if citations/refs are unresolved OR PDF missing
-          if grep -q "Undefined citations" main.log || grep -q "LaTeX Warning: Reference.*undefined" main.log ; then
+          # 参照未解決を検出して落とす
+          if grep -q "Undefined citations" main.log || grep -q "LaTeX Warning: Reference .* undefined" main.log ; then
             echo "::error::Undefined citations or references remain."
             exit 1
           fi
+
+          # PDF が無ければ失敗
           if [ ! -f main.pdf ]; then
             echo "::error::PDF was not generated."
             exit 1
@@ -76,7 +92,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: fefet_cmos018-pdf
-          path: papers/2025_fefet_cmos018/*.pdf
+          path: papers/2025_fefet_cmos018/main.pdf
           retention-days: 7
 
       - name: Upload LaTeX logs
