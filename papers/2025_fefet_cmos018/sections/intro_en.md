@@ -1,12 +1,13 @@
-FeFETs based on HfZrO\textsubscript{x} thin films have emerged as a CMOS-compatible option for embedded non-volatile memory (NVM)~\citep{Mulaosmanovic2017}. Such devices combine scalability with low-power operation, but their practical deployment requires proven integration within mature logic processes widely used in cost- and reliability-driven markets such as automotive and IoT.  
+FeFETs based on HfZrO\textsubscript{x} thin films have emerged as a CMOS-compatible option for embedded non-volatile memory (NVM)~\citep{boscke2011hafnium, mueller2012fefet}. Such devices combine scalability with low-power operation, but practical deployment requires integration within mature logic processes~\citep{schenk2019review} widely used in automotive and IoT.
 
-In this work, we target a legacy 0.18\,\si{\micro\meter} CMOS logic flow and demonstrate a minimal-overhead integration of FeFET modules.  
+In this work, we target a legacy 0.18\,\si{\micro\meter} CMOS logic flow and demonstrate a minimal-overhead integration of FeFET modules.
 
-\textbf{The key contributions of this paper are as follows:}  
-1) demonstration of a drop-in FeFET module fully compatible with the baseline logic flow,  
-2) realization with only one additional mask step, minimizing process cost, and  
-3) quantitative evaluation of the reliability window, covering both endurance and retention metrics.  
+\textbf{This paper makes the following contributions:}
+(i) demonstration of a drop-in FeFET module fully compatible with the baseline logic flow,
+(ii) realization with only one additional mask step, minimizing process cost, and
+(iii) quantitative evaluation of the reliability window, covering both endurance and retention metrics~\citep{mueller2015endurance, park2020nbdoping}.
 
-Program and erase operations are achieved by switching between opposite polarization states ($\pm P_r$) stored in the ferroelectric gate, enabling embedded NVM functionality within standard CMOS.  
+Program and erase operations are realized by switching between opposite polarization states ($\pm P_r$) stored in the ferroelectric gate.
 
-\paragraph*{Related Work} Comprehensive surveys of FeFET integration strategies and reliability challenges are provided in~\citep{Khan2015}.
+\paragraph*{Related Work}
+Comprehensive surveys of FeFET integration/reliability can be found in~\citep{Khan2015, polakowski2014reliability}; automotive reliability requirements are reviewed in~\citep{mitsubishi2003automotive}.
