@@ -19,40 +19,39 @@ In principle, DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ could coexist;
 Potential enablers include selective or dual-step annealing, dopant modulation, or stress engineering.
 At present, monolithic HBM+FeFET integration remains an open challenge for device and process research.
 
-% ===== Fig.1: Minimal chiplet integration (下段を下げ＆間隔広め) =====
+% ===== Fig.1: Minimal chiplet integration（座標固定で重なり解消） =====
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[
-  font=\footnotesize, >=latex,
-  node distance=14mm and 14mm, % ← 上下14mm, 左右14mmに拡大
+  font=\footnotesize, >=latex, x=1cm, y=1cm,
   box/.style={draw, rounded corners=2pt, fill=black!6,
-              minimum width=24mm, minimum height=7mm, align=center},
+              minimum width=28mm, minimum height=7.5mm, align=center},
   ctrl/.style={draw, rounded corners=2pt, fill=black!10,
-               minimum width=68mm, minimum height=7mm, align=center}
+               minimum width=86mm, minimum height=8mm, align=center}
 ]
 
-% 上段：コントローラ
-\node[ctrl] (mc) {Memory Controller \& Policy Engine};
+% 上段コントローラ（y=1.9）
+\node[ctrl] (mc) at (0,1.9) {Memory Controller \& Policy Engine};
 
-% 下段：横一列（間隔広め）
-\node[box, below left =of mc]  (cpu)   {CPU /\\ Accelerator};
-\node[box, below       =of mc] (hbm)   {HBM (DRAM)};
-\node[box, below right =of mc] (feram) {FeRAM\\ Chiplet};
+% 下段3ブロック（y=0）— 間隔を広めに x= -4.2, 0, +4.2
+\node[box] (cpu)   at (-4.2,0) {CPU /\\ Accelerator};
+\node[box] (hbm)   at ( 0.0,0) {HBM (DRAM)};
+\node[box] (feram) at ( 4.2,0) {FeRAM\\ Chiplet};
 
-% データパス
+% データパス（下段同士）
 \draw[->, thick] (cpu) -- node[midway, below, inner sep=1pt]{\scriptsize bandwidth} (hbm);
 \draw[->, thick] (hbm) -- node[midway, below, inner sep=1pt]{\scriptsize persistent data} (feram);
 
-% コントローラからの制御線
+% コントローラからの制御線（曲げて重なり防止）
 \draw[->, thick] (mc.south) to[out=-90,in=90] (cpu.north);
 \draw[->, thick] (mc.south) -- (hbm.north);
 \draw[->, thick] (mc.south) to[out=-90,in=90] (feram.north);
 
 \end{tikzpicture}
 
-\vspace{2pt}
-\caption{Minimal chiplet integration view. CPU$\rightarrow$HBM provides bandwidth; 
-persistent data and checkpoints are stored in the FeRAM chiplet. 
-The controller/policy engine coordinates tiering and checkpointing.}
+\vspace{3pt}
+\caption{Minimal chiplet integration view. CPU$\rightarrow$HBM は帯域を供給し，
+永続データとチェックポイントは FeRAM チップレットに保持。
+上段のコントローラ／ポリシーエンジンが tiering と checkpointing を統括する。}
 \label{fig:chiplet_min}
 \end{figure}
