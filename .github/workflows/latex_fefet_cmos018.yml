@@ -1,0 +1,69 @@
+name: Build LaTeX (fefet_cmos018)
+
+on:
+  push:
+    paths:
+      - "papers/2025_fefet_cmos018/**"
+      - ".github/workflows/latex_fefet_cmos018.yml"
+  workflow_dispatch:
+
+jobs:
+  build-fefet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install TeX Live (with BibTeX + fonts)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-fonts-extra \
+            texlive-pictures texlive-science texlive-bibtex-extra \
+            texlive-publishers texlive-lang-cjk ghostscript
+
+      - name: Clean old build
+        working-directory: papers/2025_fefet_cmos018
+        run: |
+          rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot *.log *.pdf || true
+          ls -la
+
+      - name: Build PDF (forced 4-pass with BibTeX)
+        working-directory: papers/2025_fefet_cmos018
+        run: |
+          pdflatex -file-line-error -interaction=nonstopmode main.tex || true
+          bibtex main || true
+          pdflatex -file-line-error -interaction=nonstopmode main.tex || true
+          pdflatex -file-line-error -interaction=nonstopmode main.tex || true
+          echo "==== tail main.log (last 200 lines) ===="
+          if [ -f main.log ]; then tail -n 200 main.log; else echo "main.log not found"; fi
+          # fail if citations/refs are unresolved
+          if grep -q "Undefined citations" main.log || grep -q "LaTeX Warning: Reference.*undefined" main.log ; then
+            echo "::error::Undefined citations or references remain."
+            exit 1
+          fi
+
+      - name: Upload PDF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fefet_cmos018-pdf
+          path: papers/2025_fefet_cmos018/*.pdf
+          retention-days: 7
+
+      - name: Upload LaTeX logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fefet_cmos018-logs
+          path: |
+            papers/2025_fefet_cmos018/*.log
+            papers/2025_fefet_cmos018/*.blg
+            papers/2025_fefet_cmos018/*.bbl
+            papers/2025_fefet_cmos018/*.aux
+            papers/2025_fefet_cmos018/*.fls
+            papers/2025_fefet_cmos018/*.fdb_latexmk
+          retention-days: 7
