@@ -1,14 +1,18 @@
-\section{Future Outlook: Toward HBM+FeFET}
-In the near term, chiplet integration of HBM and FeRAM offers a practical solution for mobile edge AI, balancing bandwidth and persistence. 
-Future prospects include replacing FeRAM with FeFET:
+\section{Future Outlook}
+In the near term, chiplet integration of HBM and FeRAM offers a practical solution for mobile edge AI, 
+balancing bandwidth and persistence. 
+Future enhancements may explore replacing FeRAM with FeFET to further improve characteristics:
 \begin{itemize}
   \item \textbf{Non-destructive read}, reducing wear-out,
-  \item \textbf{Higher density}, fitting within HBM logic base,
+  \item \textbf{Higher density}, fitting within the HBM logic base,
   \item \textbf{CMOS compatibility}, easing scaling to advanced nodes.
 \end{itemize}
 
-Nevertheless, true monolithic integration faces process conflicts: DRAM capacitors require high-$T$ anneals, while FeFETs demand low-$T$ stabilization. 
-Overcoming this is an active research challenge.
+Rather than pursuing monolithic integration, which faces fundamental process conflicts 
+(high-$T$ anneals for DRAM capacitors vs. low-$T$ stabilization for FeFETs), 
+the practical pathway is continued refinement of chiplet-based solutions. 
+This includes tighter co-design across architecture, interfaces, and memory control policies using \textbf{SystemDK}, 
+to maximize bandwidth efficiency, reduce standby power, and extend system-level scalability.
 
 % ===== Fig.3: Package cross-section with SystemDK (TikZ) =====
 \begin{figure}[!t]
@@ -48,7 +52,7 @@ Overcoming this is an active research challenge.
   }
   \node[align=center] at (0.5,0.05) {\scriptsize DRAM layers\\ \scriptsize (TSVs)};
   \draw[die] (2.1,-0.6) rectangle (4.0,-1.1);
-  \node[align=center] at (3.05,-0.85) {\scriptsize FeRAM\\ \scriptsize Chiplet};
+  \node[align=center] at (3.05,-0.85) {\scriptsize FeRAM/FeFET\\ \scriptsize Chiplet};
   % data direction
   \draw[->, thick] (-1.2,-0.85) -- (-0.8,-0.85);
   \draw[->, thick] (1.8,-0.85) -- (2.1,-0.85);
@@ -57,6 +61,6 @@ Overcoming this is an active research challenge.
   \draw[->] (sdk.south) -- (0.5,0.2);                                        % to HBM
   \draw[->] (sdk.west) .. controls +(-1.0,-0.1) and +(-0.8,0.6) .. (-2.5,-0.6); % to CPU
 \end{tikzpicture}
-\caption{Package cross-section: CPU/Controller, HBM DRAM stack, and FeRAM chiplet co-integrated on an interposer with \textbf{SystemDK} supervision.}
+\caption{Package cross-section: CPU/Controller, HBM DRAM stack, and FeRAM/FeFET chiplet co-integrated on an interposer with \textbf{SystemDK} supervision.}
 \label{fig:package_cross_section_sdk}
 \end{figure}
