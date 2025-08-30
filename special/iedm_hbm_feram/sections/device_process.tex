@@ -19,39 +19,42 @@ In principle, DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ could coexist;
 Potential enablers include selective or dual-step annealing, dopant modulation, or stress engineering.
 At present, monolithic HBM+FeFET integration remains an open challenge for device and process research.
 
-% ===== Fig.1: Minimal chiplet integration (clean layout, no overlaps) =====
+% ===== Fig.1: Minimal chiplet integration (no overlaps, column-safe) =====
+% 位置取り用
+% \usetikzlibrary{positioning}  % ※ まだ読み込んでいなければ preamble に追加
+
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[
   font=\footnotesize, >=latex,
-  node distance=10mm and 12mm,
+  node distance=8mm and 10mm,
   box/.style={draw, rounded corners=2pt, fill=black!6,
-              minimum width=28mm, minimum height=7mm, align=center},
+              minimum width=22mm, minimum height=6mm, align=center},
   ctrl/.style={draw, rounded corners=2pt, fill=black!10,
-               minimum width=70mm, minimum height=7mm, align=center}
+               minimum width=64mm, minimum height=6mm, align=center}
 ]
 
-% Top: controller
+% 上段：コントローラ（幅を64mmに抑制）
 \node[ctrl] (mc) {Memory Controller \& Policy Engine};
 
-% Bottom row: three boxes (even spacing, no overlaps)
-\node[box, below left =of mc]  (cpu)   {CPU / Accelerator};
+% 下段：3ボックス（幅22mm、間隔広め）
+\node[box, below left =of mc]  (cpu)   {CPU /\\ Accelerator};
 \node[box, below       =of mc] (hbm)   {HBM (DRAM)};
-\node[box, below right =of mc] (feram) {FeRAM Chiplet};
+\node[box, below right =of mc] (feram) {FeRAM\\ Chiplet};
 
-% Data paths inside the tier (labels kept small and centered on the arrows)
+% データパス（短いラベル・矢印は直線）
 \draw[->, thick] (cpu) -- node[midway, below, inner sep=1pt]{\scriptsize bandwidth} (hbm);
 \draw[->, thick] (hbm) -- node[midway, below, inner sep=1pt]{\scriptsize persistent data} (feram);
 
-% Supervision from controller (no labels to keep clean)
-\draw[->, thick] (mc.south) -- (cpu.north);
+% コントローラからの指示線（少しカーブで重なり回避）
+\draw[->, thick] (mc.south) to[out=-90,in=90] (cpu.north);
 \draw[->, thick] (mc.south) -- (hbm.north);
-\draw[->, thick] (mc.south) -- (feram.north);
+\draw[->, thick] (mc.south) to[out=-90,in=90] (feram.north);
 
 \end{tikzpicture}
 
 \vspace{2pt}
-\caption{Minimal chiplet integration. Bandwidth traffic flows CPU$\rightarrow$HBM; 
+\caption{Minimal chiplet integration. Bandwidth flows CPU$\rightarrow$HBM; 
 persistent data and checkpoints reside on the FeRAM chiplet. 
 The controller/policy engine orchestrates tiering and checkpointing.}
 \label{fig:chiplet_min}
