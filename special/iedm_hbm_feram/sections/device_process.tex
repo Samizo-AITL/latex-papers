@@ -1,10 +1,11 @@
 \section{Device and Process Integration}
 HBM DRAM stacks are typically fabricated with high-temperature capacitor anneals ($>700~^\circ$C),
 whereas FeRAM/FeFET devices require lower-temperature processing ($\sim$400~^\circ$C$) to stabilize the ferroelectric o-phase in HfO$_2$.
-This thermal budget mismatch currently hinders monolithic integration.
+This thermal budget mismatch makes monolithic integration impractical.
+Therefore, this work proposes chiplet-based integration as the practical path.
 
 \subsection{Chiplet-based Integration (Practical Solution)}
-The most practical near-term approach is chiplet-based integration:
+The most realistic approach is chiplet-based integration:
 HBM stacks and FeRAM/FeFET dies are fabricated in their respective optimized flows and co-integrated on a silicon interposer using $\mu$-bump connections.
 This architecture enables:
 \begin{itemize}
@@ -13,13 +14,7 @@ This architecture enables:
   \item Reduction of refresh-induced traffic in DRAM.
 \end{itemize}
 
-\subsection{Monolithic Integration (Research Challenge)}
-A longer-term research direction is embedding FeFET arrays within the HBM logic base die.
-In principle, DRAM capacitor HfO$_2$ and FeFET gate-stack HfO$_2$ could coexist; however, their annealing requirements remain incompatible.
-Potential enablers include selective or dual-step annealing, dopant modulation, or stress engineering.
-At present, monolithic HBM+FeFET integration remains an open challenge for device and process research.
-
-% ===== Fig.1: Minimal chiplet integration（座標固定で重なり解消） =====
+% ===== Fig.1: Minimal chiplet integration =====
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[
@@ -30,19 +25,19 @@ At present, monolithic HBM+FeFET integration remains an open challenge for devic
                minimum width=86mm, minimum height=8mm, align=center}
 ]
 
-% 上段コントローラ（y=1.9）
+% 上段コントローラ
 \node[ctrl] (mc) at (0,1.9) {Memory Controller \& Policy Engine};
 
-% 下段3ブロック（y=0）— 間隔を広めに x= -4.2, 0, +4.2
+% 下段3ブロック
 \node[box] (cpu)   at (-4.2,0) {CPU /\\ Accelerator};
 \node[box] (hbm)   at ( 0.0,0) {HBM (DRAM)};
 \node[box] (feram) at ( 4.2,0) {FeRAM\\ Chiplet};
 
-% データパス（下段同士）
+% データパス
 \draw[->, thick] (cpu) -- node[midway, below, inner sep=1pt]{\scriptsize bandwidth} (hbm);
 \draw[->, thick] (hbm) -- node[midway, below, inner sep=1pt]{\scriptsize persistent data} (feram);
 
-% コントローラからの制御線（曲げて重なり防止）
+% 制御線
 \draw[->, thick] (mc.south) to[out=-90,in=90] (cpu.north);
 \draw[->, thick] (mc.south) -- (hbm.north);
 \draw[->, thick] (mc.south) to[out=-90,in=90] (feram.north);
