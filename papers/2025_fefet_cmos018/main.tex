@@ -1,18 +1,22 @@
 \documentclass[journal]{IEEEtran}
 
+% --- Engine & fonts ---
 \usepackage{iftex}
 \ifXeTeX
   \usepackage{fontspec}
   \usepackage{xeCJK}
-  \setmainfont{Times New Roman}
-  \setsansfont{Arial}
-  \setmonofont{Courier New}
+  % 英文は TeX Live 同梱の TeX Gyre 系（Times/Helvetica/Courier 互換）
+  \setmainfont{TeX Gyre Termes}   % Times 互換
+  \setsansfont{TeX Gyre Heros}    % Helvetica 互換
+  \setmonofont{TeX Gyre Cursor}   % Courier 互換
+  % 日本語は Noto CJK
   \setCJKmainfont{Noto Serif CJK JP}
   \setCJKsansfont{Noto Sans CJK JP}
 \else
-  % pdfLaTeX は使わない前提（CI で XeLaTeX を使います）
+  % CI は XeLaTeX 前提。pdfLaTeX は使わない。
 \fi
 
+% --- Packages ---
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{siunitx}
@@ -58,4 +62,5 @@
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
+
 \end{document}
