@@ -3,7 +3,7 @@ name: Build LaTeX (fefet_cmos018)
 on:
   push:
     paths:
-      - "papers/2025_fefet_cmos018/**"          # ここに refs.bib も含まれる
+      - "papers/2025_fefet_cmos018/**"          # refs.bib も含む
       - ".github/workflows/latex_fefet_cmos018.yml"
   workflow_dispatch:
 
@@ -51,41 +51,34 @@ jobs:
           LANG: C.UTF-8
         run: |
           set -e
-          # 1st LaTeX で .aux を作成
-          xelatex -file-line-error -interaction=nonstopmode main.tex || true
 
-          # BibTeX 実行（.aux が無い/refs.bib が無い場合は明示的に失敗）
+          # 1st pass（.aux 生成）
+          xelatex -file-line-error -interaction=nonstopmode main.tex | tee main_pass1.log || true
+
+          # BibTeX
           if [ ! -f main.aux ]; then
             echo "::error::main.aux が生成されていません（LaTeX 1st pass 失敗）"; exit 1
           fi
-          if ! grep -q "\citation" main.aux; then
-            echo "No citations found in main.aux -> それでも BibTeX を実行します"
-          fi
           bibtex main || true
-
-          # 追加の安全チェック：refs.bib を開けなかったら落とす
           if grep -q "I couldn't open database file" main.blg; then
             echo "::error::BibTeX が refs.bib を開けませんでした"; exit 1
           fi
 
-          # 2nd/3rd pass
-          xelatex -file-line-error -interaction=nonstopmode main.tex || true
-          xelatex -file-line-error -interaction=nonstopmode main.tex || true
+          # 2nd / 3rd pass
+          xelatex -file-line-error -interaction=nonstopmode main.tex | tee main_pass2.log || true
+          xelatex -file-line-error -interaction=nonstopmode main.tex | tee main_pass3.log || true
 
-          echo "==== tail main.log (last 200 lines) ===="
-          tail -n 200 main.log || true
+          echo "==== tail main_pass3.log (last 200 lines) ===="
+          tail -n 200 main_pass3.log || true
 
-          # 参照未解決を検出して落とす
-          if grep -q "Undefined citations" main.log || grep -q "LaTeX Warning: Reference .* undefined" main.log ; then
-            echo "::error::Undefined citations or references remain."
+          # ★ 最終パスのみで未解決を判定
+          if grep -qE "Undefined citations|LaTeX Warning: Reference .* undefined" main_pass3.log ; then
+            echo "::error::Undefined citations or references remain (final pass)."
             exit 1
           fi
 
-          # PDF が無ければ失敗
-          if [ ! -f main.pdf ]; then
-            echo "::error::PDF was not generated."
-            exit 1
-          fi
+          # PDF 確認
+          [ -f main.pdf ] || { echo "::error::PDF was not generated."; exit 1; }
 
       - name: Upload PDF
         if: always()
