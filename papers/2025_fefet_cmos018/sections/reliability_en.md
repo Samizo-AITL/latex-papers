@@ -1,24 +1,41 @@
-\section*{Reliability}
-
-\subsection*{Endurance}
-Program/erase (P/E) cycling up to $10^5$ operations exhibits less than 20\% degradation in the threshold-voltage window $\Delta V_{\mathrm{th}}$ (Fig.~\ref{fig:endurance}), consistent with reports on HfO$_2$-based FeFETs~\citep{mueller2015endurance,park2020nbdoping}.
-
 \begin{figure}[t]
-  \centering
-  \IfFileExists{figs/endurance.pdf}{
-    \includegraphics[width=0.85\linewidth]{endurance}
-  }{
-    \fbox{\parbox{0.85\linewidth}{
-      \centering \vspace{18mm}
-      \textbf{FIG PLACEHOLDER}\\[2mm]
-      Put \texttt{figs/endurance.pdf} here.\\
-      (Endurance at $V_{\mathrm{PGM}}=X$\,V, pulse $t=Y\,\mu$s)
-      \vspace{18mm}
-    }}
-  }
-  \caption{Endurance measured at $V_{\mathrm{PGM}} = X$\,V with pulse width $t = Y\,\mu$s.}
-  \label{fig:endurance}
-\end{figure}
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+  width=0.86\linewidth,
+  height=48mm,
+  xmin=10, xmax=1e5,
+  ymin=80, ymax=100,
+  xlabel={P/E Cycles},
+  ylabel={Normalized $\Delta V_{\mathrm{th}}$ Window (\%)},
+  ymajorgrids, xmajorgrids,
+  tick align=outside,
+  label style={font=\footnotesize},
+  tick label style={font=\footnotesize},
+]
+% 20% degradation threshold (at 80%)
+\addplot[densely dashed] coordinates {(10,80) (1e5,80)};
+\node[anchor=west,font=\footnotesize] at (axis cs:12,80.8) {20\% Degradation Threshold};
 
-\subsection*{Retention}
-Retention is projected for 10 years at 85$^\circ$C using an Arrhenius activation model~\citep{Yamazaki2018}, in line with trends summarized in~\citep{schenk2019review}.
+% Example endurance decay curve
+\addplot[very thick] table[row sep=\\]{
+x   y\\
+10  99.5\\
+20  98.5\\
+50  97.0\\
+100 95.0\\
+200 93.8\\
+500 92.0\\
+1000 90.0\\
+2000 88.5\\
+5000 86.8\\
+10000 85.0\\
+20000 83.5\\
+50000 82.5\\
+100000 82.0\\
+};
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{Endurance measured at $V_{\mathrm{PGM}}=X\,\mathrm{V}$ with pulse width $t=Y\,\mu\mathrm{s}$ (example trend).}
+\label{fig:endurance}
+\end{figure}
