@@ -1,20 +1,20 @@
 \documentclass[journal]{IEEEtran}
 
-% --- Engine & fonts ---
+% ---------- Engine & fonts ----------
 \usepackage{iftex}
 \ifXeTeX
   \usepackage{fontspec}
   \usepackage{xeCJK}
-  % 英文は TeX Gyre 系
-  \setmainfont{TeX Gyre Termes}   % Times 互換
-  \setsansfont{TeX Gyre Heros}    % Helvetica 互換
-  \setmonofont{TeX Gyre Cursor}   % Courier 互換
-  % 日本語は Noto CJK
+  % English fonts (TeX Gyre family)
+  \setmainfont{TeX Gyre Termes}
+  \setsansfont{TeX Gyre Heros}
+  \setmonofont{TeX Gyre Cursor}
+  % Japanese fonts (Noto CJK)
   \setCJKmainfont{Noto Serif CJK JP}
   \setCJKsansfont{Noto Sans CJK JP}
 \fi
 
-% --- Packages ---
+% ---------- Packages ----------
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{siunitx}
@@ -23,147 +23,71 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{hyperref}
+\usepackage{url}
+\graphicspath{{figs/}} % figures directory
+
+% ---------- Helper: safe \input ----------
+\makeatletter
+\newcommand{\maybeinput}[1]{\IfFileExists{#1}{\input{#1}}{\textit{[missing: #1]}}}
+\makeatother
+
+% Avoid small-caps + Unicode subscript clash (e.g., HfO₂).
+% Prefer math subscripts HfO$_2$, HZO$_x$ etc. in the source.
 
 \begin{document}
 
-\title{FeFET CMOS 0.18µm Integration Study}
+\title{FeFET CMOS 0.18\,$\mu$m Integration Study}
 \author{Samizo-AITL}
 \maketitle
 
-% ------- Abstract -------
+% ================= Abstracts =================
 \begin{abstract}
-Context: Ferroelectric field-effect transistors (FeFETs) based on Hf$_{0.5}$Zr$_{0.5}$O$_2$ provide a CMOS-compatible option for embedded nonvolatile memory.  
-Approach: We integrate a gate-last FeFET module into a 0.18\,$\mu$m CMOS logic baseline with only one additional mask.  
-Results: Devices exhibit a threshold-voltage window of 0.8--1.0\,V, endurance beyond $10^5$ program/erase cycles, and retention projected $>$10 years at 85$^\circ$C.  
-Implications: These results enable instant-on, SRAM backup, and secure key storage on mature 0.18\,$\mu$m technology nodes.
+\maybeinput{build/abstract_en.tex}
 \end{abstract}
 
 \begin{IEEEkeywords}
 FeFET, HfZrO$_x$, 0.18\,$\mu$m CMOS, reliability, process integration
 \end{IEEEkeywords}
 
-% ------- Japanese Abstract -------
 \section*{要旨}
-背景：Hf$_{0.5}$Zr$_{0.5}$O$_2$ に基づく強誘電 FET は、組込み用途向けの CMOS 互換不揮発メモリとして期待される。  
-手法：レガシー 0.18\,$\mu$m CMOS ロジックベースラインに、1 枚の追加マスクでゲートラスト型 FeFET モジュールを統合した。  
-結果：デバイスは 0.8--1.0 V のしきい値ウィンドウを示し、$10^5$ 回を超える書換え耐久性、85$^\circ$C における 10 年超の保持特性を確認した。  
-意義：これにより、成熟した 0.18\,$\mu$m ラインにおいて、自動車 ECU や IoT ノード向けに瞬時起動、SRAM バックアップ、セキュアキー格納を実現できる。
+\maybeinput{build/abstract_ja.tex}
 
 \section*{索引用語}
 FeFET，強誘電 HfZrO$_x$，0.18\,$\mu$m CMOS，信頼性，プロセス統合
 
-% =====================================================
+% ================= Body =================
 \section{Introduction}
-FeFETs based on HfZrO thin films have emerged as CMOS-compatible candidates for embedded nonvolatile memory (NVM)~\cite{boscke2011hafnium,mueller2012fefet}. Practical deployment requires integration within mature logic processes~\cite{mitsubishi2003automotive}, such as 0.18\,$\mu$m widely used in automotive and IoT.  
-This paper demonstrates a minimal-overhead FeFET module compatible with 0.18\,$\mu$m CMOS, achieving endurance and retention.
+\maybeinput{build/intro_en.tex}
 
 \section*{序論}
-HfZrO 系薄膜に基づく FeFET は CMOS に適合した組込み用途向け不揮発メモリ候補として注目されている~\cite{boscke2011hafnium,mueller2012fefet}。実用化には、自動車や IoT に用いられるレガシー 0.18\,$\mu$m CMOS プロセスでの統合が必須である~\cite{mitsubishi2003automotive}。  
-本研究では、最小限の追加工程で統合可能な FeFET モジュールを提案し、耐久性および保持特性を示す。
+\maybeinput{build/intro_ja.tex}
 
-% =====================================================
 \section{Process Integration}
-The ferroelectric gate stack is inserted after polysilicon removal. Table~\ref{tab:masks} summarizes added steps. Fig.~\ref{fig:flow} shows placement.
-
-\begin{table}[!t]
-  \centering
-  \caption{Added masks relative to baseline.}
-  \label{tab:masks}
-  \begin{tabular}{@{}lcc@{}}
-    \toprule
-    Step & Mask & Comment \\
-    \midrule
-    FE gate & +1 & New mask \\
-    FE anneal & 0 & Done in BEOL furnace \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+\maybeinput{build/process_integration_en.tex}
 
 \section*{プロセス統合}
-強誘電ゲートスタックはポリシリコン除去後に挿入される。表~\ref{tab:masks} に追加工程を示し、図~\ref{fig:flow} に 0.18\,$\mu$m ロジックフローにおける配置を示す。
+\maybeinput{build/process_integration_ja.tex}
 
-% =====================================================
 \section{Experimental Conditions}
-Ferroelectric gate stacks were prepared with:
-\begin{itemize}
-\item Hf$_{0.5}$Zr$_{0.5}$O$_2$ 10 nm (ALD)
-\item Capacitor area: $100\times100\,\mu$m$^2$
-\item Gate voltage: $\pm$3 V, 1--10 µs pulses
-\item Measurement: 1 kHz–1 MHz
-\item Equipment: Keysight B1500A + Cascade probe
-\end{itemize}
+\maybeinput{build/experimental_conditions_en.tex}
 
 \section*{実験条件}
-\begin{itemize}
-\item Hf$_{0.5}$Zr$_{0.5}$O$_2$ 10 nm (ALD堆積)  
-\item キャパシタ面積 $100\times100\,\mu$m$^2$  
-\item ゲート電圧 $\pm$3 V、パルス幅 1--10 µs  
-\item 測定周波数 1 kHz–1 MHz  
-\item 計測系: Keysight B1500A 半導体アナライザ + Cascade プローブステーション  
-\end{itemize}
+% JA 側は .tex を直接置いている想定（.md → .tex に揃えたら build/ にしてください）
+\maybeinput{sections/experimental_conditions_ja.tex}
 
-% =====================================================
-\section{FeFET Gate-Last Module (HfO₂/HZO)}
-A gate-last module was developed. Table~\ref{tab:flow} shows steps 901–911.
-
-\begin{table*}[!t]
-  \centering
-  \caption{FeFET gate-last process module flow.}
-  \label{tab:flow}
-  \begin{tabular}{@{}cllll@{}}
-    \toprule
-    No. & Mask & Step & Method & Condition \\
-    \midrule
-    901 & FE-OPN & Gate opening & Litho & KrF \\
-    902 & -- & Dummy poly removal & Etch & HBr/Cl$_2$ RIE \\
-    903 & -- & GOX refresh & Wet & 0.5\% HF \\
-    904 & FE-IL & Interfacial Al$_2$O$_3$ 1--2 nm & ALD & 200--250$^\circ$C \\
-    905 & FE-HZO & Hf$_{0.5}$Zr$_{0.5}$O$_2$ 8--12 nm & ALD & 200--300$^\circ$C \\
-    906 & FE-CAP & Cap Al$_2$O$_3$ 1--2 nm (opt.) & ALD & -- \\
-    907 & FE-TiN & TiN 30--50 nm & PVD/ALD & Long-throw sputter \\
-    908 & FE-GP  & Gate patterning & Litho/RIE & KrF \\
-    909 & FE-ANL & Crystallization & RTA & 450--500$^\circ$C, 30--60 s \\
-    910 & FE-FGA & Forming gas anneal & Furnace & 350$^\circ$C, 20--30 min \\
-    911 & FE-ISO & Isolation + CMP & HDP/TEOS & -- \\
-    \bottomrule
-  \end{tabular}
-\end{table*}
-
-\section*{FeFETゲートラストモジュール}
-ゲートラスト工程を開発した。工程 901–911 を表~\ref{tab:flow} に示す。
-
-% =====================================================
 \section{Reliability}
-Endurance: $10^5$ P/E cycles with $\Delta V_{th}$ degradation $<$20\%.  
-Retention: 10-year projection at 85$^\circ$C via Arrhenius extrapolation.  
+\maybeinput{build/reliability_en.tex}
 
 \section*{信頼性}
-耐久性：$10^5$ サイクルで $\Delta V_{th}$ 劣化 20\% 未満。  
-保持：85$^\circ$C にて 10 年保持を Arrhenius 外挿で確認。
+\maybeinput{build/reliability_ja.tex}
 
-% =====================================================
-\section{Reliability Challenges and Strategy}
-Endurance limit: $10^4$–$10^5$ cycles, lower than SRAM/DRAM.  
-TDDB: Limited by oxygen-vacancy leakage.  
-Retention/Wake-up: Early-cycle drift and high-$T$ degradation.  
-
-Strategic focus: FeFETs restricted to auxiliary NVM (SRAM backup, instant-on, secure key).  
-
-\section*{信頼性課題と戦略}
-耐久性：書換寿命は $10^4$–$10^5$ サイクルで、SRAM/DRAM に比べ制約。  
-TDDB：酸素空孔リークにより寿命制限。  
-保持／Wake-up：初期サイクルのドリフト、高温保持で劣化。  
-
-戦略的割り切り：大容量化を狙わず、SRAM 補助 NVM に特化し、実用性と歩留まりを両立。
-
-% =====================================================
 \section{Conclusion}
-We demonstrated a minimal-mask FeFET integration on 0.18\,$\mu$m CMOS. Verified endurance/retention. Future work: array yield and sense-path co-design.
+\maybeinput{build/conclusion_en.tex}
 
 \section*{結論}
-0.18\,$\mu$m CMOS に最小限の追加マスクで FeFET モジュールを統合し、耐久性・保持特性を実証した。今後はアレイ歩留まりとセンス回路の協調最適化に取り組む。
+\maybeinput{build/conclusion_ja.tex}
 
-% =====================================================
+% ================= References =================
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
