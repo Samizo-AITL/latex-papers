@@ -8,14 +8,14 @@
 \usepackage{float}
 \usepackage[compact]{titlesec}
 
-% --- graphics: search path & preferred extensions (EPS first) ---
-\graphicspath{{./}{figs/}}
-\DeclareGraphicsExtensions{.eps,.jpg,.jpeg}
-
 % --- tighten section spacing ---
 \titlespacing{\section}{0pt}{*1.0}{*0.5}
 \titlespacing{\subsection}{0pt}{*0.6}{*0.35}
 \titlespacing{\subsubsection}{0pt}{*0.45}{*0.25}
+
+% --- graphics path and extensions ---
+\graphicspath{{figs/}{fig/}{images/}{./}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
 
 % ---------- Document ----------
 \begin{document}
@@ -24,7 +24,7 @@
 
 \author{\IEEEauthorblockN{Shinichi Samizo}
 \IEEEauthorblockA{Independent Semiconductor Researcher; Former Engineer at Seiko Epson Corporation\\
-Email: shin3t72@gmail.com,\; GitHub: https://github.com/Samizo-AITL}
+Email: shin3t72@gmail.com, GitHub: https://github.com/Samizo-AITL}
 }
 
 \maketitle
@@ -37,13 +37,13 @@ Ferroelectric field-effect transistors (FeFETs) based on Hf$_{0.5}$Zr$_{0.5}$O$_
 FeFET, HfZrO$_2$, 0.18~$\mu$m CMOS, reliability, process integration
 \end{IEEEkeywords}
 
+% ------------------------
 \section{Introduction}
 FeFETs based on HZO thin films have emerged as a CMOS-compatible option for embedded NVM~\cite{Boscke2011,Mueller2012,Schenk2019}. We target a legacy 0.18~$\mu$m CMOS flow and demonstrate a minimal-overhead integration of FeFET modules. This paper makes three contributions: (i) drop-in FeFET module fully compatible with the baseline logic flow, (ii) realization with only one extra mask (cost minimization), and (iii) quantitative evaluation of endurance/retention. Surveys of FeFET integration/reliability appear in~\cite{Mueller2015,Park2020}, and automotive reliability considerations in~\cite{Nakamura2003}.
 
-% ==== Fig.1 then Table 1 (vertical order preserved) ====
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.42\textwidth]{fig1_flow} % <- no extension
+  \includegraphics[width=0.42\textwidth]{fig1_flow}
   \caption{Placement of FeFET module within the 0.18~$\mu$m CMOS baseline (vertical layout).}
   \label{fig:flow}
 \end{figure}
@@ -61,6 +61,7 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
 \end{tabular}
 \end{table}
 
+% ------------------------
 \section{Process Integration}
 
 \subsection{Flow Placement (Fig.~\ref{fig:flow})}
@@ -69,8 +70,10 @@ The ferroelectric (FE) gate stack is inserted after polysilicon definition. Only
 \subsection{Device Stack and Notes}
 TiN / Hf$_{0.5}$Zr$_{0.5}$O$_2$ (8--12~nm, ALD) / Al$_2$O$_3$ interfacial layer (1--2~nm) / p-Si. Notes: The 1.8~V/3.3~V baseline is extended with an 1.8~V FeFET option. FeFETs serve as auxiliary NVM blocks for 1.8~V SRAM macros (not large arrays). Integration is feasible in a 0.18~$\mu$m line by adding ALD; TiN can reuse barrier sputter tools. The FeFET module is inserted after FEOL Co salicide and lamp anneal, requiring only one extra mask.
 
+% ------------------------
 \section{Experimental Conditions}
 To represent the \textbf{newly added FeFET capacitor option} in the 0.18~$\mu$m flow, MIM-like capacitors using the same IL/FE/TiN stack were fabricated and used as a reliability vehicle. Unless noted, the following conditions apply:
+
 \begin{itemize}
   \item \textbf{FE gate stack:} Hf$_{0.5}$Zr$_{0.5}$O$_2$ thickness: 10~nm (ALD); Al$_2$O$_3$ IL: 1--2~nm; TiN gate: 30--50~nm (co-fabricated with the logic FeFET).
   \item \textbf{Capacitor area:} $100 \times 100~\mu$m$^2$ (test structure scribe).
@@ -78,6 +81,7 @@ To represent the \textbf{newly added FeFET capacitor option} in the 0.18~$\mu$m 
   \item \textbf{Measurement:} 1~kHz--1~MHz; Keysight B1500A + Cascade probe station.
 \end{itemize}
 
+% ------------------------
 \section{Reliability}
 
 \subsection{Endurance (illustrative)}
@@ -110,26 +114,35 @@ Time-dependent dielectric breakdown (TDDB) in HZO stacks is impacted by oxygen-v
   \label{fig:tddb}
 \end{figure}
 
+% ------------------------
 \section{Conclusion}
 We demonstrated a minimal-mask integration of FeFETs into a 0.18~$\mu$m CMOS flow, achieving verified endurance and retention characteristics. Future work will address array-level yield optimization and co-design of the sense path.
 
+% ------------------------
 \begin{thebibliography}{8}
 \bibitem{Boscke2011}
-T.~S.~B\"oscke, J.~M\"uller, D.~Schr\"oder, and T.~Mikolajick, ``Ferroelectricity in hafnium oxide thin films,'' \emph{Appl. Phys. Lett.}, vol.~99, p.~102903, 2011.
+T. S. Böscke, J. Müller, D. Schröder, and T. Mikolajick, ``Ferroelectricity in hafnium oxide thin films,'' \emph{Appl. Phys. Lett.}, vol. 99, p. 102903, 2011.
+
 \bibitem{Mueller2012}
-J.~M\"uller, P.~Polakowski, S.~M\"uller, and T.~Mikolajick, ``Ferroelectricity in simple binary ZrO$_2$ and HfO$_2$,'' \emph{Appl. Phys. Lett.}, vol.~99, p.~112901, 2012.
+J. Müller, P. Polakowski, S. Müller, and T. Mikolajick, ``Ferroelectricity in simple binary ZrO$_2$ and HfO$_2$,'' \emph{Appl. Phys. Lett.}, vol. 99, p. 112901, 2012.
+
 \bibitem{Schenk2019}
-T.~Schenk, U.~Schroeder, and T.~Mikolajick, ``Ferroelectric hafnium oxide for ferroelectric random-access memories: A review,'' \emph{J. Appl. Phys.}, vol.~125, p.~152902, 2019.
+T. Schenk, U. Schroeder, and T. Mikolajick, ``Ferroelectric hafnium oxide for ferroelectric random-access memories: A review,'' \emph{J. Appl. Phys.}, vol. 125, p. 152902, 2019.
+
 \bibitem{Mueller2015}
-J.~M\"uller, J.~M\"uller, U.~Schr\"oder \emph{et al.}, ``Endurance of ferroelectric hafnium oxide based FeFETs,'' \emph{IEEE Trans. Electron Devices}, vol.~62, no.~11, pp.~3622--3628, 2015.
+J. Müller, J. Müller, U. Schröder et al., ``Endurance of ferroelectric hafnium oxide based FeFETs,'' \emph{IEEE Trans. Electron Devices}, vol. 62, no. 11, pp. 3622--3628, 2015.
+
 \bibitem{Park2020}
-J.~Park, H.~Kim, S.~Lee \emph{et al.}, ``Endurance enhancement in HfO$_2$-based FeFETs by Nb doping,'' \emph{IEEE Electron Device Lett.}, vol.~41, no.~12, pp.~1825--1828, 2020.
+J. Park, H. Kim, S. Lee et al., ``Endurance enhancement in HfO$_2$-based FeFETs by Nb doping,'' \emph{IEEE Electron Device Lett.}, vol. 41, no. 12, pp. 1825--1828, 2020.
+
 \bibitem{Nakamura2003}
-H.~Nakamura \emph{et al.}, ``Automotive electronics reliability requirements for semiconductor devices,'' \emph{IEEE Trans. Device and Materials Reliability}, vol.~3, no.~4, pp.~142--149, 2003.
+H. Nakamura et al., ``Automotive electronics reliability requirements for semiconductor devices,'' \emph{IEEE Trans. Device and Materials Reliability}, vol. 3, no. 4, pp. 142--149, 2003.
+
 \bibitem{Yamazaki2018}
-K.~Yamazaki \emph{et al.}, ``Retention characteristics of HfO$_2$-based ferroelectric capacitors evaluated by Arrhenius extrapolation,'' \emph{Jpn. J. Appl. Phys.}, vol.~57, 04FB01, 2018.
+K. Yamazaki et al., ``Retention characteristics of HfO$_2$-based ferroelectric capacitors evaluated by Arrhenius extrapolation,'' \emph{Jpn. J. Appl. Phys.}, vol. 57, 04FB01, 2018.
 \end{thebibliography}
 
+% ------------------------
 \section*{Author Biography}
 Shinichi Samizo received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. He joined Seiko Epson Corporation in 1997, engaging in semiconductor device process development including 0.25--0.18~$\mu$m CMOS, HV-CMOS, DRAM, FeRAM, and FinFET/GAA research. He also contributed to inkjet MEMS process development and thin-film piezo actuator design, leading to the productization of PrecisionCore printheads. His expertise covers semiconductor devices (logic, memory [DRAM/FeRAM/SRAM], high-voltage mixed integration), inkjet actuators, and AI-based control education.
 
