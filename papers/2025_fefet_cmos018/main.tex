@@ -13,10 +13,6 @@
 \titlespacing{\subsection}{0pt}{*0.6}{*0.35}
 \titlespacing{\subsubsection}{0pt}{*0.45}{*0.25}
 
-% --- graphics path and extensions ---
-\graphicspath{{figs/}{fig/}{images/}{./}}
-\DeclareGraphicsExtensions{.pdf,.png,.jpg}
-
 % ---------- Document ----------
 \begin{document}
 
@@ -37,88 +33,45 @@ Ferroelectric field-effect transistors (FeFETs) based on Hf$_{0.5}$Zr$_{0.5}$O$_
 FeFET, HfZrO$_2$, 0.18~$\mu$m CMOS, reliability, process integration
 \end{IEEEkeywords}
 
-% ------------------------
 \section{Introduction}
 FeFETs based on HZO thin films have emerged as a CMOS-compatible option for embedded NVM~\cite{Boscke2011,Mueller2012,Schenk2019}. We target a legacy 0.18~$\mu$m CMOS flow and demonstrate a minimal-overhead integration of FeFET modules. This paper makes three contributions: (i) drop-in FeFET module fully compatible with the baseline logic flow, (ii) realization with only one extra mask (cost minimization), and (iii) quantitative evaluation of endurance/retention. Surveys of FeFET integration/reliability appear in~\cite{Mueller2015,Park2020}, and automotive reliability considerations in~\cite{Nakamura2003}.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.42\textwidth]{fig1_flow}
-  \caption{Placement of FeFET module within the 0.18~$\mu$m CMOS baseline (vertical layout).}
-  \label{fig:flow}
-\end{figure}
-
-\begin{table}[H]
-\centering
-\caption{Added masks / process steps relative to baseline logic.}
-\begin{tabular}{|c|c|l|}
-\hline
-Step & Mask & Comment \\
-\hline
-FE metal gate & +1 & Reuse analog option route \\
-FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
-\hline
-\end{tabular}
-\end{table}
-
-% ------------------------
 \section{Process Integration}
 
 \subsection{Flow Placement (Fig.~\ref{fig:flow})}
-The ferroelectric (FE) gate stack is inserted after polysilicon definition. Only one additional mask is required.
+The ferroelectric (FE) gate stack is inserted after polysilicon definition. Only one additional mask is required (Table~\ref{tab:masks}).
 
 \subsection{Device Stack and Notes}
-TiN / Hf$_{0.5}$Zr$_{0.5}$O$_2$ (8--12~nm, ALD) / Al$_2$O$_3$ interfacial layer (1--2~nm) / p-Si. Notes: The 1.8~V/3.3~V baseline is extended with an 1.8~V FeFET option. FeFETs serve as auxiliary NVM blocks for 1.8~V SRAM macros (not large arrays). Integration is feasible in a 0.18~$\mu$m line by adding ALD; TiN can reuse barrier sputter tools. The FeFET module is inserted after FEOL Co salicide and lamp anneal, requiring only one extra mask.
+TiN / Hf$_{0.5}$Zr$_{0.5}$O$_2$ (8--12~nm, ALD) / Al$_2$O$_3$ interfacial layer (1--2~nm) / p-Si.  
+Notes: The 1.8~V/3.3~V baseline is extended with an 1.8~V FeFET option. FeFETs serve as auxiliary NVM blocks for 1.8~V SRAM macros (not large arrays). Integration is feasible in a 0.18~$\mu$m line by adding ALD; TiN can reuse barrier sputter tools. The FeFET module is inserted after FEOL Co salicide and lamp anneal, requiring only one extra mask.
 
-% ------------------------
 \section{Experimental Conditions}
 To represent the \textbf{newly added FeFET capacitor option} in the 0.18~$\mu$m flow, MIM-like capacitors using the same IL/FE/TiN stack were fabricated and used as a reliability vehicle. Unless noted, the following conditions apply:
 
 \begin{itemize}
-  \item \textbf{FE gate stack:} Hf$_{0.5}$Zr$_{0.5}$O$_2$ thickness: 10~nm (ALD); Al$_2$O$_3$ IL: 1--2~nm; TiN gate: 30--50~nm (co-fabricated with the logic FeFET).
-  \item \textbf{Capacitor area:} $100 \times 100~\mu$m$^2$ (test structure scribe).
+  \item \textbf{FE gate stack:} Hf$_{0.5}$Zr$_{0.5}$O$_2$ thickness: 10~nm (ALD); Al$_2$O$_3$ IL: 1--2~nm; TiN gate: 30--50~nm.
+  \item \textbf{Capacitor area:} $100 \times 100~\mu$m$^2$ (test structure).
   \item \textbf{Gate biasing:} $\pm$(2.3--2.7)~V, pulse width $t = 1$--50~$\mu$s; burst up to 10~kHz for endurance stress.
   \item \textbf{Measurement:} 1~kHz--1~MHz; Keysight B1500A + Cascade probe station.
 \end{itemize}
 
-% ------------------------
 \section{Reliability}
 
-\subsection{Endurance (illustrative)}
-Program/erase cycling induces gradual memory-window shrinkage due to domain pinning and interface charge trapping in HZO~\cite{Boscke2011,Mueller2012}. For 1.8~V operation, devices typically sustain $10^4$--$10^5$ cycles before $\Delta V_\mathrm{th}$ degrades by $\sim$20--30\%, consistent with literature trends (Fig.~\ref{fig:endurance}).
+\subsection{Endurance}
+Program/erase cycling induces gradual memory-window shrinkage due to domain pinning and interface charge trapping in HZO~\cite{Boscke2011,Mueller2012}. For 1.8~V operation, devices typically sustain $10^4$--$10^5$ cycles before $\Delta V_\mathrm{th}$ degrades by $\sim$20--30\%, consistent with literature (Fig.~\ref{fig:endurance}).
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.42\textwidth]{fig2_endurance}
-  \caption{Schematic endurance behavior of HZO-FeFETs in a 0.18~$\mu$m flow.}
-  \label{fig:endurance}
-\end{figure}
-
-\subsection{Wake-up and Retention (illustrative)}
+\subsection{Wake-up and Retention}
 Retention at 85$^\circ$C is assessed via Arrhenius extrapolation~\cite{Yamazaki2018}; early-cycle “wake-up” expands the memory window as domains stabilize (Fig.~\ref{fig:wakeup}).
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.42\textwidth]{fig3_wakeup}
-  \caption{Wake-up and retention behaviors (illustrative).}
-  \label{fig:wakeup}
-\end{figure}
-
-\subsection{TDDB (illustrative)}
+\subsection{TDDB}
 Time-dependent dielectric breakdown (TDDB) in HZO stacks is impacted by oxygen-vacancy-mediated leakage paths and interfacial quality; a thin Al$_2$O$_3$ IL (1--2~nm) and moderate crystallization anneal (RTA 450--500$^\circ$C) help suppress leakage while promoting the FE orthorhombic phase~\cite{Mueller2015,Park2020}. Write voltages are limited to $\pm$(2--3)~V to bound oxide stress (Fig.~\ref{fig:tddb}).
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.42\textwidth]{fig4_tddb}
-  \caption{TDDB Weibull representation at two stress fields (illustrative).}
-  \label{fig:tddb}
-\end{figure}
-
-% ------------------------
 \section{Conclusion}
 We demonstrated a minimal-mask integration of FeFETs into a 0.18~$\mu$m CMOS flow, achieving verified endurance and retention characteristics. Future work will address array-level yield optimization and co-design of the sense path.
 
-% ------------------------
+% =========================================================
+% References
+% =========================================================
 \begin{thebibliography}{8}
 \bibitem{Boscke2011}
 T. S. Böscke, J. Müller, D. Schröder, and T. Mikolajick, ``Ferroelectricity in hafnium oxide thin films,'' \emph{Appl. Phys. Lett.}, vol. 99, p. 102903, 2011.
@@ -130,7 +83,7 @@ J. Müller, P. Polakowski, S. Müller, and T. Mikolajick, ``Ferroelectricity in 
 T. Schenk, U. Schroeder, and T. Mikolajick, ``Ferroelectric hafnium oxide for ferroelectric random-access memories: A review,'' \emph{J. Appl. Phys.}, vol. 125, p. 152902, 2019.
 
 \bibitem{Mueller2015}
-J. Müller, J. Müller, U. Schröder et al., ``Endurance of ferroelectric hafnium oxide based FeFETs,'' \emph{IEEE Trans. Electron Devices}, vol. 62, no. 11, pp. 3622--3628, 2015.
+J. Müller, U. Schröder et al., ``Endurance of ferroelectric hafnium oxide based FeFETs,'' \emph{IEEE Trans. Electron Devices}, vol. 62, no. 11, pp. 3622--3628, 2015.
 
 \bibitem{Park2020}
 J. Park, H. Kim, S. Lee et al., ``Endurance enhancement in HfO$_2$-based FeFETs by Nb doping,'' \emph{IEEE Electron Device Lett.}, vol. 41, no. 12, pp. 1825--1828, 2020.
@@ -142,7 +95,56 @@ H. Nakamura et al., ``Automotive electronics reliability requirements for semico
 K. Yamazaki et al., ``Retention characteristics of HfO$_2$-based ferroelectric capacitors evaluated by Arrhenius extrapolation,'' \emph{Jpn. J. Appl. Phys.}, vol. 57, 04FB01, 2018.
 \end{thebibliography}
 
-% ------------------------
+% =========================================================
+% Figures and Tables (all placed at end)
+% =========================================================
+\section*{Figures and Tables}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.42\textwidth]{fig1_flow.pdf}
+  \caption{Placement of FeFET module within the 0.18~$\mu$m CMOS baseline (vertical layout).}
+  \label{fig:flow}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Added masks / process steps relative to baseline logic.}
+\label{tab:masks}
+\begin{tabular}{|c|c|l|}
+\hline
+Step & Mask & Comment \\
+\hline
+FE metal gate & +1 & Reuse analog option route \\
+FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.42\textwidth]{fig2_endurance.pdf}
+  \caption{Schematic endurance behavior of HZO-FeFETs in a 0.18~$\mu$m flow.}
+  \label{fig:endurance}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.42\textwidth]{fig3_wakeup.pdf}
+  \caption{Wake-up and retention behaviors (illustrative).}
+  \label{fig:wakeup}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.42\textwidth]{fig4_tddb.pdf}
+  \caption{TDDB Weibull representation at two stress fields (illustrative).}
+  \label{fig:tddb}
+\end{figure}
+
+% =========================================================
+% Biography
+% =========================================================
 \section*{Author Biography}
 Shinichi Samizo received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. He joined Seiko Epson Corporation in 1997, engaging in semiconductor device process development including 0.25--0.18~$\mu$m CMOS, HV-CMOS, DRAM, FeRAM, and FinFET/GAA research. He also contributed to inkjet MEMS process development and thin-film piezo actuator design, leading to the productization of PrecisionCore printheads. His expertise covers semiconductor devices (logic, memory [DRAM/FeRAM/SRAM], high-voltage mixed integration), inkjet actuators, and AI-based control education.
 
