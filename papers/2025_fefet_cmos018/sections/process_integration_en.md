@@ -1,14 +1,16 @@
+\section{Process Integration}
+
 \subsection*{Baseline and Added Steps}
 The ferroelectric (FE) gate stack is inserted after polysilicon definition. Additional process steps are minimized and summarized in Table~\ref{tab:masks}. Fig.~\ref{fig:flow} shows placement within the baseline.
 
-\begin{figure}[!t]
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.85\linewidth]{figs/flow_overview.pdf}
-  \caption{Placement of the FeFET module within the 0.18\,\si{\micro\meter} CMOS baseline flow.}
+  \caption{Placement of the FeFET module within the 0.18\,$\mu$m CMOS baseline flow.}
   \label{fig:flow}
 \end{figure}
 
-\begin{table}[!t]
+\begin{table}[t]
   \centering
   \caption{Added masks / process steps relative to baseline logic.}
   \label{tab:masks}
@@ -17,7 +19,7 @@ The ferroelectric (FE) gate stack is inserted after polysilicon definition. Addi
     \textbf{Step} & \textbf{Mask} & \textbf{Comment}\\
     \midrule
     FE metal gate & +1 & Reuses analog option mask\\
-    FE anneal     & 0  & Performed in BEOL furnace\\
+    FE anneal     &  0 & Performed in BEOL furnace\\
     \bottomrule
   \end{tabular}
 \end{table}
