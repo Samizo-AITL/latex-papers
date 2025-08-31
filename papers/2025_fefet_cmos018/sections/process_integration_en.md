@@ -8,31 +8,31 @@ Fig.~\ref{fig:flow} shows placement within the baseline.
 % ===== Flow Overview Figure =====
 \begin{figure}[t]
   \centering
-  % --- If external PDF exists, include ---
-  \IfFileExists{figs/flow_overview.pdf}{
-    \includegraphics[width=0.85\linewidth]{flow_overview}
-  }{
-  % --- Else, fallback TikZ diagram ---
   \begin{tikzpicture}[
-    node distance=5mm,
-    stage/.style={draw,rounded corners,minimum width=10mm,minimum height=8mm,align=center,font=\footnotesize},
+    node distance=6mm,
+    stage/.style={draw,rounded corners,minimum width=28mm,minimum height=6mm,align=center,font=\footnotesize},
     arr/.style={-{Stealth},thick}
   ]
-    \node[stage] (act) {Active/\\Isolation};
-    \node[stage,right=of act] (vt) {V\!T Adjust};
-    \node[stage,right=of vt] (poly) {Poly Gate\\Definition};
-    \node[stage,right=of poly] (ldd) {LDD/Spacer};
-    \node[stage,right=of ldd] (imp) {Implant};
-    \node[stage,right=of imp] (sal) {Salicide};
-    \node[stage,right=of sal] (ild) {ILD + Vias};
-    \draw[arr] (act) -- (vt) -- (poly) -- (ldd) -- (imp) -- (sal) -- (ild);
+    \node[stage] (act) {Active / Isolation};
+    \node[stage,below=of act] (vt) {V\!T Adjust};
+    \node[stage,below=of vt] (poly) {Poly Gate Definition};
+    \node[stage,below=of poly] (ldd) {LDD / Spacer};
+    \node[stage,below=of ldd] (imp) {Source/Drain Implant};
+    \node[stage,below=of imp] (sal) {Salicide (Co)};
+    \node[stage,below=of sal] (fefet) {FeFET Gate-Last Module\\
+      (ALD IL/FE/CAP + TiN + RTA/FGA)};
+    \node[stage,below=of fefet] (ild) {ILD + Vias};
 
-    % FeFET module annotation
-    \node[draw,dashed,very thick,rounded corners,fit=(sal) (ild),
-          inner sep=6mm,label={[font=\scriptsize]right:{\textbf{FeFET Gate-Last Module}\\(ALD IL/FE/CAP + TiN + RTA/FGA)}}] {};
+    % arrows
+    \draw[arr] (act) -- (vt);
+    \draw[arr] (vt) -- (poly);
+    \draw[arr] (poly) -- (ldd);
+    \draw[arr] (ldd) -- (imp);
+    \draw[arr] (imp) -- (sal);
+    \draw[arr] (sal) -- (fefet);
+    \draw[arr] (fefet) -- (ild);
   \end{tikzpicture}
-  }
-  \caption{Placement of the FeFET module within the 0.18\,$\mu$m CMOS baseline flow.}
+  \caption{Placement of the FeFET gate-last module in the 0.18\,$\mu$m CMOS baseline flow.}
   \label{fig:flow}
 \end{figure}
 
