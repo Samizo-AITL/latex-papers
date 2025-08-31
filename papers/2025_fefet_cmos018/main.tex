@@ -28,12 +28,12 @@
 
 % ---------- Helper: safe \input ----------
 \makeatletter
-\newcommand{\maybeinput}[1]{\IfFileExists{#1}{\input{#1}}{\textit{[missing: #1]}}}
+\newcommand{\maybeinput}[1]{%
+  \IfFileExists{#1}{\input{#1}}{\textit{[missing: #1]}}%
+}
 \makeatother
 
-% Avoid small-caps + Unicode subscript clash (e.g., HfO₂).
-% Prefer math subscripts HfO$_2$, HZO$_x$ etc. in the source.
-
+% ---------- Begin Document ----------
 \begin{document}
 
 \title{FeFET CMOS 0.18\,$\mu$m Integration Study}
@@ -72,8 +72,7 @@ FeFET，強誘電 HfZrO$_x$，0.18\,$\mu$m CMOS，信頼性，プロセス統合
 \maybeinput{build/experimental_conditions_en.tex}
 
 \section*{実験条件}
-% JA 側は .tex を直接置いている想定（.md → .tex に揃えたら build/ にしてください）
-\maybeinput{sections/experimental_conditions_ja.tex}
+\maybeinput{build/experimental_conditions_ja.tex}
 
 \section{Reliability}
 \maybeinput{build/reliability_en.tex}
