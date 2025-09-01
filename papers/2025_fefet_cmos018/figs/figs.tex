@@ -13,9 +13,9 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{arrows.meta,positioning,fit}
-\usepackage{subcaption}   % ← subfigure で使う
+\usepackage{subcaption}   % ← subfigure 用
 \usepackage{float}        % ← [H]
-\usepackage{placeins}     % ← \FloatBarrier を使うため必須
+\usepackage{placeins}     % ← \FloatBarrier
 
 \pagestyle{empty}
 
@@ -106,41 +106,42 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 
 \vspace{2mm}
 
-% Fig.3 Wake-up & Retention（横並び）
-\begin{figure}[H]
-\centering
+% ===== Fig.3 Wake-up & Retention（横並び・安全版） =====
+\captionsetup[sub]{font=small,skip=2pt,justification=centering}
 
-% 左：Wake-up
-\begin{subcaptionbox{(a) Wake-up}[0.48\linewidth]{
-\begin{tikzpicture}
-\begin{axis}[
-  width=\linewidth, height=0.36\linewidth, % ←高さ拡大
-  xmin=0, xmax=210, ymin=0.92, ymax=1.00,
-  xlabel={Light P/E Cycles}, ylabel={Normalized Window},
-  grid=both, tick align=outside, /pgf/number format/precision=2
-]
-\addplot+[mark=*, thick] coordinates
-  {(0,0.92) (30,0.98) (60,0.985) (120,0.992) (200,0.996)};
-\end{axis}
-\end{tikzpicture}
-}}\hfill
-% 右：Retention
-\begin{subcaptionbox{(b) Retention at 85$^\circ$C}[0.48\linewidth]{
-\begin{tikzpicture}
-\begin{axis}[
-  width=\linewidth, height=0.36\linewidth, % ←高さ拡大
-  xmode=log, log basis x=10,
-  xmin=9e1, xmax=1.1e6, ymin=0.92, ymax=1.00,
-  xlabel={Time $t$ (s)}, ylabel={$ \Delta V_{\mathrm{th}}(t)/\Delta V_{\mathrm{th}}(t_0)$},
-  grid=both, tick align=outside
-]
-\addplot+[mark=*, thick] coordinates
-  {(1e2,0.995) (1e3,0.985) (1e4,0.972) (1e5,0.960) (1e6,0.950)};
-\end{axis}
-\end{tikzpicture}
-}}
-\caption{Wake-up（左）と Retention（右）の比較。}
-\label{fig:wakeup_retention}
+\begin{figure}[H]
+  \centering
+  % 左：Wake-up
+  \subcaptionbox{(a) Wake-up}[0.48\linewidth]{%
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=\linewidth, height=0.36\linewidth,
+        xmin=0, xmax=210, ymin=0.92, ymax=1.00,
+        xlabel={Light P/E Cycles}, ylabel={Normalized Window},
+        grid=both, tick align=outside, /pgf/number format/precision=2
+      ]
+        \addplot+[mark=*, thick] coordinates
+          {(0,0.92) (30,0.98) (60,0.985) (120,0.992) (200,0.996)};
+      \end{axis}
+    \end{tikzpicture}
+  }\hfill
+  % 右：Retention
+  \subcaptionbox{(b) Retention at 85$^\circ$C}[0.48\linewidth]{%
+    \begin{tikzpicture}
+      \begin{axis}[
+        width=\linewidth, height=0.36\linewidth,
+        xmode=log, log basis x=10,
+        xmin=9e1, xmax=1.1e6, ymin=0.92, ymax=1.00,
+        xlabel={Time $t$ (s)}, ylabel={$ \Delta V_{\mathrm{th}}(t)/\Delta V_{\mathrm{th}}(t_0)$},
+        grid=both, tick align=outside
+      ]
+        \addplot+[mark=*, thick] coordinates
+          {(1e2,0.995) (1e3,0.985) (1e4,0.972) (1e5,0.960) (1e6,0.950)};
+      \end{axis}
+    \end{tikzpicture}
+  }
+  \caption{Wake-up（左）と Retention（右）の比較。}
+  \label{fig:wakeup_retention}
 \end{figure}
 
 % Fig.4 TDDB（凡例は右下）
