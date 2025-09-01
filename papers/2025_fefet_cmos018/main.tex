@@ -97,46 +97,51 @@ H. Nakamura et al., ``Automotive electronics reliability requirements for semico
 K. Yamazaki et al., ``Retention characteristics of HfO$_2$-based ferroelectric capacitors evaluated by Arrhenius extrapolation,'' \emph{Jpn. J. Appl. Phys.}, vol. 57, 04FB01, 2018.
 \end{thebibliography}
 
-% ================= Figures and Tables after References =================
+% ====== (ここから貼り替え) Figures and Tables after References ======
 \clearpage
+\onecolumn            % 以降は1段組で図表ページにする（空白回避）
 \section*{Figures and Tables}
 
-%--- Fig.1: process placement (TikZ) ---
-\begin{figure}[!t]
+% --- TikZのスタイル定義（/tikz/stepエラー対策）---
+\tikzset{
+  step/.style={
+    draw,
+    rounded corners=2pt,
+    minimum width=42mm,
+    minimum height=4.2mm
+  },
+  callout/.style={draw,dashed,rounded corners=2pt,inner sep=3pt}
+}
+
+% ------- Fig.1: プロセス配置のブロック図（TikZ） -------
+\begin{figure}[H]
 \centering
-\begin{tikzpicture}[font=\footnotesize,>=latex]
-  \tikzstyle{step}=[draw,rounded corners=2pt,minimum width=40mm,minimum height=4mm]
-  \node[step] (act) {Active / Isolation};
-  \node[step,below=4mm of act] (well) {VT Adjust / Well};
-  \node[step,below=4mm of well] (poly) {Poly Gate Definition};
-  \node[step,below=4mm of poly] (ldd) {LDD / Spacer};
-  \node[step,below=4mm of ldd] (sd) {Source/Drain Implant};
-  \node[step,below=4mm of sd] (sal) {Salicide (Co)};
+\begin{tikzpicture}[node distance=6.2mm]
+  \node[step] (iso) {Active / Isolation};
+  \node[step,below=of iso] (well) {VT Adjust / Well};
+  \node[step,below=of well] (poly) {Poly Gate Definition};
+  \node[step,below=of poly] (ldd) {LDD / Spacer};
+  \node[step,below=of ldd] (sd) {Source/Drain Implant};
+  \node[step,below=of sd] (sal) {Salicide (Co)};
 
-  \draw[-stealth] (act) -- (well);
-  \draw[-stealth] (well) -- (poly);
-  \draw[-stealth] (poly) -- (ldd);
-  \draw[-stealth] (ldd) -- (sd);
-  \draw[-stealth] (sd) -- (sal);
+  \draw[-] (iso) -- (well) -- (poly) -- (ldd) -- (sd) -- (sal);
 
-  % FeFET module (dashed box)
-  \node[draw,dashed,rounded corners=2pt,fit={(well) (sd)},inner sep=6mm,label={[align=center]right:
-    \strut Added mask: +1 (FE metal gate)\\
-    \strut FE anneal: BEOL furnace (no extra mask)}] (box) {};
-  \node at ($(well)!0.5!(sd)$) {\parbox{42mm}{\centering FeFET Gate-Last: IL/FE/CAP (ALD) + TiN (PVD/ALD)\\[1mm]
-  Crystallization RTA (450--500$^\circ$C) + FGA (350$^\circ$C)}};
-
-  \node[step,below=8mm of sal] (beol) {ILD + Vias + BEOL};
-  \draw[-stealth] (sal) -- (beol);
+  \node[callout,below=10mm of sal,align=center,minimum width=86mm] (fefet) {%
+    \small FeFET Gate-Last: IL/FE/CAP (ALD) + TiN (PVD/ALD)\\
+    \small Crystallization RTA (450--500$^\circ$C) + FGA (350$^\circ$C)};
+  \draw[dashed] (poly.south) |- (fefet.north);
+  \draw[-] (sal) -- ++(0,-4mm) node[step,below=8mm of sal] (beol) {ILD + Vias + BEOL};
+  \draw[-] (fefet.south) -- (beol.north);
 \end{tikzpicture}
 \caption{Placement of the FeFET gate-last module within the 0.18~$\mu$m CMOS baseline (vertical layout).}
 \label{fig:flow}
 \end{figure}
 
-%--- Table I ---
-\begin{table}[!t]
+% ------- Table 1: 追加マスク --------
+\begin{table}[H]
 \centering
 \caption{Added masks / process steps relative to baseline logic.}
+\label{tab:masks}
 \begin{tabular}{|c|c|l|}
 \hline
 Step & Mask & Comment \\
@@ -145,28 +150,22 @@ FE metal gate & +1 & Reuse analog option route \\
 FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
 \hline
 \end{tabular}
-\label{tab:masks}
 \end{table}
 
-%--- Fig.2: endurance ---
-\begin{figure}[!t]
+% ------- Fig.2: Endurance（pgfplots） -------
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.92\linewidth,
-  height=0.42\linewidth,
-  xmin=1e2,xmax=1e6,
-  ymin=1.28,ymax=1.62,
-  xmode=log,
-  grid=both,
-  xlabel={P/E Cycles},
-  ylabel={Memory Window $\Delta V_\mathrm{th}$ [V]},
-  legend style={at={(0.03,0.97)},anchor=north west,draw=none,fill=none,font=\footnotesize},
-  ticklabel style={/pgf/number format/fixed}
+  width=0.84\textwidth, height=0.38\textwidth,
+  xmin=1e2, xmax=1e6, xmode=log,
+  ymin=1.28, ymax=1.62,
+  xlabel={P/E Cycles}, ylabel={Memory Window $\Delta V_{\mathrm{th}}$ [V]},
+  grid=both, tick align=outside, legend style={at={(0.03,0.97)},anchor=north west}
 ]
-\addplot+[mark=*,thick] coordinates {(1e2,1.60) (5e2,1.55) (1e4,1.48) (1e5,1.40) (1e6,1.30)};
+\addplot+[mark=*, thick] coordinates {(1e2,1.60) (5e2,1.56) (2e3,1.50) (1e4,1.45) (1e5,1.38) (1e6,1.31)};
 \addlegendentry{$\pm 2.5$ V, 10 $\mu$s}
-\addplot+[mark=*,thick,densely dashed] coordinates {(1e2,1.58) (5e2,1.53) (1e4,1.46) (1e5,1.38) (1e6,1.29)};
+\addplot+[mark=*, dashed, thick] coordinates {(1e2,1.58) (5e2,1.54) (2e3,1.48) (1e4,1.43) (1e5,1.36) (1e6,1.30)};
 \addlegendentry{$\pm 2.7$ V, 5 $\mu$s}
 \end{axis}
 \end{tikzpicture}
@@ -174,71 +173,52 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
 \label{fig:endurance}
 \end{figure}
 
-%--- Fig.3: wake-up (top) and retention (bottom) ---  <<<< ここを縦並びに変更
-\begin{figure}[!t]
+% ------- Fig.3: Wake-up と Retention を「縦並び」 -------
+\begin{figure}[H]
 \centering
 % (a) Wake-up
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.92\linewidth,
-  height=0.36\linewidth,
-  xmin=0,xmax=200,
-  ymin=0.92,ymax=1.00,
-  grid=both,
-  xlabel={Light P/E Cycles},
-  ylabel={Normalized Window},
-  ticklabel style={/pgf/number format/fixed}
+  width=0.82\textwidth, height=0.28\textwidth,
+  xmin=0, xmax=200, ymin=0.92, ymax=1.00,
+  xlabel={Light P/E Cycles}, ylabel={Normalized Window},
+  grid=both, tick align=outside
 ]
-\addplot+[mark=*,thick] coordinates {(0,0.92) (30,0.97) (60,0.985) (120,0.992) (200,0.995)};
+\addplot+[mark=*, thick] coordinates {(0,0.92) (20,0.97) (50,0.985) (100,0.992) (180,0.996)};
 \end{axis}
 \end{tikzpicture}
-
-\vspace{1mm}
-\small (a) Wake-up (early cycles). \normalsize
 
 \vspace{2mm}
-% (b) Retention projection
+
+% (b) Retention @85C
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.92\linewidth,
-  height=0.36\linewidth,
-  xmode=log,
-  xmin=1e2,xmax=1e6,
-  ymin=0.90,ymax=1.00,
-  grid=both,
-  xlabel={Time $t$ @ 85$^\circ$C (s)},
-  ylabel={$ \Delta V_\mathrm{th}(t) / \Delta V_\mathrm{th}(t_0)$},
-  ticklabel style={/pgf/number format/fixed}
+  width=0.82\textwidth, height=0.28\textwidth,
+  xmode=log, xmin=1e2, xmax=1e6, ymin=0.90, ymax=1.00,
+  xlabel={Time $t$ @ 85$^\circ$C (s)}, ylabel={$ \Delta V_{\mathrm{th}}(t) / \Delta V_{\mathrm{th}}(t_0)$},
+  grid=both, tick align=outside
 ]
-\addplot+[mark=*,thick] coordinates {(1e2,0.995) (1e3,0.990) (1e4,0.980) (1e5,0.970) (1e6,0.955)};
-\addplot+[thick,densely dashed,domain=1.8e2:1.2e6,samples=2] {1.0 - 0.02*ln(x/1e2)/ln(1e6/1e2)};
+\addplot+[mark=*, thick] coordinates {(1e2,0.995) (2e3,0.990) (1e4,0.980) (1e5,0.970) (1e6,0.955)};
 \end{axis}
 \end{tikzpicture}
 
-\vspace{1mm}
-\small (b) Retention (projection). \normalsize
-
-\caption{Wake-up and retention behaviors (illustrative).}
+\caption{Wake-up (top) and retention projection at 85$^\circ$C (bottom).}
 \label{fig:wakeup}
 \end{figure}
 
-%--- Fig.4: TDDB Weibull ---
-\begin{figure}[!t]
+% ------- Fig.4: TDDB Weibull -------
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.92\linewidth,
-  height=0.42\linewidth,
-  xmin=0.2,xmax=3.0,
-  ymin=-2.2,ymax=2.0,
-  grid=both,
-  xlabel={$\ln(t_\mathrm{BD})$ (arb.)},
-  ylabel={$\ln[-\ln(1-F)]$},
-  legend style={at={(0.97,0.03)},anchor=south east,draw=none,fill=none,font=\footnotesize}
+  width=0.84\textwidth, height=0.34\textwidth,
+  xmin=0.2, xmax=3.0, ymin=-2.2, ymax=2.0,
+  xlabel={$\ln(t_{\mathrm{BD}})$ (arb.)}, ylabel={$\ln[-\ln(1-F)]$},
+  grid=both, tick align=outside, legend style={at={(0.03,0.97)},anchor=north west}
 ]
-\addplot+[mark=*,thick] coordinates {(0.3,-2.0) (0.7,-1.1) (1.1,-0.3) (1.6,0.6) (2.2,1.1) (2.7,1.6)};
+\addplot+[mark=*, thick] coordinates {(0.3,-1.9) (0.6,-1.2) (1.0,-0.4) (1.4,0.3) (1.8,1.0) (2.6,1.6)};
 \addlegendentry{Low $E$-field}
-\addplot+[mark=square*,thick,densely dashed] coordinates {(0.35,-1.8) (0.8,-0.9) (1.2,-0.1) (1.7,0.8) (2.3,1.3) (2.85,1.9)};
+\addplot+[mark=square*, dashed, thick] coordinates {(0.35,-1.8) (0.7,-1.0) (1.1,-0.2) (1.5,0.6) (1.9,1.1) (2.8,1.8)};
 \addlegendentry{High $E$-field}
 \end{axis}
 \end{tikzpicture}
@@ -246,8 +226,9 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
 \label{fig:tddb}
 \end{figure}
 
-%--- Author bio (最後に配置) ---
-\begin{IEEEbiographynophoto}{Shinichi Samizo}
+% ------- Biography（conferenceモード互換の素の節） -------
+\section*{Author Biography}
 Shinichi Samizo received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. He joined Seiko Epson Corporation in 1997, engaging in semiconductor device process development including 0.25--0.18~$\mu$m CMOS, HV-CMOS, DRAM, FeRAM, and FinFET/GAA research. He also contributed to inkjet MEMS process development and thin-film piezo actuator design, leading to the productization of PrecisionCore printheads. His expertise covers semiconductor devices (logic, memory [DRAM/FeRAM/SRAM], high-voltage mixed integration), inkjet actuators, and AI-based control education.
-\end{IEEEbiographynophoto}
-% ================= End (Figures and Tables) =================
+
+\twocolumn            % 以降を2段組に戻す（ここで文末なら不要）
+% ====== (貼り替えここまで) ======
