@@ -7,13 +7,15 @@
 \setlength{\floatsep}{8pt plus 2pt minus 2pt}
 \setlength{\intextsep}{8pt plus 2pt minus 2pt}
 
+% Figures / TikZ
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{arrows.meta,positioning,fit}
-\usepackage{subcaption}
-\usepackage{float} % ← [H] を使う
+\usepackage{subcaption}   % ← subfigure で使う
+\usepackage{float}        % ← [H]
+\usepackage{placeins}     % ← \FloatBarrier を使うため必須
 
 \pagestyle{empty}
 
@@ -78,8 +80,8 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 \end{table}
 
 % --- 強制的にページを切る ---
-\FloatBarrier  % ここで未配置の figure/table を必ず吐き出す
-\clearpage     % 改ページ（ここだけで十分）
+\FloatBarrier
+\clearpage
 
 % ================== Page 2 ==================
 % Fig.2 Endurance
@@ -107,7 +109,8 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 % Fig.3 Wake-up & Retention（横並び）
 \begin{figure}[H]
 \centering
-\begin{subcaptionbox{Wake-up (early cycles)}[0.48\linewidth]{%
+\begin{subfigure}[t]{0.48\linewidth}
+\centering
 \begin{tikzpicture}
 \begin{axis}[
   width=\linewidth,height=0.30\linewidth,
@@ -117,8 +120,10 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 \addplot+[mark=*,thick] coordinates {(0,0.92) (30,0.98) (60,0.985) (120,0.992) (200,0.996)};
 \end{axis}
 \end{tikzpicture}
-}}\hfill
-\begin{subcaptionbox{Retention projection at 85$^\circ$C}[0.48\linewidth]{%
+\caption{Wake-up (early cycles)}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.48\linewidth}
+\centering
 \begin{tikzpicture}
 \begin{axis}[
   width=\linewidth,height=0.30\linewidth,
@@ -129,7 +134,8 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 \addplot+[mark=*,thick] coordinates {(1e2,0.995) (1e3,0.985) (1e4,0.972) (1e5,0.960) (1e6,0.950)};
 \end{axis}
 \end{tikzpicture}
-}}
+\caption{Retention projection at 85$^\circ$C}
+\end{subfigure}
 \caption{Wake-up (left) and retention projection (right).}
 \label{fig:wakeup_retention}
 \end{figure}
