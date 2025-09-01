@@ -1,6 +1,6 @@
 \documentclass[conference]{IEEEtran}
 
-% 図表用の最小パッケージ（本文から独立）
+% 図表用の最小パッケージ
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{pgfplots}
@@ -9,14 +9,15 @@
 
 \begin{document}
 
-% ===== タイトル部分（候補2） =====
-\title{\large Supplementary Figures and Tables for\\ ``FeFET CMOS 0.18~$\mu$m Integration Study''}
+% ===== タイトル部分（大きめフォント） =====
+\title{\LARGE Figures and Tables for\\ ``FeFET CMOS 0.18~$\mu$m Integration Study''}
 \author{}
 \maketitle
 
-\section*{Figures and Tables}
+% ---------------- Page 1 ----------------
+\section*{Figures and Tables (Process Integration)}
 
-% -------- Fig.1（プロセスフロー図：TikZ） --------
+% -------- Fig.1（プロセスフロー図） --------
 \begin{figure}[!t]\centering
 \begin{tikzpicture}[node distance=5mm]
 \node (a) [draw, rectangle] {Active / Isolation};
@@ -35,7 +36,7 @@
 \caption{Placement of the FeFET gate-last module within the 0.18~$\mu$m CMOS baseline (vertical layout).}
 \end{figure}
 
-% -------- Table I（追加マスク） --------
+% -------- Table I --------
 \begin{table}[!t]\centering
 \caption{Added masks / process steps relative to baseline logic.}
 \begin{tabular}{|c|c|l|}\hline
@@ -44,6 +45,11 @@ FE metal gate & +1 & Reuse analog option route\\
 FE anneal & 0 & Performed in BEOL furnace (no extra mask)\\ \hline
 \end{tabular}
 \end{table}
+
+\clearpage  % ← ここで次のページに移動
+
+% ---------------- Page 2 ----------------
+\section*{Figures and Tables (Reliability Data)}
 
 % -------- Fig.2（Endurance） --------
 \begin{figure}[!t]\centering
@@ -62,7 +68,7 @@ FE anneal & 0 & Performed in BEOL furnace (no extra mask)\\ \hline
 \caption{Schematic endurance behavior of HZO-FeFETs in a 0.18~$\mu$m flow.}
 \end{figure}
 
-% -------- Fig.3（Wake-up と Retention：縦並び） --------
+% -------- Fig.3（Wake-up & Retention：縦並び） --------
 \begin{figure}[!t]\centering
 \begin{tikzpicture}
 \begin{axis}[
