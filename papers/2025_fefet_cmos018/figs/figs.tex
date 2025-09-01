@@ -109,34 +109,37 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 % Fig.3 Wake-up & Retention（横並び）
 \begin{figure}[H]
 \centering
-\begin{subfigure}[t]{0.48\linewidth}
-\centering
+
+% 左：Wake-up
+\begin{subcaptionbox{(a) Wake-up}[0.48\linewidth]{
 \begin{tikzpicture}
 \begin{axis}[
-  width=\linewidth,height=0.30\linewidth,
+  width=\linewidth, height=0.36\linewidth, % ←高さ拡大
+  xmin=0, xmax=210, ymin=0.92, ymax=1.00,
   xlabel={Light P/E Cycles}, ylabel={Normalized Window},
-  ymin=0.92,ymax=1.00, grid=both, tick align=outside
+  grid=both, tick align=outside, /pgf/number format/precision=2
 ]
-\addplot+[mark=*,thick] coordinates {(0,0.92) (30,0.98) (60,0.985) (120,0.992) (200,0.996)};
+\addplot+[mark=*, thick] coordinates
+  {(0,0.92) (30,0.98) (60,0.985) (120,0.992) (200,0.996)};
 \end{axis}
 \end{tikzpicture}
-\caption{Wake-up (early cycles)}
-\end{subfigure}\hfill
-\begin{subfigure}[t]{0.48\linewidth}
-\centering
+}}\hfill
+% 右：Retention
+\begin{subcaptionbox{(b) Retention at 85$^\circ$C}[0.48\linewidth]{
 \begin{tikzpicture}
 \begin{axis}[
-  width=\linewidth,height=0.30\linewidth,
-  xmode=log, log basis x=10, grid=both,
-  xlabel={Time $t$ @ 85$^\circ$C (s)}, ylabel={$ \Delta V_{\mathrm{th}}(t)/\Delta V_{\mathrm{th}}(t_0)$},
-  ymin=0.92,ymax=1.00, tick align=outside
+  width=\linewidth, height=0.36\linewidth, % ←高さ拡大
+  xmode=log, log basis x=10,
+  xmin=9e1, xmax=1.1e6, ymin=0.92, ymax=1.00,
+  xlabel={Time $t$ (s)}, ylabel={$ \Delta V_{\mathrm{th}}(t)/\Delta V_{\mathrm{th}}(t_0)$},
+  grid=both, tick align=outside
 ]
-\addplot+[mark=*,thick] coordinates {(1e2,0.995) (1e3,0.985) (1e4,0.972) (1e5,0.960) (1e6,0.950)};
+\addplot+[mark=*, thick] coordinates
+  {(1e2,0.995) (1e3,0.985) (1e4,0.972) (1e5,0.960) (1e6,0.950)};
 \end{axis}
 \end{tikzpicture}
-\caption{Retention projection at 85$^\circ$C}
-\end{subfigure}
-\caption{Wake-up (left) and retention projection (right).}
+}}
+\caption{Wake-up（左）と Retention（右）の比較。}
 \label{fig:wakeup_retention}
 \end{figure}
 
