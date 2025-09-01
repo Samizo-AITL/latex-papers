@@ -24,31 +24,57 @@
 \maketitle
 
 % ================= Page 1: Process Integration =================
-\section*{Figures and Tables (Process Integration)}
-
-% --- Fig.1 (flow) ---
+% --- Fig.1 (Process flow, vertical TikZ) ---
 \begin{figure}[!t]
 \centering
-% （ここにあなたの TikZ フロー図）
-% \begin{tikzpicture}[...]\end{tikzpicture}
+\begin{tikzpicture}[
+  node distance=4.5mm,
+  stage/.style={draw,rounded corners,minimum width=35mm,
+                minimum height=6mm,align=center,font=\footnotesize},
+  arr/.style={-{Stealth},thick},
+  ann/.style={font=\scriptsize}
+]
+\node[stage] (act)  {Active / Isolation};
+\node[stage,below=of act] (vt)  {V\!T Adjust / Well};
+\node[stage,below=of vt]  (poly) {Poly Gate Definition};
+\node[stage,below=of poly] (ldd)  {LDD / Spacer};
+\node[stage,below=of ldd]  (imp)  {S/D Implant};
+\node[stage,below=of imp]  (sal)  {Co Salicide \& Lamp Anneal};
+\node[stage,below=of sal]  (fegate)  {FeFET Gate-Last: IL/FE/CAP (ALD) + TiN (PVD/ALD)};
+\node[stage,below=of fegate]  (rta)  {Crystallization RTA (450--500\,\si{\celsius}) + FGA (350\,\si{\celsius})};
+\node[stage,below=of rta]  (ild)  {ILD + Vias + BEOL};
+
+\draw[arr] (act) -- (vt) -- (poly) -- (ldd) -- (imp) -- (sal) -- (fegate) -- (rta) -- (ild);
+
+% dashed bracket to highlight FeFET module
+\node[draw,dashed,very thick,rounded corners,fit=(fegate) (rta),inner sep=3mm,
+      label={[ann]right:\textbf{FeFET Gate-Last Module}}] {};
+
+% note box
+\node[draw,rounded corners,align=left,font=\scriptsize,anchor=east,
+      right=12mm of fegate] (note) {Added masks: +1 (FE metal gate)\\
+Anneal: BEOL furnace (no mask)\\
+TiN: long-throw/collimated PVD};
+\draw[arr] (note.west) -- (fegate.east);
+\end{tikzpicture}
 \caption{Placement of the FeFET gate-last module within the 0.18~$\mu$m CMOS baseline (vertical layout).}
+\label{fig:flow}
 \end{figure}
 
-% Fig.1 と Table I の間隔を意図的に確保
-\vspace{8pt}
+\vspace{1em} % 図と表の間隔を確保
 
-% --- Table I ---
+% --- Table I (Added masks) ---
 \begin{table}[!t]
 \centering
 \caption{Added masks / process steps relative to baseline logic.}
-\begin{tabular}{|c|c|l|}\hline
-Step & Mask & Comment\\ \hline
-FE metal gate & +1 & Reuse analog option route\\
-FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
+\label{tab:masks}
+\begin{tabular}{|c|c|l|}
+\hline
+\textbf{Step} & \textbf{Mask} & \textbf{Comment} \\ \hline
+FE metal gate & +1 & Reuse analog option route \\ 
+FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\ \hline
 \end{tabular}
 \end{table}
-
-\newpage
 
 % ================= Page 2: Reliability Data =================
 \section*{Figures and Tables (Reliability Data)}
