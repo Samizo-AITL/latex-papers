@@ -1,33 +1,37 @@
-%===================== figs.tex (standalone: figures-only) =====================
+%===================== figs.tex (fixed title & 2-page split) ====================
 \documentclass[12pt]{article}
 
-% --- page & caption tuning ---
 \usepackage[margin=22mm]{geometry}
-\usepackage{setspace}
 \usepackage[labelfont=bf,font=small]{caption}
 \captionsetup{skip=4pt}
+\usepackage{setspace}
 \setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
 \setlength{\floatsep}{8pt plus 2pt minus 2pt}
 \setlength{\intextsep}{8pt plus 2pt minus 2pt}
 
-% --- graphics & plots ---
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{arrows.meta,positioning,fit}
-\usepackage{subcaption} % for side-by-side subfigures
+\usepackage{subcaption}
+\usepackage{float}            % ← [H] を使って配置を固定
+\pagestyle{empty}             % ページ番号を消す（不要なら削除）
 
 \begin{document}
+
+% -------- タイトル（最上部固定） --------
+\vspace*{-6mm}
 \begin{center}
 {\LARGE \textbf{Supplementary Figures and Tables for}}\\[2mm]
 {\Large \textit{“FeFET CMOS 0.18~$\mu$m Integration Study”}}
 \end{center}
+\vspace{2mm}
 
 %============================ Page 1 ============================
 
-%--------- Fig.1 (process flow; centered) ---------
-\begin{figure}[!t]
+%--------- Fig.1（フロー：中央寄せ／[H]で固定）---------
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[
   node distance=5mm,
@@ -49,41 +53,40 @@
 
 \draw[arr] (act) -- (vt) -- (poly) -- (ldd) -- (sd) -- (sal) -- (fegate) -- (rta) -- (ild);
 
-% dashed highlight for FeFET module
 \node[draw,dashed,rounded corners,very thick,fit=(fegate)(rta),inner sep=3mm] (box) {};
 \node[note,anchor=west,right=10mm of fegate] (n1)
   {Added mask: +1 (FE metal gate)\\
    FE anneal: BEOL furnace (no extra mask)\\
    TiN: long-throw / collimated sputter};
 \draw[arr] (n1.west) -- ++(-6mm,0) |- (fegate.east);
-
 \end{tikzpicture}
 \caption{Placement of the FeFET gate-last module within the 0.18~$\mu$m CMOS baseline (vertical layout).}
 \label{fig:flow}
 \end{figure}
 
-\vspace{6pt}
+% Fig.1 と Table I の間隔を十分に空ける
+\vspace{6mm}
 
-%--------- Table I (centered; decent gap from Fig.1) ---------
-\begin{table}[!b]
+%--------- Table I（中央寄せ／[H]固定）---------
+\begin{table}[H]
 \centering
 \caption{Added masks / process steps relative to baseline logic.}
 \label{tab:masks}
 \begin{tabular}{|c|c|p{85mm}|}
 \hline
-\textbf{Step} & \textbf{Mask} & \textbf{Comment} \\
-\hline
-FE metal gate & +1 & Reuse analog option route \\
-FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
-\hline
+\textbf{Step} & \textbf{Mask} & \textbf{Comment}\\ \hline
+FE metal gate & +1 & Reuse analog option route\\
+FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 \end{tabular}
 \end{table}
 
+% ここで必ず改ページして 2 ページ目に信頼性図を出す
 \clearpage
+
 %============================ Page 2 ============================
 
-%--------- Fig.2 (Endurance; full width) ---------
-\begin{figure}[!t]
+%--------- Fig.2（Endurance：フル幅／[H]固定）---------
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
@@ -102,10 +105,10 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
 \label{fig:endurance}
 \end{figure}
 
-\vspace{2pt}
+\vspace{2mm}
 
-%--------- Fig.3 (Wake-up & Retention: side-by-side) ---------
-\begin{figure}[!b]
+%--------- Fig.3（Wake-up & Retention：横並び／[H]固定）---------
+\begin{figure}[H]
 \centering
 \begin{subcaptionbox{Wake-up (early cycles)}[0.48\linewidth]{%
 \begin{tikzpicture}
@@ -117,8 +120,7 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
 \addplot+[mark=*,thick] coordinates {(0,0.92) (30,0.98) (60,0.985) (120,0.992) (200,0.996)};
 \end{axis}
 \end{tikzpicture}
-}\label{fig:wakeup}}
-\hfill
+}}\hfill
 \begin{subcaptionbox{Retention projection at 85$^\circ$C}[0.48\linewidth]{%
 \begin{tikzpicture}
 \begin{axis}[
@@ -130,13 +132,13 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
 \addplot+[mark=*,thick] coordinates {(1e2,0.995) (1e3,0.985) (1e4,0.972) (1e5,0.960) (1e6,0.950)};
 \end{axis}
 \end{tikzpicture}
-}\label{fig:retention}}
+}}
 \caption{Wake-up (left) and retention projection (right).}
 \label{fig:wakeup_retention}
 \end{figure}
 
-%--------- Fig.4 (TDDB; will also fit on page 2) ---------
-\begin{figure}[!h]
+%--------- Fig.4（TDDB；凡例は右下／[H]固定）---------
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
@@ -156,4 +158,4 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
 \end{figure}
 
 \end{document}
-%=================== end of figs.tex ===================
+%=================== end of figs.tex ===========================================
