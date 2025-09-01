@@ -78,8 +78,8 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 \end{table}
 
 % --- 強制的にページを切る ---
-\clearpage
-\newpage
+\FloatBarrier  % ここで未配置の figure/table を必ず吐き出す
+\clearpage     % 改ページ（ここだけで十分）
 
 % ================== Page 2 ==================
 % Fig.2 Endurance
