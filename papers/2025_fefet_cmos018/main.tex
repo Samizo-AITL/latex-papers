@@ -100,140 +100,61 @@ K. Yamazaki et al., ``Retention characteristics of HfO$_2$-based ferroelectric c
 
 % ================= Figures and Tables after References =================
 \clearpage
+\onecolumn
 \section*{Figures and Tables}
 
-% ---- Fig.1: flow (TikZ) ----
-\begin{figure}[H]\centering
-\begin{tikzpicture}[font=\footnotesize, node distance=5mm]
-\tikzset{blk/.style={draw, rounded corners=2pt, minimum width=32mm, minimum height=4mm}}
-\node[blk] (a) {Active / Isolation};
-\node[blk, below=of a] (b) {VT Adjust / Well};
-\node[blk, below=of b] (c) {Poly Gate Definition};
-\node[blk, below=of c] (d) {LDD / Spacer};
-\node[blk, below=of d] (e) {Source/Drain Implant};
-\node[blk, below=of e] (f) {Salicide (Co)};
-\draw[-] (a) -- (b); \draw[-] (b) -- (c); \draw[-] (c) -- (d);
-\draw[-] (d) -- (e); \draw[-] (e) -- (f);
+% --- Fig.1 (全幅) ---
+\begin{figure*}[t]
+  \centering
+  % ここにあなたの Fig.1 の TikZ/pgfplots（または \includegraphics）を置く
+  \input{fig1_flow.tikz}% 例：外出しなら
+  \caption{Placement of the FeFET gate-last module within the 0.18~$\mu$m CMOS baseline (vertical layout).}
+  \label{fig:flow}
+\end{figure*}
 
-\node[draw, dashed, rounded corners=4pt, below=10mm of f, minimum width=66mm, minimum height=14mm] (box) {};
-\node at (box.north) [yshift=-4mm] {\footnotesize FeFET Gate-Last: IL/FE/CAP (ALD) + TiN (PVD/ALD)};
-\node at (box.south) [yshift=5mm] {\footnotesize Crystallization RTA (450--500$^\circ$C) + FGA (350$^\circ$C)};
-
-\node[blk, below=12mm of box] (g) {ILD + Vias + BEOL};
-\draw[-] (f) -- (box);
-\draw[-] (box) -- (g);
-
-\node[align=left, anchor=west] at ([xshift=70mm]box.east)
-{\footnotesize \begin{tabular}{@{}l@{}}
-Added mask: +1 (FE metal gate)\\
-FE anneal: BEOL furnace (no extra mask)\\
-TiN: long-throw/\\ collimated sputter\\
-\end{tabular}};
-\end{tikzpicture}
-\caption{Placement of the FeFET gate-last module within the 0.18\,\um\ CMOS baseline (vertical layout).}
-\label{fig:flow}
-\end{figure}
-
-% ---- Table 1 ----
-\begin{table}[H]\centering
+% --- Table 1 (全幅) ---
+\begin{table*}[t]
+\centering
 \caption{Added masks / process steps relative to baseline logic.}
-\label{tab:steps}
-\begin{tabular}{@{}lcl@{}}
-\toprule
-Step & Mask & Comment\\
-\midrule
-FE metal gate & +1 & Reuse analog option route\\
-FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\
-\bottomrule
+\label{tab:masks}
+\begin{tabular}{|c|c|l|}
+\hline
+Step & Mask & Comment \\
+\hline
+FE metal gate & +1 & Reuse analog option route \\
+FE anneal     & 0  & Performed in BEOL furnace (no extra mask) \\
+\hline
 \end{tabular}
-\end{table}
+\end{table*}
 
-% ---- Fig.2: endurance (pgfplots) ----
-\begin{figure}[H]\centering
-\begin{tikzpicture}
-\begin{axis}[
-  width=0.9\linewidth, height=0.52\linewidth,
-  xlabel={P/E Cycles}, xmode=log, log basis x=10,
-  ylabel={Memory Window $\Delta V_\mathrm{th}$ [V]},
-  ymin=1.25, ymax=1.65, xmin=1e2, xmax=1e6,
-  tick align=outside, grid=both, grid style={densely dotted},
-  legend style={draw=none, font=\scriptsize, at={(0.03,0.03)}, anchor=south west}
-]
-\addplot+[only marks, mark=*, line width=0.8pt] coordinates
-{(1e2,1.60) (5e2,1.55) (1e4,1.48) (1e5,1.40) (1e6,1.31)};
-\addlegendentry{$\pm2.5$ V, 10 $\mu$s}
-\addplot+[dashed, mark=*, mark size=1.4pt, line width=0.8pt] coordinates
-{(1e2,1.58) (5e2,1.53) (1e4,1.46) (1e5,1.38) (1e6,1.30)};
-\addlegendentry{$\pm2.7$ V, 5 $\mu$s}
-\end{axis}
-\end{tikzpicture}
-\caption{Schematic endurance behavior of HZO-FeFETs in a 0.18\,\um\ flow.}
-\label{fig:endurance}
-\end{figure}
+% --- Fig.2 (全幅) ---
+\begin{figure*}[t]
+  \centering
+  \input{fig2_endurance.tikz}
+  \caption{Schematic endurance behavior of HZO-FeFETs in a 0.18~$\mu$m flow.}
+  \label{fig:endurance}
+\end{figure*}
 
-% ---- Fig.3: wake-up + retention (two minipages) ----
-\begin{figure}[H]\centering
-\begin{minipage}{0.48\linewidth}\centering
-\begin{tikzpicture}
-\begin{axis}[
-  width=\linewidth, height=0.45\linewidth,
-  xlabel={Light P/E Cycles}, ylabel={Normalized Window},
-  ymin=0.92, ymax=1.00, xmin=0, xmax=200,
-  grid=both, grid style={densely dotted}, tick align=outside
-]
-\addplot+[mark=*, line width=0.8pt] coordinates
-{(0,0.92) (30,0.98) (80,0.985) (150,0.992) (200,0.996)};
-\end{axis}
-\end{tikzpicture}\\
-\scriptsize (a) Wake-up (early cycles).
-\end{minipage}\hfill
-\begin{minipage}{0.48\linewidth}\centering
-\begin{tikzpicture}
-\begin{axis}[
-  width=\linewidth, height=0.45\linewidth,
-  xmode=log, log basis x=10, xmin=1e2, xmax=1e6,
-  xlabel={Time $t$ @ 85$^\circ$C (s)},
-  ylabel={$ \Delta V_\mathrm{th}(t)/\Delta V_\mathrm{th}(t_0)$},
-  ymin=0.90, ymax=1.00, grid=both, grid style={densely dotted},
-  tick align=outside
-]
-\addplot+[mark=*, line width=0.8pt] coordinates
-{(1e2,0.995) (5e2,0.990) (1e4,0.980) (1e5,0.970) (1e6,0.955)};
-\addplot+[dashed, no marks] coordinates {(1e2,1.0) (1e6,0.94)};
-\end{axis}
-\end{tikzpicture}\\
-\scriptsize (b) Retention (projection).
-\end{minipage}
-\caption{Wake-up and retention behaviors (illustrative).}
-\label{fig:wakeup}
-\end{figure}
+% --- Fig.3 (2枚横並びでも可・全幅) ---
+\begin{figure*}[t]
+  \centering
+  \input{fig3a_wakeup.tikz}\hfill
+  \input{fig3b_retention.tikz}
+  \caption{Wake-up (left) and retention projection at 85$^\circ$C (right).}
+  \label{fig:wakeup}
+\end{figure*}
 
-% ---- Fig.4: TDDB Weibull ----
-\begin{figure}[H]\centering
-\begin{tikzpicture}
-\begin{axis}[
-  width=0.9\linewidth, height=0.5\linewidth,
-  xlabel={$\ln(t_{\mathrm{BD}})$ (arb.)},
-  ylabel={$\ln\!\left[-\ln(1-F)\right]$},
-  xmin=0.2, xmax=3.0, ymin=-2.0, ymax=2.0,
-  grid=both, grid style={densely dotted}, tick align=outside,
-  legend style={draw=none, font=\scriptsize, at={(0.97,0.05)}, anchor=south east}
-]
-\addplot+[mark=*, line width=0.9pt] coordinates
-{(0.3,-1.9) (0.8,-1.1) (1.1,-0.5) (1.6,0.1) (2.2,0.9) (2.8,1.5)};
-\addlegendentry{Low $E$-field}
-\addplot+[dashed, mark=square*, line width=0.9pt] coordinates
-{(0.35,-1.7) (0.9,-0.9) (1.3,-0.2) (1.9,0.6) (2.4,1.2) (2.9,1.8)};
-\addlegendentry{High $E$-field}
-\end{axis}
-\end{tikzpicture}
-\caption{TDDB Weibull representation at two stress fields (illustrative).}
-\label{fig:tddb}
-\end{figure}
+% --- Fig.4 (全幅) ---
+\begin{figure*}[t]
+  \centering
+  \input{fig4_tddb.tikz}
+  \caption{TDDB Weibull representation at two stress fields (illustrative).}
+  \label{fig:tddb}
+\end{figure*}
 
-% ----------------- Biography LAST -----------------
 \clearpage
+\twocolumn
+
+% ===== Biography（最後に配置） =====
 \section*{Author Biography}
 Shinichi Samizo received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. He joined Seiko Epson Corporation in 1997, engaging in semiconductor device process development including 0.25--0.18~$\mu$m CMOS, HV-CMOS, DRAM, FeRAM, and FinFET/GAA research. He also contributed to inkjet MEMS process development and thin-film piezo actuator design, leading to the productization of PrecisionCore printheads. His expertise covers semiconductor devices (logic, memory [DRAM/FeRAM/SRAM], high-voltage mixed integration), inkjet actuators, and AI-based control education.
-
-\end{document}
