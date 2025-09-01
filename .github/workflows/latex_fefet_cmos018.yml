@@ -3,7 +3,7 @@ name: Build LaTeX (fefet_cmos018)
 on:
   push:
     paths:
-      - "papers/2025_fefet_cmos018/**"          # refs.bib も含む
+      - "papers/2025_fefet_cmos018/**"              # main.tex / figs.tex / refs.bib など一式
       - ".github/workflows/latex_fefet_cmos018.yml"
   workflow_dispatch:
 
@@ -28,7 +28,7 @@ jobs:
             texlive-publishers texlive-lang-cjk ghostscript \
             fonts-noto-cjk fonts-noto-cjk-extra
 
-      - name: Clean old build
+      - name: Clean old build (main & figs)
         working-directory: papers/2025_fefet_cmos018
         run: |
           rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot *.log *.pdf || true
@@ -38,56 +38,91 @@ jobs:
       - name: Convert Markdown to TeX (sections -> build)
         working-directory: papers/2025_fefet_cmos018
         run: |
-          for f in sections/*.md; do
-            fname=$(basename "$f" .md)
-            echo "Converting $f -> build/$fname.tex"
-            pandoc "$f" -o "build/$fname.tex" -t latex --wrap=none
-          done
-          ls -la build
+          if ls sections/*.md >/dev/null 2>&1; then
+            for f in sections/*.md; do
+              fname=$(basename "$f" .md)
+              echo "Converting $f -> build/$fname.tex"
+              pandoc "$f" -o "build/$fname.tex" -t latex --wrap=none
+            done
+            ls -la build
+          else
+            echo "No sections/*.md found. Skipping pandoc step."
+          fi
 
-      - name: Build PDF with XeLaTeX (3-pass + BibTeX)
+      # -------------------- 本文 main.tex --------------------
+      - name: Build main.pdf with XeLaTeX (3-pass + BibTeX)
         working-directory: papers/2025_fefet_cmos018
-        env:
-          LANG: C.UTF-8
+        env: { LANG: C.UTF-8 }
         run: |
           set -e
-
-          # 1st pass（.aux 生成）
           xelatex -file-line-error -interaction=nonstopmode main.tex | tee main_pass1.log || true
 
-          # BibTeX
           if [ ! -f main.aux ]; then
             echo "::error::main.aux が生成されていません（LaTeX 1st pass 失敗）"; exit 1
           fi
           bibtex main || true
-          if grep -q "I couldn't open database file" main.blg; then
+          if grep -q "I couldn't open database file" main.blg 2>/dev/null; then
             echo "::error::BibTeX が refs.bib を開けませんでした"; exit 1
           fi
 
-          # 2nd / 3rd pass
           xelatex -file-line-error -interaction=nonstopmode main.tex | tee main_pass2.log || true
           xelatex -file-line-error -interaction=nonstopmode main.tex | tee main_pass3.log || true
-
-          echo "==== tail main_pass3.log (last 200 lines) ===="
           tail -n 200 main_pass3.log || true
 
-          # ★ 最終パスのみで未解決を判定
           if grep -qE "Undefined citations|LaTeX Warning: Reference .* undefined" main_pass3.log ; then
-            echo "::error::Undefined citations or references remain (final pass)."
-            exit 1
+            echo "::error::Undefined citations or references remain (final pass)."; exit 1
           fi
+          [ -f main.pdf ] || { echo "::error::main.pdf が生成されていません"; exit 1; }
+          mv main.pdf ../main.pdf
 
-          # PDF 確認
-          [ -f main.pdf ] || { echo "::error::PDF was not generated."; exit 1; }
-
-      - name: Upload PDF
+      - name: Upload main.pdf
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fefet_cmos018-pdf
-          path: papers/2025_fefet_cmos018/main.pdf
-          retention-days: 7
+          name: main-pdf
+          path: main.pdf
+          retention-days: 14
 
+      # -------------------- 図表別冊 figs.tex --------------------
+      - name: Build figs.pdf (if figs.tex exists)
+        working-directory: papers/2025_fefet_cmos018
+        env: { LANG: C.UTF-8 }
+        run: |
+          set -e
+          FIGSRC=""
+          if [ -f figs.tex ]; then
+            FIGSRC="figs.tex"
+          elif [ -f figs/figs.tex ]; then
+            FIGSRC="figs/figs.tex"
+          fi
+
+          if [ -z "$FIGSRC" ]; then
+            echo "figs.tex が見つからないため図表別冊のビルドをスキップします。"
+            exit 0
+          fi
+
+          echo "Building $FIGSRC ..."
+          xelatex -file-line-error -interaction=nonstopmode "$FIGSRC" | tee figs_pass1.log || true
+          xelatex -file-line-error -interaction=nonstopmode "$FIGSRC" | tee figs_pass2.log || true
+
+          # 生成場所はソースと同階層。名前を統一
+          if [ -f figs.pdf ]; then
+            mv figs.pdf ../figs.pdf
+          elif [ -f figs/figs.pdf ]; then
+            mv figs/figs.pdf ../figs.pdf
+          else
+            echo "::error::figs.pdf が生成されていません"; exit 1
+          fi
+
+      - name: Upload figs.pdf (if exists)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: figs-pdf
+          path: figs.pdf
+          retention-days: 14
+
+      # -------------------- Logs --------------------
       - name: Upload LaTeX logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -100,4 +135,4 @@ jobs:
             papers/2025_fefet_cmos018/*.aux
             papers/2025_fefet_cmos018/*.fls
             papers/2025_fefet_cmos018/*.fdb_latexmk
-          retention-days: 7
+          retention-days: 14
