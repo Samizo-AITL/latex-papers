@@ -1,10 +1,8 @@
-%===================== figs.tex (fixed title & 2-page split) ====================
 \documentclass[12pt]{article}
 
 \usepackage[margin=22mm]{geometry}
 \usepackage[labelfont=bf,font=small]{caption}
 \captionsetup{skip=4pt}
-\usepackage{setspace}
 \setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
 \setlength{\floatsep}{8pt plus 2pt minus 2pt}
 \setlength{\intextsep}{8pt plus 2pt minus 2pt}
@@ -15,12 +13,13 @@
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{arrows.meta,positioning,fit}
 \usepackage{subcaption}
-\usepackage{float}            % ← [H] を使って配置を固定
-\pagestyle{empty}             % ページ番号を消す（不要なら削除）
+\usepackage{float} % ← [H] を使う
+
+\pagestyle{empty}
 
 \begin{document}
 
-% -------- タイトル（最上部固定） --------
+% ------------------ Title ------------------
 \vspace*{-6mm}
 \begin{center}
 {\LARGE \textbf{Supplementary Figures and Tables for}}\\[2mm]
@@ -28,9 +27,8 @@
 \end{center}
 \vspace{2mm}
 
-%============================ Page 1 ============================
-
-%--------- Fig.1（フロー：中央寄せ／[H]で固定）---------
+% ================== Page 1 ==================
+% Fig.1
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[
@@ -64,10 +62,9 @@
 \label{fig:flow}
 \end{figure}
 
-% Fig.1 と Table I の間隔を十分に空ける
 \vspace{6mm}
 
-%--------- Table I（中央寄せ／[H]固定）---------
+% Table I
 \begin{table}[H]
 \centering
 \caption{Added masks / process steps relative to baseline logic.}
@@ -80,12 +77,12 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 \end{tabular}
 \end{table}
 
-% ここで必ず改ページして 2 ページ目に信頼性図を出す
+% --- 強制的にページを切る ---
 \clearpage
+\newpage
 
-%============================ Page 2 ============================
-
-%--------- Fig.2（Endurance：フル幅／[H]固定）---------
+% ================== Page 2 ==================
+% Fig.2 Endurance
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}
@@ -107,7 +104,7 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 
 \vspace{2mm}
 
-%--------- Fig.3（Wake-up & Retention：横並び／[H]固定）---------
+% Fig.3 Wake-up & Retention（横並び）
 \begin{figure}[H]
 \centering
 \begin{subcaptionbox{Wake-up (early cycles)}[0.48\linewidth]{%
@@ -137,7 +134,7 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 \label{fig:wakeup_retention}
 \end{figure}
 
-%--------- Fig.4（TDDB；凡例は右下／[H]固定）---------
+% Fig.4 TDDB（凡例は右下）
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}
@@ -158,4 +155,3 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 \end{figure}
 
 \end{document}
-%=================== end of figs.tex ===========================================
