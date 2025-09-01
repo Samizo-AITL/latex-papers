@@ -13,21 +13,21 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{arrows.meta,positioning,fit}
-\usepackage{subcaption}   % ← subfigure 用
-\usepackage{float}        % ← [H]
-\usepackage{placeins}     % ← \FloatBarrier
+\usepackage{subcaption}   % subfigure
+\usepackage{float}        % [H]
+\usepackage{placeins}     % \FloatBarrier
 
 \pagestyle{empty}
 
 \begin{document}
 
 % ------------------ Title ------------------
-\vspace*{-6mm}
+\vspace*{-4mm} % すこしだけ上を詰める
 \begin{center}
 {\LARGE \textbf{Supplementary Figures and Tables for}}\\[2mm]
 {\Large \textit{“FeFET CMOS 0.18~$\mu$m Integration Study”}}
 \end{center}
-\vspace{2mm}
+\vspace{8mm} % ← タイトルと Fig.1 の間を広く
 
 % ================== Page 1 ==================
 % Fig.1
@@ -64,7 +64,7 @@
 \label{fig:flow}
 \end{figure}
 
-\vspace{6mm}
+\vspace{10mm} % ← Fig.1 と Table I の間隔を広げる
 
 % Table I
 \begin{table}[H]
@@ -104,18 +104,17 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
 \label{fig:endurance}
 \end{figure}
 
-\vspace{2mm}
+\vspace{3mm}
 
-% ===== Fig.3 Wake-up & Retention（横並び・修正版） =====
+% ===== Fig.3 Wake-up & Retention（横並び・広め） =====
 \captionsetup[sub]{font=small,skip=2pt,justification=centering}
-
 \begin{figure}[H]
   \centering
   % 左：Wake-up
   \subcaptionbox{Wake-up}[0.48\linewidth]{%
     \begin{tikzpicture}
       \begin{axis}[
-        width=\linewidth, height=0.45\linewidth, % ←縦幅拡大
+        width=\linewidth, height=0.52\linewidth, % ←さらに縦幅UP
         xmin=0, xmax=210, ymin=0.92, ymax=1.00,
         xlabel={Light P/E Cycles}, ylabel={Normalized Window},
         grid=both, tick align=inside, /pgf/number format/precision=2
@@ -129,7 +128,7 @@ FE anneal     & 0  & Performed in BEOL furnace (no extra mask)\\ \hline
   \subcaptionbox{Retention at 85$^\circ$C}[0.48\linewidth]{%
     \begin{tikzpicture}
       \begin{axis}[
-        width=\linewidth, height=0.45\linewidth, % ←縦幅拡大
+        width=\linewidth, height=0.52\linewidth, % ←さらに縦幅UP
         xmode=log, log basis x=10,
         xmin=9e1, xmax=1.1e6, ymin=0.92, ymax=1.00,
         xlabel={Time $t$ (s)}, ylabel={$\Delta V_{\mathrm{th}}(t)/\Delta V_{\mathrm{th}}(t_0)$},
