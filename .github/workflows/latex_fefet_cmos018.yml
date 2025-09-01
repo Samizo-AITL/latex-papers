@@ -3,7 +3,7 @@ name: Build LaTeX (fefet_cmos018)
 on:
   push:
     paths:
-      - "papers/2025_fefet_cmos018/**"              # main.tex / figs.tex / refs.bib など一式
+      - "papers/2025_fefet_cmos018/**"
       - ".github/workflows/latex_fefet_cmos018.yml"
   workflow_dispatch:
 
@@ -20,15 +20,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            pandoc \
-            latexmk \
+            pandoc latexmk \
             texlive-xetex texlive-latex-base texlive-latex-recommended texlive-latex-extra \
             texlive-fonts-recommended texlive-fonts-extra \
             texlive-pictures texlive-science texlive-bibtex-extra \
             texlive-publishers texlive-lang-cjk ghostscript \
             fonts-noto-cjk fonts-noto-cjk-extra
 
-      - name: Clean old build (main & figs)
+      - name: Clean old build
         working-directory: papers/2025_fefet_cmos018
         run: |
           rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.out *.toc *.lof *.lot *.log *.pdf || true
@@ -44,47 +43,36 @@ jobs:
               echo "Converting $f -> build/$fname.tex"
               pandoc "$f" -o "build/$fname.tex" -t latex --wrap=none
             done
-            ls -la build
-          else
-            echo "No sections/*.md found. Skipping pandoc step."
           fi
 
-      # -------------------- 本文 main.tex --------------------
-      - name: Build main.pdf with XeLaTeX (3-pass + BibTeX)
+      # ===== 本文 =====
+      - name: Build main.pdf (3-pass + BibTeX)
         working-directory: papers/2025_fefet_cmos018
         env: { LANG: C.UTF-8 }
         run: |
           set -e
           xelatex -file-line-error -interaction=nonstopmode main.tex | tee main_pass1.log || true
-
-          if [ ! -f main.aux ]; then
-            echo "::error::main.aux が生成されていません（LaTeX 1st pass 失敗）"; exit 1
-          fi
+          [ -f main.aux ] || { echo "::error::main.aux がありません"; exit 1; }
           bibtex main || true
-          if grep -q "I couldn't open database file" main.blg 2>/dev/null; then
-            echo "::error::BibTeX が refs.bib を開けませんでした"; exit 1
-          fi
-
           xelatex -file-line-error -interaction=nonstopmode main.tex | tee main_pass2.log || true
           xelatex -file-line-error -interaction=nonstopmode main.tex | tee main_pass3.log || true
-          tail -n 200 main_pass3.log || true
-
-          if grep -qE "Undefined citations|LaTeX Warning: Reference .* undefined" main_pass3.log ; then
+          tail -n 100 main_pass3.log || true
+          if grep -qE "Undefined citations|Reference .* undefined" main_pass3.log ; then
             echo "::error::Undefined citations or references remain (final pass)."; exit 1
           fi
           [ -f main.pdf ] || { echo "::error::main.pdf が生成されていません"; exit 1; }
-          mv main.pdf ../main.pdf
+          ls -la
 
       - name: Upload main.pdf
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: main-pdf
-          path: main.pdf
+          path: papers/2025_fefet_cmos018/main.pdf
           retention-days: 14
 
-      # -------------------- 図表別冊 figs.tex --------------------
-      - name: Build figs.pdf (if figs.tex exists)
+      # ===== 図表別冊 =====
+      - name: Build figs.pdf if figs.tex exists
         working-directory: papers/2025_fefet_cmos018
         env: { LANG: C.UTF-8 }
         run: |
@@ -95,34 +83,23 @@ jobs:
           elif [ -f figs/figs.tex ]; then
             FIGSRC="figs/figs.tex"
           fi
-
           if [ -z "$FIGSRC" ]; then
-            echo "figs.tex が見つからないため図表別冊のビルドをスキップします。"
-            exit 0
+            echo "figs.tex が無いのでスキップ"; exit 0
           fi
-
           echo "Building $FIGSRC ..."
-          xelatex -file-line-error -interaction=nonstopmode "$FIGSRC" | tee figs_pass1.log || true
-          xelatex -file-line-error -interaction=nonstopmode "$FIGSRC" | tee figs_pass2.log || true
+          xelatex -file-line-error -interaction=nonstopmode -jobname=figs "$FIGSRC" | tee figs_pass1.log || true
+          xelatex -file-line-error -interaction=nonstopmode -jobname=figs "$FIGSRC" | tee figs_pass2.log || true
+          [ -f figs.pdf ] || { echo "::error::figs.pdf が生成されていません"; exit 1; }
+          ls -la *.pdf
 
-          # 生成場所はソースと同階層。名前を統一
-          if [ -f figs.pdf ]; then
-            mv figs.pdf ../figs.pdf
-          elif [ -f figs/figs.pdf ]; then
-            mv figs/figs.pdf ../figs.pdf
-          else
-            echo "::error::figs.pdf が生成されていません"; exit 1
-          fi
-
-      - name: Upload figs.pdf (if exists)
+      - name: Upload figs.pdf
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: figs-pdf
-          path: figs.pdf
+          path: papers/2025_fefet_cmos018/figs.pdf
           retention-days: 14
 
-      # -------------------- Logs --------------------
       - name: Upload LaTeX logs
         if: always()
         uses: actions/upload-artifact@v4
