@@ -41,9 +41,46 @@ This work proposes a **Pb-free ScAlN MEMS ultrasonic array**, co-integrated with
 
 ---
 
+# Simulation Results
+
+## Finite Element Method (FEM) Analysis
+- Modeled **ScAlN MEMS cells** with λ/2 pitch at 20, 30, and 40 MHz.  
+- Results show:  
+  - **Resonant frequencies** aligned with design target.  
+  - **Effective electromechanical coupling (k²_eff)** in the range of 2–4%.  
+  - **Acoustic beam patterns** demonstrating expected directivity for 64- and 128-channel arrays.  
+
+## Circuit Simulation
+- Modeled **LNA with input-referred noise < 2 nV/√Hz**.  
+- System-level SPICE simulation including MEMS capacitance, interconnect parasitics, and ADC quantization.  
+- Achieved **SNR > 60 dB** for 20–40 MHz operation with 64-channel beamforming.  
+
+---
+
+# Application Scenarios
+
+## Ophthalmology
+- **20–40 MHz ScAlN MEMS array** provides high-resolution imaging of the anterior eye.  
+- Potential replacement for PZT-based **Ultrasound Biomicroscopy (UBM)** with Pb-free compliance.  
+
+## Vascular Imaging (IVUS)
+- **Catheter-integrated arrays** at 30–40 MHz for intravascular ultrasound.  
+- Pb-free approach reduces toxicity concerns for long-term implantable devices.  
+
+## Dermatology and Oncology
+- **10–20 MHz wide-aperture arrays** for non-invasive imaging of skin layers and tumor boundaries.  
+- Portable, battery-powered devices enabled by low-power SiGe CMOS.  
+
+## Implantable Monitoring
+- Miniaturized **SiP package** with wireless telemetry.  
+- Continuous monitoring of blood flow or tissue elasticity in chronic disease management.  
+
+---
+
 # Expected Contributions
 1. Demonstration of a **Pb-free ultrasonic array technology** for medical applications.  
 2. A practical **co-integration scheme** of MEMS and SiGe CMOS using SiP.  
 3. Establishing **design guidelines** for pitch, frequency, and front-end electronics for high-resolution imaging.  
+4. Application scenarios in **ophthalmology, vascular imaging, dermatology, and implantable monitoring**.  
 
 ---
