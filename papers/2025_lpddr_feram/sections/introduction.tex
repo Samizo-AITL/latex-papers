@@ -3,23 +3,25 @@
 % =========================
 \section{Introduction}
 
-Mobile edge AI systems such as smartphones, wearables, and embedded accelerators require memory subsystems that balance
+Mobile edge AI platforms such as smartphones, wearables, and embedded accelerators require memory subsystems that balance
 \emph{bandwidth}, \emph{energy efficiency}, and \emph{responsiveness}.
-Low-power DRAM (LPDDR) has become the de-facto main memory for these platforms, offering tens to hundreds of~GB/s bandwidth
-with relatively low I/O energy compared to server-class HBM~\cite{ChoiIEDM2022}.
-However, LPDDR remains \emph{volatile} and relies on periodic refresh, which introduces standby power overhead
-and limits energy efficiency in always-connected modes.
+Low-power DRAM (LPDDR) has become the de-facto main memory for these devices, delivering tens to hundreds of~GB/s bandwidth
+with lower I/O energy than server-class HBM~\cite{ChoiIEDM2022}.
+Nevertheless, LPDDR remains \emph{volatile} and depends on periodic refresh, which incurs standby power overhead
+and constrains energy efficiency in always-connected modes.
 
-Non-volatile memories (NVMs) such as ReRAM, MRAM, and FeRAM have been proposed as alternatives or complements to DRAM~\cite{NohedaNature2023,WeebitIEDM2022}.
-Among them, FeRAM based on HfO$_2$ offers low-voltage switching, fast rewriting, and long retention,
-making it attractive as a lightweight assistive memory~\cite{KimIEDM2021}.
-Yet, direct monolithic integration of LPDDR and FeRAM is infeasible due to process-temperature mismatch:
-DRAM capacitors require high-$T$ anneals ($>$700$^\circ$C), whereas FeRAM crystallization must remain near 400$^\circ$C.
-This motivates heterogeneous integration at the \emph{package level} rather than within a single process flow.
+Non-volatile memories (NVMs) such as ReRAM, MRAM, and FeRAM have been explored as either replacements or complements to DRAM~\cite{NohedaNRM2023,WongProcIEEE2012,IkedaNature2010,WeebitIEDM2022}.
+Among these, ferroelectric RAM (FeRAM) based on HfO$_2$ shows promise: it offers low-voltage switching, nanosecond-class rewriting, and long retention~\cite{MullerAPL2011,KimIEDM2021}.
+However, direct monolithic integration of LPDDR and FeRAM is not feasible due to severe process-temperature mismatch:
+DRAM capacitors require high-$T$ anneals ($>$700$^\circ$C), whereas ferroelectric crystallization in HfO$_2$ must remain near 400$^\circ$C.
+This incompatibility motivates heterogeneous integration at the \emph{package level} rather than within a single process flow.
 
 In this work, we propose \textbf{LPDDR+FeRAM integration via chiplet or system-in-package (SiP/PoP) assembly}.
-LPDDR remains the primary working memory, while a small FeRAM die provides checkpointing and refresh offloading.
+LPDDR continues to serve as the primary working memory, while a small FeRAM die acts as an assistive checkpoint and refresh-offload memory.
 The organization is supervised by the \emph{SystemDK} co-design framework, which coordinates policies across hardware, packaging, and runtime software.
 Figure~\ref{fig:concept_lpddr_feram} illustrates the high-level concept:
-LPDDR supplies high-bandwidth working memory, FeRAM chiplets retain state with negligible standby power, 
-and SystemDK supervision ensures seamless operation within mobile edge AI devices.
+LPDDR supplies high-bandwidth working memory, FeRAM chiplets retain state with negligible standby power,
+and SystemDK supervision ensures seamless operation for mobile edge AI workloads.
+
+% --- Figure 1: Concept overview ---
+\input{figures/fig1_concept_overview}
