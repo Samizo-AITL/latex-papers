@@ -1,0 +1,54 @@
+% ==== Fig. 2: Access time vs. retention (LPDDR vs FeRAM) ====
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}
+    \begin{loglogaxis}[
+      width=\columnwidth,
+      height=0.62\columnwidth,
+      xlabel={Access time (ns)},
+      ylabel={Retention (s)},
+      xmin=8, xmax=300,
+      ymin=1e-3, ymax=1e9,
+      xtick={10,20,50,100,200},
+      ytick={1e-3,1e-2,1e-1,1,1e1,1e3,1e5,1e7,1e9},
+      legend style={at={(0.97,0.03)},anchor=south east,fill=none,draw=none},
+      tick align=outside,
+      grid=both,
+      grid style={line width=.1pt, draw=gray!40}
+    ]
+
+    % --- LPDDR (volatile / needs refresh): red squares ---
+    % Access time ~15-60 ns, effective "retention" ~32-64 ms before refresh
+    \addplot+[
+      only marks,
+      mark=square*,
+      mark size=2.2pt
+    ] table[row sep=\\]{
+      x   y
+      15  3.2e-2  % 32 ms
+      20  6.4e-2  % 64 ms
+      30  3.2e-2
+      60  6.4e-2
+    };
+
+    % --- FeRAM: blue circles ---
+    % Access time ~80-150 ns, retention years (1e7-1e8 s)
+    \addplot+[
+      only marks,
+      mark=*,
+      mark size=2.2pt
+    ] table[row sep=\\]{
+      x    y
+      80   1.0e7   % ~0.3 year
+      100  3.0e7   % ~1 year
+      120  1.0e8   % ~3.2 years
+      150  3.0e8   % ~9.5 years
+    };
+
+    \legend{LPDDR (typ.), FeRAM (typ.)}
+    \end{loglogaxis}
+  \end{tikzpicture}
+  \vspace{-1ex}
+  \caption{Access time vs. retention comparison between LPDDR (red squares) and FeRAM (blue circles). LPDDR offers fast access but requires frequent refresh (tens of ms), whereas FeRAM provides orders-of-magnitude longer retention with modest access latency.}
+  \label{fig:access_retention_lpddr_feram}
+\end{figure}
