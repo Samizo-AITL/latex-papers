@@ -10,6 +10,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # ← ジョブ全体をTeX Live公式イメージで実行
+    container:
+      image: danteev/texlive:latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,21 +24,17 @@ jobs:
           ls -la papers/2025_scaln_ultrasonic
 
       - name: Clean aux files
+        working-directory: papers/2025_scaln_ultrasonic
         run: |
-          cd papers/2025_scaln_ultrasonic
           rm -f scaln_ultrasonic.{aux,bbl,blg,bcf,run.xml,out,toc,lof,lot,fls,fdb_latexmk,log}
 
-      - name: Compile LaTeX (XeLaTeX + BibTeX)
-        uses: xu-cheng/latex-action@v3
-        with:
-          docker_image: danteev/texlive:latest   # ← ここを変更
-          working_directory: papers/2025_scaln_ultrasonic
-          root_file: scaln_ultrasonic.tex
-          latexmk_use_xelatex: true
-          args: -bibtex -interaction=nonstopmode -file-line-error
-          latexmk_shell_escape: true
+      - name: Build with latexmk (XeLaTeX + BibTeX)
+        working-directory: papers/2025_scaln_ultrasonic
+        # -xelatex でUTF-8/日本語OK、-bibtex で引用解決、-interaction nonstop で止まらない
+        run: |
+          latexmk -xelatex -bibtex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
 
-      - name: Upload LOG (for debug when fails)
+      - name: Upload logs (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -44,7 +44,7 @@ jobs:
             papers/2025_scaln_ultrasonic/scaln_ultrasonic.blg
             papers/2025_scaln_ultrasonic/scaln_ultrasonic.bbl
 
-      - name: Upload PDF artifact
+      - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
           name: scaln_ultrasonic_pdf
