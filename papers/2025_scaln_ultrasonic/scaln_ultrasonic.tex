@@ -3,12 +3,13 @@
 % ---------- Robust UTF-8 & fonts (pdflatex / xelatex 両対応) ----------
 \usepackage{iftex}
 \ifPDFTeX
+  \usepackage[utf8]{inputenc}      % ← pdflatex で UTF-8 を確実に
   \usepackage[T1]{fontenc}
-  % IEEEtran 向け Times 系フォント
+  % IEEEtran と相性の良い Times 系
   \usepackage{newtxtext,newtxmath}
 \else
-  \usepackage{fontspec} % xelatex/lualatex
-  % Times 互換フォント指定（TU/ptm 警告回避）
+  \usepackage{fontspec}            % xelatex / lualatex
+  % Times 互換フォント（TU/ptm 警告を回避）
   \setmainfont{TeX Gyre Termes}
   \setsansfont{TeX Gyre Heros}
   \setmonofont{TeX Gyre Cursor}
@@ -24,8 +25,8 @@
 
 % ---------- TikZ / pgfplots ----------
 \usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta} % positioning により right=.. of .. を利用
-\tikzset{ % ノード共通スタイル
+\usetikzlibrary{positioning,arrows.meta}  % right=.. of .. を使う
+\tikzset{
   blk/.style={
     rectangle,draw,rounded corners,
     minimum height=9mm,minimum width=26mm,
@@ -91,10 +92,10 @@ Flip-chip bonding integrates MEMS and CMOS dice. Benefits: yield separation, sho
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[node distance=12mm, auto, thick]
-\node[blk]                        (mems) {ScAlN MEMS Array\\(10--50 MHz)};
-\node[blk, right=12mm of mems]    (lna)  {SiGe LNA/VGA\\(65 nm)};
-\node[blk, right=12mm of lna]     (adc)  {ADC\\(12--14 bit, 50--100 MS/s)};
-\node[blk, right=12mm of adc]     (bf)   {Beamformer/\\Digital Core};
+\node[blk]                     (mems) {ScAlN MEMS Array\\(10--50 MHz)};
+\node[blk, right=12mm of mems] (lna)  {SiGe LNA/VGA\\(65 nm)};
+\node[blk, right=12mm of lna]  (adc)  {ADC\\(12--14 bit, 50--100 MS/s)};
+\node[blk, right=12mm of adc]  (bf)   {Beamformer/\\Digital Core};
 \draw[->] (mems)--(lna);
 \draw[->] (lna)--(adc);
 \draw[->] (adc)--(bf);
