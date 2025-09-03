@@ -7,6 +7,10 @@ on:
       - '.github/workflows/latex_lpddr_feram.yml'
   workflow_dispatch:
 
+concurrency:
+  group: lpddr-feram-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,8 +26,8 @@ jobs:
           working_directory: papers/2025_lpddr_feram
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
-          # error on undefined refs -> 2-pass build is handled by latexmk
-          # continue_on_error: true
+          # ビルド高速化（TeX Liveのキャッシュ）
+          cache: true
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
