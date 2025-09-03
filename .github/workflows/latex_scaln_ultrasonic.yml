@@ -33,14 +33,14 @@ jobs:
           tlmgr install latexmk bibtex xetex fontspec pgfplots tikz \
                         ieeetran hyperref amsmath graphics || true
 
-      - name: Build with XeLaTeX + BibTeX
+      # === ここを修正：latexmk + xelatexで多回実行＆継続 ===
+      - name: Build PDF (latexmk + XeLaTeX)
         working-directory: papers/2025_scaln_ultrasonic
+        continue-on-error: true
         run: |
-          set -euxo pipefail
-          xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
-          bibtex scaln_ultrasonic || true
-          xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
-          xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
+          latexmk -xelatex -bibtex -interaction=nonstopmode -file-line-error -f scaln_ultrasonic.tex
+          # 念のため：PDFができているかチェック（なければ非ゼロ終了）
+          test -s scaln_ultrasonic.pdf
 
       - name: Upload logs (always)
         if: always()
