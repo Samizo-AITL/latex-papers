@@ -27,7 +27,7 @@ jobs:
       - name: Compile LaTeX (XeLaTeX + BibTeX)
         uses: xu-cheng/latex-action@v3
         with:
-          docker_image: xu-cheng/texlive-full:latest   # ← ここが重要
+          docker_image: danteev/texlive:latest   # ← ここを変更
           working_directory: papers/2025_scaln_ultrasonic
           root_file: scaln_ultrasonic.tex
           latexmk_use_xelatex: true
