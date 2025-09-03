@@ -1,0 +1,34 @@
+% ==== Fig. 3: Package cross-section (LPDDR+FeRAM Chiplet Integration) ====
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[node distance=1.2cm, font=\small]
+
+    % CPU/Controller
+    \node[draw, thick, minimum width=2.8cm, minimum height=1.0cm, fill=gray!15] (cpu) {CPU / Controller};
+
+    % LPDDR chip
+    \node[draw, thick, minimum width=2.8cm, minimum height=1.0cm, fill=gray!15, below=of cpu] (lpddr) {LPDDR DRAM Chip};
+
+    % FeRAM chiplet
+    \node[draw, thick, minimum width=2.8cm, minimum height=1.0cm, fill=gray!15, right=3.0cm of lpddr] (feram) {FeRAM Chiplet};
+
+    % SystemDK box (supervision layer)
+    \node[draw, thick, dashed, minimum width=8.0cm, minimum height=3.2cm, fit=(cpu) (lpddr) (feram)] (systemdk) {};
+
+    \node[above right=-0.3cm and -0.3cm of systemdk.north west, anchor=north west, font=\small\itshape] 
+      {SystemDK Co-Design Supervision};
+
+    % Arrows
+    \draw[->, thick] (cpu.south) -- (lpddr.north) node[midway,left] {high bandwidth};
+    \draw[->, thick] (cpu.east) -- (feram.west) node[midway,above] {checkpoint / state};
+    \draw[<->, thick, dashed] (lpddr.east) -- (feram.south west) node[midway,below] {refresh offloading};
+
+    % Substrate
+    \node[draw, thick, fill=gray!10, minimum width=9.0cm, minimum height=0.45cm, below=1.2cm of lpddr.south east, anchor=north east] (substrate) {};
+    \node at (substrate) {Package Substrate / Interposer (SiP/PoP)};
+    
+  \end{tikzpicture}
+  \vspace{-1ex}
+  \caption{Package-level integration of LPDDR and FeRAM chiplet under SystemDK supervision. LPDDR serves as main working memory, while FeRAM provides checkpointing and refresh suppression via a common substrate (SiP/PoP).}
+  \label{fig:package_lpddr_feram}
+\end{figure}
