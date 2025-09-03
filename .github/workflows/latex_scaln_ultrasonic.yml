@@ -17,9 +17,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show TeX Live version & files
+      - name: Show files (sanity check)
         run: |
-          tlmgr --version || true
           ls -la
           ls -la papers/2025_scaln_ultrasonic
 
@@ -31,26 +30,17 @@ jobs:
       - name: Ensure TeX packages
         run: |
           tlmgr update --self --all || true
-          tlmgr install latexmk bibtex xetex fontspec \
-                        pgf pgfplots xcolor booktabs cite url \
+          tlmgr install latexmk bibtex xetex fontspec pgfplots tikz \
                         ieeetran hyperref amsmath graphics || true
 
-      # 明示フロー: XeLaTeX -> BibTeX -> XeLaTeX*2（失敗時に pdfLaTeXへ）
-      - name: Build (XeLaTeX + BibTeX, fallback to pdfLaTeX)
+      - name: Build with XeLaTeX + BibTeX
         working-directory: papers/2025_scaln_ultrasonic
         run: |
           set -euxo pipefail
           xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
           bibtex scaln_ultrasonic || true
           xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
-          xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex || true
-
-          if [ ! -f scaln_ultrasonic.pdf ]; then
-            pdflatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
-            bibtex scaln_ultrasonic || true
-            pdflatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
-            pdflatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
-          fi
+          xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
 
       - name: Upload logs (always)
         if: always()
@@ -62,8 +52,7 @@ jobs:
             papers/2025_scaln_ultrasonic/scaln_ultrasonic.blg
             papers/2025_scaln_ultrasonic/scaln_ultrasonic.bbl
 
-      - name: Upload PDF (only if exists)
-        if: ${{ hashFiles('papers/2025_scaln_ultrasonic/scaln_ultrasonic.pdf') != '' }}
+      - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
           name: scaln_ultrasonic_pdf
