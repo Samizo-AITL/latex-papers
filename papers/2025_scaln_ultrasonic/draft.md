@@ -1,5 +1,5 @@
 ---
-title: 📄 Draft – Pb-free ScAlN MEMS Array × 65 nm SiGe CMOS × SiP for Medical Ultrasonic Sensors
+title: 📄 Full Draft – Pb-free ScAlN MEMS Array × 65 nm SiGe CMOS × SiP for Medical Ultrasonic Sensors
 ---
 
 # Introduction
@@ -77,10 +77,34 @@ This work proposes a **Pb-free ScAlN MEMS ultrasonic array**, co-integrated with
 
 ---
 
-# Expected Contributions
-1. Demonstration of a **Pb-free ultrasonic array technology** for medical applications.  
-2. A practical **co-integration scheme** of MEMS and SiGe CMOS using SiP.  
-3. Establishing **design guidelines** for pitch, frequency, and front-end electronics for high-resolution imaging.  
-4. Application scenarios in **ophthalmology, vascular imaging, dermatology, and implantable monitoring**.  
+# Discussion
+
+## Comparison with PZT
+- **PZT**: High d₃₃ (100–500 pC/N), but Pb toxicity and incompatibility with CMOS.  
+- **ScAlN**: Lower d₃₃ (20–30 pC/N), but CMOS-compatible, Pb-free, and proven in RF applications.  
+- For high-frequency arrays (20–50 MHz), **ScAlN’s lower coupling is less limiting**, while Pb-free compliance is decisive.  
+
+## Comparison with CMUT/PMUT
+- **CMUT**: High frequency potential but requires high bias voltage, reliability concerns in liquid media.  
+- **PMUT (PZT-based)**: Pb contamination risk in medical devices.  
+- **ScAlN MEMS**: Low-voltage drive, CMOS-compatible, and safer for body-contact devices.  
+
+## Advantages of SiP vs Monolithic Integration
+- SiP allows **independent MEMS and CMOS fabrication**, maximizing yield.  
+- Flip-chip integration provides **short interconnects** comparable to monolithic approaches.  
+- Hermetic SiP packaging ensures **medical-grade reliability**, with scalable production.  
+
+---
+
+# Conclusion
+
+This work presents a **Pb-free ScAlN MEMS ultrasonic array** integrated with a **65 nm SiGe CMOS front-end** through **System-in-Package (SiP)** technology.  
+
+- **Pb-free compliance** makes it suitable for in-body medical applications, overcoming PZT’s regulatory barriers.  
+- **ScAlN MEMS arrays** achieve the required sensitivity and resolution for **20–50 MHz medical imaging**.  
+- **SiGe CMOS** enables low-noise, low-power detection of microvolt-level signals.  
+- **SiP integration** ensures manufacturability, reliability, and compact form factor.  
+
+**Conclusion:** The combination of **Pb-free piezoelectric MEMS arrays and advanced SiGe CMOS front-ends in SiP** represents a **practical, scalable, and regulatory-compliant solution** for next-generation high-resolution medical ultrasound sensors.  
 
 ---
