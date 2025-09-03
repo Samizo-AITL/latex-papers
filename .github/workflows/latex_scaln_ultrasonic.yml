@@ -14,7 +14,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Clean old aux files to avoid stale citation errors
+      - name: Show files (sanity check)
+        run: |
+          ls -la
+          ls -la papers/2025_scaln_ultrasonic
+
       - name: Clean aux files
         run: |
           cd papers/2025_scaln_ultrasonic
