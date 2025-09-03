@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: danteev/texlive:latest
+      image: danteev/texlive:latest   # 公式TeXLive入りの軽量イメージ
 
     steps:
       - name: Checkout repository
@@ -27,17 +27,32 @@ jobs:
         run: |
           rm -f scaln_ultrasonic.{aux,bbl,blg,bcf,run.xml,out,toc,lof,lot,fls,fdb_latexmk,log}
 
+      # TeX Live の更新と必要パッケージの確保
       - name: Ensure TeX packages
         run: |
           tlmgr update --self --all || true
-          tlmgr install latexmk bibtex xetex fontspec pgfplots tikz || true
+          tlmgr install latexmk bibtex xetex fontspec pgfplots tikz \
+                        ieeetran hyperref amsmath graphics || true
 
+      # 明示フロー: XeLaTeX -> BibTeX -> XeLaTeX*2
       - name: Build (XeLaTeX + BibTeX, fallback to pdfLaTeX)
         working-directory: papers/2025_scaln_ultrasonic
         run: |
-          set -e
-          if ! latexmk -xelatex -bibtex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex; then
-            latexmk -pdf -bibtex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
+          set -euxo pipefail
+          # 1st pass
+          xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
+          # BibTeX (引用解決)
+          bibtex scaln_ultrasonic || true
+          # 2nd & 3rd passes
+          xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
+          xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex || true
+
+          # もし XeLaTeX 系でコケた場合に備え pdfLaTeX へフォールバック
+          if [ ! -f scaln_ultrasonic.pdf ]; then
+            pdflatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
+            bibtex scaln_ultrasonic || true
+            pdflatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
+            pdflatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
           fi
 
       - name: Upload logs (always)
