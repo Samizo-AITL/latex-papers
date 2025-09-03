@@ -29,8 +29,7 @@ jobs:
         with:
           working_directory: papers/2025_scaln_ultrasonic
           root_file: scaln_ultrasonic.tex
-          latexmk_use_bibtex: true
-          args: -pdf -interaction=nonstopmode -file-line-error
+          args: -pdf -bibtex -interaction=nonstopmode -file-line-error
           latexmk_shell_escape: true
 
       - name: Upload PDF artifact
