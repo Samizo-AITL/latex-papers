@@ -3,11 +3,15 @@
 % ---------- Robust UTF-8 & fonts (pdflatex / xelatex 両対応) ----------
 \usepackage{iftex}
 \ifPDFTeX
-  \usepackage[utf8]{inputenc}
   \usepackage[T1]{fontenc}
-  \usepackage{lmodern}
+  % IEEEtran 向け Times 系フォント
+  \usepackage{newtxtext,newtxmath}
 \else
   \usepackage{fontspec} % xelatex/lualatex
+  % Times 互換フォント指定（TU/ptm 警告回避）
+  \setmainfont{TeX Gyre Termes}
+  \setsansfont{TeX Gyre Heros}
+  \setmonofont{TeX Gyre Cursor}
 \fi
 
 % ---------- Common packages ----------
@@ -18,9 +22,10 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{booktabs}
 
+% ---------- TikZ / pgfplots ----------
 \usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta} % ← 追加：right=.. of .. を使う
-\tikzset{ % ← 追加：ノード共通スタイル
+\usetikzlibrary{positioning,arrows.meta} % positioning により right=.. of .. を利用
+\tikzset{ % ノード共通スタイル
   blk/.style={
     rectangle,draw,rounded corners,
     minimum height=9mm,minimum width=26mm,
@@ -31,6 +36,7 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
+% ====================================================================
 \begin{document}
 
 \title{Pb-free ScAlN MEMS Array Integrated with 65 nm SiGe CMOS via System-in-Package for Medical Ultrasonic Sensors}
@@ -54,9 +60,11 @@ The ScAlN MEMS array is designed for 10--50~MHz operation with $\lambda/2$ pitch
 ScAlN MEMS, Pb-free piezoelectrics, System-in-Package (SiP), SiGe CMOS, Medical ultrasound, Ultrasonic imaging
 \end{IEEEkeywords}
 
+% ====================================================================
 \section{Introduction}
 Medical ultrasonic imaging is widely used in ophthalmology, vascular diagnosis, dermatology, and implantable monitoring. Traditional devices have been dominated by PZT due to superior piezoelectric properties~\cite{akata2009pzt}, but Pb toxicity limits in-body use under EU RoHS, REACH, and FDA regulations. Scandium-doped AlN (ScAlN) has emerged as a Pb-free candidate with CMOS compatibility, high-$Q$, and industrial adoption in RF BAW/XBAR filters~\cite{akrout2018scaln}. We propose ScAlN MEMS arrays co-integrated with 65~nm SiGe CMOS via SiP for medical ultrasound.
 
+% ====================================================================
 \section{Background and Contributions}
 \subsection{Background}
 PZT transducers provide excellent $d_{33}$ and coupling but contain Pb and are not preferred for in-body devices~\cite{akata2009pzt}. CMUT/PMUT enable MEMS-CMOS co-integration, yet often require high bias and face fluid-reliability challenges~\cite{khuri2009cmut}. ScAlN is a promising Pb-free piezoelectric with proven manufacturability and CMOS process compatibility~\cite{akrout2018scaln}. Combining ScAlN arrays with low-noise SiGe readout via SiP offers a realistic, compliant route to high-resolution ultrasound.
@@ -69,6 +77,7 @@ PZT transducers provide excellent $d_{33}$ and coupling but contain Pb and are n
   \item Application considerations in ophthalmology~\cite{pavlin2009ubm}, IVUS~\cite{foster2000ivus}, dermatology, and implantables.
 \end{itemize}
 
+% ====================================================================
 \section{System Concept}
 \subsection{ScAlN MEMS Array}
 Operation: 10--50~MHz. Channels: 64--256 with $\lambda/2$ pitch. Structures: PMUT-like stacks or BAW/XBAR cavities.
@@ -94,6 +103,7 @@ Flip-chip bonding integrates MEMS and CMOS dice. Benefits: yield separation, sho
 \label{fig:arch}
 \end{figure}
 
+% ====================================================================
 \section{Simulation Results}
 FEM analysis confirms resonances at 20, 30, and 40~MHz with $k^2_{\mathrm{eff}}\!=\!2$--4\%. Circuit estimates show LNA input noise $<2$~nV/$\sqrt{\mathrm{Hz}}$ and system SNR $>60$~dB at 20--40~MHz.
 
@@ -149,6 +159,7 @@ PVDF & Yes & 5--10    & High & Flexible, low output\\
 \end{tabular}
 \end{table}
 
+% ====================================================================
 \section{Application Scenarios}
 \begin{itemize}
   \item \textbf{Ophthalmology:} 20--40~MHz anterior eye imaging~\cite{pavlin2009ubm}.
@@ -157,18 +168,22 @@ PVDF & Yes & 5--10    & High & Flexible, low output\\
   \item \textbf{Implantables:} Miniaturized SiP with telemetry.
 \end{itemize}
 
+% ====================================================================
 \section{Discussion}
 Versus PZT, ScAlN offers CMOS compatibility and Pb-free compliance at lower $d_{33}$. Versus CMUT/PMUT~\cite{khuri2009cmut}, ScAlN needs lower bias and shows better fluid reliability. SiP yields separation, short interconnects, and hermeticity versus monolithic integration.
 
+% ====================================================================
 \section{Conclusion}
 Pb-free ScAlN MEMS arrays integrated with 65~nm SiGe CMOS via SiP provide: (i) regulatory compliance, (ii) adequate 20--50~MHz resolution, (iii) low-noise detection via SiGe, and (iv) scalable, reliable packaging. This is a practical, competitive path for next-generation medical ultrasonic sensors.
 
+% ====================================================================
 \section*{Acknowledgment}
 The author thanks colleagues and collaborators in semiconductor device research and MEMS development.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 
+% ====================================================================
 \section*{Author Biography}
 \textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. He joined Seiko Epson Corporation in 1997, engaging in semiconductor device process development including 0.25--0.18~$\mu$m CMOS, HV-CMOS, DRAM, FeRAM, and FinFET/GAA research. He also contributed to inkjet MEMS process development and thin-film piezo actuator design, leading to the productization of PrecisionCore printheads. His expertise covers semiconductor devices (logic, memory [DRAM/FeRAM/SRAM], high-voltage mixed integration), inkjet actuators, and AI-based control education.
 
