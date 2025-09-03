@@ -33,7 +33,7 @@ Low-power DRAM (LPDDR) is the dominant main memory for mobile edge AI accelerato
 However, LPDDR remains volatile and incurs standby power due to periodic refresh. 
 Ferroelectric RAM (FeRAM), based on HfO$_2$, provides non-volatility, low-voltage operation, and fast rewriting, making it suitable as an assistive memory for checkpointing and state retention. 
 Because monolithic LPDDR+FeRAM co-fabrication is infeasible due to process-temperature mismatch, this work proposes \textbf{chiplet-level LPDDR+FeRAM integration} using SiP/PoP packaging. 
-System-level analysis shows that FeRAM chiplets can reduce standby power by up to 20\%, shorten resume latency from the ms to sub-ms range ($<$500~$\mu$s), and improve overall energy efficiency by 15--25\% for mobile edge AI workloads.
+System-level analysis shows that FeRAM chiplets can reduce standby power by up to 20\%, shorten resume latency from $\sim$10~ms (baseline LPDDR) to sub-ms range ($<$500~$\mu$s), and improve overall energy efficiency by 15--25\% under representative mobile edge AI workloads.
 \end{abstract}
 
 % ===== Sections =====
@@ -45,14 +45,21 @@ System-level analysis shows that FeRAM chiplets can reduce standby power by up t
 
 % ===== References =====
 \bibliographystyle{IEEEtran}
+
+% バランス調整（文献数に応じて番号調整、ここでは9件想定）
+\IEEEtriggercmd{\balance}
+\IEEEtriggeratref{5}
+
 \bibliography{references}
 
 % ===== Author Biography =====
 \begingroup\small
 \vspace{0.25\baselineskip}
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
-is an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration. 
-He previously worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology. 
+received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. 
+He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology. 
+He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration. 
+
 \textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, 
 \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 \end{IEEEbiographynophoto}
