@@ -14,12 +14,12 @@
 
 % --- title/author ---
 \title{LPDDR+FeRAM for Mobile Edge AI:\\
-Chiplet/SiP Integration as the Practical Path}
+Chiplet/SiP Integration as a Practical Path}
 
 \author{%
   \IEEEauthorblockN{Shinichi Samizo}%
   \IEEEauthorblockA{Independent Semiconductor Researcher\\
-  Former Engineer at Seiko Epson Corporation\\
+  Former Engineer, Seiko Epson Corporation\\
   Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\
   GitHub: \href{https://github.com/Samizo-AITL}{Samizo-AITL}}%
 }
@@ -29,12 +29,11 @@ Chiplet/SiP Integration as the Practical Path}
 
 % ===== Abstract =====
 \begin{abstract}
-Low-power DRAM (LPDDR) is the main memory technology for mobile edge AI accelerators, providing a balance of bandwidth and energy efficiency. 
-However, LPDDR still suffers from standby power due to periodic refresh and volatility. 
-Ferroelectric RAM (FeRAM), based on HfO$_2$, offers non-volatility, low-voltage operation, and fast rewriting, making it suitable as an assistive memory for checkpointing and state retention. 
-Monolithic integration of LPDDR and FeRAM is impractical due to process-temperature mismatch --- DRAM capacitor anneal $>$700$^\circ$C versus FeRAM $\sim$400$^\circ$C. 
-Therefore, this work proposes \textbf{LPDDR+FeRAM integration} using chiplet or system-in-package (SiP) assembly, where LPDDR remains the main working memory and a small FeRAM die provides checkpointing and state retention. 
-System-level analysis shows that FeRAM chiplets reduce standby power by suppressing DRAM refresh, shorten resume latency to the $\mu$s range, and improve overall energy efficiency for mobile edge AI workloads.
+Low-power DRAM (LPDDR) is the dominant main memory for mobile edge AI accelerators, balancing bandwidth and energy efficiency. 
+However, LPDDR remains volatile and incurs standby power due to periodic refresh. 
+Ferroelectric RAM (FeRAM), based on HfO$_2$, provides non-volatility, low-voltage operation, and fast rewriting, making it suitable as an assistive memory for checkpointing and state retention. 
+Because monolithic LPDDR+FeRAM co-fabrication is infeasible due to process-temperature mismatch, this work proposes \textbf{chiplet-level LPDDR+FeRAM integration} using SiP/PoP packaging. 
+System-level analysis shows that FeRAM chiplets can reduce standby power by suppressing DRAM refresh, shorten resume latency to the $\mu$s range, and improve overall energy efficiency for mobile edge AI workloads.
 \end{abstract}
 
 % ===== Sections =====
@@ -53,7 +52,7 @@ System-level analysis shows that FeRAM chiplets reduce standby power by suppress
 \vspace{0.25\baselineskip}
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
 is an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration. 
-He previously worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuator and PrecisionCore printhead process design. 
+He previously worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology. 
 \textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, 
 \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 \end{IEEEbiographynophoto}
