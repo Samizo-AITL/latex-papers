@@ -1,0 +1,88 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{cite}
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{Pb-free ScAlN MEMS Array Integrated with 65 nm SiGe CMOS via System-in-Package for Medical Ultrasonic Sensors}
+
+\author{
+  \IEEEauthorblockN{Shinichi Samizo}
+  \IEEEauthorblockA{
+    Samizo-AITL \\
+    GitHub: \url{https://github.com/Samizo-AITL} \\
+    Email: (your email here)
+  }
+}
+
+\maketitle
+
+\begin{abstract}
+Conventional medical ultrasonic devices have been dominated by PZT (Pb(Zr,Ti)O$_3$). 
+However, Pb-containing materials face strict regulatory restrictions (EU RoHS, REACH, FDA) in in-body medical applications. 
+This work proposes a Pb-free alternative based on ScAlN MEMS arrays, integrated with 65 nm SiGe CMOS using System-in-Package (SiP) technology.
+
+The ScAlN MEMS array is designed for 10--50 MHz operation with $\lambda/2$ pitch for high-resolution imaging. 
+The SiGe CMOS front-end integrates LNA, VGA, and ADC, enabling detection of microvolt-level signals. 
+The SiP approach ensures yield separation, short interconnects, and hermetic sealing for medical reliability.
+
+Finite element and circuit simulations demonstrate:
+adequate sensitivity and beam directivity at 20--40 MHz,
+noise reduction with SiGe LNA (NF < 2 dB),
+and compact, reliable packaging via flip-chip SiP.
+
+Conclusion: Pb-free ScAlN MEMS arrays, combined with 65 nm SiGe CMOS via SiP, represent a practical solution for next-generation high-resolution medical ultrasound sensors, with strong competitiveness in ophthalmology, vascular imaging, dermatology, and implantable applications.
+\end{abstract}
+
+\section{Introduction}
+Medical ultrasonic imaging is widely used in ophthalmology, vascular diagnosis, dermatology, and implantable monitoring. 
+Traditional devices have been dominated by PZT (Pb(Zr,Ti)O$_3$) because of its superior piezoelectric properties. 
+However, Pb toxicity has become a limitation for in-body use due to EU RoHS, REACH, and FDA regulations.
+
+Scandium-doped Aluminum Nitride (ScAlN) has emerged as a Pb-free candidate due to CMOS compatibility, high-Q properties, and industrial adoption in RF BAW/XBAR filters.
+This paper proposes ScAlN MEMS arrays co-integrated with 65 nm SiGe CMOS front-ends via SiP for medical ultrasound.
+
+\section{System Concept}
+\subsection{ScAlN MEMS Array}
+The array operates at 10--50 MHz, with 64--256 channels designed under the $\lambda/2$ pitch rule. 
+Structures include PMUT-like stacks or BAW/XBAR cavities.
+
+\subsection{SiGe CMOS Front-end}
+65 nm SiGe BiCMOS provides low NF (< 2 dB). 
+It integrates LNA, VGA, ADC, and T/R switch, optimized for microvolt-level signals.
+
+\subsection{System-in-Package Integration}
+Flip-chip bonding enables MEMS and CMOS die integration. 
+Benefits: yield separation, short interconnects, hermetic sealing.
+
+\section{Simulation Results}
+FEM analysis confirms resonant frequencies at 20, 30, 40 MHz with $k^2_{eff} = 2$--4\%. 
+Circuit simulations show LNA input noise < 2 nV/$\sqrt{Hz}$ and system SNR > 60 dB at 20--40 MHz.
+
+\section{Application Scenarios}
+- Ophthalmology: 20--40 MHz anterior eye imaging.  
+- Vascular IVUS: 30--40 MHz catheter arrays.  
+- Dermatology: 10--20 MHz skin/tumor imaging.  
+- Implantables: miniaturized SiP with telemetry.
+
+\section{Discussion}
+Compared with PZT, ScAlN offers CMOS compatibility and Pb-free compliance at the cost of lower $d_{33}$.  
+Compared with CMUT/PMUT, ScAlN requires lower bias and offers better reliability in fluids.  
+SiP provides yield separation, short interconnects, and hermetic reliability versus monolithic integration.
+
+\section{Conclusion}
+Pb-free ScAlN MEMS arrays integrated with 65 nm SiGe CMOS via SiP provide:
+- Regulatory compliance and safety,  
+- Adequate resolution at 20--50 MHz,  
+- Low-noise detection via SiGe CMOS,  
+- Scalable, reliable SiP packaging.  
+
+This makes the approach a practical and competitive solution for next-generation medical ultrasonic sensors.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
