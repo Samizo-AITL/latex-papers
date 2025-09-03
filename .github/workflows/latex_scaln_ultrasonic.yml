@@ -24,35 +24,12 @@ jobs:
           cd papers/2025_scaln_ultrasonic
           rm -f scaln_ultrasonic.{aux,bbl,blg,bcf,run.xml,out,toc,lof,lot,fls,fdb_latexmk,log}
 
-      # 1) まず1回だけコンパイルして .aux を作る
-      - name: First LaTeX pass (make .aux)
+      - name: Compile LaTeX (pdflatex + bibtex)
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: papers/2025_scaln_ultrasonic
           root_file: scaln_ultrasonic.tex
-          args: -pdf -interaction=nonstopmode -file-line-error
-          latexmk_shell_escape: true
-
-      # 2) BibTeX を明示的に実行
-      - name: Run BibTeX
-        run: |
-          cd papers/2025_scaln_ultrasonic
-          bibtex scaln_ultrasonic
-
-      # 3) 参照解決のために2回コンパイル
-      - name: Second LaTeX pass
-        uses: xu-cheng/latex-action@v3
-        with:
-          working_directory: papers/2025_scaln_ultrasonic
-          root_file: scaln_ultrasonic.tex
-          args: -pdf -interaction=nonstopmode -file-line-error
-          latexmk_shell_escape: true
-
-      - name: Final LaTeX pass
-        uses: xu-cheng/latex-action@v3
-        with:
-          working_directory: papers/2025_scaln_ultrasonic
-          root_file: scaln_ultrasonic.tex
+          latexmk_use_bibtex: true
           args: -pdf -interaction=nonstopmode -file-line-error
           latexmk_shell_escape: true
 
