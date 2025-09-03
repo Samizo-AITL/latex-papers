@@ -1,0 +1,29 @@
+name: Build LPDDR+FeRAM Paper
+
+on:
+  push:
+    paths:
+      - 'papers/2025_lpddr_feram/**'
+      - '.github/workflows/latex_lpddr_feram.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up LaTeX
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex
+          working_directory: papers/2025_lpddr_feram
+          latexmk_use_lualatex: true
+          latexmk_shell_escape: true
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: lpddr-feram-paper
+          path: papers/2025_lpddr_feram/main.pdf
