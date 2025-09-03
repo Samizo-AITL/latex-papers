@@ -24,13 +24,24 @@ jobs:
           cd papers/2025_scaln_ultrasonic
           rm -f scaln_ultrasonic.{aux,bbl,blg,bcf,run.xml,out,toc,lof,lot,fls,fdb_latexmk,log}
 
-      - name: Compile LaTeX (pdflatex + bibtex)
+      - name: Compile LaTeX (XeLaTeX + BibTeX)
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: papers/2025_scaln_ultrasonic
           root_file: scaln_ultrasonic.tex
-          args: -pdf -bibtex -interaction=nonstopmode -file-line-error
+          latexmk_use_xelatex: true
+          args: -bibtex -interaction=nonstopmode -file-line-error
           latexmk_shell_escape: true
+
+      - name: Upload LOG (for debug when fails)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scaln_ultrasonic_logs
+          path: |
+            papers/2025_scaln_ultrasonic/scaln_ultrasonic.log
+            papers/2025_scaln_ultrasonic/scaln_ultrasonic.blg
+            papers/2025_scaln_ultrasonic/scaln_ultrasonic.bbl
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
