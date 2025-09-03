@@ -14,17 +14,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 旧ビルド生成物をクリーン（壊れた .aux/.bbl が原因のcitation未解決を防止）
+      - name: Clean aux files
+        run: |
+          cd papers/2025_scaln_ultrasonic
+          rm -f scaln_ultrasonic.{aux,bbl,blg,bcf,run.xml,out,toc,lof,lot,fls,fdb_latexmk,log}
+
       - name: Compile LaTeX (pdflatex + bibtex)
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: papers/2025_scaln_ultrasonic
           root_file: scaln_ultrasonic.tex
-          latexmk_use_bibtex: true      # ← 追加：BibTeXを必ず実行
-          args: -pdf -interaction=nonstopmode -synctex=1
-          latexmk_shell_escape: true
+          args: -pdf -interaction=nonstopmode -file-line-error
+          latexmk_shell_escape: true  # TikZ/pgfplots 用
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: scaln_ultrasonic_pdf
           path: papers/2025_scaln_ultrasonic/scaln_ultrasonic.pdf
+          retention-days: 14
