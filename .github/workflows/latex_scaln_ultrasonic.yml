@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 旧ビルド生成物をクリーン（壊れた .aux/.bbl が原因のcitation未解決を防止）
+      # ← 追加：壊れた中間ファイルを削除（citation未解決の原因になりがち）
       - name: Clean aux files
         run: |
           cd papers/2025_scaln_ultrasonic
@@ -26,7 +26,7 @@ jobs:
           working_directory: papers/2025_scaln_ultrasonic
           root_file: scaln_ultrasonic.tex
           args: -pdf -interaction=nonstopmode -file-line-error
-          latexmk_shell_escape: true  # TikZ/pgfplots 用
+          latexmk_shell_escape: true
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
