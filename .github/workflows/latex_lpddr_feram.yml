@@ -19,15 +19,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up LaTeX (latexmk + pdflatex)
+      - name: Build LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: papers/2025_lpddr_feram
-          latexmk_use_pdflatex: true     # ← ここを有効化
-          latexmk_use_lualatex: false    # ← LuaLaTeXは無効化
+          compiler: pdflatex          # ← これだけで十分
           latexmk_shell_escape: true
-          cache: true
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
@@ -36,3 +34,11 @@ jobs:
           path: papers/2025_lpddr_feram/main.pdf
           if-no-files-found: error
           retention-days: 14
+
+      # 任意：失敗時に LaTeX のログを回収
+      - name: Upload LaTeX logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex-logs
+          path: papers/2025_lpddr_feram/*.log
