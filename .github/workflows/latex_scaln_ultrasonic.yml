@@ -11,14 +11,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: danteev/texlive:latest   # 公式TeXLive入りの軽量イメージ
+      image: danteev/texlive:latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show files (sanity check)
+      - name: Show TeX Live version & files
         run: |
+          tlmgr --version || true
           ls -la
           ls -la papers/2025_scaln_ultrasonic
 
@@ -27,27 +28,23 @@ jobs:
         run: |
           rm -f scaln_ultrasonic.{aux,bbl,blg,bcf,run.xml,out,toc,lof,lot,fls,fdb_latexmk,log}
 
-      # TeX Live の更新と必要パッケージの確保
       - name: Ensure TeX packages
         run: |
           tlmgr update --self --all || true
-          tlmgr install latexmk bibtex xetex fontspec pgfplots tikz \
+          tlmgr install latexmk bibtex xetex fontspec \
+                        pgf pgfplots xcolor booktabs cite url \
                         ieeetran hyperref amsmath graphics || true
 
-      # 明示フロー: XeLaTeX -> BibTeX -> XeLaTeX*2
+      # 明示フロー: XeLaTeX -> BibTeX -> XeLaTeX*2（失敗時に pdfLaTeXへ）
       - name: Build (XeLaTeX + BibTeX, fallback to pdfLaTeX)
         working-directory: papers/2025_scaln_ultrasonic
         run: |
           set -euxo pipefail
-          # 1st pass
           xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
-          # BibTeX (引用解決)
           bibtex scaln_ultrasonic || true
-          # 2nd & 3rd passes
           xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
           xelatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex || true
 
-          # もし XeLaTeX 系でコケた場合に備え pdfLaTeX へフォールバック
           if [ ! -f scaln_ultrasonic.pdf ]; then
             pdflatex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
             bibtex scaln_ultrasonic || true
@@ -65,7 +62,8 @@ jobs:
             papers/2025_scaln_ultrasonic/scaln_ultrasonic.blg
             papers/2025_scaln_ultrasonic/scaln_ultrasonic.bbl
 
-      - name: Upload PDF
+      - name: Upload PDF (only if exists)
+        if: ${{ hashFiles('papers/2025_scaln_ultrasonic/scaln_ultrasonic.pdf') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: scaln_ultrasonic_pdf
