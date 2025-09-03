@@ -91,11 +91,12 @@ Flip-chip bonding integrates MEMS and CMOS dice. Benefits: yield separation, sho
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[node distance=12mm, auto, thick]
-\node[blk]                     (mems) {ScAlN MEMS Array\\(10--50 MHz)};
-\node[blk, right=12mm of mems] (lna)  {SiGe LNA/VGA\\(65 nm)};
-\node[blk, right=12mm of lna]  (adc)  {ADC\\(12--14 bit, 50--100 MS/s)};
-\node[blk, right=12mm of adc]  (bf)   {Beamformer/\\Digital Core};
+\begin{tikzpicture}[node distance=10mm, auto, thick]
+\node[blk]              (mems) {ScAlN MEMS Array\\(10--50 MHz)};
+\node[blk, below=10mm of mems] (lna)  {SiGe LNA/VGA\\(65 nm)};
+\node[blk, below=10mm of lna]  (adc)  {ADC\\(12--14 bit, 50--100 MS/s)};
+\node[blk, below=10mm of adc]  (bf)   {Beamformer/\\Digital Core};
+
 \draw[->] (mems)--(lna);
 \draw[->] (lna)--(adc);
 \draw[->] (adc)--(bf);
@@ -112,9 +113,12 @@ FEM analysis confirms resonances at 20, 30, and 40~MHz with $k^2_{\mathrm{eff}}\
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=\columnwidth,height=5.0cm,
+  width=\columnwidth, height=5.0cm,
   xlabel={Frequency (MHz)}, ylabel={System SNR (dB)},
-  xmin=18,xmax=42,ymin=40,ymax=75, grid=both, tick align=outside]
+  xmin=18, xmax=42, ymin=40, ymax=75,
+  grid=both,
+  tick align=inside  % ← 内側にする
+]
 \addplot+[mark=square*,thick] coordinates {(20,62) (30,65) (40,61)};
 \end{axis}
 \end{tikzpicture}
