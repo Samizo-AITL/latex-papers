@@ -17,7 +17,17 @@
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \usepackage{booktabs}
+
 \usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta} % ← 追加：right=.. of .. を使う
+\tikzset{ % ← 追加：ノード共通スタイル
+  blk/.style={
+    rectangle,draw,rounded corners,
+    minimum height=9mm,minimum width=26mm,
+    align=center,fill=blue!8
+  }
+}
+
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
@@ -71,12 +81,11 @@ Flip-chip bonding integrates MEMS and CMOS dice. Benefits: yield separation, sho
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[node distance=1.6cm, auto, thick]
-\tikzstyle{blk}=[rectangle,draw,rounded corners,minimum height=9mm,minimum width=26mm,align=center]
-\node[blk] (mems) {ScAlN MEMS Array\\(10--50 MHz)};
-\node[blk, right=12mm of mems] (lna) {SiGe LNA/VGA\\(65 nm)};
-\node[blk, right=12mm of lna] (adc) {ADC\\(12--14 bit, 50--100 MS/s)};
-\node[blk, right=12mm of adc] (bf) {Beamformer/\\Digital Core};
+\begin{tikzpicture}[node distance=12mm, auto, thick]
+\node[blk]                        (mems) {ScAlN MEMS Array\\(10--50 MHz)};
+\node[blk, right=12mm of mems]    (lna)  {SiGe LNA/VGA\\(65 nm)};
+\node[blk, right=12mm of lna]     (adc)  {ADC\\(12--14 bit, 50--100 MS/s)};
+\node[blk, right=12mm of adc]     (bf)   {Beamformer/\\Digital Core};
 \draw[->] (mems)--(lna);
 \draw[->] (lna)--(adc);
 \draw[->] (adc)--(bf);
