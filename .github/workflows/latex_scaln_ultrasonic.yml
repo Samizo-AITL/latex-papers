@@ -1,0 +1,29 @@
+name: Build ScAlN Ultrasonic Paper
+
+on:
+  push:
+    paths:
+      - 'papers/2025_scaln_ultrasonic/**'
+      - '.github/workflows/latex_scaln_ultrasonic.yml'
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX (pdflatex + bibtex)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: scaln_ultrasonic.tex
+          working_directory: papers/2025_scaln_ultrasonic
+          args: -pdf -interaction=nonstopmode -synctex=1
+          latexmk_shell_escape: true
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scaln_ultrasonic_pdf
+          path: papers/2025_scaln_ultrasonic/scaln_ultrasonic.pdf
