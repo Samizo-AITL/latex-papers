@@ -4,66 +4,62 @@
 \section{Device and Process Integration}
 
 \subsection{LPDDR Technology Background}
-Low-power DRAM (LPDDR) is the de-facto main memory for mobile systems, providing tens to a few hundreds of~GB/s bandwidth at substantially lower energy than HBM-class DRAM~\cite{ChoiIEDM2022}. 
-Despite architectural and IO optimizations, LPDDR remains \emph{volatile} and incurs standby power due to periodic refresh, which motivates assistive non-volatile memory (NVM) for checkpointing and state retention.
+Low-power DRAM (LPDDR) is the de-facto main memory for mobile systems, providing tens to a few hundreds of~GB/s bandwidth
+at substantially lower I/O energy than HBM-class DRAM~\cite{ChoiIEDM2022}.
+Despite architectural and I/O optimizations, LPDDR is \emph{volatile} and incurs standby power due to periodic refresh.
+
+% --- Fig.2: 特性比較（本文に現れる順で先に出す） ---
+\input{figures/fig2_access_retention}
 
 \subsection{FeRAM Device and Process}
-Ferroelectric RAM (FeRAM) based on doped HfO$_2$ leverages polarization switching to store data with low write voltage and fast access~\cite{NohedaNature2023,KimIEDM2021}. 
-Process-wise, FeRAM/FeFET flows require \emph{low-to-mid} temperature stabilization ($\sim$350--450$^\circ$C) to preserve ferroelectric phase in HfZrO$_2$.
-These temperatures are compatible with back-end assembly but conflict with the high-temperature steps in conventional DRAM capacitor formation.
+Ferroelectric RAM (FeRAM) based on doped HfO$_2$ leverages polarization switching to store data with low write voltage and fast access~\cite{MullerAPL2011,KimIEDM2021,NohedaNRM2023}.
+Process-wise, FeRAM/FeFET flows require \emph{low-to-mid} temperature stabilization ($\sim$350--450$^\circ$C) to preserve the ferroelectric orthorhombic phase in HfZrO$_2$.
 
 \subsection{Why Monolithic Co-Integration Is Impractical}
-LPDDR DRAM arrays rely on high-temperature anneals ($>$700$^\circ$C) to realize high-quality storage capacitors. 
-Such thermal budget destroys the ferroelectric phase of HfO$_2$ devices, whereas post-FeRAM low-temperature windows cannot support DRAM capacitor quality. 
+LPDDR DRAM arrays rely on high-temperature anneals ($>$700$^\circ$C) to realize high-quality storage capacitors.
+Such thermal budgets collapse the ferroelectric phase of HfO$_2$, whereas post-FeRAM low-temperature windows cannot support DRAM capacitor quality.
 Therefore, monolithic LPDDR+FeRAM co-fabrication is \textbf{impractical}; a package-level approach is required.
 
 \subsection{Package-Level Integration: Chiplet/SiP/PoP}
-Fig.~\ref{fig:package_lpddr_feram} illustrates the proposed organization:
-(1) LPDDR remains as a standard DRAM chip/package optimized in its own process; 
-(2) a small FeRAM die (chiplet) is co-packaged on a common substrate (SiP/interposer or PoP); 
-(3) the CPU/SoC connects to both through short, low-parasitic interconnects.
+Figure~\ref{fig:package_lpddr_feram} shows our organization:
+(1) LPDDR remains as a standard DRAM die/package optimized in its own process;
+(2) a small FeRAM die (chiplet) is co-packaged on a common substrate (SiP/interposer or PoP);
+(3) the SoC connects to both through short, low-parasitic interconnects.
 This separation preserves each technology's process window while enabling system-level policies to exploit non-volatility.
 
+% --- Fig.3: パッケージ統合 ---
+\input{figures/fig3_package_integration}
+
 \subsection{Interface and Policy Hooks}
-The FeRAM chiplet exposes a narrow, reliable link (e.g., AXI-lite or mailbox-style DMA) for:
+The FeRAM chiplet exposes a narrow, reliable link (e.g., mailbox DMA or AXI-lite) for:
 \begin{itemize}
   \item \textbf{Checkpoint Write/Read}: bulk DMA of model/activation checkpoints and OS state.
-  \item \textbf{Refresh Offloading}: a firmware policy to migrate cold regions from LPDDR to FeRAM, suppressing refresh traffic for those regions.
-  \item \textbf{Instant Resume}: a fast restore path that avoids full DRAM warm-up.
+  \item \textbf{Refresh Offloading}: firmware migrates cold regions from LPDDR to FeRAM, suppressing refresh traffic.
+  \item \textbf{Instant Resume}: fast restore path avoiding full DRAM warm-up.
 \end{itemize}
-These hooks are orchestrated by the \emph{SystemDK} co-design framework (policies spanning architecture, package, and OS), as indicated by the red dashed supervision in Fig.~\ref{fig:package_lpddr_feram}.
+These hooks are orchestrated by the \emph{SystemDK} co-design framework (policies spanning architecture, package, and OS).
 
 \subsection{Key Technology Parameters}
-Table~\ref{tab:tech_params} summarizes representative parameters used by our system analysis (also reflected in Fig.~\ref{fig:access_retention_lpddr_feram}). Values are typical-order estimates used for policy exploration; silicon-dependent tuning is straightforward within the same framework.
+Table~\ref{tab:tech_params} summarizes representative parameters used by our analysis (also reflected in Fig.~\ref{fig:access_retention_lpddr_feram}).
+Values are typical-order estimates for policy exploration; silicon-specific tuning is straightforward.
 
 \begin{table}[t]
   \centering
   \caption{Representative parameters for LPDDR and FeRAM used in evaluation.}
   \label{tab:tech_params}
-  \vspace{3pt}
+  \vspace{2pt}
+  \small
+  \setlength{\tabcolsep}{5pt}
   \begin{tabular}{@{}lcc@{}}
     \toprule
     Parameter & LPDDR (typ.) & FeRAM (typ.) \\
     \midrule
     Access latency & 15--60~ns & 80--150~ns \\
-    Retention & volatile (refresh 32--64~ms) & years ($10^7$--$10^8$~s) \\
+    Retention & volatile (32--64~ms refresh) & years ($10^7$--$10^8$~s) \\
     Write energy/bit & moderate & low \\
-    Endurance & $>$10$^{15}$ (access) & 10$^8$--10$^{12}$ (writes) \\
-    Process temp. & high-$T$ caps ($>$700$^\circ$C) & $\sim$350--450$^\circ$C \\
+    Endurance & $>$10$^{15}$ accesses & 10$^8$--10$^{12}$ writes \\
+    Process temp. & caps anneal $>$700$^\circ$C & 350--450$^\circ$C \\
     Role & working memory & checkpoint/state \\
     \bottomrule
   \end{tabular}
 \end{table}
-
-\subsection{Power and Refresh Model (Used in Results)}
-Let $P_{\mathrm{stby}}^{\mathrm{LPDDR}} = P_{\mathrm{bg}} + P_{\mathrm{ref}}$ where $P_{\mathrm{ref}}$ is proportional to the number of active rows under refresh. 
-If a fraction $\alpha$ of cold data is migrated to FeRAM and their LPDDR regions are placed in deep-sleep (no refresh), the new standby becomes
-\[
-P_{\mathrm{stby}}' = P_{\mathrm{bg}} + (1-\alpha)\,P_{\mathrm{ref}} + P_{\mathrm{FeRAM,hold}}.
-\]
-Since $P_{\mathrm{FeRAM,hold}} \!\approx\! 0$ for non-volatile storage, the improvement is approximately $\Delta P \!\approx\! \alpha\,P_{\mathrm{ref}}$.
-Resume latency reduces from DRAM warm-up + page reload to just FeRAM restore DMA, i.e., $\mathcal{O}(\mu\mathrm{s})$ for checkpoint-sized blocks.
-
-\subsection{Implications}
-This partitioning preserves LPDDR efficiency for hot data while exploiting FeRAM persistence for cold/checkpoint data. 
-The separation of process temperatures makes the approach \emph{practical today}, and the same flow can later replace FeRAM with FeFET without changing package or policies.
