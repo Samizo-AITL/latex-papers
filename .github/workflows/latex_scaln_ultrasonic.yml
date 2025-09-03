@@ -10,7 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # ← ジョブ全体をTeX Live公式イメージで実行
     container:
       image: danteev/texlive:latest
 
@@ -28,11 +27,18 @@ jobs:
         run: |
           rm -f scaln_ultrasonic.{aux,bbl,blg,bcf,run.xml,out,toc,lof,lot,fls,fdb_latexmk,log}
 
-      - name: Build with latexmk (XeLaTeX + BibTeX)
-        working-directory: papers/2025_scaln_ultrasonic
-        # -xelatex でUTF-8/日本語OK、-bibtex で引用解決、-interaction nonstop で止まらない
+      - name: Ensure TeX packages
         run: |
-          latexmk -xelatex -bibtex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
+          tlmgr update --self --all || true
+          tlmgr install latexmk bibtex xetex fontspec pgfplots tikz || true
+
+      - name: Build (XeLaTeX + BibTeX, fallback to pdfLaTeX)
+        working-directory: papers/2025_scaln_ultrasonic
+        run: |
+          set -e
+          if ! latexmk -xelatex -bibtex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex; then
+            latexmk -pdf -bibtex -interaction=nonstopmode -file-line-error scaln_ultrasonic.tex
+          fi
 
       - name: Upload logs (always)
         if: always()
