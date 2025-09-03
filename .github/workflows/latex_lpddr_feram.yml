@@ -19,14 +19,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up LaTeX (latexmk + lualatex)
+      - name: Set up LaTeX (latexmk + pdflatex)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: papers/2025_lpddr_feram
-          latexmk_use_lualatex: true
+          latexmk_use_pdflatex: true     # ← ここを有効化
+          latexmk_use_lualatex: false    # ← LuaLaTeXは無効化
           latexmk_shell_escape: true
-          # ビルド高速化（TeX Liveのキャッシュ）
           cache: true
 
       - name: Upload PDF artifact
