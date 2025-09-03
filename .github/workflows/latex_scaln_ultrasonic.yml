@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ← 追加：壊れた中間ファイルを削除（citation未解決の原因になりがち）
+      # Clean old aux files to avoid stale citation errors
       - name: Clean aux files
         run: |
           cd papers/2025_scaln_ultrasonic
@@ -25,7 +25,7 @@ jobs:
         with:
           working_directory: papers/2025_scaln_ultrasonic
           root_file: scaln_ultrasonic.tex
-          args: -pdf -interaction=nonstopmode -file-line-error
+          args: -pdf -bibtex -interaction=nonstopmode -file-line-error
           latexmk_shell_escape: true
 
       - name: Upload PDF artifact
