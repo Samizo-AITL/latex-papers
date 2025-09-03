@@ -7,7 +7,7 @@
 \usepackage{hyperref}
 \usepackage{tikz}
 \usepackage{pgfplots}
-\pgfplotsset{compat=newest}
+\pgfplotsset{compat=1.18} % 安定バージョン指定
 
 \begin{document}
 
@@ -81,7 +81,7 @@ It integrates LNA, VGA, ADC, and T/R switch, optimized for microvolt-level signa
 Flip-chip bonding enables MEMS and CMOS die integration. 
 Benefits include yield separation, short interconnects, and hermetic sealing.
 
-\begin{figure}[t]
+\begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[node distance=1.8cm, auto, thick]
 \tikzstyle{block} = [rectangle, draw, fill=blue!10,
@@ -104,7 +104,7 @@ Benefits include yield separation, short interconnects, and hermetic sealing.
 FEM analysis confirms resonant frequencies at 20, 30, and 40 MHz with $k^2_{\mathrm{eff}} = 2$--4\%. 
 Circuit simulations show LNA input noise $< 2$ nV/$\sqrt{\mathrm{Hz}}$ and system SNR $> 60$ dB at 20--40 MHz.
 
-\begin{figure}[t]
+\begin{figure}[htbp]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
@@ -126,7 +126,7 @@ Circuit simulations show LNA input noise $< 2$ nV/$\sqrt{\mathrm{Hz}}$ and syste
 \label{fig:snr_freq}
 \end{figure}
 
-\begin{table}[t]
+\begin{table}[htbp]
 \caption{System Specifications of Pb-free ScAlN MEMS Array Integrated with 65 nm SiGe CMOS via SiP}
 \label{tab:system_specs}
 \centering
@@ -144,7 +144,7 @@ Package & System-in-Package (flip-chip) \\ \hline
 \end{tabular}
 \end{table}
 
-\begin{table}[t]
+\begin{table}[htbp]
 \caption{Comparison of Piezoelectric Materials for Ultrasonic MEMS}
 \label{tab:materials}
 \centering
@@ -187,7 +187,7 @@ The author thanks colleagues and collaborators in semiconductor device research 
 This work was supported in part by independent research efforts and educational initiatives.
 
 \bibliographystyle{IEEEtran}
-\bibliography{references}
+\bibliography{./references} % ← パスを明示
 
 \section*{Author Biography}
 \textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering
