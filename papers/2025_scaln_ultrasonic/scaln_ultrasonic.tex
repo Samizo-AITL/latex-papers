@@ -11,38 +11,37 @@
 
 \author{
   \IEEEauthorblockN{Shinichi Samizo}
-  \IEEEauthorblockA{
-    Samizo-AITL \\
-    GitHub: \url{https://github.com/Samizo-AITL} \\
-    Email: (your email here)
-  }
+  \IEEEauthorblockA{Independent Semiconductor Researcher \\
+  Former Engineer at Seiko Epson Corporation \\
+  Email: shin3t72@gmail.com \\
+  GitHub: \url{https://github.com/Samizo-AITL}}
 }
 
 \maketitle
 
 \begin{abstract}
-Conventional medical ultrasonic devices have been dominated by PZT (Pb(Zr,Ti)O$_3$). 
+Conventional medical ultrasonic devices have been dominated by PZT (Pb(Zr,Ti)O$_3$) \cite{akata2009pzt}. 
 However, Pb-containing materials face strict regulatory restrictions (EU RoHS, REACH, FDA) in in-body medical applications. 
 This work proposes a Pb-free alternative based on ScAlN MEMS arrays, integrated with 65 nm SiGe CMOS using System-in-Package (SiP) technology.
 
-The ScAlN MEMS array is designed for 10--50 MHz operation with $\lambda/2$ pitch for high-resolution imaging. 
+The ScAlN MEMS array is designed for 10--50 MHz operation with $\lambda/2$ pitch for high-resolution imaging \cite{akrout2018scaln}. 
 The SiGe CMOS front-end integrates LNA, VGA, and ADC, enabling detection of microvolt-level signals. 
 The SiP approach ensures yield separation, short interconnects, and hermetic sealing for medical reliability.
 
-Finite element and circuit simulations demonstrate:
-adequate sensitivity and beam directivity at 20--40 MHz,
-noise reduction with SiGe LNA (NF < 2 dB),
-and compact, reliable packaging via flip-chip SiP.
+Finite element and circuit simulations demonstrate: adequate sensitivity and beam directivity at 20--40 MHz, 
+noise reduction with SiGe LNA (NF < 2 dB), and compact, reliable packaging via flip-chip SiP.
 
-Conclusion: Pb-free ScAlN MEMS arrays, combined with 65 nm SiGe CMOS via SiP, represent a practical solution for next-generation high-resolution medical ultrasound sensors, with strong competitiveness in ophthalmology, vascular imaging, dermatology, and implantable applications.
+Conclusion: Pb-free ScAlN MEMS arrays, combined with 65 nm SiGe CMOS via SiP, represent a practical solution for next-generation 
+high-resolution medical ultrasound sensors, with strong competitiveness in ophthalmology, vascular imaging, dermatology, and implantable applications.
 \end{abstract}
 
 \section{Introduction}
 Medical ultrasonic imaging is widely used in ophthalmology, vascular diagnosis, dermatology, and implantable monitoring. 
-Traditional devices have been dominated by PZT (Pb(Zr,Ti)O$_3$) because of its superior piezoelectric properties. 
+Traditional devices have been dominated by PZT (Pb(Zr,Ti)O$_3$) because of its superior piezoelectric properties \cite{akata2009pzt}. 
 However, Pb toxicity has become a limitation for in-body use due to EU RoHS, REACH, and FDA regulations.
 
-Scandium-doped Aluminum Nitride (ScAlN) has emerged as a Pb-free candidate due to CMOS compatibility, high-Q properties, and industrial adoption in RF BAW/XBAR filters.
+Scandium-doped Aluminum Nitride (ScAlN) has emerged as a Pb-free candidate due to CMOS compatibility, high-Q properties, 
+and industrial adoption in RF BAW/XBAR filters \cite{akrout2018scaln}. 
 This paper proposes ScAlN MEMS arrays co-integrated with 65 nm SiGe CMOS front-ends via SiP for medical ultrasound.
 
 \section{System Concept}
@@ -63,18 +62,18 @@ FEM analysis confirms resonant frequencies at 20, 30, 40 MHz with $k^2_{eff} = 2
 Circuit simulations show LNA input noise < 2 nV/$\sqrt{Hz}$ and system SNR > 60 dB at 20--40 MHz.
 
 \section{Application Scenarios}
-- Ophthalmology: 20--40 MHz anterior eye imaging.  
-- Vascular IVUS: 30--40 MHz catheter arrays.  
+- Ophthalmology: 20--40 MHz anterior eye imaging \cite{pavlin2009ubm}.  
+- Vascular IVUS: 30--40 MHz catheter arrays \cite{foster2000ivus}.  
 - Dermatology: 10--20 MHz skin/tumor imaging.  
 - Implantables: miniaturized SiP with telemetry.
 
 \section{Discussion}
 Compared with PZT, ScAlN offers CMOS compatibility and Pb-free compliance at the cost of lower $d_{33}$.  
-Compared with CMUT/PMUT, ScAlN requires lower bias and offers better reliability in fluids.  
+Compared with CMUT/PMUT \cite{khuri2009cmut}, ScAlN requires lower bias and offers better reliability in fluids.  
 SiP provides yield separation, short interconnects, and hermetic reliability versus monolithic integration.
 
 \section{Conclusion}
-Pb-free ScAlN MEMS arrays integrated with 65 nm SiGe CMOS via SiP provide:
+Pb-free ScAlN MEMS arrays integrated with 65 nm SiGe CMOS via SiP provide:  
 - Regulatory compliance and safety,  
 - Adequate resolution at 20--50 MHz,  
 - Low-noise detection via SiGe CMOS,  
@@ -84,5 +83,15 @@ This makes the approach a practical and competitive solution for next-generation
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
+
+\section*{Author Biography}
+\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering
+from Shinshu University, Japan. He joined Seiko Epson Corporation in 1997,
+engaging in semiconductor device process development including 0.25--0.18~$\mu$m
+CMOS, HV-CMOS, DRAM, FeRAM, and FinFET/GAA research. He also contributed to
+inkjet MEMS process development and thin-film piezo actuator design, leading to
+the productization of PrecisionCore printheads. His expertise covers
+semiconductor devices (logic, memory [DRAM/FeRAM/SRAM], high-voltage mixed
+integration), inkjet actuators, and AI-based control education.
 
 \end{document}
