@@ -25,11 +25,19 @@ between digital SoC, AMS front-end, power drive, and energy harvesting subsystem
 enabling multi-physics co-simulation of noise, heat, and stress effects.
 
 \begin{figure}[t]
-    \centering
-    \includegraphics[width=0.48\textwidth]{figures/systemdk_flow.pdf}
-    \caption{SystemDK-based integrated design flow spanning SoC (22 nm), AMS (0.18 µm),
-    LDMOS power drive (0.35 µm), and energy harvesting subsystems.}
-    \label{fig:systemdk_flow}
+  \centering
+  % 図が未コミットでもビルドを通すプレースホルダ
+  \IfFileExists{figures/systemdk_flow.pdf}{%
+    \includegraphics[width=\columnwidth]{figures/systemdk_flow.pdf}%
+  }{%
+    \fbox{\begin{minipage}[c][0.48\linewidth][c]{0.94\columnwidth}\centering
+    \vspace{0.5em}\textit{Placeholder: figures/systemdk_flow.pdf not found}\\
+    (Commit the figure to replace this box.)\vspace{0.5em}
+    \end{minipage}}%
+  }
+  \caption{SystemDK-based integrated design flow spanning SoC (22 nm), AMS (0.18~µm),
+  LDMOS power drive (0.35~µm), and energy harvesting subsystems.}
+  \label{fig:systemdk_flow}
 \end{figure}
 
 \subsection{Key Performance Indicators}
@@ -41,15 +49,16 @@ in posture recovery, gait stability, energy efficiency, and memory subsystem per
 \caption{Summary of Key Performance Indicators (KPIs)}
 \label{tab:kpi_summary}
 \centering
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{p{3.5cm} p{3.5cm}}
+\renewcommand{\arraystretch}{1.15}
+\footnotesize
+\begin{tabular}{@{}p{0.48\columnwidth} p{0.44\columnwidth}@{}}
 \toprule
 \textbf{Metric} & \textbf{Result} \\
 \midrule
-Posture recovery time & $\leq 200$ ms (vs. $>500$ ms with PID only) \\
-Gait stability (CoM RMS) & 30\% improvement over PID only \\
-Energy efficiency & +15\% with hybrid control + harvesting \\
-Self-harvest contribution & Up to 20\% of power budget \\
+Posture recovery time & $\leq 200$ ms (vs.\ $>500$ ms with PID only) \\
+Gait stability (CoM RMS) & $\approx 30\%$ improvement over PID only \\
+Energy efficiency & $+15\%$ with hybrid control + harvesting \\
+Self-harvest contribution & Up to $20\%$ of power budget \\
 Checkpoint resume time & $\leq 10$ ms (FRAM/EEPROM) \\
 Memory endurance & $10^{12}$ write cycles \\
 \bottomrule
