@@ -14,14 +14,39 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Compile LaTeX document
+        id: compile
         uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
           working_directory: papers/2025_humanoid_tcst
           latexmk_use_xelatex: true
+          continue_on_error: false
+
+      # --- 失敗時でもログを出力 ---
+      - name: Show LaTeX logs (tail)
+        if: always()
+        run: |
+          echo "==== list ===="
+          ls -la papers/2025_humanoid_tcst || true
+          echo "==== main.log (last 200 lines) ===="
+          tail -n 200 papers/2025_humanoid_tcst/main.log || true
+          echo "==== latexmk.log (last 200 lines) ===="
+          tail -n 200 papers/2025_humanoid_tcst/latexmk.log || true
 
       - name: Upload PDF artifact
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: humanoid_tcst_pdf
           path: papers/2025_humanoid_tcst/main.pdf
+
+      - name: Upload logs artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex_logs
+          path: |
+            papers/2025_humanoid_tcst/*.log
+            papers/2025_humanoid_tcst/*.aux
+            papers/2025_humanoid_tcst/*.blg
+            papers/2025_humanoid_tcst/*.bbl
