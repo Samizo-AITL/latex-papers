@@ -1,0 +1,23 @@
+\section{Introduction}
+Humanoid robots represent one of the most challenging applications in modern control systems,
+requiring robust dynamic stabilization, real-time adaptation to disturbances,
+and high-level decision-making capabilities.
+Recent advancements such as Boston Dynamics Atlas and Tesla Optimus
+have demonstrated impressive mobility and manipulation skills.
+However, these platforms primarily emphasize either dynamic performance
+or industrial deployment, while critical aspects such as autonomy,
+fault tolerance, and sustainable operation remain underexplored.
+
+This work presents a flagship proof-of-concept (PoC) humanoid robot
+that integrates finite state machines (FSM), proportional-integral-derivative (PID) control,
+state-space methods, and large language models (LLMs) into a unified architecture.
+The key contribution is a hierarchical control design where low-level stability
+and mid-level behavior switching are coordinated with high-level goal generation
+and anomaly interpretation provided by the LLM layer.
+
+The proposed system is implemented as a cross-node design,
+spanning a 22 nm SoC for inference and control, a 0.18 µm AMS sensor hub,
+and a 0.35 µm LDMOS drive with external power chips.
+System-level validation using SystemDK demonstrates that the hybrid control
+achieves posture recovery within 200 ms, improves gait stability by 30\%,
+and enhances energy efficiency by 15\% compared to PID-only baselines.
