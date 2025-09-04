@@ -17,3 +17,41 @@ The humanoid system-on-chipset integrates heterogeneous technologies:
   \item \textbf{Drive Layer}: high-torque actuation and safety monitoring;
   \item \textbf{Energy Layer}: harvesting, storage, and power management.
 \end{itemize}
+
+\subsection{SystemDK Integrated Design Flow}
+As illustrated in Fig.~\ref{fig:systemdk_flow}, the proposed PoC was modeled 
+and verified using SystemDK. The design flow captures cross-node interactions 
+between digital SoC, AMS front-end, power drive, and energy harvesting subsystems, 
+enabling multi-physics co-simulation of noise, heat, and stress effects.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.48\textwidth]{figures/systemdk_flow.pdf}
+    \caption{SystemDK-based integrated design flow spanning SoC (22 nm), AMS (0.18 µm),
+    LDMOS power drive (0.35 µm), and energy harvesting subsystems.}
+    \label{fig:systemdk_flow}
+\end{figure}
+
+\subsection{Key Performance Indicators}
+The PoC architecture was evaluated against several key performance indicators (KPIs),
+summarized in Table~\ref{tab:kpi_summary}. These metrics guided the design trade-offs
+in posture recovery, gait stability, energy efficiency, and memory subsystem performance.
+
+\begin{table}[t]
+\caption{Summary of Key Performance Indicators (KPIs)}
+\label{tab:kpi_summary}
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{3.5cm} p{3.5cm}}
+\toprule
+\textbf{Metric} & \textbf{Result} \\
+\midrule
+Posture recovery time & $\leq 200$ ms (vs. $>500$ ms with PID only) \\
+Gait stability (CoM RMS) & 30\% improvement over PID only \\
+Energy efficiency & +15\% with hybrid control + harvesting \\
+Self-harvest contribution & Up to 20\% of power budget \\
+Checkpoint resume time & $\leq 10$ ms (FRAM/EEPROM) \\
+Memory endurance & $10^{12}$ write cycles \\
+\bottomrule
+\end{tabular}
+\end{table}
