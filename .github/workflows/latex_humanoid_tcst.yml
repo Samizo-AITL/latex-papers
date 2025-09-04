@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'edusemi/papers/2025_humanoid_tcst/**.tex'
+      - 'edusemi/papers/2025_humanoid_tcst/**.bib'
       - '.github/workflows/latex_humanoid_tcst.yml'
 
 jobs:
@@ -13,13 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up LaTeX
+      - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
           working_directory: edusemi/papers/2025_humanoid_tcst
           latexmk_use_xelatex: true
-          continue_on_error: true
+          continue_on_error: false
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
