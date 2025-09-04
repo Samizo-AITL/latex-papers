@@ -1,0 +1,22 @@
+\section{Experimental Results}
+System-level validation was conducted using SystemDK multi-physics modeling
+combined with hardware-in-the-loop prototypes.
+
+\subsection{Posture Recovery}
+Disturbance rejection experiments show that the proposed FSM+PID+LLM
+recovers upright posture within 200 ms,
+whereas PID-only control requires more than 500 ms.
+
+\subsection{Gait Stability}
+Center-of-mass (CoM) deviation was measured during continuous walking.
+The hybrid control reduced RMS CoM deviation by 30\% compared to PID-only baselines.
+
+\subsection{Energy Efficiency}
+By coordinating control with piezoelectric, photovoltaic, and regenerative harvesting,
+overall energy efficiency improved by 15\%.
+Self-powering covered up to 20\% of total energy consumption in field scenarios.
+
+\subsection{Memory Subsystem}
+Checkpoint and resume functionality using FRAM/EEPROM
+achieved recovery within 10 ms without full system reinitialization.
+Durability testing confirmed $10^{12}$ write cycles within PoC requirements.
