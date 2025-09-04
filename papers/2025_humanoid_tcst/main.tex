@@ -3,11 +3,15 @@
 % ===== Packages =====
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
-\usepackage{booktabs}   % for professional tables
-\usepackage{subfigure}  % for subfigures
+\usepackage{booktabs}   % professional tables
+% IEEEtranでは subfigure は非推奨。subfig を caption=false で使用
+\usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{cite}
 \usepackage{url}
-\usepackage{hyperref}
+\usepackage{hyperref}   % 必ず最後に
+
+% （任意）図フォルダのデフォルトパス
+\graphicspath{{figures/}}
 
 % ===== Document =====
 \begin{document}
@@ -16,9 +20,9 @@
 \title{Cross-Node Humanoid Robot Control: FSM, PID, State-Space and LLM Integration}
 
 \author{Shinichi Samizo,~\IEEEmembership{Member,~IEEE}%
-\thanks{Shinichi Samizo is an independent semiconductor researcher. 
-Former engineer at Seiko Epson Corporation. 
-Contact: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}. 
+\thanks{Shinichi Samizo is an independent semiconductor researcher.
+Former engineer at Seiko Epson Corporation.
+Contact: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}.
 GitHub: \href{https://github.com/Samizo-AITL}{Samizo-AITL}.}
 }
 
@@ -40,8 +44,8 @@ Humanoid Robots, Fault-Tolerant Control, FSM, PID, State-Space Methods, LLM, Ene
 
 % ===== Acknowledgment =====
 \section*{Acknowledgment}
-The author would like to thank the open-source community and educational collaborators 
-who contributed to the EduController, Edusemi, and AITL projects, 
+The author would like to thank the open-source community and educational collaborators
+who contributed to the EduController, Edusemi, and AITL projects,
 which formed the foundation of this work.
 
 % ===== References =====
@@ -56,7 +60,7 @@ received the M.S. degree in Electrical and Electronic Engineering from Shinshu U
 He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
 He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.
 
-\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, 
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com},
 \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 \end{IEEEbiographynophoto}
 \endgroup
