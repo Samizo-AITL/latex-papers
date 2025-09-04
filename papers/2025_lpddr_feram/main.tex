@@ -1,38 +1,19 @@
 \documentclass[10pt,conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 
-% -----------------------------
-% packages
-% -----------------------------
+% --- packages ---
 \usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{positioning,fit,arrows.meta,calc}
 \usepackage{pgfplots}
-% pgfplots: IEEEっぽい標準設定（余計な外向き目盛は付けない）
-\pgfplotsset{
-  compat=1.18,
-  every axis/.append style={
-    grid=both
-  }
-}
+\pgfplotsset{compat=1.18} % 標準設定（目盛り方向などは変更しない）
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{cite}
 \usepackage{balance}
-\usepackage[hidelinks]{hyperref} % ← hyperref はできるだけ最後に
+\usepackage[hidelinks]{hyperref} % ← できるだけ最後に
 
-% -----------------------------
-% bibliography spacing (安全に本文開始後に適用)
-% -----------------------------
-\makeatletter
-\AtBeginDocument{%
-  \setlength{\IEEEbibitemsep}{1.0ex plus 0.2ex}% 参考文献の項目間
-}
-\makeatother
-
-% -----------------------------
-% title / author
-% -----------------------------
+% --- title/author ---
 \title{LPDDR+FeRAM for Mobile Edge AI:\\
 Chiplet/SiP Integration as a Practical Path}
 
@@ -64,26 +45,23 @@ System-level analysis shows that FeRAM chiplets can reduce standby power by up t
 \input{sections/conclusion}
 
 % ===== References =====
-% 2段末バランス（IEEE推奨）
+% 見出しの直前だけ間隔を広げる（本文→REFERENCES）
+\section*{REFERENCES}
+\vspace{1ex} % ← ここで上だけ広げる
 \balance
-
-% 本文と「REFERENCES」タイトルの間だけを広げる
-\vspace*{0.8\baselineskip}
-
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 
-% References と Biography の間は少し詰める（詰めすぎ注意）
-\vspace*{-0.60\baselineskip}
-
 % ===== Author Biography =====
+% References と Bio の間を少しだけ詰める（必要に応じて -0.5～-1.0ex 程度で調整）
+\vspace{-0.5\baselineskip}
 \begingroup\small
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
 received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
 He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
 He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.
 
-\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, 
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com},
 \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 \end{IEEEbiographynophoto}
 \endgroup
