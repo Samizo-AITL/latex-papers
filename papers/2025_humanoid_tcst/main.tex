@@ -3,26 +3,29 @@
 % ===== Packages =====
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
-\usepackage{booktabs}   % professional tables
-% IEEEtranでは subfigure は非推奨。subfig を caption=false で使用
+\usepackage{booktabs}
 \usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{cite}
 \usepackage{url}
 
-% ---- フォント警告の抑制（Times 系）----
-% hyperref より前に読み込むこと
+% ★ これを追加（フォント警告を消し、Times系に統一）
 \usepackage{newtxtext,newtxmath}
 
-% hyperref は最後に
+% ★ hyperref は最後に
 \usepackage{hyperref}
+\hypersetup{
+  colorlinks=false,           % モノクロ（IEEE向け）
+  pdfborder={0 0 0},
+  pdfauthor={Shinichi Samizo},
+  pdftitle={Cross-Node Humanoid Robot Control: FSM, PID, State-Space and LLM Integration}
+}
 
-% （任意）図フォルダのデフォルトパス
+% 図フォルダ
 \graphicspath{{figures/}}
 
 % ===== Document =====
 \begin{document}
 
-% ===== Title and Author =====
 \title{Cross-Node Humanoid Robot Control: FSM, PID, State-Space and LLM Integration}
 
 \author{Shinichi Samizo,~\IEEEmembership{Member,~IEEE}%
@@ -34,13 +37,11 @@ GitHub: \href{https://github.com/Samizo-AITL}{Samizo-AITL}.}
 
 \maketitle
 
-% ===== Abstract & Keywords =====
 \input{abstract}
 \begin{IEEEkeywords}
 Humanoid Robots, Fault-Tolerant Control, FSM, PID, State-Space Methods, LLM, Energy Harvesting
 \end{IEEEkeywords}
 
-% ===== Main Sections =====
 \input{intro}
 \input{related}
 \input{system}
@@ -48,21 +49,14 @@ Humanoid Robots, Fault-Tolerant Control, FSM, PID, State-Space Methods, LLM, Ene
 \input{discussion}
 \input{conclusion}
 
-% ===== Acknowledgment =====
 \section*{Acknowledgment}
 The author would like to thank the open-source community and educational collaborators
 who contributed to the EduController, Edusemi, and AITL projects,
 which formed the foundation of this work.
 
-% ===== References =====
-% bbl が空で \end{thebibliography} エラーを出さないよう暫定で埋める
-% 本文に \cite{} が増えたら、この \nocite は削ってOK
-\nocite{Franklin2015,Khalil2002,Anderson2007,Mayne2014,
-        Kajita2003,Kuindersma2017,Paradiso2005,Brown2020}
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
-% ===== Author Biography =====
 \vspace{-0.5\baselineskip}
 \begingroup\small
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
