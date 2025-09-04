@@ -3,7 +3,7 @@ name: Build LaTeX PDF (Humanoid TCST)
 on:
   push:
     paths:
-      - 'papers/2025_humanoid_tcst/**'     # ← ここをリポジトリ相対に
+      - 'edusemi/papers/2025_humanoid_tcst/**'
       - '.github/workflows/latex_humanoid_tcst.yml'
 
 jobs:
@@ -16,8 +16,8 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
-          working_directory: papers/2025_humanoid_tcst   # ← edusemi/ を外す
           root_file: main.tex
+          working_directory: edusemi/papers/2025_humanoid_tcst
           latexmk_use_xelatex: true
           continue_on_error: false
 
@@ -25,4 +25,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: humanoid_tcst_pdf
-          path: papers/2025_humanoid_tcst/main.pdf       # ← ここも同様
+          path: edusemi/papers/2025_humanoid_tcst/main.pdf
