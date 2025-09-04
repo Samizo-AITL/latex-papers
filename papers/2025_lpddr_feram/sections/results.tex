@@ -14,11 +14,13 @@ The new standby power is
 \[
 P_{\mathrm{stby}}' = P_{\mathrm{bg}} + (1-\alpha) P_{\mathrm{ref}} + P_{\mathrm{FeRAM,hold}}.
 \]
-Since $P_{\mathrm{FeRAM,hold}}\!\approx\!0$, the reduction is $\Delta P \approx \alpha P_{\mathrm{ref}}$.
-For LPDDR5X, $P_{\mathrm{ref}}$ is 15--25\% of total standby depending on density~\cite{ChoiIEDM2022}.
-With $\alpha=0.5$, we expect $\sim$10--12\% reduction; with $\alpha=0.8$, $\sim$18--20\%.
+Since $P_{\mathrm{FeRAM,hold}} \approx 0$, the expected reduction is
+\[
+\Delta P \approx \alpha P_{\mathrm{ref}}.
+\]
+For LPDDR5X, $P_{\mathrm{ref}}$ accounts for 15--25\% of total standby depending on density~\cite{ChoiIEDM2022}.
+With $\alpha=0.5$, we expect a 10--12\% reduction; with $\alpha=0.8$, 18--20\%.
 
-% --- 簡易プロット（TikZ/pgfplotsでの例）：任意 ---
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}
@@ -26,13 +28,13 @@ With $\alpha=0.5$, we expect $\sim$10--12\% reduction; with $\alpha=0.8$, $\sim$
       width=\columnwidth,
       height=0.58\columnwidth,
       xlabel={Fraction offloaded to FeRAM ($\alpha$)},
-      ylabel={Standby Power Reduction (\%)},
+      ylabel={Standby power reduction [\%]},
       xmin=0, xmax=1, ymin=0, ymax=25,
       grid=both, tick align=outside,
       legend style={at={(0.97,0.03)},anchor=south east,draw=none,fill=none}
     ]
       \addplot[thick, mark=*] coordinates {(0,0) (0.2,5) (0.5,12) (0.8,19) (1.0,23)};
-      \legend{LPDDR5X+FeRAM model}
+      \addlegendentry{LPDDR5X+FeRAM model}
     \end{axis}
   \end{tikzpicture}
   \vspace{-1ex}
@@ -42,9 +44,9 @@ With $\alpha=0.5$, we expect $\sim$10--12\% reduction; with $\alpha=0.8$, $\sim$
 
 \subsection{Resume Latency}
 Resume latency is the time from power-on to usable memory state.
-Baseline LPDDR involves DRAM warm-up, MR restore, and page reload (ms-scale).
-With FeRAM offloading, only DMA from FeRAM chiplet is required for checkpoints.
-For 1--10~MB checkpoints and 5--10~GB/s DMA bandwidth, latency becomes 100--500~$\mu$s.
+Baseline LPDDR involves DRAM warm-up, mode-register restore, and page reload (millisecond scale).
+With FeRAM offloading, only DMA from the FeRAM chiplet is required for checkpoints.
+For 1--10~MB checkpoints and 5--10~GB/s DMA bandwidth, latency becomes 100--500\,$\mu$s.
 
 \subsection{System-Level Efficiency}
 \begin{table}[t]
@@ -59,9 +61,9 @@ For 1--10~MB checkpoints and 5--10~GB/s DMA bandwidth, latency becomes 100--500~
       Metric & Baseline (LPDDR only) & LPDDR+FeRAM \\
       \midrule
       Standby power & 100\% & 80--88\% \\
-      Resume latency & ms order & 100--500~$\mu$s \\
-      Data retention & volatile (32--64~ms) & years (FeRAM) \\
-      Effective energy efficiency & 1.0$\times$ & 1.15--1.25$\times$ \\
+      Resume latency & ms scale & 100--500\,$\mu$s \\
+      Data retention & volatile (32--64~ms) & $10^7$--$10^8$~s ($\sim$years) \\
+      Effective energy efficiency & 1.0× & 1.15--1.25× \\
       \bottomrule
     \end{tabular}
   }
