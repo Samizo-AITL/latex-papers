@@ -3,31 +3,34 @@
   \centering
   \begin{tikzpicture}
     \begin{loglogaxis}[
-      width=\columnwidth,
-      height=0.65\columnwidth,
+      width=0.93\columnwidth,      % ← 軸だけ少し小さく
+      height=0.62\columnwidth,
+      scale only axis=true,        % ← ラベル分で実幅が増えない
       xlabel={Access time (ns)},
       ylabel={Retention (s)},
-      legend style={at={(1.02,0)},anchor=south west, draw=none, fill=white, font=\scriptsize}, % ← 外側
-      legend cell align=left,
       grid=both,
       tick align=outside,
       tickpos=left,
       xmin=10, xmax=200,
       ymin=1e-3, ymax=1e9,
-      ytickten={-3,-1,1,3,5,7,9},
-      xtickten={1,1.3,1.7,2},
-      clip=false % ← 凡例が外に出る時の保険
+      xlabel near ticks, ylabel near ticks,
+      legend style={
+        at={(1.02,0)}, anchor=south west, % ← 右外に配置
+        draw=none, fill=white, font=\scriptsize
+      },
+      legend cell align=left,
+      clip=false                     % ← 外置き凡例の安全策
     ]
 
-    % LPDDR
-    \addplot+[only marks, mark=square*, mark size=1.8pt]
-    coordinates {(15,3.2e-2) (20,6.4e-2) (30,3.2e-2) (60,6.4e-2) (100,3.2e-2)};
-    \addlegendentry{LPDDR (typ.)}
+      % LPDDR
+      \addplot+[only marks, mark=square*, mark size=1.8pt]
+        coordinates {(15,3.2e-2) (20,6.4e-2) (30,3.2e-2) (60,6.4e-2) (100,3.2e-2)};
+      \addlegendentry{LPDDR (typ.)}
 
-    % FeRAM
-    \addplot+[only marks, mark=*, mark size=1.8pt]
-    coordinates {(80,1.0e7) (100,3.0e7) (120,1.0e8) (150,3.0e8)};
-    \addlegendentry{FeRAM (typ.)}
+      % FeRAM
+      \addplot+[only marks, mark=*, mark size=1.8pt]
+        coordinates {(80,1.0e7) (100,3.0e7) (120,1.0e8) (150,3.0e8)};
+      \addlegendentry{FeRAM (typ.)}
 
     \end{loglogaxis}
   \end{tikzpicture}
