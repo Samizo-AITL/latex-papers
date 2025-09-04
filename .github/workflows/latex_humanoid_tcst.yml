@@ -11,18 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up LaTeX
         uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
           working_directory: edusemi/papers/2025_humanoid_tcst
-          latexmk_use_xelatex: true   # XeLaTeX 推奨
+          latexmk_use_xelatex: true
           continue_on_error: true
 
       - name: Upload PDF artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: humanoid_tcst_pdf
           path: edusemi/papers/2025_humanoid_tcst/main.pdf
