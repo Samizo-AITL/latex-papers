@@ -3,9 +3,9 @@
   \centering
   \begin{tikzpicture}
     \begin{loglogaxis}[
-      width=0.93\columnwidth,      % ← 軸だけ少し小さく
+      width=0.93\columnwidth,
       height=0.62\columnwidth,
-      scale only axis=true,        % ← ラベル分で実幅が増えない
+      scale only axis=true,
       xlabel={Access time (ns)},
       ylabel={Retention (s)},
       grid=both,
@@ -15,11 +15,12 @@
       ymin=1e-3, ymax=1e9,
       xlabel near ticks, ylabel near ticks,
       legend style={
-        at={(1.02,0)}, anchor=south west, % ← 右外に配置
-        draw=none, fill=white, font=\scriptsize
+        at={(1.02,0)}, anchor=south west,           % 右外配置
+        draw=none, fill=white, font=\scriptsize,
+        /tikz/overlay                              % ← バウンディングボックスに含めない
       },
-      legend cell align=left,
-      clip=false                     % ← 外置き凡例の安全策
+      legend cell align=left
+      % clip=false は不要（凡例は overlay で外出し）
     ]
 
       % LPDDR
