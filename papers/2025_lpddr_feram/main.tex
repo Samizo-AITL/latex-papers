@@ -4,14 +4,23 @@
 % --- packages ---
 \usepackage{graphicx}
 \usepackage{tikz}
-\usetikzlibrary{positioning,fit,arrows.meta,calc} % ← 追加：図で使うTikZライブラリ
+\usetikzlibrary{positioning,fit,arrows.meta,calc}
 \usepackage{pgfplots}
-\pgfplotsset{compat=1.18}
+% pgfplots: 全図に共通で「目盛りを外向き・少し長め」を適用
+\pgfplotsset{
+  compat=1.18,
+  every axis/.append style={
+    tick align=outside,
+    tickpos=left,
+    tick style={major tick length=3pt},
+    grid=both
+  }
+}
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{cite}
-\usepackage[hidelinks]{hyperref}
 \usepackage{balance}
+\usepackage[hidelinks]{hyperref} % ← hyperref はできるだけ最後に
 
 % --- title/author ---
 \title{LPDDR+FeRAM for Mobile Edge AI:\\
@@ -45,12 +54,9 @@ System-level analysis shows that FeRAM chiplets can reduce standby power by up t
 \input{sections/conclusion}
 
 % ===== References =====
+% 参考文献の段組を自動でバランス
+\balance
 \bibliographystyle{IEEEtran}
-
-% 段組バランスの指示（文献数に応じて番号調整、現在は8～9件想定）
-\IEEEtriggercmd{\balance}
-\IEEEtriggeratref{5}
-
 \bibliography{references}
 
 % ===== Author Biography =====
