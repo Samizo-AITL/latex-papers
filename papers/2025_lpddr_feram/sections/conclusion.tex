@@ -6,10 +6,19 @@
 This work presented a practical integration path for combining LPDDR and FeRAM in mobile edge AI systems. 
 By keeping LPDDR as the primary working memory and adding a small FeRAM chiplet for checkpointing and refresh suppression, 
 standby power can be reduced by up to $\sim$20\%, and resume latency shortened to the sub-ms range ($<$500~$\mu$s). 
-Unlike monolithic co-fabrication, which suffers from severe process-temperature mismatch, 
-chiplet or SiP/PoP integration provides a feasible near-term solution using existing packaging technology. 
+Unlike monolithic co-fabrication, which suffers from severe process--temperature mismatch, 
+chiplet or SiP/PoP integration provides a feasible near-term solution using existing packaging technology.
+
+\textbf{Target implementation nodes} considered in this study are: SoC logic at 5--3\,nm (FinFET/GAAFET), 
+LPDDR5/5X DRAM dies at 1$\alpha$--1$\gamma$ generations ($\sim$14--10\,nm), 
+and FeRAM chiplets at 28--22\,nm CMOS. 
+This heterogeneous mix reflects realistic foundry offerings and underlines why chiplet integration is the most pragmatic path today.
 
 The concept generalizes to other NVM options (ReRAM, FeFET, MRAM) with the same architectural hooks, 
 demonstrating the flexibility of the SystemDK co-design approach. 
+In the longer term, \textbf{FeFET-based sub-10\,nm monolithic integration} could unify logic and non-volatile memory, 
+paving the way for finer-grained checkpointing and even lower standby power. 
+
 Overall, LPDDR+FeRAM integration represents a concrete and actionable step 
-toward practical near-term deployment of more energy-efficient, responsive, and persistent memory subsystems for mobile edge AI workloads.
+toward near-term deployment of more energy-efficient, responsive, and persistent memory subsystems for mobile edge AI workloads,
+while also outlining a credible roadmap from today’s chiplet-based solutions to tomorrow’s monolithic NVM integration.
