@@ -1,13 +1,31 @@
 \section{Conclusion}
 This paper presented a flagship proof-of-concept humanoid robot control system
-that integrates FSM, PID, state-space control, and LLMs
-within a cross-node chipset architecture.
+that integrates finite state machines (FSM), proportional-integral-derivative (PID) control,
+state-space methods, and large language models (LLMs) within a cross-node chipset architecture.
+The architecture spans a 22 nm SoC for inference and control, a 0.18 µm AMS sensor hub,
+and a 0.35 µm LDMOS power drive with external GaN/MOSFET integration.
 SystemDK-based validation confirmed posture recovery within 200 ms,
-improved gait stability by 30\%, and energy efficiency gains of 15\%.
+gait stability improved by 30\%, and energy efficiency gains of 15\%.
+Self-harvesting contributed up to 20\% of the total power budget,
+while checkpoint-and-resume capability enabled robust and fast mission continuity.
 
-Future work will focus on extending high-torque actuation
-through GaN integration, optimizing hybrid energy harvesting,
-and demonstrating autonomous operation in real-world field scenarios.
-Ultimately, the proposed approach aims to establish
-a sustainable, fault-tolerant humanoid platform
-that bridges classical control, modern AI, and semiconductor co-design.
+The main contributions of this work are as follows:
+\begin{itemize}
+  \item Introduction of a hierarchical control framework
+        that combines FSM, PID/state-space, and LLM layers
+        for enhanced autonomy and fault tolerance;
+  \item Demonstration of cross-node semiconductor co-design
+        integrating digital, AMS, and power technologies in one system;
+  \item Experimental validation of resilience and sustainability
+        through posture recovery, gait stability, and energy harvesting KPIs;
+  \item Open publication of models and PoC results,
+        reinforcing reproducibility and educational impact.
+\end{itemize}
+
+Future work will extend this PoC toward larger-scale prototypes
+with high-torque actuation via GaN integration, optimized energy harvesting,
+and deployment in real-world field scenarios such as mountainous
+or disaster environments.
+Beyond robotics, the proposed hybrid control concept suggests
+a broader paradigm for intelligent systems,
+bridging classical model-based control and modern AI-driven reasoning.
