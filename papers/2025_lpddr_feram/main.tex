@@ -6,21 +6,16 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,fit,arrows.meta,calc}
 \usepackage{pgfplots}
-% pgfplots: 全図に共通で「目盛りを内向き・短め」に設定
-\pgfplotsset{
-  compat=1.18,
-  every axis/.append style={
-    tick align=inside,
-    tickpos=left,
-    tick style={major tick length=2pt},
-    grid=both
-  }
-}
+\pgfplotsset{compat=1.18} % ← 共通の目盛り上書きはしない＝標準のまま
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{cite}
-\usepackage{balance}
 \usepackage[hidelinks]{hyperref} % ← hyperref はできるだけ最後に
+
+% --- 参考文献の行間（少しゆったり） ---
+\makeatletter
+\setlength{\IEEEbibitemsep}{1.0ex plus 0.2ex}
+\makeatother
 
 % --- title/author ---
 \title{LPDDR+FeRAM for Mobile Edge AI:\\
@@ -54,7 +49,13 @@ System-level analysis shows that FeRAM chiplets can reduce standby power by up t
 \input{sections/conclusion}
 
 % ===== References =====
-\balance
+% \balance  % ← 外す：右カラムに回り込まないようにする
+% 参考：もし左カラムに収まらない場合は、次の数字を1つずつ増やして
+% 最終ページの段落改め位置を前に寄せてください。
+% 例：\IEEEtriggercmd{\newpage}\IEEEtriggeratref{12}
+\IEEEtriggercmd{\newpage}%
+\IEEEtriggeratref{12}% ← 目安。左カラムに文献が全て入る値に調整
+
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 
