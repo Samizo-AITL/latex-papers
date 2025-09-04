@@ -1,11 +1,13 @@
 % figures/fig2_access_retention.tex
 \begin{figure}[t]
   \centering
+  % 画像全体が列幅ぴったりに収まる
+  \resizebox{\columnwidth}{!}{%
   \begin{tikzpicture}
     \begin{loglogaxis}[
-      width=0.93\columnwidth,
+      width=\columnwidth,          % ← 図全体の基準（resizebox内なのでOK）
       height=0.62\columnwidth,
-      scale only axis=true,
+      % scale only axis は使わない（ラベルも含めて収める）
       xlabel={Access time (ns)},
       ylabel={Retention (s)},
       grid=both,
@@ -14,10 +16,14 @@
       xmin=10, xmax=200,
       ymin=1e-3, ymax=1e9,
       xlabel near ticks, ylabel near ticks,
-      legend pos=north west,        % ← 図の内側に配置
+      legend pos=north west,
       legend style={draw=none, fill=white, font=\scriptsize},
-      legend cell align=left
-      % clip=false は削除（既定の clip=true に戻す）
+      legend cell align=left,
+      % --- x軸の「10^1.2」対策：主目盛だけ表示し、数値表記に ---
+      xtick={10,20,30,60,100,200},
+      minor x tick num=0,
+      xticklabel=\pgfmathprintnumber{\tick},
+      xticklabel style={/pgf/number format/fixed,/pgf/number format/precision=0}
     ]
 
       % LPDDR
@@ -31,7 +37,8 @@
       \addlegendentry{FeRAM (typ.)}
 
     \end{loglogaxis}
-  \end{tikzpicture}
+  \end{tikzpicture}%
+  }
   \vspace{-0.6em}
   \caption{Access time vs.\ retention.}
   \label{fig:access_retention_lpddr_feram}
