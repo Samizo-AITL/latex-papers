@@ -1,0 +1,22 @@
+\section{Related Work}
+Classical humanoid control has relied heavily on PID loops
+for joint-level stabilization and trajectory tracking.
+Atlas, developed by Boston Dynamics, emphasizes highly dynamic behaviors
+such as jumping and flipping through advanced mechanical design
+and optimized low-level control.
+Tesla's Optimus, in contrast, targets scalable production for industrial assistance,
+focusing on simplified walking and manipulation tasks.
+
+Beyond traditional approaches, state-space control methods,
+including linear quadratic regulator (LQR) and linear quadratic Gaussian (LQG),
+have been applied to multi-input multi-output humanoid stabilization problems.
+More recently, integration of AI techniques such as reinforcement learning
+has been explored to enhance adaptability.
+However, the combination of symbolic state machines, classical control,
+and natural language-based reasoning remains underrepresented in the literature.
+
+This work differentiates itself by introducing LLMs
+into the hierarchical control loop of a humanoid robot.
+Rather than replacing classical controllers, the LLM layer
+generates goals, interprets anomalies, and supports human-robot interaction,
+while stability and safety are retained through PID and state-space methods.
