@@ -1,36 +1,44 @@
-% figures/fig1_concept_overview.tex
+% ==== Fig. 1: Conceptual overview of LPDDR+FeRAM for Mobile Edge AI ====
 \begin{figure}[t]
   \centering
-  \resizebox{\columnwidth}{!}{% ← 追加：はみ出し防止
-  \begin{tikzpicture}[node distance=1.5cm, font=\small, >=stealth]
-    % Mobile Edge AI Device
+  % 列幅に合わせて全体をスケール
+  \begin{adjustbox}{width=\columnwidth,center}
+  \begin{tikzpicture}[node distance=1.35cm, font=\small, >=Stealth]
+
+    % Mobile Edge AI Device（列幅に対して安全な余白）
     \node[draw, thick, rounded corners, fill=gray!15,
-          minimum width=8cm, minimum height=5cm] (device) {};
+          minimum width=0.94\linewidth, minimum height=4.2cm] (device) {};
 
     % SoC block
-    \node[draw, thick, fill=blue!10, minimum width=3.5cm, minimum height=1.2cm]
-      (soc) at (device.center) {SoC / AI Accelerator};
+    \node[draw, thick, fill=blue!10, minimum width=3.2cm, minimum height=1.0cm]
+         (soc) at (device.center) {SoC / AI Accelerator};
 
     % LPDDR
-    \node[draw, thick, fill=cyan!20, minimum width=3.0cm, minimum height=1.0cm,
-          above=1.2cm of soc] (lpddr) {LPDDR (main memory)};
+    \node[draw, thick, fill=cyan!20, minimum width=2.8cm, minimum height=0.9cm,
+          above=1.1cm of soc] (lpddr) {LPDDR (main memory)};
 
     % FeRAM
-    \node[draw, thick, fill=green!20, minimum width=2.8cm, minimum height=1.0cm,
-          right=2.5cm of soc] (feram) {FeRAM Chiplet};
+    \node[draw, thick, fill=green!20, minimum width=2.6cm, minimum height=0.9cm,
+          right=2.2cm of soc] (feram) {FeRAM Chiplet};
 
-    % SystemDK supervision
+    % SystemDK supervision（ラベルの配置を安全側に）
     \node[draw, thick, dashed, red!60!black, rounded corners,
           fit=(soc) (lpddr) (feram), inner sep=6pt] (sysdk) {};
-    \node[anchor=north west, font=\small\itshape, red!60!black]
-      at ([xshift=2pt,yshift=-2pt]sysdk.north west) {SystemDK Co-Design Supervision};
+    \node[anchor=south west, font=\small\itshape, red!60!black]
+         at (sysdk.north west) {SystemDK Co-Design Supervision};
 
     % Arrows
     \draw[->, thick] (soc.north) -- (lpddr.south) node[midway,left] {high BW};
-    \draw[->, thick] (soc.east) -- (feram.west) node[midway,above] {checkpoint / state};
-    \draw[<->, thick, dashed] (lpddr.east) -- (feram.north west) node[midway,below] {refresh offload};
-  \end{tikzpicture}}
-  \vspace{-1ex}
+    \draw[->, thick] (soc.east)  -- (feram.west) node[midway,above] {checkpoint / state};
+    \draw[<->, thick, dashed] (lpddr.east) -- (feram.north west)
+         node[midway,below] {refresh offload};
+
+    % Label for device
+    \node[below=1.9cm of soc, font=\small\bfseries] {Mobile Edge AI Device};
+
+  \end{tikzpicture}
+  \end{adjustbox}
+  \vspace{-0.6ex}
   \caption{High-level concept of LPDDR+FeRAM integration for mobile edge AI.}
   \label{fig:concept_lpddr_feram}
 \end{figure}
