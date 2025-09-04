@@ -1,22 +1,60 @@
 \section{Experimental Results}
-System-level validation was conducted using SystemDK multi-physics modeling
-combined with hardware-in-the-loop prototypes.
+System-level validation was performed using SystemDK multi-physics modeling
+and hardware-in-the-loop prototypes. The evaluation focused on disturbance recovery,
+gait stability, energy efficiency, memory subsystem performance, and comparison
+with existing humanoid platforms.
 
 \subsection{Posture Recovery}
-Disturbance rejection experiments show that the proposed FSM+PID+LLM
-recovers upright posture within 200 ms,
-whereas PID-only control requires more than 500 ms.
+Disturbance rejection tests indicate that the proposed FSM+PID+LLM controller
+restores upright posture within 200 ms,
+compared to over 500 ms with PID-only control.
+This demonstrates a more than twofold improvement in recovery speed.
 
 \subsection{Gait Stability}
 Center-of-mass (CoM) deviation was measured during continuous walking.
-The hybrid control reduced RMS CoM deviation by 30\% compared to PID-only baselines.
+The hybrid architecture reduced RMS CoM deviation by approximately 30\%
+relative to the PID-only baseline,
+confirming enhanced whole-body coordination.
 
 \subsection{Energy Efficiency}
-By coordinating control with piezoelectric, photovoltaic, and regenerative harvesting,
-overall energy efficiency improved by 15\%.
-Self-powering covered up to 20\% of total energy consumption in field scenarios.
+By combining classical control with piezoelectric, photovoltaic, and regenerative harvesting,
+the system achieved an average energy efficiency improvement of 15\%.
+In field scenarios, self-harvesting contributed up to 20\% of the total power budget,
+significantly extending operational duration without external charging.
 
 \subsection{Memory Subsystem}
-Checkpoint and resume functionality using FRAM/EEPROM
-achieved recovery within 10 ms without full system reinitialization.
-Durability testing confirmed $10^{12}$ write cycles within PoC requirements.
+Checkpoint-and-resume functionality using FRAM/EEPROM
+enabled system recovery within 10 ms without full reinitialization.
+Endurance tests validated $10^{12}$ write cycles,
+satisfying durability requirements for continuous PoC operation.
+
+\subsection{Comparison with Existing Humanoids}
+Table~\ref{tab:humanoid_comparison} compares the proposed Samizo-AITL PoC 
+with Boston Dynamics Atlas and Tesla Optimus.
+Unlike Atlas, which prioritizes dynamic acrobatics,
+and Optimus, which targets scalable industrial deployment,
+the proposed system emphasizes autonomy, fault tolerance,
+and energy self-sufficiency.
+
+\begin{table}[t]
+\caption{Comparison of World-Leading Humanoid Robots}
+\label{tab:humanoid_comparison}
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{2.1cm} p{2.1cm} p{2.1cm} p{2.4cm}}
+\toprule
+\textbf{Feature} & \textbf{Atlas} & \textbf{Optimus} & \textbf{Samizo-AITL PoC} \\
+\midrule
+Goal & Research (dynamic demos) & Mass production for logistics & Educational culmination; autonomy + fault tolerance \\
+Control & Dynamic (jumps/flips) & Simple walking/manipulation & FSM + PID + State-space + LLM \\
+Disturbance Recovery & Robust & Limited & Posture recovery $\leq$200 ms \\
+Conversation & None & Planned & Natural via LLM \\
+Person Recognition & None & Not implemented & Face + voiceprint \\
+Navigation & Experimental & Planned factory nav. & SLAM + voice command \\
+Damage Tolerance & Stops after falls & Not implemented & Continues with remaining actuators \\
+Power Output & Battery + hydraulics & Internal battery & LDMOS + GaN/MOSFET (high torque) \\
+Energy Autonomy & Battery only & Battery only & Piezo + PV + regenerative harvesting \\
+Openness & Closed demos & Partially open & Open, bilingual on GitHub Pages \\
+\bottomrule
+\end{tabular}
+\end{table}
