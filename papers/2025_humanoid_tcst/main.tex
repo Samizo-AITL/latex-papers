@@ -1,20 +1,36 @@
 \documentclass[journal]{IEEEtran}
-\usepackage{amsmath,amssymb}
-\usepackage{graphicx}
-\usepackage{cite}
 
+% ===== Packages =====
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{subfigure}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{hyperref}
+
+% ===== Document =====
 \begin{document}
 
+% ===== Title and Author =====
 \title{Cross-Node Humanoid Robot Control: FSM, PID, State-Space and LLM Integration}
-\author{Shinichi Samizo,~\IEEEmembership{Member,~IEEE}, et al.}
+
+\author{Shinichi Samizo,~\IEEEmembership{Member,~IEEE}%
+\thanks{Shinichi Samizo is an independent semiconductor researcher. 
+Former engineer at Seiko Epson Corporation. 
+Contact: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}. 
+GitHub: \href{https://github.com/Samizo-AITL}{Samizo-AITL}.}
+}
 
 \maketitle
 
+% ===== Abstract & Keywords =====
 \input{abstract}
 \begin{IEEEkeywords}
 Humanoid Robot, FSM, PID, State-Space Control, LLM, Cross-Node Design, Energy Harvesting
 \end{IEEEkeywords}
 
+% ===== Main Sections =====
 \input{intro}
 \input{related}
 \input{system}
@@ -22,7 +38,27 @@ Humanoid Robot, FSM, PID, State-Space Control, LLM, Cross-Node Design, Energy Ha
 \input{discussion}
 \input{conclusion}
 
+% ===== Acknowledgment =====
+\section*{Acknowledgment}
+The author would like to thank the open-source community and educational collaborators 
+who contributed to the development of the EduController, Edusemi, and AITL projects, 
+which formed the foundation of this work.
+
+% ===== References =====
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
+
+% ===== Author Biography =====
+\vspace{-0.5\baselineskip}
+\begingroup\small
+\begin{IEEEbiographynophoto}{Shinichi Samizo}
+received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
+He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
+He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.
+
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com},
+\href{https://github.com/Samizo-AITL}{Samizo-AITL}
+\end{IEEEbiographynophoto}
+\endgroup
 
 \end{document}
