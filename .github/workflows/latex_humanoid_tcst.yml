@@ -3,8 +3,7 @@ name: Build LaTeX PDF (Humanoid TCST)
 on:
   push:
     paths:
-      - '**.tex'
-      - '**.bib'
+      - 'papers/2025_humanoid_tcst/**'
       - '.github/workflows/latex_humanoid_tcst.yml'
 
 jobs:
@@ -13,41 +12,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: true
-          fetch-depth: 0
 
-      # --- Debug: show tree to verify the real path ---
-      - name: Show repository tree
-        run: |
-          echo "PWD=$(pwd)"
-          ls -la
-          echo "==== find main.tex candidates ===="
-          find . -maxdepth 4 -name "main.tex" -print
-
-      # --- Try with edusemi/... path; work in that dir automatically ---
-      - name: Compile LaTeX (edusemi/... path)
-        id: build1
-        continue-on-error: true
+      - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: edusemi/papers/2025_humanoid_tcst/main.tex
-          work_in_root_file_dir: true
+          root_file: main.tex
+          working_directory: papers/2025_humanoid_tcst
           latexmk_use_xelatex: true
 
-      # --- If the first path doesn't exist, try papers/... directly ---
-      - name: Compile LaTeX (papers/... path)
-        if: steps.build1.outcome == 'failure'
-        uses: xu-cheng/latex-action@v2
-        with:
-          root_file: papers/2025_humanoid_tcst/main.tex
-          work_in_root_file_dir: true
-          latexmk_use_xelatex: true
-
-      - name: Upload PDF artifact (if exists)
+      - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: humanoid_tcst_pdf
-          path: |
-            edusemi/papers/2025_humanoid_tcst/main.pdf
-            papers/2025_humanoid_tcst/main.pdf
+          path: papers/2025_humanoid_tcst/main.pdf
