@@ -1,23 +1,26 @@
 \documentclass[10pt,conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 
-% --- packages ---
+% ================== Packages ==================
 \usepackage{graphicx}
+
 \usepackage{tikz}
 \usetikzlibrary{positioning,fit,arrows.meta,calc}
+
 \usepackage{pgfplots}
-\pgfplotsset{compat=1.18} % ← 共通の目盛り上書きはしない＝標準のまま
+\pgfplotsset{compat=1.18} % ← 標準
+
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{cite}
-\usepackage[hidelinks]{hyperref} % ← hyperref はできるだけ最後に
+\usepackage{balance}
+\usepackage[hidelinks]{hyperref} % ← できるだけ最後
 
-% --- 参考文献の行間（少しゆったり） ---
-\makeatletter
-\setlength{\IEEEbibitemsep}{1.0ex plus 0.2ex}
-\makeatother
+% ====== lengths that must be set after \begin{document} ======
+% 参考文献の行間（安全のため文書開始時に設定）
+\AtBeginDocument{\setlength{\IEEEbibitemsep}{1.0ex plus 0.2ex}}
 
-% --- title/author ---
+% ================== Title / Author ==================
 \title{LPDDR+FeRAM for Mobile Edge AI:\\
 Chiplet/SiP Integration as a Practical Path}
 
@@ -29,10 +32,11 @@ Chiplet/SiP Integration as a Practical Path}
   GitHub: \href{https://github.com/Samizo-AITL}{Samizo-AITL}}%
 }
 
+% ================== Document ==================
 \begin{document}
 \maketitle
 
-% ===== Abstract =====
+% ============ Abstract ============
 \begin{abstract}
 Low-power DRAM (LPDDR) is the dominant main memory for mobile edge AI accelerators, balancing bandwidth and energy efficiency.
 However, LPDDR remains volatile and incurs standby power due to periodic refresh.
@@ -41,25 +45,22 @@ Because monolithic LPDDR+FeRAM co-fabrication is infeasible due to process-tempe
 System-level analysis shows that FeRAM chiplets can reduce standby power by up to 20\%, shorten resume latency from $\sim$10~ms (baseline LPDDR) to sub-ms range ($<$500~$\mu$s), and improve overall energy efficiency by 15--25\% under representative mobile edge AI workloads.
 \end{abstract}
 
-% ===== Sections =====
+% ============ Sections ============
 \input{sections/introduction}
 \input{sections/device_process}
 \input{sections/results}
 \input{sections/outlook}
 \input{sections/conclusion}
 
-% ===== References =====
-% \balance  % ← 外す：右カラムに回り込まないようにする
-% 参考：もし左カラムに収まらない場合は、次の数字を1つずつ増やして
-% 最終ページの段落改め位置を前に寄せてください。
-% 例：\IEEEtriggercmd{\newpage}\IEEEtriggeratref{12}
+% ============ References ============
+% 自動バランスは使わず、必要なら手動トリガで調整
+% （参考文献を右欄に回さず左欄で終わらせたいとき、番号を微調整）
 \IEEEtriggercmd{\newpage}%
-\IEEEtriggeratref{12}% ← 目安。左カラムに文献が全て入る値に調整
-
+\IEEEtriggeratref{12}% ← 必要に応じて 10,11,13... と調整
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 
-% ===== Author Biography =====
+% ============ Author Biography ============
 \begingroup\small
 \vspace{0.25\baselineskip}
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
