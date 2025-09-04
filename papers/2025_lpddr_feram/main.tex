@@ -1,26 +1,38 @@
 \documentclass[10pt,conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 
-% ================== Packages ==================
+% -----------------------------
+% packages
+% -----------------------------
 \usepackage{graphicx}
-
 \usepackage{tikz}
 \usetikzlibrary{positioning,fit,arrows.meta,calc}
-
 \usepackage{pgfplots}
-\pgfplotsset{compat=1.18} % ← 標準
-
+% pgfplots: IEEEっぽい標準設定（余計な外向き目盛は付けない）
+\pgfplotsset{
+  compat=1.18,
+  every axis/.append style={
+    grid=both
+  }
+}
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{cite}
 \usepackage{balance}
-\usepackage[hidelinks]{hyperref} % ← できるだけ最後
+\usepackage[hidelinks]{hyperref} % ← hyperref はできるだけ最後に
 
-% ====== lengths that must be set after \begin{document} ======
-% 参考文献の行間（安全のため文書開始時に設定）
-\AtBeginDocument{\setlength{\IEEEbibitemsep}{1.0ex plus 0.2ex}}
+% -----------------------------
+% bibliography spacing (安全に本文開始後に適用)
+% -----------------------------
+\makeatletter
+\AtBeginDocument{%
+  \setlength{\IEEEbibitemsep}{1.0ex plus 0.2ex}% 参考文献の項目間
+}
+\makeatother
 
-% ================== Title / Author ==================
+% -----------------------------
+% title / author
+% -----------------------------
 \title{LPDDR+FeRAM for Mobile Edge AI:\\
 Chiplet/SiP Integration as a Practical Path}
 
@@ -32,11 +44,10 @@ Chiplet/SiP Integration as a Practical Path}
   GitHub: \href{https://github.com/Samizo-AITL}{Samizo-AITL}}%
 }
 
-% ================== Document ==================
 \begin{document}
 \maketitle
 
-% ============ Abstract ============
+% ===== Abstract =====
 \begin{abstract}
 Low-power DRAM (LPDDR) is the dominant main memory for mobile edge AI accelerators, balancing bandwidth and energy efficiency.
 However, LPDDR remains volatile and incurs standby power due to periodic refresh.
@@ -45,7 +56,7 @@ Because monolithic LPDDR+FeRAM co-fabrication is infeasible due to process-tempe
 System-level analysis shows that FeRAM chiplets can reduce standby power by up to 20\%, shorten resume latency from $\sim$10~ms (baseline LPDDR) to sub-ms range ($<$500~$\mu$s), and improve overall energy efficiency by 15--25\% under representative mobile edge AI workloads.
 \end{abstract}
 
-% ============ Sections ============
+% ===== Sections =====
 \input{sections/introduction}
 \input{sections/device_process}
 \input{sections/results}
@@ -53,21 +64,28 @@ System-level analysis shows that FeRAM chiplets can reduce standby power by up t
 \input{sections/conclusion}
 
 % ===== References =====
-\vspace{1.0\baselineskip}   % 本文とREFERENCESタイトルの間を広げる
+% 2段末バランス（IEEE推奨）
+\balance
+
+% 本文と「REFERENCES」タイトルの間だけを広げる
+\vspace*{0.8\baselineskip}
+
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 
+% References と Biography の間は少し詰める（詰めすぎ注意）
+\vspace*{-0.60\baselineskip}
+
 % ===== Author Biography =====
-\vspace{-0.75\baselineskip} % ReferencesとBiographyの間を詰める
 \begingroup\small
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
 received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
-He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, 
-and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
-He is currently an independent semiconductor researcher focusing on process/device education, 
-memory architecture, and AI system integration.
+He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
+He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.
 
 \textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, 
 \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 \end{IEEEbiographynophoto}
 \endgroup
+
+\end{document}
