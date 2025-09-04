@@ -1,0 +1,19 @@
+\section{System Architecture}
+\subsection{Cross-Node Chipset}
+The humanoid system-on-chipset integrates heterogeneous technologies:
+\begin{itemize}
+  \item \textbf{Brain SoC (22 nm)}: executes LLM inference, FSM management, and LQR/LQG control;
+  \item \textbf{Sensor Hub (0.18 µm AMS)}: processes CMOS cameras, IMU, encoders, force/pressure sensors, and microphones;
+  \item \textbf{Power Drive (0.35 µm LDMOS + external GaN/MOSFET)}: enables high-torque actuation with current and temperature monitoring;
+  \item \textbf{Energy Harvesting Subsystem}: piezoelectric, photovoltaic, and regenerative sources for extended autonomy;
+  \item \textbf{Memory Subsystem}: LPDDR for active tasks and FRAM/EEPROM for checkpoints and logs.
+\end{itemize}
+
+\subsection{Hierarchical Control Layers}
+\begin{itemize}
+  \item \textbf{LLM Layer}: goal generation, anomaly interpretation, conversational interface;
+  \item \textbf{FSM Layer}: mode switching between standing, walking, turning, recovery, and energy-saving behaviors;
+  \item \textbf{Physical Control Layer}: PID and state-space control for joint-level stability and full-body coordination;
+  \item \textbf{Drive Layer}: high-torque actuation and safety monitoring;
+  \item \textbf{Energy Layer}: harvesting, storage, and power management.
+\end{itemize}
