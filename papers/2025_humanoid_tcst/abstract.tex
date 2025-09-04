@@ -1,0 +1,22 @@
+\begin{abstract}
+This paper presents a flagship proof-of-concept humanoid robot control system that integrates
+finite state machines (FSM), proportional-integral-derivative (PID) controllers, state-space methods
+(LQR/LQG), and large language models (LLMs) into a unified three-layer architecture. 
+Unlike existing humanoid platforms such as Boston Dynamics Atlas and Tesla Optimus,
+our approach emphasizes autonomy, fault tolerance, and sustainability.
+
+The proposed architecture is realized as a cross-node chipset design: 
+a 22 nm SoC executes LLM inference, FSM management, and state-space control;
+a 0.18 µm AMS sensor hub processes multimodal inputs (vision, IMU, force, audio);
+and a 0.35 µm LDMOS power drive with external GaN/MOSFET chips delivers high-torque actuation.
+Energy harvesting via piezoelectric, photovoltaic, and regenerative methods 
+extends operational lifetime in off-grid environments.
+
+System-level modeling and verification are performed using SystemDK, 
+demonstrating posture recovery within 200 ms, gait stability improved by 30\% over PID-only control,
+and energy efficiency gains of 15\% with hybrid control and harvesting. 
+Checkpointing with FRAM/EEPROM further enables fast resume ($\leq$10 ms) and robust mission continuity. 
+These results highlight the feasibility of a sustainable and resilient humanoid control system
+that bridges advanced control theory with emerging AI techniques.
+
+\end{abstract}
