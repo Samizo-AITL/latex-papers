@@ -35,6 +35,7 @@ However, LPDDR remains volatile and incurs standby power due to periodic refresh
 Ferroelectric RAM (FeRAM), based on HfO$_2$, provides non-volatility, low-voltage operation, and fast rewriting, making it suitable as an assistive memory for checkpointing and state retention.
 Because monolithic LPDDR+FeRAM co-fabrication is infeasible due to process-temperature mismatch, this work proposes \textbf{chiplet-level LPDDR+FeRAM integration} using SiP/PoP packaging.
 System-level analysis shows that FeRAM chiplets can reduce standby power by up to 20\%, shorten resume latency from $\sim$10~ms (baseline LPDDR) to sub-ms range ($<$500~$\mu$s), and improve overall energy efficiency by 15--25\% under representative mobile edge AI workloads.
+\textbf{Target implementation nodes:} SoC at 5--3\,nm (FinFET/GAAFET), LPDDR5/5X at 1$\alpha$--1$\gamma$ DRAM nodes ($\sim$14--10\,nm), and a 28--22\,nm CMOS FeRAM chiplet integrated via SiP/PoP.
 \end{abstract}
 
 % ===== Sections =====
