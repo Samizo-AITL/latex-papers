@@ -14,13 +14,10 @@
       xmin=10, xmax=200,
       ymin=1e-3, ymax=1e9,
       xlabel near ticks, ylabel near ticks,
-      legend style={
-        at={(1.02,0)}, anchor=south west,           % 右外配置
-        draw=none, fill=white, font=\scriptsize,
-        /tikz/overlay                              % ← バウンディングボックスに含めない
-      },
+      legend pos=north west,        % ← 図の内側に配置
+      legend style={draw=none, fill=white, font=\scriptsize},
       legend cell align=left
-      % clip=false は不要（凡例は overlay で外出し）
+      % clip=false は削除（既定の clip=true に戻す）
     ]
 
       % LPDDR
