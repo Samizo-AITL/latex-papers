@@ -1,13 +1,11 @@
 % figures/fig2_access_retention.tex
 \begin{figure}[t]
   \centering
-  % 画像全体が列幅ぴったりに収まる
   \resizebox{\columnwidth}{!}{%
   \begin{tikzpicture}
     \begin{loglogaxis}[
-      width=\columnwidth,          % ← 図全体の基準（resizebox内なのでOK）
+      width=\columnwidth,
       height=0.62\columnwidth,
-      % scale only axis は使わない（ラベルも含めて収める）
       xlabel={Access time (ns)},
       ylabel={Retention (s)},
       grid=both,
@@ -19,11 +17,10 @@
       legend pos=north west,
       legend style={draw=none, fill=white, font=\scriptsize},
       legend cell align=left,
-      % --- x軸の「10^1.2」対策：主目盛だけ表示し、数値表記に ---
+      % ---- 横軸を10,20,30,60,100,200のみに固定 ----
       xtick={10,20,30,60,100,200},
-      minor x tick num=0,
-      xticklabel=\pgfmathprintnumber{\tick},
-      xticklabel style={/pgf/number format/fixed,/pgf/number format/precision=0}
+      xticklabels={10,20,30,60,100,200},
+      minor x tick num=0
     ]
 
       % LPDDR
