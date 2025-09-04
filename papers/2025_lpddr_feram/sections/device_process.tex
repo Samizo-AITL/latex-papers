@@ -27,8 +27,28 @@ Figure~\ref{fig:package_lpddr_feram} shows our organization:
 (3) the SoC connects to both through short, low-parasitic interconnects.
 This separation preserves each technology's process window while enabling system-level policies to exploit non-volatility.
 
-% --- Fig.3: パッケージ統合 ---
-\input{figures/fig3_package_integration}
+% --- Fig.3: パッケージ統合（ノード明記） ---
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  node/.style={draw, rounded corners=2pt, align=center, inner sep=4pt},
+  arrow/.style={-Latex}
+]
+\node[node, fill=gray!10] (soc) {SoC (CPU/GPU/NPU)\\\small 5--3\,nm FinFET/GAAFET};
+\node[node, fill=green!10, right=1.8cm of soc] (lpddr) {LPDDR5/5X\\\small 1$\alpha$--1$\gamma$ (14--10\,nm)};
+\node[node, fill=blue!10, below=1.2cm of lpddr] (feram) {FeRAM chiplet\\\small 28--22\,nm CMOS\\\small HfO$_2$ ferroelectric};
+\node[node, fill=orange!10, below=1.2cm of soc, text width=2.9cm] (sysdk) {SystemDK / OS\\\small checkpoint/resume\\\small refresh offload};
+
+\draw[arrow] (soc) -- (lpddr) node[midway, above] {\small high BW};
+\draw[arrow] (lpddr) -- (soc);
+\draw[arrow] (lpddr) -- (feram) node[midway, right] {\small ckpt};
+\draw[arrow] (feram) -- (lpddr);
+\draw[arrow] (sysdk) -- (lpddr);
+\draw[arrow] (sysdk) -- (feram);
+\end{tikzpicture}
+\caption{Chiplet/SiP package-level integration with explicit process nodes.}
+\label{fig:package_lpddr_feram}
+\end{figure}
 
 \subsection{Interface and Policy Hooks}
 The FeRAM chiplet exposes a narrow, reliable link (e.g., mailbox DMA or AXI-lite) for:
@@ -38,6 +58,28 @@ The FeRAM chiplet exposes a narrow, reliable link (e.g., mailbox DMA or AXI-lite
   \item \textbf{Instant Resume}: fast restore path avoiding full DRAM warm-up.
 \end{itemize}
 These hooks are orchestrated by the \emph{SystemDK} co-design framework (policies spanning architecture, package, and OS).
+
+\subsection{Process Node Mapping}
+To clarify manufacturability, Table~\ref{tab:node_mapping} summarizes representative nodes for each component.
+
+\begin{table}[t]
+  \centering
+  \caption{Representative process nodes for LPDDR+FeRAM integration.}
+  \label{tab:node_mapping}
+  \vspace{2pt}
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{}lcll@{}}
+    \toprule
+    \textbf{Target} & \textbf{Node} & \textbf{Tech} & \textbf{Notes} \\
+    \midrule
+    SoC logic & 5--3\,nm & FinFET/GAAFET & Perf/W optimization \\
+    LPDDR5/5X DRAM & 1$\alpha$--1$\gamma$ & 14--10\,nm DRAM & vendor “1x” gens \\
+    FeRAM chiplet & 28--22\,nm & CMOS+ferroelectric & mature BEOL window \\
+    Future FeFET & $<$10\,nm & CMOS-compatible & monolithic option \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsection{Key Technology Parameters}
 Table~\ref{tab:tech_params} summarizes representative parameters used in our analysis (also reflected in Fig.~\ref{fig:access_retention_lpddr_feram}).
@@ -58,7 +100,7 @@ Values are order-of-magnitude estimates for policy exploration; silicon-specific
     Retention & volatile (32--64~ms refresh) & $10^7$--$10^8$~s ($\sim$years) \\
     Write energy/bit & moderate & low \\
     Endurance & $>10^{15}$ accesses & $10^8$--$10^{12}$ writes \\
-    Process temperature & capacitor anneal $>700\,^\circ\mathrm{C}$ & 350--450$\,^\circ\mathrm{C}$ \\
+    Process temperature & capacitor anneal $>700\,^\circ$C & 350--450$\,^\circ$C \\
     Role & working memory & checkpoint/state \\
     \bottomrule
   \end{tabular}
