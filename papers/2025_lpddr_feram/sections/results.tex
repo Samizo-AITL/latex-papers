@@ -30,10 +30,14 @@ With $\alpha=0.5$, we expect a 10--12\% reduction; with $\alpha=0.8$, 18--20\%.
       xlabel={Fraction offloaded to FeRAM ($\alpha$)},
       ylabel={Standby power reduction [\%]},
       xmin=0, xmax=1, ymin=0, ymax=25,
-      grid=both, tick align=outside,
+      grid=both,
+      tick align=outside,                 % 目盛りを外向きに
+      tick style={major tick length=3pt}, % 少し長めに
+      tickpos=left,
       legend style={at={(0.97,0.03)},anchor=south east,draw=none,fill=none}
     ]
-      \addplot[thick, mark=*] coordinates {(0,0) (0.2,5) (0.5,12) (0.8,19) (1.0,23)};
+      \addplot[thick, mark=*] 
+        coordinates {(0,0) (0.2,5) (0.5,12) (0.8,19) (1.0,23)};
       \addlegendentry{LPDDR5X+FeRAM model}
     \end{axis}
   \end{tikzpicture}
