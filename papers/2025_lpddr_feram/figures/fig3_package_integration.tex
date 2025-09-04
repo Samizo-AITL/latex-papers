@@ -1,7 +1,7 @@
 % ==== Fig. 3: Package cross-section (LPDDR+FeRAM Chiplet Integration) ====
 \begin{figure}[t]
   \centering
-  % 2段組の列幅に必ず収める
+  % 2段組の列幅に必ず収める（文字サイズも含めて一括スケール）
   \resizebox{\columnwidth}{!}{%
   \begin{tikzpicture}[node distance=8mm, font=\scriptsize, >=latex]
 
@@ -17,14 +17,15 @@
     % ---- 右：FeRAM chiplet ----
     \node[draw, thick, fill=gray!15,
           minimum width=0.32\columnwidth, minimum height=9mm,
-          right=13mm of lpddr.center, anchor=center] (feram) {FeRAM Chiplet};
+          right=13mm of lpddr] (feram) {FeRAM Chiplet};
 
-    % ---- SystemDK supervision (fitで3ブロックを囲う) ----
+    % ---- SystemDK supervision（3ブロックを囲う）----
     \node[draw, thick, dashed, rounded corners,
           inner sep=5mm, fit=(cpu) (lpddr) (feram), name=systemdk] {};
 
-    \node[font=\scriptsize\itshape, anchor=north west, text=black]
-      at ([xshift=1mm,yshift=1mm]systemdk.north west) {SystemDK Co-Design Supervision};
+    % ラベルは枠から少し内側に
+    \node[font=\scriptsize\itshape, anchor=north west]
+      at ($(systemdk.north west)+(1mm,-1mm)$) {SystemDK Co-Design Supervision};
 
     % ---- 相互接続矢印 ----
     \draw[->, thick] (cpu.south) -- (lpddr.north) node[midway, left] {high bandwidth};
@@ -33,9 +34,11 @@
       node[midway, below] {refresh offloading};
 
     % ---- Substrate / Interposer ----
+    % systemdk.south は座標なので一度拾ってから below= で配置
+    \path (systemdk.south) coordinate (baseS);
     \node[draw, thick, fill=gray!10,
           minimum width=0.95\columnwidth, minimum height=4mm,
-          below=10mm of systemdk.south] (substrate) {};
+          below=10mm of baseS] (substrate) {};
     \node[align=center] at (substrate)
       {Package Substrate / Interposer (SiP/PoP)};
 
