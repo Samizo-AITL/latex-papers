@@ -12,7 +12,8 @@ As shown in Fig.~\ref{fig:package_lpddr_feram}, this organization introduces min
 While FeRAM provides an effective proof-of-concept, alternative non-volatile memory (NVM) options can extend the approach:
 \begin{itemize}
   \item \textbf{ReRAM}: CMOS-friendly BEOL integration with high scalability, though variability and endurance remain open issues.
-  \item \textbf{FeFET}: Excellent CMOS compatibility by embedding ferroelectricity into the gate stack. Still under active R\&D, but a promising path toward future monolithic integration.
+  \item \textbf{FeFET}: Excellent CMOS compatibility by embedding ferroelectricity into the gate stack. 
+  Critically, FeFETs can be fabricated in sub-10\,nm logic nodes, offering a realistic path toward \textbf{monolithic integration of logic and NVM}.
   \item \textbf{MRAM}: Strong endurance and speed, but process/material mismatch with CMOS logic makes it more suitable as a chiplet for high-performance domains.
 \end{itemize}
 The same architectural hooks (checkpoint, refresh suppression, instant resume) apply across these NVM types, allowing drop-in replacement in future generations.
@@ -36,6 +37,12 @@ The proposed framework highlights a broader co-design philosophy:
 \end{enumerate}
 This division of labor between volatile and non-volatile memories offers a scalable and portable approach, aligning with both current packaging capabilities and future heterogeneous integration trends.
 
-\subsection{Long-Term Vision}
-In the long term, as FeFET or scaled ReRAM mature, the role of the assistive chiplet may shrink into monolithically embedded NVM directly within a logic--DRAM die stack. 
-Until then, LPDDR+FeRAM chiplet integration stands as a \emph{practical near-term solution} that balances performance, energy efficiency, and manufacturability for mobile edge AI.
+\subsection{Roadmap and Long-Term Vision}
+\begin{itemize}
+  \item \textbf{Short term (now--2025)}: LPDDR+FeRAM chiplet integration via SiP/PoP for smartphones, wearables, and embedded AI devices.
+  \item \textbf{Mid term (2025--2028)}: Extension to HBM+FeRAM for edge servers and AI boxes, exploiting higher bandwidth packaging.
+  \item \textbf{Long term (beyond 2028)}: Transition to \textbf{FeFET-based sub-10\,nm monolithic integration}, embedding non-volatility directly in the logic or DRAM stack. 
+  This enables finer-grained checkpointing, lower standby power, and simpler packaging.
+\end{itemize}
+
+Until FeFET or scaled ReRAM reach production maturity, LPDDR+FeRAM chiplet integration stands as a \emph{practical near-term solution} that balances performance, energy efficiency, and manufacturability for mobile edge AI.
