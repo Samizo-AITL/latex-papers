@@ -14,18 +14,18 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build LaTeX document (latexmk + pdflatex)
+      - name: Build LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
-          working_directory: papers/2025_lpddr_feram
           root_file: main.tex
+          working_directory: papers/2025_lpddr_feram
           compiler: latexmk
-          args: -pdf -interaction=nonstopmode -file-line-error -shell-escape
-          # ↑ ここで latexmk に pdflatex を使わせ、shell-escape も有効化
+          args: -pdf -shell-escape -interaction=nonstopmode -file-line-error
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
