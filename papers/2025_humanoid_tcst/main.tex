@@ -8,7 +8,13 @@
 \usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{cite}
 \usepackage{url}
-\usepackage{hyperref}   % 必ず最後に
+
+% ---- フォント警告の抑制（Times 系）----
+% hyperref より前に読み込むこと
+\usepackage{newtxtext,newtxmath}
+
+% hyperref は最後に
+\usepackage{hyperref}
 
 % （任意）図フォルダのデフォルトパス
 \graphicspath{{figures/}}
@@ -49,6 +55,10 @@ who contributed to the EduController, Edusemi, and AITL projects,
 which formed the foundation of this work.
 
 % ===== References =====
+% bbl が空で \end{thebibliography} エラーを出さないよう暫定で埋める
+% 本文に \cite{} が増えたら、この \nocite は削ってOK
+\nocite{Franklin2015,Khalil2002,Anderson2007,Mayne2014,
+        Kajita2003,Kuindersma2017,Paradiso2005,Brown2020}
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
