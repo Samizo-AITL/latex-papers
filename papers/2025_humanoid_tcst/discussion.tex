@@ -1,14 +1,28 @@
 \section{Discussion}
-Compared to Atlas and Optimus, the proposed system emphasizes autonomy,
-fault tolerance, and sustainability rather than purely dynamic performance
-or industrial mass deployment.
-The integration of LLMs into the hierarchical control loop
-enables capabilities such as natural conversation,
-personal recognition, and anomaly interpretation,
-which are rarely addressed in conventional humanoid platforms.
+Table~\ref{tab:humanoid_comparison} positions the proposed Samizo-AITL PoC
+relative to two leading humanoid platforms: Boston Dynamics Atlas and Tesla Optimus.
+Atlas demonstrates world-class dynamic acrobatics, while Optimus targets scalable
+industrial deployment. In contrast, the proposed system prioritizes autonomy,
+fault tolerance, and sustainability.
 
-Educational reproducibility is another distinctive feature.
-All PoC specifications and control software are openly published
-via GitHub Pages in bilingual format,
-allowing the architecture to serve both as a research prototype
-and as an educational resource.
+The integration of LLMs into the hierarchical control loop is a distinctive feature.
+Rather than replacing classical controllers, the LLM layer provides high-level
+goal generation, anomaly interpretation, and conversational interfaces.
+This complements the FSM and PID/state-space layers, ensuring stability and safety
+while expanding the robot’s cognitive capabilities.
+Such a design aligns with emerging trends in control systems where hybrid
+architectures bridge model-based methods and data-driven intelligence.
+
+Another differentiating factor is energy autonomy.
+Through piezoelectric, photovoltaic, and regenerative harvesting,
+the PoC sustains up to 20\% of its power budget without external charging.
+This contrasts with Atlas and Optimus, which rely entirely on battery packs.
+Combined with fast checkpoint-and-resume capability, the system supports resilient
+operation in remote or resource-constrained environments.
+
+Finally, educational reproducibility strengthens the broader impact of this work.
+All specifications, models, and PoC results are openly published in bilingual
+(Japanese–English) format on GitHub Pages, enabling replication and serving
+as an instructional resource for control engineering education.
+This open-science approach differentiates the PoC from closed industrial projects
+and reinforces its role as both a research prototype and an educational benchmark.
