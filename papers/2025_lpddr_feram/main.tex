@@ -6,13 +6,13 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,fit,arrows.meta,calc}
 \usepackage{pgfplots}
-% pgfplots: 全図に共通で「目盛りを外向き・少し長め」を適用
+% pgfplots: 全図に共通で「目盛りを内向き・短め」に設定
 \pgfplotsset{
   compat=1.18,
   every axis/.append style={
-    tick align=outside,
+    tick align=inside,
     tickpos=left,
-    tick style={major tick length=3pt},
+    tick style={major tick length=2pt},
     grid=both
   }
 }
@@ -54,7 +54,6 @@ System-level analysis shows that FeRAM chiplets can reduce standby power by up t
 \input{sections/conclusion}
 
 % ===== References =====
-% 参考文献の段組を自動でバランス
 \balance
 \bibliographystyle{IEEEtran}
 \bibliography{references}
