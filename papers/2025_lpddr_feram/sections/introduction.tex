@@ -19,6 +19,13 @@ This incompatibility motivates heterogeneous integration at the \emph{package le
 In this work, we propose \textbf{LPDDR+FeRAM integration via chiplet or system-in-package (SiP/PoP) assembly}.
 LPDDR continues to serve as the primary working memory, while a small FeRAM die acts as an assistive checkpoint and refresh-offload memory.
 The organization is supervised by the \emph{SystemDK} co-design framework, which coordinates policies across hardware, packaging, and runtime software.
+
+\textbf{Target implementation nodes are as follows:}
+SoC logic fabricated at 5--3\,nm (FinFET/GAAFET),
+LPDDR5/5X DRAM dies at 1$\alpha$--1$\gamma$ generations ($\sim$14--10\,nm),
+and FeRAM chiplets implemented in mature 28--22\,nm CMOS.
+This heterogeneous combination reflects realistic foundry offerings and motivates the chiplet-level integration strategy.
+
 Figure~\ref{fig:concept_lpddr_feram} illustrates the high-level concept:
 LPDDR supplies high-bandwidth working memory, FeRAM chiplets retain state with negligible standby power,
 and SystemDK supervision ensures seamless operation for mobile edge AI workloads.
