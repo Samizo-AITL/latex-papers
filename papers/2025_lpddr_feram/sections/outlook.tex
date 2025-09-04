@@ -4,26 +4,26 @@
 \section{Outlook and Future Directions}
 
 \subsection{Implementation Pathways}
-The most practical short-term realization of LPDDR+FeRAM integration is through \emph{system-in-package (SiP)} or \emph{package-on-package (PoP)} assembly. 
+The most practical short-term realization of LPDDR+FeRAM integration is through \emph{System-in-Package (SiP)} or \emph{Package-on-Package (PoP)} assembly. 
 Standard LPDDR dies remain unchanged, while a small FeRAM die can be co-packaged using mature 2.5D/3D integration techniques.
 As shown in Fig.~\ref{fig:package_lpddr_feram}, this organization introduces minimal process disruption and leverages existing packaging infrastructure widely used in mobile SoCs.
 
 \subsection{Extension to Other NVM Options}
-While FeRAM provides an effective proof-of-concept, alternative NVMs can extend the approach:
+While FeRAM provides an effective proof-of-concept, alternative non-volatile memory (NVM) options can extend the approach:
 \begin{itemize}
-  \item \textbf{ReRAM}: CMOS-friendly BEOL integration with higher scalability, though variability and endurance remain open issues.
-  \item \textbf{FeFET}: Excellent CMOS compatibility by embedding ferroelectricity into the gate stack. Still under active R\&D, but a promising path for future monolithic integration.
-  \item \textbf{MRAM}: Strong endurance and speed, but process/material mismatch with CMOS logic makes it more suitable in chiplet form for high-performance domains.
+  \item \textbf{ReRAM}: CMOS-friendly BEOL integration with high scalability, though variability and endurance remain open issues.
+  \item \textbf{FeFET}: Excellent CMOS compatibility by embedding ferroelectricity into the gate stack. Still under active R\&D, but a promising path toward future monolithic integration.
+  \item \textbf{MRAM}: Strong endurance and speed, but process/material mismatch with CMOS logic makes it more suitable as a chiplet for high-performance domains.
 \end{itemize}
 The same architectural hooks (checkpoint, refresh suppression, instant resume) apply across these NVM types, allowing drop-in replacement in future generations.
 
 \subsection{Mobile Edge AI Use Cases}
 Mobile edge AI workloads emphasize \emph{energy efficiency, responsiveness, and always-on connectivity}. 
-Examples include:
+Representative scenarios include:
 \begin{itemize}
-  \item \textbf{On-device inference}: reducing standby energy when the accelerator is idle between bursts of activity.
-  \item \textbf{Federated and continual learning}: frequent checkpointing of model updates without incurring DRAM refresh overhead.
-  \item \textbf{Interactive AR/VR and sensor fusion}: instant resume from standby to active state within sub-millisecond latency.
+  \item \textbf{On-device inference}: reduce standby energy when the accelerator is idle between bursts of activity.
+  \item \textbf{Federated and continual learning}: enable frequent checkpointing of model updates without incurring DRAM refresh overhead.
+  \item \textbf{Interactive AR/VR and sensor fusion}: support instant resume from standby to active state within sub-ms latency.
 \end{itemize}
 In each case, LPDDR+FeRAM integration provides measurable benefits while staying within the power and form-factor constraints of mobile SoCs.
 
@@ -34,8 +34,8 @@ The proposed framework highlights a broader co-design philosophy:
   \item Add a small NVM chiplet for persistence and standby optimization.
   \item Coordinate at the system level via policies in \emph{SystemDK} to maximize efficiency.
 \end{enumerate}
-This division of labor between volatile and non-volatile memories offers a scalable and portable approach, aligning well with both current packaging capabilities and future heterogeneous integration trends.
+This division of labor between volatile and non-volatile memories offers a scalable and portable approach, aligning with both current packaging capabilities and future heterogeneous integration trends.
 
 \subsection{Long-Term Vision}
-In the long term, as FeFET or scaled ReRAM mature, the role of the assistive chiplet may shrink into monolithically embedded NVM directly within the logic+DRAM die stack. 
-Until then, LPDDR+FeRAM chiplet integration stands as a \emph{practical, near-term solution} that balances performance, energy efficiency, and manufacturability for mobile edge AI.
+In the long term, as FeFET or scaled ReRAM mature, the role of the assistive chiplet may shrink into monolithically embedded NVM directly within a logic--DRAM die stack. 
+Until then, LPDDR+FeRAM chiplet integration stands as a \emph{practical near-term solution} that balances performance, energy efficiency, and manufacturability for mobile edge AI.
