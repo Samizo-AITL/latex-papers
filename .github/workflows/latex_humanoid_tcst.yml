@@ -1,28 +1,28 @@
-\documentclass[journal]{IEEEtran}
-\usepackage{amsmath,amssymb}
-\usepackage{graphicx}
-\usepackage{cite}
+name: Build LaTeX PDF (Humanoid TCST)
 
-\begin{document}
+on:
+  push:
+    paths:
+      - 'edusemi/papers/2025_humanoid_tcst/**.tex'
+      - '.github/workflows/latex_humanoid_tcst.yml'
 
-\title{Cross-Node Humanoid Robot Control: FSM, PID, State-Space and LLM Integration}
-\author{Shinichi Samizo,~\IEEEmembership{Member,~IEEE}, et al.}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-\maketitle
+      - name: Set up LaTeX
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex
+          working_directory: edusemi/papers/2025_humanoid_tcst
+          latexmk_use_xelatex: true   # XeLaTeX 推奨
+          continue_on_error: true
 
-\input{abstract}
-\begin{IEEEkeywords}
-Humanoid Robot, FSM, PID, State-Space Control, LLM, Cross-Node Design, Energy Harvesting
-\end{IEEEkeywords}
-
-\input{intro}
-\input{related}
-\input{system}
-\input{results}
-\input{discussion}
-\input{conclusion}
-
-\bibliographystyle{IEEEtran}
-\bibliography{refs}
-
-\end{document}
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: humanoid_tcst_pdf
+          path: edusemi/papers/2025_humanoid_tcst/main.pdf
