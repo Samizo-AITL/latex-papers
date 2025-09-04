@@ -4,19 +4,19 @@
 \section{Device and Process Integration}
 
 \subsection{LPDDR Technology Background}
-Low-power DRAM (LPDDR) is the de-facto main memory for mobile systems, providing tens to a few hundreds of~GB/s bandwidth
+Low-power DRAM (LPDDR) is the de facto main memory for mobile systems, providing tens to a few hundreds of~GB/s bandwidth
 at substantially lower I/O energy than HBM-class DRAM~\cite{ChoiIEDM2022}.
 Despite architectural and I/O optimizations, LPDDR is \emph{volatile} and incurs standby power due to periodic refresh.
 
-% --- Fig.2: 特性比較（本文に現れる順で先に出す） ---
+% --- Fig.2: 特性比較 ---
 \input{figures/fig2_access_retention}
 
 \subsection{FeRAM Device and Process}
 Ferroelectric RAM (FeRAM) based on doped HfO$_2$ leverages polarization switching to store data with low write voltage and fast access~\cite{MullerAPL2011,KimIEDM2021,NohedaNRM2023}.
-Process-wise, FeRAM/FeFET flows require \emph{low-to-mid} temperature stabilization ($\sim$350--450$^\circ$C) to preserve the ferroelectric orthorhombic phase in HfZrO$_2$.
+Process-wise, FeRAM/FeFET flows require \emph{low-to-mid} temperature stabilization ($\sim$350--450$\,^\circ\mathrm{C}$) to preserve the ferroelectric orthorhombic phase in HfZrO$_2$.
 
 \subsection{Why Monolithic Co-Integration Is Impractical}
-LPDDR DRAM arrays rely on high-temperature anneals ($>$700$^\circ$C) to realize high-quality storage capacitors.
+LPDDR DRAM arrays rely on high-temperature anneals ($>700\,^\circ\mathrm{C}$) to realize high-quality storage capacitors.
 Such thermal budgets collapse the ferroelectric phase of HfO$_2$, whereas post-FeRAM low-temperature windows cannot support DRAM capacitor quality.
 Therefore, monolithic LPDDR+FeRAM co-fabrication is \textbf{impractical}; a package-level approach is required.
 
@@ -40,8 +40,8 @@ The FeRAM chiplet exposes a narrow, reliable link (e.g., mailbox DMA or AXI-lite
 These hooks are orchestrated by the \emph{SystemDK} co-design framework (policies spanning architecture, package, and OS).
 
 \subsection{Key Technology Parameters}
-Table~\ref{tab:tech_params} summarizes representative parameters used by our analysis (also reflected in Fig.~\ref{fig:access_retention_lpddr_feram}).
-Values are typical-order estimates for policy exploration; silicon-specific tuning is straightforward.
+Table~\ref{tab:tech_params} summarizes representative parameters used in our analysis (also reflected in Fig.~\ref{fig:access_retention_lpddr_feram}).
+Values are order-of-magnitude estimates for policy exploration; silicon-specific tuning is straightforward.
 
 \begin{table}[t]
   \centering
@@ -52,13 +52,13 @@ Values are typical-order estimates for policy exploration; silicon-specific tuni
   \setlength{\tabcolsep}{5pt}
   \begin{tabular}{@{}lcc@{}}
     \toprule
-    Parameter & LPDDR (typ.) & FeRAM (typ.) \\
+    Parameter & LPDDR (typical) & FeRAM (typical) \\
     \midrule
     Access latency & 15--60~ns & 80--150~ns \\
-    Retention & volatile (32--64~ms refresh) & years ($10^7$--$10^8$~s) \\
+    Retention & volatile (32--64~ms refresh) & $10^7$--$10^8$~s ($\sim$years) \\
     Write energy/bit & moderate & low \\
-    Endurance & $>$10$^{15}$ accesses & 10$^8$--10$^{12}$ writes \\
-    Process temp. & caps anneal $>$700$^\circ$C & 350--450$^\circ$C \\
+    Endurance & $>10^{15}$ accesses & $10^8$--$10^{12}$ writes \\
+    Process temperature & capacitor anneal $>700\,^\circ\mathrm{C}$ & 350--450$\,^\circ\mathrm{C}$ \\
     Role & working memory & checkpoint/state \\
     \bottomrule
   \end{tabular}
