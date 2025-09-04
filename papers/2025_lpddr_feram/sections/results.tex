@@ -3,6 +3,15 @@
 % =========================
 \section{Results and Analysis}
 
+\subsection{Assumptions}
+Unless otherwise noted, all evaluations assume:
+\begin{itemize}
+  \item \textbf{SoC logic}: fabricated in 5--3\,nm FinFET/GAAFET technology.
+  \item \textbf{LPDDR5/5X DRAM}: 1$\alpha$--1$\gamma$ generations ($\sim$14--10\,nm DRAM nodes).
+  \item \textbf{FeRAM chiplet}: implemented in mature 28--22\,nm CMOS with HfO$_2$ ferroelectric integration.
+\end{itemize}
+These nodes reflect realistic foundry offerings and package-level integration feasibility.
+
 \subsection{Evaluation Setup}
 We evaluate the LPDDR+FeRAM organization with a simple analytical model calibrated to representative LPDDR5X
 and HfO$_2$-based FeRAM characteristics~\cite{ChoiIEDM2022,KimIEDM2021}.
@@ -31,8 +40,8 @@ With $\alpha=0.5$, we expect a 10--12\% reduction; with $\alpha=0.8$, 18--20\%.
       ylabel={Standby power reduction [\%]},
       xmin=0, xmax=1, ymin=0, ymax=25,
       grid=both,
-      tick align=outside,                 % 目盛りを外向きに
-      tick style={major tick length=3pt}, % 少し長めに
+      tick align=outside,
+      tick style={major tick length=3pt},
       tickpos=left,
       legend style={at={(0.97,0.03)},anchor=south east,draw=none,fill=none}
     ]
