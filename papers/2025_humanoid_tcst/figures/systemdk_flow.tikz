@@ -1,0 +1,55 @@
+% figures/systemdk_flow.tikz  （tikzpicture だけ！）
+\begin{tikzpicture}[
+  font=\footnotesize,
+  >={Latex[length=2mm]},
+  node distance=6mm and 6mm,
+  box/.style={draw,rounded corners,thick,inner sep=4pt,align=center},
+  grp/.style={draw,rounded corners,inner sep=6pt}
+]
+% 左：SoC/AMS/Power/Memory/Harvest
+\node[box,minimum width=34mm,minimum height=8mm] (soc)
+  {Brain SoC\\(22 nm)\\LLM, FSM, LQR/LQG};
+\node[box,below=of soc,minimum width=34mm,minimum height=8mm] (ams)
+  {AMS Sensor Hub\\(0.18 µm)\\IMU, Force, Audio, Vision};
+\node[box,below=of ams,minimum width=34mm,minimum height=8mm] (pwr)
+  {Power Drive\\(0.35 µm LDMOS +\\ ext. GaN/MOSFET)};
+\node[box,below=of pwr,minimum width=34mm,minimum height=8mm] (mem)
+  {Memory\\LPDDR + FRAM/EEPROM};
+\node[box,below=of mem,minimum width=34mm,minimum height=8mm] (harv)
+  {Energy Harvesting\\Piezo / PV / Regen};
+\node[grp,fit=(soc)(ams)(pwr)(mem)(harv),
+      label={[yshift=-2mm]above:\textbf{Cross-Node Chipset}}] (L) {};
+
+% 右：制御レイヤ
+\node[box,minimum width=48mm,minimum height=8mm, right=22mm of soc] (llm)
+  {LLM Layer\\plan, anomaly interpret., conversation};
+\node[box,below=of llm,minimum width=48mm,minimum height=8mm] (fsm)
+  {FSM Layer\\standing / walking / turning / recovery};
+\node[box,below=of fsm,minimum width=48mm,minimum height=8mm] (phys)
+  {Physical Control\\PID + State-Space (LQR/LQG)};
+\node[box,below=of phys,minimum width=48mm,minimum height=8mm] (drive)
+  {Drive Layer\\torque control \& safety monitor};
+\node[box,below=of drive,minimum width=48mm,minimum height=8mm] (energy)
+  {Energy Layer\\harvesting, storage, power mgmt.};
+\node[grp,fit=(llm)(fsm)(phys)(drive)(energy),
+      label={[yshift=-2mm]above:\textbf{Hierarchical Control Layers}}] (R) {};
+
+% 接続
+\draw[thick,->] (soc.east) -- (llm.west);
+\draw[thick,->] (llm.south) -- (fsm.north);
+\draw[thick,->] (fsm.south) -- (phys.north);
+\draw[thick,->] (phys.south) -- (drive.north);
+\draw[thick,->] (drive.south) -- (energy.north);
+
+\draw[thick,->] (ams.east) -- ++(8mm,0) |- (phys.west) node[pos=0.75,above left]{sensors};
+\draw[thick,->] (pwr.east) -- ++(8mm,0) |- (drive.west) node[pos=0.7,above left]{actuators};
+\draw[thick,->] (mem.east) -- ++(8mm,0) |- (fsm.west) node[pos=0.7,above left]{checkpoints};
+\draw[thick,->] (harv.east) -- ++(8mm,0) |- (energy.west) node[pos=0.7,above left]{harvest};
+
+\draw[thick,->] (phys.west) -- ++(-8mm,0) |- (soc.west)
+  node[pos=0.25,above]{cmds/telemetry};
+
+% SystemDK の囲み
+\node[grp,dashed,fit=(L)(R),
+  label={[yshift=2mm]below:\strut \textit{SystemDK co-sim: digital SoC + AMS + Power + Harvesting}}] {};
+\end{tikzpicture}
