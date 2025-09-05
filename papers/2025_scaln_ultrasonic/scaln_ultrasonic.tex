@@ -1,11 +1,11 @@
 \documentclass[conference]{IEEEtran}
 
-% ---------- Robust UTF-8 & fonts (pdflatex / xelatex 両対応) ----------
+% ---------- Robust UTF-8 & fonts ----------
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[utf8]{inputenc}
   \usepackage[T1]{fontenc}
-  \usepackage{newtxtext,newtxmath}  % Times系
+  \usepackage{newtxtext,newtxmath}
 \else
   \usepackage{fontspec}
   \setmainfont{TeX Gyre Termes}
@@ -31,13 +31,12 @@
     align=center,fill=blue!8
   }
 }
-
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
-% ---------- Float control (位置が飛ばないように) ----------
-\usepackage[section]{placeins} % 各 \section の境目で \FloatBarrier
-\usepackage{stfloats}          % 2カラム時のフロート安定化（保険）
+% ---------- Float control ----------
+\usepackage[section]{placeins}
+\usepackage{stfloats}
 
 % ====================================================================
 \begin{document}
@@ -55,8 +54,7 @@
 \maketitle
 
 \begin{abstract}
-Conventional medical ultrasonic devices have been dominated by PZT (Pb(Zr,Ti)O$_3$)~\cite{akata2009pzt}. However, Pb-containing materials face strict regulatory restrictions (EU RoHS, REACH, FDA) in in-body medical applications. This work proposes a Pb-free alternative based on ScAlN MEMS arrays, integrated with 65~nm SiGe CMOS using System-in-Package (SiP) technology.
-The ScAlN MEMS array is designed for 10--50~MHz operation with $\lambda/2$ pitch for high-resolution imaging~\cite{akrout2018scaln}. The SiGe CMOS front-end integrates LNA, VGA, and ADC, enabling detection of microvolt-level signals. The SiP approach ensures yield separation, short interconnects, and hermetic sealing for medical reliability. Finite element and circuit simulations indicate adequate sensitivity and beam directivity at 20--40~MHz, LNA noise figure $<2$~dB, and compact, reliable packaging via flip-chip SiP. Pb-free ScAlN arrays with 65~nm SiGe CMOS via SiP form a practical path for next-generation high-resolution medical ultrasonic sensors.
+Conventional medical ultrasonic devices have been dominated by PZT (Pb(Zr,Ti)O$_3$)~\cite{akata2009pzt}. However, Pb-containing materials face strict regulatory restrictions (EU RoHS, REACH, FDA) in in-body medical applications. This work proposes a Pb-free alternative based on ScAlN MEMS arrays, integrated with 65~nm SiGe CMOS using System-in-Package (SiP) technology. The ScAlN MEMS array is designed for 10--50~MHz operation with $\lambda/2$ pitch for high-resolution imaging~\cite{akrout2018scaln}. The SiGe CMOS front-end integrates LNA, VGA, and ADC, enabling detection of microvolt-level signals. The SiP approach ensures yield separation, short interconnects, and hermetic sealing for medical reliability. Finite element and circuit simulations indicate adequate sensitivity and beam directivity at 20--40~MHz, LNA noise figure $<2$~dB, and compact, reliable packaging via flip-chip SiP. Pb-free ScAlN arrays with 65~nm SiGe CMOS via SiP form a practical path for next-generation high-resolution medical ultrasonic sensors.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -107,7 +105,7 @@ Flip-chip bonding integrates MEMS and CMOS dice. Benefits: yield separation, sho
 \end{figure}
 
 \begin{table}[!t]
-\caption{System Specifications (ScAlN Array + 65 nm SiGe via SiP)}
+\caption{System specifications (ScAlN Array + 65 nm SiGe via SiP)}
 \label{tab:spec}
 \centering
 \begin{tabular}{@{}ll@{}}
@@ -147,7 +145,7 @@ FEM analysis revealed resonances near 20, 30, and 40~MHz. The simulated electric
 \centering
 \begin{tikzpicture}
 \begin{semilogyaxis}[
-  width=\columnwidth, height=5.0cm,
+  width=\columnwidth, height=4.4cm,
   xlabel={Frequency (MHz)}, ylabel={Impedance $|Z|$ (Ω)},
   xmin=10, xmax=50, ymin=50, ymax=1e5,
   grid=both, tick align=inside
@@ -161,21 +159,21 @@ FEM analysis revealed resonances near 20, 30, and 40~MHz. The simulated electric
 };
 \end{semilogyaxis}
 \end{tikzpicture}
-\caption{Impedance magnitude showing series/parallel resonances.}
+\caption{Impedance magnitude showing resonances near 20, 30, and 40 MHz.}
 \label{fig:imp}
 \end{figure}
 
 \begin{figure}[!t]
 \centering
 \begin{tikzpicture}[scale=0.9]
-\fill[blue!6] (-3,1.6) rectangle (3,3.0);  % Water
-\fill[blue!12,opacity=0.7] (-3,3.0) rectangle (3,3.6); % PML
-\fill[gray!25] (-2.2,1.2) rectangle (2.2,1.6);  % ScAlN
-\fill[gray!45] (-2.2,1.6) rectangle (2.2,1.65); % Top electrode
-\fill[gray!45] (-2.2,1.15) rectangle (2.2,1.2); % Bottom electrode
+\fill[blue!6] (-3,1.6) rectangle (3,3.0);
+\fill[blue!12,opacity=0.7] (-3,3.0) rectangle (3,3.6);
+\fill[gray!25] (-2.2,1.2) rectangle (2.2,1.6);
+\fill[gray!45] (-2.2,1.6) rectangle (2.2,1.65);
+\fill[gray!45] (-2.2,1.15) rectangle (2.2,1.2);
 \fill[gray!50] (-2.4,0.9) rectangle (-2.2,1.8);
 \fill[gray!50] ( 2.2,0.9) rectangle ( 2.4,1.8);
-\fill[brown!20] (-3,0.9) rectangle (3,1.15);  % Substrate
+\fill[brown!20] (-3,0.9) rectangle (3,1.15);
 \node at (0,3.3) {PML};
 \node at (0,2.3) {Water domain};
 \node at (0,1.4) {ScAlN layer};
@@ -188,7 +186,7 @@ FEM analysis revealed resonances near 20, 30, and 40~MHz. The simulated electric
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=\columnwidth, height=4.6cm, % 少し縮めて収まりやすく
+  width=\columnwidth, height=4.4cm,
   xlabel={Frequency (MHz)}, ylabel={System SNR (dB)},
   xmin=18, xmax=42, ymin=40, ymax=75,
   grid=both, tick align=inside
@@ -196,7 +194,7 @@ FEM analysis revealed resonances near 20, 30, and 40~MHz. The simulated electric
 \addplot+[mark=square*,thick] coordinates {(20,62) (30,65) (40,61)};
 \end{axis}
 \end{tikzpicture}
-\caption{System SNR with SiGe front-end across 20--40~MHz.}
+\caption{System SNR with SiGe front-end at 20--40 MHz.}
 \label{fig:snr}
 \end{figure}
 
@@ -213,8 +211,8 @@ FEM analysis revealed resonances near 20, 30, and 40~MHz. The simulated electric
 \section{Discussion}
 Versus PZT, ScAlN offers CMOS compatibility and Pb-free compliance at lower $d_{33}$. Versus CMUT/PMUT~\cite{khuri2009cmut}, ScAlN needs lower bias and shows better fluid reliability. SiP yields separation, short interconnects, and hermeticity versus monolithic integration.
 
-\begin{table}[!t]
-\caption{Piezoelectric Materials for Ultrasonic MEMS (Summary)}
+\begin{table}[!b]
+\caption{Piezoelectric materials for ultrasonic MEMS (summary)}
 \label{tab:mat}
 \centering
 \begin{tabular}{@{}lllll@{}}
@@ -235,7 +233,6 @@ PVDF & Yes & 5--10    & High & Flexible, low output\\
 \section{Conclusion}
 Pb-free ScAlN MEMS arrays integrated with 65~nm SiGe CMOS via SiP provide: (i) regulatory compliance, (ii) adequate 20--50~MHz resolution, (iii) low-noise detection via SiGe, and (iv) scalable, reliable packaging. This is a practical, competitive path for next-generation medical ultrasonic sensors.
 
-% ---- 残りフロートを吐き出す（迷子防止）----
 \FloatBarrier
 
 % ====================================================================
