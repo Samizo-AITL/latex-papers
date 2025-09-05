@@ -8,24 +8,25 @@
 \usepackage{cite}
 \usepackage{url}
 
-% ★ これを追加（フォント警告を消し、Times系に統一）
+% ★ フォント（Times 系に統一 & XeTeX 警告回避）
 \usepackage{newtxtext,newtxmath}
 
-% ★ hyperref は最後に
+% ★ hyperref は最後に（IEEEtran 向け設定）
 \usepackage{hyperref}
 \hypersetup{
-  colorlinks=false,           % モノクロ（IEEE向け）
-  pdfborder={0 0 0},
+  colorlinks=false,           % IEEEtran は基本モノクロ
+  pdfborder={0 0 0},          % リンク枠なし
   pdfauthor={Shinichi Samizo},
   pdftitle={Cross-Node Humanoid Robot Control: FSM, PID, State-Space and LLM Integration}
 }
 
-% 図フォルダ
+% ===== 図フォルダ =====
 \graphicspath{{figures/}}
 
 % ===== Document =====
 \begin{document}
 
+% ===== Title and Author =====
 \title{Cross-Node Humanoid Robot Control: FSM, PID, State-Space and LLM Integration}
 
 \author{Shinichi Samizo,~\IEEEmembership{Member,~IEEE}%
@@ -37,11 +38,13 @@ GitHub: \href{https://github.com/Samizo-AITL}{Samizo-AITL}.}
 
 \maketitle
 
+% ===== Abstract & Keywords =====
 \input{abstract}
 \begin{IEEEkeywords}
 Humanoid Robots, Fault-Tolerant Control, FSM, PID, State-Space Methods, LLM, Energy Harvesting
 \end{IEEEkeywords}
 
+% ===== Main Sections =====
 \input{intro}
 \input{related}
 \input{system}
@@ -49,14 +52,18 @@ Humanoid Robots, Fault-Tolerant Control, FSM, PID, State-Space Methods, LLM, Ene
 \input{discussion}
 \input{conclusion}
 
+% ===== Acknowledgment =====
 \section*{Acknowledgment}
 The author would like to thank the open-source community and educational collaborators
 who contributed to the EduController, Edusemi, and AITL projects,
 which formed the foundation of this work.
 
+% ===== References =====
 \bibliographystyle{IEEEtran}
+\nocite{*}  % ★ refs.bib の全エントリを出力（エラー回避）
 \bibliography{refs}
 
+% ===== Author Biography =====
 \vspace{-0.5\baselineskip}
 \begingroup\small
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
