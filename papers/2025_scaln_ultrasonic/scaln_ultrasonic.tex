@@ -35,6 +35,10 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
+% ---------- Float control (位置が飛ばないように) ----------
+\usepackage[section]{placeins} % 各 \section の境目で \FloatBarrier
+\usepackage{stfloats}          % 2カラム時のフロート安定化（保険）
+
 % ====================================================================
 \begin{document}
 
@@ -87,7 +91,7 @@ Operation: 10--50~MHz. Channels: 64--256 with $\lambda/2$ pitch. Structures: PMU
 \subsection{System-in-Package Integration}
 Flip-chip bonding integrates MEMS and CMOS dice. Benefits: yield separation, short interconnects, and hermetic sealing.
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \begin{tikzpicture}[node distance=10mm, auto, thick]
 \node[blk]              (mems) {ScAlN MEMS Array\\(10--50 MHz)};
@@ -102,7 +106,7 @@ Flip-chip bonding integrates MEMS and CMOS dice. Benefits: yield separation, sho
 \label{fig:arch}
 \end{figure}
 
-\begin{table}[t]
+\begin{table}[!t]
 \caption{System Specifications (ScAlN Array + 65 nm SiGe via SiP)}
 \label{tab:spec}
 \centering
@@ -139,7 +143,7 @@ Material constants were taken from literature for ScAlN ($\rho\!\approx\!3200$~k
 \section{Simulation Results}
 FEM analysis revealed resonances near 20, 30, and 40~MHz. The simulated electrical impedance showed clear series and parallel resonances; the effective coupling was $k^2_{\mathrm{eff}}=2$--4\%. In the transmit case (1~V drive), on-axis pressure reached tens of kPa at 1~mm depth. In the receive case (1~Pa input), open-circuit voltage was tens of $\mu$V. Combined with the 65~nm SiGe front-end ($<2$~nV/$\sqrt{\mathrm{Hz}}$), system SNR exceeded 60~dB across 20--40~MHz.
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \begin{tikzpicture}
 \begin{semilogyaxis}[
@@ -161,7 +165,7 @@ FEM analysis revealed resonances near 20, 30, and 40~MHz. The simulated electric
 \label{fig:imp}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \begin{tikzpicture}[scale=0.9]
 \fill[blue!6] (-3,1.6) rectangle (3,3.0);  % Water
@@ -180,11 +184,11 @@ FEM analysis revealed resonances near 20, 30, and 40~MHz. The simulated electric
 \label{fig:mode}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=\columnwidth, height=5.0cm,
+  width=\columnwidth, height=4.6cm, % 少し縮めて収まりやすく
   xlabel={Frequency (MHz)}, ylabel={System SNR (dB)},
   xmin=18, xmax=42, ymin=40, ymax=75,
   grid=both, tick align=inside
@@ -209,7 +213,7 @@ FEM analysis revealed resonances near 20, 30, and 40~MHz. The simulated electric
 \section{Discussion}
 Versus PZT, ScAlN offers CMOS compatibility and Pb-free compliance at lower $d_{33}$. Versus CMUT/PMUT~\cite{khuri2009cmut}, ScAlN needs lower bias and shows better fluid reliability. SiP yields separation, short interconnects, and hermeticity versus monolithic integration.
 
-\begin{table}[t]
+\begin{table}[!t]
 \caption{Piezoelectric Materials for Ultrasonic MEMS (Summary)}
 \label{tab:mat}
 \centering
@@ -230,6 +234,9 @@ PVDF & Yes & 5--10    & High & Flexible, low output\\
 % ====================================================================
 \section{Conclusion}
 Pb-free ScAlN MEMS arrays integrated with 65~nm SiGe CMOS via SiP provide: (i) regulatory compliance, (ii) adequate 20--50~MHz resolution, (iii) low-noise detection via SiGe, and (iv) scalable, reliable packaging. This is a practical, competitive path for next-generation medical ultrasonic sensors.
+
+% ---- 残りフロートを吐き出す（迷子防止）----
+\FloatBarrier
 
 % ====================================================================
 \section*{Acknowledgment}
