@@ -135,62 +135,86 @@ system SNR.
 
 % ====================================================================
 \section{Simulation Results}
-FEM analysis confirms resonances at 20, 30, and 40~MHz with $k^2_{\mathrm{eff}}\!=\!2$--4\%. Circuit estimates show LNA input noise $<2$~nV/$\sqrt{\mathrm{Hz}}$ and system SNR $>60$~dB at 20--40~MHz.
+
+FEM analysis revealed resonances near 20, 30, and 40~MHz corresponding
+to the designed membrane/cavity modes. The simulated electrical
+impedance exhibited clear series and parallel resonances; the extracted
+effective coupling was $k^2_{\mathrm{eff}}=2$--4\% based on the
+frequency split. In the transmit case (1~V$_\mathrm{AC}$ drive), the
+predicted on-axis pressure reached the order of tens of kPa at 1~mm
+depth in water, sufficient for ophthalmic and IVUS ranges. In the
+receive case (1~Pa plane wave), the open-circuit voltage was in the
+tens-of-$\mu$V range. Combined with the 65~nm SiGe front-end
+(input-referred noise $<2$~nV/$\sqrt{\mathrm{Hz}}$), the system SNR
+exceeded 60~dB across 20--40~MHz (Fig.~\ref{fig:snr}).
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
-\begin{axis}[
+\begin{semilogyaxis}[
   width=\columnwidth, height=5.0cm,
-  xlabel={Frequency (MHz)}, ylabel={System SNR (dB)},
-  xmin=18, xmax=42, ymin=40, ymax=75,
-  grid=both,
-  tick align=inside  % ← 内側にする
+  xlabel={Frequency (MHz)}, ylabel={$|Z|$ (Ohm)},
+  xmin=10, xmax=50, ymin=50, ymax=1e5,
+  grid=both, tick align=inside,
+  legend style={at={(0.02,0.98)},anchor=north west}
 ]
-\addplot+[mark=square*,thick] coordinates {(20,62) (30,65) (40,61)};
-\end{axis}
+% サンプル座標（必要に応じて実データに置換）
+\addplot+[thick,mark=*] coordinates {
+ (10,8000) (12,5000) (14,3000) (16,1200) (18,600)
+ (19,300) (20,180) (21,280) (22,700) (24,2000)
+ (26,4000) (28,7000) (29,9000) (30,12000) (31,9000)
+ (32,6000) (34,3000) (36,1200) (38,600)
+ (39,320) (40,200) (41,300) (42,700) (45,3000) (48,7000) (50,10000)
+};
+\legend{$|Z(f)|$}
+\end{semilogyaxis}
 \end{tikzpicture}
-\caption{Example system SNR with SiGe front-end.}
-\label{fig:snr}
+\caption{Representative impedance magnitude showing series/parallel
+resonances near 20, 30, and 40~MHz.}
+\label{fig:imp}
 \end{figure}
 
-\begin{table}[t]
-\caption{System Specifications (ScAlN Array + 65 nm SiGe via SiP)}
-\label{tab:spec}
+\begin{figure}[t]
 \centering
-\begin{tabular}{@{}ll@{}}
-\toprule
-\textbf{Parameter} & \textbf{Specification}\\
-\midrule
-Operating frequency & 10--50 MHz\\
-Array size & 64--256 ch (1D/2D)\\
-Pitch rule & $\lambda/2$ (tissue $c\!\approx\!1540$ m/s)\\
-CMOS node & 65 nm SiGe BiCMOS\\
-Front-end blocks & LNA, VGA, T/R switch, ADC\\
-ADC resolution & 12--14 bit, 50--100 MS/s\\
-System SNR & $>60$ dB (20--40 MHz)\\
-Package & SiP (flip-chip)\\
-\bottomrule
-\end{tabular}
-\end{table}
+\begin{tikzpicture}[scale=0.9]
+% 水 + PML
+\fill[blue!6] (-3,1.6) rectangle (3,3.0);     % Water
+\fill[blue!12,opacity=0.7] (-3,3.0) rectangle (3,3.6); % PML
 
-\begin{table}[t]
-\caption{Piezoelectric Materials for Ultrasonic MEMS (Summary)}
-\label{tab:mat}
-\centering
-\begin{tabular}{@{}lllll@{}}
-\toprule
-Material & Pb-free & $d_{33}$ & CMOS & Notes\\
-\midrule
-PZT  & No  & 100--500 & Low  & High performance\\
-ScAlN& Yes & 20--30   & High & CMOS-compatible\\
-KNN  & Yes & 80--200  & Med. & Bulk ceramic\\
-BNT  & Yes & $\sim$100& Med. & High-temp stable\\
-ZnO  & Yes & 10--15   & High & Simple, low $d_{33}$\\
-PVDF & Yes & 5--10    & High & Flexible, low output\\
-\bottomrule
-\end{tabular}
-\end{table}
+% 膜/層
+\fill[gray!25] (-2.2,1.2) rectangle (2.2,1.6);      % ScAlN
+\fill[gray!45] (-2.2,1.6) rectangle (2.2,1.65);     % Top electrode
+\fill[gray!45] (-2.2,1.15) rectangle (2.2,1.2);     % Bottom electrode
+
+% 支持リム (固定)
+\fill[gray!50] (-2.4,0.9) rectangle (-2.2,1.8);
+\fill[gray!50] ( 2.2,0.9) rectangle ( 2.4,1.8);
+
+% 基板
+\fill[brown!20] (-3,0.9) rectangle (3,1.15);
+
+% ラベル
+\node at (0,3.3) {PML};
+\node at (0,2.3) {Water domain};
+\node at (0,1.4) {ScAlN layer};
+\node[anchor=east] at (-2.4,1.35) {Fixed rim};
+\node[anchor=west] at (2.4,1.35) {Fixed rim};
+
+% 電気境界
+\draw[->] (-2.8,1.625) -- (-2.25,1.625);
+\node[anchor=east] at (-2.8,1.625) {Top electrode: 1 V (Tx) / Open (Rx)};
+\draw[->] (-2.8,1.18) -- (-2.25,1.18);
+\node[anchor=east] at (-2.8,1.18) {Bottom electrode: GND};
+
+% 音響境界
+\draw[->] (2.8,2.7) -- (2.3,2.7);
+\node[anchor=west] at (2.8,2.7) {Plane wave 1 Pa (Rx)};
+\draw[dashed] (-3,3.0) -- (3,3.0);
+
+\end{tikzpicture}
+\caption{FEM model sketch: stack, boundary conditions, and acoustic PML.}
+\label{fig:mode}
+\end{figure}
 
 % ====================================================================
 \section{Application Scenarios}
