@@ -3,13 +3,11 @@
 % ---------- Robust UTF-8 & fonts (pdflatex / xelatex 両対応) ----------
 \usepackage{iftex}
 \ifPDFTeX
-  \usepackage[utf8]{inputenc}      % ← pdflatex で UTF-8 を確実に
+  \usepackage[utf8]{inputenc}
   \usepackage[T1]{fontenc}
-  % IEEEtran と相性の良い Times 系
-  \usepackage{newtxtext,newtxmath}
+  \usepackage{newtxtext,newtxmath}  % Times系
 \else
-  \usepackage{fontspec}            % xelatex / lualatex
-  % Times 互換フォント（TU/ptm 警告を回避）
+  \usepackage{fontspec}
   \setmainfont{TeX Gyre Termes}
   \setsansfont{TeX Gyre Heros}
   \setmonofont{TeX Gyre Cursor}
@@ -25,7 +23,7 @@
 
 % ---------- TikZ / pgfplots ----------
 \usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta}  % right=.. of .. を使う
+\usetikzlibrary{positioning,arrows.meta}
 \tikzset{
   blk/.style={
     rectangle,draw,rounded corners,
@@ -96,7 +94,6 @@ Flip-chip bonding integrates MEMS and CMOS dice. Benefits: yield separation, sho
 \node[blk, below=10mm of mems] (lna)  {SiGe LNA/VGA\\(65 nm)};
 \node[blk, below=10mm of lna]  (adc)  {ADC\\(12--14 bit, 50--100 MS/s)};
 \node[blk, below=10mm of adc]  (bf)   {Beamformer/\\Digital Core};
-
 \draw[->] (mems)--(lna);
 \draw[->] (lna)--(adc);
 \draw[->] (adc)--(bf);
@@ -105,60 +102,52 @@ Flip-chip bonding integrates MEMS and CMOS dice. Benefits: yield separation, sho
 \label{fig:arch}
 \end{figure}
 
+\begin{table}[t]
+\caption{System Specifications (ScAlN Array + 65 nm SiGe via SiP)}
+\label{tab:spec}
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Specification}\\
+\midrule
+Operating frequency & 10--50 MHz\\
+Array size & 64--256 ch (1D/2D)\\
+Pitch rule & $\lambda/2$ (tissue $c\!\approx\!1540$ m/s)\\
+CMOS node & 65 nm SiGe BiCMOS\\
+Front-end blocks & LNA, VGA, T/R switch, ADC\\
+ADC resolution & 12--14 bit, 50--100 MS/s\\
+System SNR & $>60$ dB (20--40 MHz)\\
+Package & SiP (flip-chip)\\
+\bottomrule
+\end{tabular}
+\end{table}
+
 % ====================================================================
 \section{FEM Analysis Methodology}
-
-Finite element simulations were performed to evaluate the
-ScAlN MEMS array performance. The device stack (Sc$_{0.2}$Al$_{0.8}$N
-piezoelectric layer, electrodes, and supporting membrane) was modeled
-with piezoelectric solid mechanics, while the surrounding water domain
-was represented by acoustic pressure elements with perfectly matched
-layers (PML) to emulate open boundaries.
+Finite element simulations were performed to evaluate the ScAlN MEMS array performance. The device stack (Sc$_{0.2}$Al$_{0.8}$N piezoelectric layer, electrodes, and supporting membrane) was modeled with piezoelectric solid mechanics, while the surrounding water domain was represented by acoustic pressure elements with perfectly matched layers (PML).
 
 Boundary conditions were:
 \begin{itemize}
   \item \textbf{Transmit:} Top electrode driven by 1~V AC, bottom electrode grounded.
-  \item \textbf{Receive:} Electrodes left open, and a 1~Pa plane acoustic
-        wave was applied at the fluid boundary.
+  \item \textbf{Receive:} Electrodes open, 1~Pa plane acoustic wave applied at fluid boundary.
   \item \textbf{Support:} Membrane rim mechanically fixed.
 \end{itemize}
 
-Material constants were taken from literature for
-ScAlN ($\rho\!\approx\!3200$~kg/m$^3$, $\varepsilon_r\!\approx\!11$,
-$e_{33}\!\approx\!1.3$~C/m$^2$). Frequency-domain sweeps from
-10--50~MHz were conducted to extract impedance, displacement fields, and
-acoustic pressure radiation. Effective electromechanical coupling
-$k_\mathrm{eff}^2$ was calculated from resonance and anti-resonance
-frequencies. The open-circuit receive voltage was combined with the SiGe
-LNA noise model ($<2$~nV/$\sqrt{\mathrm{Hz}}$) to estimate overall
-system SNR.
+Material constants were taken from literature for ScAlN ($\rho\!\approx\!3200$~kg/m$^3$, $\varepsilon_r\!\approx\!11$, $e_{33}\!\approx\!1.3$~C/m$^2$). Frequency sweeps from 10--50~MHz were conducted to extract impedance, displacement fields, and acoustic pressure radiation.
 
 % ====================================================================
 \section{Simulation Results}
-
-FEM analysis revealed resonances near 20, 30, and 40~MHz corresponding
-to the designed membrane/cavity modes. The simulated electrical
-impedance exhibited clear series and parallel resonances; the extracted
-effective coupling was $k^2_{\mathrm{eff}}=2$--4\% based on the
-frequency split. In the transmit case (1~V$_\mathrm{AC}$ drive), the
-predicted on-axis pressure reached the order of tens of kPa at 1~mm
-depth in water, sufficient for ophthalmic and IVUS ranges. In the
-receive case (1~Pa plane wave), the open-circuit voltage was in the
-tens-of-$\mu$V range. Combined with the 65~nm SiGe front-end
-(input-referred noise $<2$~nV/$\sqrt{\mathrm{Hz}}$), the system SNR
-exceeded 60~dB across 20--40~MHz (Fig.~\ref{fig:snr}).
+FEM analysis revealed resonances near 20, 30, and 40~MHz. The simulated electrical impedance showed clear series and parallel resonances; the effective coupling was $k^2_{\mathrm{eff}}=2$--4\%. In the transmit case (1~V drive), on-axis pressure reached tens of kPa at 1~mm depth. In the receive case (1~Pa input), open-circuit voltage was tens of $\mu$V. Combined with the 65~nm SiGe front-end ($<2$~nV/$\sqrt{\mathrm{Hz}}$), system SNR exceeded 60~dB across 20--40~MHz.
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{semilogyaxis}[
   width=\columnwidth, height=5.0cm,
-  xlabel={Frequency (MHz)}, ylabel={$|Z|$ (Ohm)},
+  xlabel={Frequency (MHz)}, ylabel={Impedance $|Z|$ (Ω)},
   xmin=10, xmax=50, ymin=50, ymax=1e5,
-  grid=both, tick align=inside,
-  legend style={at={(0.02,0.98)},anchor=north west}
+  grid=both, tick align=inside
 ]
-% サンプル座標（必要に応じて実データに置換）
 \addplot+[thick,mark=*] coordinates {
  (10,8000) (12,5000) (14,3000) (16,1200) (18,600)
  (19,300) (20,180) (21,280) (22,700) (24,2000)
@@ -166,54 +155,45 @@ exceeded 60~dB across 20--40~MHz (Fig.~\ref{fig:snr}).
  (32,6000) (34,3000) (36,1200) (38,600)
  (39,320) (40,200) (41,300) (42,700) (45,3000) (48,7000) (50,10000)
 };
-\legend{$|Z(f)|$}
 \end{semilogyaxis}
 \end{tikzpicture}
-\caption{Representative impedance magnitude showing series/parallel
-resonances near 20, 30, and 40~MHz.}
+\caption{Impedance magnitude showing series/parallel resonances.}
 \label{fig:imp}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[scale=0.9]
-% 水 + PML
-\fill[blue!6] (-3,1.6) rectangle (3,3.0);     % Water
+\fill[blue!6] (-3,1.6) rectangle (3,3.0);  % Water
 \fill[blue!12,opacity=0.7] (-3,3.0) rectangle (3,3.6); % PML
-
-% 膜/層
-\fill[gray!25] (-2.2,1.2) rectangle (2.2,1.6);      % ScAlN
-\fill[gray!45] (-2.2,1.6) rectangle (2.2,1.65);     % Top electrode
-\fill[gray!45] (-2.2,1.15) rectangle (2.2,1.2);     % Bottom electrode
-
-% 支持リム (固定)
+\fill[gray!25] (-2.2,1.2) rectangle (2.2,1.6);  % ScAlN
+\fill[gray!45] (-2.2,1.6) rectangle (2.2,1.65); % Top electrode
+\fill[gray!45] (-2.2,1.15) rectangle (2.2,1.2); % Bottom electrode
 \fill[gray!50] (-2.4,0.9) rectangle (-2.2,1.8);
 \fill[gray!50] ( 2.2,0.9) rectangle ( 2.4,1.8);
-
-% 基板
-\fill[brown!20] (-3,0.9) rectangle (3,1.15);
-
-% ラベル
+\fill[brown!20] (-3,0.9) rectangle (3,1.15);  % Substrate
 \node at (0,3.3) {PML};
 \node at (0,2.3) {Water domain};
 \node at (0,1.4) {ScAlN layer};
-\node[anchor=east] at (-2.4,1.35) {Fixed rim};
-\node[anchor=west] at (2.4,1.35) {Fixed rim};
-
-% 電気境界
-\draw[->] (-2.8,1.625) -- (-2.25,1.625);
-\node[anchor=east] at (-2.8,1.625) {Top electrode: 1 V (Tx) / Open (Rx)};
-\draw[->] (-2.8,1.18) -- (-2.25,1.18);
-\node[anchor=east] at (-2.8,1.18) {Bottom electrode: GND};
-
-% 音響境界
-\draw[->] (2.8,2.7) -- (2.3,2.7);
-\node[anchor=west] at (2.8,2.7) {Plane wave 1 Pa (Rx)};
-\draw[dashed] (-3,3.0) -- (3,3.0);
-
 \end{tikzpicture}
-\caption{FEM model sketch: stack, boundary conditions, and acoustic PML.}
+\caption{FEM model sketch: stack, boundaries, and acoustic PML.}
 \label{fig:mode}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\columnwidth, height=5.0cm,
+  xlabel={Frequency (MHz)}, ylabel={System SNR (dB)},
+  xmin=18, xmax=42, ymin=40, ymax=75,
+  grid=both, tick align=inside
+]
+\addplot+[mark=square*,thick] coordinates {(20,62) (30,65) (40,61)};
+\end{axis}
+\end{tikzpicture}
+\caption{System SNR with SiGe front-end across 20--40~MHz.}
+\label{fig:snr}
 \end{figure}
 
 % ====================================================================
@@ -228,6 +208,24 @@ resonances near 20, 30, and 40~MHz.}
 % ====================================================================
 \section{Discussion}
 Versus PZT, ScAlN offers CMOS compatibility and Pb-free compliance at lower $d_{33}$. Versus CMUT/PMUT~\cite{khuri2009cmut}, ScAlN needs lower bias and shows better fluid reliability. SiP yields separation, short interconnects, and hermeticity versus monolithic integration.
+
+\begin{table}[t]
+\caption{Piezoelectric Materials for Ultrasonic MEMS (Summary)}
+\label{tab:mat}
+\centering
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Material & Pb-free & $d_{33}$ & CMOS & Notes\\
+\midrule
+PZT  & No  & 100--500 & Low  & High performance\\
+ScAlN& Yes & 20--30   & High & CMOS-compatible\\
+KNN  & Yes & 80--200  & Med. & Bulk ceramic\\
+BNT  & Yes & $\sim$100& Med. & High-temp stable\\
+ZnO  & Yes & 10--15   & High & Simple, low $d_{33}$\\
+PVDF & Yes & 5--10    & High & Flexible, low output\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 % ====================================================================
 \section{Conclusion}
