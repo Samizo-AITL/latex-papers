@@ -11,8 +11,12 @@
 % ★ フォント（Times 系に統一 & XeTeX 警告回避）
 \usepackage{newtxtext,newtxmath}
 
+% TikZ（図の描画用）
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc,shadows.blur}
 % ★ hyperref は最後に（IEEEtran 向け設定）
 \usepackage{hyperref}
+
 \hypersetup{
   colorlinks=false,           % IEEEtran は基本モノクロ
   pdfborder={0 0 0},          % リンク枠なし
