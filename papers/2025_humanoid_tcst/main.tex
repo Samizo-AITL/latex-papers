@@ -7,59 +7,29 @@
 \usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{cite}
 \usepackage{url}
-
-% ★ フォント（Times 系に統一 & XeTeX 警告回避）
 \usepackage{newtxtext,newtxmath}
-
-% TikZ（図の描画用）
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc,shadows.blur}
-% ★ hyperref は最後に（IEEEtran 向け設定）
 \usepackage{hyperref}
 
 \hypersetup{
-  colorlinks=false,           % IEEEtran は基本モノクロ
-  pdfborder={0 0 0},          % リンク枠なし
+  colorlinks=false,
+  pdfborder={0 0 0},
   pdfauthor={Shinichi Samizo},
   pdftitle={Cross-Node Humanoid Robot Control: FSM, PID, State-Space and LLM Integration}
 }
 
-% ===== 図フォルダ =====
 \graphicspath{{figures/}}
 
-% ===== Document =====
 \begin{document}
 
 % ===== Title and Author =====
 \title{Cross-Node Humanoid Robot Control: FSM, PID, State-Space and LLM Integration}
-
 \author{Shinichi Samizo,~\IEEEmembership{Member,~IEEE}}
 
-% ★ ここを maketitle の前に移動
-\IEEEaftertitletext{%
-\vspace{-1.0\baselineskip}%
-\noindent\begin{minipage}{\textwidth}
-\footnotesize
-Shinichi Samizo is an independent semiconductor researcher and former engineer at Seiko Epson Corporation.\\[0.3em]
-\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
-\textbf{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}
-\end{minipage}\par
-\addvspace{0.8\baselineskip}%
-}
+\markboth{Submitted to IEEE Transactions on Control Systems Technology}{Samizo: Cross-Node Humanoid Robot Control}
 
 \maketitle
-
-% ===== Author Note (全幅で出す) =====
-\IEEEaftertitletext{%
-\vspace{-1.2\baselineskip}%
-\noindent\begin{minipage}{\textwidth}
-\footnotesize
-Shinichi Samizo is an independent semiconductor researcher and former engineer at Seiko Epson Corporation.\\[0.3em]
-\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com} \quad
-\textbf{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}
-\end{minipage}%
-\par\addvspace{0.8\baselineskip}%
-}
 
 % ===== Abstract & Keywords =====
 \input{abstract}
@@ -83,20 +53,16 @@ which formed the foundation of this work.
 
 % ===== References =====
 \bibliographystyle{IEEEtran}
-\nocite{*}  % ★ refs.bib の全エントリを出力（エラー回避）
 \bibliography{refs}
 
 % ===== Author Biography =====
-\vspace{-0.5\baselineskip}
-\begingroup\small
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
 received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
 He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
 He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.
 
-\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com},
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, 
 \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 \end{IEEEbiographynophoto}
-\endgroup
 
 \end{document}
