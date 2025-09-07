@@ -1,23 +1,25 @@
 \section{Introduction}
-Humanoid robots represent one of the most challenging applications in modern control systems,
-requiring robust dynamic stabilization, real-time adaptation to disturbances,
-and high-level decision-making capabilities.
-Recent advancements such as Boston Dynamics Atlas and Tesla Optimus
-have demonstrated impressive mobility and manipulation skills.
-However, these platforms primarily emphasize either dynamic performance
-or industrial deployment, while critical aspects such as autonomy,
-fault tolerance, and sustainable operation remain underexplored.
+Humanoid robots represent one of the most demanding applications in modern control engineering,
+requiring dynamic stabilization, real-time disturbance rejection, and high-level
+decision-making. Recent platforms such as Boston Dynamics Atlas and Tesla Optimus
+have demonstrated remarkable mobility and manipulation. Nevertheless, existing systems
+tend to emphasize either dynamic performance or industrial deployment, while
+autonomy, fault tolerance, and energy sustainability remain relatively underexplored.
 
-This work presents a flagship proof-of-concept (PoC) humanoid robot
-that integrates finite state machines (FSM), proportional-integral-derivative (PID) control,
-state-space methods, and large language models (LLMs) into a unified architecture.
-The key contribution is a hierarchical control design where low-level stability
-and mid-level behavior switching are coordinated with high-level goal generation
-and anomaly interpretation provided by the LLM layer.
+This paper addresses these gaps by presenting a proof-of-concept humanoid robot control
+framework that integrates finite-state machines (FSM), proportional–integral–derivative (PID)
+controllers, state-space methods (LQR/LQG), and large language models (LLMs)
+into a unified hierarchical architecture. In this design,
+(1) low-level PID and state-space control ensure stable actuation,
+(2) mid-level FSM handles task sequencing and mode switching,
+and (3) the LLM layer provides high-level goal reasoning and anomaly interpretation.
 
-The proposed system is implemented as a cross-node design,
-spanning a 22 nm SoC for inference and control, a 0.18 µm AMS sensor hub,
-and a 0.35 µm LDMOS drive with external power chips.
-System-level validation using SystemDK demonstrates that the hybrid control
-achieves posture recovery within 200 ms, improves gait stability by 30\%,
-and enhances energy efficiency by 15\% compared to PID-only baselines.
+The proposed architecture is realized as a heterogeneous cross-node design,
+consisting of a 22\,nm system-on-chip for inference and control, a 0.18\,$\mu$m
+AMS sensor hub for multimodal data acquisition, and a 0.35\,$\mu$m LDMOS-based
+drive stage with external GaN/MOSFET modules for high-torque actuation.
+System-level validation using SystemDK co-simulation demonstrates posture
+recovery within 200\,ms after disturbances, a 30\% improvement in gait stability,
+and a 15\% increase in energy efficiency compared with PID-only baselines.
+These results highlight the feasibility of combining classical control theory
+and AI-based supervision to realize sustainable and fault-tolerant humanoid robots.
