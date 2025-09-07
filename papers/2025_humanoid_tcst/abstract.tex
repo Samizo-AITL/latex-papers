@@ -1,22 +1,25 @@
 \begin{abstract}
-This paper presents a flagship proof-of-concept humanoid robot control system that integrates
-finite state machines (FSM), proportional-integral-derivative (PID) controllers, state-space methods
-(LQR/LQG), and large language models (LLMs) into a unified three-layer architecture. 
-Unlike existing humanoid platforms such as Boston Dynamics Atlas and Tesla Optimus,
-our approach emphasizes autonomy, fault tolerance, and sustainability.
+This paper presents a proof-of-concept humanoid robot control framework that integrates
+finite-state machines (FSM), proportional–integral–derivative (PID) control,
+state-space methods (LQR/LQG), and large language models (LLMs) into a unified
+three-layer architecture. In contrast to prior platforms (e.g., Atlas or Optimus),
+the focus is on autonomy, fault tolerance, and energy sustainability.
 
-The proposed architecture is realized as a cross-node chipset design: 
-a 22 nm SoC executes LLM inference, FSM management, and state-space control;
-a 0.18 µm AMS sensor hub processes multimodal inputs (vision, IMU, force, audio);
-and a 0.35 µm LDMOS power drive with external GaN/MOSFET chips delivers high-torque actuation.
-Energy harvesting via piezoelectric, photovoltaic, and regenerative methods 
-extends operational lifetime in off-grid environments.
+The architecture is realized as a heterogeneous cross-node chipset:
+a 22\,nm system-on-chip executes LLM inference, FSM management, and state-space control;
+a 0.18\,$\mu$m AMS hub processes multimodal sensing (vision, IMU, force, audio);
+and a 0.35\,$\mu$m LDMOS power drive with GaN/MOSFET stages delivers high-torque actuation.
+Energy harvesting through piezoelectric, photovoltaic, and regenerative pathways
+extends mission endurance in off-grid scenarios.
 
-System-level modeling and verification are performed using SystemDK, 
-demonstrating posture recovery within 200 ms, gait stability improved by 30\% over PID-only control,
-and energy efficiency gains of 15\% with hybrid control and harvesting. 
-Checkpointing with FRAM/EEPROM further enables fast resume ($\leq$10 ms) and robust mission continuity. 
-These results highlight the feasibility of a sustainable and resilient humanoid control system
-that bridges advanced control theory with emerging AI techniques.
+System-level verification using a SystemDK-style co-simulation demonstrates
+posture recovery within 200\,ms after push disturbances,
+a 30\% reduction in center-of-mass deviation compared with PID-only control,
+and a 15\% improvement in walking energy efficiency with hybrid harvesting.
+Nonvolatile checkpointing (FRAM/EEPROM) further enables resume within 10\,ms,
+supporting robust mission continuity.
 
+These results demonstrate the feasibility of combining classical control
+and AI-based supervision in a sustainable, fault-tolerant humanoid
+robot control system.
 \end{abstract}
