@@ -1,17 +1,56 @@
-name: build_latex
-on: [push, pull_request]
+name: Build CFET Review Paper
+
+on:
+  push:
+    paths:
+      - 'papers/2025_cfet_review/**'
+      - '.github/workflows/latex_cfet_review.yml'
+
+permissions:
+  contents: read
 
 jobs:
   build_latex:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4   # ← v4 に更新
-      - uses: xu-cheng/latex-action@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 何があるかを確実に見る
+      - name: Show tree
+        run: |
+          ls -la
+          echo "----- papers/2025_cfet_review -----"
+          ls -la papers/2025_cfet_review
+
+      # LaTeXビルド（latexmk、TeX Live入りコンテナ）
+      - name: Compile LaTeX document
+        id: latex
+        uses: xu-cheng/latex-action@v2
         with:
-          root_file: main.tex
           working_directory: papers/2025_cfet_review
+          root_file: main.tex
+          latexmk_use_xelatex: false
+          # 必要なら： latexmk_shell_escape: true
+          #           extra_fonts: |
+          #             # ここに追加フォントを配置
+
+      # 失敗時に .log をコンソールに出す（モバイルUIでも見える）
+      - name: Print LaTeX log on failure
+        if: failure()
+        run: |
+          echo "===== main.log (tail) ====="
+          tail -n 200 papers/2025_cfet_review/main.log || true
+          echo "===== main.fls (exists?) ====="
+          ls -la papers/2025_cfet_review || true
+
+      # 成否に関わらず成果物をアップロード（v4）
       - name: Upload PDF
-        uses: actions/upload-artifact@v4   # ← v4 に更新
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: paper
-          path: papers/2025_cfet_review/main.pdf
+          name: cfet_review_pdf
+          path: |
+            papers/2025_cfet_review/main.pdf
+            papers/2025_cfet_review/main.log
+          if-no-files-found: warn
