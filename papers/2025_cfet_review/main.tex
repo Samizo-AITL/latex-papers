@@ -49,8 +49,7 @@ This paper positions CFET as both a roadmap element and an educational vehicle f
 % =========================
 \section{Device Evolution: From SCE Relief to Cross-Sectional CMOS}
 \subsection{Planar CMOS and SCE Motivation}
-As gate lengths entered the deep sub-100\,nm regime, planar MOSFETs suffered
-from short-channel effects (SCE): threshold-voltage roll-off, drain-induced barrier lowering, off-state leakage, and degraded subthreshold slope.
+As gate lengths entered the deep sub-100\,nm regime, planar MOSFETs suffered from short-channel effects (SCE): threshold-voltage roll-off, drain-induced barrier lowering, off-state leakage, and degraded subthreshold slope.
 Electrostatic control by a single top gate could no longer effectively pinch off the channel.
 
 \subsection{FinFET: Three-Sided Gate Control}
@@ -132,29 +131,17 @@ n/p channels are placed orthogonally with a dielectric ``fork'' spacer to ease r
 \centering
 \fitfig{%
 \begin{tikzpicture}[scale=1.0]
-  % --- geometry ---
-  % nMOS（横）
-  \fill[blue!20] (0,0) rectangle (4,0.6);
-  % pMOS（縦）
-  \fill[red!20] (1.7,-0.6) rectangle (2.3,1.2);
-  % Dielectric fork（縦の狭いスペーサ）
-  \fill[gray!35] (1.95,-0.6) rectangle (2.05,1.2);
+% nMOS region
+\fill[blue!20] (0,0) rectangle (4,0.6);
+\node at (2,-0.2) {\scriptsize nMOS sheets (horizontal)};
 
-  % --- labels (外側に配置・白背景で可読性UP) ---
-  % nMOS label（長方形の下）
-  \node[fill=white,inner sep=1pt,anchor=north] at (2,-0.08)
-       {\scriptsize nMOS sheets (horizontal)};
-  % pMOS label（縦棒の右側）
-  \node[fill=white,inner sep=1pt,anchor=west]  at (2.38,0.30)
-       {\scriptsize pMOS sheets (vertical)};
-  % fork label（上側）
-  \node[fill=white,inner sep=1pt,anchor=south] at (2,1.28)
-       {\scriptsize Dielectric fork};
+% pMOS region
+\fill[red!20] (1.7,-0.6) rectangle (2.3,1.2);
+\node[anchor=west] at (2.4,0.3) {\scriptsize pMOS sheets (vertical)};
 
-  % （任意）ラベルへの小矢印
-  \draw[->] (2,1.22) -- (2,1.02);      % fork
-  \draw[->] (2.36,0.30) -- (2.30,0.30); % pMOS
-  \draw[->] (2,-0.06) -- (2,0);         % nMOS
+% Dielectric fork
+\fill[gray!30,opacity=0.5] (1.9,-0.6) rectangle (2.1,1.2);
+\node at (1.2,0.8) {\scriptsize Dielectric fork};
 \end{tikzpicture}}
 \caption{Forksheet-CFET top view: orthogonal n/p nanosheets separated by a dielectric fork for routing relief.}
 \label{fig:forksheet}
@@ -185,7 +172,7 @@ No open CFET PDKs or standard-cell libraries are available, leaving CFET as an o
 % =========================
 \section{Educational Value}
 CFET connects device physics with circuit/layout co-design.
-It exposes students to unresolved challenges in fabrication, modeling, and CAD—a rich basis for advanced device courses and projects.
+It exposes students to unresolved challenges in fabrication, modeling, and CAD---a rich basis for advanced device courses and projects.
 
 % =========================
 \section{Conclusion and Outlook}
