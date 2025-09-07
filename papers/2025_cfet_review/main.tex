@@ -73,7 +73,7 @@ In short, CFET reframes CMOS as a \emph{cross-sectional inverter} rather than a 
 \begin{figure}[htbp]
 \centering
 \fitfig{%
-\begin{tikzpicture}[node distance=2.4cm,>=Latex]
+\begin{tikzpicture}[node distance=2.2cm,>=Latex]
 \node[draw, minimum width=1.6cm, minimum height=0.8cm] (planar) {Planar};
 \node[draw, right=of planar] (finfet) {FinFET};
 \node[draw, right=of finfet] (gaa) {GAA};
@@ -99,27 +99,32 @@ nFET is fabricated first, followed by pFET under a constrained thermal budget. S
 \begin{tikzpicture}[scale=1.0]
 % Substrate
 \fill[gray!20] (0,0) rectangle (3,0.3);
-\node at (1.5,0.15) {\small Substrate};
+\draw (0,0) rectangle (3,0.3);
+\node[font=\small] at (1.5,0.15) {Substrate};
 
-% nFET
-\fill[blue!20] (0.2,0.6) rectangle (2.8,0.9);
-\node at (1.5,0.75) {\scriptsize nFET (lower nanosheets)};
+% nFET block
+\fill[blue!15] (0.2,0.6) rectangle (2.8,0.9);
+\draw (0.2,0.6) rectangle (2.8,0.9);
+\node[font=\scriptsize] at (1.5,0.75) {nFET (lower nanosheets)};
 
-% Isolation oxide
-\fill[gray!40,pattern=north east lines] (0.2,1.2) rectangle (2.8,1.5);
-\node at (1.5,1.35) {\scriptsize Isolation oxide};
+% Isolation
+\fill[gray!35,pattern=north east lines] (0.2,1.2) rectangle (2.8,1.5);
+\draw (0.2,1.2) rectangle (2.8,1.5);
+\node[font=\scriptsize] at (1.5,1.35) {Isolation oxide};
 
-% pFET
-\fill[red!20] (0.2,1.8) rectangle (2.8,2.1);
-\node at (1.5,1.95) {\scriptsize pFET (upper nanosheets)};
+% pFET block
+\fill[red!15] (0.2,1.8) rectangle (2.8,2.1);
+\draw (0.2,1.8) rectangle (2.8,2.1);
+\node[font=\scriptsize] at (1.5,1.95) {pFET (upper nanosheets)};
 
-% Vertical via
-\fill[black!30] (2.9,0.6) rectangle (3.1,2.1);
-\node[anchor=west] at (3.15,1.35) {\scriptsize Vertical via (Output)};
+% Vertical via (output)
+\fill[black!25] (2.9,0.6) rectangle (3.1,2.1);
+\draw (2.9,0.6) rectangle (3.1,2.1);
+\node[anchor=west, font=\scriptsize] at (3.15,1.35) {Vertical via (Output)};
 
-% Contacts
-\node[anchor=east] at (-0.3,0.75) {\scriptsize GND};
-\node[anchor=east] at (-0.3,1.95) {\scriptsize VDD};
+% Supplies (text outside to avoid overlap)
+\node[anchor=east, font=\scriptsize] at (-0.25,0.75) {GND};
+\node[anchor=east, font=\scriptsize] at (-0.25,1.95) {VDD};
 \end{tikzpicture}}
 \caption{Sequential CFET cross-section with stacked nFET/pFET and vertical output via.}
 \label{fig:cfet_stack}
@@ -132,20 +137,22 @@ n/p channels are placed orthogonally with a dielectric ``fork'' spacer to ease r
 \centering
 \fitfig{%
 \begin{tikzpicture}[scale=1.0]
-% nMOS region
-\fill[blue!20] (0,0) rectangle (4,0.6);
-\node at (2,-0.2) {\scriptsize nMOS sheets (horizontal)};
+% nMOS horizontal sheets
+\fill[blue!15] (0,0) rectangle (4,0.6);
+\draw (0,0) rectangle (4,0.6);
+% pMOS vertical sheets
+\fill[red!15] (1.75,-0.6) rectangle (2.25,1.2);
+\draw (1.75,-0.6) rectangle (2.25,1.2);
+% dielectric fork (thin spacer)
+\fill[gray!35,opacity=0.65] (1.95,-0.6) rectangle (2.05,1.2);
+\draw (1.95,-0.6) rectangle (2.05,1.2);
 
-% pMOS region
-\fill[red!20] (1.7,-0.6) rectangle (2.3,1.2);
-\node[anchor=west] at (2.4,0.3) {\scriptsize pMOS sheets (vertical)};
-
-% Dielectric fork
-\fill[gray!30,opacity=0.5] (1.9,-0.6) rectangle (2.1,1.2);
-\node at (1.2,0.8) {\scriptsize Dielectric fork};
-
+% Labels (置き場所をずらして重なり回避)
+\node[font=\scriptsize,anchor=north] at (2.0,1.25) {Dielectric fork};
+\node[font=\scriptsize,anchor=south] at (2.45,0.2) {pMOS sheets (vertical)};
+\node[font=\scriptsize,anchor=north] at (2.0,-0.1) {nMOS sheets (horizontal)};
 \end{tikzpicture}}
-\caption{Forksheet-CFET top view: orthogonal n/p nanosheets separated by dielectric fork for routing relief.}
+\caption{Forksheet-CFET top view: orthogonal n/p nanosheets separated by a dielectric fork for routing relief.}
 \label{fig:forksheet}
 \end{figure}
 
@@ -153,41 +160,40 @@ n/p channels are placed orthogonally with a dielectric ``fork'' spacer to ease r
 \section{Electrical and Layout Impacts}
 Key educational points include:
 \begin{itemize}
-  \item \textbf{Area efficiency:} Near $\sim 2\times$ density for inverter cells; benefits extend to NAND/NOR by co-locating pull-up and pull-down networks.
-  \item \textbf{Delay/energy:} Vertical n-to-p via shortens RC path; FO1 delay improves even if device $I\!-\!V$ matches GAA.
-  \item \textbf{Electrostatics:} Each tier can retain GAA-level control; inter-tier coupling introduces parasitics (capacitance, via resistance).
-  \item \textbf{Variability/noise:} Thermal coupling and VDD/GND partitioning introduce asymmetries requiring placement and routing co-optimization.
+  \item \textbf{Area efficiency:} Near $\sim 2\times$ density for inverter cells; benefits extend to NAND/NOR by co-locating pull-up and pull-down networks. Standard-cell height reductions become feasible when vertical contacts are co-designed with BEOL.
+  \item \textbf{Delay/energy:} Vertical n-to-p via shortens RC path; FO1 delay improves even if device $I\!-\!V$ matches GAA. Wire-limited paths in logic stacks (e.g., AOI/OAI) particularly benefit from reduced diffusion-to-diffusion distances.
+  \item \textbf{Electrostatics:} Each tier can retain GAA-level control; inter-tier coupling introduces parasitics (capacitance, via resistance). Guarding isolation thickness and spacer geometry is crucial to avoid drive loss from capacitive loading.
+  \item \textbf{Variability/noise:} Thermal coupling and VDD/GND partitioning introduce asymmetries requiring placement and power-routing co-optimization. Power-delivery splits (VDD top / GND bottom) alter IR drop and dynamic supply noise.
 \end{itemize}
 
 % =========================
 \section{Manufacturing Challenges}
 Realizing CFET integration introduces unprecedented fabrication hurdles.
 Independent n/p work-functions and junctions across stacked tiers demand highly selective epitaxy and etching steps, often at low thermal budgets ($<500^{\circ}$C) to preserve the completed tier.
-Alignment tolerance for vertical vias is sub-5\,nm, requiring EUV lithography overlay beyond current production standards.
-Dielectric isolation must simultaneously suppress dopant diffusion and maintain mechanical integrity across multiple layers.
-Recent demonstrations by IMEC \cite{imec_cfet_iedm2020} highlight sequential CFET feasibility, but scaling reliability and yield remain open challenges.
+Alignment tolerance for vertical vias is sub-5\,nm, requiring EUV lithography overlay accuracy beyond current mass-production capabilities.
+Dielectric isolation must simultaneously suppress dopant diffusion and maintain mechanical/thermal integrity across multiple layers.
+Recent demonstrations by IMEC \cite{imec_cfet_iedm2020} highlight sequential CFET feasibility, but large-scale yield, variability control, and reliability remain open challenges for industry adoption.
 
 % =========================
 \section{Modeling and EDA Limitations}
 Existing compact models such as BSIM-CMG \cite{bsimcmg_sispad2017} can capture GAA device behavior, but extensions to CFET remain absent.
-Key missing ingredients include inter-tier electrostatics, vertical thermal coupling, and parasitic capacitances from stacked vias.
-While prototype Verilog-A implementations exist, they lack consensus and calibration.
-Furthermore, no open-source CFET-ready PDKs or cell libraries are available, preventing standardized EDA flows.
-This situation, while limiting, provides an educational sandbox for students to explore device-to-circuit modeling.
+Key missing aspects include: (i) inter-tier electrostatics, (ii) vertical thermal coupling, and (iii) parasitic R/C from stacked vias and tier-to-tier contacts.
+Prototype Verilog-A implementations exist but lack consensus and calibration.
+Furthermore, no open-source CFET-ready PDKs or cell libraries are available, preventing standardized design flows.
+This gap not only limits immediate design enablement but also provides a fertile educational sandbox for research-oriented coursework.
 
 % =========================
 \section{Educational Value}
-From a pedagogical perspective, CFET offers a unique opportunity to link device physics with layout and CAD.
-By positioning CFET as an ``unresolved technology,'' educators can design curricula that expose students to multidisciplinary challenges in process integration, modeling, and design co-optimization.
-Graduate courses can integrate CFET Verilog-A models as design projects, while roadmap discussions (e.g., IRDS \cite{irds_2023}) can serve as context for technology forecasting.
-This integration bridges device-level abstraction and system-level design, anchoring CFET as a cornerstone in advanced semiconductor education.
+From a pedagogical perspective, CFET provides a unique opportunity to integrate \emph{unresolved technology} into curricula, linking physics, fabrication, and CAD.
+Graduate courses can incorporate CFET Verilog-A models as design projects, explore sensitivity to inter-tier parasitics, and practice co-optimization with placement/routing.
+Roadmap discussions via IRDS \cite{irds_2023} offer context for technology forecasting and design-technology co-optimization (DTCO), bridging device-level abstraction to system-level design.
 
 % =========================
 \section{Conclusion and Outlook}
 CFET reframes CMOS as a stacked, cross-sectional inverter that simultaneously improves density and wiring delay.
-Looking forward, forksheet CFET layouts, 3D sequential stacks, and System-on-Stack architectures are promising research vectors.
-Thermal-aware power partitioning and AI-driven design-space exploration will be critical to achieve manufacturable CFET integration.
-Embedding CFET into curricula prepares future engineers to confront open problems at the frontier of scaling.
+Looking forward, forksheet layouts, sequential 3D-CFET stacks, and System-on-Stack architectures are promising research vectors.
+Thermal-aware power partitioning, co-optimized BEOL integration, and AI-driven design-space exploration will be essential to reach manufacturable solutions.
+Embedding CFET into curricula not only prepares engineers for the 2030s but also cultivates critical thinking about unresolved scaling frontiers.
 
 \section*{Acknowledgment}
 The author thanks the Project Design Hub community for discussions.
