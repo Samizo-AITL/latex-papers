@@ -2,9 +2,9 @@
 \IEEEoverridecommandlockouts
 
 % ==== Fonts & core packages ====
-\usepackage{newtxtext,newtxmath} % IEEE推奨Times系
+\usepackage{newtxtext,newtxmath} % Times系
 \usepackage{graphicx}
-\usepackage{amsmath} % amssymb は newtxmath と衝突しやすいので未使用
+\usepackage{amsmath}             % amssymb は newtxmath と衝突しやすいので未使用
 \usepackage{cite}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,patterns}
@@ -13,6 +13,12 @@
 
 % 図の横幅を安全に抑えるヘルパー
 \newcommand{\fitfig}[1]{\resizebox{0.92\linewidth}{!}{#1}}
+
+% TikZ共通: 見やすい白背景ラベル
+\tikzset{
+  labelbg/.style={fill=white,inner sep=1.5pt,rounded corners=1pt},
+  thinbox/.style={draw,rounded corners=0.5pt,line width=0.3pt}
+}
 
 \title{Educational Perspectives on Complementary FETs (CFET):\\
 Evolution Beyond GAA and Open Challenges}
@@ -73,11 +79,11 @@ In short, CFET reframes CMOS as a \emph{cross-sectional inverter} rather than a 
 \begin{figure}[htbp]
 \centering
 \fitfig{%
-\begin{tikzpicture}[node distance=2.4cm,>=Latex]
-\node[draw, minimum width=1.6cm, minimum height=0.8cm] (planar) {Planar};
-\node[draw, right=of planar] (finfet) {FinFET};
-\node[draw, right=of finfet] (gaa) {GAA};
-\node[draw, right=of gaa] (cfet) {CFET};
+\begin{tikzpicture}[node distance=2.4cm,>=Latex,font=\footnotesize]
+\node[thinbox, minimum width=1.8cm, minimum height=0.9cm] (planar) {Planar};
+\node[thinbox, right=of planar, minimum width=1.8cm, minimum height=0.9cm] (finfet) {FinFET};
+\node[thinbox, right=of finfet, minimum width=1.8cm, minimum height=0.9cm] (gaa) {GAA};
+\node[thinbox, right=of gaa, minimum width=1.8cm, minimum height=0.9cm] (cfet) {CFET};
 \draw[->] (planar) -- (finfet);
 \draw[->] (finfet) -- (gaa);
 \draw[->] (gaa) -- (cfet);
@@ -96,32 +102,36 @@ nFET is fabricated first, followed by pFET under a constrained thermal budget. S
 \begin{figure}[htbp]
 \centering
 \fitfig{%
-\begin{tikzpicture}[scale=1.0]
-% Substrate
-\fill[gray!20] (0,0) rectangle (3,0.3);
-\node at (1.5,0.15) {\small Substrate};
+\begin{tikzpicture}[x=1cm,y=1cm,font=\scriptsize]
+% --- Substrate ---
+\fill[gray!20] (0,0) rectangle (5,0.35);
+\node[labelbg] at (2.5,0.17) {Substrate};
 
-% nFET
-\fill[blue!20] (0.2,0.6) rectangle (2.8,0.9);
-\node at (1.5,0.75) {\scriptsize nFET (lower nanosheets)};
+% --- nFET tier (lower nanosheets) ---
+\fill[blue!18] (0.4,0.60) rectangle (4.6,0.95);
+\draw (0.4,0.60) rectangle (4.6,0.95);
+\node[labelbg] at (2.5,0.78) {nFET (lower nanosheets)};
 
-% Isolation oxide
-\fill[gray!40,pattern=north east lines] (0.2,1.2) rectangle (2.8,1.5);
-\node at (1.5,1.35) {\scriptsize Isolation oxide};
+% --- Isolation oxide (hatched) ---
+\fill[gray!35,pattern=north east lines] (0.4,1.18) rectangle (4.6,1.52);
+\draw (0.4,1.18) rectangle (4.6,1.52);
+\node[labelbg] at (2.5,1.35) {Isolation oxide};
 
-% pFET
-\fill[red!20] (0.2,1.8) rectangle (2.8,2.1);
-\node at (1.5,1.95) {\scriptsize pFET (upper nanosheets)};
+% --- pFET tier (upper nanosheets) ---
+\fill[red!18] (0.4,1.82) rectangle (4.6,2.17);
+\draw (0.4,1.82) rectangle (4.6,2.17);
+\node[labelbg] at (2.5,1.995) {pFET (upper nanosheets)};
 
-% Vertical via
-\fill[black!30] (2.9,0.6) rectangle (3.1,2.1);
-\node[anchor=west] at (3.15,1.35) {\scriptsize Vertical via (Output)};
+% --- Vertical output via ---
+\fill[black!35] (4.75,0.60) rectangle (4.95,2.17);
+\draw (4.75,0.60) rectangle (4.95,2.17);
+\node[labelbg,anchor=west] at (5.05,1.38) {Vertical via (Output)};
 
-% Contacts
-\node[anchor=east] at (-0.3,0.75) {\scriptsize GND};
-\node[anchor=east] at (-0.3,1.95) {\scriptsize VDD};
+% --- Supply contacts (textは外側・白背景) ---
+\node[labelbg,anchor=east] at (0.25,1.995) {VDD};
+\node[labelbg,anchor=east] at (0.25,0.78) {GND};
 \end{tikzpicture}}
-\caption{Sequential CFET cross-section with stacked nFET/pFET and vertical output via.}
+\caption{Sequential CFET cross-section with stacked nFET/pFET and vertical output via. 白背景ラベルで重なりを防止。}
 \label{fig:cfet_stack}
 \end{figure}
 
@@ -131,21 +141,23 @@ n/p channels are placed orthogonally with a dielectric ``fork'' spacer to ease r
 \begin{figure}[htbp]
 \centering
 \fitfig{%
-\begin{tikzpicture}[scale=1.0]
-% nMOS region
-\fill[blue!20] (0,0) rectangle (4,0.6);
-\node at (2,-0.2) {\scriptsize nMOS sheets (horizontal)};
+\begin{tikzpicture}[x=1cm,y=1cm,font=\scriptsize]
+% --- nMOS horizontal region ---
+\fill[blue!18] (0,0) rectangle (6,0.65);
+\draw (0,0) rectangle (6,0.65);
+\node[labelbg,anchor=south west] at (0.05,0.70) {nMOS sheets (horizontal)};
 
-% pMOS region
-\fill[red!20] (1.7,-0.6) rectangle (2.3,1.2);
-\node[anchor=west] at (2.4,0.3) {\scriptsize pMOS sheets (vertical)};
+% --- pMOS vertical region (center) ---
+\fill[red!18] (2.85,-0.80) rectangle (3.15,1.60);
+\draw (2.85,-0.80) rectangle (3.15,1.60);
+\node[rotate=90,labelbg,anchor=west] at (3.28,0.40) {pMOS sheets (vertical)};
 
-% Dielectric fork
-\fill[gray!30,opacity=0.5] (1.9,-0.6) rectangle (2.1,1.2);
-\node at (1.3,0.8) {\scriptsize Dielectric fork};
-
+% --- Dielectric fork (左右の壁) ---
+\draw[very thick, gray] (2.60,-0.90) -- (2.60,1.70);
+\draw[very thick, gray] (3.40,-0.90) -- (3.40,1.70);
+\node[labelbg] at (3.00,1.35) {Dielectric fork};
 \end{tikzpicture}}
-\caption{Forksheet-CFET top view: orthogonal n/p nanosheets separated by dielectric fork for routing relief.}
+\caption{Forksheet-CFET top view: orthogonal n/p nanosheets separated by a dielectric fork. ラベルは白背景で可読性を確保。}
 \label{fig:forksheet}
 \end{figure}
 
@@ -195,5 +207,4 @@ received the M.S. degree in Electrical and Electronic Engineering from Shinshu U
 He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
 He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\[2pt]
 \textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, \href{https://github.com/Samizo-AITL}{Samizo-AITL}
-
 \end{document}
