@@ -6,12 +6,13 @@
 \usepackage{newtxtext,newtxmath}
 
 \usepackage{graphicx}
-\usepackage{amsmath} % ← amssymbはnewtxmathと衝突するので外す（推奨）
+\usepackage{amsmath} % amssymbはnewtxmathと衝突しやすいため不使用
 \usepackage{cite}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
+\usepackage{placeins} % ← フロートの越境を防ぐ（\FloatBarrier）
 
 % 図の横幅を安全に抑えるヘルパー
 \newcommand{\fitfig}[1]{\resizebox{0.92\linewidth}{!}{#1}}
@@ -41,6 +42,9 @@ We consolidate structure, electrical impacts, fabrication challenges, and modeli
 CFET, GAA, FinFET, nanosheet FET, scaling, education, tutorial, vertical stacking, PDK.
 \end{IEEEkeywords}
 
+% 図がアブストラクトより前へ飛ばないようにバリアを設置
+\FloatBarrier
+
 \section{Introduction}
 Scaling has progressed from planar CMOS to FinFET and most recently GAA nanosheet FETs.
 Beyond the 2\,nm node, interconnect delay and cell area limit further gains.
@@ -50,7 +54,7 @@ This paper positions CFET as both a roadmap element and an educational vehicle f
 \section{Device Evolution}
 Fig.~\ref{fig:evolution} sketches the historical trajectory.
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \fitfig{%
 \begin{tikzpicture}[node distance=2.4cm,>=Latex]
@@ -70,7 +74,7 @@ Fig.~\ref{fig:evolution} sketches the historical trajectory.
 Two main variants are considered: (i) \emph{Sequential CFET}, where the bottom device (e.g., nFET) is completed first and the top device (e.g., pFET) is formed under a tight thermal budget; and (ii) \emph{Forksheet CFET}, where n/p channels are arranged orthogonally to alleviate routing congestion.
 Both integrate complementary devices in the vertical dimension to realize \emph{cross-section = inverter}.
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \fitfig{%
 \begin{tikzpicture}[scale=1.0]
@@ -98,7 +102,7 @@ Both integrate complementary devices in the vertical dimension to realize \emph{
 \label{fig:cfet_stack}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \fitfig{%
 \begin{tikzpicture}[scale=1.0]
