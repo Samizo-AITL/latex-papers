@@ -1,21 +1,27 @@
-\begin{tikzpicture}[>=latex, node distance=1.5cm, font=\footnotesize\sffamily]
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[
+      node distance=10mm,
+      box/.style={rectangle, draw, minimum width=6cm, minimum height=1cm, align=center},
+      arrow/.style={-{Latex}, thick}
+    ]
 
-% --- LLM Layer ---
-\node[draw, thick, fill=gray!10, minimum width=7cm, minimum height=1cm] (llm) {LLM Layer: High-level reasoning \& anomaly-driven redesign};
+    % Blocks
+    \node[box, fill=blue!15] (pid) {PID Layer: Real-time stabilization};
+    \node[box, fill=green!15, above=of pid] (fsm) {FSM Layer: Supervisory mode switching};
+    \node[box, fill=orange!15, above=of fsm] (llm) {LLM Layer: High-level reasoning \& anomaly-driven redesign};
+    \node[box, fill=gray!15, below=of pid, minimum height=1.2cm] (plant) {Humanoid Robot Dynamics};
 
-% --- FSM Layer ---
-\node[draw, thick, fill=blue!10, minimum width=7cm, minimum height=1cm, below=of llm] (fsm) {FSM Layer: Supervisory mode switching};
+    % Arrows downward
+    \draw[arrow] (llm.south) -- (fsm.north);
+    \draw[arrow] (fsm.south) -- (pid.north);
+    \draw[arrow] (pid.south) -- (plant.north);
 
-% --- PID Layer ---
-\node[draw, thick, fill=green!10, minimum width=7cm, minimum height=1cm, below=of fsm] (pid) {PID Layer: Real-time stabilization};
+    % Feedback (avoid overlapping)
+    \draw[arrow] (plant.west)++(-1.2,0) coordinate (aux1)
+                 |- (pid.west);
 
-% --- Plant (Humanoid System) ---
-\node[draw, thick, fill=orange!15, minimum width=7cm, minimum height=1cm, below=of pid] (plant) {Humanoid Robot Dynamics};
-
-% --- Arrows ---
-\draw[->, thick] (llm.south) -- (fsm.north);
-\draw[->, thick] (fsm.south) -- (pid.north);
-\draw[->, thick] (pid.south) -- (plant.north);
-\draw[->, thick] (plant.north east)++(-0.5,0) -- ++(0,3.7) node[midway,right]{Feedback} -- (llm.east);
-
-\end{tikzpicture}
+  \end{tikzpicture}
+  \caption{AITL three-layer control hierarchy. PID ensures stability, FSM orchestrates mode transitions, and LLM supervises anomalies and reconfiguration.}
+  \label{fig:aitl_layers}
+\end{figure}
