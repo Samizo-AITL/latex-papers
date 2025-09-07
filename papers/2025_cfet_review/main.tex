@@ -4,14 +4,14 @@
 % ==== Fonts & core packages ====
 \usepackage{newtxtext,newtxmath} % IEEE推奨Times系
 \usepackage{graphicx}
-\usepackage{amsmath}             % amssymb は newtxmath と衝突しやすいので未使用
+\usepackage{amsmath} % amssymb は newtxmath と衝突しやすいので未使用
 \usepackage{cite}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,patterns}
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
 
-% 図の横幅を安全に抑えるヘルパー（2段組の横幅を超えにくい）
+% 図の横幅を安全に抑えるヘルパー
 \newcommand{\fitfig}[1]{\resizebox{0.92\linewidth}{!}{#1}}
 
 \title{Educational Perspectives on Complementary FETs (CFET):\\
@@ -50,7 +50,7 @@ This paper positions CFET as both a roadmap element and an educational vehicle f
 \section{Device Evolution: From SCE Relief to Cross-Sectional CMOS}
 \subsection{Planar CMOS and SCE Motivation}
 As gate lengths entered the deep sub-100\,nm regime, planar MOSFETs suffered
-from short-channel effects (SCE): threshold-voltage roll-off, drain-induced barrier lowering, off-state leakage, and degraded subthreshold slope.
+from short-channel effects (SCE): threshold-voltage roll-off, drain-induced barrier lowering, off-state leakage, and degraded subthreshold slope \cite{irds_2023}.
 Electrostatic control by a single top gate could no longer effectively pinch off the channel.
 
 \subsection{FinFET: Three-Sided Gate Control}
@@ -60,7 +60,7 @@ However, the tall/narrow fin introduced process and variability trade-offs and l
 
 \subsection{GAA Nanosheet: Four-Sided Control}
 Gate-All-Around (GAA) nanosheet FETs extend control to \emph{four} sides by surrounding suspended sheets (or wires) with the gate.
-This architecture further suppresses SCE and variability and allows continued gate-length scaling.
+This architecture further suppresses SCE and variability and allows continued gate-length scaling \cite{bsimcmg_sispad2017}.
 Yet, at advanced nodes the delay/energy bottleneck increasingly shifts from device electrostatics to \emph{wiring}: local interconnect resistance/capacitance (RC) and the lateral footprint of standard cells.
 
 \subsection{CFET: Stacking Complementary Devices}
@@ -68,9 +68,9 @@ CFET addresses wiring and density limits by placing nFET and pFET in the \emph{s
 Educational takeaways are:
 (i) effective cell density can approach $\sim 2\times$ by sharing diffusion/gate footprint across polarities; and
 (ii) the critical n-to-p connection in inverters and logic stacks shortens, reducing local RC and stage delay.
-In short, CFET reframes CMOS as a \emph{cross-sectional inverter} rather than a lateral pair.
+In short, CFET reframes CMOS as a \emph{cross-sectional inverter} rather than a lateral pair \cite{imec_cfet_iedm2020}.
 
-\begin{figure}[!t]
+\begin{figure}[htbp]
 \centering
 \fitfig{%
 \begin{tikzpicture}[node distance=2.4cm,>=Latex]
@@ -93,7 +93,7 @@ Two representative integration styles are considered.
 \paragraph*{(i) Sequential CFET}
 nFET is fabricated first, followed by pFET under a constrained thermal budget. Selective epitaxy/etch and dielectric isolation are crucial, as is vertical contact to the inverter output.
 
-\begin{figure}[!t]
+\begin{figure}[htbp]
 \centering
 \fitfig{%
 \begin{tikzpicture}[scale=1.0]
@@ -117,9 +117,9 @@ nFET is fabricated first, followed by pFET under a constrained thermal budget. S
 \fill[black!30] (2.9,0.6) rectangle (3.1,2.1);
 \node[anchor=west] at (3.15,1.35) {\scriptsize Vertical via (Output)};
 
-% Contacts (text only; 版面外に出ない配置)
-\node[anchor=east] at (-0.25,0.75) {\scriptsize GND};
-\node[anchor=east] at (-0.25,1.95) {\scriptsize VDD};
+% Contacts
+\node[anchor=east] at (-0.3,0.75) {\scriptsize GND};
+\node[anchor=east] at (-0.3,1.95) {\scriptsize VDD};
 \end{tikzpicture}}
 \caption{Sequential CFET cross-section with stacked nFET/pFET and vertical output via.}
 \label{fig:cfet_stack}
@@ -128,25 +128,24 @@ nFET is fabricated first, followed by pFET under a constrained thermal budget. S
 \paragraph*{(ii) Forksheet CFET}
 n/p channels are placed orthogonally with a dielectric ``fork'' spacer to ease routing congestion and preserve electrostatics.
 
-\begin{figure}[!t]
+\begin{figure}[htbp]
 \centering
 \fitfig{%
 \begin{tikzpicture}[scale=1.0]
-% nMOS region (horizontal)
+% nMOS region
 \fill[blue!20] (0,0) rectangle (4,0.6);
-\node at (2,-0.20) {\scriptsize nMOS sheets (horizontal)};
+\node[anchor=north] at (2,0) {\scriptsize nMOS sheets (horizontal)};
 
-% pMOS region (vertical column)
+% pMOS region
 \fill[red!20] (1.7,-0.6) rectangle (2.3,1.2);
+\node[anchor=west] at (2.4,0.3) {\scriptsize pMOS sheets (vertical)};
 
-% Dielectric fork (narrow spacer centered)
-\fill[gray!35] (1.95,-0.6) rectangle (2.05,1.2);
+% Dielectric fork
+\fill[gray!30,opacity=0.5] (1.9,-0.6) rectangle (2.1,1.2);
+\node[anchor=south] at (1.0,1.0) {\scriptsize Dielectric fork};
 
-% Clear, non-overlapping labels
-\node[anchor=west] at (2.35,0.30) {\scriptsize pMOS sheets (vertical)};
-\node[anchor=east] at (1.80,0.85) {\scriptsize Dielectric fork};
 \end{tikzpicture}}
-\caption{Forksheet-CFET top view: orthogonal n/p nanosheets separated by a dielectric fork for routing relief.}
+\caption{Forksheet-CFET top view: orthogonal n/p nanosheets separated by dielectric fork for routing relief.}
 \label{fig:forksheet}
 \end{figure}
 
@@ -155,49 +154,50 @@ n/p channels are placed orthogonally with a dielectric ``fork'' spacer to ease r
 Key educational points include:
 \begin{itemize}
   \item \textbf{Area efficiency:} Near $\sim 2\times$ density for inverter cells; benefits extend to NAND/NOR by co-locating pull-up and pull-down networks.
-  \item \textbf{Delay/energy:} Vertical n-to-p via shortens RC path; FO1 delay can improve even if device $I\!-\!V$ matches GAA.
+  \item \textbf{Delay/energy:} Vertical n-to-p via shortens RC path; FO1 delay improves even if device $I\!-\!V$ matches GAA.
   \item \textbf{Electrostatics:} Each tier can retain GAA-level control; inter-tier coupling introduces parasitics (capacitance, via resistance).
-  \item \textbf{Variability/noise:} Thermal coupling and VDD/GND partitioning introduce asymmetries requiring placement and power-routing co-optimization (e.g., AOI/OAI stacks).
+  \item \textbf{Variability/noise:} Thermal coupling and VDD/GND partitioning introduce asymmetries requiring placement and routing co-optimization.
 \end{itemize}
 
 % =========================
 \section{Manufacturing Challenges}
 Realizing CFET integration introduces unprecedented fabrication hurdles.
-Independent n/p work-functions and junctions across stacked tiers demand highly selective epitaxy and etching steps at low thermal budgets ($<500^{\circ}$C) to preserve the completed tier.
-Alignment tolerance for vertical vias is sub-5\,nm.
-Dielectric isolation must suppress dopant/defect diffusion while maintaining mechanical integrity across multiple layers.
-Recent demonstrations by IMEC indicate sequential CFET feasibility, while scaling reliability and yield remain open challenges~\cite{imec_cfet_iedm2020}.
+Independent n/p work-functions and junctions across stacked tiers demand highly selective epitaxy and etching steps, often at low thermal budgets ($<500^{\circ}$C) to preserve the completed tier.
+Alignment tolerance for vertical vias is sub-5\,nm, requiring EUV lithography overlay beyond current production standards.
+Dielectric isolation must simultaneously suppress dopant diffusion and maintain mechanical integrity across multiple layers.
+Recent demonstrations by IMEC highlight sequential CFET feasibility, but scaling reliability and yield remain open challenges \cite{imec_cfet_iedm2020}.
 
 % =========================
 \section{Modeling and EDA Limitations}
-Existing compact models such as BSIM-CMG capture GAA behavior but do not cover CFET-specific vertical coupling, thermal interactions, or stacked-via parasitics.
-Prototype Verilog-A implementations exist without consensus and calibration.
-No open CFET-ready PDKs or standard-cell libraries are available, preventing standardized design flows.
-These gaps limit immediate design enablement yet provide a fertile educational sandbox~\cite{bsimcmg_sispad2017}.
+Existing compact models such as BSIM-CMG \cite{bsimcmg_sispad2017} can capture GAA device behavior, but extensions to CFET remain absent.
+Key missing ingredients include inter-tier electrostatics, vertical thermal coupling, and parasitic capacitances from stacked vias.
+Prototype Verilog-A implementations exist but lack consensus and calibration.
+Furthermore, no open-source CFET-ready PDKs or cell libraries are available, preventing standardized EDA flows.
+This gap not only limits immediate design enablement but also provides a fertile educational sandbox for research-oriented coursework.
 
 % =========================
 \section{Educational Value}
-From a pedagogical perspective, CFET provides a unique opportunity to bridge device physics, fabrication, layout, and CAD.
-Graduate courses can integrate CFET Verilog-A projects, sensitivity studies to inter-tier parasitics, and DTCO case studies aligned with public roadmaps such as IRDS~\cite{irds_2023}.
+From a pedagogical perspective, CFET offers a unique opportunity to link device physics with layout and CAD.
+By positioning CFET as an ``unresolved technology,'' educators can design curricula that expose students to multidisciplinary challenges in process integration, modeling, and design co-optimization.
+Graduate courses can integrate CFET Verilog-A models as design projects, while roadmap discussions (e.g., IRDS \cite{irds_2023}) can serve as context for technology forecasting.
+This integration bridges device-level abstraction and system-level design, anchoring CFET as a cornerstone in advanced semiconductor education.
 
 % =========================
 \section{Conclusion and Outlook}
 CFET reframes CMOS as a stacked, cross-sectional inverter that simultaneously improves density and wiring delay.
-Looking forward, forksheet layouts, 3D sequential stacks, thermal-aware power partitioning, and System-on-Stack integration are promising directions.
-Embedding CFET in curricula helps prepare engineers for unresolved challenges at the frontier of scaling.
+Looking forward, forksheet CFET layouts, 3D sequential stacks, thermal-aware power partitioning, co-optimized BEOL integration, and AI-driven design-space exploration are promising directions.
+Embedding CFET into curricula not only prepares engineers for the 2030s but also cultivates critical thinking about unresolved challenges at the frontier of scaling.
 
 \section*{Acknowledgment}
 The author thanks the Project Design Hub community for discussions.
 
-% ===== Bibliography =====
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
-% ===== Biography (optional for conference) =====
 \section*{Author Biography}
 \noindent\textbf{Shinichi Samizo}
 received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
-He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
+He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
 He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\[2pt]
 \textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 
