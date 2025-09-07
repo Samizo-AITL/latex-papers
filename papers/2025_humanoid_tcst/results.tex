@@ -5,9 +5,14 @@ gait stability, energy efficiency, memory subsystem performance, and comparison
 with existing humanoid platforms.
 
 \subsection{Posture Recovery}
-Disturbance rejection tests indicate that the proposed FSM+PID+LLM controller
-restores upright posture within 200 ms,
-compared to over 500 ms with PID-only control.
+Disturbance rejection tests were conducted on a flat surface under controlled lateral pushes 
+applied at the torso level during continuous walking with a gait cycle of 0.8~s. 
+In the SystemDK co-simulation, sensor quantization noise, encoder jitter, thermal drift, 
+and mechanical stress effects were modeled using vendor-specified parameters 
+for AMS (0.18~µm) and LDMOS (0.35~µm) technologies. 
+Results indicate that the proposed FSM+PID+LLM controller
+restores upright posture within 200~ms,
+compared to over 500~ms with PID-only control.
 This demonstrates a more than twofold improvement in recovery speed.
 
 \subsection{Gait Stability}
@@ -23,8 +28,8 @@ In field scenarios, self-harvesting contributed up to 20\% of the total power bu
 significantly extending operational duration without external charging.
 
 \subsection{Memory Subsystem}
-Checkpoint-and-resume functionality using FRAM/EEPROM
-enabled system recovery within 10 ms without full reinitialization.
+Checkpoint-and-resume functionality using FRAM/EEPROM-based storage
+enabled system recovery within 10~ms without full reinitialization.
 Endurance tests validated $10^{12}$ write cycles,
 satisfying durability requirements for continuous PoC operation.
 
