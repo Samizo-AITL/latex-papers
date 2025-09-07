@@ -1,40 +1,42 @@
 \section{System Architecture}
+
 \subsection{Cross-Node Chipset}
-The humanoid system-on-chipset integrates heterogeneous technologies:
+The humanoid control system is realized as a heterogeneous cross-node chipset integrating:
 \begin{itemize}
   \item \textbf{Brain SoC (22 nm)}: executes LLM inference, FSM management, and LQR/LQG control;
-  \item \textbf{Sensor Hub (0.18 µm AMS)}: processes CMOS cameras, IMU, encoders, force/pressure sensors, and microphones;
-  \item \textbf{Power Drive (0.35 µm LDMOS + external GaN/MOSFET)}: enables high-torque actuation with current and temperature monitoring;
-  \item \textbf{Energy Harvesting Subsystem}: piezoelectric, photovoltaic, and regenerative sources for extended autonomy;
-  \item \textbf{Memory Subsystem}: LPDDR for active tasks and FRAM/EEPROM for checkpoints and logs.
+  \item \textbf{Sensor Hub (0.18 µm AMS)}: acquires multimodal data from cameras, IMU, encoders, force/pressure sensors, and microphones;
+  \item \textbf{Power Drive (0.35 µm LDMOS with external GaN/MOSFET)}: delivers high-torque actuation with current and temperature monitoring;
+  \item \textbf{Energy Harvesting Subsystem}: incorporates piezoelectric, photovoltaic, and regenerative sources for extended autonomy;
+  \item \textbf{Memory Subsystem}: employs LPDDR for active tasks and FRAM/EEPROM for checkpointing and persistent logging.
 \end{itemize}
 
 \subsection{Hierarchical Control Layers}
+The architecture follows a layered control hierarchy:
 \begin{itemize}
-  \item \textbf{LLM Layer}: goal generation, anomaly interpretation, conversational interface;
-  \item \textbf{FSM Layer}: mode switching between standing, walking, turning, recovery, and energy-saving behaviors;
-  \item \textbf{Physical Control Layer}: PID and state-space control for joint-level stability and full-body coordination;
-  \item \textbf{Drive Layer}: high-torque actuation and safety monitoring;
-  \item \textbf{Energy Layer}: harvesting, storage, and power management.
+  \item \textbf{LLM Layer}: high-level goal reasoning, anomaly interpretation, and natural language interface;
+  \item \textbf{FSM Layer}: supervisory mode switching (standing, walking, turning, recovery, energy-saving);
+  \item \textbf{Physical Control Layer}: PID and state-space controllers for joint-level stabilization and full-body coordination;
+  \item \textbf{Drive Layer}: high-torque actuation with integrated safety monitoring;
+  \item \textbf{Energy Layer}: harvesting, storage, and adaptive power management.
 \end{itemize}
 
-\subsection{SystemDK Integrated Design Flow}
-As illustrated in Fig.~\ref{fig:systemdk_flow}, the proposed PoC was modeled 
-and verified using SystemDK. The design flow captures cross-node interactions 
-between digital SoC, AMS front-end, power drive, and energy harvesting subsystems, 
-enabling multi-physics co-simulation of noise, heat, and stress effects.
+\subsection{SystemDK Co-Design Flow}
+As shown in Fig.~\ref{fig:systemdk_flow}, the proof-of-concept was modeled and verified
+using SystemDK. The co-design flow captures cross-node interactions among the digital SoC,
+AMS sensor hub, power drive, and energy harvesting modules, enabling multi-physics
+co-simulation including noise, thermal, and mechanical stress effects.
 
 \begin{figure}[t]
   \centering
-  % 1) PDF があれば優先
+  % 1) Use PDF if available
   \IfFileExists{figures/systemdk_flow.pdf}{%
     \includegraphics[width=\linewidth,keepaspectratio]{figures/systemdk_flow.pdf}%
   }{%
-  % 2) PDF が無ければ .tikz を列幅に縮小して入力
+  % 2) Fallback to TikZ
   \IfFileExists{figures/systemdk_flow.tikz}{%
     \resizebox{\linewidth}{!}{\input{figures/systemdk_flow.tikz}}%
   }{%
-  % 3) どちらも無ければプレースホルダ
+  % 3) Placeholder if missing
     \fbox{\begin{minipage}[c][0.44\linewidth][c]{0.94\linewidth}\centering
       \vspace{0.3em}\textit{Placeholder: \path{figures/systemdk_flow.(pdf|tikz)} not found}\\
       (Commit the figure to replace this box.)\vspace{0.3em}
@@ -46,9 +48,9 @@ enabling multi-physics co-simulation of noise, heat, and stress effects.
 \end{figure}
 
 \subsection{Key Performance Indicators}
-The PoC architecture was evaluated against several key performance indicators (KPIs),
-summarized in Table~\ref{tab:kpi_summary}. These metrics guided the design trade-offs
-in posture recovery, gait stability, energy efficiency, and memory subsystem performance.
+The architecture was evaluated against several key performance indicators (KPIs),
+summarized in Table~\ref{tab:kpi_summary}. These metrics guided design trade-offs
+in stabilization, efficiency, and reliability.
 
 \begin{table}[t]
 \caption{Summary of Key Performance Indicators (KPIs)}
@@ -60,12 +62,12 @@ in posture recovery, gait stability, energy efficiency, and memory subsystem per
 \toprule
 \textbf{Metric} & \textbf{Result} \\
 \midrule
-Posture recovery time & $\leq 200$ ms (vs.\ $>500$ ms with PID only) \\
-Gait stability (CoM RMS) & $\approx 30\%$ improvement over PID only \\
-Energy efficiency & $+15\%$ with hybrid control + harvesting \\
-Self-harvest contribution & Up to $20\%$ of power budget \\
-Checkpoint resume time & $\leq 10$ ms (FRAM/EEPROM) \\
-Memory endurance & $10^{12}$ write cycles \\
+Posture recovery time & $\leq 200$ ms (baseline PID-only: $>500$ ms) \\
+Gait stability (CoM RMS) & $\approx 30\%$ improvement over PID-only \\
+Energy efficiency & $+15\%$ with hybrid control and harvesting \\
+Self-harvested power & Up to $20\%$ of system power budget \\
+Checkpoint resume time & $\leq 10$ ms (FRAM/EEPROM-based) \\
+Memory endurance & $10^{12}$ write cycles (FRAM) \\
 \bottomrule
 \end{tabular}
 \end{table}
