@@ -1,35 +1,28 @@
-\begin{figure}[t]
-  \centering
-  \begin{tikzpicture}[
-      node distance=7mm,
-      >=Latex,
-      box/.style={
-        rectangle, rounded corners,
-        draw=black!70, fill=#1!15,
-        minimum width=0.92\columnwidth, minimum height=10mm,
-        align=center, inner xsep=3mm, inner ysep=2mm,
-      },
-      box/.default=blue,
-      arrow/.style={-Latex, semithick, shorten >=1pt, shorten <=1pt}
-    ]
+\begin{tikzpicture}[
+  node distance=7mm,
+  >=Latex,
+  box/.style={
+    rectangle, rounded corners,
+    draw=black!70, fill=#1!15,
+    minimum width=0.92\columnwidth, minimum height=10mm,
+    align=center, inner xsep=3mm, inner ysep=2mm,
+  },
+  box/.default=blue,
+  arrow/.style={-Latex, semithick, shorten >=1pt, shorten <=1pt}
+]
+  % Blocks
+  \node[box=blue]   (pid)   {\footnotesize PID Layer: Real-time stabilization};
+  \node[box=green,  above=of pid] (fsm) {\footnotesize FSM Layer: Supervisory mode switching};
+  \node[box=orange, above=of fsm] (llm) {\footnotesize LLM Layer: High-level reasoning \& anomaly-driven redesign};
+  \node[box=gray,   below=of pid, minimum height=12mm] (plant) {\footnotesize Humanoid Robot Dynamics};
 
-    % Blocks
-    \node[box=blue]   (pid)   {\footnotesize PID Layer: Real-time stabilization};
-    \node[box=green,  above=of pid] (fsm) {\footnotesize FSM Layer: Supervisory mode switching};
-    \node[box=orange, above=of fsm] (llm) {\footnotesize LLM Layer: High-level reasoning \& anomaly-driven redesign};
-    \node[box=gray,   below=of pid, minimum height=12mm] (plant) {\footnotesize Humanoid Robot Dynamics};
+  % Top-down flow
+  \draw[arrow] (llm.south) -- (fsm.north);
+  \draw[arrow] (fsm.south) -- (pid.north);
+  \draw[arrow] (pid.south) -- (plant.north);
 
-    % Top-down flow
-    \draw[arrow] (llm.south) -- (fsm.north);
-    \draw[arrow] (fsm.south) -- (pid.north);
-    \draw[arrow] (pid.south) -- (plant.north);
-
-    % Feedback: left bypass to avoid overlapping any block
-    \path (plant.west)+(-6mm,0) coordinate (auxL);
-    \draw[arrow] (plant.west) -- (auxL) |- (pid.west)
-         node[pos=0.15, above left, xshift=-1mm, yshift=1mm, font=\scriptsize]{Feedback};
-
-  \end{tikzpicture}
-  \caption{AITL three-layer control hierarchy. PID ensures stability, FSM orchestrates mode transitions, and LLM supervises anomalies and reconfiguration.}
-  \label{fig:aitl_layers}
-\end{figure}
+  % Feedback (左に逃がして重なり回避)
+  \path (plant.west)+(-6mm,0) coordinate (auxL);
+  \draw[arrow] (plant.west) -- (auxL) |- (pid.west)
+       node[pos=0.15, above left, xshift=-1mm, yshift=1mm, font=\scriptsize]{Feedback};
+\end{tikzpicture}
