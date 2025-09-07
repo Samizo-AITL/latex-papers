@@ -1,25 +1,33 @@
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}[
-      node distance=10mm,
-      box/.style={rectangle, draw, minimum width=6cm, minimum height=1cm, align=center},
-      arrow/.style={-{Latex}, thick}
+      node distance=7mm,
+      >=Latex,
+      box/.style={
+        rectangle, rounded corners,
+        draw=black!70, fill=#1!15,
+        minimum width=0.92\columnwidth, minimum height=10mm,
+        align=center, inner xsep=3mm, inner ysep=2mm,
+      },
+      box/.default=blue,
+      arrow/.style={-Latex, semithick, shorten >=1pt, shorten <=1pt}
     ]
 
     % Blocks
-    \node[box, fill=blue!15] (pid) {PID Layer: Real-time stabilization};
-    \node[box, fill=green!15, above=of pid] (fsm) {FSM Layer: Supervisory mode switching};
-    \node[box, fill=orange!15, above=of fsm] (llm) {LLM Layer: High-level reasoning \& anomaly-driven redesign};
-    \node[box, fill=gray!15, below=of pid, minimum height=1.2cm] (plant) {Humanoid Robot Dynamics};
+    \node[box=blue]   (pid)   {\footnotesize PID Layer: Real-time stabilization};
+    \node[box=green,  above=of pid] (fsm) {\footnotesize FSM Layer: Supervisory mode switching};
+    \node[box=orange, above=of fsm] (llm) {\footnotesize LLM Layer: High-level reasoning \& anomaly-driven redesign};
+    \node[box=gray,   below=of pid, minimum height=12mm] (plant) {\footnotesize Humanoid Robot Dynamics};
 
-    % Arrows downward
+    % Top-down flow
     \draw[arrow] (llm.south) -- (fsm.north);
     \draw[arrow] (fsm.south) -- (pid.north);
     \draw[arrow] (pid.south) -- (plant.north);
 
-    % Feedback (avoid overlapping)
-    \draw[arrow] (plant.west)++(-1.2,0) coordinate (aux1)
-                 |- (pid.west);
+    % Feedback: left bypass to avoid overlapping any block
+    \path (plant.west)+(-6mm,0) coordinate (auxL);
+    \draw[arrow] (plant.west) -- (auxL) |- (pid.west)
+         node[pos=0.15, above left, xshift=-1mm, yshift=1mm, font=\scriptsize]{Feedback};
 
   \end{tikzpicture}
   \caption{AITL three-layer control hierarchy. PID ensures stability, FSM orchestrates mode transitions, and LLM supervises anomalies and reconfiguration.}
