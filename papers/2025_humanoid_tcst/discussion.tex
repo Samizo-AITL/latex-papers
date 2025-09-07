@@ -1,28 +1,33 @@
 \section{Discussion}
-Table~\ref{tab:humanoid_comparison} positions the proposed Samizo-AITL PoC
-relative to two leading humanoid platforms: Boston Dynamics Atlas and Tesla Optimus.
-Atlas demonstrates world-class dynamic acrobatics, while Optimus targets scalable
-industrial deployment. In contrast, the proposed system prioritizes autonomy,
-fault tolerance, and sustainability.
+Table~\ref{tab:humanoid_comparison} compares the proposed Samizo-AITL PoC
+with two representative humanoid platforms: Boston Dynamics \textit{Atlas} 
+and Tesla \textit{Optimus}.
+Atlas excels at dynamic acrobatics, while Optimus emphasizes scalable
+industrial deployment. In contrast, the proposed PoC targets autonomy,
+fault tolerance, and sustainable operation.
 
-The integration of LLMs into the hierarchical control loop is a distinctive feature.
-Rather than replacing classical controllers, the LLM layer provides high-level
-goal generation, anomaly interpretation, and conversational interfaces.
-This complements the FSM and PID/state-space layers, ensuring stability and safety
-while expanding the robot’s cognitive capabilities.
-Such a design aligns with emerging trends in control systems where hybrid
-architectures bridge model-based methods and data-driven intelligence.
+A first distinctive feature is the integration of LLMs into the hierarchical
+control loop. Instead of replacing classical controllers, the LLM layer
+generates goals, interprets anomalies, and provides conversational interfaces.
+This complements the FSM for supervisory logic and PID/state-space methods
+for stabilization, creating a hybrid architecture that combines the safety
+of model-based control with the adaptability of data-driven intelligence.
 
-Another differentiating factor is energy autonomy.
-Through piezoelectric, photovoltaic, and regenerative harvesting,
-the PoC sustains up to 20\% of its power budget without external charging.
-This contrasts with Atlas and Optimus, which rely entirely on battery packs.
-Combined with fast checkpoint-and-resume capability, the system supports resilient
-operation in remote or resource-constrained environments.
+A second differentiator is energy autonomy. The PoC integrates
+piezoelectric, photovoltaic, and regenerative harvesting,
+allowing up to 20\% of the power budget to be sustained
+without external charging. This contrasts with Atlas and Optimus,
+which rely exclusively on batteries. Together with FRAM/EEPROM-based
+checkpoint-and-resume, the system ensures resilient operation
+in remote or resource-limited environments.
 
-Finally, educational reproducibility strengthens the broader impact of this work.
-All specifications, models, and PoC results are openly published in bilingual
-(Japanese–English) format on GitHub Pages, enabling replication and serving
-as an instructional resource for control engineering education.
-This open-science approach differentiates the PoC from closed industrial projects
-and reinforces its role as both a research prototype and an educational benchmark.
+A third contribution is educational reproducibility.
+All specifications, models, and proof-of-concept results are openly published
+in bilingual (Japanese–English) format on GitHub Pages.
+This open-science approach enables replication, lowers barriers for students,
+and positions the PoC as both a research prototype and an instructional
+benchmark in control engineering education.
+
+Overall, the proposed system demonstrates that hybrid architectures
+can extend humanoid robotics beyond performance and manufacturability,
+toward autonomy, resilience, and sustainable deployment.
