@@ -1,23 +1,17 @@
-name: Build CFET Review Paper
-
-on:
-  push:
-    paths:
-      - 'papers/2025_cfet_review/**'
-      - '.github/workflows/latex_cfet_review.yml'
+name: build_latex
+on: [push, pull_request]
 
 jobs:
   build_latex:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Compile LaTeX document
-        uses: xu-cheng/latex-action@v2
+      - uses: actions/checkout@v4   # ← v4 に更新
+      - uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
           working_directory: papers/2025_cfet_review
       - name: Upload PDF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4   # ← v4 に更新
         with:
-          name: cfet_review_pdf
+          name: paper
           path: papers/2025_cfet_review/main.pdf
