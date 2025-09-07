@@ -1,145 +1,155 @@
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 
-\title{Educational Perspectives on Complementary FETs (CFET): \\
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{cite}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+
+\title{Educational Perspectives on Complementary FETs (CFET):\\
 Evolution Beyond GAA and Open Challenges}
 
 \author{
 \IEEEauthorblockN{Shinichi Samizo}
-\IEEEauthorblockA{
-Project Design Hub, Samizo-AITL \\
-Email: samizo-aitl@example.com
-}
+\IEEEauthorblockA{Project Design Hub, Samizo-AITL\\
+Email: samizo-aitl@example.com}
 }
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This tutorial paper provides an educational overview of the emerging
-\textit{Complementary FET (CFET)} technology, which vertically stacks
-nFET and pFET devices to overcome scaling limits beyond Gate-All-Around
-(GAA) nanosheets. CFET represents a paradigm shift where the
-cross-section itself forms a CMOS inverter, enabling significant area
-reduction and delay minimization. While promising, CFET fabrication and
-design remain in research stages, and industrial process design kits
-(PDKs) or compact models are not yet available. This paper reviews the
-evolution from planar MOSFETs to FinFETs, GAA, and CFET, summarizes
-structural concepts, electrical impacts, and fabrication challenges, and
-emphasizes the educational value of integrating CFET into semiconductor
-curricula as an example of an open, unresolved technology challenge.
+This tutorial paper provides an educational overview of emerging
+\emph{Complementary FET (CFET)} technology, which vertically stacks
+nFET and pFET devices beyond Gate-All-Around (GAA) nanosheets.
+CFET reframes the CMOS inverter as a \emph{cross-sectional} integration,
+promising density and delay improvements. We consolidate structure,
+electrical impacts, fabrication challenges, and modeling limitations,
+and articulate the pedagogical value of CFET as an open, unresolved
+technology for semiconductor curricula.
 \end{abstract}
 
 \begin{IEEEkeywords}
-CFET, GAA, FinFET, nanosheet FET, scaling, semiconductor education,
-tutorial, vertical stacking, PDK.
+CFET, GAA, FinFET, nanosheet FET, scaling, education, tutorial, vertical stacking, PDK.
 \end{IEEEkeywords}
 
 \section{Introduction}
-Scaling of CMOS devices has followed Moore's law for decades, enabled
-by planar CMOS, FinFET, and most recently Gate-All-Around (GAA)
-nanosheet FETs. However, beyond the 2nm node, interconnect delay and
-cell area become critical bottlenecks. CFET (Complementary FET) has
-emerged as a candidate solution, stacking nFET and pFET vertically so
-that the cross-section itself forms a CMOS inverter. This paper
-positions CFET as both a technological roadmap element and an
-educational opportunity to expose students and engineers to open
-research challenges.
+Scaling has progressed from planar CMOS to FinFET and most recently
+GAA nanosheet FETs. Beyond the 2\,nm node, interconnect delay and cell
+area limit further gains. CFET (Complementary FET) stacks nFET and pFET
+so that the cross-section itself forms a CMOS inverter, potentially
+doubling effective cell density while shortening critical connections.
+This paper positions CFET as both a roadmap element and an educational
+vehicle for device--design co-optimization.
 
 \section{Device Evolution}
-The historical trajectory of CMOS devices is illustrated in
-Fig.~\ref{fig:evolution}.
-\begin{itemize}
-\item Planar CMOS: dominant until 90nm node
-\item FinFET: 3D fins, improved control (22nm and beyond)
-\item GAA Nanosheet: full gate wrap, scalable to 2nm
-\item CFET: vertical n/p stacking, projected beyond 2030
-\end{itemize}
+Fig.~\ref{fig:evolution} sketches the historical trajectory.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=2.4cm,>=Latex]
+\node[draw, minimum width=1.6cm, minimum height=0.8cm] (planar) {Planar};
+\node[draw, right=of planar] (finfet) {FinFET};
+\node[draw, right=of finfet] (gaa) {GAA};
+\node[draw, right=of gaa] (cfet) {CFET};
+\draw[->] (planar) -- (finfet);
+\draw[->] (finfet) -- (gaa);
+\draw[->] (gaa) -- (cfet);
+\end{tikzpicture}
+\caption{Device evolution: Planar $\rightarrow$ FinFET $\rightarrow$ GAA $\rightarrow$ CFET.}
+\label{fig:evolution}
+\end{figure}
 
 \section{CFET Structural Concepts}
-Two main structural variants exist:
-\begin{enumerate}
-\item Sequential CFET: bottom nFET + top pFET, formed sequentially
-with strict thermal budget management.
-\item Forksheet CFET: orthogonal layout of n/p nanosheets, reducing
-routing congestion.
-\end{enumerate}
-Both approaches share the concept of integrating n/p devices in the
-vertical dimension to double effective cell density.
+Two main variants are considered: (i) \emph{Sequential CFET}, where
+the bottom device (e.g., nFET) is completed first and the top device
+(e.g., pFET) is formed under a tight thermal budget; and (ii)
+\emph{Forksheet CFET}, where n/p channels are arranged orthogonally to
+alleviate routing congestion. Both integrate complementary devices in
+the vertical dimension to realize \emph{cross-section = inverter}.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[scale=1.0]
+% Substrate
+\draw (0,0) rectangle (3,0.3);
+\node at (1.5,0.15) {\small Substrate};
+
+% nFET
+\draw (0.2,0.6) rectangle (2.8,0.9);
+\node at (1.5,0.75) {\scriptsize nFET (Lower nanosheets)};
+
+% Isolation oxide
+\draw[dashed] (0.2,1.2) rectangle (2.8,1.5);
+\node at (1.5,1.35) {\scriptsize Isolation Oxide};
+
+% pFET
+\draw (0.2,1.8) rectangle (2.8,2.1);
+\node at (1.5,1.95) {\scriptsize pFET (Upper nanosheets)};
+
+% Vias
+\draw (2.9,0.6) rectangle (3.1,2.1);
+\node[anchor=west] at (3.12,1.4) {\scriptsize Vertical via (Output)};
+\draw (-0.3,0.6) rectangle (-0.1,0.9);
+\node[anchor=east] at (-0.32,0.75) {\scriptsize GND};
+\draw (-0.3,1.8) rectangle (-0.1,2.1);
+\node[anchor=east] at (-0.32,1.95) {\scriptsize VDD};
+\end{tikzpicture}
+\caption{Sequential CFET cross-section: pFET stacked over nFET with vertical output via.}
+\label{fig:cfet_stack}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[scale=1.0]
+% Horizontal nMOS region
+\draw (0,0) rectangle (4,0.5);
+\node at (2,0.25) {\scriptsize nMOS sheets (horizontal)};
+% Vertical pMOS region
+\draw (1.8,-0.5) rectangle (2.2,1.0);
+\node[rotate=90] at (2.0,0.25) {\scriptsize pMOS sheets (vertical)};
+\node at (2,-1.0) {\small Top view (Forksheet-CFET concept)};
+\end{tikzpicture}
+\caption{Forksheet-CFET top view concept: orthogonal n/p nanosheets for routing relief.}
+\label{fig:forksheet}
+\end{figure}
 
 \section{Electrical Features and Design Impacts}
-Key educational aspects include:
-\begin{itemize}
-\item \textbf{Area Efficiency:} Standard cell area nearly halved.
-\item \textbf{Delay Reduction:} n/p direct vertical connection reduces
-RC delay.
-\item \textbf{Symmetry:} Improved inverter balance due to stacked
-structure.
-\item \textbf{New Parasitics:} Vertical vias introduce variability and
-resistance challenges.
-\end{itemize}
+Salient educational points include: (i) area efficiency approaching
+$\sim\!2\times$ at the standard-cell level; (ii) reduced RC delay due
+to vertical n/p connections; (iii) improved symmetry; and (iv)
+emergent parasitics from vertical vias and inter-layer coupling.
 
 \section{Manufacturing Challenges}
-CFET fabrication requires:
-\begin{itemize}
-\item Independent doping control for stacked n/p channels.
-\item Thermal budget separation: top devices must be fabricated under
-low temperature.
-\item Precise selective epitaxy and etching.
-\item BEOL integration with vertical vias for VDD/GND and output.
-\end{itemize}
+Key integration hurdles: independent n/p doping, thermal budget
+separation, selective epitaxy/etching across multiple layers, and
+BEOL co-design of VDD/GND and output vias with tight alignment.
 
 \section{Modeling and EDA Limitations}
-Currently, no compact models fully support CFET:
-\begin{itemize}
-\item BSIM-CMG: up to GAA only.
-\item BSIM-BULK: planar MOSFETs only.
-\item Verilog-A level research models exist, but no standard.
-\item No CFET-ready PDK libraries available for EDA tools.
-\end{itemize}
-From an educational perspective, this limitation is valuable: students
-learn that modeling and design environments often lag behind device
-innovation.
+Compact models remain limited: BSIM-CMG covers GAA but not CFET;
+Verilog-A prototypes exist without consensus; no CFET-ready PDKs or
+standard-cell libraries are publicly available. This gap itself is
+pedagogically valuable.
 
 \section{Educational Value}
-CFET offers unique teaching opportunities:
-\begin{itemize}
-\item Illustrates the direct link between device scaling and circuit
-design.
-\item Provides students with exposure to \textit{unsolved} challenges.
-\item Enables cross-disciplinary learning (device, process, CAD).
-\item Positions learners to think about semiconductor technology in the
-2030s.
-\end{itemize}
+CFET links device physics with circuit/layout co-optimization and
+exposes students to unresolved, multidisciplinary challenges---a
+useful anchor for advanced semiconductor courses and capstone projects.
 
 \section{Conclusion and Outlook}
-CFET is a concept where the CMOS inverter is realized in the
-cross-section. While still in research, it provides an invaluable
-educational case study for illustrating unresolved semiconductor
-challenges. Forksheet and 3D-CFET extensions, as well as integration
-with system-on-stack (SoS) architectures, will likely define the next
-decade of transistor innovation. Incorporating CFET into educational
-curricula can help bridge device physics, circuit design, and system
-integration for future engineers.
+CFET reframes CMOS as a stacked, cross-sectional inverter. While
+pre-industrial, it motivates research in forksheet layouts, 3D-CFET,
+and System-on-Stack integration. Embedding CFET in curricula helps
+prepare engineers for the 2030s.
 
 \section*{Acknowledgment}
-The author thanks the Project Design Hub community for discussions and
-support in developing educational resources on advanced semiconductor
-nodes.
+The author thanks the Project Design Hub community for discussions.
 
-\begin{thebibliography}{1}
-\bibitem{imec2022}
-IMEC, ``Complementary FETs for sub-1nm nodes,'' in \textit{IEDM Tech.
-Digest}, 2022.
-
-\bibitem{intel2023}
-Intel Labs, ``Research progress on CFET integration,'' in \textit{VLSI
-Symposium}, 2023.
-
-\bibitem{ibm2021}
-IBM Research, ``Gate-all-around nanosheets and beyond,'' \textit{Nature
-Electronics}, vol. 4, pp. 456--463, 2021.
-
-\end{thebibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
 
 \end{document}
