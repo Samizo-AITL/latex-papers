@@ -49,7 +49,8 @@ This paper positions CFET as both a roadmap element and an educational vehicle f
 % =========================
 \section{Device Evolution: From SCE Relief to Cross-Sectional CMOS}
 \subsection{Planar CMOS and SCE Motivation}
-As gate lengths entered the deep sub-100\,nm regime, planar MOSFETs suffered from short-channel effects (SCE): threshold-voltage roll-off, drain-induced barrier lowering, off-state leakage, and degraded subthreshold slope.
+As gate lengths entered the deep sub-100\,nm regime, planar MOSFETs suffered
+from short-channel effects (SCE): threshold-voltage roll-off, drain-induced barrier lowering, off-state leakage, and degraded subthreshold slope.
 Electrostatic control by a single top gate could no longer effectively pinch off the channel.
 
 \subsection{FinFET: Three-Sided Gate Control}
@@ -142,8 +143,9 @@ n/p channels are placed orthogonally with a dielectric ``fork'' spacer to ease r
 % Dielectric fork
 \fill[gray!30,opacity=0.5] (1.9,-0.6) rectangle (2.1,1.2);
 \node at (1.2,0.8) {\scriptsize Dielectric fork};
+
 \end{tikzpicture}}
-\caption{Forksheet-CFET top view: orthogonal n/p nanosheets separated by a dielectric fork for routing relief.}
+\caption{Forksheet-CFET top view: orthogonal n/p nanosheets separated by dielectric fork for routing relief.}
 \label{fig:forksheet}
 \end{figure}
 
@@ -159,27 +161,33 @@ Key educational points include:
 
 % =========================
 \section{Manufacturing Challenges}
-Stacked tiers demand selective epitaxy/etch, low thermal budgets, and precise alignment.
-Dielectric isolation must block dopant diffusion while supporting vias.
-BEOL co-design ensures VDD/GND distribution and output via landing without track penalties.
+Realizing CFET integration introduces unprecedented fabrication hurdles.
+Independent n/p work-functions and junctions across stacked tiers demand highly selective epitaxy and etching steps, often at low thermal budgets ($<500^{\circ}$C) to preserve the completed tier.
+Alignment tolerance for vertical vias is sub-5\,nm, requiring EUV lithography overlay beyond current production standards.
+Dielectric isolation must simultaneously suppress dopant diffusion and maintain mechanical integrity across multiple layers.
+Recent demonstrations by IMEC \cite{imec_cfet_iedm2020} highlight sequential CFET feasibility, but scaling reliability and yield remain open challenges.
 
 % =========================
 \section{Modeling and EDA Limitations}
-BSIM-CMG captures GAA but not CFET-specific vertical coupling or thermal effects.
-Verilog-A prototypes exist without consensus.
-No open CFET PDKs or standard-cell libraries are available, leaving CFET as an open sandbox for education.\nocite{*}
+Existing compact models such as BSIM-CMG \cite{bsimcmg_sispad2017} can capture GAA device behavior, but extensions to CFET remain absent.
+Key missing ingredients include inter-tier electrostatics, vertical thermal coupling, and parasitic capacitances from stacked vias.
+While prototype Verilog-A implementations exist, they lack consensus and calibration.
+Furthermore, no open-source CFET-ready PDKs or cell libraries are available, preventing standardized EDA flows.
+This situation, while limiting, provides an educational sandbox for students to explore device-to-circuit modeling.
 
 % =========================
 \section{Educational Value}
-CFET connects device physics with circuit/layout co-design.
-It exposes students to unresolved challenges in fabrication, modeling, and CAD---a rich basis for advanced device courses and projects.
+From a pedagogical perspective, CFET offers a unique opportunity to link device physics with layout and CAD.
+By positioning CFET as an ``unresolved technology,'' educators can design curricula that expose students to multidisciplinary challenges in process integration, modeling, and design co-optimization.
+Graduate courses can integrate CFET Verilog-A models as design projects, while roadmap discussions (e.g., IRDS \cite{irds_2023}) can serve as context for technology forecasting.
+This integration bridges device-level abstraction and system-level design, anchoring CFET as a cornerstone in advanced semiconductor education.
 
 % =========================
 \section{Conclusion and Outlook}
-CFET reframes CMOS as a stacked, cross-sectional inverter.
-Beyond electrostatics, it targets wiring delay and density.
-Future vectors include forksheet layouts, 3D-CFET, thermal-aware power partitioning, and System-on-Stack integration.
-Embedding CFET in curricula prepares engineers for the 2030s.
+CFET reframes CMOS as a stacked, cross-sectional inverter that simultaneously improves density and wiring delay.
+Looking forward, forksheet CFET layouts, 3D sequential stacks, and System-on-Stack architectures are promising research vectors.
+Thermal-aware power partitioning and AI-driven design-space exploration will be critical to achieve manufacturable CFET integration.
+Embedding CFET into curricula prepares future engineers to confront open problems at the frontier of scaling.
 
 \section*{Acknowledgment}
 The author thanks the Project Design Hub community for discussions.
