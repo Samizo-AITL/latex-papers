@@ -66,4 +66,65 @@ He is currently an independent semiconductor researcher focusing on process/devi
 \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 \end{IEEEbiographynophoto}
 
+% ===== Appendices =====
+\appendices
+
+\section{Control \& Simulation Parameters}
+\label{appendix:control}
+
+Table~\ref{tab:control_params} summarizes the key control parameters 
+and SystemDK simulation settings used in the experiments.
+
+\begin{table}[h]
+\centering
+\caption{Control and Simulation Parameters (SystemDK)}
+\label{tab:control_params}
+\renewcommand{\arraystretch}{1.2}
+\footnotesize
+\begin{tabular}{p{4.2cm} p{3.6cm}}
+\toprule
+\textbf{Parameter} & \textbf{Value / Model} \\
+\midrule
+Gait cycle & 0.8~s \\
+Disturbance type & Lateral push at torso \\
+Sensor quantization noise & 12-bit IMU, 14-bit encoder \\
+Encoder jitter & $\pm$1~LSB \\
+Thermal drift model & 0.5\%/10$^\circ$C (AMS 0.18 µm) \\
+Mechanical stress model & Vendor FEM-based coefficients \\
+PID gains (hip joint) & $K_p=120$, $K_i=5$, $K_d=18$ \\
+FSM modes & Standing, walking, turning, recovery, energy-save \\
+LLM triggers & Anomaly classification, FSM rule reconfiguration \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Device \& Hardware Specifications}
+\label{appendix:device}
+
+Table~\ref{tab:device_specs} lists the semiconductor and hardware-level parameters 
+for the cross-node chipset.
+
+\begin{table}[h]
+\centering
+\caption{Device and Hardware Specifications}
+\label{tab:device_specs}
+\renewcommand{\arraystretch}{1.2}
+\footnotesize
+\begin{tabular}{p{4.2cm} p{3.6cm}}
+\toprule
+\textbf{Component} & \textbf{Specification} \\
+\midrule
+Brain SoC & 22~nm CMOS, quad-core, LPDDR4 interface \\
+Sensor Hub & 0.18~µm AMS, 12b ADC, 14b encoder IF \\
+Power Drive & 0.35~µm LDMOS + external GaN \\
+Torque per joint & 60~Nm peak (GaN stage) \\
+Energy harvesting & PV (20\%), piezo (10 mW), regen braking \\
+Memory (volatile) & LPDDR4, 2~GB \\
+Memory (non-volatile) & FRAM $10^{12}$ cycles, EEPROM \\
+Checkpoint resume & $\leq$10~ms \\
+Package integration & System-in-Package (SiP) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \end{document}
