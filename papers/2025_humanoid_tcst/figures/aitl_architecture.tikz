@@ -1,0 +1,21 @@
+\begin{tikzpicture}[>=latex, node distance=1.5cm, font=\footnotesize\sffamily]
+
+% --- LLM Layer ---
+\node[draw, thick, fill=gray!10, minimum width=7cm, minimum height=1cm] (llm) {LLM Layer: High-level reasoning \& anomaly-driven redesign};
+
+% --- FSM Layer ---
+\node[draw, thick, fill=blue!10, minimum width=7cm, minimum height=1cm, below=of llm] (fsm) {FSM Layer: Supervisory mode switching};
+
+% --- PID Layer ---
+\node[draw, thick, fill=green!10, minimum width=7cm, minimum height=1cm, below=of fsm] (pid) {PID Layer: Real-time stabilization};
+
+% --- Plant (Humanoid System) ---
+\node[draw, thick, fill=orange!15, minimum width=7cm, minimum height=1cm, below=of pid] (plant) {Humanoid Robot Dynamics};
+
+% --- Arrows ---
+\draw[->, thick] (llm.south) -- (fsm.north);
+\draw[->, thick] (fsm.south) -- (pid.north);
+\draw[->, thick] (pid.south) -- (plant.north);
+\draw[->, thick] (plant.north east)++(-0.5,0) -- ++(0,3.7) node[midway,right]{Feedback} -- (llm.east);
+
+\end{tikzpicture}
