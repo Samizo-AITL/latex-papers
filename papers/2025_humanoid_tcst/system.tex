@@ -1,7 +1,7 @@
 \section{System Architecture}
 
 \subsection{Cross-Node Chipset}
-The humanoid control system is realized as a heterogeneous cross-node chipset integrating:
+The humanoid control system is implemented as a heterogeneous cross-node chipset integrating:
 \begin{itemize}
   \item \textbf{Brain SoC (22 nm)}: executes LLM inference, FSM management, and LQR/LQG control;
   \item \textbf{Sensor Hub (0.18 µm AMS)}: acquires multimodal data from cameras, IMU, encoders, force/pressure sensors, and microphones;
@@ -10,18 +10,20 @@ The humanoid control system is realized as a heterogeneous cross-node chipset in
   \item \textbf{Memory Subsystem}: employs LPDDR for active tasks and FRAM/EEPROM for checkpointing and persistent logging.
 \end{itemize}
 
-\subsection{Hierarchical Control Layers}
-The architecture follows a layered control hierarchy:
+\subsection{AITL Three-Layer Control Architecture}
+The control hierarchy follows the \textbf{AITL (AI-Integrated Three-Layer)} paradigm, 
+where classical feedback and supervisory logic are augmented with AI-based reasoning:
 \begin{itemize}
-  \item \textbf{LLM Layer}: high-level goal reasoning, anomaly interpretation, and natural language interface;
-  \item \textbf{FSM Layer}: supervisory mode switching (standing, walking, turning, recovery, energy-saving);
-  \item \textbf{Physical Control Layer}: PID and state-space controllers for joint-level stabilization and full-body coordination;
-  \item \textbf{Drive Layer}: high-torque actuation with integrated safety monitoring;
-  \item \textbf{Energy Layer}: harvesting, storage, and adaptive power management.
+  \item \textbf{Inner Loop (PID Control)}: guarantees joint-level stability, disturbance rejection, and real-time responsiveness;
+  \item \textbf{Middle Loop (FSM Control)}: orchestrates sequential behaviors such as standing, walking, turning, recovery, and energy-saving modes by supervising PID controllers;
+  \item \textbf{Outer Loop (LLM Supervision)}: interprets anomalies, generates high-level goals, and, when necessary, reconfigures the control system itself by retuning PID gains or revising FSM transition rules.
 \end{itemize}
+This layered design ensures stability through PID, structured sequencing via FSM, 
+and adaptability through LLM-driven supervision, establishing a hybrid paradigm that 
+bridges model-based control and AI-driven reasoning.
 
 \subsection{SystemDK Co-Design Flow}
-As shown in Fig.~\ref{fig:systemdk_flow}, the proof-of-concept was modeled and verified
+As illustrated in Fig.~\ref{fig:systemdk_flow}, the proof-of-concept was modeled and verified
 using SystemDK. The co-design flow captures cross-node interactions among the digital SoC,
 AMS sensor hub, power drive, and energy harvesting modules, enabling multi-physics
 co-simulation including noise, thermal, and mechanical stress effects.
@@ -50,7 +52,7 @@ co-simulation including noise, thermal, and mechanical stress effects.
 \subsection{Key Performance Indicators}
 The architecture was evaluated against several key performance indicators (KPIs),
 summarized in Table~\ref{tab:kpi_summary}. These metrics guided design trade-offs
-in stabilization, efficiency, and reliability.
+in stabilization, efficiency, and resilience.
 
 \begin{table}[t]
 \caption{Summary of Key Performance Indicators (KPIs)}
