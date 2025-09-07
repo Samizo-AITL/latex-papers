@@ -22,6 +22,15 @@ This layered design ensures stability through PID, structured sequencing via FSM
 and adaptability through LLM-driven supervision, establishing a hybrid paradigm that 
 bridges model-based control and AI-driven reasoning.
 
+\begin{figure}[t]
+  \centering
+  \resizebox{0.9\linewidth}{!}{\input{figures/aitl_architecture.tikz}}
+  \caption{AITL three-layer control hierarchy:
+  PID ensures stability, FSM orchestrates mode transitions,
+  and LLM supervises anomalies and reconfiguration.}
+  \label{fig:aitl_architecture}
+\end{figure}
+
 \subsection{SystemDK Co-Design Flow}
 As illustrated in Fig.~\ref{fig:systemdk_flow}, the proof-of-concept was modeled and verified
 using SystemDK. The co-design flow captures cross-node interactions among the digital SoC,
