@@ -2,28 +2,16 @@
 \IEEEoverridecommandlockouts
 
 % ==== Fonts & core packages ====
-\usepackage{newtxtext,newtxmath}
+\usepackage{newtxtext,newtxmath} % IEEE推奨Times系
 \usepackage{graphicx}
-\usepackage{amsmath}
+\usepackage{amsmath} % amssymb は newtxmath と衝突しやすいので未使用
 \usepackage{cite}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning}
+\usetikzlibrary{arrows.meta,positioning,patterns}
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
 
-% TikZ styles for figures
-\tikzset{
-  metal/.style={draw, fill=gray!18},
-  gate/.style={draw, rounded corners=1pt, fill=blue!7},
-  chan/.style={draw, thick},
-  oxide/.style={draw, dashed, fill=orange!8},
-  via/.style={draw, fill=black!25},
-  contact/.style={draw, fill=gray!35},
-  lab/.style={font=\scriptsize},
-  tinycap/.style={font=\scriptsize, align=center}
-}
-
-% Safe resize helper
+% 図の横幅を安全に抑えるヘルパー
 \newcommand{\fitfig}[1]{\resizebox{0.92\linewidth}{!}{#1}}
 
 \title{Educational Perspectives on Complementary FETs (CFET):\\
@@ -67,21 +55,20 @@ Electrostatic control by a single top gate could no longer effectively pinch off
 
 \subsection{FinFET: Three-Sided Gate Control}
 FinFETs improved electrostatics by wrapping the gate around \emph{three} sides of a vertical fin.
-The stronger gate-to-channel coupling sharpened subthreshold slope and reduced variability.
-Drive current density per footprint increased by using multiple fins per device.
-However, the tall/narrow fin introduced process complexity and left one side of the channel uncontrolled.
+The stronger gate-to-channel coupling sharpened subthreshold slope, reduced variability, and enabled higher drive per footprint by using multiple fins per device.
+However, the tall/narrow fin introduced process and variability trade-offs and left one side of the channel uncontrolled.
 
 \subsection{GAA Nanosheet: Four-Sided Control}
-Gate-All-Around (GAA) nanosheet FETs extend control to \emph{four} sides by surrounding suspended sheets with the gate.
-This architecture strongly suppresses SCE and variability and allows gate-length scaling to continue.
-Yet, the design bottleneck shifted from device electrostatics to \emph{interconnect}: RC delay and lateral footprint of standard cells.
+Gate-All-Around (GAA) nanosheet FETs extend control to \emph{four} sides by surrounding suspended sheets (or wires) with the gate.
+This architecture further suppresses SCE and variability and allows continued gate-length scaling.
+Yet, at advanced nodes the delay/energy bottleneck increasingly shifts from device electrostatics to \emph{wiring}: local interconnect resistance/capacitance (RC) and the lateral footprint of standard cells.
 
 \subsection{CFET: Stacking Complementary Devices}
 CFET addresses wiring and density limits by placing nFET and pFET in the \emph{same lateral footprint} and connecting them vertically.
-Two educational takeaways are:
-(i) cell density can approach $\sim 2\times$ by sharing diffusion/gate footprint across polarities; and
-(ii) the critical n-to-p inverter connection shortens to a vertical via, reducing RC delay.
-CFET reframes CMOS as a \emph{cross-sectional inverter}.
+Educational takeaways are:
+(i) effective cell density can approach $\sim 2\times$ by sharing diffusion/gate footprint across polarities; and
+(ii) the critical n-to-p connection in inverters and logic stacks shortens, reducing local RC and stage delay.
+In short, CFET reframes CMOS as a \emph{cross-sectional inverter} rather than a lateral pair.
 
 \begin{figure}[htbp]
 \centering
@@ -95,55 +82,46 @@ CFET reframes CMOS as a \emph{cross-sectional inverter}.
 \draw[->] (finfet) -- (gaa);
 \draw[->] (gaa) -- (cfet);
 \end{tikzpicture}}
-\caption{Device evolution by electrostatics and wiring: Planar $\rightarrow$ FinFET (3-side) $\rightarrow$ GAA (4-side) $\rightarrow$ CFET (vertical stack).}
+\caption{Device evolution: Planar $\rightarrow$ FinFET (3-side) $\rightarrow$ GAA (4-side) $\rightarrow$ CFET (vertical stack).}
 \label{fig:evolution}
 \end{figure}
 
 % =========================
 \section{CFET Structural Concepts}
+Two representative integration styles are considered.
+
 \paragraph*{(i) Sequential CFET}
-nFET is fabricated first, followed by pFET under a constrained thermal budget.
-Selective epitaxy/etch and tier isolation are crucial, as is vertical contact to the inverter output.
+nFET is fabricated first, followed by pFET under a constrained thermal budget. Selective epitaxy/etch and dielectric isolation are crucial, as is vertical contact to the inverter output.
 
 \begin{figure}[htbp]
 \centering
 \fitfig{%
-\begin{tikzpicture}[x=1cm,y=1cm]
+\begin{tikzpicture}[scale=1.0]
 % Substrate
-\draw[metal] (0,0) rectangle (5,0.25);
-\node[tinycap] at (2.5,0.12) {Substrate};
+\fill[gray!20] (0,0) rectangle (3,0.3);
+\node at (1.5,0.15) {\small Substrate};
 
-% nFET (lower)
-\draw[contact] (0.4,0.55) rectangle (1.0,0.95);
-\draw[contact] (4.0,0.55) rectangle (4.6,0.95);
-\foreach \y in {0.62,0.74,0.86}{
-  \draw[chan] (1.0,\y) -- (4.0,\y);
-}
-\draw[gate] (0.95,0.5) rectangle (4.05,1.0);
-\node[lab] at (2.5,1.07) {nFET (lower nanosheets)};
+% nFET
+\fill[blue!20] (0.2,0.6) rectangle (2.8,0.9);
+\node at (1.5,0.75) {\scriptsize nFET (lower nanosheets)};
 
 % Isolation oxide
-\draw[oxide] (0.35,1.20) rectangle (4.65,1.40);
-\node[lab] at (2.5,1.50) {Isolation oxide};
+\fill[gray!40,pattern=north east lines] (0.2,1.2) rectangle (2.8,1.5);
+\node at (1.5,1.35) {\scriptsize Isolation oxide};
 
-% pFET (upper)
-\draw[contact] (0.4,1.70) rectangle (1.0,2.10);
-\draw[contact] (4.0,1.70) rectangle (4.6,2.10);
-\foreach \y in {1.77,1.89,2.01}{
-  \draw[chan] (1.0,\y) -- (4.0,\y);
-}
-\draw[gate] (0.95,1.65) rectangle (4.05,2.15);
-\node[lab] at (2.5,2.25) {pFET (upper nanosheets)};
+% pFET
+\fill[red!20] (0.2,1.8) rectangle (2.8,2.1);
+\node at (1.5,1.95) {\scriptsize pFET (upper nanosheets)};
 
-% Vias
-\draw[via] (2.45,0.55) rectangle (2.55,2.10);
-\node[lab, anchor=west] at (2.6,1.3) {Vertical via (output)};
+% Vertical via
+\fill[black!30] (2.9,0.6) rectangle (3.1,2.1);
+\node[anchor=west] at (3.15,1.35) {\scriptsize Vertical via (Output)};
 
-% Power rails
-\node[lab, anchor=east] at (0.3,0.75) {GND};
-\node[lab, anchor=east] at (0.3,1.90) {VDD};
+% Contacts
+\node[anchor=east] at (-0.3,0.75) {\scriptsize GND};
+\node[anchor=east] at (-0.3,1.95) {\scriptsize VDD};
 \end{tikzpicture}}
-\caption{Sequential CFET cross-section: pFET stacked over nFET with vertical output via and tier isolation.}
+\caption{Sequential CFET cross-section with stacked nFET/pFET and vertical output via.}
 \label{fig:cfet_stack}
 \end{figure}
 
@@ -153,21 +131,19 @@ n/p channels are placed orthogonally with a dielectric ``fork'' spacer to ease r
 \begin{figure}[htbp]
 \centering
 \fitfig{%
-\begin{tikzpicture}[x=1cm,y=1cm]
-% nMOS sheets (horizontal)
-\foreach \y in {0.2,-0.15,-0.5}{
-  \draw[metal] (-2.2,\y) rectangle (2.2,\y+0.3);
-}
-\node[lab,anchor=south] at (0,0.55) {nMOS nanosheets (horizontal)};
+\begin{tikzpicture}[scale=1.0]
+% nMOS region
+\fill[blue!20] (0,0) rectangle (4,0.6);
+\node at (2,-0.2) {\scriptsize nMOS sheets (horizontal)};
 
-% fork spacer
-\draw[oxide] (-0.10,-0.80) rectangle (0.10,0.85);
-\node[lab,anchor=west] at (0.15,0.70) {Dielectric fork};
+% pMOS region
+\fill[red!20] (1.7,-0.6) rectangle (2.3,1.2);
+\node[anchor=west] at (2.4,0.3) {\scriptsize pMOS sheets (vertical)};
 
-% pMOS sheets (vertical)
-\draw[metal] (-0.35,-0.80) rectangle (-0.05,0.85);
-\draw[metal] (0.05,-0.80) rectangle (0.35,0.85);
-\node[lab,anchor=east] at (-0.40,0.00) {pMOS nanosheets (vertical)};
+% Dielectric fork
+\fill[gray!30,opacity=0.5] (1.9,-0.6) rectangle (2.1,1.2);
+\node at (1.3,0.8) {\scriptsize Dielectric fork};
+
 \end{tikzpicture}}
 \caption{Forksheet-CFET top view: orthogonal n/p nanosheets separated by dielectric fork for routing relief.}
 \label{fig:forksheet}
@@ -175,11 +151,11 @@ n/p channels are placed orthogonally with a dielectric ``fork'' spacer to ease r
 
 % =========================
 \section{Electrical and Layout Impacts}
-Key educational points:
+Key educational points include:
 \begin{itemize}
   \item \textbf{Area efficiency:} Near $\sim 2\times$ density for inverter cells; benefits extend to NAND/NOR by co-locating pull-up and pull-down networks.
-  \item \textbf{Delay/energy:} Vertical n-to-p via shortens RC path; FO1 delay improves even if single-device $I$-$V$ matches GAA.
-  \item \textbf{Electrostatics:} Tiers retain GAA control; inter-layer coupling adds parasitics.
+  \item \textbf{Delay/energy:} Vertical n-to-p via shortens RC path; FO1 delay improves even if device $I\!-\!V$ matches GAA.
+  \item \textbf{Electrostatics:} Each tier can retain GAA-level control; inter-tier coupling introduces parasitics (capacitance, via resistance).
   \item \textbf{Variability/noise:} Thermal coupling and VDD/GND partitioning introduce asymmetries requiring placement and routing co-optimization.
 \end{itemize}
 
@@ -198,13 +174,13 @@ No open CFET PDKs or standard-cell libraries are available, leaving CFET as an o
 % =========================
 \section{Educational Value}
 CFET connects device physics with circuit/layout co-design.
-It exposes students to unresolved challenges in fabrication, modeling, and CAD---a rich basis for advanced device courses, design projects, and capstone activities.
+It exposes students to unresolved challenges in fabrication, modeling, and CAD—a rich basis for advanced device courses and projects.
 
 % =========================
 \section{Conclusion and Outlook}
 CFET reframes CMOS as a stacked, cross-sectional inverter.
 Beyond electrostatics, it targets wiring delay and density.
-Future vectors include forksheet layouts, 3D-CFET, thermal-aware power partitioning, and System-on-Stack.
+Future vectors include forksheet layouts, 3D-CFET, thermal-aware power partitioning, and System-on-Stack integration.
 Embedding CFET in curricula prepares engineers for the 2030s.
 
 \section*{Acknowledgment}
@@ -216,7 +192,7 @@ The author thanks the Project Design Hub community for discussions.
 \section*{Author Biography}
 \noindent\textbf{Shinichi Samizo}
 received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
-He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
+He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
 He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\[2pt]
 \textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 
