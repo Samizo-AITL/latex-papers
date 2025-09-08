@@ -1,0 +1,39 @@
+name: LaTeX (SystemDK with AITL)
+
+on:
+  push:
+    paths:
+      - "papers/systemdk_aitl2025/**"
+      - ".github/workflows/latex_systemdk_aitl.yml"
+  pull_request:
+    paths:
+      - "papers/systemdk_aitl2025/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build LaTeX (BibTeX)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: systemdk_aitl2025.tex
+          working_directory: ./papers/systemdk_aitl2025
+          latexmk_use_biber: false
+          latexmk_shell_escape: false
+          extra_system_packages: "ghostscript"
+          cache: true
+
+      - name: Upload PDF and Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemdk-aitl-artifacts
+          path: |
+            papers/systemdk_aitl2025/*.pdf
+            papers/systemdk_aitl2025/*.log
+            papers/systemdk_aitl2025/*.aux
+            papers/systemdk_aitl2025/*.bbl
+            papers/systemdk_aitl2025/*.blg
+          if-no-files-found: error
