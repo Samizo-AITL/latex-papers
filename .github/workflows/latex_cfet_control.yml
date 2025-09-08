@@ -1,0 +1,45 @@
+name: LaTeX (CFET Control)
+
+on:
+  push:
+    paths:
+      - "papers/2025_cfet_control/**"
+      - ".github/workflows/latex_cfet_control.yml"
+  pull_request:
+    paths:
+      - "papers/2025_cfet_control/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # もっとも安定な LaTeX ビルド Action
+      - name: Build LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          # ルート .tex
+          root_file: main.tex
+          # 作業ディレクトリ（原稿フォルダ）
+          working_directory: papers/2025_cfet_control
+          # 参考文献に biber を使う場合は true（bibtex の場合は false）
+          latexmk_use_biber: true
+          latexmk_shell_escape: false
+          # エラー時にログを詳細化
+          extra_system_packages: "ghostscript"
+          # キャッシュ有効化（TeX Live packages）
+          cache: true
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cfet-control-pdf
+          path: |
+            papers/2025_cfet_control/*.pdf
+            papers/2025_cfet_control/*.log
+            papers/2025_cfet_control/*.bbl
+            papers/2025_cfet_control/*.blg
+          if-no-files-found: error
