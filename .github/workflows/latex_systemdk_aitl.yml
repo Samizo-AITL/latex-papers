@@ -13,6 +13,13 @@ on:
       - ".github/workflows/latex_systemdk_aitl.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: latex-systemdk-aitl-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,18 +35,26 @@ jobs:
 
       - name: Verify sources
         run: |
+          echo "== Working directory =="
+          pwd
+          echo "== Listing =="
           ls -lah .
           test -f systemdk_aitl2025.tex
+          # BibTeXを使うので .bib の存在も確認
+          test -f systemdk_aitl2025_refs.bib
 
       - name: Build LaTeX (BibTeX)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: systemdk_aitl2025.tex
           working_directory: ./papers/systemdk_aitl2025
+          # BibTeX 想定
           latexmk_use_biber: false
           latexmk_shell_escape: false
-          args: -pdf -interaction=nonstopmode -file-line-error   # ← PDF 出力を強制
-          extra_system_packages: ghostscript
+          # 直PDF生成を強制
+          args: -pdf -interaction=nonstopmode -file-line-error
+          # 画像やPDF最終化で便利（任意）
+          extra_system_packages: "ghostscript poppler-utils"
           cache: true
 
       - name: Print LaTeX errors (on failure)
@@ -49,7 +64,15 @@ jobs:
           (grep -nE "^(!|LaTeX (Error|Warning))" systemdk_aitl2025.log || true)
           echo "==== Last 200 lines of .log ===="
           (tail -n 200 systemdk_aitl2025.log || true)
+          echo "==== Artifacts in dir ===="
           ls -lah .
+
+      - name: List outputs (on success)
+        if: success()
+        run: |
+          echo "==== Generated files ===="
+          ls -lah .
+          file systemdk_aitl2025.pdf || true
 
       - name: Upload PDF and logs (always)
         if: always()
@@ -58,7 +81,7 @@ jobs:
           name: systemdk-aitl-artifacts
           path: |
             papers/systemdk_aitl2025/*.pdf
-            papers/systemdk_aitl2025/*.dvi           # ← 任意（デバッグ用）
+            papers/systemdk_aitl2025/*.dvi
             papers/systemdk_aitl2025/*.log
             papers/systemdk_aitl2025/*.aux
             papers/systemdk_aitl2025/*.bbl
@@ -67,3 +90,4 @@ jobs:
             papers/systemdk_aitl2025/*.fdb_latexmk
             papers/systemdk_aitl2025/*.synctex.gz
           if-no-files-found: error
+          retention-days: 14
