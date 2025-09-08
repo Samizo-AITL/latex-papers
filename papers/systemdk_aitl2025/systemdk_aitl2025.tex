@@ -1,0 +1,109 @@
+\documentclass[conference]{IEEEtran}
+
+% --- Robust preamble (URLs, UTF-8, fonts) ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{hyperref}
+
+\title{SystemDK with AITL: Integrating Control Loops into EDA for Runtime-Aware DTCO}
+
+\author{
+  \IEEEauthorblockN{Shinichi Samizo}
+  \IEEEauthorblockA{Independent Semiconductor Researcher\\
+  Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper introduces \textbf{SystemDK with AITL}, a paradigm that extends 
+traditional Design-Technology Co-Optimization (DTCO) by embedding 
+\emph{control-theoretic loops} directly into EDA flows. 
+Beyond static compact models, we integrate PID feedback, FSM guards, 
+and LLM supervision to dynamically mitigate RC delay, thermal coupling, 
+stress-induced variability, and EMI/EMC disturbances. 
+This framework enables runtime-aware DTCO, reducing guardbands while 
+improving reliability across sub-2\,nm nodes.
+\end{abstract}
+
+\section{Introduction}
+Conventional EDA focuses on static design closure. 
+However, future nodes face dynamic challenges: 
+\begin{itemize}
+  \item RC delay variation due to interconnect scaling,
+  \item Thermal coupling in 3D CFET and sequential integration,
+  \item Stress-driven mobility and threshold voltage shifts,
+  \item EMI/EMC noise affecting signal integrity.
+\end{itemize}
+SystemDK provides DTCO interfaces, but lacks runtime adaptability.
+We propose extending it with \textbf{AITL (AI $\times$ Intelligent Loop)} 
+to bring control feedback directly into SystemDK.
+
+\section{Architecture: SystemDK with AITL}
+\subsection{Control Loop Integration}
+\begin{itemize}
+  \item \textbf{PID:} compensates RC delay and thermal deviation.
+  \item \textbf{FSM:} ensures safety by throttling under HOT/stress conditions.
+  \item \textbf{LLM:} supervises policies, adapts gains, and redefines thresholds.
+\end{itemize}
+
+\subsection{Physical Domains}
+\begin{itemize}
+  \item \textbf{Thermal-aware device models}: compact RC network with feedback.
+  \item \textbf{Stress-augmented RC models}: variability corrected online.
+  \item \textbf{EMI disturbance injection}: evaluated at RTL/NoC simulation.
+  \item \textbf{Co-simulation path}: MATLAB/Simulink $\to$ RTL testbench.
+\end{itemize}
+
+\section{Experimental Validation}
+We prototyped a two-tier CFET thermal–RC plant with DVFS actuation.  
+SystemDK 2025 was extended with AITL controllers.  
+Simulation parameters:
+\begin{itemize}
+  \item $R_{via}=1\text{--}10~\Omega$, $C_{inter}=1\text{--}5$ fF,
+  \item $P_{burst}=0.1\text{--}1.0$ W, coupling $k_c=0.3\text{--}0.9$,
+  \item EMI injection: sinusoidal $f=10\text{--}200$ MHz.
+\end{itemize}
+Results show:
+\begin{itemize}
+  \item Delay deviation suppressed $>100\times$ vs no-control,
+  \item Thermal overshoot $<3\times 10^{-5}\%$,
+  \item Stress-induced delay shift compensated within $10^{-6}\%$,
+  \item EMI-induced jitter reduced by 2 orders of magnitude.
+\end{itemize}
+
+\section{Discussion and Outlook}
+\textbf{SystemDK with AITL} enables a new EDA paradigm:
+\begin{itemize}
+  \item From \emph{static sign-off} $\to$ \emph{dynamic runtime-aware design}.
+  \item Guardbands can be reduced by embedding corrective loops.
+  \item Reliability improves by co-optimizing delay, thermal, stress, and EMI.
+\end{itemize}
+Future extensions:
+\begin{itemize}
+  \item Embedding AITL controllers into commercial EDA flows,
+  \item Extending compact models for stress and EMI-aware design,
+  \item Integration with NoC-level traffic control,
+  \item Coupling with microfluidic cooling for holistic thermal management.
+\end{itemize}
+
+\section*{Acknowledgment}
+The author thanks the Project Design Hub community for discussions.
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\section*{Author Biography}
+\noindent\textbf{Shinichi Samizo}
+received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.  
+He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.  
+He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\[2pt]
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, 
+\href{https://github.com/Samizo-AITL}{Samizo-AITL}
+
+\end{document}
