@@ -1,60 +1,60 @@
-name: LaTeX (SystemDK with AITL)
+name: LaTeX (EDA on AITL)
 
 on:
   push:
     paths:
-      - "papers/systemdk_aitl2025/**"
-      - ".github/workflows/latex_systemdk_aitl.yml"
+      - "papers/2025_eda_aitl/**"
+      - ".github/workflows/latex_eda_aitl.yml"
   pull_request:
     paths:
-      - "papers/systemdk_aitl2025/**"
+      - "papers/2025_eda_aitl/**"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./papers/systemdk_aitl2025
+        working-directory: ./papers/2025_eda_aitl
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Build LaTeX (BibTeX)
-        id: latex
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: systemdk_aitl2025.tex
-          working_directory: ./papers/systemdk_aitl2025
-          latexmk_use_biber: false
+          root_file: eda_aitl2025.tex            # ← ここを厳密一致
+          working_directory: ./papers/2025_eda_aitl
+          latexmk_use_biber: false               # BibTeX 想定
           latexmk_shell_escape: false
-          # nonstopmode でコンパイル継続し、ログに全情報を残す
           args: -interaction=nonstopmode -file-line-error
           extra_system_packages: "ghostscript"
           cache: true
 
-      # 失敗時に .log のエラー周辺を抜粋表示（CI画面で即チェック）
+      # 失敗時にログからエラー行を抜粋
       - name: Print LaTeX errors (on failure)
         if: failure()
         run: |
-          echo "==== grep LaTeX Error lines ===="
-          grep -nE "^(!|LaTeX (Error|Warning))" systemdk_aitl2025.log || true
-          echo "==== last 200 lines of .log ===="
-          tail -n 200 systemdk_aitl2025.log || true
+          echo "==== Error/Warning lines ===="
+          grep -nE "^(!|LaTeX (Error|Warning))" eda_aitl2025.log || true
+          echo "==== Last 200 lines of .log ===="
+          tail -n 200 eda_aitl2025.log || true
+          echo "==== Working dir listing ===="
+          ls -lah
 
-      # 成否に関係なく、PDF/ログ/補助ファイルを保存
+      # 成否に関係なく成果物を保存
       - name: Upload PDF and logs (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: systemdk-aitl-artifacts
+          name: eda-aitl-artifacts
           path: |
-            papers/systemdk_aitl2025/*.pdf
-            papers/systemdk_aitl2025/*.log
-            papers/systemdk_aitl2025/*.aux
-            papers/systemdk_aitl2025/*.bbl
-            papers/systemdk_aitl2025/*.blg
-            papers/systemdk_aitl2025/*.fls
-            papers/systemdk_aitl2025/*.fdb_latexmk
-            papers/systemdk_aitl2025/*.synctex.gz
-          if-no-files-found: warn
+            papers/2025_eda_aitl/*.pdf
+            papers/2025_eda_aitl/*.log
+            papers/2025_eda_aitl/*.aux
+            papers/2025_eda_aitl/*.bbl
+            papers/2025_eda_aitl/*.blg
+            papers/2025_eda_aitl/*.fls
+            papers/2025_eda_aitl/*.fdb_latexmk
+            papers/2025_eda_aitl/*.synctex.gz
+          if-no-files-found: error                # ← PDFが無い時、失敗で気づける
