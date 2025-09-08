@@ -1,0 +1,38 @@
+name: LaTeX (EDA on AITL)
+
+on:
+  push:
+    paths:
+      - "papers/2025_eda_aitl/**"
+      - ".github/workflows/latex_eda_aitl.yml"
+  pull_request:
+    paths:
+      - "papers/2025_eda_aitl/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build LaTeX (BibTeX)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: eda_aitl2025.tex
+          working_directory: ./papers/2025_eda_aitl
+          latexmk_use_biber: false
+          latexmk_shell_escape: false
+          extra_system_packages: "ghostscript"
+          cache: true
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: eda-aitl-pdf
+          path: |
+            papers/2025_eda_aitl/*.pdf
+            papers/2025_eda_aitl/*.log
+            papers/2025_eda_aitl/*.bbl
+            papers/2025_eda_aitl/*.blg
+          if-no-files-found: error
