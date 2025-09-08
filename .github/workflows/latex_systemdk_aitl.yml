@@ -1,4 +1,4 @@
-name: LaTeX (EDA on AITL)
+name: LaTeX (EDA on AITL) 
 
 on:
   push:
