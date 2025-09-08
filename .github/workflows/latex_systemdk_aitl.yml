@@ -1,13 +1,17 @@
-name: LaTeX (EDA on AITL) 
+name: LaTeX (EDA on AITL)
 
 on:
   push:
+    branches: [ main ]                     # ← 対象ブランチを明示
     paths:
       - "papers/2025_eda_aitl/**"
       - ".github/workflows/latex_eda_aitl.yml"
   pull_request:
+    branches: [ main ]                     # ← PR でも main 向けのみ実行
     paths:
       - "papers/2025_eda_aitl/**"
+      - ".github/workflows/latex_eda_aitl.yml"
+  workflow_dispatch:                        # ← 手動実行を許可
 
 jobs:
   build:
@@ -19,30 +23,37 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0                   # ← まれな差分検出問題を回避
+
+      - name: Verify sources exist
+        run: |
+          ls -lah .
+          test -f eda_aitl2025.tex
+          # refs.bib を使う場合は以下を有効化
+          # test -f refs.bib
 
       - name: Build LaTeX (BibTeX)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: eda_aitl2025.tex            # ← ここを厳密一致
+          root_file: eda_aitl2025.tex
           working_directory: ./papers/2025_eda_aitl
-          latexmk_use_biber: false               # BibTeX 想定
+          latexmk_use_biber: false         # ← BibTeX
           latexmk_shell_escape: false
           args: -interaction=nonstopmode -file-line-error
-          extra_system_packages: "ghostscript"
+          extra_system_packages: ghostscript
           cache: true
 
-      # 失敗時にログからエラー行を抜粋
       - name: Print LaTeX errors (on failure)
         if: failure()
         run: |
           echo "==== Error/Warning lines ===="
-          grep -nE "^(!|LaTeX (Error|Warning))" eda_aitl2025.log || true
+          (grep -nE "^(!|LaTeX (Error|Warning))" eda_aitl2025.log || true)
           echo "==== Last 200 lines of .log ===="
-          tail -n 200 eda_aitl2025.log || true
+          (tail -n 200 eda_aitl2025.log || true)
           echo "==== Working dir listing ===="
-          ls -lah
+          ls -lah .
 
-      # 成否に関係なく成果物を保存
       - name: Upload PDF and logs (always)
         if: always()
         uses: actions/upload-artifact@v4
@@ -57,4 +68,4 @@ jobs:
             papers/2025_eda_aitl/*.fls
             papers/2025_eda_aitl/*.fdb_latexmk
             papers/2025_eda_aitl/*.synctex.gz
-          if-no-files-found: error                # ← PDFが無い時、失敗で気づける
+          if-no-files-found: error          # ← PDF/ログが無いならビルド失敗を検知
