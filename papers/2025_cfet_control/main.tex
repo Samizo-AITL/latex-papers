@@ -7,9 +7,17 @@
 \usepackage{graphicx}
 \usepackage{cite}
 \usepackage{url}      % for \url
-\usepackage{hyperref} % clickable email/links
 
-\title{Cross-Layer Control of CFET Interconnect Delay and Thermal Coupling via PID+FSM+LLM Supervision}
+% hyperref は最後に読み込む
+\usepackage{hyperref}
+\hypersetup{
+  hidelinks,          % リンク装飾を消す（IEEE向け）
+  pdfauthor={Shinichi Samizo},
+  pdftitle={Cross-Layer Control of CFET Interconnect Delay and Thermal Coupling via PID+FSM+LLM Supervision}
+}
+
+\title{Cross-Layer Control of CFET Interconnect Delay\\
+and Thermal Coupling via PID+FSM+LLM Supervision}
 
 \author{
   \IEEEauthorblockN{Shinichi Samizo}
@@ -35,41 +43,39 @@ Complementary FETs (CFETs) stack nFET and pFET channels vertically,
 promising density and wiring delay benefits beyond nanosheet GAA.
 However, vertical vias introduce RC delay, and stacked tiers experience
 thermal coupling. Conventional physical models capture these effects
-but lack robustness under dynamic workloads. Inspired by control systems,
-we propose PID+FSM+LLM control architecture for runtime compensation.
-
-For background on CFET integration challenges and roadmap context,
-see \cite{yakimets2020cfet,irds2023}. Classical control theory references
-that ground this work include \cite{franklin2015feedback,khalil2002nonlinear,anderson2007optimal}.
+but can lack robustness under dynamic workloads. Inspired by control systems,
+we propose a PID+FSM+LLM control architecture for runtime compensation.
+For background on CFET integration challenges and roadmap context, see \cite{yakimets2020cfet,irds2023}.
+Classical control theory references that ground this work include \cite{franklin2015feedback,khalil2002nonlinear,anderson2007optimal}.
 
 \section{Modeling}
-The FO1 delay is expressed as:
+The FO1 delay is expressed as
 \begin{equation}
-T_{FO1} = (R_{wire}+R_{via})(C_{load}+C_{inter})
+T_{\mathrm{FO1}}=(R_{\mathrm{wire}}+R_{\mathrm{via}})(C_{\mathrm{load}}+C_{\mathrm{inter}}). \label{eq:fo1}
 \end{equation}
-Temperature dependence is given by:
+Temperature dependence is modeled by
 \begin{equation}
-R(T) = R_0 \left(1 + \alpha (T-25^\circ C)\right)
+R(T)=R_0\!\left(1+\alpha (T-25^{\circ}\! \mathrm{C})\right). \label{eq:rtemp}
 \end{equation}
 Thermal dynamics follow a first-order RC network:
 \begin{equation}
-C_{th}\frac{dT}{dt} = P\cdot R_{th} - (T - T_{amb})
+C_{\mathrm{th}}\frac{dT}{dt}=P\cdot R_{\mathrm{th}}-(T-T_{\mathrm{amb}}). \label{eq:therm}
 \end{equation}
 A coupling factor $k_c$ propagates top-tier heating into bottom-tier delay shifts.
 
 \section{Control Architecture}
 \begin{itemize}
   \item \textbf{PID}: adjusts DVFS knob $u$ to reduce delay deviation.
-  \item \textbf{FSM}: triggers HOT mode when $T_{top} > 85^\circ C$, enforcing throttle and $u_{max}$ limits.
+  \item \textbf{FSM}: triggers HOT mode when $T_{\text{top}} > 85^\circ$C, enforcing throttle and $u_{\max}$ limits.
   \item \textbf{LLM}: supervises policies; re-tunes $K_p$/$K_i$ and FSM thresholds if overshoot/error exceed tolerance.
 \end{itemize}
 This layered design ensures stability (PID), safety (FSM), and adaptability (LLM).
 
 \section{Results}
-We evaluated parameter sweeps ($R_{via}, C_{inter}, k_{couple}, P_{burst}, \beta$)
+We evaluated parameter sweeps ($R_{\mathrm{via}}, C_{\mathrm{inter}}, k_{\mathrm{couple}}, P_{\mathrm{burst}}, \beta$)
 and automatic PID tuning.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Key Metrics}
 \begin{tabular}{|l|c|c|c|}
@@ -87,24 +93,24 @@ Control effort & N/A & Stable & Optimized \\
 Figures~\ref{fig:heatmap} and \ref{fig:beta} show heatmap results
 and $\beta$ dependence. Figure~\ref{fig:delay} compares hand-tuned and auto-tuned PID+FSM.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\columnwidth]{figs/heatmap.pdf}
-\caption{Heatmap of peak deviation vs $k_{couple}$ and $P_{burst}$.}
+\caption{Heatmap of peak deviation vs.\ $k_{\mathrm{couple}}$ and $P_{\mathrm{burst}}$.}
 \label{fig:heatmap}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\columnwidth]{figs/beta_curve.pdf}
 \caption{Effect of control authority $\beta$.}
 \label{fig:beta}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\columnwidth]{figs/delay_compare.pdf}
-\caption{Delay comparison: hand-tuned vs auto-tuned PID+FSM.}
+\caption{Delay comparison: hand-tuned vs.\ auto-tuned PID+FSM.}
 \label{fig:delay}
 \end{figure}
 
@@ -125,14 +131,14 @@ The author thanks the Project Design Hub community for discussions.
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
+\vspace{1ex}
 \section*{Author Biography}
-\noindent\textbf{Shinichi Samizo}
-received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
+\vspace{-0.5ex}
+\noindent\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
 He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development,
 and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
 He is currently an independent semiconductor researcher focusing on process/device education,
-memory architecture, and AI system integration.\\[2pt]
-\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com},
-\href{https://github.com/Samizo-AITL}{Samizo-AITL}
+memory architecture, and AI system integration.\\[1ex]
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 
 \end{document}
