@@ -1,6 +1,7 @@
 \documentclass[conference]{IEEEtran} 
 
 % --- Robust preamble (URLs, UTF-8, fonts) ---
+\pdfoutput=1                  % 強制的にPDF出力
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb}
@@ -8,6 +9,7 @@
 \usepackage{cite}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{times}            % IEEE推奨フォント
 
 \title{SystemDK with AITL: Integrating Control Loops into EDA for Runtime-Aware DTCO}
 
@@ -43,6 +45,10 @@ However, future nodes face dynamic challenges:
 SystemDK provides DTCO interfaces, but lacks runtime adaptability.
 We propose extending it with \textbf{AITL (AI $\times$ Intelligent Loop)} 
 to bring control feedback directly into SystemDK.
+
+For related CFET modeling challenges and DTCO context, 
+see \cite{yakimets2020cfet,irds2023}.  
+Classical control foundations are based on \cite{franklin2015feedback}.
 
 \section{Architecture: SystemDK with AITL}
 \subsection{Control Loop Integration}
@@ -96,7 +102,7 @@ Future extensions:
 The author thanks the Project Design Hub community for discussions.
 
 \bibliographystyle{IEEEtran}
-\bibliography{refs}
+\bibliography{systemdk_aitl2025}
 
 \section*{Author Biography}
 \noindent\textbf{Shinichi Samizo}
