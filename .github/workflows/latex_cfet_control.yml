@@ -12,25 +12,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # もっとも安定な LaTeX ビルド Action
-      - name: Build LaTeX
+      - name: Build LaTeX (BibTeX)
         uses: xu-cheng/latex-action@v3
         with:
-          # ルート .tex
           root_file: main.tex
-          # 作業ディレクトリ（原稿フォルダ）
-          working_directory: papers/2025_cfet_control
-          # 参考文献に biber を使う場合は true（bibtex の場合は false）
-          latexmk_use_biber: true
+          working_directory: ./papers/2025_cfet_control
+          latexmk_use_biber: false        # ← BibTeX を使う
           latexmk_shell_escape: false
-          # エラー時にログを詳細化
           extra_system_packages: "ghostscript"
-          # キャッシュ有効化（TeX Live packages）
           cache: true
 
       - name: Upload PDF artifact
