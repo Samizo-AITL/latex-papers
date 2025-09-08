@@ -1,0 +1,180 @@
+\documentclass[conference]{IEEEtran}
+
+% --- Robust preamble ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{hyperref}
+
+\title{EDA on AITL: A Dynamic Control Paradigm for Semiconductor Design Automation}
+
+\author{
+  \IEEEauthorblockN{Shinichi Samizo}
+  \IEEEauthorblockA{Independent Semiconductor Researcher\\
+  Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Electronic Design Automation (EDA) has traditionally relied on static optimization flows, 
+where design iterations are executed in batch mode with limited adaptability during runtime. 
+This paper introduces a new paradigm, \textbf{EDA on AITL} 
+(PID $\times$ FSM $\times$ LLM architecture), 
+which incorporates real-time feedback, supervisory logic, and AI-guided adaptation 
+directly into the design automation process. 
+By embedding control loops within simulation and optimization stages, 
+EDA tools transition from static execution to dynamic closed-loop operation. 
+Proof-of-concept experiments on CFET delay/thermal modeling demonstrate 
+faster convergence, improved robustness under parameter drifts, 
+and the potential to reshape design-technology co-optimization (DTCO) 
+for sub-2\,nm nodes and beyond.
+\end{abstract}
+
+\section{Introduction}
+EDA has been the backbone of semiconductor scaling, 
+yet its fundamental workflow remains a static pipeline:
+design $\to$ simulation $\to$ analysis $\to$ redesign. 
+While efficient for deterministic models, this paradigm lacks adaptability 
+to emerging device architectures such as CFETs, forksheets, and 3D sequential integration, 
+where strong coupling (thermal, RC, variability) 
+causes unpredictable behavior under real workloads.
+
+Inspired by control theory, 
+we propose \textbf{EDA on AITL}, a cross-layer approach that embeds:
+\begin{itemize}
+  \item \textbf{PID}: continuous feedback adjustment of simulation parameters,
+  \item \textbf{FSM}: supervisory guards to enforce safe transitions,
+  \item \textbf{LLM}: high-level reasoning to retune control and optimization strategies.
+\end{itemize}
+This layered architecture transforms EDA from an \emph{open-loop design tool} 
+to a \emph{closed-loop adaptive system}.
+
+\section{Background and Motivation}
+\subsection{Limitations of Static EDA}
+Traditional flows (SPICE, STA, P\&R) rely on fixed compact models and corner analysis. 
+However, nanosheet and CFET devices exhibit:
+\begin{itemize}
+  \item Strong temperature–delay coupling,
+  \item Workload-dependent variation,
+  \item Need for rapid DTCO across process corners.
+\end{itemize}
+Static optimization cannot adapt in-flight, leading to excessive guardbands.
+
+\subsection{AITL Concept}
+AITL (Adaptive Intelligence with Three Layers) integrates:
+\begin{enumerate}
+  \item PID (inner loop) for real-time stability,
+  \item FSM (middle layer) for state/event management,
+  \item LLM (outer layer) for adaptive learning and reconfiguration.
+\end{enumerate}
+This concept, initially proposed for system control, 
+is here applied to semiconductor EDA as a new paradigm.
+
+\section{Proposed Framework: EDA on AITL}
+Figure~\ref{fig:framework} illustrates the architecture.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\columnwidth]{figs/eda_aitl_framework.pdf}
+\caption{Proposed ``EDA on AITL'' paradigm: 
+simulation kernels are wrapped in PID controllers, 
+monitored by FSM, and supervised by LLM.}
+\label{fig:framework}
+\end{figure}
+
+\subsection{PID in Simulation Kernels}
+During device/circuit simulation, PID controllers adjust:
+\begin{itemize}
+  \item Voltage/frequency scaling during transient analysis,
+  \item Mesh step size in thermal solvers,
+  \item Iterative solver tolerances.
+\end{itemize}
+This ensures stable convergence and minimizes overshoot.
+
+\subsection{FSM Supervisory Layer}
+FSM monitors simulation states:
+\begin{itemize}
+  \item HOT mode when $T>85^\circ$C,
+  \item UNSTABLE mode when iteration divergence detected,
+  \item NORMAL mode otherwise.
+\end{itemize}
+Transitions trigger safe throttling or rescheduling.
+
+\subsection{LLM Supervisory Layer}
+The LLM evaluates metrics across runs:
+\begin{itemize}
+  \item Retunes $(K_p,K_i,K_d)$ gains,
+  \item Suggests parameter sweeps for unexplored regions,
+  \item Rewrites FSM thresholds if instability persists.
+\end{itemize}
+This outer layer injects adaptability absent from traditional EDA.
+
+\section{Proof-of-Concept: CFET Delay/Thermal Control}
+To validate the paradigm, we implemented a compact CFET interconnect model 
+with vertical coupling ($k_c$). 
+The delay model follows:
+\begin{equation}
+T_{FO1} = (R_{wire}+R_{via})(C_{load}+C_{inter}),
+\end{equation}
+with temperature-dependent resistance:
+\begin{equation}
+R(T) = R_0\big(1+\alpha(T-25^\circ C)\big).
+\end{equation}
+Thermal dynamics are modeled by a first-order RC:
+\begin{equation}
+C_{th}\frac{dT}{dt} = P\cdot R_{th} - (T-T_{amb}).
+\end{equation}
+
+\subsection{Results}
+\begin{itemize}
+  \item \textbf{Static EDA baseline:} 0.9\% peak deviation, large overshoot.
+  \item \textbf{EDA+PID+FSM:} deviation $<10^{-3}\%$, overshoot suppressed.
+  \item \textbf{EDA on AITL (auto-tuned):} deviation $2.6\times10^{-5}\%$, 
+  steady-state error $<10^{-6}\%$.
+\end{itemize}
+These results highlight dynamic adaptability as the key advantage.
+
+\section{Discussion}
+The AITL paradigm shifts EDA from \emph{batch static optimization} 
+to \emph{real-time dynamic adaptation}. 
+This enables:
+\begin{itemize}
+  \item Faster DTCO convergence under emerging nodes,
+  \item Robustness against unmodeled coupling effects,
+  \item A pathway to integrate AI-driven supervisory logic into design flows.
+\end{itemize}
+
+\section{Conclusion and Outlook}
+We have proposed \textbf{EDA on AITL}, 
+a dynamic control paradigm that embeds PID, FSM, and LLM layers 
+within semiconductor EDA workflows. 
+Initial validation on CFET models shows significant robustness gains. 
+Future work includes:
+\begin{itemize}
+  \item Integrating with commercial SPICE and STA engines,
+  \item Extending to NoC-aware thermal and delay control,
+  \item Exploring LLM-in-the-loop for automated compact model refinement.
+\end{itemize}
+
+\section*{Acknowledgment}
+The author thanks the Project Design Hub community for insights and discussions.
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\section*{Author Biography}
+\noindent\textbf{Shinichi Samizo}
+received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
+He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development,
+and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
+He is currently an independent semiconductor researcher focusing on process/device education,
+memory architecture, and AI system integration.\\[2pt]
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com},
+\href{https://github.com/Samizo-AITL}{Samizo-AITL}
+
+\end{document}
