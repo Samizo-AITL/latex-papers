@@ -11,7 +11,7 @@ on:
     paths:
       - "papers/systemdk_aitl2025/**"
       - ".github/workflows/latex_systemdk_aitl.yml"
-  workflow_dispatch:            # 手動実行も可能に
+  workflow_dispatch:
 
 jobs:
   build:
@@ -38,7 +38,7 @@ jobs:
           working_directory: ./papers/systemdk_aitl2025
           latexmk_use_biber: false
           latexmk_shell_escape: false
-          args: -interaction=nonstopmode -file-line-error
+          args: -pdf -interaction=nonstopmode -file-line-error   # ← PDF 出力を強制
           extra_system_packages: ghostscript
           cache: true
 
@@ -58,6 +58,7 @@ jobs:
           name: systemdk-aitl-artifacts
           path: |
             papers/systemdk_aitl2025/*.pdf
+            papers/systemdk_aitl2025/*.dvi           # ← 任意（デバッグ用）
             papers/systemdk_aitl2025/*.log
             papers/systemdk_aitl2025/*.aux
             papers/systemdk_aitl2025/*.bbl
