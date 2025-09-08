@@ -16,23 +16,38 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Clean previous artifacts (optional)
+        run: |
+          cd papers/2025_cfet_control
+          latexmk -C || true
+
       - name: Build LaTeX (BibTeX)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: ./papers/2025_cfet_control
-          latexmk_use_biber: false        # ← BibTeX を使う
+          latexmk_use_biber: false
           latexmk_shell_escape: false
           extra_system_packages: "ghostscript"
           cache: true
 
+      - name: Upload TeX logs (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tex-logs
+          path: |
+            papers/2025_cfet_control/*.log
+            papers/2025_cfet_control/*.blg
+            papers/2025_cfet_control/*.bbl
+            papers/2025_cfet_control/*.aux
+            papers/2025_cfet_control/*.fls
+            papers/2025_cfet_control/*.fdb_latexmk
+
       - name: Upload PDF artifact
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: cfet-control-pdf
-          path: |
-            papers/2025_cfet_control/*.pdf
-            papers/2025_cfet_control/*.log
-            papers/2025_cfet_control/*.bbl
-            papers/2025_cfet_control/*.blg
+          path: papers/2025_cfet_control/*.pdf
           if-no-files-found: error
