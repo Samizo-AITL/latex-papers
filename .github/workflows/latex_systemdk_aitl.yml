@@ -12,21 +12,39 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./papers/systemdk_aitl2025
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Build LaTeX (BibTeX)
+        id: latex
         uses: xu-cheng/latex-action@v3
         with:
           root_file: systemdk_aitl2025.tex
           working_directory: ./papers/systemdk_aitl2025
           latexmk_use_biber: false
           latexmk_shell_escape: false
+          # nonstopmode でコンパイル継続し、ログに全情報を残す
+          args: -interaction=nonstopmode -file-line-error
           extra_system_packages: "ghostscript"
           cache: true
 
-      - name: Upload PDF and Logs
+      # 失敗時に .log のエラー周辺を抜粋表示（CI画面で即チェック）
+      - name: Print LaTeX errors (on failure)
+        if: failure()
+        run: |
+          echo "==== grep LaTeX Error lines ===="
+          grep -nE "^(!|LaTeX (Error|Warning))" systemdk_aitl2025.log || true
+          echo "==== last 200 lines of .log ===="
+          tail -n 200 systemdk_aitl2025.log || true
+
+      # 成否に関係なく、PDF/ログ/補助ファイルを保存
+      - name: Upload PDF and logs (always)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: systemdk-aitl-artifacts
@@ -36,4 +54,7 @@ jobs:
             papers/systemdk_aitl2025/*.aux
             papers/systemdk_aitl2025/*.bbl
             papers/systemdk_aitl2025/*.blg
-          if-no-files-found: error
+            papers/systemdk_aitl2025/*.fls
+            papers/systemdk_aitl2025/*.fdb_latexmk
+            papers/systemdk_aitl2025/*.synctex.gz
+          if-no-files-found: warn
