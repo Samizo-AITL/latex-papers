@@ -21,17 +21,15 @@
 \maketitle
 
 \begin{abstract}
-This paper introduces \textbf{SystemDK with AITL}, a paradigm that extends
+This paper introduces \textbf{SystemDK with AITL}, a paradigm that extends 
 traditional Design-Technology Co-Optimization (DTCO) by embedding 
-\emph{control-theoretic loops} directly into EDA flows.
+\emph{control-theoretic loops} directly into EDA flows. 
 Beyond static compact models, we integrate PID feedback, FSM guards, 
 and LLM supervision to dynamically mitigate RC delay, thermal coupling, 
 stress-induced variability, and EMI/EMC disturbances. 
-Proof-of-concept simulations demonstrate more than $100\times$ reduction in 
-delay deviation, thermal overshoot below $3\times 10^{-5}\%$, 
-and EMI-induced jitter suppressed by two orders of magnitude. 
-This framework enables runtime-aware DTCO, reducing guardbands 
-while improving reliability across sub-2\,nm nodes.
+Proof-of-concept simulations demonstrate more than $100\times$ reduction in delay deviation,
+thermal overshoot below $3\times 10^{-5}\%$, and EMI-induced jitter suppressed by two orders of magnitude. 
+This framework enables runtime-aware DTCO, reducing guardbands while improving reliability across sub-2\,nm nodes.
 \end{abstract}
 
 \section{Introduction}
@@ -40,93 +38,136 @@ However, scaling to CFET and 3D sequential integration faces challenges:
 \begin{itemize}
   \item RC delay variation due to interconnect scaling,
   \item Vertical thermal coupling across tiers,
-  \item Stress-driven mobility and $V_{th}$ shifts,
+  \item Stress-driven mobility and Vth shifts,
   \item EMI/EMC noise degrading signal integrity.
 \end{itemize}
 SystemDK provides DTCO interfaces, but lacks runtime adaptability.
-We propose \textbf{AITL (AI $\times$ Intelligent Loop)} integration to 
-embed corrective feedback directly into SystemDK.
+We propose \textbf{AITL (AI $\times$ Intelligent Loop)} integration to embed corrective feedback directly into SystemDK.
 
 \section{Modeling}
+The delay and thermal behavior of CFET interconnects are governed by resistive,
+capacitive, and thermal RC dynamics. We extend these compact equations with
+stress-induced and EMI disturbance models.
+
 \subsection{Delay and Thermal Models}
+The FO1 delay is given by:
 \begin{equation}
-T_{FO1} = (R_{wire}+R_{via})(C_{load}+C_{inter})
+T_{FO1} = (R_{wire}+R_{via})(C_{load}+C_{inter}),
 \end{equation}
+capturing the combined effect of wiring resistance and via contribution.
+At scaled nodes, $R_{via}$ dominates due to aspect ratio.
+
+The temperature dependence of resistance is:
 \begin{equation}
-R(T) = R_0 \left(1 + \alpha (T-25^\circ C)\right)
+R(T) = R_0 \left( 1 + \alpha (T-25^\circ C) \right),
 \end{equation}
+where $\alpha$ is the TCR coefficient.
+
+Thermal dynamics follow:
 \begin{equation}
-C_{th}\frac{dT}{dt} = P\cdot R_{th} - (T-T_{amb})
+C_{th}\frac{dT}{dt} = P \cdot R_{th} - (T - T_{amb}),
 \end{equation}
-A coupling factor $k_c$ propagates top-tier heating to bottom-tier delay.
+linking power dissipation $P$ to temperature rise.  
+Coupling $k_c$ propagates top-tier heating into bottom-tier delay shifts.
 
 \subsection{Stress and EMI Models}
+Mechanical stress alters mobility and threshold voltage:
 \begin{equation}
-\Delta V_{th}(t) = \beta_{stress}\cdot \sigma(t), \quad 
-\Delta \mu = -\gamma \sigma(t)
+\Delta V_{th}(t) = \beta_{\mathrm{stress}} \cdot \sigma(t), \quad
+\Delta \mu = -\gamma \cdot \sigma(t).
 \end{equation}
+
+EMI disturbance injection:
 \begin{equation}
-v_{emi}(t) = A\sin(2\pi f t), \quad f=10\text{--}200~\text{MHz}
+v_{emi}(t) = A \sin(2\pi f t), \quad f = 10\text{--}200~\mathrm{MHz}.
 \end{equation}
+This models coupling from aggressors into interconnect delay.
 
 \section{Control Architecture}
+Our layered controller integrates PID, FSM, and LLM:
 \begin{itemize}
   \item \textbf{PID:} adjusts DVFS knob $u$ to reduce delay deviation.
-  \item \textbf{FSM:} ensures safety by throttling under HOT/stress mode.
-  \item \textbf{LLM:} supervises policies, re-tunes $K_p,K_i$, redefines thresholds.
+  \item \textbf{FSM:} enforces safety by throttling under HOT/stress conditions.
+  \item \textbf{LLM:} supervises policies, re-tunes $K_p,K_i$, and redefines thresholds.
 \end{itemize}
-This layered design ensures \emph{stability (PID)}, 
-\emph{safety (FSM)}, and \emph{adaptability (LLM)}.
+This layered design ensures \emph{stability (PID)}, \emph{safety (FSM)}, and \emph{adaptability (LLM)}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\columnwidth]{figs/control_arch.pdf}
+\caption{Block diagram of PID+FSM+LLM supervisory control.}
+\label{fig:arch}
+\end{figure}
 
 \section{Experimental Validation}
-A compact two-tier CFET thermal–RC plant with DVFS actuation was prototyped.
+A compact two-tier CFET thermal–RC plant with DVFS actuation was prototyped.  
 AITL controllers were embedded into SystemDK 2025.
 
 \subsection{Setup}
 \begin{itemize}
-  \item $R_{via}=1\text{--}10~\Omega$, $C_{inter}=1\text{--}5$ fF,
+  \item $R_{via} = 1\text{--}10~\Omega$, $C_{inter}=1\text{--}5$ fF,
   \item $P_{burst}=0.1\text{--}1.0$ W, $k_c=0.3\text{--}0.9$,
-  \item EMI injection: $f=10\text{--}200$ MHz sinusoidal,
+  \item EMI injection: sinusoidal $f=10\text{--}200$ MHz,
   \item Co-simulation: MATLAB/Simulink $\to$ RTL testbench.
 \end{itemize}
 
 \subsection{Results}
 \begin{itemize}
-  \item Delay deviation reduced $>100\times$ vs no control,
+  \item Delay deviation suppressed $>100\times$ vs no-control,
   \item Thermal overshoot suppressed $<3\times 10^{-5}\%$,
-  \item Stress-induced delay drift corrected within $10^{-6}\%$,
+  \item Stress-induced delay shift corrected within $10^{-6}\%$,
   \item EMI jitter reduced by $100\times$ at NoC-level validation.
 \end{itemize}
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\columnwidth]{figs/heatmap_results.pdf}
+\caption{Heatmap of delay deviation suppression vs. coupling $k_c$ and $P_{burst}$.}
+\label{fig:heatmap}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\columnwidth]{figs/delay_comp.pdf}
+\caption{Time-series delay comparison: uncontrolled, PID, PID+FSM+LLM.}
+\label{fig:delay}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\columnwidth]{figs/emi_jitter.pdf}
+\caption{EMI-induced jitter suppression at NoC-level simulation.}
+\label{fig:emi}
+\end{figure}
+
 \section{Related Work}
-Yakimets \textit{et al.}~\cite{yakimets2020cfet} analyzed CFET integration challenges,
-but lacked runtime adaptation. The IRDS roadmap~\cite{irds2023} stresses DTCO importance,
-yet focuses on static methods. Classical control theory~\cite{franklin2015,khalil2002,anderson2007optimal}
-provides analytical foundations for PID+FSM+LLM layering.
+Yakimets \textit{et al.}~\cite{yakimets2020cfet} analyzed CFET integration challenges but lacked runtime adaptation.
+The IRDS roadmap~\cite{irds2023} highlights DTCO importance, yet focuses on static methods.
+Classical control theory~\cite{franklin2015feedback} provides analytical foundations for PID+FSM+LLM layering.
 
 \section{Stability Analysis}
 For a system with gain $G$ and natural frequency $\omega_n$:
 \begin{equation}
-K_p < \frac{2\zeta\omega_n}{G}, \quad 
-K_i < \frac{\omega_n^2}{G}
+K_p < \frac{2\zeta\omega_n}{G}, \quad K_i < \frac{\omega_n^2}{G}.
 \end{equation}
-FSM guarantees bounded effort $u\le u_{max}$ in HOT mode.
-LLM adapts gains to maintain margins under parameter drift.
+FSM guarantees bounded control effort $u \leq u_{max}$ in HOT mode.  
+LLM adapts gains to maintain stability margins under drift.
 
 \section{Limitations}
 \begin{itemize}
-  \item SystemDK models remain compact abstractions; parasitic 3D effects not fully captured.
-  \item EMI disturbances simplified as sinusoidal injection.
-  \item Real-time silicon adaptation may require HW simplifications of LLM supervision.
+  \item Models remain compact abstractions; parasitic 3D effects not fully captured,
+  \item EMI disturbances simplified as sinusoidal injection,
+  \item Real-time silicon adaptation may require HW simplifications of LLM.
 \end{itemize}
 
 \section{Discussion and Outlook}
 \textbf{SystemDK with AITL} enables a new EDA paradigm:
 \begin{itemize}
-  \item Static sign-off $\to$ dynamic runtime-aware closure,
+  \item From static sign-off $\to$ dynamic runtime-aware closure,
   \item Guardbands reduced by corrective loops,
   \item Reliability improved across delay, thermal, stress, EMI.
 \end{itemize}
+
 Future directions:
 \begin{itemize}
   \item Embedding AITL controllers into commercial EDA,
@@ -139,17 +180,13 @@ Future directions:
 The author thanks the Project Design Hub community for discussions.
 
 \bibliographystyle{IEEEtran}
-\bibliography{systemdk_aitl2025}
+\bibliography{systemdk_aitl2025_refs}
 
 \section*{Author Biography}
 \noindent\textbf{Shinichi Samizo}
-received the M.S. degree in Electrical and Electronic Engineering 
-from Shinshu University, Japan.  
-He worked at Seiko Epson Corporation in semiconductor memory and 
-mixed-signal device development, and contributed to inkjet MEMS actuators 
-and PrecisionCore printhead technology.  
-He is currently an independent semiconductor researcher focusing on 
-process/device education, memory architecture, and AI system integration.\\[2pt]
+received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.  
+He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.  
+He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\[2pt]
 \textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, 
 \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 
