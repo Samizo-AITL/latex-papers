@@ -23,46 +23,32 @@ jobs:
         with:
           fetch-depth: 0
 
-      # どこに何があるか、まず全体を出す（デバッグ強化）
-      - name: Show repo tree (top)
-        run: |
-          pwd
-          ls -lah
-          echo "---- find . -maxdepth 3 -name systemdk_aitl2025.tex ----"
-          find . -maxdepth 3 -type f -name 'systemdk_aitl2025.tex' -printf '%p\n'
-
-      # 作業ディレクトリに入ってから再度確認
       - name: Verify sources
-        working-directory: ./papers/systemdk_aitl2025
         run: |
-          pwd
-          ls -lah
-          test -f systemdk_aitl2025.tex || { echo "ERROR: systemdk_aitl2025.tex not found in $(pwd)"; exit 1; }
+          ls -lah papers/systemdk_aitl2025
+          test -f papers/systemdk_aitl2025/systemdk_aitl2025.tex
 
       - name: Build LaTeX (BibTeX)
         uses: xu-cheng/latex-action@v3
         with:
-          working_directory: ./papers/systemdk_aitl2025
           root_file: systemdk_aitl2025.tex
+          working_directory: papers/systemdk_aitl2025
           latexmk_use_biber: false
           latexmk_shell_escape: false
           args: -pdf -interaction=nonstopmode -file-line-error
-          extra_system_packages: ghostscript
+          extra_system_packages: "ghostscript"
           cache: true
 
-      # 失敗時のログ抜粋（.log が無くてもコケない）
       - name: Print LaTeX errors (on failure)
         if: failure()
-        working-directory: ./papers/systemdk_aitl2025
         run: |
           echo "==== Error/Warning lines ===="
-          (grep -nE "^(!|LaTeX (Error|Warning))" systemdk_aitl2025.log || true)
+          grep -nE "^(!|LaTeX (Error|Warning))" papers/systemdk_aitl2025/systemdk_aitl2025.log || true
           echo "==== Last 200 lines of .log ===="
-          (tail -n 200 systemdk_aitl2025.log || true)
+          tail -n 200 papers/systemdk_aitl2025/systemdk_aitl2025.log || true
           echo "==== Directory listing ===="
-          ls -lah
+          ls -lah papers/systemdk_aitl2025
 
-      # 成否に関係なく成果物を収集（無くても失敗にしない）
       - name: Upload PDF and logs (always)
         if: always()
         uses: actions/upload-artifact@v4
@@ -70,7 +56,6 @@ jobs:
           name: systemdk-aitl-artifacts
           path: |
             papers/systemdk_aitl2025/*.pdf
-            papers/systemdk_aitl2025/*.dvi
             papers/systemdk_aitl2025/*.log
             papers/systemdk_aitl2025/*.aux
             papers/systemdk_aitl2025/*.bbl
@@ -78,13 +63,4 @@ jobs:
             papers/systemdk_aitl2025/*.fls
             papers/systemdk_aitl2025/*.fdb_latexmk
             papers/systemdk_aitl2025/*.synctex.gz
-          if-no-files-found: warn
-
-      # さらにデバッグ用：フォルダ全体を拾う
-      - name: Upload working folder snapshot (always)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: systemdk-aitl-workdir
-          path: papers/systemdk_aitl2025/**
-          if-no-files-found: warn
+          if-no-files-found: error
