@@ -24,31 +24,33 @@ jobs:
           fetch-depth: 0
 
       - name: Verify sources
+        working-directory: papers/systemdk_aitl2025
         run: |
-          ls -lah papers/systemdk_aitl2025
-          test -f papers/systemdk_aitl2025/systemdk_aitl2025.tex
+          pwd; ls -lah
+          test -f systemdk_aitl2025.tex
 
       - name: Build LaTeX (BibTeX)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: systemdk_aitl2025.tex
-          working_directory: papers/systemdk_aitl2025
+          working_directory: ./papers/systemdk_aitl2025
           latexmk_use_biber: false
           latexmk_shell_escape: false
           args: -pdf -interaction=nonstopmode -file-line-error
-          extra_system_packages: "ghostscript"
+          extra_system_packages: ghostscript
           cache: true
 
       - name: Print LaTeX errors (on failure)
         if: failure()
+        working-directory: papers/systemdk_aitl2025
         run: |
           echo "==== Error/Warning lines ===="
-          grep -nE "^(!|LaTeX (Error|Warning))" papers/systemdk_aitl2025/systemdk_aitl2025.log || true
+          (grep -nE "^(!|LaTeX (Error|Warning))" systemdk_aitl2025.log || true)
           echo "==== Last 200 lines of .log ===="
-          tail -n 200 papers/systemdk_aitl2025/systemdk_aitl2025.log || true
-          echo "==== Directory listing ===="
-          ls -lah papers/systemdk_aitl2025
+          (tail -n 200 systemdk_aitl2025.log || true)
+          ls -lah
 
+      # 生成物の収集は repository root からのパスで指定（確実）
       - name: Upload PDF and logs (always)
         if: always()
         uses: actions/upload-artifact@v4
@@ -56,6 +58,7 @@ jobs:
           name: systemdk-aitl-artifacts
           path: |
             papers/systemdk_aitl2025/*.pdf
+            papers/systemdk_aitl2025/*.dvi
             papers/systemdk_aitl2025/*.log
             papers/systemdk_aitl2025/*.aux
             papers/systemdk_aitl2025/*.bbl
