@@ -1,4 +1,4 @@
-\documentclass[conference]{IEEEtran} 
+\documentclass[conference]{IEEEtran}
 
 % --- Robust preamble (URLs, UTF-8, fonts) ---
 \usepackage[utf8]{inputenc}
@@ -7,11 +7,15 @@
 \usepackage{graphicx}
 \usepackage{cite}
 \usepackage{url}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
+
+% Figures
+\graphicspath{{figs/}}        % 図フォルダ
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,calc}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usepackage[caption=false,font=footnotesize]{subfig} % ← Fig.2–4 統合用
 
 % TikZ 全体のノードフォントを IEEE 本文サイズに揃える
 \tikzset{every node/.style={font=\small}}
@@ -28,19 +32,19 @@
 \maketitle
 
 \begin{abstract}
-This paper introduces \textbf{SystemDK with AITL}, a paradigm that extends 
-traditional Design-Technology Co-Optimization (DTCO) by embedding 
-\emph{control-theoretic loops} directly into EDA flows. 
-Beyond static compact models, we integrate PID feedback, FSM guards, 
-and LLM supervision to dynamically mitigate RC delay, thermal coupling, 
-stress-induced variability, and EMI/EMC disturbances. 
+This paper introduces \textbf{SystemDK with AITL}, a paradigm that extends
+traditional Design-Technology Co-Optimization (DTCO) by embedding
+\emph{control-theoretic loops} directly into EDA flows.
+Beyond static compact models, we integrate PID feedback, FSM guards,
+and LLM supervision to dynamically mitigate RC delay, thermal coupling,
+stress-induced variability, and EMI/EMC disturbances.
 Proof-of-concept simulations demonstrate over $100\times$ reduction in delay deviation,
-thermal overshoot below $3\times 10^{-5}\%$, and EMI-induced jitter suppressed by two orders of magnitude. 
+thermal overshoot below $3\times 10^{-5}\%$, and EMI-induced jitter suppressed by two orders of magnitude.
 This framework enables runtime-aware DTCO, reducing guardbands while improving reliability across sub-2\,nm nodes.
 \end{abstract}
 
 \section{Introduction}
-Conventional EDA tools focus on static sign-off closure. 
+Conventional EDA tools focus on static sign-off closure.
 However, scaling to CFET and 3D sequential integration introduces \emph{dynamic runtime effects}:
 \begin{itemize}
   \item RC delay variation due to interconnect scaling,
@@ -61,13 +65,13 @@ FO1 delay is:
 \begin{equation}
 T_{FO1} = (R_{wire}+R_{via})(C_{load}+C_{inter}),
 \end{equation}
-where $R_{via}$ dominates at scaled nodes due to aspect ratio.  
+where $R_{via}$ dominates at scaled nodes due to aspect ratio.
 
 Temperature dependence is modeled as:
 \begin{equation}
 R(T) = R_0 \left( 1 + \alpha (T-25^\circ C) \right),
 \end{equation}
-with $\alpha$ as TCR.  
+with $\alpha$ as TCR.
 
 Thermal dynamics:
 \begin{equation}
@@ -94,7 +98,8 @@ A three-layered controller (PID, FSM, LLM) is proposed:
   \item \textbf{LLM:} supervises, adapts $(K_p,K_i)$, and redefines thresholds.
 \end{itemize}
 
-\begin{figure*}[t]
+% ===== Fig.1 : TikZ, 2段抜き =====
+\begin{figure*}[!t]
 \centering
 \begin{tikzpicture}[
   block/.style={draw,rounded corners,minimum width=28mm,minimum height=10mm,
@@ -114,7 +119,7 @@ A three-layered controller (PID, FSM, LLM) is proposed:
 \draw[line] (pid) -- (fsm);
 \draw[line] (fsm) -- (plant);
 \draw[line] (plant.east) -- ++(14mm,0) coordinate (out);
-\draw[line] (out) |- ($(sum.south)+(0,-10mm)$) -| 
+\draw[line] (out) |- ($(sum.south)+(0,-10mm)$) -|
     node[pos=0.25,below] {Measured Delay $y(t)$} (sum.south);
 \draw[line] ($(sum.west)+(-14mm,0)$) -- node[above] {Reference $r(t)$} (sum.west);
 \draw[dashedline] (llm.south west) -- ++(-7mm,-7mm) -- (pid.north);
@@ -126,7 +131,7 @@ A three-layered controller (PID, FSM, LLM) is proposed:
 \end{figure*}
 
 \section{Experimental Validation}
-Two-tier CFET thermal--RC plant with DVFS actuation was prototyped.  
+Two-tier CFET thermal--RC plant with DVFS actuation was prototyped.
 AITL controllers were integrated in SystemDK 2025.
 
 \subsection{Setup}
@@ -145,31 +150,28 @@ AITL controllers were integrated in SystemDK 2025.
   \item EMI jitter reduced $100\times$ in NoC simulation.
 \end{itemize}
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\columnwidth]{figs/heatmap_results.pdf}
-\caption{Heatmap of delay deviation suppression vs $k_c$ and $P_{burst}$.}
-\label{fig:heatmap}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\columnwidth]{figs/delay_comp.pdf}
-\caption{Time-series comparison: uncontrolled vs PID vs PID+FSM+LLM.}
-\label{fig:delay}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\columnwidth]{figs/emi_jitter.pdf}
-\caption{EMI-induced jitter suppression under AITL control.}
-\label{fig:emi}
-\end{figure}
+% ===== Fig.2–4 : まとめて2段抜き =====
+\begin{figure*}[!t]
+  \centering
+  \subfloat[Suppression vs.\ $k_c$ and $P_{burst}$.]{
+    \includegraphics[width=0.31\textwidth]{heatmap_results.pdf}
+    \label{fig:heatmap}}
+  \hfil
+  \subfloat[Delay vs.\ time (No control / PID / PID+FSM+LLM).]{
+    \includegraphics[width=0.31\textwidth]{delay_comp.pdf}
+    \label{fig:delay}}
+  \hfil
+  \subfloat[EMI-induced jitter suppression (normalized RMS).]{
+    \includegraphics[width=0.31\textwidth]{emi_jitter.pdf}
+    \label{fig:emi}}
+  \caption{Experimental results under AITL control.}
+  \label{fig:results}
+\end{figure*}
 
 \section{Related Work}
-Yakimets \textit{et al.}~\cite{yakimets2020cfet} studied CFET integration but lacked runtime adaptation.  
-IRDS~\cite{irds2023} emphasized DTCO but with static flows.  
-Control theory~\cite{franklin2015feedback,khalil2002nonlinear,anderson2007optimal} provides analytical foundation.  
+Yakimets \textit{et al.}~\cite{yakimets2020cfet} studied CFET integration but lacked runtime adaptation.
+IRDS~\cite{irds2023} emphasized DTCO but with static flows.
+Control theory~\cite{franklin2015feedback,khalil2002nonlinear,anderson2007optimal} provides analytical foundation.
 EMI compliance follows IEC~\cite{iec61000}.
 
 \section{Stability Analysis}
@@ -177,7 +179,7 @@ PID loop must satisfy:
 \begin{equation}
 K_p < \frac{2\zeta\omega_n}{G}, \quad K_i < \frac{\omega_n^2}{G},
 \end{equation}
-FSM bounds control effort $u \leq u_{max}$.  
+FSM bounds control effort $u \leq u_{max}$.
 LLM adapts gains to maintain Lyapunov stability margins under parameter drift.
 
 \section{Limitations}
@@ -195,10 +197,10 @@ LLM adapts gains to maintain Lyapunov stability margins under parameter drift.
   \item Reliability $\to$ cross-domain resilience (delay, thermal, stress, EMI).
 \end{itemize}
 
-Future work:  
-(1) Embed AITL into commercial EDA,  
-(2) Extend compact models (stress/EMI-aware),  
-(3) Integrate with NoC traffic controllers,  
+Future work:
+(1) Embed AITL into commercial EDA,
+(2) Extend compact models (stress/EMI-aware),
+(3) Integrate with NoC traffic controllers,
 (4) Couple with microfluidic cooling for holistic DTCO.
 
 \section*{Acknowledgment}
@@ -209,10 +211,9 @@ The author thanks the Project Design Hub community for discussions.
 
 \section*{Author Biography}
 \noindent\textbf{Shinichi Samizo}
-received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.  
-He worked at Seiko Epson Corporation in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.  
+received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
+He worked at Seiko Epson Corporation in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
 He is now an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\[2pt]
-\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, 
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com},
 \href{https://github.com/Samizo-AITL}{Samizo-AITL}
-
 \end{document}
