@@ -13,6 +13,9 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
+% TikZ 全体のノードフォントを IEEE 本文サイズに揃える
+\tikzset{every node/.style={font=\small}}
+
 \title{SystemDK with AITL: Integrating Control Loops into EDA for Runtime-Aware DTCO}
 
 \author{
@@ -91,33 +94,36 @@ A three-layered controller (PID, FSM, LLM) is proposed:
   \item \textbf{LLM:} supervises, adapts $(K_p,K_i)$, and redefines thresholds.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure*}[t]
 \centering
 \begin{tikzpicture}[
-  block/.style={draw,rounded corners,minimum width=20mm,minimum height=10mm,align=center,fill=black!5},
-  sum/.style={circle,draw,inner sep=1pt},
+  block/.style={draw,rounded corners,minimum width=28mm,minimum height=10mm,
+                align=center,fill=black!5},
+  sum/.style={circle,draw,inner sep=1.5pt},
   line/.style={-Latex,thick},
-  dashedline/.style={-Latex,dashed,thick}
+  dashedline/.style={-Latex,dashed,thick},
+  node distance=14mm and 22mm
 ]
-\node[sum] (sum) at (0,0) {};
-\node[block,right=8mm of sum] (pid) {PID\\$(K_p,K_i)$};
-\node[block,right=12mm of pid] (fsm) {FSM\\Safety/Throttle};
-\node[block,right=12mm of fsm,minimum width=30mm] (plant) {CFET Thermal--RC Plant};
-\node[block,above=12mm of fsm,minimum width=35mm] (llm) {LLM Supervisor};
+\node[sum] (sum) {};
+\node[block,right=of sum] (pid) {PID\\$(K_p,K_i)$};
+\node[block,right=of pid] (fsm) {FSM\\Safety / Throttle};
+\node[block,right=of fsm,minimum width=38mm] (plant) {CFET Thermal--RC Plant\\(Delay \& Temperature)};
+\node[block,above=of fsm,minimum width=42mm] (llm) {LLM Supervisor\\Gain / Threshold Adaptation};
 
 \draw[line] (sum) -- node[above] {$e(t)$} (pid);
 \draw[line] (pid) -- (fsm);
 \draw[line] (fsm) -- (plant);
-\draw[line] (plant.east) -- ++(10mm,0) coordinate (out);
-\draw[line] (out) |- ($(sum.south)+(0,-8mm)$) -| node[pos=0.25,below] {Measured Delay $y(t)$} (sum.south);
-\draw[line] ($(sum.west)+(-10mm,0)$) -- node[above] {Reference $r(t)$} (sum.west);
-\draw[dashedline] (llm) -- (pid.north);
-\draw[dashedline] (llm) -- (fsm.north);
-\draw[dashedline] (llm) -| (plant.north);
+\draw[line] (plant.east) -- ++(14mm,0) coordinate (out);
+\draw[line] (out) |- ($(sum.south)+(0,-10mm)$) -| 
+    node[pos=0.25,below] {Measured Delay $y(t)$} (sum.south);
+\draw[line] ($(sum.west)+(-14mm,0)$) -- node[above] {Reference $r(t)$} (sum.west);
+\draw[dashedline] (llm.south west) -- ++(-7mm,-7mm) -- (pid.north);
+\draw[dashedline] (llm.south) -- (fsm.north);
+\draw[dashedline] (llm.south east) -- ++(7mm,-7mm) -- (plant.north);
 \end{tikzpicture}
 \caption{Supervisory PID+FSM+LLM control architecture.}
 \label{fig:arch}
-\end{figure}
+\end{figure*}
 
 \section{Experimental Validation}
 Two-tier CFET thermal--RC plant with DVFS actuation was prototyped.  
@@ -138,6 +144,27 @@ AITL controllers were integrated in SystemDK 2025.
   \item Stress-induced delay drift compensated within $10^{-6}\%$,
   \item EMI jitter reduced $100\times$ in NoC simulation.
 \end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\columnwidth]{figs/heatmap_results.pdf}
+\caption{Heatmap of delay deviation suppression vs $k_c$ and $P_{burst}$.}
+\label{fig:heatmap}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\columnwidth]{figs/delay_comp.pdf}
+\caption{Time-series comparison: uncontrolled vs PID vs PID+FSM+LLM.}
+\label{fig:delay}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\columnwidth]{figs/emi_jitter.pdf}
+\caption{EMI-induced jitter suppression under AITL control.}
+\label{fig:emi}
+\end{figure}
 
 \section{Related Work}
 Yakimets \textit{et al.}~\cite{yakimets2020cfet} studied CFET integration but lacked runtime adaptation.  
