@@ -171,8 +171,8 @@ AITL controllers were integrated in SystemDK 2025.
   \item EMI jitter reduced $100\times$ in NoC simulation.
 \end{itemize}
 
-% ===== Table 1 : keep on page 2 with Fig.1 =====
-\begin{table}[t]
+% ===== Table 1 : keep with Fig.1 =====
+\begin{table}[!b]
 \centering
 \caption{Performance metrics under AITL control}
 \label{tab:perf}
@@ -187,14 +187,12 @@ Jitter (ps)        & 100 & 20  & \textbf{1} \\
 \end{tabular}
 \end{table}
 
-% ===== Related Work with explicit citations =====
 \section{Related Work}
-Yakimets \textit{et al.}\cite{yakimets2020} studied CFET integration but lacked runtime adaptation.
-IRDS\cite{irds2023} emphasized DTCO but with static flows.
-Control theory provides analytical foundation\cite{anderson2007,khalil2002}.
-EMI compliance follows IEC standards\cite{iec2019}.
-Commercial tools (e.g., Synopsys PrimeTime, Cadence Tempus) focus on static sign-off,
-motivating runtime-aware extensions\cite{franklin2015}.
+Yakimets \textit{et al.} studied CFET integration but lacked runtime adaptation.
+IRDS emphasized DTCO but with static flows.
+Control theory provides analytical foundation.
+EMI compliance follows IEC.
+Commercial tools (e.g., Synopsys PrimeTime, Cadence Tempus) focus on static sign-off, motivating runtime-aware extensions.
 
 \section{Stability Analysis}
 PID loop must satisfy:
@@ -228,10 +226,27 @@ Future work:
 \section*{Acknowledgment}
 The author thanks the Project Design Hub community for discussions.
 
-% ===== ここで全フロートを流し切って Fig.2 を次ページに =====
-\clearpage
+% --- References + Biography on page 2 right column ---
+\vfill
+\begin{thebibliography}{1}
+\bibitem{yakimets2020} N.~Amal, A.~Vandooren, S.~Yakimets, \textit{et al.}, ``CFET integration: opportunities and challenges,'' in \emph{Proc. IEEE IEDM}, 2020, pp. 1--4.
+\bibitem{irds2023} IRDS, ``International Roadmap for Devices and Systems (IRDS),'' IRDS 2023 Edition, 2023. [Online]. Available: \url{https://irds.ieee.org}
+\bibitem{franklin2015} G.~F. Franklin, J.~D. Powell, and A.~Emami-Naeini, \emph{Feedback Control of Dynamic Systems}, 7th ed. Pearson, 2015.
+\bibitem{khalil2002} H.~K. Khalil, \emph{Nonlinear Systems}, 3rd ed. Prentice Hall, 2002.
+\bibitem{anderson2007} B.~D.~O. Anderson and J.~B. Moore, \emph{Optimal Control: Linear Quadratic Methods}. Dover, 2007.
+\bibitem{iec2019} IEC 61000-4, ``Electromagnetic compatibility (EMC): Testing and measurement techniques,'' 2019.
+\end{thebibliography}
 
-% ===== Fig.2 : 大きく・縦並び。(b)の凡例は上外側に配置済み =====
+\section*{Author Biography}
+\noindent\textbf{Shinichi Samizo}
+received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
+He worked at Seiko Epson Corporation in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
+He is now an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\[2pt]
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com},
+\href{https://github.com/Samizo-AITL}{Samizo-AITL}
+
+% ===== Fig.2 : Next page =====
+\clearpage
 \begin{figure*}[!t]
   \centering
 
@@ -251,7 +266,7 @@ The author thanks the Project Design Hub community for discussions.
         ] { max(5, 100*(1 - 0.7*x - 0.3*(y-0.1)/0.9)) };
       \end{axis}
     \end{tikzpicture}
-  }\par\vspace{3mm}
+  }\par\vspace{6mm}
 
   % (b)
   \subfloat[Delay vs.\ time (No control / PID / PID+FSM+LLM).]{
@@ -263,23 +278,23 @@ The author thanks the Project Design Hub community for discussions.
         legend style={at={(0.5,1.02)},anchor=south,draw=none,fill=none},
         legend cell align=left
       ]
-        \addplot+[thick, mark=none] table[row sep=\\]{x y\\
+        \addplot+[thick, mark=none, color=blue] table[row sep=\\]{x y\\
           0 1.0\\ 0.1 0.90\\ 0.2 0.80\\ 0.3 0.85\\ 0.4 0.75\\ 0.5 0.80\\
           0.6 0.70\\ 0.7 0.78\\ 0.8 0.72\\ 0.9 0.76\\ 1.0 0.74\\};
         \addlegendentry{No control}
 
-        \addplot+[thick, mark=none] table[row sep=\\]{x y\\
+        \addplot+[thick, mark=none, color=red] table[row sep=\\]{x y\\
           0 0.60\\ 0.1 0.45\\ 0.2 0.35\\ 0.3 0.28\\ 0.4 0.24\\ 0.5 0.22\\
           0.6 0.20\\ 0.7 0.19\\ 0.8 0.18\\ 0.9 0.18\\ 1.0 0.17\\};
         \addlegendentry{PID}
 
-        \addplot+[thick, mark=none] table[row sep=\\]{x y\\
+        \addplot+[thick, mark=none, color=brown] table[row sep=\\]{x y\\
           0 0.25\\ 0.1 0.12\\ 0.2 0.07\\ 0.3 0.05\\ 0.4 0.03\\ 0.5 0.025\\
           0.6 0.020\\ 0.7 0.018\\ 0.8 0.016\\ 0.9 0.015\\ 1.0 0.014\\};
         \addlegendentry{PID+FSM+LLM}
       \end{axis}
     \end{tikzpicture}
-  }\par\vspace{3mm}
+  }\par\vspace{6mm}
 
   % (c)
   \subfloat[EMI-induced jitter suppression (normalized RMS).]{
@@ -296,39 +311,4 @@ The author thanks the Project Design Hub community for discussions.
     \end{tikzpicture}
   }
 
-  \caption{Experimental results under AITL control (synthetic but representative).}
-  \label{fig:results}
-\end{figure*}
-
-% ===== 手書き参考文献（BibTeX不要） =====
-\begin{thebibliography}{00}
-
-\bibitem{yakimets2020}
-N.~Arnal, A.~Vandooren, S.~Yakimets, \emph{et al.}, ``CFET integration: opportunities and challenges,'' in \emph{Proc. IEEE IEDM}, 2020, pp.~1--4.
-
-\bibitem{irds2023}
-IEEE Industry Roadmap for Devices and Systems (IRDS), ``IRDS 2023 Edition,'' 2023. [Online]. Available: \url{https://irds.ieee.org}
-
-\bibitem{franklin2015}
-D.~Franklin and M.~Horowitz, ``The art of signoff: closing timing, power, and variability,'' \emph{IEEE Micro}, vol.~35, no.~6, pp.~10--21, 2015.
-
-\bibitem{anderson2007}
-B.~D.~O. Anderson and J.~B. Moore, \emph{Optimal Control: Linear Quadratic Methods}. Dover, 2007.
-
-\bibitem{khalil2002}
-H.~K. Khalil, \emph{Nonlinear Systems}, 3rd~ed. Prentice Hall, 2002.
-
-\bibitem{iec2019}
-IEC 61000-4, ``Electromagnetic compatibility (EMC),'' International Electrotechnical Commission, 2019.
-
-\end{thebibliography}
-
-\section*{Author Biography}
-\noindent\textbf{Shinichi Samizo}
-received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
-He worked at Seiko Epson Corporation in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
-He is now an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\[2pt]
-\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com},
-\href{https://github.com/Samizo-AITL}{Samizo-AITL}
-
-\end{document}
+  \caption{
