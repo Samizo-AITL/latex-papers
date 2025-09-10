@@ -265,8 +265,9 @@ He is now an independent semiconductor researcher focusing on process/device edu
           surf, shader=interp, samples=35, samples y=30, domain=0:1, y domain=0.1:1.0
         ] { max(5, 100*(1 - 0.7*x - 0.3*(y-0.1)/0.9)) };
       \end{axis}
+    \begin{scope}[on background layer]\end{scope}
     \end{tikzpicture}%
-  }\par\vspace{6mm}
+  }\\[6mm]
 
   % (b)
   \subfloat[Delay vs.\ time (No control / PID / PID+FSM+LLM).]{%
@@ -294,7 +295,7 @@ He is now an independent semiconductor researcher focusing on process/device edu
         \addlegendentry{PID+FSM+LLM}
       \end{axis}
     \end{tikzpicture}%
-  }\par\vspace{6mm}
+  }\\[6mm]
 
   % (c)
   \subfloat[EMI-induced jitter suppression (normalized RMS).]{%
@@ -309,4 +310,10 @@ He is now an independent semiconductor researcher focusing on process/device edu
         \addplot coordinates {(No control,1.0) (PID,0.2) (PID+FSM+LLM,0.01)};
       \end{axis}
     \end{tikzpicture}%
- 
+  }
+
+  \caption{Experimental results under AITL control (synthetic but representative).}
+  \label{fig:results}
+\end{figure*}
+
+\end{document}
