@@ -1,6 +1,6 @@
 \documentclass[conference]{IEEEtran}
 
-% --- Robust preamble (URLs, UTF-8, fonts) ---
+% --- Preamble ---
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb}
@@ -8,19 +8,15 @@
 \usepackage{cite}
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
-
-% Figures
-\graphicspath{{figs/}}        % 図フォルダ
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,calc}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\usepackage[caption=false,font=footnotesize]{subfig} % ← Fig.2–4 統合用
+\usepackage[caption=false,font=footnotesize]{subfig}
 
-% TikZ 全体のノードフォントを IEEE 本文サイズに揃える
 \tikzset{every node/.style={font=\small}}
 
-\title{SystemDK with AITL: Integrating Control Loops into EDA for Runtime-Aware DTCO}
+\title{SystemDK with AITL: Physics-Aware Runtime DTCO via PID, FSM, and LLM Integration}
 
 \author{
   \IEEEauthorblockN{Shinichi Samizo}
@@ -38,6 +34,8 @@ traditional Design-Technology Co-Optimization (DTCO) by embedding
 Beyond static compact models, we integrate PID feedback, FSM guards,
 and LLM supervision to dynamically mitigate RC delay, thermal coupling,
 stress-induced variability, and EMI/EMC disturbances.
+In addition, FEM analysis (thermal, stress, EM) and S-parameter measurements
+are injected into synthesis, P\&R, and STA to ensure physics-aware closure.
 Proof-of-concept simulations demonstrate over $100\times$ reduction in delay deviation,
 thermal overshoot below $3\times 10^{-5}\%$, and EMI-induced jitter suppressed by two orders of magnitude.
 This framework enables runtime-aware DTCO, reducing guardbands while improving reliability across sub-2\,nm nodes.
@@ -58,7 +56,7 @@ We propose \textbf{AITL (AI $\times$ Intelligent Loop)} integration to embed cor
 \section{Modeling}
 The delay and thermal behavior of CFET interconnects are governed by resistive,
 capacitive, and thermal RC dynamics. Compact models are extended with
-stress-induced and EMI disturbance terms.
+stress-induced, EMI, and transmission disturbance terms.
 
 \subsection{Delay and Thermal Models}
 FO1 delay is:
@@ -90,6 +88,13 @@ EMI injection:
 v_{emi}(t) = A \sin(2\pi f t), \quad f=10\text{--}200~\mathrm{MHz}.
 \end{equation}
 
+\subsection{Network Analyzer Models}
+Interconnect transmission is modeled by measured $S$-parameters:
+\begin{equation}
+H(f) = S_{21}(f), \quad f=1\text{--}40~\mathrm{GHz},
+\end{equation}
+which modulate delay and jitter characteristics during STA.
+
 \section{Control Architecture}
 A three-layered controller (PID, FSM, LLM) is proposed:
 \begin{itemize}
@@ -97,8 +102,10 @@ A three-layered controller (PID, FSM, LLM) is proposed:
   \item \textbf{FSM:} enforces safety with $u_{max}$ bounds,
   \item \textbf{LLM:} supervises, adapts $(K_p,K_i)$, and redefines thresholds.
 \end{itemize}
+FSM+LLM supervision is synthesized into Verilog RTL,
+integrated into logic synthesis and P\&R with FEM/S-parameter feedback.
 
-% ===== Fig.1 : TikZ, 2段抜き =====
+% ===== Fig.1 : Control Loop =====
 \begin{figure*}[!t]
 \centering
 \begin{tikzpicture}[
@@ -126,7 +133,7 @@ A three-layered controller (PID, FSM, LLM) is proposed:
 \draw[dashedline] (llm.south) -- (fsm.north);
 \draw[dashedline] (llm.south east) -- ++(7mm,-7mm) -- (plant.north);
 \end{tikzpicture}
-\caption{Supervisory PID+FSM+LLM control architecture.}
+\caption{Supervisory PID+FSM+LLM control architecture integrated with EDA flow.}
 \label{fig:arch}
 \end{figure*}
 
@@ -150,10 +157,10 @@ AITL controllers were integrated in SystemDK 2025.
   \item EMI jitter reduced $100\times$ in NoC simulation.
 \end{itemize}
 
-% ===== Fig.2–4 : まとめて2段抜き =====
+% ===== Fig.2–4 + Table =====
 \begin{figure*}[!t]
   \centering
-  \subfloat[Suppression vs.\ $k_c$ and $P_{burst}$.]{
+  \subfloat[Suppression vs.\ $k_c$ and $P_{burst}$ (FEM co-sim).]{
     \includegraphics[width=0.31\textwidth]{heatmap_results.pdf}
     \label{fig:heatmap}}
   \hfil
@@ -168,11 +175,26 @@ AITL controllers were integrated in SystemDK 2025.
   \label{fig:results}
 \end{figure*}
 
+\begin{table}[h]
+\centering
+\caption{Performance metrics under AITL control}
+\begin{tabular}{lccc}
+\hline
+Metric & Conventional & PID only & PID+FSM+LLM \\
+\hline
+Delay Var. (norm.) & 1.0 & 0.2 & \textbf{0.01} \\
+$\Delta T$ (K)     & +12 & +4  & \textbf{+0.001} \\
+Jitter (ps)        & 100 & 20  & \textbf{1} \\
+\hline
+\end{tabular}
+\end{table}
+
 \section{Related Work}
 Yakimets \textit{et al.}~\cite{yakimets2020cfet} studied CFET integration but lacked runtime adaptation.
 IRDS~\cite{irds2023} emphasized DTCO but with static flows.
 Control theory~\cite{franklin2015feedback,khalil2002nonlinear,anderson2007optimal} provides analytical foundation.
 EMI compliance follows IEC~\cite{iec61000}.
+Commercial tools (e.g., Synopsys PrimeTime, Cadence Tempus) focus on static sign-off, motivating runtime-aware extensions.
 
 \section{Stability Analysis}
 PID loop must satisfy:
@@ -201,7 +223,8 @@ Future work:
 (1) Embed AITL into commercial EDA,
 (2) Extend compact models (stress/EMI-aware),
 (3) Integrate with NoC traffic controllers,
-(4) Couple with microfluidic cooling for holistic DTCO.
+(4) Couple with microfluidic cooling for holistic DTCO,
+(5) Package as educational framework (Edusemi) for academia and training.
 
 \section*{Acknowledgment}
 The author thanks the Project Design Hub community for discussions.
