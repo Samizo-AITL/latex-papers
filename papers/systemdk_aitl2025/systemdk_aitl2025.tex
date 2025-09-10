@@ -14,6 +14,7 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage[section]{placeins} % ← セクションをまたいだ回り込みを防ぐ
 
 \tikzset{every node/.style={font=\small}}
 
@@ -115,7 +116,7 @@ FSM+LLM supervision is synthesized into Verilog RTL,
 integrated into logic synthesis and P\&R with FEM/S-parameter feedback.
 
 % ===== Fig.1 : Control Loop =====
-\begin{figure*}[!t]
+\begin{figure*}[t!]
 \centering
 \begin{tikzpicture}[
   block/.style={draw,rounded corners,minimum width=28mm,minimum height=10mm,
@@ -166,52 +167,58 @@ AITL controllers were integrated in SystemDK 2025.
   \item EMI jitter reduced $100\times$ in NoC simulation.
 \end{itemize}
 
-% ===== Fig.2 : 改訂版 (1.5倍拡大 + 凡例調整) =====
-\begin{figure*}[!t]
+% ===== Fig.2 : 大きさ統一＆横幅抑制、凡例の被り解消、参考文献への食い込み防止 =====
+\begin{figure*}[t!]
   \centering
+  % 共通サイズ
+  \def\w{0.70\textwidth}
+  \def\h{0.34\textwidth}
 
   % (a) Heatmap
   \subfloat[Suppression vs.\ $k_c$ and $P_{\text{burst}}$ (FEM co-sim, synthetic).]{
     \begin{tikzpicture}
       \begin{axis}[
-        width=0.65\textwidth, height=0.50\textwidth,
+        width=\w, height=\h,
         xlabel={$k_c$}, ylabel={$P_{\text{burst}}$ (W)},
-        xmin=0, xmax=1, ymin=0.1, ymax=1.0,
+        xmin=0, xmax=1, ymin=0.0, ymax=1.0,
         colormap/viridis, colorbar,
         point meta min=0, point meta max=100,
         enlargelimits=false
       ]
         \addplot3[
-          surf, shader=interp, samples=35, samples y=30, domain=0:1, y domain=0.1:1.0
-        ] { max(5, 100*(1 - 0.7*x - 0.3*(y-0.1)/0.9)) };
+          surf, shader=interp, samples=35, samples y=30, domain=0:1, y domain=0:1
+        ] { max(5, 100*(1 - 0.7*x - 0.3*y)) };
       \end{axis}
     \end{tikzpicture}
     \label{fig:heatmap}
   }
 
+  \vspace{2mm}
+
   % (b) Delay vs time
   \subfloat[Delay vs.\ time (No control / PID / PID+FSM+LLM).]{
     \begin{tikzpicture}
       \begin{axis}[
-        width=0.65\textwidth, height=0.40\textwidth,
-        xlabel={Time (s)}, ylabel={Delay deviation (norm.)},
-        xmin=0, xmax=1, ymin=0, ymax=1.05,
+        width=\w, height=\h,
+        xlabel={Time (s)},ylabel={Delay deviation (norm.)},
+        xmin=0,xmax=1, ymin=0, ymax=1.05,
         legend cell align=left,
-        legend style={at={(0.97,0.05)}, anchor=south east, draw=none, fill=none}
+        legend style={
+          at={(1.02,0.98)}, anchor=north west, draw=none,
+          fill=white, fill opacity=0.7, text opacity=1
+        }
       ]
-        % --- No control ---
+        % No control
         \addplot+[thick, mark=none] table[row sep=\\]{x y\\
-          0 1.0\\ 0.1 0.90\\ 0.2 0.80\\ 0.3 0.85\\ 0.4 0.75\\ 0.5 0.80\\
+          0 1.00\\ 0.1 0.90\\ 0.2 0.80\\ 0.3 0.85\\ 0.4 0.75\\ 0.5 0.80\\
           0.6 0.70\\ 0.7 0.78\\ 0.8 0.72\\ 0.9 0.76\\ 1.0 0.74\\};
         \addlegendentry{No control}
-
-        % --- PID ---
+        % PID
         \addplot+[thick, mark=none] table[row sep=\\]{x y\\
           0 0.60\\ 0.1 0.45\\ 0.2 0.35\\ 0.3 0.28\\ 0.4 0.24\\ 0.5 0.22\\
           0.6 0.20\\ 0.7 0.19\\ 0.8 0.18\\ 0.9 0.18\\ 1.0 0.17\\};
         \addlegendentry{PID}
-
-        % --- PID+FSM+LLM ---
+        % PID+FSM+LLM
         \addplot+[thick, mark=none] table[row sep=\\]{x y\\
           0 0.25\\ 0.1 0.12\\ 0.2 0.07\\ 0.3 0.05\\ 0.4 0.03\\ 0.5 0.025\\
           0.6 0.020\\ 0.7 0.018\\ 0.8 0.016\\ 0.9 0.015\\ 1.0 0.014\\};
@@ -221,12 +228,14 @@ AITL controllers were integrated in SystemDK 2025.
     \label{fig:delay}
   }
 
+  \vspace{2mm}
+
   % (c) EMI jitter bar
   \subfloat[EMI-induced jitter suppression (normalized RMS).]{
     \begin{tikzpicture}
       \begin{axis}[
-        width=0.65\textwidth, height=0.35\textwidth,
-        ybar, bar width=18pt,
+        width=\w, height=\h,
+        ybar, bar width=14pt,
         symbolic x coords={No control, PID, PID+FSM+LLM},
         xtick=data, ymin=0, ymax=1.1, ylabel={Norm. RMS jitter},
         nodes near coords, nodes near coords align={vertical}
@@ -239,6 +248,7 @@ AITL controllers were integrated in SystemDK 2025.
 
   \caption{Experimental results under AITL control (synthetic but representative).}
   \label{fig:results}
+  \vspace{-2mm}
 \end{figure*}
 
 \begin{table}[t]
@@ -255,6 +265,8 @@ Jitter (ps)        & 100 & 20  & \textbf{1} \\
 \hline
 \end{tabular}
 \end{table}
+
+\FloatBarrier % ← ここでFig.2までを確実に吐き出してから次セクションへ
 
 \section{Related Work}
 Yakimets \textit{et al.}~\cite{yakimets2020cfet} studied CFET integration but lacked runtime adaptation.
@@ -295,7 +307,7 @@ Future work:
 \section*{Acknowledgment}
 The author thanks the Project Design Hub community for discussions.
 
-% === 最終ページ段落バランス ===
+% === 最終ページ段落バランス（必要に応じて調整）===
 \IEEEtriggeratref{6}
 
 \bibliographystyle{IEEEtran}
