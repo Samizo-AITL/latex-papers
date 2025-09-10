@@ -188,41 +188,36 @@ AITL controllers were integrated in SystemDK 2025.
     \end{tikzpicture}
     \label{fig:heatmap}
   }\hfill
-  % (b) Delay vs time
-  \subfloat[Delay vs.\ time (No control / PID / PID+FSM+LLM).]{
-    \begin{tikzpicture}
-      \begin{axis}[
-        width=0.45\textwidth, height=0.33\textwidth,
-        xlabel={Time (s)}, ylabel={Delay deviation (norm.)},
-        xmin=0, xmax=1, ymin=0, ymax=1.05,
-        legend cell align=left,
-        legend style={draw=none, fill=none, at={(0.03,0.97)}, anchor=north west},
-        line width=1pt, mark size=1.8pt
-      ]
-        \addplot+[only marks, thick]
-          table[row sep=\\]{x y\\
-            0 1.0\\ 0.1 0.90\\ 0.2 0.80\\ 0.3 0.85\\ 0.4 0.75\\ 0.5 0.80\\
-            0.6 0.70\\ 0.7 0.78\\ 0.8 0.72\\ 0.9 0.76\\ 1.0 0.74\\};
-        \addlegendentry{No control}
-
-        \addplot+[thick, mark=none]
-          table[row sep=\\]{x y\\
-            0 0.60\\ 0.1 0.45\\ 0.2 0.35\\ 0.3 0.28\\ 0.4 0.24\\ 0.5 0.22\\
-            0.6 0.20\\ 0.7 0.19\\ 0.8 0.18\\ 0.9 0.18\\ 1.0 0.17\\};
-        \addlegendentry{PID}
-
-        \addplot+[thick, mark=none, densely dashed]
-          table[row sep=\\]{x y\\
-            0 0.25\\ 0.1 0.12\\ 0.2 0.07\\ 0.3 0.05\\ 0.4 0.03\\ 0.5 0.025\\
-            0.6 0.020\\ 0.7 0.018\\ 0.8 0.016\\ 0.9 0.015\\ 1.0 0.014\\};
-        \addlegendentry{PID+FSM+LLM}
-      \end{axis}
-    \end{tikzpicture}
-    \label{fig:delay}
-  }
-
-  \vspace{1.0ex}
-
+ 
+% (b) Delay vs time
+\subfloat[Delay vs.\ time (No control / PID / PID+FSM+LLM).]{
+  \begin{tikzpicture}
+    \begin{axis}[width=0.31\textwidth,height=0.22\textwidth,
+      xlabel={Time (s)},ylabel={Delay deviation (norm.)},
+      xmin=0,xmax=1, ymin=0, ymax=1.05, grid=both, legend cell align=left,
+      legend style={draw=none,fill=none,at={(0.97,0.97)},anchor=north east}]
+      
+      % --- No control (線グラフ化) ---
+      \addplot+[thick, mark=none] table[row sep=\\]{x y\\
+        0 1.0\\ 0.1 0.90\\ 0.2 0.80\\ 0.3 0.85\\ 0.4 0.75\\ 0.5 0.80\\
+        0.6 0.70\\ 0.7 0.78\\ 0.8 0.72\\ 0.9 0.76\\ 1.0 0.74\\};
+      \addlegendentry{No control}
+      
+      % --- PID ---
+      \addplot+[thick, mark=none] table[row sep=\\]{x y\\
+        0 0.60\\ 0.1 0.45\\ 0.2 0.35\\ 0.3 0.28\\ 0.4 0.24\\ 0.5 0.22\\
+        0.6 0.20\\ 0.7 0.19\\ 0.8 0.18\\ 0.9 0.18\\ 1.0 0.17\\};
+      \addlegendentry{PID}
+      
+      % --- PID+FSM+LLM ---
+      \addplot+[thick, mark=none] table[row sep=\\]{x y\\
+        0 0.25\\ 0.1 0.12\\ 0.2 0.07\\ 0.3 0.05\\ 0.4 0.03\\ 0.5 0.025\\
+        0.6 0.020\\ 0.7 0.018\\ 0.8 0.016\\ 0.9 0.015\\ 1.0 0.014\\};
+      \addlegendentry{PID+FSM+LLM}
+    \end{axis}
+  \end{tikzpicture}
+  \label{fig:delay}}
+  
   % (c) EMI jitter bar
   \subfloat[EMI-induced jitter suppression (normalized RMS).]{
     \begin{tikzpicture}
