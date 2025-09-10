@@ -14,6 +14,8 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{flushend}   % 最終ページ左右カラム揃え
+\usepackage{placeins}   % \FloatBarrier 用
 
 \tikzset{every node/.style={font=\small}}
 
@@ -52,9 +54,12 @@ and LLM supervision to dynamically mitigate RC delay, thermal coupling,
 stress-induced variability, and EMI/EMC disturbances.
 In addition, FEM analysis (thermal, stress, EM) and S-parameter measurements
 are injected into synthesis, P\&R, and STA to ensure physics-aware closure.
-Proof-of-concept simulations demonstrate over $100\times$ reduction in delay deviation,
-thermal overshoot below $3\times 10^{-5}\%$, and EMI-induced jitter suppressed by two orders of magnitude.
-This framework enables runtime-aware DTCO, reducing guardbands while improving reliability across sub-2\,nm nodes.
+Proof-of-concept co-simulations (FEM + RTL testbench) demonstrate over
+$100\times$ reduction in delay deviation,
+thermal overshoot below $3\times 10^{-5}\%$, and EMI-induced jitter
+suppressed by two orders of magnitude.
+This framework enables runtime-aware DTCO, reducing guardbands while
+improving reliability across sub-2\,nm nodes.
 \end{abstract}
 
 \section{Introduction}
@@ -172,7 +177,7 @@ AITL controllers were integrated in SystemDK 2025.
 \end{itemize}
 
 % ===== Table 1 : keep with Fig.1 =====
-\begin{table}[!b]
+\begin{table}[!t]
 \centering
 \caption{Performance metrics under AITL control}
 \label{tab:perf}
@@ -245,6 +250,7 @@ He is now an independent semiconductor researcher focusing on process/device edu
 \textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com},
 \href{https://github.com/Samizo-AITL}{Samizo-AITL}
 
+\FloatBarrier
 % ===== Fig.2 : Next page =====
 \clearpage
 \begin{figure*}[!t]
@@ -304,15 +310,4 @@ He is now an independent semiconductor researcher focusing on process/device edu
         ybar, bar width=18pt,
         symbolic x coords={No control, PID, PID+FSM+LLM},
         xtick=data, ymin=0, ymax=1.1, ylabel={Norm. RMS jitter},
-        nodes near coords, nodes near coords align={vertical}
-      ]
-        \addplot coordinates {(No control,1.0) (PID,0.2) (PID+FSM+LLM,0.01)};
-      \end{axis}
-    \end{tikzpicture}
-  }
-
-  \caption{Experimental results under AITL control (synthetic but representative).}
-  \label{fig:results}
-\end{figure*}
-
-\end{document}
+        nodes
