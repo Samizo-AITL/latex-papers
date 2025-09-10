@@ -10,7 +10,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{microtype}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,fit,calc}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,backgrounds}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usepackage[caption=false,font=footnotesize]{subfig}
@@ -265,7 +265,6 @@ He is now an independent semiconductor researcher focusing on process/device edu
           surf, shader=interp, samples=35, samples y=30, domain=0:1, y domain=0.1:1.0
         ] { max(5, 100*(1 - 0.7*x - 0.3*(y-0.1)/0.9)) };
       \end{axis}
-    \begin{scope}[on background layer]\end{scope}
     \end{tikzpicture}%
   }\\[6mm]
 
@@ -315,5 +314,3 @@ He is now an independent semiconductor researcher focusing on process/device edu
   \caption{Experimental results under AITL control (synthetic but representative).}
   \label{fig:results}
 \end{figure*}
-
-\end{document}
