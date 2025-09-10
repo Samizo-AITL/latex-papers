@@ -3,6 +3,14 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,shapes,calc}
+\tikzset{
+  blk/.style={draw, rounded corners, align=center, minimum width=25mm, minimum height=8mm},
+  box/.style={blk, rectangle},
+  note/.style={blk, dashed},
+  line/.style={-Latex},
+}
 
 % 図の検索パスを figs/ に通す
 \graphicspath{{figs/}}
@@ -38,10 +46,41 @@ PID compensates delay/thermal/voltage variations; FSM supervises modes and safet
 \subsection{AITL Next}
 LLM (lightweight, future) analyzes EDA logs, retunes PID gains $(K_p, K_i, K_d)$, and regenerates FSM rules.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.48\textwidth]{system_overview.png}
-  \caption{System overview: Control layer (PID+FSM), EDA flow, FEM/S-parameter integration, actuators, and LLM (Next).}
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=6mm]
+  % Control
+  \node[box] (yaml) {YAML Config / FW / CSR};
+  \node[box, right=12mm of yaml] (pid) {PID Controller};
+  \node[box, right=12mm of pid]  (fsm) {FSM Supervisor};
+  \node[box, right=12mm of fsm, minimum width=30mm] (act) {Actuators\\DVFS / Vcore / Cooling};
+
+  % Monitors
+  \node[box, below=14mm of pid, minimum width=35mm] (mon) {Telemetry\\Delay / Temp / Jitter};
+
+  % EDA
+  \node[box, below=14mm of fsm, minimum width=40mm] (eda) {EDA Flow\\Synth $\rightarrow$ P\&R $\rightarrow$ STA $\rightarrow$ GDS};
+
+  % Physics + PDK
+  \node[box, right=12mm of eda, minimum width=38mm] (phys) {Physics\\FEM / S-Params};
+  \node[box, below=8mm of eda, minimum width=35mm] (pdk) {Process Design Kit};
+
+  % LLM (Next)
+  \node[note, above=10mm of fsm, minimum width=40mm] (llm) {AITL Next\\LLM Analyzer};
+
+  % Connections
+  \draw[line] (yaml) -- (pid);
+  \draw[line] (pid) -- (fsm);
+  \draw[line] (fsm) -- (act);
+  \draw[line] (mon.north) -- ($(mon.north)+(0,4mm)$) -| (pid.south);
+  \draw[line] (eda.north) -- ($(eda.north)+(0,4mm)$) -| (pid.south);
+  \draw[line] (eda.north) -- ($(eda.north)+(0,4mm)$) -| (fsm.south);
+  \draw[line] (phys.west) -- (eda.east);
+  \draw[line] (pdk.north) -- (eda.south);
+  \draw[line, dashed] (llm.south) -- (fsm.north);
+\end{tikzpicture}
+\caption{System overview (TikZ): control layer (PID+FSM), EDA flow, physics inputs, telemetry, actuators, and LLM (Next).}
+\label{fig:system_overview}
 \end{figure}
 
 \section{Analytical Models and EDA Mapping}
@@ -97,12 +136,11 @@ RTL excerpt (PID controller), FSM transitions, and YAML configuration were imple
 \end{itemize}
 
 \section{Conclusion and Future Work}
-AITL Base (PID+FSM) establishes runtime stabilization.
-AITL Next will integrate lightweight LLM models for real-time EDA log analysis and control redesign.
+AITL Base (PID+FSM) establishes runtime stabilization.  
+AITL Next will integrate lightweight LLM models for real-time EDA log analysis and control redesign.  
 Industrial relevance: prototype chips, EDA tool collaboration, and AI-driven DTCO.
 
 \bibliographystyle{IEEEtran}
-% ← ここを bib の実ファイル名に合わせて修正
 \bibliography{systemdk_aitl2025}
 
 \end{document}
