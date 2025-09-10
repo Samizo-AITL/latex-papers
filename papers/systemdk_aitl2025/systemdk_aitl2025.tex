@@ -4,15 +4,9 @@
 \usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,fit,shapes,calc}
-\tikzset{
-  blk/.style={draw, rounded corners, align=center, minimum width=25mm, minimum height=8mm},
-  box/.style={blk, rectangle},
-  note/.style={blk, dashed},
-  line/.style={-Latex},
-}
+\usetikzlibrary{positioning, shapes, arrows}
 
-% 図の検索パスを figs/ に通す
+% 図の検索パス
 \graphicspath{{figs/}}
 
 \title{SystemDK with AITL: Physics-Aware Runtime DTCO via PID, FSM, and LLM Integration}
@@ -20,7 +14,7 @@
 \author{
   \IEEEauthorblockN{Shinichi Samizo}
   \IEEEauthorblockA{Independent Semiconductor Researcher \\
-  Email: shin3t72@gmail.com}
+  Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}}
 }
 
 \begin{document}
@@ -46,41 +40,38 @@ PID compensates delay/thermal/voltage variations; FSM supervises modes and safet
 \subsection{AITL Next}
 LLM (lightweight, future) analyzes EDA logs, retunes PID gains $(K_p, K_i, K_d)$, and regenerates FSM rules.
 
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}[node distance=6mm]
-  % Control
-  \node[box] (yaml) {YAML Config / FW / CSR};
-  \node[box, right=12mm of yaml] (pid) {PID Controller};
-  \node[box, right=12mm of pid]  (fsm) {FSM Supervisor};
-  \node[box, right=12mm of fsm, minimum width=30mm] (act) {Actuators\\DVFS / Vcore / Cooling};
+\begin{figure}[h]
+  \centering
+  % 旧PNGの代わりにTikZで図を生成
+  \begin{tikzpicture}[node distance=8mm, every node/.style={font=\small}]
+    % Control Layer
+    \node[draw, rectangle, rounded corners, fill=blue!10] (pid) {PID Controller};
+    \node[draw, rectangle, rounded corners, right=of pid, fill=blue!10] (fsm) {FSM Supervisor};
+    \node[draw, rectangle, rounded corners, right=of fsm, fill=green!10] (rtl) {Verilog RTL};
+    \draw[->] (pid) -- (fsm);
+    \draw[->] (fsm) -- (rtl);
 
-  % Monitors
-  \node[box, below=14mm of pid, minimum width=35mm] (mon) {Telemetry\\Delay / Temp / Jitter};
+    % EDA Flow
+    \node[draw, rectangle, rounded corners, below=of rtl, fill=orange!10] (synth) {Logic Synthesis};
+    \node[draw, rectangle, rounded corners, right=of synth, fill=orange!10] (pnr) {Place \& Route};
+    \node[draw, rectangle, rounded corners, right=of pnr, fill=orange!10] (sta) {Static Timing Analysis};
+    \node[draw, rectangle, rounded corners, right=of sta, fill=orange!10] (gds) {GDSII};
+    \draw[->] (rtl) -- (synth) -- (pnr) -- (sta) -- (gds);
 
-  % EDA
-  \node[box, below=14mm of fsm, minimum width=40mm] (eda) {EDA Flow\\Synth $\rightarrow$ P\&R $\rightarrow$ STA $\rightarrow$ GDS};
+    % Physics
+    \node[draw, rectangle, rounded corners, below=of pnr, fill=purple!10] (fem) {FEM Analysis};
+    \node[draw, rectangle, rounded corners, right=of fem, fill=purple!10] (sparam) {S-Parameter};
+    \draw[->, dashed] (fem) -- (pnr);
+    \draw[->, dashed] (fem) -- (sta);
+    \draw[->, dashed] (sparam) -- (pnr);
+    \draw[->, dashed] (sparam) -- (sta);
 
-  % Physics + PDK
-  \node[box, right=12mm of eda, minimum width=38mm] (phys) {Physics\\FEM / S-Params};
-  \node[box, below=8mm of eda, minimum width=35mm] (pdk) {Process Design Kit};
-
-  % LLM (Next)
-  \node[note, above=10mm of fsm, minimum width=40mm] (llm) {AITL Next\\LLM Analyzer};
-
-  % Connections
-  \draw[line] (yaml) -- (pid);
-  \draw[line] (pid) -- (fsm);
-  \draw[line] (fsm) -- (act);
-  \draw[line] (mon.north) -- ($(mon.north)+(0,4mm)$) -| (pid.south);
-  \draw[line] (eda.north) -- ($(eda.north)+(0,4mm)$) -| (pid.south);
-  \draw[line] (eda.north) -- ($(eda.north)+(0,4mm)$) -| (fsm.south);
-  \draw[line] (phys.west) -- (eda.east);
-  \draw[line] (pdk.north) -- (eda.south);
-  \draw[line, dashed] (llm.south) -- (fsm.north);
-\end{tikzpicture}
-\caption{System overview (TikZ): control layer (PID+FSM), EDA flow, physics inputs, telemetry, actuators, and LLM (Next).}
-\label{fig:system_overview}
+    % LLM
+    \node[draw, rectangle, rounded corners, above=of fsm, fill=red!10, dashed] (llm) {LLM Analyzer (Next)};
+    \draw[->, dashed] (llm) -- (fsm);
+    \draw[->, dashed] (sta) -- (llm);
+  \end{tikzpicture}
+  \caption{System overview: Control (PID+FSM), EDA flow, FEM/S-parameters, and LLM (Next).}
 \end{figure}
 
 \section{Analytical Models and EDA Mapping}
@@ -142,5 +133,13 @@ Industrial relevance: prototype chips, EDA tool collaboration, and AI-driven DTC
 
 \bibliographystyle{IEEEtran}
 \bibliography{systemdk_aitl2025}
+
+\begin{IEEEbiographynophoto}{Shinichi Samizo}
+received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
+He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development,
+and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
+He is currently an independent semiconductor researcher focusing on process/device education,
+memory architecture, and AI system integration.
+\end{IEEEbiographynophoto}
 
 \end{document}
