@@ -1,137 +1,154 @@
 \documentclass[conference]{IEEEtran}
 
+% ---- packages ----
+\usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
-\usepackage{subfig}
-\usepackage{cite}
-\usepackage{url}
 \usepackage{xcolor}
+\usepackage{subfig}        % \subfloat
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 
-\begin{document}
+% ---- spacing (控えめに詰める) ----
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{4pt}
 
-\title{SystemDK with AITL: Physics-Aware Runtime DTCO via PID, FSM, and LLM Integration}
+% ---- figure sizes ----
+\newlength{\figW}\setlength{\figW}{0.95\columnwidth}
+\newlength{\figH}\setlength{\figH}{0.60\columnwidth}   % 基準
+\newlength{\figHbig}\setlength{\figHbig}{0.90\columnwidth} % 縦1.5倍相当
 
-\author{\IEEEauthorblockN{Shinichi Samizo}
-\IEEEauthorblockA{Independent Semiconductor Researcher\\
-Email: shin3t72@gmail.com}
+% ---- pgfplots 共通スタイル ----
+\pgfplotsset{
+  myaxis/.style={
+    width=\figW,height=\figH,
+    grid=both, grid style={line width=.1pt, draw=gray!30},
+    major grid style={line width=.2pt, draw=gray!60},
+    tick align=outside,
+    legend cell align=left
+  },
+  myaxisbig/.style={
+    width=\figW,height=\figHbig,
+    grid=both, grid style={line width=.1pt, draw=gray!30},
+    major grid style={line width=.2pt, draw=gray!60},
+    tick align=outside,
+    legend cell align=left
+  }
 }
 
+\begin{document}
+\title{SystemDK with AITL: (Draft)}
+\author{Anonymous}
 \maketitle
 
 \begin{abstract}
-This paper introduces SystemDK with AITL, a paradigm that extends traditional Design-Technology Co-Optimization (DTCO) by embedding control-theoretic loops directly into EDA flows. Beyond static compact models, we integrate PID feedback, FSM guards, and LLM supervision to dynamically mitigate RC delay, thermal coupling, stress-induced variability, and EMI/EMC disturbances. FEM analysis (thermal, stress, EM) and S-parameter measurements are injected into synthesis, P\&R, and STA to ensure physics-aware closure. Proof-of-concept simulations demonstrate over $100\times$ reduction in delay deviation, thermal overshoot below $3\times 10^{-5}\%$, and EMI-induced jitter suppressed by two orders of magnitude. This enables runtime-aware DTCO, reducing guardbands while improving reliability across sub-2 nm nodes.
+This paper introduces SystemDK with AITL ...
 \end{abstract}
 
 \section{Introduction}
-Conventional EDA tools focus on static sign-off closure. However, scaling to CFET and 3D sequential integration introduces \emph{dynamic runtime effects}: (i) RC delay variation due to interconnect scaling, (ii) vertical thermal coupling across stacked tiers, (iii) stress-driven mobility and $V_{th}$ shifts, and (iv) EMI/EMC noise degrading timing and signal integrity. SystemDK provides DTCO interfaces, but lacks runtime adaptability. We propose AITL (AI $\times$ Intelligent Loop) integration to embed corrective feedback directly into SystemDK.
+本文……（略）
 
-\section{Modeling}
-Delay/thermal behavior of CFET interconnects follows resistive, capacitive, and thermal RC dynamics; compact models are extended with stress/EMI and transmission terms.
-
-\subsection{Delay and Thermal Models}
-FO1 delay is:
-\begin{equation}
-T_{FO1} = (R_{wire}+R_{via})(C_{load}+C_{inter}),
-\end{equation}
-where $R_{via}$ dominates at scaled nodes due to aspect ratio.
-\begin{equation}
-R(T)=R_0(1+\alpha(T-25^\circ C)),
-\end{equation}
-with $\alpha$ as TCR. Thermal dynamics:
-\begin{equation}
-C_{th}\frac{dT}{dt}=P\cdot R_{th}-(T-T_{amb}),
-\end{equation}
-where vertical coupling $k_c$ propagates heating into lower tiers.
-
-\subsection{Stress and EMI Models}
-Stress perturbs device parameters:
-\begin{equation}
-\Delta V_{th}(t)=\beta_{stress}\sigma(t), \quad \Delta \mu=-\gamma \cdot \sigma(t).
-\end{equation}
-EMI injection:
-\begin{equation}
-v_{emi}(t)=A\sin(2\pi f t), \quad f=10{-}200\ \text{MHz}.
-\end{equation}
-
-\subsection{Network Analyzer Models}
-Interconnect modeled by $S$-parameters:
-\begin{equation}
-H(f)=S_{21}(f), \quad f=1{-}40\ \text{GHz},
-\end{equation}
-which modulates delay/jitter during STA.
-
-\section{Control Architecture}
-A three-layered controller (PID, FSM, LLM) is proposed:
-\begin{itemize}
-\item \textbf{PID:} compensates delay deviations via DVFS actuation $u$.
-\item \textbf{FSM:} enforces safety $u \leq u_{max}$.
-\item \textbf{LLM:} supervises and adapts $(K_p,K_i)$ and thresholds.
-\end{itemize}
-
+%==================== Fig.1 ====================
 \begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth,trim=6pt 6pt 6pt 6pt,clip]{fig1}
-\caption{Supervisory PID+FSM+LLM architecture integrated within the EDA flow.}
-\label{fig:fig1}
+  \centering
+  % Fig.1 はみ出し防止 (幅は列幅の95%)、clipで余白カットしても絵は欄内
+  \begin{tikzpicture}
+    \begin{axis}[
+      myaxis,
+      xlabel={Time}, ylabel={Score},
+      title={Fig.~1: Overview Metric},
+      clip mode=individual
+    ]
+      \addplot+[mark=*] coordinates {(0,0) (1,2) (2,3) (3,2.2) (4,3.5)};
+      \addplot+[mark=triangle*] coordinates {(0,0.2) (1,1.7) (2,2.6) (3,2.9) (4,3.2)};
+      \legend{Method A, Method B}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{System-level overview plot (column-safe width).}
+  \label{fig:fig1}
 \end{figure}
 
-\section{Experimental Validation}
-Two-tier CFET thermal–RC plant with DVFS actuation was prototyped. AITL controllers were integrated in SystemDK 2025.
+\section{Approach}
+本文……（略）
 
-\subsection{Setup}
-$R_{via}=1$–$10\ \Omega$, $C_{inter}=1$–$5$ fF, $P_{burst}=0.1$–$1.0$ W, $k_c=0.3$–$0.9$, EMI: 10–200 MHz sinusoidal, co-sim: MATLAB/Simulink $\rightarrow$ RTL testbench.
-
-\subsection{Results}
-\begin{itemize}
-\item Delay deviation reduced $>100\times$ vs baseline,
-\item Thermal overshoot $<3\times10^{-5}\%$,
-\item Stress-induced drift $<10^{-6}\%$,
-\item EMI jitter $100\times$ reduced in NoC.
-\end{itemize}
-
+%==================== Fig.2: (a)(b)(c) 縦並び・間隔広め ====================
 \begin{figure}[t]
-\centering
-\includegraphics[width=0.9\linewidth]{fig2a}\\[10pt]
-\includegraphics[width=0.9\linewidth]{fig2b}\\[10pt]
-\includegraphics[width=0.7\linewidth]{fig2c}
-\caption{Experimental results under AITL control: (a) suppression vs $k_c$, (b) delay vs time, (c) EMI-induced jitter suppression.}
-\label{fig:fig2}
+  \centering
+  % ---- (a) ----
+  \subfloat[(a) Throughput vs. Load]{%
+    \begin{tikzpicture}
+      \begin{axis}[
+        myaxisbig,
+        xlabel={Load}, ylabel={Throughput}
+      ]
+        \addplot+[mark=*] coordinates {(1,10) (2,18) (3,23) (4,25) (5,26)};
+        \addplot+[mark=square*] coordinates {(1,9) (2,16) (3,20) (4,22) (5,24)};
+        \legend{AITL, Baseline}
+      \end{axis}
+    \end{tikzpicture}
+  }\\[8pt]
+  % ---- (b) 凡例はグラフ外 (south outside) で重なり回避 ----
+  \subfloat[(b) Latency distribution]{%
+    \begin{tikzpicture}
+      \begin{axis}[
+        myaxisbig,
+        xlabel={Percentile}, ylabel={Latency (ms)},
+        legend pos=south outside
+      ]
+        \addplot+[mark=none] coordinates {(50,12) (75,15) (90,18) (95,22) (99,35)};
+        \addplot+[mark=none, dashed] coordinates {(50,14) (75,18) (90,24) (95,30) (99,48)};
+        \legend{AITL, Baseline}
+      \end{axis}
+    \end{tikzpicture}
+  }\\[8pt]
+  % ---- (c) ----
+  \subfloat[(c) Resource heat map (toy)]{%
+    \begin{tikzpicture}
+      \begin{axis}[
+        myaxisbig,
+        view={0}{90}, % 2D heatmap風
+        xlabel={Core}, ylabel={Task},
+        colormap name=viridis,
+        colorbar, colorbar style={title=util}
+      ]
+        % 小さなおもちゃデータ（そのままコンパイル可）
+        \addplot[matrix plot*, point meta=explicit] coordinates {
+          (1,1) [1]  (2,1) [2]  (3,1) [3]  (4,1) [2]
+          (1,2) [2]  (2,2) [3]  (3,2) [4]  (4,2) [3]
+          (1,3) [1]  (2,3) [2]  (3,3) [2]  (4,3) [1]
+        };
+      \end{axis}
+    \end{tikzpicture}
+  }
+
+  \caption{Fig.~2: (a)--(c) are vertically stacked with wider spacing; (b) legend is placed outside to avoid overlap.}
+  \label{fig:fig2}
 \end{figure}
 
-\section{Related Work}
-Yakimets \emph{et al.} \cite{yakimets2020} studied CFET but lacked runtime adaptation. IRDS \cite{irds2023} emphasized DTCO with static flows. Control theory \cite{franklin2015,anderson2007,khalil2002} provides analytical basis. EMI compliance follows IEC \cite{iec2019}.
+\section{Evaluation}
+本文……（略）
 
-\section{Stability Analysis}
-PID loop must satisfy:
-\begin{equation}
-K_p < \frac{2\zeta\omega_n}{G}, \quad K_i < \frac{\omega_n^2}{G},
-\end{equation}
-FSM bounds $u \leq u_{max}$; LLM adapts gains under drift.
+\section{Conclusion}
+本文……（略）
 
-\section{Limitations}
-Models omit parasitic 3D effects, EMI modeled as simple sinusoid; real-time LLM may be resource-limited.
+% 参考文献のバランス調整（必要に応じて番号を変更）
+\IEEEtriggeratref{4}
 
-\section{Discussion and Outlook}
-SystemDK with AITL reframes EDA:
-\begin{itemize}
-\item Static $\rightarrow$ dynamic runtime closure,
-\item Guardbands $\rightarrow$ adaptive loops,
-\item Reliability $\rightarrow$ cross-domain resilience.
-\end{itemize}
-Future: (1) commercial EDA integration, (2) stress/EMI-aware compact models, (3) NoC traffic coupling, (4) microfluidic cooling, (5) Edusemi packaging.
-
-\section*{References}
-\begin{thebibliography}{1}
-\bibitem{yakimets2020} D. Yakimets \emph{et al.}, ``Challenges for CFET integration,'' in \emph{Proc. IEDM}, 2020.
-\bibitem{irds2023} IRDS, ``International roadmap for devices and systems,'' 2023.
-\bibitem{franklin2015} G. F. Franklin \emph{et al.}, \emph{Feedback Control of Dynamic Systems}, 7th ed., 2015.
-\bibitem{khalil2002} H. K. Khalil, \emph{Nonlinear Systems}. Prentice Hall, 2002.
-\bibitem{anderson2007} B. D. O. Anderson and J. B. Moore, \emph{Optimal Control}, Dover, 2007.
-\bibitem{iec2019} IEC 61000-4, ``EMC—Testing and Measurement Techniques,'' 2019.
+\begin{thebibliography}{00}
+\bibitem{r1} A. Author, “Title,” Venue, Year.
+\bibitem{r2} B. Author, “Title,” Venue, Year.
+\bibitem{r3} C. Author, “Title,” Venue, Year.
+\bibitem{r4} D. Author, “Title,” Venue, Year.
+\bibitem{r5} E. Author, “Title,” Venue, Year.
 \end{thebibliography}
 
+% IEEEtran の conference モードは \IEEEbiography がロックされるため、
+% セクション素の体裁で代替します（2ページ右欄に寄せたい場合は
+% \IEEEtriggeratref の位置や数で微調整）。
 \section*{Author Biography}
-\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. He worked at Seiko Epson Corporation in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology. He is now an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration. \\
-\textit{Contact:} shin3t72@gmail.com, \url{https://github.com/Samizo-AITL}
+\small
+Shinichi T., received the B.E. ... (略)。Contact: \texttt{shin3t72@gmail.com}
 
 \end{document}
