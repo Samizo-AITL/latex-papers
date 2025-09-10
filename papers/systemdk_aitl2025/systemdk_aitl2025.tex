@@ -4,6 +4,9 @@
 \usepackage{booktabs}
 \usepackage{hyperref}
 
+% 図の検索パスを figs/ に通す
+\graphicspath{{figs/}}
+
 \title{SystemDK with AITL: Physics-Aware Runtime DTCO via PID, FSM, and LLM Integration}
 
 \author{
@@ -31,7 +34,7 @@ Traditional DTCO applies static guardbands, leading to inefficiency. SystemDK wi
 
 \section{Proposed Framework}
 \subsection{AITL Base}
-PID compensates delay/thermal/voltage variations; FSM supervises modes and safety thresholds.  
+PID compensates delay/thermal/voltage variations; FSM supervises modes and safety thresholds.
 \subsection{AITL Next}
 LLM (lightweight, future) analyzes EDA logs, retunes PID gains $(K_p, K_i, K_d)$, and regenerates FSM rules.
 
@@ -94,11 +97,12 @@ RTL excerpt (PID controller), FSM transitions, and YAML configuration were imple
 \end{itemize}
 
 \section{Conclusion and Future Work}
-AITL Base (PID+FSM) establishes runtime stabilization.  
-AITL Next will integrate lightweight LLM models for real-time EDA log analysis and control redesign.  
+AITL Base (PID+FSM) establishes runtime stabilization.
+AITL Next will integrate lightweight LLM models for real-time EDA log analysis and control redesign.
 Industrial relevance: prototype chips, EDA tool collaboration, and AI-driven DTCO.
 
 \bibliographystyle{IEEEtran}
-\bibliography{refs}
+% ← ここを bib の実ファイル名に合わせて修正
+\bibliography{systemdk_aitl2025}
 
 \end{document}
