@@ -82,19 +82,15 @@ A lightweight LLM analyzes EDA/telemetry logs, recommends new gains $(K_p,K_i,K_
 % YAML -> PID
 \draw[->] (yaml.east) -- (pid.west);
 
-% ---- FSM -> EDA : Telemetry の下を通す（重なり防止）----
-% 調整用クリアランス（必要に応じて 3–6mm 程度で調整）
-\def\arrowclear{4mm}
+% ---- FSM -> EDA : EDA の下辺に接続 ----
+\path let \p1=(eda.south) in
+  coordinate (edaBottom) at (\x1,\y1-6mm); % EDA 下辺の少し下に中継点
 
-% Telemetry 下の水平ラインとその中点を作る
-\path let \p1=(tele.south), \p2=(eda.east), \p3=(fsm.south) in
-  coordinate (fsmeda) at (\x2,\y1-\arrowclear) % EDA 側の到達点（水平）
-  coordinate (fsmh)   at (\x3,\y1-\arrowclear) % FSM 直下（水平開始点）
-  coordinate (fsmmid) at ($(fsmh)!0.5!(fsmeda)$); % 水平区間の中点
+% FSM から縦に降ろして → EDA 下辺に接続
+\draw[->] (fsm.south) |- (edaBottom) -- (eda.south);
 
-% ルーティング（縦→水平→EDA）とラベル
-\draw[->] (fsm.south) |- (fsmeda) -- (eda.east);
-\node[font=\scriptsize,below=2pt,align=center] at (fsmmid) {constraints};
+% ラベル配置（中継点の少し下）
+\node[font=\scriptsize,below=2pt,align=center] at (edaBottom) {constraints};
   
 % Telemetry -> PID
 \draw[->] (tele.north) -- (pid.south);
