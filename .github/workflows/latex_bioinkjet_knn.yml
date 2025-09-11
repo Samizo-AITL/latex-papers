@@ -2,12 +2,16 @@ name: Build LaTeX PDF (BioInkjet KNN)
 
 on:
   push:
+    branches: [ "main", "develop", "**" ]   # ← どのブランチでも基本発火
     paths:
-      - "papers/2025_bioinkjet_knn/**"
+      - "papers/2025_bioinkjet_knn/**"      # ← 当該ディレクトリに変更がある時
+      - ".github/workflows/latex_bioinkjet_knn.yml"  # ← ワークフロー更新でも発火
   pull_request:
+    branches: [ "**" ]
     paths:
       - "papers/2025_bioinkjet_knn/**"
-  workflow_dispatch:
+      - ".github/workflows/latex_bioinkjet_knn.yml"
+  workflow_dispatch: {}                      # ← 手動実行OK
 
 jobs:
   build:
@@ -15,20 +19,31 @@ jobs:
     defaults:
       run:
         working-directory: papers/2025_bioinkjet_knn
-    steps:
-      - uses: actions/checkout@v4   # ← checkoutもv4対応に更新
 
-      # LaTeX ビルド
+    steps:
+      - uses: actions/checkout@v4
+
+      # （任意）TeX Live キャッシュで高速化
+      - name: Cache TeX Live
+        uses: actions/cache@v4
+        with:
+          path: ~/.texlive
+          key: texlive-${{ runner.os }}-2025
+
       - name: Compile LaTeX
         id: latex
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: papers/2025_bioinkjet_knn
-          # 例: XeLaTeXを使いたい場合
+          # XeLaTeX を使う場合は以下を有効化
           # latexmk_use_xelatex: true
+          # shell-escape が必要なら有効化
+          # latexmk_shell_escape: true
+          # 追加パッケージが必要なら（例）
+          # extra_system_packages: "ghostscript poppler-utils"
 
-      # PDF成果物
+      # PDF を保存（失敗しても必ず実行）
       - name: Upload PDF artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -37,7 +52,7 @@ jobs:
           path: papers/2025_bioinkjet_knn/main.pdf
           retention-days: 14
 
-      # ログ・中間ファイル
+      # ログ類を保存（失敗時のデバッグ用）
       - name: Upload build logs
         if: always()
         uses: actions/upload-artifact@v4
