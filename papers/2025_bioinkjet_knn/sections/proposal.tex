@@ -57,26 +57,31 @@ resulting in an integrated Bio-IJ printhead module.
   \label{fig:block}
 \end{figure}
 
-% Fig.2: Cross section (single column)
-\begin{figure}[t]
+% --- Fig.2: Cross section (single-column width, no overflow) ---
+\begin{figure}[!t]
   \centering
-  \tikzset{font=\footnotesize}
   \begin{tikzpicture}[
-      box/.style={draw, rounded corners, align=center, minimum height=5.6mm, minimum width=70mm}
+      every node/.style={font=\scriptsize},
+      box/.style={draw, rounded corners, align=center,
+                  minimum height=5mm, text width=.9\linewidth},
+      line width=0.3pt
     ]
-    % Layers
-    \node[box] (hs) {Heat spreader};
-    \node[box, below=1mm of hs] (act) {Bulk KNN multilayer stack (200--500~\si{\micro\meter})};
+    % 本体レイヤ（幅は列幅の 0.9 倍に固定）
+    \node[box] (hs)  {Heat spreader};
+    \node[box, below=1mm of hs]  (act) {Bulk KNN multilayer stack (200--500\,\si{\micro\meter})};
     \node[box, below=1mm of act] (cav) {Etched Si cavity};
-    \node[box, below=1mm of cav] (sub) {Si substrate / nozzle outlet ($\varphi$\,8~\si{\micro\meter})};
+    \node[box, below=1mm of cav] (sub) {Si substrate / nozzle outlet ($\varphi$\,8\,\si{\micro\meter})};
 
-    % Notes (left/right)
-    \node[align=left, anchor=east] (lt) at ([xshift=-2mm]cav.west) {Back pressure $\approx -2.0$~kPa\\PI membrane damper\\Supply};
-    \draw (lt.east) -- ++(2mm,0) |- (cav.west);
+    % 説明（図の内側・上部に収める）
+    \node[align=left, anchor=west]  at ([xshift=-.45\linewidth,yshift=2.5mm]hs.north)
+      {Back pressure $\approx -2.0$\,kPa;\quad PI membrane damper;\quad Supply};
+    \node[align=right, anchor=east] at ([xshift=.45\linewidth,yshift=2.5mm]hs.north)
+      {Target: 3--5\,\si{\pico\liter} droplets;\quad $\sim 10^6$ shots class};
 
-    \node[align=left, anchor=west] (rt) at ([xshift=2mm]sub.east) {Target: 3--5~\si{\pico\liter} droplets\\$\sim 10^6$ shots class};
-    \draw (rt.west) -- ++(-2mm,0) |- (sub.east);
+    % （必要なら上の2行から矢印を足せますが、幅外へ出ないように線は内側で完結させます）
   \end{tikzpicture}
-  \caption{Cross-sectional schematic of the Bio-IJ printhead. The KNN stack is bonded to a silicon cavity with $\varphi 8$~\si{\micro\meter} nozzles; fluidics provide back-pressure stabilization and damping.}
+  \caption{Cross-sectional schematic of the Bio-IJ printhead.
+  The KNN stack is bonded to a silicon cavity with $\varphi$\,8\,\si{\micro\meter}
+  nozzles; fluidics provide back-pressure stabilization and damping.}
   \label{fig:section}
 \end{figure}
