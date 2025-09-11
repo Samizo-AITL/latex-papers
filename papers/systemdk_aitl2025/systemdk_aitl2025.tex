@@ -48,7 +48,7 @@ A compact PID compensates delay/thermal/voltage variations while an FSM supervis
 \subsection{AITL Next}
 A lightweight LLM analyzes EDA/telemetry logs, recommends new gains $(K_p,K_i,K_d)$, and regenerates FSM rules when operating points drift (aging, workload, ambient). This enables adaptive retuning without human-in-the-loop during field operation.
 
-% ---- Fig.1 tikz: drop-in replacement (no block-crossing) ----
+% ---- Fig.1 tikz: fixed routing (no overlap with node borders) ----
 \begin{figure*}[t]
 \centering
 \begin{tikzpicture}[
@@ -59,53 +59,53 @@ A lightweight LLM analyzes EDA/telemetry logs, recommends new gains $(K_p,K_i,K_
   lab/.style={font=\scriptsize, inner sep=1pt, fill=white, draw=none},
   >={Latex[length=2mm]}
 ]
-% --- Top: LLM (dashed) ---
+% --- Nodes ---
 \node[ghost] (llm) at (0,2.9) {LLM Analyzer (Next):\\retunes $K_p,K_i,K_d$; regenerates FSM rules};
 
-% --- Upper row: Config -> PID -> FSM ---
 \node[box] (yaml) at (-4.8,0.7) {YAML Config\\FW / CSR};
 \node[box] (pid)  at (-0.8,0.7) {PID Controller};
 \node[box] (fsm)  [right=19mm of pid] {FSM Supervisor};
 
-% --- Vertical stack under PID ---
 \node[box] (tele) [below=12mm of pid] {Telemetry:\\Delay / Temp / Jitter};
 \node[box] (fem)  [below=10mm of tele] {FEM\\(Thermal / Stress)};
 \node[box] (spar) [below=10mm of fem]  {S-parameters (SI/EMI)};
 
-% --- EDA hook (left column) ---
 \node[box] (eda)  [left=20mm of tele] {EDA Flow\\(Synth / P\&R / STA)};
 
-% ========== Connections (no block crossing) ==========
-% Config -> PID (short straight)
+% ========== Connections ==========
+% Config -> PID
 \draw[->] (yaml.east) -- (pid.west);
 
-% LLM -> PID (dashed, via short vertical)
-\draw[dashed,->] (llm.south) -- ++(0,-1.2) -| (pid.north);
+% --- Top rail for LLM fanout (avoids odd entry to FSM/PID) ---
+% rail is a little above the controllers so it won't coincide with any top edge
+\coordinate (rail) at ($(pid.north)!0.5!(fsm.north) + (0,7mm)$);
+\draw[dashed,->] (llm.south) -- ++(0,-1.4) -| (rail);
+\draw[dashed,->] (rail) -- (pid.north);
+\draw[dashed,->] (rail) -- (fsm.north);
+\node[lab] at ($(pid.north)!0.5!(fsm.north)+(0,0.55)$) {gain \& threshold adapt};
 
-% LLM -> FSM (dashed, via top rail so it never crosses blocks)
-\draw[dashed,->] (llm.east) ++(0.2,0) -- ++(0.9,0) |- (fsm.north);
-
-% Telemetry up to PID (straight)
+% Telemetry -> PID
 \draw[->] (tele.north) -- (pid.south);
 
-% Physics upflow (S-params -> FEM -> Telemetry)
+% Physics upflow
 \draw[->] (spar.north) -- (fem.south);
 \draw[->] (fem.north)  -- (tele.south);
 
-% EDA -> Telemetry (run-time measurements), routed from left
+% EDA -> Telemetry（左から回り込み）
 \draw[->] (eda.east) -- ++(0.9,0) |- (tele.west);
 
-% FSM supervisory constraints back to EDA (routed on top edge, not across blocks)
-\path let \p1=(fsm.west) in
-      coordinate (tap) at (\x1-0.9,\y1);
-\draw[->] (fsm.west) -- (tap) |- (eda.north);
-\node[lab] at ($(tap)!0.5!(eda.north)+(0,0.35)$) {constraints};
-
-% Small label for LLM outputs
-\node[lab] at ($(pid.north)!0.5!(fsm.north)+(0,0.55)$) {gain \& threshold adapt};
+% --- FSM -> EDA constraints (three-step route: left, up, left, then down) ---
+% 1) 少し左へ出してノード境界から離れる
+\coordinate (foutL) at ($(fsm.west)+(-0.9,0)$);
+% 2) 上に持ち上げて同一直線重なりを避ける
+\coordinate (foutU) at ($(foutL)+(0,7mm)$);
+% 3) EDA の真上まで水平に運び、下ろす
+\coordinate (edaAbove) at ($(eda.north)+(0,6mm)$);
+\draw[->] (fsm.west) -- (foutL) -- (foutU) -- ($(edaAbove)!1!(edaAbove)$) -- (eda.north);
+\node[lab] at ($(foutU)!0.5!(edaAbove)+(0,0.35)$) {constraints};
 
 \end{tikzpicture}
-\caption{System overview (two-column): runtime telemetry $\rightarrow$ compact physics models $\rightarrow$ PID/FSM runtime control $\rightarrow$ actuators, with EDA sign-off integration; an optional LLM (Next) provides adaptive gain retuning and FSM rule regeneration. All arrows are routed along gaps/edges (not over blocks).}
+\caption{System overview (two-column): runtime telemetry $\rightarrow$ compact physics models $\rightarrow$ PID/FSM runtime control $\rightarrow$ actuators, with EDA sign-off integration; an optional LLM (Next) provides adaptive gain retuning and FSM rule regeneration. All arrows are routed along gaps/edges and do not overlap node borders.}
 \label{fig:system}
 \end{figure*}
 
