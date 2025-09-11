@@ -82,11 +82,11 @@ A lightweight LLM analyzes EDA/telemetry logs, recommends new gains $(K_p,K_i,K_
 % YAML -> PID
 \draw[->] (yaml.east) -- (pid.west);
 
-% --- FSM -> EDA （constraints：EDAの右辺に接続）---
-\draw[->] (fsm.south) |- ($(eda.east)+(0,0.0)$) -- (eda.east);
+% --- FSM -> EDA （constraints：Telemetryの下を通ってEDA右辺に接続）---
+\draw[->] (fsm.south) -- ++(0,-1.2) -- ++(-4.8,0) |- (eda.east);
 \node[font=\scriptsize,align=center]
-  at ($(fsm.south)!0.5!(eda.east)+(0.55,-0.2)$) {constraints};
-
+  at ($(fsm.south)+( -2.4,-1.2)$) {constraints};
+  
 % Telemetry -> PID
 \draw[->] (tele.north) -- (pid.south);
 
