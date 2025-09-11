@@ -82,16 +82,19 @@ A lightweight LLM analyzes EDA/telemetry logs, recommends new gains $(K_p,K_i,K_
 % YAML -> PID
 \draw[->] (yaml.east) -- (pid.west);
 
-% --- FSM -> EDA（Telemetry の下を通す）---
-% ※ tikzlibrary{calc} が必要
-\path let \p1 = (tele.south), \p2 = (eda.east) in
-      coordinate (fsmeda) at (\x2,\y1-3mm);
+% ---- FSM -> EDA : Telemetry の下を通す（重なり防止）----
+% 調整用クリアランス（必要に応じて 3–6mm 程度で調整）
+\def\arrowclear{4mm}
 
+% Telemetry 下の水平ラインとその中点を作る
+\path let \p1=(tele.south), \p2=(eda.east), \p3=(fsm.south) in
+  coordinate (fsmeda) at (\x2,\y1-\arrowclear) % EDA 側の到達点（水平）
+  coordinate (fsmh)   at (\x3,\y1-\arrowclear) % FSM 直下（水平開始点）
+  coordinate (fsmmid) at ($(fsmh)!0.5!(fsmeda)$); % 水平区間の中点
+
+% ルーティング（縦→水平→EDA）とラベル
 \draw[->] (fsm.south) |- (fsmeda) -- (eda.east);
-
-% ラベルは水平区間の中点付近
-\node[font=\scriptsize,align=center]
-      at ($(fsm.south)!0.6!(fsmeda)$) {constraints};
+\node[font=\scriptsize,below=2pt,align=center] at (fsmmid) {constraints};
   
 % Telemetry -> PID
 \draw[->] (tele.north) -- (pid.south);
