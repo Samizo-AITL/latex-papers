@@ -82,10 +82,16 @@ A lightweight LLM analyzes EDA/telemetry logs, recommends new gains $(K_p,K_i,K_
 % YAML -> PID
 \draw[->] (yaml.east) -- (pid.west);
 
-% --- FSM -> EDA （constraints：Telemetryの下を通ってEDA右辺に接続）---
-\draw[->] (fsm.south) -- ++(0,-1.2) -- ++(-4.8,0) |- (eda.east);
-\node[font=\scriptsize,align=center]
-  at ($(fsm.south)+( -2.4,-1.2)$) {constraints};
+% -------- FSM -> EDA（Telemetryの下を通す・重なり回避） --------
+% Telemetry の下端y座標と EDA東端x座標を取得し、少し下(=3mm)に回避点を作る
+\path let \pTs=(tele.south), \pEe=(eda.east) in
+      coordinate (fsmeda) at (\xEe,\yTs-3mm);
+
+% FSM南端からL字に fsmeda を経由して EDA東端へ
+\draw[->] (fsm.south) |- (fsmeda) -- (eda.east);
+
+% ラベルは水平区間の中点付近に
+\node[font=\scriptsize,align=center] at ($(fsm.south)!0.6!(fsmeda)$) {constraints};
   
 % Telemetry -> PID
 \draw[->] (tele.north) -- (pid.south);
