@@ -5,9 +5,9 @@
 \usepackage{amsmath}
 \usepackage{siunitx}
 \usepackage{cite}
-\usepackage{tikz} % <-- TikZを追加
+\usepackage{tikz} % TikZ for figures
 \usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric,decorations.pathreplacing}
-\usepackage[hidelinks]{hyperref} % hyperlinks, load last
+\usepackage[hidelinks]{hyperref} % load last
 \urlstyle{same}
 
 % ===== Graphics handling =====
@@ -48,7 +48,7 @@ microarrays.
 % ===== Main Sections =====
 \input{sections/intro}
 \input{sections/background}
-\input{sections/proposal}   % <-- Figures handled inside with IfFileExists
+\input{sections/proposal}   % figures are drawn with TikZ inside this file
 \input{sections/applications}
 \input{sections/conclusion}
 
