@@ -5,17 +5,13 @@
 \usepackage{amsmath}
 \usepackage{siunitx}
 \usepackage{cite}
-\usepackage{tikz} % TikZ for figures
+\usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric,decorations.pathreplacing}
-\usepackage[hidelinks]{hyperref} % load last
+\usepackage[hidelinks]{hyperref}
 \urlstyle{same}
 
-% ===== Graphics handling =====
-\graphicspath{{figures/}{images/}{./}} % search paths for figures
-\DeclareGraphicsExtensions{.pdf,.png,.jpg,.jpeg} % valid extensions
-
 % ===== Title & Author =====
-\title{Lead-free Bio-Inkjet Printing with Bulk KNN Actuators}
+\title{Lead-free Bio-Inkjet Printing with Bulk KNN Actuators and AITL-based Adaptive Control}
 
 \author{
   \IEEEauthorblockN{Shinichi Samizo}
@@ -31,31 +27,77 @@
 % ===== Abstract =====
 \begin{abstract}
 This paper proposes a biocompatible inkjet printing architecture based on
-lead-free piezoelectric materials, specifically bulk KNN (K,Na)NbO$_3$,
-combined with chip-on-film (COF) driver IC implementation and silicon
-cavity integration.
-While Pb-free piezoelectrics have failed to replace PZT in industrial
-printing due to strict requirements on performance, endurance, and cost,
-bioprinting applications impose more moderate demands.
-Typical needs include droplet volumes of 1--10~\si{\pico\liter}, device
-lifetimes on the order of $10^6$ shots, and operation within $\pm
-50$~\si{\volt}, all of which can be met by KNN-based actuators.
-We present the process flow, expected performance, and potential
-applications in bio-3D printing, cell patterning, and protein
-microarrays.
+lead-free piezoelectric actuators, specifically bulk KNN (K,Na)NbO$_3$, combined
+with chip-on-film (COF) driver ICs, silicon cavity integration, and
+an AITL (Adaptive Intelligent Three-Layer) supervisory control framework.
+Unlike conventional PZT-driven industrial heads, the KNN approach supports
+biocompatibility and Pb-free compliance, while moderate performance
+(3--5 pL droplets, $10^6$ shots, $\pm50$ V operation) satisfies bioprinting needs.
+Beyond actuation, the electromechanical response of KNN is leveraged for
+\emph{self-diagnosis}: detecting missing droplets and estimating ink viscosity.
+This diagnostic data feeds into an AITL architecture---an inner PID loop for
+real-time stability, an FSM layer for mode transitions and compensation,
+and an LLM-driven supervisory layer for adaptive redesign of control rules.
+We present the architecture, process flow, and representative biomedical
+applications, highlighting the potential of KNN as both actuator and sensor.
 \end{abstract}
 
-% ===== Main Sections =====
+% ===== Sections =====
+\section{Introduction}
 \input{sections/intro}
+
+\section{Background: Pb-free Piezoelectrics}
 \input{sections/background}
-\input{sections/proposal}   % figures are drawn with TikZ inside this file
+
+\section{Proposed Bio-IJ Architecture}
+\input{sections/proposal}
+
+\section{Self-Diagnosis and Feedback Control}
+The bulk KNN actuator can also function as a proxy sensor by monitoring
+its electromechanical response during drive pulses.
+\subsection{Dot-Missing Detection and Compensation}
+By observing charge/displacement signatures, missing droplets are detected
+without external optics. An FSM controller triggers neighboring-nozzle
+compensation, preserving array-level print reliability.
+\subsection{Viscosity Estimation and Drive Adaptation}
+Viscosity changes appear as altered dynamic response.
+The PID loop adjusts drive voltage/pulsewidth in real time.
+This closes the loop between fluid rheology and actuator operation.
+
+\section{AITL Control Framework}
+The Adaptive Intelligent Three-Layer (AITL) framework integrates:
+\begin{itemize}
+\item \textbf{Inner PID}: ensures real-time stability of droplet ejection.
+\item \textbf{Intermediate FSM}: supervises nozzle states, detects anomalies,
+and switches modes (normal, compensation, cleaning).
+\item \textbf{Outer LLM}: analyzes long-term trends, re-identifies PID gains,
+and redefines FSM transitions when performance degrades.
+\end{itemize}
+A schematic is shown in Fig.~\ref{fig:aitl}.
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  block/.style={draw, rounded corners, minimum width=2.4cm, minimum height=8mm, align=center},
+  line/.style={-{Latex[length=2.2mm,width=1.4mm]}}
+]
+\node[block] (pid) {PID Loop\\(Droplet Stability)};
+\node[block, above=of pid] (fsm) {FSM Layer\\(Nozzle State Control)};
+\node[block, above=of fsm] (llm) {LLM Layer\\(Adaptive Redesign)};
+\draw[line] (fsm) -- (pid);
+\draw[line] (llm) -- (fsm);
+\end{tikzpicture}
+\caption{AITL three-layer architecture for Bio-IJ adaptive control.}
+\label{fig:aitl}
+\end{figure}
+
+\section{Applications}
 \input{sections/applications}
+
+\section{Conclusion}
 \input{sections/conclusion}
 
-% ------ Ensure references appear even if not cited explicitly ------
-\nocite{Saito2004KNN,Dubois2019BioIJ}
-
 % ===== References =====
+\nocite{Saito2004KNN,Dubois2019BioIJ}
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
