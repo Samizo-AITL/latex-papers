@@ -4,14 +4,50 @@ on:
   push:
     paths:
       - "papers/2025_bioinkjet_knn/**"
+  pull_request:
+    paths:
+      - "papers/2025_bioinkjet_knn/**"
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: papers/2025_bioinkjet_knn
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4   # ← checkoutもv4対応に更新
+
+      # LaTeX ビルド
       - name: Compile LaTeX
+        id: latex
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: papers/2025_bioinkjet_knn
+          # 例: XeLaTeXを使いたい場合
+          # latexmk_use_xelatex: true
+
+      # PDF成果物
+      - name: Upload PDF artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bioinkjet_knn-pdf
+          path: papers/2025_bioinkjet_knn/main.pdf
+          retention-days: 14
+
+      # ログ・中間ファイル
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bioinkjet_knn-logs
+          path: |
+            papers/2025_bioinkjet_knn/*.log
+            papers/2025_bioinkjet_knn/*.aux
+            papers/2025_bioinkjet_knn/*.fls
+            papers/2025_bioinkjet_knn/*.fdb_latexmk
+            papers/2025_bioinkjet_knn/*.out
+            papers/2025_bioinkjet_knn/*.toc
+          retention-days: 14
