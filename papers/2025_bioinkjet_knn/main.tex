@@ -5,55 +5,59 @@
 \usepackage{amsmath}
 \usepackage{siunitx}
 \usepackage{cite}
-% 最後に読み込む（リンクを有効化）
-\usepackage[hidelinks]{hyperref}
+\usepackage[hidelinks]{hyperref} % hyperlinks, load last
 \urlstyle{same}
 
+% ===== Title & Author =====
 \title{Lead-free Bio-Inkjet Printing with Bulk KNN Actuators}
 
 \author{
   \IEEEauthorblockN{Shinichi Samizo}
-  \IEEEauthorblockA{
-    Independent Semiconductor Researcher\\
-    Former Engineer at Seiko Epson Corporation\\
-    Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\
-    GitHub: \url{https://github.com/Samizo-AITL}
-  }
+  \IEEEauthorblockA{Independent Semiconductor Researcher\\
+  Former Engineer at Seiko Epson Corporation\\
+  Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\
+  GitHub: \url{https://github.com/Samizo-AITL}}
 }
 
 \begin{document}
 \maketitle
 
+% ===== Abstract =====
 \begin{abstract}
-This paper proposes a bio-compatible inkjet architecture based on
+This paper proposes a biocompatible inkjet printing architecture based on
 lead-free piezoelectric materials, specifically bulk KNN (K,Na)NbO$_3$,
-combined with COF driver IC implementation and Si cavity integration.
-While Pb-free piezoelectrics failed to replace PZT in industrial
-printing due to performance and durability demands, in bio-printing
-applications the requirements are more moderate: droplet volumes of
-1--10 pL, endurance around $10^6$ shots, and voltages within $\pm50$ V
-are sufficient. We present a process flow, expected performance, and
-potential applications in bio 3D printing, cell patterning, and
-protein microarrays.
+combined with chip-on-film (COF) driver IC implementation and silicon
+cavity integration.
+While Pb-free piezoelectrics have failed to replace PZT in industrial
+printing due to strict requirements on performance, endurance, and cost,
+bioprinting applications impose more moderate demands.
+Typical needs include droplet volumes of 1--10~\si{\pico\liter}, device
+lifetimes on the order of $10^6$ shots, and operation within $\pm
+50$~\si{\volt}, all of which can be met by KNN-based actuators.
+We present the process flow, expected performance, and potential
+applications in bio-3D printing, cell patterning, and protein
+microarrays.
 \end{abstract}
 
+% ===== Main Sections =====
 \input{sections/intro}
 \input{sections/background}
 \input{sections/proposal}
 \input{sections/applications}
 \input{sections/conclusion}
 
+% ===== References =====
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
-% ---------- Biography (optional, fits in 2 pages if needed) ----------
+% ===== Biography =====
 \section*{Author Biography}
-\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering 
-from Shinshu University, Japan. He worked at Seiko Epson Corporation as an engineer in 
-semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS 
-actuators and PrecisionCore printhead technology. He is currently an independent 
-semiconductor researcher focusing on process/device education, memory architecture, and 
-AI system integration. 
-
-\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}.
+\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic
+Engineering from Shinshu University, Japan. He worked at Seiko Epson
+Corporation as an engineer in semiconductor memory and mixed-signal
+device development, and contributed to inkjet MEMS actuators and
+PrecisionCore printhead technology. He is currently an independent
+semiconductor researcher focusing on process/device education, memory
+architecture, and AI system integration. Contact:
+\href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}.
 \end{document}
