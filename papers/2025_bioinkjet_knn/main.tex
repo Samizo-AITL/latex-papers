@@ -1,4 +1,4 @@
-\documentclass[conference]{IEEEtran}  % or article/journal style
+\documentclass[conference]{IEEEtran}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{siunitx}
@@ -10,6 +10,19 @@
 \begin{document}
 \maketitle
 
+\begin{abstract}
+This paper proposes a bio-compatible inkjet architecture based on
+lead-free piezoelectric materials, specifically bulk KNN (K,Na)NbO$_3$,
+combined with COF driver IC implementation and Si cavity integration.
+While Pb-free piezoelectrics failed to replace PZT in industrial
+printing due to performance and durability demands, in bio-printing
+applications the requirements are more moderate: droplet volumes of
+1--10 pL, endurance around $10^6$ shots, and voltages within $\pm50$ V
+are sufficient. We present a process flow, expected performance, and
+potential applications in bio 3D printing, cell patterning, and
+protein microarrays.
+\end{abstract}
+
 \input{sections/intro}
 \input{sections/background}
 \input{sections/proposal}
@@ -18,4 +31,5 @@
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
+
 \end{document}
