@@ -57,7 +57,7 @@ resulting in an integrated Bio-IJ printhead module.
   \label{fig:block}
 \end{figure}
 
-% --- Fig.2: Cross section (single-column width, no overlap) ---
+% --- Fig.2: Cross section (single-column width, 上部説明をさらに上へ) ---
 \begin{figure}[!t]
   \centering
   \begin{tikzpicture}[
@@ -66,22 +66,20 @@ resulting in an integrated Bio-IJ printhead module.
                   minimum height=5mm, text width=.90\linewidth},
       line width=0.3pt
     ]
-    % 本体レイヤ（幅は列幅の 0.90 倍）
+    % 本体レイヤ
     \node[box] (hs)  {Heat spreader};
     \node[box, below=1mm of hs]  (act) {Bulk KNN multilayer stack (200--500\,\si{\micro\meter})};
     \node[box, below=1mm of act] (cav) {Etched Si cavity};
     \node[box, below=1mm of cav] (sub) {Si substrate / nozzle outlet ($\varphi$\,8\,\si{\micro\meter})};
 
-    % ── 上部説明（左右に固定幅／中央で重ならない） ──
-    \node[align=left, anchor=north west, text width=.44\linewidth, inner sep=0pt]
-      at ([yshift=2mm]hs.north west)
+    % ── 上部説明（さらに上にシフトして重なり解消） ──
+    \node[align=left, anchor=south west, text width=.44\linewidth, inner sep=0pt]
+      at ([yshift=6mm]hs.north west)
       {Back pressure $\approx -2.0$\,kPa;\\ PI membrane damper; Supply};
 
-    \node[align=right, anchor=north east, text width=.44\linewidth, inner sep=0pt]
-      at ([yshift=2mm]hs.north east)
+    \node[align=right, anchor=south east, text width=.44\linewidth, inner sep=0pt]
+      at ([yshift=6mm]hs.north east)
       {Target: 3--5\,\si{\pico\liter} droplets;\\ $\sim 10^6$ shots class};
-
-    % （必要なら矢印を追加するが、図内に収める）
   \end{tikzpicture}
   \caption{Cross-sectional schematic of the Bio-IJ printhead.
   The KNN stack is bonded to a silicon cavity with $\varphi$\,8\,\si{\micro\meter}
