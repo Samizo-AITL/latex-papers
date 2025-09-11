@@ -4,23 +4,23 @@ biocompatibility, manufacturability, and sufficient actuation
 performance for biomedical applications. Its main components are as
 follows:
 \begin{itemize}
-  \item \textbf{Bulk KNN multilayer stack actuator}: 
+  \item \textbf{Bulk KNN multilayer stack actuator}:
         A 200--500~\si{\micro\meter} thick piezoelectric stack providing
         moderate displacement suitable for picoliter-scale droplet
         ejection.
-  \item \textbf{COF driver IC}: 
-        A chip-on-film high-voltage driver with 16--32 channels, 
-        operating at up to $\pm 50$~V, and incorporating waveform RAM 
+  \item \textbf{COF driver IC}:
+        A chip-on-film high-voltage driver with 16--32 channels,
+        operating at up to $\pm 50$~\si{\volt}, and incorporating waveform RAM
         with SPI control for flexible pulse shaping.
-  \item \textbf{Si cavity and nozzle array}: 
+  \item \textbf{Si cavity and nozzle array}:
         A silicon-etched cavity directly bonded to the actuator, with
         nozzles of $\varphi$\SI{8}{\micro\meter} diameter producing
         droplets in the 3--5~\si{\pico\liter} range.
-  \item \textbf{Reservoir and back pressure control}: 
-        A fluidic supply stabilized at approximately $-2.0$~kPa using
-        a PID-controlled regulator to ensure consistent meniscus
+  \item \textbf{Reservoir and back-pressure control}:
+        A fluidic supply stabilized at approximately \SI{-2.0}{\kilo\pascal}
+        using a PID-controlled regulator to ensure consistent meniscus
         positioning.
-  \item \textbf{PI membrane damper}: 
+  \item \textbf{PI membrane damper}:
         A polyimide-based damping layer integrated in the reservoir to
         suppress pressure fluctuations and prevent satellite droplets.
 \end{itemize}
@@ -36,7 +36,6 @@ resulting in an integrated Bio-IJ printhead module.
 % --- Fig.1: Block diagram (two-column width) ---
 \begin{figure*}[t]
   \centering
-  % 見やすさのため両カラム幅
   \resizebox{\textwidth}{!}{%
   \begin{tikzpicture}[
       node distance=18mm,
@@ -48,18 +47,16 @@ resulting in an integrated Bio-IJ printhead module.
     \node[box] (knn) {Bulk KNN\\multilayer actuator\\(200--500\,\si{\micro\meter})};
     \node[box, right=30mm of knn] (cof) {COF driver IC\\(16--32 ch, $\pm 50$\,\si{\volt})\\Waveform RAM / SPI};
     \node[box, right=30mm of cof] (noz) {Si cavity \&\\nozzle array\\($\varphi$\,8\,\si{\micro\meter}, 3--5\,\si{\pico\liter})};
-    \node[box, above=14mm of cof] (bp) {Reservoir \& Back Pressure\\($\approx -2.0$\,kPa) + PI damper};
+    \node[box, above=14mm of cof] (bp) {Reservoir \& Back Pressure\\($\approx -2.0$\,\si{\kilo\pascal}) + PI damper};
 
     % Arrows
     \draw[arrow] (cof) -- node[above]{HV pulses} (knn);
     \draw[arrow] (knn) -- (noz);
     \draw[arrow] (bp)  -- (noz);
-
   \end{tikzpicture}%
   }
-  \caption{System architecture of the proposed Bio-Inkjet (Bio-IJ). A bulk KNN actuator, COF high-voltage driver, silicon cavity/nozzles, and fluidics（back-pressure + PI damper）を統合。}
+  \caption{System architecture of the proposed Bio-Inkjet (Bio-IJ). A bulk KNN actuator, COF high-voltage driver, silicon cavity/nozzles, and fluidics (back-pressure + PI damper) are integrated.}
   \label{fig:block}
-  % \vspace{-1mm} % 必要なら有効化（詰めたい場合のみ）
 \end{figure*}
 
 % --- Fig.2: Cross section (single-column width) ---
@@ -70,14 +67,14 @@ resulting in an integrated Bio-IJ printhead module.
       every node/.style={font=\footnotesize},
       box/.style={draw, rounded corners, align=center, minimum height=6mm}
     ]
-    % 基本レイヤ
+    % Layers
     \node[box, minimum width=75mm] (hs) {Heat spreader};
-    \node[box, below=1mm of hs, minimum width=75mm] (act) {Bulk KNN multilayer stack (200--500\,\si{\micro\meter})};
+    \node[box, below=1mm of hs,  minimum width=75mm] (act) {Bulk KNN multilayer stack (200--500\,\si{\micro\meter})};
     \node[box, below=1mm of act, minimum width=75mm] (cav) {Etched Si cavity};
     \node[box, below=1mm of cav, minimum width=75mm] (sub) {Si substrate / nozzle outlet ($\varphi$\,8\,\si{\micro\meter})};
 
-    % 説明
-    \node[align=left, left=0mm of act, xshift=-3mm] (lefttxt) {Back pressure $\approx -2.0$\,kPa\\PI membrane damper\\Supply};
+    % Callouts
+    \node[align=left, left=0mm of act, xshift=-3mm] (lefttxt) {Back pressure $\approx -2.0$\,\si{\kilo\pascal}\\PI membrane damper\\Supply};
     \draw[-] (lefttxt.east) -- ++(3mm,0) |- (cav.west);
 
     \node[align=left, right=0mm of act, xshift=3mm] (righttxt) {Target: 3--5\,\si{\pico\liter} droplets\\$\sim 10^6$ shots class};
@@ -86,5 +83,4 @@ resulting in an integrated Bio-IJ printhead module.
   }
   \caption{Cross-sectional schematic of the Bio-IJ printhead. The KNN stack is bonded to a silicon cavity with $\varphi$8\,\si{\micro\meter} nozzles; fluidics provide back-pressure stabilization and damping.}
   \label{fig:section}
-  % \vspace{-1mm} % 必要なら有効化
 \end{figure}
