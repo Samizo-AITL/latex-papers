@@ -1,28 +1,145 @@
+\section{Proposed Architecture}
+The proposed Bio-Inkjet (Bio-IJ) actuator system is designed to balance
+biocompatibility, manufacturability, and sufficient actuation
+performance for biomedical applications. Its main components are as
+follows:
+\begin{itemize}
+  \item \textbf{Bulk KNN multilayer stack actuator}: 
+        A 200--500~\si{\micro\meter} thick piezoelectric stack providing
+        moderate displacement suitable for picoliter-scale droplet
+        ejection.
+  \item \textbf{COF driver IC}: 
+        A chip-on-film high-voltage driver with 16--32 channels, 
+        operating at up to $\pm 50$~V, and incorporating waveform RAM 
+        with SPI control for flexible pulse shaping.
+  \item \textbf{Si cavity and nozzle array}: 
+        A silicon-etched cavity directly bonded to the actuator, with
+        nozzles of $\varphi$\SI{8}{\micro\meter} diameter producing
+        droplets in the 3--5~\si{\pico\liter} range.
+  \item \textbf{Reservoir and back pressure control}: 
+        A fluidic supply stabilized at approximately $-2.0$~kPa using
+        a PID-controlled regulator to ensure consistent meniscus
+        positioning.
+  \item \textbf{PI membrane damper}: 
+        A polyimide-based damping layer integrated in the reservoir to
+        suppress pressure fluctuations and prevent satellite droplets.
+\end{itemize}
+
 The associated \textit{process flow} begins with fabrication of the bulk
 KNN stack and electrode finishing, followed by terminal cutting and COF
 assembly. The actuator is then mounted with a heat spreader for thermal
 management and finally bonded to the silicon cavity structure,
 resulting in an integrated Bio-IJ printhead module.
 
-% ===== Figures =====
+% ===== Figure 1: Block Diagram (TikZ, no external files) =====
 \begin{figure}[t]
   \centering
-  % TODO: Replace with TikZ or external PDF/PNG
-  \includegraphics[width=0.9\linewidth]{figures/block_diagram.pdf}
-  \caption{System architecture of the proposed Bio-Inkjet (Bio-IJ).
-  The design integrates a bulk KNN multilayer actuator, COF driver IC,
-  silicon cavity/nozzle array, and fluidic components (reservoir with
-  PI damper and back-pressure control).}
+  \begin{tikzpicture}[
+      >=Stealth,
+      node distance=12mm,
+      every node/.style={font=\small},
+      box/.style={draw,rounded corners,thick,minimum width=28mm,minimum height=10mm,align=center}
+  ]
+    % Nodes
+    \node[box,fill=gray!15] (knn) {Bulk KNN\\Actuator};
+    \node[box,fill=blue!12,right=18mm of knn] (driver) {COF Driver IC\\(16--32 ch, $\pm 50$ V)\\Waveform RAM / SPI};
+    \node[box,fill=green!12,right=18mm of driver,minimum width=30mm] (si) {Si Cavity\\\& Nozzle Array};
+    \node[box,fill=yellow!20,above=12mm of driver,minimum width=42mm] (res) {Reservoir \& Back Pressure\\($-2.0$ kPa) + PI Damper};
+
+    % Arrows
+    \draw[->,thick] (driver) -- node[above]{HV pulses} (si);
+    \draw[->,thick] (knn) -- node[above]{mechanical actuation} (si);
+    \draw[->,thick] (res) -- node[right]{fluid supply} (si);
+
+    % Brace / annotation
+    \node[align=left,below=10mm of driver,font=\footnotesize]
+      (note) {Target: 3--5~\si{\pico\liter} droplets, $10^6$ shots class};
+    \draw[dashed] (note.north -| knn.west) -- (note.north -| si.east);
+  \end{tikzpicture}
+  \caption{System architecture of the proposed Bio-Inkjet (Bio-IJ) using TikZ only.
+  A bulk KNN actuator, COF high-voltage driver, silicon cavity/nozzles, and
+  fluidics (back-pressure with PI damping) are integrated.}
   \label{fig:block}
 \end{figure}
 
+% ===== Figure 2: Cross-Section (TikZ, no external files) =====
 \begin{figure}[t]
   \centering
-  % TODO: Replace with TikZ or external PDF/PNG
-  \includegraphics[width=0.9\linewidth]{figures/cross_section.pdf}
-  \caption{Cross-sectional schematic of the Bio-IJ printhead.
-  The bulk KNN actuator is bonded onto a silicon cavity with outlet
-  nozzles of $\varphi$\SI{8}{\micro\meter}, supported by reservoir
-  fluidics, damping, and back-pressure stabilization.}
+  % scale調整：列幅に収まるように全体スケールをやや小さめに
+  \begin{tikzpicture}[x=0.18mm,y=0.18mm,>=Stealth, every node/.style={font=\scriptsize}]
+    % Dimensions (arbitrary but consistent, not to scale)
+    % Layer heights (approx visual)
+    \def\siH{40}        % visible Si thickness
+    \def\cavH{22}       % cavity depth
+    \def\adhH{6}        % adhesive layer
+    \def\knnH{46}       % KNN stack
+    \def\hsH{12}        % heat spreader
+    \def\totalW{260}    % total width
+
+    % Baseline y positions (from bottom up)
+    \def\ySi{0}
+    \def\yCav{\ySi+\siH}
+    \def\yAdh{\yCav+\cavH}
+    \def\yKNN{\yAdh+\adhH}
+    \def\yHS{\yKNN+\knnH}
+    \def\yTop{\yHS+\hsH}
+
+    % --- Silicon substrate ---
+    \fill[gray!20] (0,\ySi) rectangle (\totalW,\yCav);
+    \draw[thick] (0,\ySi) rectangle (\totalW,\yCav);
+    \node[anchor=west] at (2,\ySi+6) {Si substrate};
+
+    % --- Etched cavity (rectangle with nozzle outlet) ---
+    \fill[white] (60,\yCav) rectangle (200,\yAdh);
+    \draw[thick] (60,\yCav) rectangle (200,\yAdh);
+    \node at (130,\yCav+8) {Etched cavity};
+
+    % Nozzle outlet (φ8 μm) approximate representation
+    \draw[thick] (128,\yCav) -- (132,\yCav-8); % tapered outlet
+    \draw[thick] (132,\yCav-8) -- (136,\yCav); % small V-notch
+    \node[anchor=west] at (138,\yCav-6) {$\varphi$\SI{8}{\micro\meter} nozzle};
+
+    % --- Adhesive layer ---
+    \fill[orange!25] (0,\yAdh) rectangle (\totalW,\yKNN);
+    \draw[thick] (0,\yAdh) rectangle (\totalW,\yKNN);
+    \node[anchor=west] at (2,\yAdh+3) {Adhesive (bonding)};
+
+    % --- KNN stack ---
+    \fill[blue!12] (0,\yKNN) rectangle (\totalW,\yHS);
+    \draw[thick] (0,\yKNN) rectangle (\totalW,\yHS);
+    \node[anchor=west] at (2,\yKNN+6) {Bulk KNN multilayer stack (200--500~\si{\micro\meter})};
+
+    % --- Heat spreader ---
+    \fill[gray!35] (0,\yHS) rectangle (\totalW,\yTop);
+    \draw[thick] (0,\yHS) rectangle (\totalW,\yTop);
+    \node[anchor=west] at (2,\yHS+4) {Heat spreader};
+
+    % --- Reservoir channel (left) ---
+    \fill[cyan!12] (-30,\yCav+6) rectangle (60,\yAdh-6);
+    \draw[thick] (-30,\yCav+6) rectangle (60,\yAdh-6);
+    \node[rotate=90] at (-20,\yCav+\cavH/2) {Reservoir / Supply};
+
+    % Back-pressure annotation
+    \draw[->,thick] (-30,\yCav+\cavH/2) -- (-40,\yCav+\cavH/2);
+    \node[anchor=east] at (-42,\yCav+\cavH/2) {Back pressure $\approx -2.0$~kPa};
+
+    % PI membrane damper (right)
+    \fill[yellow!30] (200,\yCav+6) rectangle (270,\yAdh-6);
+    \draw[thick] (200,\yCav+6) rectangle (270,\yAdh-6);
+    \node[rotate=90] at (262,\yCav+\cavH/2) {PI membrane damper};
+
+    % Droplet
+    \draw[thick,->] (134,\yCav-8) -- (134,\yCav-28);
+    \fill (134,\yCav-32) circle (2.5);
+    \node[anchor=west] at (138,\yCav-30) {3--5~\si{\pico\liter} droplet};
+
+    % Braces / notes
+    \draw[decorate,decoration={brace,amplitude=5pt,mirror},thick]
+      (\totalW+2,\yKNN) -- (\totalW+2,\yHS)
+      node[midway,xshift=12,align=left] {KNN\\stack};
+  \end{tikzpicture}
+  \caption{Cross-sectional schematic of the Bio-IJ printhead (TikZ only).
+  A bulk KNN stack is bonded to a silicon cavity with $\varphi$\SI{8}{\micro\meter}
+  nozzles; fluidics include back pressure and a PI membrane damper.}
   \label{fig:section}
 \end{figure}
