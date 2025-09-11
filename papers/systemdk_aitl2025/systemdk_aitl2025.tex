@@ -48,59 +48,64 @@ A compact PID compensates delay/thermal/voltage variations while an FSM supervis
 \subsection{AITL Next}
 A lightweight LLM analyzes EDA/telemetry logs, recommends new gains $(K_p,K_i,K_d)$, and regenerates FSM rules when operating points drift (aging, workload, ambient). This enables adaptive retuning without human-in-the-loop during field operation.
 
-% ---------- Fig.1 (two-column) ----------
+% ===== Fig.1 (drop-in) =====
 \begin{figure*}[t]
 \centering
-% ---- TikZ style ----
-\begin{tikzpicture}[%
+\begin{tikzpicture}[
   font=\small,
   node distance=9mm and 11mm,
-  box/.style={draw, rounded corners=2pt, inner xsep=6pt, inner ysep=4pt, align=center},
+  box/.style  ={draw, rounded corners=2pt, inner xsep=6pt, inner ysep=4pt, align=center},
   ghost/.style={draw, dashed, rounded corners=2pt, inner xsep=6pt, inner ysep=4pt, align=center},
   >={Latex[length=2mm]}
 ]
-% Nodes (top control / analysis)
-\node[ghost] (llm)            at (0,2.6) {LLM Analyzer (Next):\\retunes $K_p,K_i,K_d$; regenerates FSM rules};
+% --- Nodes ---
+\node[ghost] (llm) at (0,2.6)
+  {LLM Analyzer (Next):\\retunes $K_p,K_i,K_d$; regenerates FSM rules};
 
-% Core control path (left-to-right)
-\node[box]   (yaml)           at (-4.6,0.6) {YAML Config\\FW / CSR};
-\node[box]   (pid)            at (-0.6,0.6) {PID Controller};
-\node[box]   (fsm)            [right=18mm of pid] {FSM Supervisor};
+\node[box] (yaml) at (-4.6,0.6) {YAML Config\\FW / CSR};
+\node[box] (pid)  at (-0.6,0.6) {PID Controller};
+\node[box] (fsm)  [right=18mm of pid] {FSM Supervisor};
 
-% Telemetry and models (vertical stack under PID)
-\node[box]   (tele)           [below=12mm of pid] {Telemetry:\\Delay / Temp / Jitter};
-\node[box]   (fem)            [below=10mm of tele] {FEM\\(Thermal / Stress)};
-\node[box]   (spar)           [below=10mm of fem] {S-parameters (SI/EMI)};
+\node[box] (tele) [below=12mm of pid] {Telemetry:\\Delay / Temp / Jitter};
+\node[box] (fem)  [below=10mm of tele] {FEM\\(Thermal / Stress)};
+\node[box] (spar) [below=10mm of fem] {S-parameters (SI/EMI)};
 
-% EDA hooks (left column)
-\node[box]   (eda)            [left=18mm of tele] {EDA Flow\\(Synth / P\&R / STA)};
+\node[box] (eda)  [left=18mm of tele] {EDA Flow\\(Synth / P\&R / STA)};
 
-% Dotted feedback from LLM to controllers
-\draw[dashed,->] (llm.south) -- ++(0,-1.0) -| (pid.north);
-\draw[dashed,->] (llm.south) -- ++(0,-1.0) -| (fsm.north);
-\node[align=center] at ($(pid.north)!0.5!(fsm.north)+(0,0.55)$) {\scriptsize gain \& threshold adapt};
+% --- Arrows ---
+% LLM -> PID/FSM (dashed). ラベルは独立ノード
+\draw[dashed,->] (llm.south) |- ($(pid.north)+(0,0.2)$) -- (pid.north);
+\draw[dashed,->] (llm.south) |- ($(fsm.north)+(0,0.2)$) -- (fsm.north);
+\node[font=\scriptsize] at ($(pid.north)!0.5!(fsm.north)+(0,0.55)$)
+  {gain \& threshold adapt};
 
-% Config path
-\draw[->] (yaml.east) -- ($(pid.west)+(-0.2,0)$) -- (pid.west);
+% YAML -> PID
+\draw[->] (yaml.east) -- (pid.west);
 
-% Supervisory path (FSM issues constraints)
-\draw[->] (fsm.west) -- ++(-0.8,0) |- (eda.east);
-\node[align=center] at ($(fsm.west)!0.45!(eda.east)+(0,0.35)$) {\scriptsize constraints};
+% FSM -> EDA （constraints：上辺へ、ブロックを跨がない）
+\draw[->] (fsm.west) -- ++(-0.8,0) |- (eda.north);
+\node[font=\scriptsize,align=center]
+  at ($(fsm.west)!0.5!(eda.north)+(0,0.25)$) {constraints};
 
-% Telemetry upward to PID
+% Telemetry -> PID
 \draw[->] (tele.north) -- (pid.south);
 
-% Physics flow upward (S-params -> FEM -> Telemetry)
+% S-params -> FEM -> Telemetry
 \draw[->] (spar.north) -- (fem.south);
 \draw[->] (fem.north)  -- (tele.south);
 
-% EDA to Telemetry (run-time measurements)
+% EDA -> Telemetry（実測値）
 \draw[->] (eda.east) -- ++(0.8,0) |- (tele.west);
-
 \end{tikzpicture}
-\caption{System overview (two-column): runtime telemetry $\rightarrow$ compact physics models $\rightarrow$ PID/FSM runtime control $\rightarrow$ actuators, with EDA sign-off integration; an optional LLM (Next) provides adaptive gain retuning and FSM rule regeneration. Arrows are confined to connector gaps (not over blocks) to avoid visual overlap.}
+
+\caption{System overview: runtime telemetry $\rightarrow$ compact physics models
+$\rightarrow$ PID/FSM runtime control $\rightarrow$ actuators, with EDA sign-off
+integration. An optional LLM (Next) provides adaptive gain retuning and FSM rule
+regeneration. All arrows are routed along gaps/edges and do not overlap node
+borders.}
 \label{fig:system}
 \end{figure*}
+% ===== end Fig.1 =====
 
 % ---------- Models and Mapping ----------
 \section{Analytical Models and EDA Mapping}
