@@ -8,6 +8,10 @@
 \usepackage[hidelinks]{hyperref} % hyperlinks, load last
 \urlstyle{same}
 
+% ===== Graphics handling =====
+\graphicspath{{figures/}{images/}{./}} % search paths for figures
+\DeclareGraphicsExtensions{.pdf,.png,.jpg,.jpeg} % valid extensions
+
 % ===== Title & Author =====
 \title{Lead-free Bio-Inkjet Printing with Bulk KNN Actuators}
 
@@ -42,7 +46,7 @@ microarrays.
 % ===== Main Sections =====
 \input{sections/intro}
 \input{sections/background}
-\input{sections/proposal}
+\input{sections/proposal}   % <-- Figures handled inside with IfFileExists
 \input{sections/applications}
 \input{sections/conclusion}
 
