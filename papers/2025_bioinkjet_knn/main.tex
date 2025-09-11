@@ -53,42 +53,7 @@ applications, highlighting the potential of KNN as both actuator and sensor.
 \input{sections/proposal}
 
 \section{Self-Diagnosis and Feedback Control}
-The bulk KNN actuator can also function as a proxy sensor by monitoring
-its electromechanical response during drive pulses.
-\subsection{Dot-Missing Detection and Compensation}
-By observing charge/displacement signatures, missing droplets are detected
-without external optics. An FSM controller triggers neighboring-nozzle
-compensation, preserving array-level print reliability.
-\subsection{Viscosity Estimation and Drive Adaptation}
-Viscosity changes appear as altered dynamic response.
-The PID loop adjusts drive voltage/pulsewidth in real time.
-This closes the loop between fluid rheology and actuator operation.
-
-\section{AITL Control Framework}
-The Adaptive Intelligent Three-Layer (AITL) framework integrates:
-\begin{itemize}
-\item \textbf{Inner PID}: ensures real-time stability of droplet ejection.
-\item \textbf{Intermediate FSM}: supervises nozzle states, detects anomalies,
-and switches modes (normal, compensation, cleaning).
-\item \textbf{Outer LLM}: analyzes long-term trends, re-identifies PID gains,
-and redefines FSM transitions when performance degrades.
-\end{itemize}
-A schematic is shown in Fig.~\ref{fig:aitl}.
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}[
-  block/.style={draw, rounded corners, minimum width=2.4cm, minimum height=8mm, align=center},
-  line/.style={-{Latex[length=2.2mm,width=1.4mm]}}
-]
-\node[block] (pid) {PID Loop\\(Droplet Stability)};
-\node[block, above=of pid] (fsm) {FSM Layer\\(Nozzle State Control)};
-\node[block, above=of fsm] (llm) {LLM Layer\\(Adaptive Redesign)};
-\draw[line] (fsm) -- (pid);
-\draw[line] (llm) -- (fsm);
-\end{tikzpicture}
-\caption{AITL three-layer architecture for Bio-IJ adaptive control.}
-\label{fig:aitl}
-\end{figure}
+\input{sections/aitl}
 
 \section{Applications}
 \input{sections/applications}
