@@ -1,32 +1,28 @@
-\section{Proposed Architecture}
-The proposed Bio-Inkjet (Bio-IJ) actuator system is designed to balance
-biocompatibility, manufacturability, and sufficient actuation
-performance for biomedical applications. Its main components are as
-follows:
-\begin{itemize}
-  \item \textbf{Bulk KNN multilayer stack actuator}: 
-        A 200--500~\si{\micro\meter} thick piezoelectric stack providing
-        moderate displacement suitable for picoliter-scale droplet
-        ejection.
-  \item \textbf{COF driver IC}: 
-        A chip-on-film high-voltage driver with 16--32 channels, 
-        operating at up to $\pm 50$~V, and incorporating waveform RAM 
-        with SPI control for flexible pulse shaping.
-  \item \textbf{Si cavity and nozzle array}: 
-        A silicon-etched cavity directly bonded to the actuator, with
-        nozzles of $\varphi$\SI{8}{\micro\meter} diameter producing
-        droplets in the 3--5~\si{\pico\liter} range.
-  \item \textbf{Reservoir and back pressure control}: 
-        A fluidic supply stabilized at approximately $-2.0$~kPa using
-        a PID-controlled regulator to ensure consistent meniscus
-        positioning.
-  \item \textbf{PI membrane damper}: 
-        A polyimide-based damping layer integrated in the reservoir to
-        suppress pressure fluctuations and prevent satellite droplets.
-\end{itemize}
-
 The associated \textit{process flow} begins with fabrication of the bulk
 KNN stack and electrode finishing, followed by terminal cutting and COF
 assembly. The actuator is then mounted with a heat spreader for thermal
 management and finally bonded to the silicon cavity structure,
 resulting in an integrated Bio-IJ printhead module.
+
+% ===== Figures =====
+\begin{figure}[t]
+  \centering
+  % TODO: Replace with TikZ or external PDF/PNG
+  \includegraphics[width=0.9\linewidth]{figures/block_diagram.pdf}
+  \caption{System architecture of the proposed Bio-Inkjet (Bio-IJ).
+  The design integrates a bulk KNN multilayer actuator, COF driver IC,
+  silicon cavity/nozzle array, and fluidic components (reservoir with
+  PI damper and back-pressure control).}
+  \label{fig:block}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  % TODO: Replace with TikZ or external PDF/PNG
+  \includegraphics[width=0.9\linewidth]{figures/cross_section.pdf}
+  \caption{Cross-sectional schematic of the Bio-IJ printhead.
+  The bulk KNN actuator is bonded onto a silicon cavity with outlet
+  nozzles of $\varphi$\SI{8}{\micro\meter}, supported by reservoir
+  fluidics, damping, and back-pressure stabilization.}
+  \label{fig:section}
+\end{figure}
