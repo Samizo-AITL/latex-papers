@@ -1,0 +1,122 @@
+% sections/aitl.tex
+\section{Self-Diagnosis and AITL Control: Models and Examples}
+This section formalizes (i) a surrogate sensing model that lets the bulk KNN actuator
+serve as a proxy sensor and (ii) an AITL (PID--FSM--LLM) control scheme including
+concrete PID gain update rules and FSM transition conditions.
+
+\subsection{Surrogate Sensing and Plant Model}
+During a drive pulse $u(t)$, the KNN stack current $i(t)$ and charge $q(t)=\int i(t)\,dt$
+reflect the electromechanical response (displacement/pressure).
+We define a scalar surrogate measurement per shot:
+\begin{equation}
+y_k \triangleq \alpha_1 q_k^{\text{peak}} + \alpha_2 \Delta q_k + \alpha_3 t_{r,k},
+\end{equation}
+where $q_k^{\text{peak}}$ is the peak charge, $\Delta q_k$ the charge increment over a fixed
+window, and $t_{r,k}$ the rise time; $\alpha_i$ are calibration coefficients.
+$y_k$ correlates monotonically with ejected droplet volume $v_k$ for a fixed nozzle geometry.
+
+For inner-loop design we use a discrete-time, second-order, input-output model that captures
+fluid loading and viscosity effects:
+\begin{equation}
+y_{k+1} = a_1(\eta)\,y_k + a_2(\eta)\,y_{k-1} + b_0(\eta)\,u_k + b_1(\eta)\,u_{k-1} + d_k,
+\label{eq:plant}
+\end{equation}
+with viscosity $\eta$ affecting $\{a_i(\eta), b_i(\eta)\}$ mainly through the effective time constant.
+A one-step-ahead predictor identifies $\hat{\theta}_k=[\hat{a}_1,\hat{a}_2,\hat{b}_0,\hat{b}_1]^T$ online
+via recursive least squares (RLS):
+\begin{align}
+\phi_k &= \begin{bmatrix} y_k & y_{k-1} & u_k & u_{k-1} \end{bmatrix}^T,\\
+\hat{\theta}_{k} &= \hat{\theta}_{k-1} + K_k\big(y_{k}-\phi_{k-1}^T\hat{\theta}_{k-1}\big),\\
+K_k &= \frac{P_{k-1}\phi_{k-1}}{\lambda + \phi_{k-1}^T P_{k-1}\phi_{k-1}},\quad
+P_k=\lambda^{-1}\!\left(P_{k-1}-K_k\phi_{k-1}^T P_{k-1}\right),
+\end{align}
+with forgetting factor $\lambda\in(0,1]$.
+
+\subsection{Inner PID (Velocity Form) with Anti-Windup}
+Let $e_k = y_k^{\star} - y_k$ be the tracking error for a reference $y_k^{\star}$ (mapped from the
+target droplet volume). The PID in velocity form is
+\begin{equation}
+u_k = \mathrm{sat}_{[u_{\min},u_{\max}]}\Big\{u_{k-1}
++ K_p (e_k - e_{k-1}) + K_i T_s e_k
++ K_d \tfrac{1}{T_s}(e_k - 2e_{k-1} + e_{k-2}) \Big\},
+\label{eq:pid}
+\end{equation}
+with sampling period $T_s$ and $u_{\min},u_{\max}=\pm 50\,\mathrm{V}$.
+Anti-windup uses a back-calculation term:
+\begin{equation}
+I_k = I_{k-1} + K_i T_s e_k + K_{aw}(u_k - u_k^{\text{unsat}}),
+\end{equation}
+where $u_k^{\text{unsat}}$ is the RHS before saturation and $K_{aw}>0$.
+
+\subsection{Adaptive PID Gain Update: Two Examples}
+We provide two practical gain-update options driven by the online model
+or directly by performance gradients.
+
+\paragraph*{(A) IMC-PID Retuning from Identified FOPDT}
+Fit the predictor \eqref{eq:plant} locally by a first-order-plus-dead-time (FOPDT) surrogate
+$G(s)\approx \frac{k}{\tau s+1}e^{-\theta s}$. With a chosen closed-loop time constant $\lambda$,
+the IMC--PID mapping gives
+\begin{equation}
+K_p = \frac{\tau+\tfrac{\theta}{2}}{k(\lambda+\theta)},\quad
+K_i = \frac{K_p}{\tau+\tfrac{\theta}{2}},\quad
+K_d = \frac{\tau\theta}{2(\tau+\tfrac{\theta}{2})}.
+\label{eq:imc}
+\end{equation}
+As viscosity increases ($\eta\uparrow$), $\tau$ grows; \eqref{eq:imc} automatically increases $K_p$
+moderately and adjusts $K_i,K_d$ to maintain rise time and damping.
+
+\paragraph*{(B) MIT-Rule (Gradient) Adaptation on Shot Cost}
+Define a per-shot cost $J_k=\tfrac{1}{2}e_k^2 + \alpha\,\Delta u_k^2$, $\Delta u_k=u_k-u_{k-1}$.
+Let $\theta=[K_p,K_i,K_d]^T$. The discrete MIT rule updates
+\begin{equation}
+\theta_{k+1}=\theta_k - \Gamma\,\psi_k\,e_k,\qquad
+\psi_k \approx \frac{\partial y_k}{\partial \theta}\Big|_{\text{filtered}},
+\end{equation}
+where $\Gamma=\mathrm{diag}(\gamma_p,\gamma_i,\gamma_d)$ and $\psi_k$ is a filtered regressor
+computed from \eqref{eq:pid} and the predictor \eqref{eq:plant}.
+Projection enforces bounds $\theta\in[\theta_{\min},\theta_{\max}]$ for safety.
+
+\subsection{Viscosity Estimation and Mapping}
+From the identified $\hat{\tau}$ (e.g., by fitting the step response of \eqref{eq:plant}),
+a power-law mapping approximates viscosity:
+\begin{equation}
+\hat{\eta} = c_\eta\,\hat{\tau}^{\,\beta},\qquad \beta>0,
+\end{equation}
+calibrated off-line with standard fluids.
+Drive adaptation then uses $\hat{\eta}$ to select either \eqref{eq:imc} or to adjust
+the target closed-loop bandwidth $\lambda(\hat{\eta})$.
+
+\subsection{FSM Layer: States, Guards, and Actions}
+We define states $\mathcal{S}=\{\textsf{NORMAL},\textsf{COMPENSATE},\textsf{CLEAN},\textsf{PAUSE}\}$
+with guards derived from surrogate features.
+Let $A_k$ be charge- or displacement-derived amplitude, $t_{r,k}$ the rise time,
+and $\rho_k$ a dot-missing score.
+\begin{align}
+&\text{Good shot:}\quad A_k \ge A_{\min}\ \land\ t_{r,k}\le t_{r,\max}\\
+&\text{Miss score:}\quad \rho_k = w_1\frac{A_{\min}-A_k}{A_{\min}} + w_2\frac{t_{r,k}-t_{r,\max}}{t_{r,\max}}.
+\end{align}
+Transitions (with $N_{\text{good}}$ consecutive good shots and integer counters $c$):
+\begin{align}
+\textsf{NORMAL}\ \xrightarrow{\ \rho_k>\tau_{\text{miss}}\ }\ \textsf{COMPENSATE},\qquad
+&\text{Action: fire neighbor nozzle(s), raise $u$ by }\Delta u_{\text{comp}}.\\
+\textsf{COMPENSATE}\ \xrightarrow{\ N_{\text{good}}\ }\ \textsf{NORMAL},\qquad
+&\text{Action: restore nominal $u$, reset $c$.}\\
+\textsf{COMPENSATE}\ \xrightarrow{\ c\ge c_{\text{clean}}\ }\ \textsf{CLEAN},\qquad
+&\text{Action: cleaning pulse train, then re-test.}\\
+\textsf{ANY}\ \xrightarrow{\ \hat{\eta}>\eta_{\max}\ }\ \textsf{PAUSE},\qquad
+&\text{Action: hold firing, raise temperature or dilute per recipe.}
+\end{align}
+Thresholds $\tau_{\text{miss}},A_{\min},t_{r,\max},\eta_{\max}$ are set by calibration and
+can be adjusted by the LLM layer based on aggregated logs.
+
+\subsection{Outer LLM Layer: Safe Policy Updates}
+The LLM aggregates run logs $\{y_k,u_k,\hat{\eta},\rho_k\}$ and proposes parameter updates
+$\{\lambda,\tau_{\text{miss}},\Delta u_{\text{comp}},c_{\text{clean}},N_{\text{good}}\}$ subject to
+\emph{safety constraints}: $|u_k|\le 50\,\mathrm{V}$, thermal budget, maximum duty, and
+nozzle health metrics. Updates are rolled out in A/B shots with automatic rollback if
+the shot cost $J_k$ regresses beyond a tolerance.
+
+\subsection{Implementation Notes}
+(1) Rate limiting on $u_k$ ensures acoustic stability; (2) integrate an anti-windup
+observer for $I_k$; (3) log features at \SI{10}{kHz} equivalent bandwidth for robust
+RLS; (4) all guards should include hysteresis to prevent chattering.
