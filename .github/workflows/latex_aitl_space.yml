@@ -16,18 +16,35 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           root_file: papers/2025_aitl_space/main.tex
+          work_in_root_file_dir: true    # ← ルートのあるディレクトリで実行
           latexmk_use_lualatex: true
+          latexmk_shell_escape: true
+          continue_on_error: true        # ← 失敗してもログを残す
           extra_system_packages: "ghostscript"
 
+      - name: List outputs (debug)
+        if: always()
+        run: |
+          echo "PWD=$(pwd)"
+          ls -al .
+          ls -al papers/2025_aitl_space || true
+
       - name: Upload PDF
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: aitl_space_pdf
-          path: papers/2025_aitl_space/main.pdf
+          path: |
+            papers/2025_aitl_space/*.pdf
+            papers/2025_aitl_space/build/*.pdf
+          if-no-files-found: warn
 
       - name: Upload LaTeX log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: aitl_space_log
-          path: papers/2025_aitl_space/main.log
+          path: |
+            papers/2025_aitl_space/*.log
+            papers/2025_aitl_space/build/*.log
+          if-no-files-found: warn
