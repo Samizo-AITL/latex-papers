@@ -1,0 +1,38 @@
+% Appendix用: 数式展開を移動
+\subsection{Surrogate Sensing and Plant Model}
+During a drive pulse $u_k$, the KNN stack current $i(t)$ and 
+charge $q(t)=\int i(t) dt$ define surrogate features:
+\begin{equation}
+y_k \triangleq \alpha_1 q_k^{\text{peak}} + \alpha_2 \Delta q_k + \alpha_3 t_{r,k},
+\end{equation}
+with calibration coefficients $\alpha_i$.
+
+\subsection{Inner-Loop Dynamics}
+We adopt a discrete 2nd-order model:
+\begin{equation}
+y_{k+1} = a_1(\eta) y_k + a_2(\eta) y_{k-1} + b_0(\eta) u_k + b_1(\eta) u_{k-1} + d_k,
+\end{equation}
+where viscosity $\eta$ influences $\{a_i, b_i\}$.
+
+\subsection{Recursive Least Squares (RLS)}
+The parameter update follows:
+\begin{align}
+\theta_k &= \theta_{k-1} + K_k (y_k - \phi_k^\top \theta_{k-1}), \\
+K_k &= \frac{P_{k-1}\phi_k}{\lambda + \phi_k^\top P_{k-1}\phi_k}, \\
+P_k &= \lambda^{-1}(P_{k-1} - K_k \phi_k^\top P_{k-1}),
+\end{align}
+with forgetting factor $\lambda \in (0,1]$.
+
+\subsection{Adaptive PID Examples}
+\textbf{IMC-PID Retuning:}
+\begin{equation}
+K_p = \frac{\tau + \theta}{K(\lambda + \theta)}, \quad 
+K_i = \frac{K_p}{\tau + \theta}, \quad 
+K_d = \frac{\tau\theta}{2(\tau + \theta)}.
+\end{equation}
+
+\textbf{MIT Rule:}
+\begin{equation}
+\theta_{k+1} = \theta_k - \Gamma \psi_k e_k, \quad 
+\psi_k = \frac{\partial \hat{y}_k}{\partial \theta}.
+\end{equation}
