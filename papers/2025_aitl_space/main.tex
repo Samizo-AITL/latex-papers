@@ -5,6 +5,9 @@
 \usepackage{siunitx}
 \usepackage{booktabs}
 \usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta} % ← これが必須（of を使う）
+
+\tikzset{>=Latex, node/.style={draw, thick, minimum width=2.7cm, minimum height=0.9cm, align=center}}
 
 \title{AITL on Space: A Robust Three-Layer Architecture with a Tri-NVM Hierarchy (SRAM / MRAM / FRAM) for Long-Duration Spacecraft Autonomy}
 
@@ -31,18 +34,26 @@ AITL comprises: (i) Robust Core (H$\infty$/MPC/SMC), (ii) FSM Supervisor (Safe/N
 
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[node distance=1cm,>=latex]
-    % Nodes
-    \node[draw, thick, minimum width=2.5cm, minimum height=1cm, fill=gray!15] (robust) {Robust Core};
-    \node[draw, thick, below=of robust, minimum width=2.5cm, minimum height=1cm, fill=gray!10] (fsm) {FSM Supervisor};
-    \node[draw, thick, below=of fsm, minimum width=2.5cm, minimum height=1cm, fill=gray!5] (ai) {AI Adaptor};
+  \begin{tikzpicture}[node distance=0.9cm]
+    % 左の縦3層
+    \node[node, fill=gray!15] (robust) {Robust Core\\{\footnotesize H$\infty$/MPC/SMC}};
+    \node[node, fill=gray!10, below=of robust] (fsm) {FSM Supervisor\\{\footnotesize Safe/Nominal/Recovery, FDI/FDII}};
+    \node[node, fill=gray!5,  below=of fsm] (ai) {AI Adaptor\\{\footnotesize Re-ID / Drift Compensation}};
 
-    \node[draw, thick, right=4cm of fsm, minimum width=3cm, minimum height=2.5cm, align=center] (nvm) {Tri-NVM Hierarchy\\(SRAM / MRAM / FRAM)};
+    % 右ブロック（Tri-NVM）
+    \node[node, fill=white, right=3.8cm of fsm, minimum width=3.7cm, minimum height=2.8cm, align=left] (nvm) {%
+      \textbf{Tri-NVM Hierarchy}\\[-1mm]
+      {\footnotesize \begin{tabular}{@{}l@{}}
+        SRAM: Exec/RT Buffers\\
+        MRAM: Code \& Logs (ECC, Scrub, A/B)\\
+        FRAM: Safe Boot \& FSM State
+      \end{tabular}}
+    };
 
-    % Arrows
-    \draw[->, thick] (robust.east) -- ++(1,0) |- (nvm.west);
-    \draw[->, thick] (fsm.east) -- ++(1,0) |- (nvm.west);
-    \draw[->, thick] (ai.east) -- ++(1,0) |- (nvm.west);
+    % 矢印
+    \draw[->, thick] (robust.east) -- ++(0.8,0) |- (nvm.west);
+    \draw[->, thick] (fsm.east)   -- ++(0.8,0) |- (nvm.west);
+    \draw[->, thick] (ai.east)    -- ++(0.8,0) |- (nvm.west);
 
     \draw[->, thick] (robust.south) -- (fsm.north);
     \draw[->, thick] (fsm.south) -- (ai.north);
@@ -61,13 +72,13 @@ Extensions scale to 20D with translational axes and bias states.
 
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[>=latex]
-    \node[draw, minimum width=2.5cm, minimum height=1cm] (att) {Attitude (6)};
-    \node[draw, right=1.5cm of att, minimum width=2.5cm, minimum height=1cm] (bus) {Power Bus (2)};
-    \node[draw, right=1.5cm of bus, minimum width=2.5cm, minimum height=1cm] (thermal) {Thermal (3)};
-    \draw[<->] (att) -- (bus);
-    \draw[<->] (bus) -- (thermal);
-    \draw[<->] (att) -- (thermal);
+  \begin{tikzpicture}
+    \node[node] (att) {Attitude (6)};
+    \node[node, right=1.4cm of att] (bus) {Power Bus (2)};
+    \node[node, right=1.4cm of bus] (thermal) {Thermal (3)};
+    \draw[<->, thick] (att) -- (bus);
+    \draw[<->, thick] (bus) -- (thermal);
+    \draw[<->, thick] (att) .. controls +(+0.8,1.0) and +(-0.8,1.0) .. (thermal);
   \end{tikzpicture}
   \caption{PoC 11D state-space model coupling attitude (6), power bus (2), and thermal nodes (3).}
   \label{fig:state_space}
@@ -81,17 +92,19 @@ FPGA HIL injects SEU bursts and sensor outages; metrics include safe-mode time (
 
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[node distance=1.2cm, >=latex]
-    \node[draw, thick, minimum width=2.7cm, minimum height=0.8cm, fill=blue!10] (json) {JSON Plant/Weights};
-    \node[draw, thick, below=of json, minimum width=2.7cm, minimum height=0.8cm, fill=green!10] (rtl) {RTL Synthesis};
-    \node[draw, thick, below=of rtl, minimum width=2.7cm, minimum height=0.8cm, fill=orange!10] (fpga) {FPGA HIL};
-    \node[draw, thick, below=of fpga, minimum width=2.7cm, minimum height=0.8cm, fill=red!10] (asic) {22FDX ASIC};
-    \node[draw, thick, right=4cm of fpga, minimum width=3.5cm, minimum height=2.5cm, fill=gray!10, align=center] (systemdk) {SystemDK FEM\\Thermal / Radiation};
+  \begin{tikzpicture}[node distance=0.9cm]
+    \node[node, fill=blue!10]   (json) {JSON Plant/Weights};
+    \node[node, fill=green!10, below=of json] (rtl) {RTL Synthesis};
+    \node[node, fill=orange!10, below=of rtl] (fpga) {FPGA HIL};
+    \node[node, fill=red!10, below=of fpga] (asic) {22FDX ASIC};
+    \node[node, fill=gray!10, right=3.8cm of fpga, minimum width=4.1cm, minimum height=2.8cm, align=left] (systemdk) {%
+      SystemDK FEM\\[-1mm]
+      {\footnotesize Thermal / Radiation / Packaging}
+    };
 
     \draw[->] (json) -- (rtl);
     \draw[->] (rtl) -- (fpga);
     \draw[->] (fpga) -- (asic);
-
     \draw[<->, thick] (fpga.east) -- (systemdk.west);
   \end{tikzpicture}
   \caption{Verification pipeline from JSON design to RTL, FPGA HIL, and ASIC; SystemDK closes the loop with thermal and radiation scenarios.}
@@ -116,5 +129,4 @@ PrecisionCore printhead technology. He is currently an independent
 semiconductor researcher focusing on process/device education, memory
 architecture, and AI system integration. Contact:
 \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}.
-
 \end{document}
