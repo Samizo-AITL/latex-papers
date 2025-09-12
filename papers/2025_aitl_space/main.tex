@@ -1,30 +1,11 @@
 \documentclass[conference]{IEEEtran}
-
-% ==== Packages ====
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{hyperref}
 \usepackage{siunitx}
 \usepackage{booktabs}
-\usepackage{tikz}                 % for placeholder frames
-\usepackage{newtxtext,newtxmath}  % Times-like fonts for IEEE style (LuaLaTeX OK)
+\usepackage{tikz}
 
-% ==== Safe include (handles underscores + compiles even if file missing) ====
-\newcommand{\safeincludegraphics}[2][]{%
-  \begingroup
-  \edef\fname{\detokenize{#2}}% neutralize _ and other specials
-  \IfFileExists{\fname}{%
-    \includegraphics[#1]{\fname}%
-  }{%
-    \begin{tikzpicture}
-      \node[draw,minimum width=0.98\linewidth, minimum height=4cm, align=center]
-      {\small \texttt{\fname} not found\\(placeholder)};
-    \end{tikzpicture}%
-  }%
-  \endgroup
-}
-
-% ==== Title/Author ====
 \title{AITL on Space: A Robust Three-Layer Architecture with a Tri-NVM Hierarchy (SRAM / MRAM / FRAM) for Long-Duration Spacecraft Autonomy}
 
 \author{%
@@ -50,7 +31,22 @@ AITL comprises: (i) Robust Core (H$\infty$/MPC/SMC), (ii) FSM Supervisor (Safe/N
 
 \begin{figure}[t]
   \centering
-  \safeincludegraphics[width=\linewidth]{figs/arch_block.pdf}
+  \begin{tikzpicture}[node distance=1cm,>=latex]
+    % Nodes
+    \node[draw, thick, minimum width=2.5cm, minimum height=1cm, fill=gray!15] (robust) {Robust Core};
+    \node[draw, thick, below=of robust, minimum width=2.5cm, minimum height=1cm, fill=gray!10] (fsm) {FSM Supervisor};
+    \node[draw, thick, below=of fsm, minimum width=2.5cm, minimum height=1cm, fill=gray!5] (ai) {AI Adaptor};
+
+    \node[draw, thick, right=4cm of fsm, minimum width=3cm, minimum height=2.5cm, align=center] (nvm) {Tri-NVM Hierarchy\\(SRAM / MRAM / FRAM)};
+
+    % Arrows
+    \draw[->, thick] (robust.east) -- ++(1,0) |- (nvm.west);
+    \draw[->, thick] (fsm.east) -- ++(1,0) |- (nvm.west);
+    \draw[->, thick] (ai.east) -- ++(1,0) |- (nvm.west);
+
+    \draw[->, thick] (robust.south) -- (fsm.north);
+    \draw[->, thick] (fsm.south) -- (ai.north);
+  \end{tikzpicture}
   \caption{AITL on Space architecture with Robust Core, Supervisor FSM, AI Adaptor, and the Tri-NVM hierarchy.}
   \label{fig:arch_block}
 \end{figure}
@@ -65,7 +61,14 @@ Extensions scale to 20D with translational axes and bias states.
 
 \begin{figure}[t]
   \centering
-  \safeincludegraphics[width=0.9\linewidth]{figs/state_space.pdf}
+  \begin{tikzpicture}[>=latex]
+    \node[draw, minimum width=2.5cm, minimum height=1cm] (att) {Attitude (6)};
+    \node[draw, right=1.5cm of att, minimum width=2.5cm, minimum height=1cm] (bus) {Power Bus (2)};
+    \node[draw, right=1.5cm of bus, minimum width=2.5cm, minimum height=1cm] (thermal) {Thermal (3)};
+    \draw[<->] (att) -- (bus);
+    \draw[<->] (bus) -- (thermal);
+    \draw[<->] (att) -- (thermal);
+  \end{tikzpicture}
   \caption{PoC 11D state-space model coupling attitude (6), power bus (2), and thermal nodes (3).}
   \label{fig:state_space}
 \end{figure}
@@ -78,7 +81,19 @@ FPGA HIL injects SEU bursts and sensor outages; metrics include safe-mode time (
 
 \begin{figure}[t]
   \centering
-  \safeincludegraphics[width=\linewidth]{figs/pipeline.pdf}
+  \begin{tikzpicture}[node distance=1.2cm, >=latex]
+    \node[draw, thick, minimum width=2.7cm, minimum height=0.8cm, fill=blue!10] (json) {JSON Plant/Weights};
+    \node[draw, thick, below=of json, minimum width=2.7cm, minimum height=0.8cm, fill=green!10] (rtl) {RTL Synthesis};
+    \node[draw, thick, below=of rtl, minimum width=2.7cm, minimum height=0.8cm, fill=orange!10] (fpga) {FPGA HIL};
+    \node[draw, thick, below=of fpga, minimum width=2.7cm, minimum height=0.8cm, fill=red!10] (asic) {22FDX ASIC};
+    \node[draw, thick, right=4cm of fpga, minimum width=3.5cm, minimum height=2.5cm, fill=gray!10, align=center] (systemdk) {SystemDK FEM\\Thermal / Radiation};
+
+    \draw[->] (json) -- (rtl);
+    \draw[->] (rtl) -- (fpga);
+    \draw[->] (fpga) -- (asic);
+
+    \draw[<->, thick] (fpga.east) -- (systemdk.west);
+  \end{tikzpicture}
   \caption{Verification pipeline from JSON design to RTL, FPGA HIL, and ASIC; SystemDK closes the loop with thermal and radiation scenarios.}
   \label{fig:pipeline}
 \end{figure}
@@ -92,7 +107,6 @@ AITL on Space offers a practical path to resilient autonomy for deep-space missi
 \bibitem{fds} Colinge, J.-P., \emph{Silicon-on-Insulator Technology}.
 \end{thebibliography}
 
-% ===== Biography =====
 \section*{Author Biography}
 \textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic
 Engineering from Shinshu University, Japan. He worked at Seiko Epson
