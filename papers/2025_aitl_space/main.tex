@@ -5,7 +5,7 @@
 \usepackage{siunitx}
 \usepackage{booktabs}
 
-\title{AITL on Space: A Robust Three-Layer Architecture with SRAM+MRAM+FRAM for Long-Duration Spacecraft Autonomy}
+\title{AITL on Space: A Robust Three-Layer Architecture with a Tri-NVM Hierarchy (SRAM / MRAM / FRAM) for Long-Duration Spacecraft Autonomy}
 
 \author{%
   \IEEEauthorblockN{Shinichi Samizo}
@@ -19,14 +19,14 @@
 \maketitle
 
 \begin{abstract}
-We propose \textbf{AITL on Space}, a three-layer control architecture (Robust Core, FSM Supervisor, AI Adaptor) implemented on a 22\,nm FDSOI SoC with a hardened NVM hierarchy (SRAM + MRAM + FRAM). The system targets ultra-robust autonomy under radiation, thermal cycling, and long-term drift. This paper outlines the architecture, state-space model (8--20\,D), H$\infty$ mixed-sensitivity design flow, and a verification pipeline from FPGA HIL to ASIC.
+We propose \textbf{AITL on Space}, a three-layer control architecture (Robust Core, FSM Supervisor, AI Adaptor) implemented on a 22\,nm FDSOI SoC with a hardened \textbf{Tri-NVM hierarchy} (SRAM / MRAM / FRAM). The system targets ultra-robust autonomy under radiation, thermal cycling, and long-term drift. This paper outlines the architecture, state-space model (8--20\,D), H$\infty$ mixed-sensitivity design flow, and a verification pipeline from FPGA HIL to ASIC.
 \end{abstract}
 
 \section{Introduction}
 Long-duration missions require high availability under TID/SEE and thermal cycles. Conventional PID+Flash architectures face reliability limits. We summarize related work and motivate AITL on Space.
 
 \section{System Architecture}
-AITL comprises: (i) Robust Core (H$\infty$/MPC/SMC), (ii) FSM Supervisor (Safe/Nominal/Recovery, FDI/FDII), and (iii) AI Adaptor for long-term re-identification. A NVM hierarchy---SRAM for execution, MRAM for logs/code (ECC+scrub, A/B slots), FRAM for safe boot---ensures persistence.
+AITL comprises: (i) Robust Core (H$\infty$/MPC/SMC), (ii) FSM Supervisor (Safe/Nominal/Recovery, FDI/FDII), and (iii) AI Adaptor for long-term re-identification. A \textbf{Tri-NVM hierarchy}---SRAM for execution, MRAM for logs/code (ECC+scrub, A/B slots), FRAM for safe boot---ensures persistence.
 
 \section{Mathematical Model}
 We use an 11D PoC plant that couples attitude (6), power bus (2), and thermal nodes (3). The discrete-time model is
