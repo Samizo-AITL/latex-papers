@@ -1,0 +1,42 @@
+flowchart TB
+  %% Layers
+  subgraph OUTER["AI Adaptor (LLM / Adaptive)"]
+    o1["Degradation Log Analysis"]
+    o2["Parameter Re-identification"]
+    o3["Policy/FSM Update"]
+  end
+
+  subgraph MIDDLE["Supervisor FSM + FDI/FDII"]
+    m1["SAFE"]
+    m2["NOMINAL"]
+    m3["RECOVERY"]
+  end
+
+  subgraph INNER["Robust Core (H∞ / MPC / SMC)"]
+    i1["Estimator (H∞/EKF)"]
+    i2["Controller"]
+  end
+
+  subgraph NVM["Tri-NVM Hierarchy"]
+    sram["SRAM (Execution)"]
+    mram["MRAM (Logs/Code, ECC+Scrub, A/B)"]
+    fram["FRAM (Safe Boot, FSM State, CRC)"]
+  end
+
+  subgraph IO["I/O & Plant"]
+    sens["Sensors (IMU, Sun/Star, Power/Temp)"]
+    act["Actuators (RW, Thruster, Heaters, EPS)"]
+  end
+
+  %% Flows
+  sens --> i1 --> i2 --> act
+  o1 --> o2 --> o3 --> m2
+  m1 -->|Safe params| i2
+  m2 -->|Nominal control| i2
+  m3 -->|Recovery rules| i2
+
+  m2 <--> NVM
+  m1 <--> fram
+  o1 --> mram
+  classDef box fill:#eef,stroke:#335,stroke-width:1px;
+  class INNER,OUTER,MIDDLE,NVM,IO box;
