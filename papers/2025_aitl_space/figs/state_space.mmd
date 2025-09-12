@@ -1,0 +1,28 @@
+flowchart LR
+  subgraph ATT["Attitude (6 states)"]
+    th["θx θy θz"]
+    w["ωx ωy ωz"]
+  end
+  subgraph EPS["Power (2 states)"]
+    v["v_bus"]
+    ib["i_bat"]
+  end
+  subgraph THM["Thermal (3 states)"]
+    Tc["T_chip"]
+    Tp["T_pkg"]
+    Tr["T_rad"]
+  end
+
+  %% Inputs / Outputs
+  u1["u_a: τx τy τz"] --> ATT
+  u2["u_e: i_pv i_load"] --> EPS
+  u3["u_t: P_chip Q_rad"] --> THM
+
+  %% Couplings
+  THM -. temp coeff .-> EPS
+  THM -. friction .-> ATT
+  EPS -. torque limit .-> ATT
+
+  y["y = {θ, v_bus, T_chip}"] <-- ATT
+  y <-- EPS
+  y <-- THM
