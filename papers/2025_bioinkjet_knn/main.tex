@@ -2,7 +2,7 @@
 
 % ===== Packages =====
 \usepackage{graphicx}
-\usepackage{amsmath,amssymb} % ← ここを修正
+\usepackage{amsmath,amssymb} % triangleq 等に必要
 \usepackage{siunitx}
 \usepackage{cite}
 \usepackage{tikz}
@@ -13,12 +13,12 @@
 % ===== Title & Author =====
 \title{Lead-free Bio-Inkjet Printing with Bulk KNN Actuators and AITL-based Adaptive Control}
 
-\author{
+\author{%
   \IEEEauthorblockN{Shinichi Samizo}
   \IEEEauthorblockA{Independent Semiconductor Researcher\\
   Former Engineer at Seiko Epson Corporation\\
   Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\
-  GitHub: \url{https://github.com/Samizo-AITL}}
+  GitHub: \url{https://github.com/Samizo-AITL}}%
 }
 
 \begin{document}
@@ -42,24 +42,19 @@ We present the architecture, process flow, and representative biomedical
 applications, highlighting the potential of KNN as both actuator and sensor.
 \end{abstract}
 
-% ===== Sections =====
-\section{Introduction}
+% ===== Body =====
+% 章タイトルは各 sections/*.tex の先頭の \section に任せる（main側では宣言しない）
 \input{sections/intro}
-
-\section{Background: Pb-free Piezoelectrics}
 \input{sections/background}
-
-\section{Proposed Bio-IJ Architecture}
 \input{sections/proposal}
-
-\section{Self-Diagnosis and Feedback Control}
-\input{sections/aitl}
-
-\section{Applications}
+\input{sections/aitl}          % ← ここは本文では \subsection にしておく（下記参照）
 \input{sections/applications}
-
-\section{Conclusion}
 \input{sections/conclusion}
+
+% ===== Appendix for math details =====
+\appendices
+\section{AITL Control Derivations}
+\input{sections/aitl_appendix}
 
 % ===== References =====
 \nocite{Saito2004KNN,Dubois2019BioIJ}
