@@ -1,21 +1,23 @@
-% main.tex  --- IEEEtran + TikZ 完全版
 \documentclass[conference]{IEEEtran}
 
 % ---------- Packages ----------
-\usepackage{amsmath,amssymb}
 \usepackage{graphicx}
-\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
 \usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{placeins} % \FloatBarrier
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes,fit}
+\usetikzlibrary{positioning,arrows.meta,shapes,fit}
 
-% ---------- TikZ styles ----------
+% TikZ styles (共通)
 \tikzset{
-  box/.style   = {draw, rounded corners=2pt, minimum width=2.6cm, minimum height=8mm, align=center},
-  pale/.style  = {fill=gray!10},
-  line/.style  = {-{Latex[length=2mm]}, thick},
+  box/.style   ={draw, rounded corners=2pt, inner sep=4pt, align=center},
+  step/.style  ={draw, rounded corners=2pt, inner sep=4pt, align=center},
+  small/.style ={font=\small},
+  tiny/.style  ={font=\footnotesize},
+  arrow/.style ={->, >=Stealth}
 }
 
 % ---------- Title ----------
@@ -24,132 +26,133 @@ with a Tri-NVM Hierarchy (SRAM / MRAM / FRAM)\\
 for Long-Duration Spacecraft Autonomy}
 
 \author{%
-  \IEEEauthorblockN{Shinichi Samizo}
-  \IEEEauthorblockA{Independent Semiconductor Researcher\\
+Shinichi Samizo\\
+Independent Semiconductor Researcher\\
 Former Engineer at Seiko Epson Corporation\\
-Email: shin3t72@gmail.com \quad GitHub: \url{https://github.com/Samizo-AITL}}
+Email: shin3t72@gmail.com \quad GitHub: \url{https://github.com/Samizo-AITL}
 }
 
 \begin{document}
 \maketitle
 
+% ----------------- Abstract (最優先で先に出す) -----------------
 \begin{abstract}
-We propose AITL on Space, a three-layer control architecture (Robust Core, FSM Supervisor, AI Adaptor) implemented on a \SI{22}{nm} FD\!SOI SoC with a hardened Tri-NVM hierarchy (SRAM/MRAM/FRAM). The system targets ultra-robust autonomy under radiation, thermal cycling, and long-term drift. This paper outlines the architecture, an 11D state-space plant model (8--20D extensible), an $H_\infty$ mixed-sensitivity design flow, and a verification pipeline from FPGA HIL to ASIC.
+We propose \emph{AITL on Space}, a three-layer control architecture (Robust Core, FSM Supervisor, AI Adaptor) implemented on a \SI{22}{nm} FDSOI SoC with a hardened tri-NVM hierarchy (SRAM/MRAM/FRAM). The system targets ultra-robust autonomy under radiation, thermal cycling, and long-term drift. This paper outlines the architecture, an 11D state-space plant model (8--20D extensible), an $H_\infty$ mixed-sensitivity design flow, and a verification pipeline from FPGA HIL to ASIC.
 \end{abstract}
 
-\IEEEpeerreviewmaketitle
+\section{Introduction}
+Long-duration missions require high availability under TID/SEE and thermal cycles.
+Conventional PID+Flash architectures face reliability limits.
+We summarize related work and motivate AITL on Space.
 
-% ===== Fig.1: Architecture (2段幅、Abstractの後、上部固定) =====
-\begin{figure*}[t]
+\section{System Architecture}
+AITL comprises: (i)~Robust Core (for $H_\infty$/MPC/SMC), (ii)~FSM Supervisor (Safe/Nominal/Recovery, FDI/FDI), and (iii)~AI Adaptor for long-term re-identification. A tri-NVM hierarchy---SRAM for execution, MRAM for logs/code (ECC+scrub, A/B slots), and FRAM for safe boot---ensures persistence.
+
+% ---- Fig.1 (アーキテクチャ)：Abstractの後に出るようにここで配置 ----
+\begin{figure*}[!t]
   \centering
   \begin{tikzpicture}[node distance=8mm]
-    % Left column (three layers)
-    \node[box,pale] (robust) {Robust Core\\ \small $H_\infty$/MPC/SMC};
-    \node[box,below=of robust,pale] (fsm) {FSM Supervisor\\ \small Safe/Nominal/Recovery\\ \small FDI/FDII};
-    \node[box,below=of fsm,pale] (ai) {AI Adaptor\\ \small Re-ID / Drift Compensation};
+    % Left column: three layers
+    \node[box, minimum width=3.4cm] (robust) {Robust Core\\ \small $H_\infty$/MPC/SMC};
+    \node[box, below=6mm of robust, minimum width=3.4cm] (fsm) {FSM Supervisor\\ \small Safe/Nominal/Recovery\\ FDI/FDII};
+    \node[box, below=6mm of fsm, minimum width=3.4cm] (ai) {AI Adaptor\\ \small Re-ID / Drift Compensation};
 
-    % Plant and tri-NVM (center/right)
-    \node[box, right=25mm of fsm, minimum width=7.4cm, minimum height=1.35cm, pale, align=left] (nvm) {%
-      \textbf{Tri-NVM Hierarchy}\\[-1mm]
-      \small SRAM: Exec \hspace{4mm}
-      MRAM: Code/Logs (ECC{+}scrub, A/B) \hspace{4mm}
-      FRAM: Safe Boot \& FSM State};
+    % Plant and blocks on the right
+    \node[box, right=22mm of robust, minimum width=2.2cm] (att) {Attitude (6)};
+    \node[box, right=10mm of att, minimum width=2.2cm] (bus) {Power Bus (2)};
+    \node[box, right=10mm of bus, minimum width=2.2cm] (therm) {Thermal (3)};
 
-    \node[box, above=10mm of nvm, minimum width=7.4cm, pale] (plant) {Attitude (6)\quad Power Bus (2)\quad Thermal (3)};
+    % Tri-NVM block under the chain
+    \node[box, below=9mm of bus, minimum width=6.8cm, align=left] (nvm) {Tri-NVM Hierarchy\\
+      \footnotesize SRAM: Exec\\
+      \footnotesize MRAM: Code/Logs (ECC+Scrub, A/B)\\
+      \footnotesize FRAM: Safe Boot \& FSM State};
 
-    % Wires from layers to NVM/Plant
-    \draw[line] (robust.east) -- ++(10mm,0) |- (plant.west);
-    \draw[line] (fsm.east) -- ++(10mm,0) |- (nvm.west);
-    \draw[line] (ai.east) -- ++(10mm,0) |- (plant.west);
+    % Connections
+    \draw[arrow] (robust.east) -| (att.west);
+    \draw[arrow] (fsm.east) -| (att.west);
+    \draw[arrow] (ai.east)  -| (att.west);
+    \draw[arrow] (att) -- (bus);
+    \draw[arrow] (bus) -- (therm);
+    \draw[arrow] (nvm.north) -- ($(att.south)!0.5!(bus.south)$);
 
-    % Plant I/O
-    \node[above=2mm of plant] (r) {$r$};
-    \node[right=2mm of plant] (y) {$y$};
-    \node[box,minimum width=0.9cm,minimum height=0.8cm, right=6mm of r] (K) {$K$};
-    \draw[line] (r) -- (K);
-    \draw[line] (K) -- (plant);
-
-    \draw[line] (plant) -- (y);
-
-    % Labels
-    \node[below=1.0cm of nvm] (dummy) {};
+    % Decorative system boundary
+    \node[draw, rounded corners=2pt, fit=(att)(bus)(therm), inner sep=8pt, label={[tiny]above:11D Plant}] {};
   \end{tikzpicture}
   \caption{AITL on Space architecture with Robust Core, Supervisor FSM, AI Adaptor, and the Tri-NVM hierarchy.}
   \label{fig:arch}
 \end{figure*}
 
-\FloatBarrier % ← Abstract直後の配置をここで固定
-
-% ===== Body =====
-\section{Introduction}
-Long-duration missions require high availability under TID/SEE and thermal cycles. Conventional PID{+}Flash architectures face reliability limits. We summarize related work and motivate AITL on Space.
-
-\section{System Architecture}
-AITL comprises: (i) Robust Core (for $H_\infty$/MPC/SMC), (ii) FSM Supervisor (Safe/Nominal/Recovery, FDI/FDII), and (iii) AI Adaptor for long-term re-identification. A Tri-NVM hierarchy---SRAM for execution, MRAM for logs/code (ECC{+}scrub, A/B slots), and FRAM for safe boot---ensures persistence.
-
-% ===== Fig.2: Hinf closed-loop (1段幅) =====
-\begin{figure}[t]
-  \centering
-  \begin{tikzpicture}
-    \node[draw,minimum width=0.9cm,minimum height=0.7cm] (K) {$K$};
-    \node[draw,minimum width=2.2cm,minimum height=0.9cm, right=13mm of K] (P) {Plant\\ \small 11D};
-    \node[left=10mm of K] (r) {$r$};
-    \node[right=10mm of P] (y) {$y$};
-    \draw[line] (r) -- (K);
-    \draw[line] (K) -- node[above] {$u$} (P);
-    \draw[line] (P) -- (y);
-  \end{tikzpicture}
-  \caption{Closed-loop schematic used for $H_\infty$ synthesis on the 11D plant.}
-  \label{fig:closedloop}
-\end{figure}
-
 \section{Mathematical Model}
 We use an 11D discrete-time plant that couples attitude (6), power bus (2), and thermal nodes (3):
 \begin{align}
-  x_{k+1} &= A x_k + B u_k + E w_k,\\
-  y_k &= C x_k + D u_k + v_k .
+  x_{k+1} &= A x_k + B u_k + E w_k, \\
+  y_k     &= C x_k + D u_k + v_k.
 \end{align}
 Extensions scale to 20D with translational axes and bias states.
 
-\section{$H_\infty$ Mixed-Sensitivity Design}
-Weights $(W_1,W_2,W_3)$ shape sensitivity, effort, and complementary sensitivity. \textit{EduController} exports JSON plant/weights; \textit{AITL-H} synthesizes output-feedback $K$ and fixed-point realization.
-
-\section{Verification Pipeline}
-FPGA HIL injects SEU bursts and sensor outages; metrics include safe-mode time ($<\SI{1}{s}$), recovery rate ($\ge\! \SI{99}{\%}$), and ECC statistics. Physical design proceeds to 22FDX tape-out; SystemDK FEM closes thermal/packaging effects.
-
-% ===== Fig.3: Verification flow (1段幅) =====
-\begin{figure}[t]
+% ---- Fig.2 (H∞ loop) ----
+\begin{figure}[!t]
   \centering
-  \begin{tikzpicture}[node distance=9mm]
-    \node[box,pale] (json) {JSON Plant/Weights};
-    \node[box,pale,below=of json,fill=green!10] (rtl) {RTL Synthesis};
-    \node[box,pale,below=of rtl,fill=orange!10] (hil) {FPGA HIL};
-    \node[box,pale,below=of hil,fill=red!10] (asic) {22FDX ASIC};
-    \node[box,pale,minimum width=4.5cm, right=22mm of rtl] (fem) {SystemDK FEM\\ \small Thermal / Radiation / Packaging};
-
-    \draw[line] (json) -- (rtl);
-    \draw[line] (rtl) -- (hil);
-    \draw[line] (hil) -- (asic);
-    \draw[line] (rtl) -- (fem);
+  \begin{tikzpicture}
+    % reference r and sum
+    \node[box, minimum width=0.9cm] (K) {$K$};
+    \node[coordinate, left=14mm of K] (r) {};
+    \node[circle, draw, minimum size=10pt, right=8mm of K] (sum) {$\small +$};
+    % plant (改行は \shortstack でLR mode回避)
+    \node[box, right=10mm of sum, minimum width=1.8cm] (P) {\shortstack{Plant\\\footnotesize 11D}};
+    % arrows
+    \draw[arrow] (r) -- node[above, tiny]{$r$} (K.west);
+    \draw[arrow] (K.east) -- node[above, tiny]{$u$} (sum.west);
+    \draw[arrow] (sum.east) -- (P.west);
+    \draw[arrow] (P.east) -- ++(10mm,0) node[above, tiny]{$y$} coordinate (yout);
+    % feedback
+    \draw[arrow] (yout) |- ++(0,-8mm) -| (sum.south);
   \end{tikzpicture}
-  \caption{Verification pipeline from JSON design to RTL, FPGA HIL, and ASIC; FEM closes the loop with thermal and radiation scenarios.}
-  \label{fig:pipeline}
+  \caption{Closed-loop schematic used for $H_\infty$ synthesis on the 11D plant.}
+  \label{fig:hinf}
 \end{figure}
 
-\FloatBarrier
+\section{$H_\infty$ Mixed-Sensitivity Design}
+Weights $(W_1,W_2,W_3)$ shape sensitivity, effort, and complementary sensitivity.
+EduController exports JSON plant/weights; AITL-H synthesizes output-feedback $K$ and fixed-point realization.
+
+\section{Verification Pipeline}
+FPGA HIL injects SEU bursts and sensor outages; metrics include safe-mode time ($<\SI{1}{s}$), recovery rate ($\ge \SI{99}{\%}$), and ECC statistics. Physical design proceeds to 22FDX tape-out; SystemDK FEM closes thermal/packaging.
+
+% ---- Fig.3（検証フロー） ----
+\begin{figure}[!t]
+  \centering
+  \begin{tikzpicture}[node distance=8mm]
+    \node[step, fill=blue!8, minimum width=3.6cm] (json) {JSON Plant/Weights};
+    \node[step, fill=green!10, below=of json, minimum width=3.6cm] (rtl) {RTL Synthesis};
+    \node[step, fill=orange!12, below=of rtl, minimum width=3.6cm] (hil) {FPGA HIL};
+    \node[step, fill=red!8, below=of hil, minimum width=3.6cm] (asic) {22FDX ASIC};
+
+    \node[box, right=22mm of rtl, minimum width=4.2cm] (fem) {SystemDK FEM\\ \small Thermal / Radiation / Packaging};
+
+    \draw[arrow] (json) -- (rtl);
+    \draw[arrow] (rtl) -- (hil);
+    \draw[arrow] (hil) -- (asic);
+    \draw[arrow] (rtl) -- (fem);
+  \end{tikzpicture}
+  \caption{Verification pipeline from JSON design to RTL, FPGA HIL, and ASIC; FEM closes the loop with thermal and radiation scenarios.}
+  \label{fig:flow}
+\end{figure}
 
 \section{Conclusion}
 AITL on Space offers a practical path to resilient autonomy for deep-space missions.
 
-% ---------- References ----------
-\begin{thebibliography}{99}
-\bibitem{doyle} G.~Doyle, \textit{Feedback Control Theory}.
-\bibitem{colinge} J.-P.~Colinge, \textit{Silicon-on-Insulator Technology}.
+% ----------------- References -----------------
+\begin{thebibliography}{99}\footnotesize
+\bibitem{Doyle}
+G.~Doyle, \emph{Feedback Control Theory}.
+\bibitem{Colinge}
+J.-P.~Colinge, \emph{Silicon-on-Insulator Technology}.
 \end{thebibliography}
 
-% ---------- Biography ----------
+% ----------------- Biography -----------------
 \section*{Author Biography}
 \noindent
-\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology. He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration. Contact: \texttt{shin3t72@gmail.com}.
-
+Shinichi Samizo received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology. He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration. Contact: \texttt{shin3t72@gmail.com}.
 \end{document}
