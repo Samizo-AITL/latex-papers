@@ -1,0 +1,25 @@
+flowchart LR
+  A["EduController\n(Plant + Weights JSON)"] --> B["AITL-H\nRTL Generation (Robust Core + FSM + NVM IF)"]
+  B --> C["FPGA HIL\n(SEU burst, sensor blackout,\nthermal drift scenarios)"]
+  C --> D["RTL Freeze"]
+  D --> E["P&R / Sign-off\n(22FDX FDSOI)"]
+  E --> F["GDS / Tape-out"]
+  F --> G["Wafer Test\n(MBIST/eMRAM/FRAM/ECC)"]
+
+  subgraph SystemDK["SystemDK"]
+    S1["FEM Thermo-Mechanical"]
+    S2["Radiation Scenarios"]
+    S3["Telemetry & Auto Report"]
+  end
+
+  C -. logs .-> S3
+  E -. thermal models .-> S1
+  S1 -. constraints .-> B
+  S2 -. SEE/TID profiles .-> C
+
+  subgraph NVMops["Tri-NVM Ops"]
+    N1["Scrub FSM"]
+    N2["Write-Ahead Log"]
+    N3["A/B Slot Update"]
+  end
+  C --> N1 & N2 & N3
