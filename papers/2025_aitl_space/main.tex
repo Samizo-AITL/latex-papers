@@ -28,6 +28,13 @@ Long-duration missions require high availability under TID/SEE and thermal cycle
 \section{System Architecture}
 AITL comprises: (i) Robust Core (H$\infty$/MPC/SMC), (ii) FSM Supervisor (Safe/Nominal/Recovery, FDI/FDII), and (iii) AI Adaptor for long-term re-identification. A \textbf{Tri-NVM hierarchy}---SRAM for execution, MRAM for logs/code (ECC+scrub, A/B slots), FRAM for safe boot---ensures persistence.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/arch_block.pdf}
+  \caption{AITL on Space architecture with Robust Core, Supervisor FSM, AI Adaptor, and the Tri-NVM hierarchy.}
+  \label{fig:arch_block}
+\end{figure}
+
 \section{Mathematical Model}
 We use an 11D PoC plant that couples attitude (6), power bus (2), and thermal nodes (3). The discrete-time model is
 \begin{align}
@@ -36,11 +43,25 @@ y_k = C x_k + D u_k + v_k.
 \end{align}
 Extensions scale to 20D with translational axes and bias states.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figs/state_space.pdf}
+  \caption{PoC 11D state-space model coupling attitude (6), power bus (2), and thermal nodes (3).}
+  \label{fig:state_space}
+\end{figure}
+
 \section{H$\infty$ Mixed-Sensitivity Design}
 Weights $(W_1,W_2,W_3)$ shape sensitivity, effort, and complementary sensitivity. EduController exports JSON plant/weights; AITL-H synthesizes output-feedback $K$ and fixed-point realization.
 
 \section{Verification Pipeline}
 FPGA HIL injects SEU bursts and sensor outages; metrics include safe-mode time ($\leq 1\,\mathrm{s}$), recovery rate ($\geq 99\%$), and ECC statistics. Physical design proceeds to 22FDX tape-out; SystemDK FEM closes thermal/packaging.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/pipeline.pdf}
+  \caption{Verification pipeline from JSON design to RTL, FPGA HIL, and ASIC; SystemDK closes the loop with thermal and radiation scenarios.}
+  \label{fig:pipeline}
+\end{figure}
 
 \section{Conclusion}
 AITL on Space offers a practical path to resilient autonomy for deep-space missions.
