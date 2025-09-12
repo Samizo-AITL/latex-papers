@@ -1,12 +1,10 @@
 name: Build AITL Space Paper
 
 on:
-  workflow_dispatch:   # 手動実行OK
-  push:
+  workflow_dispatch:          # 手動実行ボタンを出す
+  push:                       # どのpushでも実行（確実に動かす）
     branches:
-      - main           # mainブランチなら必ず実行
-    paths:
-      - 'papers/2025_aitl_space/**'
+      - '**'
 
 jobs:
   build_latex:
@@ -23,11 +21,13 @@ jobs:
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
           continue_on_error: true
-          extra_system_packages: "ghostscript"
 
       - name: List outputs (debug)
         if: always()
         run: |
+          echo "PWD=$(pwd)"
+          ls -al
+          ls -al papers || true
           ls -al papers/2025_aitl_space || true
 
       - name: Upload PDF
@@ -35,7 +35,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: aitl_space_pdf
-          path: papers/2025_aitl_space/**/*.pdf
+          path: |
+            papers/2025_aitl_space/*.pdf
+            papers/2025_aitl_space/build/*.pdf
           if-no-files-found: warn
 
       - name: Upload LaTeX log
@@ -43,5 +45,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: aitl_space_log
-          path: papers/2025_aitl_space/**/*.log
+          path: |
+            papers/2025_aitl_space/*.log
+            papers/2025_aitl_space/build/*.log
           if-no-files-found: warn
