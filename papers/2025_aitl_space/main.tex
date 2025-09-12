@@ -1,9 +1,27 @@
 \documentclass[conference]{IEEEtran}
+
+% ==== packages ====
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{hyperref}
 \usepackage{siunitx}
 \usepackage{booktabs}
+\usepackage{tikz}                 % <- 図プレースホルダ用
+\usepackage{newtxtext,newtxmath}  % <- Times系フォント（LuaLaTeXでも警告低減）
+
+% ==== safe include (図が無くても通す) ====
+\newcommand{\safeincludegraphics}[2][]{%
+  \begingroup
+  \IfFileExists{#2}{%
+    \includegraphics[#1]{#2}%
+  }{%
+    \begin{tikzpicture}
+      \node[draw,minimum width=0.98\linewidth, minimum height=4cm, align=center]
+      {\small \texttt{#2} not found\\(placeholder)};
+    \end{tikzpicture}%
+  }%
+  \endgroup
+}
 
 \title{AITL on Space: A Robust Three-Layer Architecture with a Tri-NVM Hierarchy (SRAM / MRAM / FRAM) for Long-Duration Spacecraft Autonomy}
 
@@ -30,7 +48,7 @@ AITL comprises: (i) Robust Core (H$\infty$/MPC/SMC), (ii) FSM Supervisor (Safe/N
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{figs/arch_block.pdf}
+  \safeincludegraphics[width=\linewidth]{figs/arch_block.pdf}
   \caption{AITL on Space architecture with Robust Core, Supervisor FSM, AI Adaptor, and the Tri-NVM hierarchy.}
   \label{fig:arch_block}
 \end{figure}
@@ -45,7 +63,7 @@ Extensions scale to 20D with translational axes and bias states.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.9\linewidth]{figs/state_space.pdf}
+  \safeincludegraphics[width=0.9\linewidth]{figs/state_space.pdf}
   \caption{PoC 11D state-space model coupling attitude (6), power bus (2), and thermal nodes (3).}
   \label{fig:state_space}
 \end{figure}
@@ -58,7 +76,7 @@ FPGA HIL injects SEU bursts and sensor outages; metrics include safe-mode time (
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{figs/pipeline.pdf}
+  \safeincludegraphics[width=\linewidth]{figs/pipeline.pdf}
   \caption{Verification pipeline from JSON design to RTL, FPGA HIL, and ASIC; SystemDK closes the loop with thermal and radiation scenarios.}
   \label{fig:pipeline}
 \end{figure}
