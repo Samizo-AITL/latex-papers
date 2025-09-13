@@ -242,117 +242,121 @@ and power concurrently, positioning AITL as a candidate \emph{standard architect
 for chiplet-based space-grade SoCs. Future work: scaling high-order $H_\infty$,
 distilled on-board AI, and standard rad-hard interconnects.
 
-% === Fig.1: End-to-end design flow (2-row, full width) ===
+% === Fig.1: End-to-end design flow (balanced size) ===
 \begin{figure*}[t]
 \centering
-\Huge
-\resizebox{0.95\textwidth}{!}{%
-\begin{tikzpicture}[node distance=22mm]
+\resizebox{0.75\textwidth}{!}{%
+\begin{tikzpicture}[
+  node distance=18mm,
+  >=Latex,
+  every node/.style={font=\large},
+  line/.style={-{Latex[length=2mm,width=1.2mm]}, line width=0.6pt},
+  figbox/.style={draw, rounded corners=2pt, align=center, inner sep=3pt,
+                 minimum height=10mm, minimum width=30mm}
+]
+  % Row 1
+  \node[figbox] (edu)  {EduController\\Modeling \& JSON export};
+  \node[figbox, right=18mm of edu] (json) {JSON\\$A,B,C,D,W_1,W_2,W_3$};
+  \node[figbox, right=18mm of json] (aitl) {AITL-H\\$H_\infty$ synthesis $\to$ fixed-point $K$};
 
-  % -------- Row 1 --------
-  \node[smallbox]                    (edu)  {EduController\\\large Modeling \& JSON export};
-  \node[smallbox, right=22mm of edu] (json) {JSON\\\large $A,B,C,D,W_1,W_2,W_3$};
-  \node[smallbox, right=22mm of json](aitl) {AITL-H\\\large $H_\infty$ synthesis $\to$ fixed-point $K$};
-
-  % -------- Row 2 --------
-  \node[smallbox, below=24mm of edu] (hil)  {FPGA HIL\\\large SEU/outage injection, safety metrics};
-  \node[smallbox, right=22mm of hil] (fem)  {SystemDK FEM\\\large Thermal/radiation/package stress};
-  \node[smallbox, right=22mm of fem] (asic) {ASIC\\\large 22FDX FDSOI};
+  % Row 2
+  \node[figbox, below=20mm of edu] (hil)  {FPGA HIL\\SEU/outage injection, safety metrics};
+  \node[figbox, right=18mm of hil] (fem)  {SystemDK FEM\\Thermal/radiation/package stress};
+  \node[figbox, right=18mm of fem] (asic) {ASIC\\22FDX FDSOI};
 
   % Connections
   \draw[line] (edu) -- (json);
   \draw[line] (json) -- (aitl);
-  \draw[line] (aitl) |- ++(0,-12mm) -| (hil);
+  \draw[line] (aitl) |- ++(0,-10mm) -| (hil);
   \draw[line] (hil) -- (fem);
   \draw[line] (fem) -- (asic);
-
-  % Note
-  \node[align=center, below=10mm of fem]
-    {\large Metrics: safe-mode $<1$\,s, recovery $\ge 99\%$, ECC scrubbing efficiency};
-
 \end{tikzpicture}}%
 \caption{End-to-end design flow from mission specification to ASIC.}
 \label{fig:flow}
 \end{figure*}
 
-% === Fig.2: AITL architecture (full width, centered) ===
+% === Fig.2: AITL architecture (balanced size) ===
 \begin{figure*}[t]
 \centering
-\Huge
-\resizebox{0.95\textwidth}{!}{%
-\begin{tikzpicture}[node distance=24mm]
+\resizebox{0.75\textwidth}{!}{%
+\begin{tikzpicture}[
+  node distance=14mm,
+  >=Latex,
+  every node/.style={font=\large},
+  line/.style={-{Latex[length=2mm,width=1.2mm]}, line width=0.6pt},
+  figbox/.style={draw, rounded corners=2pt, align=center, inner sep=3pt,
+                 minimum height=10mm, minimum width=28mm}
+]
 
   % Robust Core
-  \node[smallbox] (rc1) {$H_\infty$/MPC/SMC\\\large Robust control};
-  \node[smallbox, below=8mm of rc1] (rc2) {Observers / weights\\\large $W_1,W_2,W_3$};
-  \node[smallbox, below=8mm of rc2] (rc3) {Fixed-point $K$\\\large RTL/FPGA/ASIC};
+  \node[figbox] (rc1) {$H_\infty$/MPC/SMC\\Robust control};
+  \node[figbox, below=8mm of rc1] (rc2) {Observers / weights\\$W_1,W_2,W_3$};
+  \node[figbox, below=8mm of rc2] (rc3) {Fixed-point $K$\\RTL/FPGA/ASIC};
 
-  % FSM Supervisor
-  \node[smallbox, right=32mm of rc1] (fs1) {Mode management\\\large Safe/Nominal/Recovery};
-  \node[smallbox, below=8mm of fs1]  (fs2) {FDI/FDII\\\large Fault detection/isolation};
-  \node[smallbox, below=8mm of fs2]  (fs3) {Safe boot\\\large Watchdog};
+  % FSM
+  \node[figbox, right=30mm of rc1] (fs1) {Mode management\\Safe/Nominal/Recovery};
+  \node[figbox, below=8mm of fs1] (fs2) {FDI/FDII\\Fault detection/isolation};
+  \node[figbox, below=8mm of fs2] (fs3) {Safe boot\\Watchdog};
 
-  % AI Adaptor
-  \node[smallbox, right=32mm of fs1] (ai1) {Re-identification / drift compensation};
-  \node[smallbox, below=8mm of ai1]  (ai2) {Parameter update\\\large Low frequency};
-  \node[smallbox, below=8mm of ai2]  (ai3) {Validation gate\\\large Apply if safe};
+  % AI
+  \node[figbox, right=30mm of fs1] (ai1) {Re-identification / drift compensation};
+  \node[figbox, below=8mm of ai1] (ai2) {Parameter update\\Low frequency};
+  \node[figbox, below=8mm of ai2] (ai3) {Validation gate\\Apply-if-safe};
 
-  % Flows
-  \draw[line] (rc1.east) -- (fs1.west);
-  \draw[line] (fs1.east) -- (ai1.west);
-  \draw[line] (ai3.west) -- ++(-18mm,0) |- (rc3.east);
-
-  % Tri-NVM (bottom row)
-  \node[smallbox, below=26mm of rc3] (sram) {SRAM\\\large Execution/ECC};
-  \node[smallbox, right=28mm of sram] (mram) {MRAM\\\large Logs/code/ECC};
-  \node[smallbox, right=28mm of mram] (fram) {FRAM\\\large Safe boot/FSM};
+  % Tri-NVM
+  \node[figbox, above right=2mm and 20mm of fs1] (sram) {SRAM\\Execution/ECC};
+  \node[figbox, below=8mm of sram] (mram) {MRAM\\Logs/code/ECC};
+  \node[figbox, below=8mm of mram] (fram) {FRAM\\Safe boot/FSM};
 
   % Connections
-  \draw[line] (rc3.south) |- (sram.north);
-  \draw[line] (ai2.south) |- (mram.north);
-  \draw[line] (fs3.south) |- (fram.north);
+  \draw[line] (rc1.east) -- (fs1.west);
+  \draw[line] (fs1.east) -- (ai1.west);
+  \draw[line] (ai3.west) -- ++(-10mm,0) |- (rc3.east);
 
+  \draw[line] (rc3.east) -- ++(6mm,0) |- (sram.west);
+  \draw[line] (fs3.east) -- ++(6mm,0) |- (fram.west);
+  \draw[line] (ai2.east) -- ++(6mm,0) |- (mram.west);
 \end{tikzpicture}}%
 \caption{AITL architecture: three layers with a tri-NVM hierarchy.}
 \label{fig:arch}
 \end{figure*}
 
-% === Fig.3: Closed-loop block diagram (full width, centered) ===
+% === Fig.3: Closed-loop block diagram (balanced size) ===
 \begin{figure*}[t]
 \centering
-\Huge
-\resizebox{0.95\textwidth}{!}{%
-\begin{tikzpicture}[node distance=26mm]
+\resizebox{0.75\textwidth}{!}{%
+\begin{tikzpicture}[
+  node distance=16mm,
+  >=Latex,
+  every node/.style={font=\large},
+  line/.style={-{Latex[length=2mm,width=1.2mm]}, line width=0.6pt},
+  figbox/.style={draw, rounded corners=2pt, align=center, inner sep=3pt,
+                 minimum height=10mm, minimum width=20mm}
+]
 
   % Blocks
-  \node[smallbox, minimum width=30mm] (K) {$K$};
-  \node[smallbox, right=46mm of K, minimum width=34mm] (P) {$P$};
+  \node[figbox] (K) {$K$};
+  \node[figbox, right=35mm of K] (P) {$P$};
 
-  % Summing junctions
-  \node[sum, left=20mm of K]  (sumin) {$\Sigma$};
-  \node[sum, right=24mm of P] (sumy) {$\Sigma$};
+  % Summations
+  \node[draw, circle, inner sep=1.5pt, left=15mm of K] (sumin) {$\Sigma$};
+  \node[draw, circle, inner sep=1.5pt, right=20mm of P] (sumy) {$\Sigma$};
 
-  % Forward path
+  % Connections
   \draw[line] (sumin) -- (K);
   \draw[line] (K) -- node[above] {$u$} (P);
   \draw[line] (P) -- node[above] {$y$} (sumy);
+  \draw[line] (sumy) |- ++(0,-16mm) -| node[pos=0.25, below] {$-$} (sumin);
 
-  % Feedback (lower to avoid overlap)
-  \draw[line] (sumy) |- ++(0,-34mm) -| node[pos=0.25, below] {$-$} (sumin);
+  % External signals
+  \node[left=12mm of sumin] (r) {}; \draw[line] (r.center) -- node[above] {$r$} (sumin);
+  \node[above=10mm of P] (w) {};   \draw[line] (w.center) -- node[right] {$w$} (P.north);
+  \node[below=10mm of sumy] (v) {}; \draw[line] (v.center) -- node[right] {$v$} (sumy.south);
 
-  % Disturbance
-  \node[above=16mm of P] (w) {};
-  \draw[line] (w.center) -- node[right] {$w$} (P.north);
-
-  % Noise
-  \coordinate (vstart) at ($(sumy.south)+(14mm,-14mm)$);
-  \draw[line] (vstart) -- node[right] {$v$} (sumy.south);
-
-  % Performance output
-  \node[smallbox, below=18mm of P] (W) {$W$};
+  % Performance block
+  \node[figbox, below=12mm of P] (W) {$W$};
   \draw[line] (P.south) -- (W.north);
-  \node[right=30mm of W] (z) {};
-  \draw[line] (W) -- node[above] {$z$} (z.center);
+  \node[right=15mm of W] (z) {}; \draw[line] (W) -- node[above] {$z$} (z.center);
 
 \end{tikzpicture}}%
 \caption{Closed-loop structure for robust design. Objective: minimize $\|T_{w\to z}\|_\infty$ under mixed-sensitivity shaping.}
