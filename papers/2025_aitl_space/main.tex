@@ -364,7 +364,14 @@ distilled on-board AI, and standard rad-hard interconnects.
 \end{figure*}
 
 % ----------------- References -----------------
-\FloatBarrier % ← 参考文献“直前”にこれを置く
+\FloatBarrier % ← 図表が参考文献に割り込まないよう固定
+
+% Balance references across two columns (IEEEtran)
+\makeatletter
+\IEEEtriggercmd{\enlargethispage{-2.5in}} % ページ長を微調整
+\IEEEtriggeratref{5}                      % ← 参考文献の5件目で列を分割してみる
+\makeatother
+
 \begin{thebibliography}{10}
 
 \bibitem{Shell2015}
