@@ -281,55 +281,69 @@ distilled on-board AI, and standard rad-hard interconnects.
 
 \vspace{16mm}
 
-% ---------- Fig.2 (overlap-free, enlarged) ----------
-\resizebox{0.95\textwidth}{!}{%
+% === Fig.2: AITL architecture (clean, no overlaps) ===
+\begin{figure}[t]
+\centering
+\scriptsize
+\resizebox{0.95\columnwidth}{!}{%
 \begin{tikzpicture}[
-  >=Latex,
-  line/.style={-{Latex[length=2mm,width=1.2mm]}, line width=0.6pt},
-  node distance=10mm and 18mm, % vertical , horizontal
-  smallbox/.style={draw, rounded corners=2pt, align=center,
-                   font=\small, minimum height=8mm, minimum width=26mm}
+  node distance=8mm and 14mm, % <vert , horiz> ほんの少し横方向を広げる
+  title/.style={font=\bfseries, inner sep=1pt},
+  line/.style={-{Latex[length=2mm,width=1.1mm]}, line width=0.55pt}
 ]
-  % Left column: Robust Core
-  \node[smallbox] (rc1) {$H_\infty$/MPC/SMC\\Robust control};
-  \node[smallbox, below=8mm of rc1] (rc2) {Observers / weights\\$W_1,\,W_2,\,W_3$};
-  \node[smallbox, below=8mm of rc2] (rc3) {Fixed-point $K$\\RTL/FPGA/ASIC};
+  % ----- Left column: Robust core -----
+  \node[smallbox, align=center] (rc1) {$H_\infty$/MPC/SMC\\\small Robust control};
+  \node[smallbox, below=6mm of rc1, align=center] (rc2) {Observers / weights\\\small $W_1,\,W_2,\,W_3$};
+  \node[smallbox, below=6mm of rc2, align=center] (rc3) {Fixed-point $K$\\\small RTL/FPGA/ASIC};
 
-  % Middle column: FSM Supervisor
-  \node[smallbox, right=40mm of rc1] (fs1) {Mode management\\Safe/Nominal/Recovery};
-  \node[smallbox, below=8mm of fs1] (fs2) {FDI/FDII\\Fault detection/isolation};
-  \node[smallbox, below=8mm of fs2] (fs3) {Safe boot\\Watchdog};
+  % ----- Middle column: FSM supervisor -----
+  \node[smallbox, right=28mm of rc1, align=center] (fs1) {Mode management\\\small Safe/Nominal/Recovery};
+  \node[smallbox, below=6mm of fs1, align=center] (fs2) {FDI/FDII\\\small Fault detection/isolation};
+  \node[smallbox, below=6mm of fs2, align=center] (fs3) {Safe boot\\\small Watchdog};
 
-  % Right column: Tri-NVM (top)
-  \node[smallbox, right=44mm of fs1, yshift=2mm] (sram) {SRAM\\Execution/ECC};
-  \node[smallbox, below=9mm of sram] (mram) {MRAM\\Logs/code/ECC};
-  \node[smallbox, below=9mm of mram] (fram) {FRAM\\Safe boot/FSM};
+  % ----- Right column: NVM stack -----
+  \node[smallbox, right=36mm of fs1, yshift=5mm, align=center] (sram) {SRAM\\\small Execution/ECC};
+  \node[smallbox, below=7mm of sram, align=center] (mram) {MRAM\\\small Logs/code/ECC};
+  \node[smallbox, below=7mm of mram, align=center] (fram) {FRAM\\\small Safe boot/FSM};
 
-  % AI adaptor (placed to avoid overlaps)
-  \node[smallbox, left=14mm of mram] (reid) {Re-identification\\/ drift compensation};
-  \node[smallbox, below=9mm of fram] (param) {Parameter update\\Low frequency};
-  \node[smallbox, below=7mm of param] (gate) {Validation gate\\Apply-if-safe};
+  % ----- AI adaptor（NVMの左に独立配置） -----
+  \node[smallbox, left=12mm of mram, align=center] (reid) {Re-identification /\\ drift compensation};
+  \node[smallbox, below=10mm of fram, align=center] (param) {Parameter update\\\small Low frequency};
+  \node[smallbox, below=7mm of param, align=center] (gate) {Validation gate\\\small Apply-if-safe};
 
-  % --- Orthogonal routing (no overlaps) ---
-  % core -> FSM -> AI/NVM
+  % === ここから配線：矢印先端をボックス手前で止める ===
+  % 入口座標（ボックスの少し手前）を用意
+  \coordinate (reid_in) at ([xshift=-2.2mm]reid.west);
+  \coordinate (sram_in) at ([xshift=-2.2mm]sram.west);
+  \coordinate (mram_in) at ([xshift=-2.2mm]mram.west);
+  \coordinate (fram_in) at ([xshift=-2.2mm]fram.west);
+
+  % core -> FSM -> AI
   \draw[line] (rc1.east) -- (fs1.west);
-  \draw[line] (fs1.east) -- ++(8mm,0) |- (reid.west);
-  \draw[line] (reid.east) -| ([xshift=-6mm]sram.west) -- (sram.west);
+  \draw[line] (fs1.east) -- ++(6mm,0) |- (reid_in);      % 矢印はここまで
+  \draw[-, line width=0.55pt] (reid_in) -- (reid.west);   % 最後は矢印なしの短線
 
   % observers -> FDI -> MRAM
-  \draw[line] (rc2.east) -- ++(10mm,0) |- (fs2.west);
-  \draw[line] (fs2.east) -- ++(10mm,0) |- ([xshift=-6mm]mram.west) -- (mram.west);
+  \draw[line] (rc2.east) -- ++(6mm,0) |- (fs2.west);
+  \draw[line] (fs2.east) -- ++(6mm,0) |- (mram_in);
+  \draw[-, line width=0.55pt] (mram_in) -- (mram.west);
 
   % fixed K -> safe boot -> FRAM
-  \draw[line] (rc3.east) -- ++(12mm,0) |- (fs3.west);
-  \draw[line] (fs3.east) -- ++(12mm,0) |- ([xshift=-6mm]fram.west) -- (fram.west);
+  \draw[line] (rc3.east) -- ++(10mm,0) |- (fs3.west);
+  \draw[line] (fs3.east) -- ++(8mm,0) |- (fram_in);
+  \draw[-, line width=0.55pt] (fram_in) -- (fram.west);
 
-  % AI downward chain (kept away from other edges)
-  \draw[line] (fram.south) -- (param.north);
+  % AI -> SRAM（上へ回して衝突回避）
+  \draw[line] (reid.east) -| ([xshift=-6mm]sram_in) -- (sram_in);
+  \draw[-, line width=0.55pt] (sram_in) -- (sram.west);
+
+  % AI chain downward
+  \draw[line] (reid.south) |- (param.west);
   \draw[line] (param.south) -- (gate.north);
 \end{tikzpicture}}%
-\captionof{figure}{AITL architecture: three-layer control stack with a role-partitioned tri-NVM hierarchy.}
+\caption{AITL architecture: three-layer control stack with a role-partitioned tri-NVM hierarchy.}
 \label{fig:arch}
+\end{figure}
 
 \vspace{8mm}
 
