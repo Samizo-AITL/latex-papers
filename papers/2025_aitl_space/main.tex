@@ -1,93 +1,98 @@
 \documentclass[conference]{IEEEtran}
 
 % ---------- Packages ----------
-\usepackage{newtxtext,newtxmath} % Times系
+\usepackage{newtxtext,newtxmath} % Times系フォント
 \usepackage{amsmath}
 \usepackage{siunitx}
 \usepackage{graphicx,xcolor}
 \usepackage{booktabs}
 \usepackage{placeins}
 \usepackage[hidelinks]{hyperref}
-
 \usepackage{tikz}
-\usetikzlibrary{calc,positioning,fit,arrows.meta,shapes.geometric,shapes.misc}
+\usetikzlibrary{calc,positioning,fit,arrows.meta,shapes.geometric}
 
 % ---------- TikZ styles ----------
 \tikzset{
-  line/.style={-Latex, line width=0.5pt},
-  box/.style={draw, rounded corners, align=center, inner sep=3pt, font=\small},
-  smallbox/.style={box, minimum width=25mm, minimum height=7mm},
-  midbox/.style={box, minimum width=32mm, minimum height=9mm},
-  bigbox/.style={box, minimum width=68mm, minimum height=10mm}
+  line/.style={-Latex, line width=0.4pt},
+  box/.style={draw, rounded corners, align=center, inner sep=3pt},
+  smallbox/.style={box, minimum width=20mm, minimum height=7mm},
+  midbox/.style={box, minimum width=28mm, minimum height=8mm},
+  bigbox/.style={box, minimum width=55mm, minimum height=9mm}
 }
 
 % ---------- Title ----------
-\title{AITL on Space: A Robust Three-Layer Architecture with a Tri-NVM Hierarchy for Long-Duration Spacecraft Autonomy}
+\title{AITL on Space: A Robust Three-Layer Architecture\\
+with a Tri-NVM Hierarchy (SRAM / MRAM / FRAM)\\
+for Long-Duration Spacecraft Autonomy}
 
 \author{
 \IEEEauthorblockN{Shinichi Samizo}
 \IEEEauthorblockA{Independent Semiconductor Researcher\\
 Former Engineer at Seiko Epson Corporation\\
-Email: shin3t72@gmail.com\quad GitHub: \url{https://github.com/Samizo-AITL}}
+Email: shin3t72@gmail.com \\
+GitHub: \url{https://github.com/Samizo-AITL}}
 }
 
 \begin{document}
 \maketitle
 
-% ---------- Abstract ----------
 \begin{abstract}
-We propose \emph{AITL on Space}, a robust three-layer architecture (Robust Core, FSM Supervisor, AI Adaptor) integrated with a tri-NVM hierarchy (SRAM, MRAM, FRAM) and mapped to a 22\,nm FD\!SOI SoC. The novelty lies in a complete flow from mission-level specification to ASIC implementation: requirements are formalized as JSON via EduController, synthesized by the AITL-H module, verified in FPGA HIL with fault injection, stress-tested through SystemDK FEM (thermal/radiation/packaging), and finally mapped to ASIC. This end-to-end methodology enables resilient autonomy for long-duration spacecraft missions.
+We propose \emph{AITL on Space}, a three-layer control architecture (Robust Core, FSM Supervisor, AI Adaptor) integrated with a tri-NVM hierarchy (SRAM/MRAM/FRAM) and mapped to a 22\,nm FD\!SOI SoC. The novelty lies in a complete flow from mission-level specification to ASIC implementation: requirements are formalized as JSON via EduController, synthesized by the AITL-H module, verified in FPGA HIL with fault injection, stress-tested through SystemDK FEM under thermal/radiation scenarios, and finally implemented as an ASIC. This end-to-end methodology enables resilient autonomy for long-duration spacecraft missions.
 \end{abstract}
 
-% ============================================================
+% -------------------------------------------------
 \section{Introduction}
-Deep-space missions require ultra-robust control under total ionizing dose (TID), single-event effects (SEE), and thermal cycling. Conventional PID\,+\,Flash architectures face limits due to drift, aging, and endurance. We present AITL on Space: a three-layer control architecture with a hardened memory hierarchy, supported by a reproducible design flow from JSON specification to ASIC.
+Deep-space missions require ultra-robust control under total ionizing dose (TID), single event effects (SEE), and thermal cycling. Conventional PID\,+\,Flash architectures face limits due to charge-trap drift and endurance. To address these, we present AITL on Space: a resilient three-layer architecture supported by a tri-NVM memory hierarchy and a reproducible design flow from specification to ASIC.
 
-% ============================================================
+% -------------------------------------------------
 \section{Specification and Design Flow}
-The design process begins with mission requirements captured in EduController, exported as JSON including plant matrices and weighting functions. AITL-H consumes this JSON to synthesize an $H_\infty$ controller $K$ in fixed-point form. The resulting design undergoes FPGA HIL validation, followed by FEM co-simulation in SystemDK, before 22FDX ASIC tape-out.
+The design process begins with \emph{Mission Specification}, translated into plant matrices and weighting functions in \emph{EduController}. These are exported as JSON, forming a portable specification. The AITL-H module consumes JSON to synthesize an $H_\infty$ controller $K$ in fixed-point form. The resulting design undergoes:
+\begin{itemize}
+  \item FPGA HIL verification with SEU and outage injection,
+  \item SystemDK FEM analysis for thermal/radiation/packaging stress,
+  \item Mapping to 22FDX ASIC for final deployment.
+\end{itemize}
 
-% ---------- Fig.1 Design Flow ----------
-\begin{figure}[t]
+% ---------- Fig.1 Flow ----------
+\begin{figure*}[t]
 \centering
-\begin{tikzpicture}[node distance=8mm]
+\begin{tikzpicture}[node distance=9mm]
   \node[midbox, fill=blue!10] (spec) {Mission Specification};
   \node[midbox, fill=cyan!10, below=of spec] (json) {EduController JSON Export};
-  \node[midbox, fill=green!12, below=of json] (hinf) {AITL-H $H_\infty$ Synthesis};
-  \node[midbox, fill=orange!15, below=of hinf] (hil) {FPGA HIL Verification};
+  \node[midbox, fill=green!12, below=of json] (aitlh) {AITL-H $H_\infty$ Synthesis};
+  \node[midbox, fill=orange!18, below=of aitlh] (hil) {FPGA HIL Verification};
   \node[midbox, fill=red!10, below=of hil] (asic) {22FDX ASIC Implementation};
-  \node[midbox, fill=purple!10, right=25mm of hil] (fem) {SystemDK FEM\\Thermal / Radiation / Packaging};
+  \node[midbox, right=32mm of hil] (fem) {\shortstack{SystemDK FEM\\Thermal / Radiation / Packaging}};
 
   \draw[line] (spec) -- (json);
-  \draw[line] (json) -- (hinf);
-  \draw[line] (hinf) -- (hil);
+  \draw[line] (json) -- (aitlh);
+  \draw[line] (aitlh) -- (hil);
   \draw[line] (hil) -- (asic);
   \draw[line] (hil) -- (fem);
-  \draw[line] (fem) -- (asic);
 \end{tikzpicture}
-\caption{End-to-end flow: specification $\to$ JSON (EduController) $\to$ AITL-H $\to$ FPGA HIL $\to$ FEM $\to$ ASIC.}
+\caption{End-to-end design flow: specification $\to$ JSON (EduController) $\to$ AITL-H $\to$ FPGA HIL $\to$ FEM $\to$ ASIC.}
 \label{fig:flow}
-\end{figure}
+\end{figure*}
 
-% ============================================================
+% -------------------------------------------------
 \section{System Architecture}
-AITL consists of three layers:
+AITL comprises three layers:
 \begin{itemize}
-  \item \textbf{Robust Core}: $H_\infty$/MPC/SMC control.
-  \item \textbf{FSM Supervisor}: mode switching (Safe/Nominal/Recovery) with FDI/FDII.
-  \item \textbf{AI Adaptor}: long-term re-identification, drift compensation.
+  \item \textbf{Robust Core}: $H_\infty$/MPC/SMC control,
+  \item \textbf{FSM Supervisor}: Safe/Nominal/Recovery with FDI/FDII,
+  \item \textbf{AI Adaptor}: long-term re-identification and drift compensation.
 \end{itemize}
-A tri-NVM hierarchy ensures persistence: SRAM for execution, MRAM for logs/code with ECC scrubbing, and FRAM for safe boot and FSM states.
+The tri-NVM hierarchy ensures persistence: SRAM for execution, MRAM for logs/code with ECC scrubbing, FRAM for safe boot and FSM states. The SoC target is 22\,nm FD\!SOI hardened against radiation and temperature stress.
 
 % ---------- Fig.2 Architecture ----------
 \begin{figure*}[t]
 \centering
 \begin{tikzpicture}[node distance=8mm]
-  \node[bigbox, fill=gray!8] (plant) {11D Plant (Attitude+Bus+Thermal)};
-  \node[midbox, fill=blue!10, left=25mm of plant] (core) {Robust Core\\$H_\infty$/MPC/SMC};
-  \node[midbox, fill=green!10, below=of core] (fsm) {FSM Supervisor\\Safe/Nominal/Recovery};
-  \node[midbox, fill=orange!10, below=of fsm] (ai) {AI Adaptor\\Re-ID / Drift Compensation};
-  \node[midbox, fill=red!10, right=25mm of plant] (nvm) {Tri-NVM Hierarchy\\SRAM / MRAM / FRAM};
+  \node[bigbox] (plant) {11D Plant (Attitude+Bus+Thermal)};
+  \node[smallbox, left=of plant, xshift=-32mm, fill=gray!10] (core) {Robust Core\\$H_\infty$/MPC/SMC};
+  \node[smallbox, below=of core, fill=green!10] (fsm) {FSM Supervisor\\Safe/Nominal/Recovery};
+  \node[smallbox, below=of fsm, fill=orange!15] (ai) {AI Adaptor\\Re-ID / Drift Compensation};
+  \node[smallbox, right=of plant, xshift=32mm, fill=red!10] (nvm) {Tri-NVM Hierarchy\\SRAM / MRAM / FRAM};
 
   \draw[line] (core) -- (plant);
   \draw[line] (fsm) -- (nvm);
@@ -97,25 +102,27 @@ A tri-NVM hierarchy ensures persistence: SRAM for execution, MRAM for logs/code 
 \label{fig:arch}
 \end{figure*}
 
-% ============================================================
+% -------------------------------------------------
 \section{Mathematical Model and $H_\infty$ Design}
-We consider an 11D discrete-time state-space plant coupling attitude (6), power bus (2), and thermal nodes (3):
+We consider an 11D discrete-time plant:
 \begin{align}
-x_{k+1} &= A x_k + B u_k + E w_k, \\
-y_k &= C x_k + D u_k + v_k.
+  x_{k+1} &= A x_k + B u_k + E w_k, \\
+  y_k &= C x_k + D u_k + v_k.
 \end{align}
-Weights $(W_1, W_2, W_3)$ shape sensitivity, control effort, and complementary sensitivity. EduController outputs plant/weights as JSON. AITL-H synthesizes $K$ with robust stability margins, automatically mapped to fixed-point hardware for FPGA and ASIC targets.
+Here $w_k$ and $v_k$ are disturbance and noise. The model extends to 20D with translational axes and bias states.  
 
-% ---------- Fig.3 Closed-loop ----------
+Weights $(W_1,W_2,W_3)$ define sensitivity, control effort, and complementary sensitivity. EduController outputs them as JSON; AITL-H synthesizes $K$ with robust stability margins, mapped to fixed-point hardware.
+
+% ---------- Fig.3 Loop ----------
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[node distance=10mm]
-  \node[smallbox] (K) {$K$};
-  \node[circle, draw, minimum size=5mm, right=10mm of K] (sum) {};
+  \node[smallbox, minimum width=10mm] (K) {$K$};
+  \node[circle, draw, minimum size=5mm, right=8mm of K] (sum) {};
   \draw (sum) +(-2mm,0) -- +(2mm,0);
   \draw (sum) +(0,-2mm) -- +(0,2mm);
-  \node[smallbox, right=13mm of sum, minimum width=16mm] (P) {\shortstack{Plant\\11D}};
-  \node[right=16mm of P] (y) {$y$};
+  \node[smallbox, right=13mm of sum, minimum width=16mm] (P) {\shortstack{Plant\\\footnotesize 11D}};
+  \node[right=14mm of P] (y) {$y$};
   \node[left=13mm of K] (r) {$r$};
   \draw[line] (r) -- (K);
   \draw[line] (K) -- node[above]{\small $u$} (sum);
@@ -127,15 +134,15 @@ Weights $(W_1, W_2, W_3)$ shape sensitivity, control effort, and complementary s
 \label{fig:loop}
 \end{figure}
 
-% ============================================================
+% -------------------------------------------------
 \section{Verification Pipeline}
-FPGA HIL injects SEUs and sensor outages. Metrics include safe-mode entry $<\SI{1}{s}$, recovery rate $\ge\SI{99}{\percent}$, and ECC scrubbing efficiency. SystemDK FEM evaluates thermal/radiation stress, validating packaging constraints before ASIC.
+FPGA HIL injects SEUs and outages, measuring safe-mode entry ($<\SI{1}{s}$), recovery rate ($\ge\SI{99}{\percent}$), and ECC scrubbing efficiency. SystemDK FEM validates thermal and radiation stress, ensuring packaging reliability before ASIC tape-out.
 
-% ============================================================
+% -------------------------------------------------
 \section{Conclusion}
-AITL on Space combines robust control, supervisory safety, AI re-identification, and hardened memory. The proposed end-to-end flow---from JSON specification to ASIC---provides a reproducible methodology for resilient autonomy in long-duration space missions.
+AITL on Space combines robust control, supervisory safety, AI re-identification, and hardened memory. The proposed end-to-end flow---from mission specification to ASIC---provides a reproducible methodology for resilient autonomy in long-duration space missions.
 
-% ============================================================
+% ---------- References ----------
 \begin{thebibliography}{99}
 \bibitem{doyle}
 J.\,C.~Doyle, B.\,A.~Francis, and A.\,R.~Tannenbaum,
