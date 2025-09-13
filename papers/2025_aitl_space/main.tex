@@ -277,51 +277,50 @@ distilled on-board AI, and standard rad-hard interconnects.
 \label{fig:flow}
 \end{figure*}
 
-% === Fig.2: AITL architecture (no overlaps, EN only) ===
-\begin{figure}[t]
+% === Fig.2: AITL architecture (wide, no overlaps) ===========================
+\begin{figure*}[t]
 \centering
 \scriptsize
-\resizebox{0.96\columnwidth}{!}{%
-\begin{tikzpicture}[node distance=7.5mm] % 少し広め
-
-  % ----- Robust Core column -----
+\resizebox{0.95\textwidth}{!}{%
+\begin{tikzpicture}[node distance=8.5mm]
+  % ---- Columns: Robust | FSM | AI -----------------------------------------
+  % Robust Core
   \node[smallbox, align=center] (rc1) {$H_\infty$/MPC/SMC\\\small Robust control};
-  \node[smallbox, below=5mm of rc1] (rc2) {Observers / weights\\\small $W_1,W_2,W_3$};
-  \node[smallbox, below=5mm of rc2] (rc3) {Fixed-point $K$\\\small RTL/FPGA/ASIC};
+  \node[smallbox, below=5mm of rc1, align=center] (rc2) {Observers / weights\\\small $W_1,W_2,W_3$};
+  \node[smallbox, below=5mm of rc2, align=center] (rc3) {Fixed-point $K$\\\small RTL/FPGA/ASIC};
 
-  % ----- FSM column -----
-  \node[smallbox, right=22mm of rc1] (fs1) {Mode management\\\small Safe/Nominal/Recovery};
-  \node[smallbox, below=5mm of fs1] (fs2) {FDI/FDII\\\small Fault detection/isolation};
-  \node[smallbox, below=5mm of fs2] (fs3) {Safe boot\\\small Watchdog};
+  % FSM
+  \node[smallbox, right=28mm of rc1, align=center] (fs1) {Mode management\\\small Safe/Nominal/Recovery};
+  \node[smallbox, below=5mm of fs1, align=center] (fs2) {FDI/FDII\\\small Fault detection/isolation};
+  \node[smallbox, below=5mm of fs2, align=center] (fs3) {Safe boot\\\small Watchdog};
 
-  % ----- AI column -----
-  \node[smallbox, right=22mm of fs1] (ai1) {Re-identification / drift compensation};
-  \node[smallbox, below=5mm of ai1] (ai2) {Parameter update\\\small Low frequency};
-  \node[smallbox, below=5mm of ai2] (ai3) {Validation gate\\\small Apply-if-safe};
+  % AI
+  \node[smallbox, right=28mm of fs1, align=center] (ai1) {Re-identification / drift compensation};
+  \node[smallbox, below=5mm of ai1, align=center] (ai2) {Parameter update\\\small Low frequency};
+  \node[smallbox, below=5mm of ai2, align=center] (ai3) {Validation gate\\\small Apply-if-safe};
 
-  % ----- Tri-NVM (stacked above AI) -----
-  \node[smallbox, above=8mm of ai1] (sram) {SRAM\\\small Execution/ECC};
-  \node[smallbox, below=3.5mm of sram] (mram) {MRAM\\\small Logs/code/ECC};
-  \node[smallbox, below=3.5mm of mram] (fram) {FRAM\\\small Safe boot/FSM};
+  % Tri-NVM (stacked above AI column)
+  \node[smallbox, above=10mm of ai1, align=center] (sram) {SRAM\\\small Execution/ECC};
+  \node[smallbox, below=3.5mm of sram, align=center] (mram) {MRAM\\\small Logs/code/ECC};
+  \node[smallbox, below=3.5mm of mram, align=center] (fram) {FRAM\\\small Safe boot/FSM};
 
-  % ----- Routing lanes to avoid label overlap -----
-  \coordinate (laneTop) at ($(fs1.north)!0.5!(ai1.north)+(0,8mm)$);
-  \coordinate (laneMid) at ($(fs2.south)!0.5!(ai2.south)+(0,-8mm)$);
+  % ---- Routing lanes (invisible guides to avoid overlaps) ------------------
+  \coordinate (laneTop) at ($(fs1.north)!0.5!(ai1.north)+(0,9mm)$);
+  \coordinate (laneMid) at ($(fs2.south)!0.5!(ai2.south)+(0,-9mm)$);
 
-  % ----- Signals (no overlaps) -----
+  % ---- Inter-layer links (no crossing labels) ------------------------------
   \draw[line] (rc1.east) -- (fs1.west);
   \draw[line] (fs1.east) -- (ai1.west);
-  \draw[line] (ai3.west) to[out=180,in=0] ($(rc3.east)+(3mm,0)$) |- (rc3.east);
+  \draw[line] (ai3.west) to[out=180,in=0] ($(rc3.east)+(4mm,0)$) |- (rc3.east);
 
-  % ----- Memory connections via lanes -----
-  \draw[line] (rc3.east) -| ($(laneTop)+(10mm,0)$) |- (sram.west);
-  \draw[line] (fs3.east) -| ($(laneMid)+(12mm,0)$) |- (fram.west);
-  \draw[line] (ai2.east) -- ++(9mm,0) |- (mram.west);
-
+  % ---- Memory connections via lanes (stay clear of boxes/text) -------------
+  \draw[line] (rc3.east) -| ($(laneTop)+(12mm,0)$) |- (sram.west);
+  \draw[line] (fs3.east) -| ($(laneMid)+(14mm,0)$) |- (fram.west);
+  \draw[line] (ai2.east) -- ++(10mm,0) |- (mram.west);
 \end{tikzpicture}}%
-\caption{AITL architecture: three layers with a tri-NVM hierarchy.}
+\caption{AITL architecture: three-layer control stack with a role-partitioned tri-NVM hierarchy.}
 \label{fig:arch}
-\end{figure}
+\end{figure*}
 
 % === Fig.3: Closed-loop block diagram (balanced size) ===
 \begin{figure*}[t]
