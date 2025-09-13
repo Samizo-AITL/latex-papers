@@ -276,59 +276,56 @@ distilled on-board AI, and standard rad-hard interconnects.
 
 \vspace{14mm} % ← Fig.1とFig.2の間隔を広げる
 
-% === Fig.2 (no overlaps, grid layout) ===
+% === Fig.2: AITL architecture (simplified / no overlaps) ===
 \begin{figure}[t]
 \centering
-\footnotesize
+\scriptsize
 \resizebox{0.98\columnwidth}{!}{%
 \begin{tikzpicture}[
-  >=Latex,
-  nodebox/.style={draw, rounded corners=2pt, align=center,
-                  inner sep=2.2pt, minimum height=7mm, minimum width=28mm},
-  link/.style={-Latex, line width=0.55pt, rounded corners=2pt,
-               shorten >=2pt, shorten <=2pt},
-  matrix of nodes,
-  row sep=8mm, column sep=12mm   % ＜ゆとりを確保＞
+  node distance = 7mm and 18mm,      % <row , col> 間隔を広めに
+  box/.style  = {draw, rounded corners=2pt, align=center,
+                 inner sep=2.5pt, minimum height=7mm, minimum width=28mm},
+  arrow/.style= {-{Latex[length=2mm,width=1.1mm]}, line width=0.55pt, shorten >=2pt}
 ]
-%----- 3列 × 3行の基本グリッド（左=Core，中=FSM，右=NVM） -----
-\matrix (M) {
-  |[nodebox]| {$H_\infty$/MPC/SMC\\\small Robust control}   &
-  |[nodebox]| {Mode management\\\small Safe/Nominal/Recovery} &
-  |[nodebox]| {SRAM\\\small Execution/ECC} \\
-  |[nodebox]| {Observers / weights\\\small $W_1,\,W_2,\,W_3$} &
-  |[nodebox]| {FDI/FDII\\\small Fault detection/isolation}      &
-  |[nodebox]| {MRAM\\\small Logs/code/ECC} \\
-  |[nodebox]| {Fixed-point $K$\\\small RTL/FPGA/ASIC}           &
-  |[nodebox]| {Safe boot\\\small Watchdog}                       &
-  |[nodebox]| {FRAM\\\small Safe boot/FSM} \\
-  % 追加列は作らず、AI 系は FSM 列の下に縦配置
-};
-% FSM列の真下にAIチェーン（重なり回避）
-\node[nodebox, below=10mm of M-3-2] (reid)  {Re-identification /\\ drift compensation};
-\node[nodebox, below=7mm  of reid]  (param) {Parameter update\\\small Low frequency};
-\node[nodebox, below=7mm  of param] (gate)  {Validation gate\\\small Apply-if-safe};
 
-%----- 直交配線（必ず回り込み、先端はshortenで箱外に止める） -----
-% 左→中（Core→FSM）
-\draw[link] (M-1-1.east) -- (M-1-2.west);
-\draw[link] (M-2-1.east) -- (M-2-2.west);
-\draw[link] (M-3-1.east) -- (M-3-2.west);
+% ----- Left column: Robust core -----
+\node[box] (rc1) {$H_\infty$/MPC/SMC\\\small Robust control};
+\node[box, below=6mm of rc1] (rc2) {Observers / weights\\\small $W_1,\,W_2,\,W_3$};
+\node[box, below=6mm of rc2] (rc3) {Fixed-point $K$\\\small RTL/FPGA/ASIC};
 
-% 中→右（FSM→各NVM）（必ず少し右へ出てから上/下に回す）
-\draw[link] (M-1-2.east) -- ++(5mm,0) |- (M-1-3.west); % → SRAM
-\draw[link] (M-2-2.east) -- ++(5mm,0) |- (M-2-3.west); % → MRAM
-\draw[link] (M-3-2.east) -- ++(5mm,0) |- (M-3-3.west); % → FRAM
+% ----- Middle column: FSM supervisor -----
+\node[box, right=18mm of rc1] (fs1) {Mode management\\\small Safe/Nominal/Recovery};
+\node[box, below=6mm of fs1]    (fs2) {FDI/FDII\\\small Fault detection/isolation};
+\node[box, below=6mm of fs2]    (fs3) {Safe boot\\\small Watchdog};
 
-% FSM→AI、AI→SRAM（AIは中央下→右上へ“コの字”で回す）
-\draw[link] (M-1-2.south) |- (reid.west);                 % FSM(top) → Re-id
-\draw[link] (reid.east) -| ([xshift=-3mm]M-1-3.west);     % Re-id → SRAM
+% ----- Right column: NVM stack -----
+\node[box, right=22mm of fs1, yshift=5mm] (sram) {SRAM\\\small Execution/ECC};
+\node[box, below=7mm of sram]             (mram) {MRAM\\\small Logs/code/ECC};
+\node[box, below=7mm of mram]             (fram) {FRAM\\\small Safe boot/FSM};
 
-% AI 縦チェーン
-\draw[link] (reid) -- (param);
-\draw[link] (param) -- (gate);
+% ----- Far-right: AI adaptor（NVMの右に縦配置して交差回避） -----
+\node[box, right=18mm of mram] (reid) {Re-identification\\\small Drift compensation};
+\node[box, below=7mm of reid]  (param){Parameter update\\\small Low frequency};
+\node[box, below=7mm of param] (gate) {Validation gate\\\small Apply-if-safe};
+
+% ===== Connections (全て直交・交差なし) =====
+% core -> supervisor
+\draw[arrow] (rc1.east) -- (fs1.west);
+\draw[arrow] (rc2.east) -- (fs2.west);
+\draw[arrow] (rc3.east) -- (fs3.west);
+
+% supervisor -> memories
+\draw[arrow] (fs1.east) -- ++(6mm,0) |- (sram.west);
+\draw[arrow] (fs2.east) -- ++(6mm,0) |- (mram.west);
+\draw[arrow] (fs3.east) -- ++(6mm,0) |- (fram.west);
+
+% AI chain (縦) ＋ AI -> SRAM 経路（上を回して接続）
+\draw[arrow] (reid.south) -- (param.north);
+\draw[arrow] (param.south) -- (gate.north);
+\draw[arrow] (reid.west)  -| ([xshift=-3mm]sram.north east) |- (sram.east); % 右回し→上→SRAM
 
 \end{tikzpicture}}%
-\caption{AITL architecture: three-layer control stack with a role-partitioned tri-NVM hierarchy.}
+\caption{AITL architecture (simplified): three-layer control with a role-partitioned tri-NVM hierarchy and AI adaptor, drawn with orthogonal, overlap-free routes.}
 \label{fig:arch}
 \end{figure}
 
