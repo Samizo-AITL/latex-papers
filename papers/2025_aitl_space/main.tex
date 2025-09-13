@@ -274,68 +274,58 @@ distilled on-board AI, and standard rad-hard interconnects.
 \captionof{figure}{End-to-end design flow from mission specification to ASIC.}
 \label{fig:flow}
 
-\vspace{14mm} % ← Fig.1とFig.2の間隔を広げる
+% --- ここは figure* の“中” ---
+% （Fig.1 の直後に挿し込む。figure 環境は作らない）
 
-% === Fig.2 (DROP-IN REPLACEMENT) ==========================
-\begin{figure}[t]
+\vspace{16mm} % ← Fig.1 と Fig.2 の間隔を広げたいとき
+
+% ==== Fig.2 本体（入れ子禁止・重なりゼロ・少し大きめ） ====
 \centering
-% 2カラムでも読みやすいよう少し大きめ
-\resizebox{0.88\textwidth}{!}{%
+\resizebox{0.90\textwidth}{!}{%
 \begin{tikzpicture}[
-  node distance = 8mm and 18mm,         % 縦,横の基本間隔（横を広め）
+  node distance = 8mm and 18mm,   % 縦,横の基本間隔（横広め）
   >=Latex,
   line/.style   = {-{Latex[length=2mm,width=1.1mm]}, line width=0.55pt},
   box/.style    = {draw, rounded corners=2pt, align=center, inner sep=2.5pt,
                    minimum height=7.8mm, minimum width=28mm},
-  mem/.style    = {box, minimum width=34mm}, % メモリは少し広め
+  mem/.style    = {box, minimum width=34mm},
   small/.style  = {box, minimum width=30mm}
 ]
+  % 左：コア（簡略化）
+  \node[small] (core) {$H_\infty$ core\\{\footnotesize observers/weights, fixed-point $K$}};
 
-% ----- 左列：コア（簡略化して1ボックスに統合） -----
-\node[small] (core) {$H_\infty$ core\\{\footnotesize observers/weights, fixed-point $K$}};
+  % 中央：FSM→AI→Gate（縦）
+  \node[small, right=28mm of core] (fsm) {FSM supervisor\\{\footnotesize Safe/Nominal/Recovery}};
+  \node[small, below=10mm of fsm] (ai) {AI adaptor\\{\footnotesize Re-identification / updates}};
+  \node[small, below=6mm of ai] (gate) {Validation gate\\{\footnotesize apply-if-safe}};
 
-% ----- 中央列：FSM＋AI（縦積み） -----
-\node[small, right=28mm of core] (fsm) {FSM supervisor\\{\footnotesize Safe/Nominal/Recovery}};
-\node[small, below=10mm of fsm] (ai) {AI adaptor\\{\footnotesize Re-identification / updates}};
-\node[small, below=6mm of ai] (gate) {Validation gate\\{\footnotesize apply-if-safe}};
+  % 右：NVM（縦）
+  \node[mem, right=36mm of fsm, yshift=6mm] (sram) {SRAM\\{\footnotesize Execution/ECC}};
+  \node[mem, below=8mm of sram] (mram) {MRAM\\{\footnotesize Logs / code / ECC}};
+  \node[mem, below=8mm of mram] (fram) {FRAM\\{\footnotesize Safe boot / FSM}};
 
-% ----- 右列：NVM（縦積み） -----
-\node[mem, right=36mm of fsm, yshift=6mm] (sram) {SRAM\\{\footnotesize Execution/ECC}};
-\node[mem, below=8mm of sram] (mram) {MRAM\\{\footnotesize Logs / code / ECC}};
-\node[mem, below=8mm of mram] (fram) {FRAM\\{\footnotesize Safe boot / FSM}};
+  % 入口座標（矢印先端を枠の手前で止める）
+  \coordinate (sram_in) at ([xshift=-2.2mm]sram.west);
+  \coordinate (mram_in) at ([xshift=-2.2mm]mram.west);
+  \coordinate (fram_in) at ([xshift=-2.2mm]fram.west);
 
-% ===== 交差＆重なりゼロのための「入口座標」を用意（矢印は手前で止める） =====
-\coordinate (sram_in) at ([xshift=-2.2mm]sram.west);
-\coordinate (mram_in) at ([xshift=-2.2mm]mram.west);
-\coordinate (fram_in) at ([xshift=-2.2mm]fram.west);
+  % 配線（重なりゼロ）
+  \draw[line] (core) -- (fsm);
+  \draw[line] (fsm) -- (ai);
 
-% ===== 配線（文字や枠に矢印先端が乗らないよう制御） =====
-% core -> fsm
-\draw[line] (core) -- (fsm);
+  \draw[line] (ai.east) -| (mram_in);
+  \draw[-, line width=0.55pt] (mram_in) -- (mram.west);
 
-% fsm -> ai（縦）
-\draw[line] (fsm) -- (ai);
+  \draw[line] (ai.east) |- ([yshift=6mm]sram_in) -- (sram_in);
+  \draw[-, line width=0.55pt] (sram_in) -- (sram.west);
 
-% ai -> mram（水平）
-\draw[line] (ai.east) -| (mram_in);
-\draw[-, line width=0.55pt] (mram_in) -- (mram.west);
-
-% ai -> sram（上に回してから接続）
-\draw[line] (ai.east) |- ([yshift=6mm]sram_in) -- (sram_in);
-\draw[-, line width=0.55pt] (sram_in) -- (sram.west);
-
-% gate <- ai（下向き）
-\draw[line] (ai) -- (gate);
-
-% gate -> fram（下に回してから接続）
-\draw[line] (gate.east) |- (fram_in);
-\draw[-, line width=0.55pt] (fram_in) -- (fram.west);
-
+  \draw[line] (ai) -- (gate);
+  \draw[line] (gate.east) |- (fram_in);
+  \draw[-, line width=0.55pt] (fram_in) -- (fram.west);
 \end{tikzpicture}}%
-\caption{AITL architecture (simplified): three-layer control stack with role-partitioned tri-NVM hierarchy.}
+\captionof{figure}{AITL architecture (simplified): three-layer control stack with role-partitioned tri-NVM hierarchy.}
 \label{fig:arch}
-\end{figure}
-% ==========================================================
+% --- ここまで Fig.2 ---
 
 \vspace{10mm}
 
