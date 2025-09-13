@@ -243,11 +243,11 @@ for chiplet-based space-grade SoCs. Future work: scaling high-order $H_\infty$,
 distilled on-board AI, and standard rad-hard interconnects.
 
 % === Fig.1: End-to-end design flow (one-column, clean) ===
-\begin{figure}[t]
+\begin{figure}[H] % ← Table.1の直後に出す
 \centering
 \scriptsize
 \resizebox{\columnwidth}{!}{%
-\begin{tikzpicture}[node distance=12mm] % ← 少し広め
+\begin{tikzpicture}[node distance=12mm] % ノード間隔を広めに
   % ノード
   \node[smallbox, align=center] (edu) {EduController\\\small モデル化 \& JSON出力};
   \node[smallbox, right=12mm of edu, align=center] (json) {JSON\\\small $A,B,C,D$, $W_1,W_2,W_3$};
@@ -263,7 +263,7 @@ distilled on-board AI, and standard rad-hard interconnects.
   \draw[line] (hil) -- (fem);
   \draw[line] (fem) -- (asic);
 
-  % 下部の注記
+  % 注記
   \node[align=center, below=6mm of hil] (metrics)
     {\small 指標：セーフモード$<\!1$\,s，回復率$\ge 99\%$，ECCスクラビング効率};
 \end{tikzpicture}}%
@@ -271,51 +271,50 @@ distilled on-board AI, and standard rad-hard interconnects.
 \label{fig:flow}
 \end{figure}
 
-% === Fig.2: AITL architecture (one-column, uncluttered) ===
-\begin{figure}[t]
+% === Fig.2: AITL architecture (uncluttered, Tri-NVM at bottom) ===
+\begin{figure}[H]
 \centering
 \scriptsize
 \resizebox{\columnwidth}{!}{%
-\begin{tikzpicture}[node distance=10mm] % ← 距離を広げる
-  % レイヤ見出し
-  \tikzset{title/.style={font=\bfseries, inner sep=1pt}}
+\begin{tikzpicture}[node distance=9mm]
 
-  % --- Robust Core ---
+  % Robust Core
   \node[smallbox, align=center] (rc1) {$H_\infty$/MPC/SMC\\\small 安定化制御};
   \node[smallbox, below=6mm of rc1, align=center] (rc2) {観測器/整形重み\\\small $W_1,W_2,W_3$};
   \node[smallbox, below=6mm of rc2, align=center] (rc3) {固定小数点$K$\\\small RTL/FPGA/ASIC};
 
-  % --- FSM Supervisor ---
-  \node[smallbox, right=16mm of rc1, align=center] (fs1) {モード管理\\\small Safe/Nominal/Recovery};
+  % FSM Supervisor
+  \node[smallbox, right=18mm of rc1, align=center] (fs1) {モード管理\\\small Safe/Nominal/Recovery};
   \node[smallbox, below=6mm of fs1, align=center] (fs2) {FDI/FDII\\\small 故障検出・隔離};
   \node[smallbox, below=6mm of fs2, align=center] (fs3) {セーフブート\\\small ウォッチドッグ};
 
-  % --- AI Adaptor ---
-  \node[smallbox, right=16mm of fs1, align=center] (ai1) {長期リID/ドリフト補償};
+  % AI Adaptor
+  \node[smallbox, right=18mm of fs1, align=center] (ai1) {長期リID/ドリフト補償};
   \node[smallbox, below=6mm of ai1, align=center] (ai2) {パラメタ更新\\\small 低頻度演算};
   \node[smallbox, below=6mm of ai2, align=center] (ai3) {検証ゲート\\\small 安全境界内のみ反映};
 
-  % --- Tri-NVM ---
-  \node[smallbox, above right=2mm and 12mm of fs1, align=center] (sram) {SRAM\\\small 実行/ECC};
-  \node[smallbox, below=6mm of sram, align=center] (mram) {MRAM\\\small ログ/コード/ECC};
-  \node[smallbox, below=6mm of mram, align=center] (fram) {FRAM\\\small セーフブート/FSM};
+  % Tri-NVM (下段横並びで重なり解消)
+  \node[smallbox, below=14mm of rc3, align=center] (sram) {SRAM\\\small 実行/ECC};
+  \node[smallbox, right=14mm of sram, align=center] (mram) {MRAM\\\small ログ/コード/ECC};
+  \node[smallbox, right=14mm of mram, align=center] (fram) {FRAM\\\small セーフブート/FSM};
 
-  % 信号の流れ
+  % 信号
   \draw[line] (rc1.east) -- (fs1.west);
   \draw[line] (fs1.east) -- (ai1.west);
   \draw[line] (ai3.west) -- ++(-6mm,0) |- (rc3.east);
 
   % メモリ接続
-  \draw[line] (rc3.east) -- ++(6mm,0) |- (sram.west);
-  \draw[line] (fs3.east) -- ++(8mm,0) |- (fram.west);
-  \draw[line] (ai2.east) -- ++(10mm,0) |- (mram.west);
+  \draw[line] (rc3.south) |- (sram.north);
+  \draw[line] (fs3.south) |- (fram.north);
+  \draw[line] (ai2.south) |- (mram.north);
+
 \end{tikzpicture}}%
 \caption{AITL architecture: three layers with a tri-NVM hierarchy.}
 \label{fig:arch}
 \end{figure}
 
-% === Fig.3: Closed-loop block (one-column, tidy) ===
-\begin{figure}[t]
+% === Fig.3: Closed-loop block (tidy) ===
+\begin{figure}[H]
 \centering
 \scriptsize
 \begin{tikzpicture}[node distance=10mm]
@@ -327,12 +326,10 @@ distilled on-board AI, and standard rad-hard interconnects.
   \node[sum, left=10mm of K] (sumin) {$\Sigma$};
   \node[sum, right=12mm of P] (sumy) {$\Sigma$};
 
-  % 配線：u, y ループ
+  % 配線
   \draw[line] (sumin) -- (K);
   \draw[line] (K) -- node[above] {$u$} (P);
   \draw[line] (P) -- node[above] {$y$} (sumy);
-
-  % フィードバック
   \draw[line] (sumy) |- ++(0,-12mm) -| node[pos=0.25, below] {$-$} (sumin);
 
   % 外乱/性能/雑音
