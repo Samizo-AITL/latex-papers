@@ -322,9 +322,6 @@ distilled on-board AI, and standard rad-hard interconnects.
   % ===== Validation gate → FRAM =====
   \draw[line] (gate.east) -- ++(10mm,0) |- (fram.west);
   
-  \draw[line] (ai) -- (gate);
-  \draw[line] (gate.east) |- (fram_in);
-  \draw[-, line width=0.55pt] (fram_in) -- (fram.west);
 \end{tikzpicture}}%
 \captionof{figure}{AITL architecture (simplified): three-layer control stack with role-partitioned tri-NVM hierarchy.}
 \label{fig:arch}
