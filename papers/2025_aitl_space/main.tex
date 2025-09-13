@@ -277,48 +277,58 @@ distilled on-board AI, and standard rad-hard interconnects.
 \label{fig:flow}
 \end{figure*}
 
-% === Fig.2 (REPLACE THIS WHOLE FIGURE) =====================
+% === Fig.2: AITL architecture (clean layout, no overlaps) ===
 \begin{figure}[t]
 \centering
 \scriptsize
-% ローカル上書き：矢印の食い込みを避ける
-\tikzset{line/.style={-{Latex[length=2.0mm,width=1.2mm]}, line width=0.45pt, shorten >=2pt, shorten <=2pt}}
+\resizebox{0.92\columnwidth}{!}{% ← 幅は調整可（0.88–0.95 推奨）
+\begin{tikzpicture}[node distance=7mm and 10mm]
+  % 共通スタイル
+  \tikzset{
+    box/.style={draw, rounded corners=1.6pt, align=center,
+                inner sep=2.2pt, minimum height=7.2mm, minimum width=26mm},
+    line/.style={-{Latex[length=2.0mm,width=1.2mm]}, line width=0.45pt}
+  }
 
-\resizebox{0.96\columnwidth}{!}{%
-\begin{tikzpicture}[node distance=7mm]
-  % ===== Columns: Robust | FSM | AI | Memories =====
-  % Robust Core (left column)
-  \node[smallbox, align=center] (rc1) {$H_\infty$/MPC/SMC\\\small Robust control};
-  \node[smallbox, below=7mm of rc1, align=center] (rc2) {Observers / weights\\\small $W_1, W_2, W_3$};
-  \node[smallbox, below=7mm of rc2, align=center] (rc3) {Fixed-point $K$\\\small RTL/FPGA/ASIC};
+  % --- Column 1: Robust Core (left) ---
+  \node[box] (rc1) {$H_\infty$/MPC/SMC\\Robust control};
+  \node[box, below=of rc1] (rc2) {Observers / weights\\$W_1, W_2, W_3$};
+  \node[box, below=of rc2] (rc3) {Fixed-point $K$\\RTL/FPGA/ASIC};
 
-  % FSM (middle-left)
-  \node[smallbox, right=22mm of rc1, align=center] (fs1) {Mode management\\\small Safe/Nominal/Recovery};
-  \node[smallbox, below=7mm of fs1, align=center]  (fs2) {FDI/FDII\\\small Fault detection/isolation};
-  \node[smallbox, below=7mm of fs2, align=center]  (fs3) {Safe boot\\\small Watchdog};
+  % --- Column 2: FSM (middle) ---
+  \node[box, right=22mm of rc1] (fs1) {Mode management\\Safe/Nominal/Recovery};
+  \node[box, below=of fs1]       (fs2) {FDI/FDII\\Fault detection/isolation};
+  \node[box, below=of fs2]       (fs3) {Safe boot\\Watchdog};
 
-  % AI (middle-right)
-  \node[smallbox, right=22mm of fs1, align=center] (ai1) {Re-identification / drift compensation};
-  \node[smallbox, below=7mm of ai1, align=center]  (ai2) {Parameter update\\\small Low frequency};
-  \node[smallbox, below=7mm of ai2, align=center]  (ai3) {Validation gate\\\small Apply-if-safe};
+  % --- Column 3: AI Adaptor (right-mid) ---
+  \node[box, right=22mm of fs1] (ai1) {Re-identification\\/ drift compensation};
+  \node[box, below=of ai1]      (ai2) {Parameter update\\Low frequency};
+  \node[box, below=of ai2]      (ai3) {Validation gate\\Apply-if-safe};
 
-  % Memories (right column)
-  \node[smallbox, right=26mm of ai1, align=center] (sram) {SRAM\\\small Execution/ECC};
-  \node[smallbox, below=7mm of sram, align=center] (mram) {MRAM\\\small Logs/code/ECC};
-  \node[smallbox, below=7mm of mram, align=center] (fram) {FRAM\\\small Safe boot/FSM};
+  % --- Column 4: Memory (far right) ---
+  \node[box, right=16mm of ai1] (sram) {SRAM\\Execution/ECC};
+  \node[box, below=of sram]     (mram) {MRAM\\Logs/code/ECC};
+  \node[box, below=of mram]     (fram) {FRAM\\Safe boot/FSM};
 
-  % ===== Clean routing (no overlaps) =====
-  % Between layers
-  \draw[line] (rc1.east) -- (fs1.west);
-  \draw[line] (fs1.east) -- (ai1.west);
+  % ===== Connections (no text overlap; use elbows/curves) =====
+  % Core → FSM → AI
+  \draw[line] (rc1) -- (fs1);
+  \draw[line] (fs1) -- (ai1);
 
-  % AI->Robust back path: 折り返しで重なり回避
-  \draw[line] (ai3.west) -| ++(-10mm,-10mm) |- (rc3.south);
+  % AI validation back to Core K（肘配線で重なり回避）
+  \draw[line] (ai3.west) -| ++(-8mm,0) |- (rc3.east);
 
-  % To memories (jog routing to avoid boxes/lines)
-  \draw[line] (rc3.east) -| ($(sram.west)+(0,2mm)$) -- (sram.west);
-  \draw[line] (fs3.east) -- ++(6mm,0) |- (fram.west);
-  \draw[line] (ai2.east) -- ++(8mm,0) |- (mram.west);
+  % Core/FSM/AI → Memories（全て左から右へ L 字配線）
+  \draw[line] (rc3.east) -| (sram.west);
+  \draw[line] (fs3.east) -| (fram.west);
+  \draw[line] (ai2.east) -| (mram.west);
+
+  % AI reads from memories（短い枝で示す・重なり回避のため分岐点を中間に）
+  \path let \p1=(ai1.east), \p2=(sram.west) in
+    coordinate (tapA) at (\x1+6mm,\y1);
+  \draw[line] (ai1.east) -- (tapA) |- (sram.west);
+  \draw[line] (tapA) |- (mram.west);
+  \draw[line] (tapA) |- (fram.west);
 \end{tikzpicture}}%
 \caption{AITL architecture: three-layer control stack with a role-partitioned tri-NVM hierarchy.}
 \label{fig:arch}
