@@ -276,58 +276,55 @@ distilled on-board AI, and standard rad-hard interconnects.
 
 \vspace{14mm} % ← Fig.1とFig.2の間隔を広げる
 
-% === Fig.2: AITL architecture (simplified / no overlaps) ===
-\begin{figure}[t]
+% === Fig.2: simplified (no overlaps, bigger, no nested float) ===
+\par\vspace{10mm} % ← Fig.1 との間隔を確保
+\captionsetup{type=figure}
 \centering
-\scriptsize
-\resizebox{0.98\columnwidth}{!}{%
+\resizebox{0.90\textwidth}{!}{%
 \begin{tikzpicture}[
-  node distance = 7mm and 18mm,      % <row , col> 間隔を広めに
-  box/.style  = {draw, rounded corners=2pt, align=center,
-                 inner sep=2.5pt, minimum height=7mm, minimum width=28mm},
-  arrow/.style= {-{Latex[length=2mm,width=1.1mm]}, line width=0.55pt, shorten >=2pt}
+  node distance=10mm and 18mm,   % <vertical, horizontal> 間隔を広めに
+  >=Latex,
+  line/.style={-{Latex[length=2mm,width=1mm]}, line width=0.55pt},
+  box/.style={draw, rounded corners=2pt, align=center,
+              inner sep=2.5pt, minimum height=7mm, minimum width=35mm},
+  every node/.style={font=\normalsize}
 ]
+  % ----- Columns: Core (L), FSM (C), NVM (R) -----
+  % Core (まとめて1ブロックに簡略化)
+  \node[box] (core) {$H_\infty$ core\\(observers/weights, fixed-point $K$)};
 
-% ----- Left column: Robust core -----
-\node[box] (rc1) {$H_\infty$/MPC/SMC\\\small Robust control};
-\node[box, below=6mm of rc1] (rc2) {Observers / weights\\\small $W_1,\,W_2,\,W_3$};
-\node[box, below=6mm of rc2] (rc3) {Fixed-point $K$\\\small RTL/FPGA/ASIC};
+  % FSM
+  \node[box, right=42mm of core] (fsm) {FSM supervisor\\Safe/Nominal/Recovery};
 
-% ----- Middle column: FSM supervisor -----
-\node[box, right=18mm of rc1] (fs1) {Mode management\\\small Safe/Nominal/Recovery};
-\node[box, below=6mm of fs1]    (fs2) {FDI/FDII\\\small Fault detection/isolation};
-\node[box, below=6mm of fs2]    (fs3) {Safe boot\\\small Watchdog};
+  % NVM 3段（右列）
+  \node[box, right=42mm of fsm] (sram) {SRAM\\Execution/ECC};
+  \node[box, below=9mm of sram] (mram) {MRAM\\Logs/code/ECC};
+  \node[box, below=9mm of mram] (fram) {FRAM\\Safe boot/FSM};
 
-% ----- Right column: NVM stack -----
-\node[box, right=22mm of fs1, yshift=5mm] (sram) {SRAM\\\small Execution/ECC};
-\node[box, below=7mm of sram]             (mram) {MRAM\\\small Logs/code/ECC};
-\node[box, below=7mm of mram]             (fram) {FRAM\\\small Safe boot/FSM};
+  % AI adaptor（中央下に独立配置）
+  \node[box, below=18mm of fsm] (reid) {AI adaptor\\Re-identification / updates};
+  \node[box, below=8mm of reid] (gate) {Validation gate (apply-if-safe)};
 
-% ----- Far-right: AI adaptor（NVMの右に縦配置して交差回避） -----
-\node[box, right=18mm of mram] (reid) {Re-identification\\\small Drift compensation};
-\node[box, below=7mm of reid]  (param){Parameter update\\\small Low frequency};
-\node[box, below=7mm of param] (gate) {Validation gate\\\small Apply-if-safe};
+  % ---- Clean orthogonal wiring（交差なし・ノード手前止め不要）----
+  \draw[line] (core) -- (fsm);
 
-% ===== Connections (全て直交・交差なし) =====
-% core -> supervisor
-\draw[arrow] (rc1.east) -- (fs1.west);
-\draw[arrow] (rc2.east) -- (fs2.west);
-\draw[arrow] (rc3.east) -- (fs3.west);
+  % FSM → NVM（3本をそれぞれ直交配線）
+  \draw[line] (fsm.east) -- ++(6mm,0) |- (sram.west);
+  \draw[line] (fsm.east) -- ++(8mm,0) |- (mram.west);
+  \draw[line] (fsm.east) -- ++(10mm,0) |- (fram.west);
 
-% supervisor -> memories
-\draw[arrow] (fs1.east) -- ++(6mm,0) |- (sram.west);
-\draw[arrow] (fs2.east) -- ++(6mm,0) |- (mram.west);
-\draw[arrow] (fs3.east) -- ++(6mm,0) |- (fram.west);
+  % AI adaptor 連系（上へ、そして右列の各ブロックへ分岐）
+  \draw[line] (reid.north) -- (fsm.south);
+  \draw[line] (reid.east) -| (sram.south);
+  \draw[line] (reid.east) -| (mram.south);
+  \draw[line] (reid.east) -| (fram.south);
 
-% AI chain (縦) ＋ AI -> SRAM 経路（上を回して接続）
-\draw[arrow] (reid.south) -- (param.north);
-\draw[arrow] (param.south) -- (gate.north);
-\draw[arrow] (reid.west)  -| ([xshift=-3mm]sram.north east) |- (sram.east); % 右回し→上→SRAM
-
+  % 検証ゲート
+  \draw[line] (gate.north) -- (reid.south);
 \end{tikzpicture}}%
-\caption{AITL architecture (simplified): three-layer control with a role-partitioned tri-NVM hierarchy and AI adaptor, drawn with orthogonal, overlap-free routes.}
+\captionof{figure}{AITL architecture (simplified): three-layer control stack with role-partitioned tri-NVM hierarchy.}
 \label{fig:arch}
-\end{figure}
+\par\vspace{10mm} % ← Fig.3 との間隔
 
 \vspace{10mm}
 
