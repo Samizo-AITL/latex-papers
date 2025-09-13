@@ -242,20 +242,19 @@ and power concurrently, positioning AITL as a candidate \emph{standard architect
 for chiplet-based space-grade SoCs. Future work: scaling high-order $H_\infty$,
 distilled on-board AI, and standard rad-hard interconnects.
 
-% --- 〈Biography のすぐ後に挿入した図：本文確定〉 --------
-\FloatBarrier
-
-% === Fig.1: End-to-end design flow ==========================
+% === Fig.1: End-to-end design flow (one-column, clean) ===
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[node distance=10mm]
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tikzpicture}[node distance=12mm] % ← 少し広め
   % ノード
-  \node[smallbox] (edu) {EduController\\\small モデル化 \& JSON出力};
-  \node[smallbox, right=12mm of edu] (json) {JSON\\\small $A,B,C,D$, $W_1,W_2,W_3$};
-  \node[smallbox, right=12mm of json] (aitl) {AITL-H\\\small $H_\infty$合成 $\to$ 固定小数点$K$};
-  \node[smallbox, right=12mm of aitl] (hil) {FPGA HIL\\\small SEU/欠測注入, 安全率評価};
-  \node[smallbox, right=12mm of hil] (fem) {SystemDK FEM\\\small 熱/放射/実装 ストレス};
-  \node[smallbox, right=12mm of fem] (asic) {ASIC\\\small 22FDX FDSOI};
+  \node[smallbox, align=center] (edu) {EduController\\\small モデル化 \& JSON出力};
+  \node[smallbox, right=12mm of edu, align=center] (json) {JSON\\\small $A,B,C,D$, $W_1,W_2,W_3$};
+  \node[smallbox, right=12mm of json, align=center] (aitl) {AITL-H\\\small $H_\infty$合成 $\to$ 固定小数点$K$};
+  \node[smallbox, right=12mm of aitl, align=center] (hil) {FPGA HIL\\\small SEU/欠測注入・安全率評価};
+  \node[smallbox, right=12mm of hil, align=center] (fem) {SystemDK FEM\\\small 熱/放射/実装ストレス};
+  \node[smallbox, right=12mm of fem, align=center] (asic) {ASIC\\\small 22FDX FDSOI};
 
   % 矢印
   \draw[line] (edu) -- (json);
@@ -267,85 +266,62 @@ distilled on-board AI, and standard rad-hard interconnects.
   % 下部の注記
   \node[align=center, below=6mm of hil] (metrics)
     {\small 指標：セーフモード$<\!1$\,s，回復率$\ge 99\%$，ECCスクラビング効率};
-
-  % 図枠タイトル
-  \node[title, above=6mm of aitl] {End-to-end Design Flow};
-\end{tikzpicture}
+\end{tikzpicture}}%
 \caption{End-to-end design flow from mission spec to ASIC.}
 \label{fig:flow}
 \end{figure}
 
-% === Fig.2: AITL architecture ===============================
+% === Fig.2: AITL architecture (one-column, uncluttered) ===
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[node distance=6mm]
-  \tikzset{
-    colA/.style={fill=gray!6},
-    colB/.style={fill=gray!6},
-    colC/.style={fill=gray!6},
-    title/.style={font=\bfseries, inner sep=1pt}
-  }
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tikzpicture}[node distance=10mm] % ← 距離を広げる
+  % レイヤ見出し
+  \tikzset{title/.style={font=\bfseries, inner sep=1pt}}
 
-  % 全体枠
-  \node[bigbox, minimum width=84mm, minimum height=56mm, align=left] (soc) { };
+  % --- Robust Core ---
+  \node[smallbox, align=center] (rc1) {$H_\infty$/MPC/SMC\\\small 安定化制御};
+  \node[smallbox, below=6mm of rc1, align=center] (rc2) {観測器/整形重み\\\small $W_1,W_2,W_3$};
+  \node[smallbox, below=6mm of rc2, align=center] (rc3) {固定小数点$K$\\\small RTL/FPGA/ASIC};
 
-  % レイヤ枠
-  \node[bigbox, colA, minimum width=26mm, minimum height=46mm, anchor=west, xshift=3mm] (robust) at (soc.west) {};
-  \node[bigbox, colB, minimum width=26mm, minimum height=46mm, right=3mm of robust] (fsm) {};
-  \node[bigbox, colC, minimum width=26mm, minimum height=46mm, right=3mm of fsm] (ai) {};
+  % --- FSM Supervisor ---
+  \node[smallbox, right=16mm of rc1, align=center] (fs1) {モード管理\\\small Safe/Nominal/Recovery};
+  \node[smallbox, below=6mm of fs1, align=center] (fs2) {FDI/FDII\\\small 故障検出・隔離};
+  \node[smallbox, below=6mm of fs2, align=center] (fs3) {セーフブート\\\small ウォッチドッグ};
 
-  % 見出し
-  \node[title] at ([yshift=+22mm]robust.center) {Robust Core};
-  \node[title] at ([yshift=+22mm]fsm.center)   {FSM Supervisor};
-  \node[title] at ([yshift=+22mm]ai.center)    {AI Adaptor};
+  % --- AI Adaptor ---
+  \node[smallbox, right=16mm of fs1, align=center] (ai1) {長期リID/ドリフト補償};
+  \node[smallbox, below=6mm of ai1, align=center] (ai2) {パラメタ更新\\\small 低頻度演算};
+  \node[smallbox, below=6mm of ai2, align=center] (ai3) {検証ゲート\\\small 安全境界内のみ反映};
 
-  % Robust Core
-  \node[smallbox, align=center] (rc1) at ([yshift=+6mm]robust.center) {$H_\infty$/MPC/SMC\\\small 安定化制御};
-  \node[smallbox, below=4mm of rc1] (rc2) {観測器/整形重み\\\small $W_1,W_2,W_3$};
-  \node[smallbox, below=4mm of rc2] (rc3) {固定小数点$K$\\\small RTL/FPGA/ASIC};
-
-  % FSM
-  \node[smallbox] (fs1) at ([yshift=+12mm]fsm.center) {モード管理\\\small Safe/Nominal/Recovery};
-  \node[smallbox, below=4mm of fs1] (fs2) {FDI/FDII\\\small 故障検出・隔離};
-  \node[smallbox, below=4mm of fs2] (fs3) {セーフブート\\\small ウォッチドッグ};
-
-  % AI
-  \node[smallbox] (ai1) at ([yshift=+12mm]ai.center) {長期リID/ドリフト補償};
-  \node[smallbox, below=4mm of ai1] (ai2) {パラメタ更新\\\small 演算は低頻度};
-  \node[smallbox, below=4mm of ai2] (ai3) {検証ゲート\\\small 安全境界内のみ反映};
+  % --- Tri-NVM ---
+  \node[smallbox, above right=2mm and 12mm of fs1, align=center] (sram) {SRAM\\\small 実行/ECC};
+  \node[smallbox, below=6mm of sram, align=center] (mram) {MRAM\\\small ログ/コード/ECC};
+  \node[smallbox, below=6mm of mram, align=center] (fram) {FRAM\\\small セーフブート/FSM};
 
   % 信号の流れ
   \draw[line] (rc1.east) -- (fs1.west);
   \draw[line] (fs1.east) -- (ai1.west);
   \draw[line] (ai3.west) -- ++(-6mm,0) |- (rc3.east);
 
-  % Tri-NVM
-  \node[bigbox, minimum width=20mm, minimum height=46mm, anchor=east, xshift=-3mm, align=center] (nvm) at (soc.east) {};
-  \node[title, above=0mm of nvm] {Tri-NVM};
-
-  \node[smallbox, minimum width=18mm, align=center] (sram) at ([yshift=+12mm]nvm.center) {SRAM\\\small 実行用};
-  \node[smallbox, minimum width=18mm, below=3mm of sram] (mram) {MRAM\\\small ログ/コード\\ECC};
-  \node[smallbox, minimum width=18mm, below=3mm of mram] (fram) {FRAM\\\small セーフブート/FSM};
-
   % メモリ接続
-  \draw[line] (rc3.east) -- ++(4mm,0) |- (sram.west);
-  \draw[line] (fs3.east) -- ++(6mm,0) |- (fram.west);
+  \draw[line] (rc3.east) -- ++(6mm,0) |- (sram.west);
+  \draw[line] (fs3.east) -- ++(8mm,0) |- (fram.west);
   \draw[line] (ai2.east) -- ++(10mm,0) |- (mram.west);
-
-  % タイトル
-  \node[title] at ([yshift=+30mm]soc.north) {AITL Architecture on 22\,nm FDSOI SoC};
-\end{tikzpicture}
+\end{tikzpicture}}%
 \caption{AITL architecture: three layers with a tri-NVM hierarchy.}
 \label{fig:arch}
 \end{figure}
 
-% === Fig.3: Closed-loop block diagram =======================
+% === Fig.3: Closed-loop block (one-column, tidy) ===
 \begin{figure}[t]
 \centering
+\scriptsize
 \begin{tikzpicture}[node distance=10mm]
   % ブロック
-  \node[smallbox, minimum width=22mm] (K) {$K$};
-  \node[smallbox, right=22mm of K, minimum width=26mm] (P) {$P$};
+  \node[smallbox, minimum width=22mm, align=center] (K) {$K$};
+  \node[smallbox, right=22mm of K, minimum width=26mm, align=center] (P) {$P$};
 
   % サマ
   \node[sum, left=10mm of K] (sumin) {$\Sigma$};
@@ -359,7 +335,7 @@ distilled on-board AI, and standard rad-hard interconnects.
   % フィードバック
   \draw[line] (sumy) |- ++(0,-12mm) -| node[pos=0.25, below] {$-$} (sumin);
 
-  % 外乱/雑音/性能
+  % 外乱/性能/雑音
   \node[left=12mm of sumin] (r) {};
   \draw[line] (r.center) -- node[above] {$r$} (sumin);
 
@@ -370,20 +346,18 @@ distilled on-board AI, and standard rad-hard interconnects.
   \draw[line] (v.center) -- node[right] {$v$} (sumy.south);
 
   % z 出力
-  \node[smallbox, below=8mm of P] (W) {$W$};
+  \node[smallbox, below=8mm of P, align=center] (W) {$W$};
   \draw[line] (P.south) -- (W.north);
   \node[right=14mm of W] (z) {};
   \draw[line] (W) -- node[above] {$z$} (z.center);
-
-  % 注釈
-  \node[align=center, font=\small, below=14mm of K]
-    {Design: minimize $\|T_{w\to z}\|_\infty$ under mixed-sensitivity shaping.};
 \end{tikzpicture}
-\caption{Closed-loop structure used for robust design.}
+\vspace{1mm}
+\caption{Closed-loop structure for robust design. Objective: minimize $\|T_{w\to z}\|_\infty$ under mixed-sensitivity shaping.}
 \label{fig:loop}
 \end{figure}
 
 % ----------------- References -----------------
+\FloatBarrier % ← 参考文献“直前”にこれを置く
 \begin{thebibliography}{10}
 
 \bibitem{Shell2015}
