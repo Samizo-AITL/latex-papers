@@ -36,6 +36,9 @@
 
 \usepackage{balance} % ← プリアンブル
 
+% 追加（プリアンブル）
+\usepackage{capt-of} % \captionof{figure} で独立番号
+
 % ---- TikZ styles ----
 \tikzset{
   line/.style       = {-{Latex[length=2.2mm,width=1.4mm]}, line width=0.45pt},
@@ -244,146 +247,128 @@ and power concurrently, positioning AITL as a candidate \emph{standard architect
 for chiplet-based space-grade SoCs. Future work: scaling high-order $H_\infty$,
 distilled on-board AI, and standard rad-hard interconnects.
 
-% --- 独立番号のまま1ページ縦積み配置 ---
-\usepackage{capt-of} % ← 未導入なら追加
-
-\begin{figure*}[t]
+% ======= One float page for Fig.1–3 (independent numbering) =======
+\begin{figure*}[!p]
 \centering
-% 余白を少し詰める（この塊だけ）
-\setlength{\abovecaptionskip}{3pt}
-\setlength{\belowcaptionskip}{3pt}
 
-%====================== Fig.1 ======================
-\begin{minipage}[t]{0.98\textwidth}
-  \centering
-  \resizebox{0.92\textwidth}{!}{%
-  \begin{tikzpicture}[
-    node distance=18mm,
-    >=Latex,
-    every node/.style={font=\large},
-    line/.style={-{Latex[length=2mm,width=1.2mm]}, line width=0.6pt},
-    figbox/.style={draw, rounded corners=2pt, align=center, inner sep=3pt,
-                   minimum height=10mm, minimum width=30mm}
-  ]
-    % Row 1
-    \node[figbox] (edu)  {EduController\\Modeling \& JSON export};
-    \node[figbox, right=18mm of edu] (json) {JSON\\$A,B,C,D,W_1,W_2,W_3$};
-    \node[figbox, right=18mm of json] (aitl) {AITL-H\\$H_\infty$ synthesis $\to$ fixed-point $K$};
+% ---------- Fig.1 ----------
+\resizebox{0.90\textwidth}{!}{%
+\begin{tikzpicture}[
+  node distance=18mm,
+  >=Latex,
+  every node/.style={font=\large},
+  line/.style={-{Latex[length=2mm,width=1.2mm]}, line width=0.6pt},
+  figbox/.style={draw, rounded corners=2pt, align=center, inner sep=3pt,
+                 minimum height=10mm, minimum width=30mm}
+]
+  % Row 1
+  \node[figbox] (edu)  {EduController\\Modeling \& JSON export};
+  \node[figbox, right=18mm of edu] (json) {JSON\\$A,B,C,D,W_1,W_2,W_3$};
+  \node[figbox, right=18mm of json] (aitl) {AITL-H\\$H_\infty$ synthesis $\to$ fixed-point $K$};
+  % Row 2
+  \node[figbox, below=20mm of edu] (hil)  {FPGA HIL\\SEU/outage injection, safety metrics};
+  \node[figbox, right=18mm of hil] (fem)  {SystemDK FEM\\Thermal/radiation/package stress};
+  \node[figbox, right=18mm of fem] (asic) {ASIC\\22FDX FDSOI};
+  % Connections
+  \draw[line] (edu) -- (json);
+  \draw[line] (json) -- (aitl);
+  \draw[line] (aitl) |- ++(0,-10mm) -| (hil);
+  \draw[line] (hil) -- (fem);
+  \draw[line] (fem) -- (asic);
+\end{tikzpicture}}%
+\captionof{figure}{End-to-end design flow from mission specification to ASIC.}
+\label{fig:flow}
 
-    % Row 2
-    \node[figbox, below=20mm of edu] (hil)  {FPGA HIL\\SEU/outage injection, safety metrics};
-    \node[figbox, right=18mm of hil] (fem)  {SystemDK FEM\\Thermal/radiation/package stress};
-    \node[figbox, right=18mm of fem] (asic) {ASIC\\22FDX FDSOI};
+\vspace{8mm}
 
-    % Connections
-    \draw[line] (edu) -- (json);
-    \draw[line] (json) -- (aitl);
-    \draw[line] (aitl) |- ++(0,-10mm) -| (hil);
-    \draw[line] (hil) -- (fem);
-    \draw[line] (fem) -- (asic);
-  \end{tikzpicture}}
-  \captionsetup{type=figure}
-  \captionof{figure}{End-to-end design flow from mission specification to ASIC.}
-  \label{fig:flow}
-\end{minipage}
+% ---------- Fig.2 (overlap-free, enlarged) ----------
+\resizebox{0.95\textwidth}{!}{%
+\begin{tikzpicture}[
+  >=Latex,
+  line/.style={-{Latex[length=2mm,width=1.2mm]}, line width=0.6pt},
+  node distance=10mm and 18mm, % vertical , horizontal
+  smallbox/.style={draw, rounded corners=2pt, align=center,
+                   font=\small, minimum height=8mm, minimum width=26mm}
+]
+  % Left column: Robust Core
+  \node[smallbox] (rc1) {$H_\infty$/MPC/SMC\\Robust control};
+  \node[smallbox, below=8mm of rc1] (rc2) {Observers / weights\\$W_1,\,W_2,\,W_3$};
+  \node[smallbox, below=8mm of rc2] (rc3) {Fixed-point $K$\\RTL/FPGA/ASIC};
 
-\vspace{2mm}
+  % Middle column: FSM Supervisor
+  \node[smallbox, right=40mm of rc1] (fs1) {Mode management\\Safe/Nominal/Recovery};
+  \node[smallbox, below=8mm of fs1] (fs2) {FDI/FDII\\Fault detection/isolation};
+  \node[smallbox, below=8mm of fs2] (fs3) {Safe boot\\Watchdog};
 
-%====================== Fig.2（重なり解消・拡大） ======================
-\begin{minipage}[t]{0.98\textwidth}
-  \centering
-  \resizebox{0.94\textwidth}{!}{%
-  \begin{tikzpicture}[
-    node distance = {8mm and 16mm}, % 縦8, 横16
-    line/.style  = {-{Latex[length=2mm,width=1.2mm]}, line width=0.6pt},
-    box/.style   = {draw, rounded corners=2pt, align=center,
-                    inner sep=2.4pt, minimum height=7.2mm, minimum width=26mm},
-    every node/.style={font=\normalsize}
-  ]
-  % ---- 左列：Robust Core ----
-  \node[box] (rc1) {$H_\infty$/MPC/SMC\\Robust control};
-  \node[box, below=8mm of rc1] (rc2) {Observers / weights\\$W_1,\,W_2,\,W_3$};
-  \node[box, below=8mm of rc2] (rc3) {Fixed-point $K$\\RTL/FPGA/ASIC};
+  % Right column: Tri-NVM (top)
+  \node[smallbox, right=44mm of fs1, yshift=2mm] (sram) {SRAM\\Execution/ECC};
+  \node[smallbox, below=9mm of sram] (mram) {MRAM\\Logs/code/ECC};
+  \node[smallbox, below=9mm of mram] (fram) {FRAM\\Safe boot/FSM};
 
-  % ---- 中央列：FSM ----
-  \node[box, right=28mm of rc1] (fs1) {Mode management\\Safe/Nominal/Recovery};
-  \node[box, below=8mm of fs1] (fs2) {FDI/FDII\\Fault detection/isolation};
-  \node[box, below=8mm of fs2] (fs3) {Safe boot\\Watchdog};
+  % AI adaptor (placed to avoid overlaps)
+  \node[smallbox, left=14mm of mram] (reid) {Re-identification\\/ drift compensation};
+  \node[smallbox, below=9mm of fram] (param) {Parameter update\\Low frequency};
+  \node[smallbox, below=7mm of param] (gate) {Validation gate\\Apply-if-safe};
 
-  % ---- 右列：AI ----
-  \node[box, right=28mm of fs1] (ai1) {Re-identification / drift compensation};
-  \node[box, below=8mm of ai1] (ai2) {Parameter update\\Low frequency};
-  \node[box, below=8mm of ai2] (ai3) {Validation gate\\Apply-if-safe};
-
-  % ---- 最右列：Tri-NVM ----
-  \node[box, right=20mm of ai1, minimum width=28mm] (sram) {SRAM\\Execution/ECC};
-  \node[box, below=8mm of sram, minimum width=28mm] (mram) {MRAM\\Logs/code/ECC};
-  \node[box, below=8mm of mram, minimum width=28mm] (fram) {FRAM\\Safe boot/FSM};
-
-  % ---- 配線（重なりゼロ：直交＋曲線）----
-  % Core → FSM → AI
+  % --- Orthogonal routing (no overlaps) ---
+  % core -> FSM -> AI/NVM
   \draw[line] (rc1.east) -- (fs1.west);
-  \draw[line] (fs1.east) -- ++(5mm,0) |- (ai1.west);
+  \draw[line] (fs1.east) -- ++(8mm,0) |- (reid.west);
+  \draw[line] (reid.east) -| ([xshift=-6mm]sram.west) -- (sram.west);
 
-  % AI chain
-  \draw[line] (ai1.south) -- (ai2.north);
-  \draw[line] (ai2.south) -- (ai3.north);
+  % observers -> FDI -> MRAM
+  \draw[line] (rc2.east) -- ++(10mm,0) |- (fs2.west);
+  \draw[line] (fs2.east) -- ++(10mm,0) |- ([xshift=-6mm]mram.west) -- (mram.west);
 
-  % Observers → FDI/FDII → MRAM
-  \draw[line] (rc2.east) -- ++(5mm,0) |- (fs2.west);
-  \draw[line] (fs2.east) to[out=0,in=180,looseness=0.9] (mram.west);
+  % fixed K -> safe boot -> FRAM
+  \draw[line] (rc3.east) -- ++(12mm,0) |- (fs3.west);
+  \draw[line] (fs3.east) -- ++(12mm,0) |- ([xshift=-6mm]fram.west) -- (fram.west);
 
-  % K → Safe boot → FRAM
-  \draw[line] (rc3.east) -- ++(8mm,0) |- (fs3.west);
-  \draw[line] (fs3.east) -- ++(10mm,0) |- (fram.west);
+  % AI downward chain (kept away from other edges)
+  \draw[line] (fram.south) -- (param.north);
+  \draw[line] (param.south) -- (gate.north);
+\end{tikzpicture}}%
+\captionof{figure}{AITL architecture: three-layer control stack with a role-partitioned tri-NVM hierarchy.}
+\label{fig:arch}
 
-  % K → SRAM
-  \draw[line] (rc3.east) -- ++(10mm,0) |- (sram.west);
-  \end{tikzpicture}}
-  \captionsetup{type=figure}
-  \captionof{figure}{AITL architecture: three-layer control stack with a role-partitioned tri-NVM hierarchy.}
-  \label{fig:arch}
-\end{minipage}
+\vspace{8mm}
 
-\vspace{2mm}
-
-%====================== Fig.3 ======================
-\begin{minipage}[t]{0.98\textwidth}
-  \centering
-  \resizebox{0.92\textwidth}{!}{%
-  \begin{tikzpicture}[
-    node distance=16mm,
-    >=Latex,
-    every node/.style={font=\large},
-    line/.style={-{Latex[length=2mm,width=1.2mm]}, line width=0.6pt},
-    figbox/.style={draw, rounded corners=2pt, align=center, inner sep=3pt,
-                   minimum height=10mm, minimum width=20mm}
-  ]
-    \node[figbox] (K) {$K$};
-    \node[figbox, right=35mm of K] (P) {$P$};
-
-    \node[draw, circle, inner sep=1.5pt, left=15mm of K] (sumin) {$\Sigma$};
-    \node[draw, circle, inner sep=1.5pt, right=20mm of P] (sumy) {$\Sigma$};
-
-    \draw[line] (sumin) -- (K);
-    \draw[line] (K) -- node[above] {$u$} (P);
-    \draw[line] (P) -- node[above] {$y$} (sumy);
-    \draw[line] (sumy) |- ++(0,-16mm) -| node[pos=0.25, below] {$-$} (sumin);
-
-    \node[left=12mm of sumin] (r) {}; \draw[line] (r.center) -- node[above] {$r$} (sumin);
-    \node[above=10mm of P] (w) {};   \draw[line] (w.center) -- node[right] {$w$} (P.north);
-    \node[below=10mm of sumy] (v) {}; \draw[line] (v.center) -- node[right] {$v$} (sumy.south);
-
-    \node[figbox, below=12mm of P] (W) {$W$};
-    \draw[line] (P.south) -- (W.north);
-    \node[right=15mm of W] (z) {}; \draw[line] (W) -- node[above] {$z$} (z.center);
-  \end{tikzpicture}}
-  \captionsetup{type=figure}
-  \captionof{figure}{Closed-loop structure for robust design. Objective: minimize $\|T_{w\to z}\|_\infty$ under mixed-sensitivity shaping.}
-  \label{fig:loop}
-\end{minipage}
+% ---------- Fig.3 ----------
+\resizebox{0.90\textwidth}{!}{%
+\begin{tikzpicture}[
+  node distance=16mm,
+  >=Latex,
+  every node/.style={font=\large},
+  line/.style={-{Latex[length=2mm,width=1.2mm]}, line width=0.6pt},
+  figbox/.style={draw, rounded corners=2pt, align=center, inner sep=3pt,
+                 minimum height=10mm, minimum width=20mm}
+]
+  % Blocks
+  \node[figbox] (K) {$K$};
+  \node[figbox, right=35mm of K] (P) {$P$};
+  % Summations
+  \node[draw, circle, inner sep=1.5pt, left=15mm of K] (sumin) {$\Sigma$};
+  \node[draw, circle, inner sep=1.5pt, right=20mm of P] (sumy) {$\Sigma$};
+  % Connections
+  \draw[line] (sumin) -- (K);
+  \draw[line] (K) -- node[above] {$u$} (P);
+  \draw[line] (P) -- node[above] {$y$} (sumy);
+  \draw[line] (sumy) |- ++(0,-16mm) -| node[pos=0.25, below] {$-$} (sumin);
+  % External signals
+  \node[left=12mm of sumin] (r) {}; \draw[line] (r.center) -- node[above] {$r$} (sumin);
+  \node[above=10mm of P] (w) {};   \draw[line] (w.center) -- node[right] {$w$} (P.north);
+  \node[below=10mm of sumy] (v) {}; \draw[line] (v.center) -- node[right] {$v$} (sumy.south);
+  % Performance block
+  \node[figbox, below=12mm of P] (W) {$W$};
+  \draw[line] (P.south) -- (W.north);
+  \node[right=15mm of W] (z) {}; \draw[line] (W) -- node[above] {$z$} (z.center);
+\end{tikzpicture}}%
+\captionof{figure}{Closed-loop structure for robust design. Objective: minimize $\|T_{w\to z}\|_\infty$ under mixed-sensitivity shaping.}
+\label{fig:loop}
 
 \end{figure*}
+% ======= end of one float page =======
+\FloatBarrier
 
 % ----------------- References -----------------
 %\clearpage
