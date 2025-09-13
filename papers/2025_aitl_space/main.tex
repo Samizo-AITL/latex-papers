@@ -177,26 +177,26 @@ vs. PID. Using a 22\,nm FDSOI device model, leakage is $\sim$\textbf{35\%} lower
 a 28\,nm CMOS reference at matched conditions.
 
 \subsection{Power/Performance Summary}
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \caption{Power, reliability, and performance comparison}
 \label{tab:power}
-\begin{tabular}{lcc}
+\setlength{\tabcolsep}{10pt} % ← 列間の余白を調整
+\renewcommand{\arraystretch}{1.2} % ← 行の高さを少し広げる
+\begin{tabular}{lccc}
 \toprule
-Metric & AITL SoC (22\,nm FDSOI) & Legacy SoC (28\,nm CMOS)\\
+Metric & Unit & AITL SoC (22\,nm FDSOI) & Legacy SoC (28\,nm CMOS)\\
 \midrule
-Active Power & 0.78\,W & 1.20\,W \\
-Standby Power & 12\,mW & 25\,mW \\
-Mean SEU Rate & $1/10^7$ bit-hr & $1/10^6$ bit-hr \\
-Attitude Settling (disturbed) & 0.65\,s & 1.0\,s \\
-Fail-safe Recovery Success & 99.2\% & 93.5\% \\
+Active Power            & W     & 0.78  & 1.20  \\
+Standby Power           & mW    & 12    & 25    \\
+Mean SEU Rate           & bit-hr$^{-1}$ & $1/10^7$ & $1/10^6$ \\
+Attitude Settling (disturbed) & s & 0.65  & 1.0   \\
+Fail-safe Recovery Success    & \% & 99.2 & 93.5  \\
 \bottomrule
 \end{tabular}
-
-\vspace{2pt}\footnotesize \emph{Conditions}:
-$T=25^\circ$C, $V_{\mathrm{core}}=0.8$\,V, 50\,MHz control loop, identical disturbance
-profiles (solar pressure, geomagnetic disturbance, thruster noise).
-\end{table}
+\vspace{2pt}
+\footnotesize \emph{Conditions:} $T=25^\circ$C, $V_{\mathrm{core}}=0.8$\,V, 50\,MHz loop, identical disturbance profiles (solar pressure, geomagnetic disturbance, thruster noise).
+\end{table*}
 
 \subsection{Implementation Observations}
 Tri-NVM balances speed/retention/radiation tolerance; 22\,nm FDSOI improves power
