@@ -1,16 +1,26 @@
+%========================================
+% main.tex  (LuaLaTeX / IEEEtran)
+%========================================
 \documentclass[conference]{IEEEtran}
 
-% ---- Fonts & math ----
+% ---- Fonts & math (Latin) ----
 \usepackage{newtxtext,newtxmath}
+
+% ---- CJK (Japanese) for LuaLaTeX ----
+\usepackage{luatexja}
+\usepackage[match]{luatexja-fontspec}
+% 和文フォント：TeX Live 標準（無ければ下の Noto を有効化）
+\setmainjfont{HaranoAjiMincho}
+\setsansjfont{HaranoAjiGothic}
+% \setmainjfont{Noto Serif CJK JP}
+% \setsansjfont{Noto Sans CJK JP}
 
 % ---- Graphics & color ----
 \usepackage{graphicx}
 \usepackage[dvipsnames]{xcolor}
 
-% ---- Spacing around floats (tight for 2 pages) ----
-\setlength{\textfloatsep}{5pt plus 1pt minus 1pt}
-\setlength{\floatsep}{5pt plus 1pt minus 1pt}
-\setlength{\intextsep}{5pt plus 1pt minus 1pt}
+% ---- Links / URL ----
+\usepackage[hidelinks]{hyperref}
 
 % ---- Tables ----
 \usepackage{booktabs}
@@ -35,171 +45,259 @@
   sum/.style        = {draw, circle, inner sep=0.8pt, minimum size=3.4mm}
 }
 
-% ---- Convenience ----
+% ---- Tighten float spacing (2カラム最終ページ調整に役立つ) ----
+\setlength{\textfloatsep}{5pt plus 1pt minus 1pt}
+\setlength{\floatsep}{5pt plus 1pt minus 1pt}
+\setlength{\intextsep}{5pt plus 1pt minus 1pt}
+
 \newcommand{\etal}{\textit{et~al.}}
 
-% =========================================================
+%========================================
 \begin{document}
 
 \title{AITL on Space: A Robust Three-Layer Architecture\\
 with a Tri-NVM Hierarchy (SRAM / MRAM / FRAM)\\
 for Long-Duration Spacecraft Autonomy}
 
-\author{\IEEEauthorblockN{Shinichi Samizo}\\
-\IEEEauthorblockA{Independent Semiconductor Researcher\\
+\author{%
+Shinichi Samizo\\
+\emph{Independent Semiconductor Researcher}\\
 Former Engineer at Seiko Epson Corporation\\
-Email: shin3t72@gmail.com\quad GitHub: \url{https://github.com/Samizo-AITL}}
+Email: shin3t72@gmail.com \quad GitHub: \url{https://github.com/Samizo-AITL}
 }
 
 \maketitle
 
 \begin{abstract}
-\noindent
-We propose \textit{AITL on Space}, a robust three-layer control architecture (Robust Core, FSM Supervisor, AI Adaptor) integrated with a tri-NVM hierarchy (SRAM/MRAM/FRAM) and mapped to a 22\,nm FDSOI SoC. The contribution is a complete end-to-end design flow from mission-level specification to ASIC: requirements are formalized as JSON via EduController, synthesized by the AITL-H module, validated in FPGA HIL with fault injection, stress-tested through SystemDK FEM (thermal/radiation/packaging), and finally implemented as ASIC. This methodology enables resilient autonomy for long-duration spacecraft missions.
+We propose \emph{AITL on Space}, a robust three-layer control architecture
+(Robust Core, FSM Supervisor, AI Adaptor) integrated with a tri-NVM hierarchy
+(SRAM/MRAM/FRAM) and mapped to a 22\,nm FDSOI SoC.
+Requirements are formalized as JSON via \emph{EduController}, synthesized to an
+$H_\infty$ controller \(K\) by \emph{AITL-H}, validated in FPGA HIL with fault
+injection, and stress-tested through SystemDK FEM.
+This end-to-end methodology enables resilient autonomy for long-duration missions.
 \end{abstract}
 
 \section{Introduction}
-Deep-space missions require ultra-robust control under total ionizing dose (TID), single event effects (SEE), and thermal cycling. Conventional PID\,+\,Flash architectures face lifetime limits due to charge-trap drift and endurance. We present \emph{AITL on Space}: a resilient three-layer architecture with a tri-NVM hierarchy and a reproducible design flow from specification to ASIC.
+Deep-space missions require ultra-robust control under total ionizing dose,
+single event effects (SEE), and thermal cycling.
+Conventional PD\,+\,Flash architectures face lifetime limits due to cell
+degradation. We present \emph{AITL on Space}:
+a resilient three-layer architecture with a tri-NVM hierarchy and a
+reproducible design flow from specification to ASIC.
 
 \section{Specification and Design Flow}
-The process begins with \textbf{Mission Specification}. Requirements such as pointing accuracy, power stability, and thermal tolerance are captured in \textbf{EduController}, a model-based tool that exports plant matrices and weighting functions as JSON (portable across simulators). The JSON is consumed by \textbf{AITL-H}, which synthesizes an $H_\infty$ output-feedback controller $K$ with mixed-sensitivity weighting and generates a fixed-point implementation for RTL/FPGA/ASIC. The design then undergoes:
-\begin{itemize}[itemsep=0pt,topsep=1pt,leftmargin=*]
-  \item \textbf{FPGA HIL}: hardware-in-the-loop validation with SEU\,+\,outage injection; metrics include safe-mode entry $<\!1$\,s, recovery rate $\ge 99\%$, and ECC scrubbing efficiency.
-  \item \textbf{SystemDK FEM}: co-simulation of thermal cycles, radiation effects, and packaging stress, closing the verification loop before silicon.
-  \item \textbf{ASIC Mapping}: implementation on GlobalFoundries 22FDX FDSOI hardened for long-duration missions.
+The process begins with \textbf{Mission Specification}.
+Requirements such as pointing accuracy, power stability, and thermal tolerance
+are captured in \emph{EduController}, a model-based tool that exports plant
+matrices and weighting functions as JSON (portable across simulators).
+The JSON is consumed by \emph{AITL-H}, which synthesizes an
+$H_\infty$ output-feedback controller \(K\) with mixed-sensitivity weights and
+generates a fixed-point implementation for RTL/FPGA/ASIC.
+Validation proceeds with:
+\begin{itemize}
+  \item \textbf{FPGA HIL}: hardware-in-the-loop validation with SEU\,+\,outage
+  injection; metrics include safe-mode entry $<\!1$\,s, recovery rate $\ge 99\%$,
+  and ECC scrubbing efficiency.
+  \item \textbf{SystemDK FEM}: co-simulation of thermal cycles, radiation
+  effects, and packaging stress, closing the verification loop before silicon.
+  \item \textbf{ASIC Mapping}: implementation on GlobalFoundries 22FDX FDSOI
+  hardened for long-duration missions.
 \end{itemize}
-\textit{Toolchain at a Glance}. \emph{EduController} $\rightarrow$ spec\,$\rightarrow$\,JSON exporter (plant $A,B,C,D$, noise/disturbance models, weights $W_1,W_2,W_3$). \emph{AITL-H}: $H_\infty$ synthesizer (Riccati/LMI)\,$\rightarrow$\,fixed-point $K$. \emph{SystemDK FEM} = thermal/radiation/packaging derating \& memory scrubbing validation.
 
 \section{System Architecture}
-AITL consists of three layers:
-\begin{itemize}[itemsep=0pt,topsep=1pt,leftmargin=*]
-  \item \textbf{Robust Core}: $H_\infty$/MPC/SMC controllers for stability.
-  \item \textbf{FSM Supervisor}: mode switching (Safe/Nominal/Recovery) with FDI/FDI\!I for fault management.
-  \item \textbf{AI Adaptor}: long-term re-identification and drift compensation.
-\end{itemize}
-A tri-NVM hierarchy ensures persistence: SRAM for execution, MRAM for logs/code with ECC scrubbing and dual slots, and FRAM for safe boot and FSM states. Target SoC is 22\,nm FDSOI hardened for radiation and temperature stress.
+The controller consists of three layers:
+\textbf{Robust Core} ($H_\infty$/MPC/SMC),
+\textbf{FSM Supervisor} (Safe/Nominal/Recovery; FDI/FDII),
+and \textbf{AI Adaptor} (long-term re-identification and drift compensation).
+A tri-NVM hierarchy ensures persistence: SRAM for execution,
+MRAM for logs/code with ECC, and FRAM for safe boot and FSM states.
+Target SoC is 22\,nm FDSOI for radiation and temperature margins.
 
 \section{Mathematical Model and $H_\infty$ Design}
-We consider an 11D discrete-time state-space plant coupling attitude (6), power bus (2), and thermal nodes (3):
-\begin{align}
-x_{k+1} &= A x_k + B u_k + E w_k,\\
-y_k     &= C x_k + D u_k + v_k,
-\end{align}
-where $w_k$ and $v_k$ are disturbance and noise. The model extends to 20D by adding translational axes and bias states. Weights $(W_1,W_2,W_3)$ shape sensitivity, control effort, and complementary sensitivity. \textit{EduController} outputs them as JSON; \textit{AITL-H} synthesizes $K$ with robustness margins and exports a fixed-point realization for RTL/FPGA/ASIC.
+We consider a discrete LTI plant with disturbances \(w_k\) and noise \(v_k\),
+and synthesize \(K\) using mixed-sensitivity shaping weights \(W_1,W_2,W_3\).
+Design objective: \(\min \|T_{w\to z}\|_\infty\).
 
 \section{Verification Pipeline}
-FPGA HIL injects SEUs and sensor outages. Metrics include safe-mode entry time ($<\!1$\,s), recovery rate ($\ge 99\%$), and ECC scrubbing efficiency. \textit{SystemDK FEM} validates thermal and radiation stress, ensuring packaging reliability before ASIC tape-out.
+FPGA HIL injects SEUs and sensor outages.
+SystemDK FEM validates thermal and radiation stress.
+Metrics: safe-mode $<\!1$\,s, recovery $\ge 99\%$, ECC scrubbing efficiency.
+This closes the loop prior to ASIC tape-out.
 
-\section{Conclusion}
-\textit{AITL on Space} combines robust control, supervisory safety, AI re-identification, and hardened memory. The proposed end-to-end flow—from mission specification to ASIC—provides a reproducible methodology for resilient autonomy in long-duration space missions.
+% --- 〈Biography のすぐ後に挿入〉 ------------------------
+\FloatBarrier % ← ここまでを本文として確定
 
-% Balance last page columns around ref. 3
-\IEEEtriggeratref{3}
+% === Fig.1: End-to-end design flow ==========================
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=10mm]
+  % ノード
+  \node[smallbox] (edu) {EduController\\\small モデル化 \& JSON出力};
+  \node[smallbox, right=12mm of edu] (json) {JSON\\\small $A,B,C,D$, $W_1,W_2,W_3$};
+  \node[smallbox, right=12mm of json] (aitl) {AITL-H\\\small $H_\infty$合成 $\to$ 固定小数点$K$};
+  \node[smallbox, right=12mm of aitl] (hil) {FPGA HIL\\\small SEU/欠測注入, 安全率評価};
+  \node[smallbox, right=12mm of hil] (fem) {SystemDK FEM\\\small 熱/放射/実装 ストレス};
+  \node[smallbox, right=12mm of fem] (asic) {ASIC\\\small 22FDX FDSOI};
 
-\begin{thebibliography}{4}
-\bibitem{doyle} J.~C. Doyle, B.~A. Francis, and A.~R. Tannenbaum, \emph{Feedback Control Theory}. Macmillan, 1992.
-\bibitem{colinge} J.-P. Colinge, \emph{Silicon-on-Insulator Technology: Materials to VLSI}, 3rd ed. Springer, 2004.
-\bibitem{wolf} W. Wolf, \emph{FPGA-Based System Design}. Prentice Hall, 2004.
-\bibitem{rabey} J.~M. Rabaey, A. Chandrakasan, and B. Nikolić, \emph{Digital Integrated Circuits: A Design Perspective}, 2nd ed. Prentice Hall, 2003.
-\end{thebibliography}
+  % 矢印
+  \draw[line] (edu) -- (json);
+  \draw[line] (json) -- (aitl);
+  \draw[line] (aitl) -- (hil);
+  \draw[line] (hil) -- (fem);
+  \draw[line] (fem) -- (asic);
 
-\section*{Author Biography}
-\begingroup\small
-Shinichi Samizo received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology. He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration. Contact: \texttt{shin3t72@gmail.com}.
-\endgroup
+  % 下部の注記
+  \node[align=center, below=6mm of hil] (metrics)
+    {\small 指標：セーフモード$<\!1$\,s，回復率$\ge 99\%$，ECCスクラビング効率};
 
-\FloatBarrier
-
-% =========================================================
-% === Figures =============================================
-
-% Fig.1 End-to-end flow
-\begin{figure}[!t]
-  \centering
-  \resizebox{0.96\columnwidth}{!}{%
-  \begin{tikzpicture}[node distance=9mm]
-    \node[smallbox] (edu)  {EduController\\\footnotesize モデル化 \& JSON};
-    \node[smallbox, right=10mm of edu]  (json) {JSON\\\footnotesize $A,B,C,D$, $W_1,W_2,W_3$};
-    \node[smallbox, right=10mm of json] (aitl) {AITL\,-\,H\\\footnotesize $H_\infty\!\to$ 固定小数点 $K$};
-    \node[smallbox, right=10mm of aitl] (hil)  {FPGA HIL\\\footnotesize SEU/欠測, 指標評価};
-    \node[smallbox, right=10mm of hil]  (fem)  {SystemDK FEM\\\footnotesize 熱/放射/実装};
-    \node[smallbox, right=10mm of fem]  (asic) {ASIC\\\footnotesize 22FDX FDSOI};
-    \draw[line] (edu) -- (json);
-    \draw[line] (json) -- (aitl);
-    \draw[line] (aitl) -- (hil);
-    \draw[line] (hil) -- (fem);
-    \draw[line] (fem) -- (asic);
-    \node[align=center, below=5mm of hil]
-      {\footnotesize 指標：セーフモード $<\!1$\,s，回復率 $\ge 99\%$，ECC スクラビング効率};
-  \end{tikzpicture}}
-  \caption{End-to-end design flow（Spec $\to$ JSON $\to$ 合成 $\to$ HIL $\to$ FEM $\to$ ASIC）.}
-  \label{fig:flow}
+  % 図枠タイトル
+  \node[title, above=6mm of aitl] {End-to-end Design Flow};
+\end{tikzpicture}
+\caption{End-to-end design flow from mission spec to ASIC.}
+\label{fig:flow}
 \end{figure}
 
-% Fig.2 + Fig.3 両段まとめ
-\begin{figure*}[!t]
-  \centering
-  \begin{minipage}{0.49\textwidth}
-    \centering
-    \resizebox{\linewidth}{!}{%
-    \begin{tikzpicture}[node distance=5mm]
-      \node[box, minimum width=\linewidth, minimum height=54mm] (soc) {};
-      \node[swim, anchor=west, xshift=4mm, minimum width=37mm] at (soc.west) (robust) {};
-      \node[swim, right=4mm of robust, minimum width=37mm] (fsm) {};
-      \node[swim, right=4mm of fsm, minimum width=37mm] (ai) {};
-      \node[title] at ([yshift=+22mm]robust.center) {Robust Core};
-      \node[title] at ([yshift=+22mm]fsm.center)    {FSM Supervisor};
-      \node[title] at ([yshift=+22mm]ai.center)     {AI Adaptor};
-      \node[smallbox] (rc1) at ([yshift=+6mm]robust.center) {$H_\infty$/MPC/SMC};
-      \node[smallbox, below=3mm of rc1] (rc2) {整形重み $W_1,W_2,W_3$};
-      \node[smallbox, below=3mm of rc2] (rc3) {固定小数点 $K$};
-      \node[smallbox] (fs1) at ([yshift=+10mm]fsm.center) {モード管理};
-      \node[smallbox, below=3mm of fs1] (fs2) {FDI/FDII};
-      \node[smallbox, below=3mm of fs2] (fs3) {セーフブート};
-      \node[smallbox] (ai1) at ([yshift=+10mm]ai.center) {リID/ドリフト補償};
-      \node[smallbox, below=3mm of ai1] (ai2) {低頻度更新};
-      \node[smallbox, below=3mm of ai2] (ai3) {検証ゲート};
-      \node[box, minimum width=22mm, minimum height=46mm, anchor=east, xshift=-4mm] at (soc.east) (nvm) {};
-      \node[title, above=0mm of nvm] {Tri-NVM};
-      \node[smallbox, minimum width=18mm] at ([yshift=+12mm]nvm.center) (sram) {SRAM};
-      \node[smallbox, minimum width=18mm, below=3mm of sram] (mram) {MRAM};
-      \node[smallbox, minimum width=18mm, below=3mm of mram] (fram) {FRAM};
-      \draw[line] (rc1.east) -- (fs1.west);
-      \draw[line] (fs1.east) -- (ai1.west);
-      \draw[line] (ai3.west) -- ++(-5mm,0) |- (rc3.east);
-      \draw[line] (rc3.east) -- ++(3mm,0) |- (sram.west);
-      \draw[line] (fs3.east) -- ++(4mm,0) |- (fram.west);
-      \draw[line] (ai2.east) -- ++(8mm,0) |- (mram.west);
-    \end{tikzpicture}}
-    \caption{AITL architecture with three layers and tri-NVM.}
-    \label{fig:arch}
-  \end{minipage}\hfill
-  \begin{minipage}{0.49\textwidth}
-    \centering
-    \resizebox{\linewidth}{!}{%
-    \begin{tikzpicture}[node distance=9mm]
-      \node[smallbox, minimum width=20mm] (K) {$K$};
-      \node[smallbox, right=20mm of K, minimum width=24mm] (P) {$P$};
-      \node[sum, left=9mm of K] (sumin) {$\Sigma$};
-      \node[sum, right=11mm of P] (sumy) {$\Sigma$};
-      \draw[line] (sumin) -- (K);
-      \draw[line] (K) -- node[above, font=\footnotesize] {$u$} (P);
-      \draw[line] (P) -- node[above, font=\footnotesize] {$y$} (sumy);
-      \draw[line] (sumy) |- ++(0,-10mm) -| node[pos=0.25, below, font=\footnotesize] {$-$} (sumin);
-      \node[left=10mm of sumin] (r) {};
-      \draw[line] (r.center) -- node[above, font=\footnotesize] {$r$} (sumin);
-      \node[above=9mm of P] (w) {};
-      \draw[line] (w.center) -- node[right, font=\footnotesize] {$w$} (P.north);
-      \node[below=9mm of sumy] (v) {};
-      \draw[line] (v.center) -- node[right, font=\footnotesize] {$v$} (sumy.south);
-      \node[smallbox, below=7mm of P] (W) {$W$};
-      \draw[line] (P.south) -- (W.north);
-      \node[right=12mm of W] (z) {};
-      \draw[line] (W) -- node[above, font=\footnotesize] {$z$} (z.center);
-    \end{tikzpicture}}
-    \caption{Closed-loop structure for $H_\infty$ design.}
-    \label{fig:closed}
-  \end{minipage}
-\end{figure*}
+% === Fig.2: AITL architecture ===============================
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=6mm]
+  \tikzset{
+    colA/.style={fill=gray!6},
+    colB/.style={fill=gray!6},
+    colC/.style={fill=gray!6},
+    title/.style={font=\bfseries, inner sep=1pt}
+  }
+
+  % 全体枠
+  \node[bigbox, minimum width=84mm, minimum height=56mm, align=left] (soc) { };
+
+  % レイヤ枠
+  \node[bigbox, colA, minimum width=26mm, minimum height=46mm, anchor=west, xshift=3mm] (robust) at (soc.west) {};
+  \node[bigbox, colB, minimum width=26mm, minimum height=46mm, right=3mm of robust] (fsm) {};
+  \node[bigbox, colC, minimum width=26mm, minimum height=46mm, right=3mm of fsm] (ai) {};
+
+  % 見出し
+  \node[title] at ([yshift=+22mm]robust.center) {Robust Core};
+  \node[title] at ([yshift=+22mm]fsm.center)   {FSM Supervisor};
+  \node[title] at ([yshift=+22mm]ai.center)    {AI Adaptor};
+
+  % Robust Core
+  \node[smallbox, align=center] (rc1) at ([yshift=+6mm]robust.center) {$H_\infty$/MPC/SMC\\\small 安定化制御};
+  \node[smallbox, below=4mm of rc1] (rc2) {観測器/整形重み\\\small $W_1,W_2,W_3$};
+  \node[smallbox, below=4mm of rc2] (rc3) {固定小数点$K$\\\small RTL/FPGA/ASIC};
+
+  % FSM
+  \node[smallbox] (fs1) at ([yshift=+12mm]fsm.center) {モード管理\\\small Safe/Nominal/Recovery};
+  \node[smallbox, below=4mm of fs1] (fs2) {FDI/FDII\\\small 故障検出・隔離};
+  \node[smallbox, below=4mm of fs2] (fs3) {セーフブート\\\small ウォッチドッグ};
+
+  % AI
+  \node[smallbox] (ai1) at ([yshift=+12mm]ai.center) {長期リID/ドリフト補償};
+  \node[smallbox, below=4mm of ai1] (ai2) {パラメタ更新\\\small 演算は低頻度};
+  \node[smallbox, below=4mm of ai2] (ai3) {検証ゲート\\\small 安全境界内のみ反映};
+
+  % 信号の流れ
+  \draw[line] (rc1.east) -- (fs1.west);
+  \draw[line] (fs1.east) -- (ai1.west);
+  \draw[line] (ai3.west) -- ++(-6mm,0) |- (rc3.east);
+
+  % Tri-NVM
+  \node[bigbox, minimum width=20mm, minimum height=46mm, anchor=east, xshift=-3mm, align=center] (nvm) at (soc.east) {};
+  \node[title, above=0mm of nvm] {Tri-NVM};
+
+  \node[smallbox, minimum width=18mm, align=center] (sram) at ([yshift=+12mm]nvm.center) {SRAM\\\small 実行用};
+  \node[smallbox, minimum width=18mm, below=3mm of sram] (mram) {MRAM\\\small ログ/コード\\ECC};
+  \node[smallbox, minimum width=18mm, below=3mm of mram] (fram) {FRAM\\\small セーフブート/FSM};
+
+  % メモリ接続
+  \draw[line] (rc3.east) -- ++(4mm,0) |- (sram.west);
+  \draw[line] (fs3.east) -- ++(6mm,0) |- (fram.west);
+  \draw[line] (ai2.east) -- ++(10mm,0) |- (mram.west);
+
+  % タイトル
+  \node[title] at ([yshift=+30mm]soc.north) {AITL Architecture on 22\,nm FDSOI SoC};
+\end{tikzpicture}
+\caption{AITL architecture: three layers with a tri-NVM hierarchy.}
+\label{fig:arch}
+\end{figure}
+
+% === Fig.3: Closed-loop block diagram =======================
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=10mm]
+  % ブロック
+  \node[smallbox, minimum width=22mm] (K) {$K$};
+  \node[smallbox, right=22mm of K, minimum width=26mm] (P) {$P$};
+
+  % サマ
+  \node[sum, left=10mm of K] (sumin) {$\Sigma$};
+  \node[sum, right=12mm of P] (sumy) {$\Sigma$};
+
+  % 配線：u, y ループ
+  \draw[line] (sumin) -- (K);
+  \draw[line] (K) -- node[above] {$u$} (P);
+  \draw[line] (P) -- node[above] {$y$} (sumy);
+
+  % フィードバック
+  \draw[line] (sumy) |- ++(0,-12mm) -| node[pos=0.25, below] {$-$} (sumin);
+
+  % 外乱/雑音/性能
+  \node[left=12mm of sumin] (r) {};
+  \draw[line] (r.center) -- node[above] {$r$} (sumin);
+
+  \node[above=10mm of P] (w) {};
+  \draw[line] (w.center) -- node[right] {$w$} (P.north);
+
+  \node[below=10mm of sumy] (v) {};
+  \draw[line] (v.center) -- node[right] {$v$} (sumy.south);
+
+  % z 出力
+  \node[smallbox, below=8mm of P] (W) {$W$};
+  \draw[line] (P.south) -- (W.north);
+  \node[right=14mm of W] (z) {};
+  \draw[line] (W) -- node[above] {$z$} (z.center);
+
+  % 注釈
+  \node[align=center, font=\small, below=14mm of K]
+    {設計：$H_\infty$ で $\|T_{w\to z}\|_\infty$ を最小化};
+\end{tikzpicture}
+\caption{Closed-loop structure used for robust design.}
+\label{fig:loop}
+\end{figure}
+
+\section*{Conclusion}
+\emph{AITL on Space} combines robust control, supervisory safety, AI
+re-identification, and hardened memory. The end-to-end flow—from mission
+specification to ASIC—provides a reproducible methodology for resilient
+autonomy in long-duration space missions.
+
+% ----------------- References -----------------
+\begin{thebibliography}{1}
+\bibitem{doyle}
+J. C. Doyle, B. A. Francis, and A. R. Tannenbaum,
+\emph{Feedback Control Theory}. Macmillan, 1992.
+
+\bibitem{colinge}
+J.-P. Colinge, \emph{Silicon-on-Insulator Technology: Materials to VLSI},
+3rd ed. Springer, 2004.
+
+\bibitem{wolf}
+W. Wolf, \emph{FPGA-Based System Design}. Prentice Hall, 2004.
+
+\bibitem{rabaey}
+J. M. Rabaey, A. Chandrakasan, and B. Nikoli\'{c},
+\emph{Digital Integrated Circuits: A Design Perspective}, 2nd ed. Prentice Hall, 2003.
+\end{thebibliography}
+
+% ----------------- Author Biography -----------------
+\section*{Author Biography}
+Shinichi Samizo received the M.S. degree in Electrical and Electronic
+Engineering from Shinshu University, Japan. He worked at Seiko Epson Corporation
+as an engineer in semiconductor memory and mixed-signal device development, and
+contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
+He is currently an independent semiconductor researcher focusing on
+process/device education, memory architecture, and AI system integration.\\
+\emph{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}.
 
 \end{document}
