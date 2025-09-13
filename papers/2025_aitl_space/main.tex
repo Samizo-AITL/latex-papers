@@ -309,16 +309,19 @@ distilled on-board AI, and standard rad-hard interconnects.
   \coordinate (mram_in) at ([xshift=-2.2mm]mram.west);
   \coordinate (fram_in) at ([xshift=-2.2mm]fram.west);
 
-  % 配線（重なりゼロ）
+  % ===== 配線: Core → FSM → AI =====
   \draw[line] (core) -- (fsm);
   \draw[line] (fsm) -- (ai);
 
-  \draw[line] (ai.east) -| (mram_in);
-  \draw[-, line width=0.55pt] (mram_in) -- (mram.west);
+  % ===== AI adaptor → NVM群 =====
+  % AI adaptor から水平に出し、分岐して SRAM と MRAM に接続
+  \draw[line] (ai.east) -- ++(10mm,0) coordinate(ai_out);
+  \draw[line] (ai_out) |- (sram.west);
+  \draw[line] (ai_out) |- (mram.west);
 
-  \draw[line] (ai.east) |- ([yshift=6mm]sram_in) -- (sram_in);
-  \draw[-, line width=0.55pt] (sram_in) -- (sram.west);
-
+  % ===== Validation gate → FRAM =====
+  \draw[line] (gate.east) -- ++(10mm,0) |- (fram.west);
+  
   \draw[line] (ai) -- (gate);
   \draw[line] (gate.east) |- (fram_in);
   \draw[-, line width=0.55pt] (fram_in) -- (fram.west);
