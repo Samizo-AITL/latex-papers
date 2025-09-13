@@ -7,6 +7,9 @@
 \usepackage{graphicx}
 \usepackage[dvipsnames]{xcolor}
 
+% ---- Links / \url (← 追加) ----
+\usepackage[hidelinks]{hyperref}
+
 % ---- Spacing around floats (tight for 2 pages) ----
 \setlength{\textfloatsep}{5pt plus 1pt minus 1pt}
 \setlength{\floatsep}{5pt plus 1pt minus 1pt}
@@ -113,43 +116,35 @@ Shinichi Samizo received the M.S. degree in Electrical and Electronic Engineerin
 \endgroup
 
 % --- 〈Biography のすぐ後に挿入〉 ------------------------
-\FloatBarrier % ← ここまでを本文として確定させる
+\FloatBarrier % ← ここまでを本文として確定
 
-% Fig.1（片欄図だった内容を2欄図に）
-\begin{figure*}[!b]
+% Fig.1
+\begin{figure*}[!t]
   \centering
-  % 元のフロー図（TikZ or includegraphics）を \resizebox で幅合わせ
-  % 例: \resizebox{0.60\textwidth}{!}{\input{fig_flow.tikz}}
-  % あるいは画像の場合:
-  % \includegraphics[width=0.60\textwidth]{fig1-flow.pdf}
-  \resizebox{0.60\textwidth}{!}{%
-    % === あなたの Fig.1 の tikzpicture 本文 ===
-    % \begin{tikzpicture} ... \end{tikzpicture}
-  }
+  % 実体画像（拡張子は手元のファイルに合わせて）
+  \includegraphics[width=0.60\textwidth]{fig1_flow.pdf}
   \vspace{-2mm}
   \caption{End-to-end design flow: Mission Spec $\rightarrow$ JSON (EduController) $\rightarrow$ AITL-H $\rightarrow$ FPGA HIL $\rightarrow$ FEM $\rightarrow$ ASIC.}
   \label{fig:flow}
 \end{figure*}
 
-% Fig.2（広い図：アーキテクチャ）— ページ下部に来やすいよう同じく [!b]
-\begin{figure*}[!b]
+% Fig.2
+\begin{figure*}[!t]
   \centering
-  \resizebox{0.90\textwidth}{!}{%
-    % === あなたの Fig.2 の tikzpicture 本文（上段の大きい図）===
-  }
+  \includegraphics[width=0.90\textwidth]{fig2_arch.pdf}
   \vspace{-1mm}
   \caption{AITL architecture: three control layers with tri-NVM memory hierarchy. Orthogonal interconnects improve readability.}
   \label{fig:arch}
 \end{figure*}
 
-% Fig.3（小さめの閉ループ図）
-\begin{figure*}[!b]
+% Fig.3
+\begin{figure*}[!t]
   \centering
-  \resizebox{0.55\textwidth}{!}{%
-    % === あなたの Fig.3 の tikzpicture 本文 ===
-  }
+  \includegraphics[width=0.55\textwidth]{fig3_closed.pdf}
   \vspace{-2mm}
   \caption{Closed-loop system for $H_\infty$ synthesis (compact single-column rendering).}
   \label{fig:closed}
 \end{figure*}
 % ---------------------------------------------------------
+
+\end{document}
