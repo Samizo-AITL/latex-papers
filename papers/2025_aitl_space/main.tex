@@ -34,6 +34,8 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning, calc, shapes.geometric, shapes.misc}
 
+\usepackage{balance} % ← プリアンブル
+
 % ---- TikZ styles ----
 \tikzset{
   line/.style       = {-{Latex[length=2.2mm,width=1.4mm]}, line width=0.45pt},
@@ -364,8 +366,9 @@ distilled on-board AI, and standard rad-hard interconnects.
 \end{figure*}
 
 % ----------------- References -----------------
-\clearpage
-%\FloatBarrier
+%\clearpage
+\FloatBarrier
+\balance % ここで左右バランス開始
 %\makeatletter
 %\IEEEtriggercmd{\enlargethispage{-2.0in}}
 %\IEEEtriggeratref{6}
