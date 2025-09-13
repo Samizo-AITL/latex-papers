@@ -118,33 +118,136 @@ Shinichi Samizo received the M.S. degree in Electrical and Electronic Engineerin
 % --- 〈Biography のすぐ後に挿入〉 ------------------------
 \FloatBarrier % ← ここまでを本文として確定
 
-% Fig.1
-\begin{figure*}[!t]
-  \centering
-  % 実体画像（拡張子は手元のファイルに合わせて）
-  \includegraphics[width=0.60\textwidth]{fig1_flow.pdf}
-  \vspace{-2mm}
-  \caption{End-to-end design flow: Mission Spec $\rightarrow$ JSON (EduController) $\rightarrow$ AITL-H $\rightarrow$ FPGA HIL $\rightarrow$ FEM $\rightarrow$ ASIC.}
-  \label{fig:flow}
-\end{figure*}
+% === Fig.1: End-to-end design flow ==========================
+\begin{tikzpicture}[node distance=10mm]
+  % 追加スタイル
+  \tikzset{title/.style={font=\bfseries, inner sep=0pt}}
 
-% Fig.2
-\begin{figure*}[!t]
-  \centering
-  \includegraphics[width=0.90\textwidth]{fig2_arch.pdf}
-  \vspace{-1mm}
-  \caption{AITL architecture: three control layers with tri-NVM memory hierarchy. Orthogonal interconnects improve readability.}
-  \label{fig:arch}
-\end{figure*}
+  % ノード
+  \node[smallbox] (edu) {EduController\\\small モデル化 \& JSON出力};
+  \node[smallbox, right=12mm of edu] (json) {JSON\\\small $A,B,C,D$, $W_1,W_2,W_3$};
+  \node[smallbox, right=12mm of json] (aitl) {AITL-H\\\small $H_\infty$合成 $\to$ 固定小数点$K$};
+  \node[smallbox, right=12mm of aitl] (hil) {FPGA HIL\\\small SEU/欠測注入, 安全率評価};
+  \node[smallbox, right=12mm of hil] (fem) {SystemDK FEM\\\small 熱/放射/実装 ストレス};
+  \node[smallbox, right=12mm of fem] (asic) {ASIC\\\small 22FDX FDSOI};
 
-% Fig.3
-\begin{figure*}[!t]
-  \centering
-  \includegraphics[width=0.55\textwidth]{fig3_closed.pdf}
-  \vspace{-2mm}
-  \caption{Closed-loop system for $H_\infty$ synthesis (compact single-column rendering).}
-  \label{fig:closed}
-\end{figure*}
-% ---------------------------------------------------------
+  % 矢印
+  \draw[line] (edu) -- (json);
+  \draw[line] (json) -- (aitl);
+  \draw[line] (aitl) -- (hil);
+  \draw[line] (hil) -- (fem);
+  \draw[line] (fem) -- (asic);
+
+  % 下部の注記
+  \node[align=center, below=6mm of hil] (metrics)
+    {\small 指標：セーフモード$<\!1$\,s，回復率$\ge 99\%$，ECCスクラビング効率};
+
+  % 図枠タイトル的ラベル（任意）
+  \node[title, above=6mm of aitl] {End-to-end Design Flow};
+\end{tikzpicture}
+
+% === Fig.2: AITL architecture ===============================
+\begin{tikzpicture}[node distance=6mm]
+  % 追加スタイル
+  \tikzset{
+    colA/.style={fill=gray!6},
+    colB/.style={fill=gray!6},
+    colC/.style={fill=gray!6},
+    title/.style={font=\bfseries, inner sep=1pt}
+  }
+
+  % 全体枠
+  \node[bigbox, minimum width=140mm, minimum height=56mm, align=left] (soc) { };
+
+  % レイヤ枠（左から右へ並べる）
+  \node[bigbox, colA, minimum width=40mm, minimum height=46mm, anchor=west, xshift=4mm] (robust) at (soc.west) {};
+  \node[bigbox, colB, minimum width=40mm, minimum height=46mm, right=4mm of robust] (fsm) {};
+  \node[bigbox, colC, minimum width=40mm, minimum height=46mm, right=4mm of fsm] (ai) {};
+
+  % 見出し
+  \node[title] at ([yshift=+22mm]robust.center) {Robust Core};
+  \node[title] at ([yshift=+22mm]fsm.center)   {FSM Supervisor};
+  \node[title] at ([yshift=+22mm]ai.center)    {AI Adaptor};
+
+  % Robust Core 内部
+  \node[smallbox, align=center] (rc1) at ([yshift=+6mm]robust.center) {$H_\infty$/MPC/SMC\\\small 安定化制御};
+  \node[smallbox, below=4mm of rc1] (rc2) {観測器/整形重み\\\small $W_1,W_2,W_3$};
+  \node[smallbox, below=4mm of rc2] (rc3) {固定小数点$K$\\\small RTL/FPGA/ASIC};
+
+  % FSM Supervisor 内部
+  \node[smallbox] (fs1) at ([yshift=+12mm]fsm.center) {モード管理\\\small Safe/Nominal/Recovery};
+  \node[smallbox, below=4mm of fs1] (fs2) {FDI/FDII\\\small 故障検出・隔離};
+  \node[smallbox, below=4mm of fs2] (fs3) {セーフブート\\\small ウォッチドッグ};
+
+  % AI Adaptor 内部
+  \node[smallbox] (ai1) at ([yshift=+12mm]ai.center) {長期リID/ドリフト補償};
+  \node[smallbox, below=4mm of ai1] (ai2) {パラメタ更新\\\small 演算は低頻度};
+  \node[smallbox, below=4mm of ai2] (ai3) {検証ゲート\\\small 安全境界内のみ反映};
+
+  % 信号の流れ（横方向）
+  \draw[line] (rc1.east) -- (fs1.west);
+  \draw[line] (fs1.east) -- (ai1.west);
+  \draw[line] (ai3.west) -- ++(-6mm,0) |- (rc3.east); % 更新パス戻し
+
+  % Tri-NVM（右側に縦積み）
+  \node[bigbox, minimum width=26mm, minimum height=46mm, anchor=east, xshift=-4mm, align=center] (nvm) at (soc.east) {};
+  \node[title, above=0mm of nvm] {Tri-NVM};
+
+  \node[smallbox, minimum width=22mm, align=center] (sram) at ([yshift=+12mm]nvm.center) {SRAM\\\small 実行用};
+  \node[smallbox, minimum width=22mm, below=3mm of sram] (mram) {MRAM\\\small ログ/コード\\ECC};
+  \node[smallbox, minimum width=22mm, below=3mm of mram] (fram) {FRAM\\\small セーフブート/FSM};
+
+  % メモリ接続
+  \draw[line] (rc3.east) -- ++(4mm,0) |- (sram.west);
+  \draw[line] (fs3.east) -- ++(6mm,0) |- (fram.west);
+  \draw[line] (ai2.east) -- ++(10mm,0) |- (mram.west);
+
+  % 周囲ラベル
+  \node[title] at ([yshift=+30mm]soc.north) {AITL Architecture on 22\,nm FDSOI SoC};
+\end{tikzpicture}
+
+% === Fig.3: Closed-loop block diagram =======================
+\begin{tikzpicture}[node distance=10mm]
+  % スタイル
+  \tikzset{
+    sum/.style={draw, circle, inner sep=1.2pt, minimum size=3.6mm},
+    port/.style={font=\small}
+  }
+
+  % ブロック
+  \node[smallbox, minimum width=22mm] (K) {$K$};
+  \node[smallbox, right=22mm of K, minimum width=26mm] (P) {$P$};
+
+  % サマ
+  \node[sum, left=10mm of K] (sumin) {$\Sigma$};
+  \node[sum, right=12mm of P] (sumy) {$\Sigma$};
+
+  % 配線：u, y ループ
+  \draw[line] (sumin) -- (K);
+  \draw[line] (K) -- node[above, port] {$u$} (P);
+  \draw[line] (P) -- node[above, port] {$y$} (sumy);
+
+  % フィードバック
+  \draw[line] (sumy) |- ++(0,-12mm) -| node[pos=0.25, below, port] {$-$} (sumin);
+
+  % 外乱/雑音/性能
+  \node[left=12mm of sumin] (r) {};
+  \draw[line] (r.center) -- node[above, port] {$r$} (sumin);
+
+  \node[above=10mm of P] (w) {};
+  \draw[line] (w.center) -- node[right, port] {$w$} (P.north);
+
+  \node[below=10mm of sumy] (v) {};
+  \draw[line] (v.center) -- node[right, port] {$v$} (sumy.south);
+
+  % z 出力
+  \node[smallbox, below=8mm of P] (W) {$W$};
+  \draw[line] (P.south) -- (W.north);
+  \node[right=14mm of W] (z) {};
+  \draw[line] (W) -- node[above, port] {$z$} (z.center);
+
+  % キャプション用の小さな注釈（任意）
+  \node[align=center, font=\small, below=14mm of K] {設計：$H_\infty$ で $\|T_{w\to z}\|_\infty$ を最小化};
+\end{tikzpicture}
 
 \end{document}
