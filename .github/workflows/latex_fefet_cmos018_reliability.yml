@@ -14,7 +14,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 必ず実行して、runner 上のファイルを確認
       - name: Debug file tree
         run: |
           echo "PWD=$(pwd)"
@@ -27,9 +26,7 @@ jobs:
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v2
         with:
-          # ここは「ファイル名のみ」。パスは working_directory で指定
-          root_file: main.tex
-          working_directory: papers/2025_fefet_cmos018_reliability
+          root_file: papers/2025_fefet_cmos018_reliability/main.tex
           work_in_root_file_dir: true
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
