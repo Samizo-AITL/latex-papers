@@ -6,9 +6,12 @@
 \usepackage{graphicx}
 \usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{tikz}
-\usetikzlibrary{positioning}
+\usetikzlibrary{positioning,arrows.meta} % ← 矢印エラー対策で追加
 \usepackage{booktabs}
 \usepackage{cite}
+
+% TikZ 矢印 tip 既定（Latex 矢印を安定使用）
+\tikzset{>={Latex[length=2mm,width=2mm]}}
 
 % 図まわりの間隔を調整（崩れ防止）
 \setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
@@ -52,7 +55,8 @@ The FeFET module is inserted after poly definition and salicide/RTA, requiring m
 \subsection{Process Flow}
 \begin{figure}[!t]
   \centering
-  \begin{tikzpicture}[node distance=6mm, every node/.style={draw,rectangle,minimum width=25mm,minimum height=6mm},>=stealth]
+  \begin{tikzpicture}[node distance=6mm,
+      every node/.style={draw,rectangle,minimum width=25mm,minimum height=6mm},>=stealth]
     \node (a) {FEOL (Co RTA)};
     \node (b) [below=of a] {ALD: Al$_2$O$_3$ (1--2 nm)};
     \node (c) [below=of b] {ALD: HZO (8--12 nm)};
@@ -131,7 +135,9 @@ An optional 3.3 V peripheral domain is kept for I/O and AMS (ADC/DAC, LDO).
 \begin{figure}[!t]
   \centering
   \resizebox{\columnwidth}{!}{%
-    \begin{tikzpicture}[node distance=8mm, every node/.style={draw,rounded corners,minimum width=20mm,minimum height=6mm,align=center},>=stealth,transform shape]
+    \begin{tikzpicture}[node distance=8mm,
+      every node/.style={draw,rounded corners,minimum width=20mm,minimum height=6mm,align=center},
+      transform shape]
       \node (logic) {Logic (1.8V)};
       \node (sram) [below=of logic] {SRAM};
       \node (fefet) [below=of sram] {FeFET NVM};
@@ -149,7 +155,6 @@ An optional 3.3 V peripheral domain is kept for I/O and AMS (ADC/DAC, LDO).
 % ==== Fig.5: Backup/restore flow（単カラム／はみ出し防止）====
 \begin{figure}[!t]
   \centering
-  % カラム幅以内に強制収容（はみ出し・重なり防止）
   \resizebox{0.98\columnwidth}{!}{%
   \begin{tikzpicture}[
       node distance=8mm,
@@ -159,8 +164,8 @@ An optional 3.3 V peripheral domain is kept for I/O and AMS (ADC/DAC, LDO).
     \node[box, right=12mm of sram] (ctrl) {Backup Ctrl};
     \node[box, right=12mm of ctrl] (nvm)  {FeFET NVM};
 
-    \draw[-{Latex}] (sram) -- node[above,sloped]{Backup} (ctrl);
-    \draw[-{Latex}] (ctrl) -- node[above,sloped]{Restore} (nvm);
+    \draw[->] (sram) -- node[above,yshift=0.8mm]{Backup} (ctrl);
+    \draw[->] (ctrl) -- node[above,yshift=0.8mm]{Restore} (nvm);
   \end{tikzpicture}}
   \caption{Backup/restore flow between SRAM and FeFET.}
   \label{fig:backup_flow}
