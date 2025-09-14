@@ -11,20 +11,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      # 必ず実行して、runner 上のファイルを確認
       - name: Debug file tree
         run: |
           echo "PWD=$(pwd)"
           ls -al
           ls -al papers || true
           ls -al papers/2025_fefet_cmos018_reliability || true
-          echo "---- find main.tex ----"
-          find papers -maxdepth 3 -type f -iname "main*.tex" || true
+          echo "find results:"
+          find papers -maxdepth 3 -type f -iname "main*.tex" -print
 
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: papers/2025_fefet_cmos018_reliability/main.tex
+          # ここは「ファイル名のみ」。パスは working_directory で指定
+          root_file: main.tex
+          working_directory: papers/2025_fefet_cmos018_reliability
+          work_in_root_file_dir: true
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
