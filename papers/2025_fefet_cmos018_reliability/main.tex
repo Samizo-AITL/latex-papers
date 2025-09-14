@@ -98,20 +98,23 @@ Endurance: $\pm$2.5 V, 10 $\mu$s, 10 kHz up to $10^5$ cycles.
 Retention: 25$^\circ$C, 85$^\circ$C, 125$^\circ$C, with Arrhenius extrapolation.
 
 \section{Results}
-\subsection{TZDB}
-Breakdown statistics indicate early-failure tails due to defects.
+\subsection{Reliability Summary}
+Reliability results are summarized in Fig.~\ref{fig:reliab_block}.
 
+% ==== Fig.3: Reliabilityまとめ (Retention含む) ====
 \begin{figure*}[!t]
   \centering
-  \subfloat[TZDB distributions of FeCAPs.\label{fig:tzdb}]{
-    \includegraphics[width=0.48\linewidth]{figures/fig3_tzdb.png}}\hfill
+  \subfloat[TZDB distributions of FeCAPs.]{
+    \includegraphics[width=0.32\linewidth]{figures/fig3_tzdb.png}}\hfill
   \subfloat[TDDB Weibull plots with fitted lines $(\beta,\eta)$.]{
-    \includegraphics[width=0.48\linewidth]{figures/fig4_tddb_weibull.png}}\\[0.6ex]
+    \includegraphics[width=0.32\linewidth]{figures/fig4_tddb_weibull.png}}\hfill
   \subfloat[TDDB CDF under all stress conditions.]{
-    \includegraphics[width=0.48\linewidth]{figures/fig4_tddb_cdf.png}}\hfill
-  \subfloat[Endurance characteristics $(\Delta V_{\mathrm{th}}$ vs. cycles).]{
-    \includegraphics[width=0.48\linewidth]{figures/fig5_endurance.png}}
-  \caption{Reliability results summary.}
+    \includegraphics[width=0.32\linewidth]{figures/fig4_tddb_cdf.png}}\\[0.6ex]
+  \subfloat[Endurance $(\Delta V_{\mathrm{th}}$ vs. cycles).]{
+    \includegraphics[width=0.32\linewidth]{figures/fig5_endurance.png}}\hfill
+  \subfloat[Retention characteristics and Arrhenius extrapolation.]{
+    \includegraphics[width=0.32\linewidth]{figures/fig7_retention.png}}
+  \caption{Reliability results summary: TZDB, TDDB, Endurance, and Retention.}
   \label{fig:reliab_block}
 \end{figure*}
 
@@ -125,7 +128,8 @@ Up to $10^5$ cycles verified; the window shrinks 20–30\%.
 A compact fit is $\Delta V_{\mathrm{th}}(N) = 1.12 - 0.05 \log_{10} N$.
 
 \subsection{Retention}
-Arrhenius extrapolation with $E_a \approx 1.1$ eV predicts: $>$100 years @ 25$^\circ$C, $>$10 years @ 85$^\circ$C, and only months @ 150$^\circ$C.
+Arrhenius extrapolation with $E_a \approx 1.1$ eV predicts: 
+$>$100 years @ 25$^\circ$C, $>$10 years @ 85$^\circ$C, and only months @ 150$^\circ$C.
 
 \tightsecspace
 \section{System Architecture (SRAM + FeFET)}
@@ -152,7 +156,7 @@ An optional 3.3 V peripheral domain is kept for I/O and AMS (ADC/DAC, LDO).
   \label{fig:system}
 \end{figure}
 
-% ==== Fig.5: Backup/restore flow ====
+% ==== Fig.4: Backup/restore flow ====
 \begin{figure}[!t]
   \centering
   \resizebox{0.95\columnwidth}{!}{%
