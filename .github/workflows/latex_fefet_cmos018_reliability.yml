@@ -1,4 +1,4 @@
-name: Build LaTeX PDF (FeFET CMOS018 Reliability) 
+name: Build LaTeX PDF (FeFET CMOS018 Reliability)
 
 on:
   push:
@@ -6,6 +6,10 @@ on:
       - 'papers/2025_fefet_cmos018_reliability/**'
       - '.github/workflows/latex_fefet_cmos018_reliability.yml'
   workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -19,51 +23,46 @@ jobs:
 
       - name: Verify target files
         id: verify
-        shell: bash
         run: |
-          set -e
           DIR="papers/2025_fefet_cmos018_reliability"
           echo "HEAD: $(git rev-parse HEAD)"
-          echo "== git ls-files in $DIR =="
-          git ls-files "$DIR/*" || true
           echo "== ls -al $DIR =="
           ls -al "$DIR" || true
-          if [[ -f "$DIR/main.tex" ]]; then
-            echo "found_main=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "found_main=false" >> "$GITHUB_OUTPUT"
-          fi
+          test -f "$DIR/main.tex" && echo "found_main=true" >> $GITHUB_OUTPUT || echo "found_main=false" >> $GITHUB_OUTPUT
 
       - name: Build LaTeX (LuaLaTeX)
         if: steps.verify.outputs.found_main == 'true'
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: papers/2025_fefet_cmos018_reliability/main.tex
+          root_file: main.tex                      # ファイル名のみ
+          working_directory: papers/2025_fefet_cmos018_reliability
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
-      - name: Fallback log (always)
+      - name: Tail main.log on failure
+        if: failure()
+        run: |
+          tail -n 200 papers/2025_fefet_cmos018_reliability/main.log || true
+
+      - name: Fallback context log (always)
         if: always()
-        shell: bash
         run: |
           DIR="papers/2025_fefet_cmos018_reliability"
-          OUT="reliability_run_info.txt"
           {
             echo "==== Reliability build context ===="
             echo "UTC: $(date -u)"
             echo "HEAD: $(git rev-parse HEAD)"
-            echo "found_main: ${FOUND:-${{ steps.verify.outputs.found_main }}}"
+            echo "found_main: ${{ steps.verify.outputs.found_main }}"
             echo "--- repo root (top 2 levels) ---"
             find . -maxdepth 2 -type d -printf "%p/\n" | sort
             echo "--- ls -al $DIR ---"
             ls -al "$DIR" || echo "(directory missing)"
-          } > "$OUT"
-          # もしディレクトリが存在すれば console.log も出す（存在しなくても失敗しない）
-          if [[ -d "$DIR" ]]; then
-            cp "$OUT" "$DIR/console.log" || true
+          } > reliability_run_info.txt
+          if [ -d "$DIR" ]; then
+            cp reliability_run_info.txt "$DIR/console.log" || true
           fi
 
-      - name: Upload PDF & logs
+      - name: Upload PDF & logs (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
