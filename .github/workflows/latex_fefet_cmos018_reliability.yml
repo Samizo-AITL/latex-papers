@@ -13,20 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ある / ない を確認（失敗しても続行）
       - name: Debug file tree
         run: |
-          echo "PWD=$(pwd)" || true
-          ls -la || true
-          ls -la papers || true
-          ls -la papers/2025_fefet_cmos018_reliability || true
+          echo "PWD=$(pwd)"
+          ls -R papers/2025_fefet_cmos018_reliability || true
 
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v2
         with:
-          # ← working_directory は使わず、root_file にフルパスを指定
-          root_file: papers/2025_fefet_cmos018_reliability/main.tex
-          work_in_root_file_dir: true
+          # ディレクトリだけ指定して、ファイルは main.tex に統一
+          root_file: main.tex
+          working_directory: papers/2025_fefet_cmos018_reliability
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
