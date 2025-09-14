@@ -15,21 +15,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-            fetch-depth: 0
+          fetch-depth: 0
 
-      # main.tex を “確実に” 見つける
       - name: Locate main.tex
         id: locate
         run: |
-          echo "PWD=$(pwd)"
-          echo "---- repo top ----"; ls -al || true
-          echo "---- papers ----";   ls -al papers || true
           TEX=$(git ls-files -- 'papers/**/main.tex' | grep '2025_fefet_cmos018_reliability' || true)
           if [ -z "$TEX" ]; then
             TEX=$(find papers -maxdepth 4 -type f -name main.tex -print | grep '2025_fefet_cmos018_reliability' || true)
           fi
           if [ -z "$TEX" ]; then
-            echo "main.tex not found. Tree:"; find . -maxdepth 3 -type d -print
+            echo "main.tex not found!"
             exit 1
           fi
           echo "TEX=$TEX"           | tee -a $GITHUB_ENV
@@ -39,8 +35,7 @@ jobs:
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v3
         with:
-          # ここにフルパスを渡す（working_directoryは使わない）
-          root_file: ${{ env.TEX }}
+          root_file: ${{ env.TEX }}     # ← main.tex のフルパスを渡す
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
