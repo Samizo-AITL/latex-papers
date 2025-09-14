@@ -11,22 +11,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true          # LFS を使っている場合の保険（図版が LFS でもOKに）
 
+      # まず実体を確認
       - name: Debug file tree
         run: |
           echo "PWD=$(pwd)"
           ls -al
-          ls -al papers
+          ls -al papers || true
           ls -al papers/2025_fefet_cmos018_reliability || true
+          echo "--- try cat main header ---"
+          head -n 5 papers/2025_fefet_cmos018_reliability/main.tex || true
 
+      # フルパスで直接指定（working_directory は使わない）
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: main.tex
-          working_directory: papers/2025_fefet_cmos018_reliability
+          root_file: papers/2025_fefet_cmos018_reliability/main.tex
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
+      # 成否にかかわらず成果物を拾う
       - name: Upload PDF and log
         if: always()
         uses: actions/upload-artifact@v4
