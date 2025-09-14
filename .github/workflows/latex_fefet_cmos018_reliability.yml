@@ -1,90 +1,46 @@
 name: Build LaTeX PDF (FeFET CMOS018 Reliability)
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch: {}                # 手動実行
   push:
+    branches: [ main ]                 # main への push で実行
+    paths:
+      - 'papers/2025_fefet_cmos018_reliability/**'
+      - '.github/workflows/latex_fefet_cmos018_reliability.yml'
+  pull_request:
+    branches: [ main ]
     paths:
       - 'papers/2025_fefet_cmos018_reliability/**'
       - '.github/workflows/latex_fefet_cmos018_reliability.yml'
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 1) リポジトリ状況を全面ダンプ（必ず実行）
-      - name: Probe repo state
-        id: probe
+      # どのファイルでトリガしたか確認
+      - name: Show changed files
         run: |
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-          echo "== top =="
+          echo "Changed files:"
+          git diff --name-only HEAD~1 HEAD || true
+          echo "Tree:"
           ls -al
-          echo "== papers =="
           ls -al papers || true
-          echo "== find (depth 3) =="
-          find . -maxdepth 3 -type d | sort
-          echo "== hash main.tex =="
-          HASH=$(git ls-files -z | tr '\0' '\n' | grep -Fx "papers/2025_fefet_cmos018_reliability/main.tex" || true)
-          echo "HAS_MAIN=${HASH:+yes}" >> $GITHUB_OUTPUT
+          ls -al papers/2025_fefet_cmos018_reliability || true
 
-      # 2) ソースが存在しない場合は、理由を記した擬似ログを作ってアップロードへ
-      - name: Create missing-source log
-        if: steps.probe.outputs.HAS_MAIN != 'yes'
-        run: |
-          mkdir -p _fallback_log
-          {
-            echo "ERROR: papers/2025_fefet_cmos018_reliability/main.tex not found on runner."
-            echo "Hints:"
-            echo " - フォルダ名/綴りの違い（例: reliability vs reliablility）"
-            echo " - ブランチ違い（main にファイルが無い）"
-            echo " - パスフィルタ 'on.push.paths' に合致していない commit"
-            echo " - フォルダ階層が 'papers' 直下ではない"
-            echo ""
-            echo "== dump from probe step =="
-            ls -al
-            echo "== find . (depth 5) =="
-            find . -maxdepth 5 -print
-          } > _fallback_log/main.log
-
-      # 3) ソースがある場合だけビルド（LuaLaTeX）。失敗しても先へ進む
-      - name: Build (latex-action, LuaLaTeX)
-        if: steps.probe.outputs.HAS_MAIN == 'yes'
-        uses: xu-cheng/latex-action@v2
+      - name: Build LaTeX (lualatex)
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: papers/2025_fefet_cmos018_reliability
           work_in_root_file_dir: true
           latexmk_use_lualatex: true
-          args: -file-line-error -interaction=nonstopmode -synctex=1
-          continue_on_error: true
+          args: -file-line-error -interaction=nonstopmode
 
-      # 4) main.log が無い/壊れている時は、コンソール出力を回収して main.log にする
-      - name: Ensure log exists (fallback compile)
-        if: steps.probe.outputs.HAS_MAIN == 'yes'
-        run: |
-          set -e
-          DIR="papers/2025_fefet_cmos018_reliability"
-          if [ ! -f "$DIR/main.log" ]; then
-            echo "::warning:: main.log not found. Capturing console output."
-            (cd "$DIR" && latexmk -lualatex -file-line-error -interaction=nonstopmode -synctex=1 main.tex > console.log 2>&1 || true)
-            if [ -f "$DIR/main.log" ]; then
-              echo "main.log created during fallback."
-            else
-              cp "$DIR/console.log" "$DIR/main.log"
-            fi
-          fi
-          ls -al "$DIR" || true
-
-      # 5) 生成物アップロード（必ず実行）
-      - name: Upload artifacts
+      - name: Upload PDF and log (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -92,7 +48,4 @@ jobs:
           path: |
             papers/2025_fefet_cmos018_reliability/main.pdf
             papers/2025_fefet_cmos018_reliability/main.log
-            papers/2025_fefet_cmos018_reliability/console.log
-            _fallback_log/main.log
           if-no-files-found: warn
-          retention-days: 14
