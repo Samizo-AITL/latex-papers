@@ -1,64 +1,50 @@
 name: Build LaTeX PDF (FeFET CMOS018 Reliability)
 
 on:
-  push:
-    branches: [ main ]          # まずは確実に発火させる
   workflow_dispatch:
+  push:
+    paths:
+      - 'papers/2025_fefet_cmos018_reliability/**'
+      - '.github/workflows/latex_fefet_cmos018_reliability.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 1) main.tex を自動発見（papers 以下の “*fefet*cmos018*reliability*/main.tex” を最優先）
-      - name: Locate main.tex
-        id: loc
-        shell: bash
+      - name: Verify target folder exists
         run: |
-          set -euo pipefail
-          echo "== search candidates =="
-          # 優先パターン
-          CAND=$(find papers -type f -iname "main.tex" \
-                 | grep -i "fefet" | grep -i "cmos018" | grep -i "reliability" | head -n 1 || true)
-          # 見つからなければ汎用
-          if [[ -z "${CAND}" ]]; then
-            CAND=$(find papers -type f -iname "main.tex" | head -n 1 || true)
-          fi
-          if [[ -z "${CAND}" ]]; then
-            echo "main.tex not found under papers/ . repo tree follows:" >&2
-            ls -R | sed -n '1,200p' >&2
-            exit 1
-          fi
-          echo "FOUND=${CAND}"
-          WORKDIR=$(dirname "${CAND}")
-          BASENAME=$(basename "${CAND}")
-          echo "workdir=${WORKDIR}" >> $GITHUB_OUTPUT
-          echo "root=${BASENAME}"    >> $GITHUB_OUTPUT
-          # デバッグ表示
-          echo "::notice title=Found::${WORKDIR}/${BASENAME}"
+          test -d papers/2025_fefet_cmos018_reliability || {
+            echo "papers/2025_fefet_cmos018_reliability not found"; exit 1; }
+          ls -al papers/2025_fefet_cmos018_reliability
+          test -f papers/2025_fefet_cmos018_reliability/main.tex
 
-      # 2) ビルド
-      - name: Build LaTeX (lualatex)
+      # latexmk が必要回数の再コンパイルを自動実行（クロスリファレンスの ?? を解消）
+      - name: Build LaTeX with latexmk (lualatex)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: ${{ steps.loc.outputs.root }}
-          working_directory: ${{ steps.loc.outputs.workdir }}
-          work_in_root_file_dir: true
+          root_file: main.tex
+          working_directory: papers/2025_fefet_cmos018_reliability
           latexmk_use_lualatex: true
-          args: -file-line-error -interaction=nonstopmode
+          # -pdf は latexmk に PDF を作らせる（複数回走る）
+          args: -pdf -file-line-error -interaction=nonstopmode
 
-      # 3) 生成物アップロード（PDF/LOG）
-      - name: Upload PDF and log
+      # 失敗時にも中身を確認できるようにログ・中間生成物を全部アップロード
+      - name: Upload PDF and logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: fefet_cmos018_reliability_artifacts
           path: |
-            ${{ steps.loc.outputs.workdir }}/*.pdf
-            ${{ steps.loc.outputs.workdir }}/*.log
+            papers/2025_fefet_cmos018_reliability/*.pdf
+            papers/2025_fefet_cmos018_reliability/*.log
+            papers/2025_fefet_cmos018_reliability/*.aux
+            papers/2025_fefet_cmos018_reliability/*.fls
+            papers/2025_fefet_cmos018_reliability/*.fdb_latexmk
+            papers/2025_fefet_cmos018_reliability/*.synctex.gz
           if-no-files-found: warn
