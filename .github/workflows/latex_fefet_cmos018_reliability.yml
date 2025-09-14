@@ -2,40 +2,62 @@ name: Build LaTeX PDF (FeFET CMOS018 Reliability)
 
 on:
   push:
+    branches: [ main ]
     paths:
       - 'papers/2025_fefet_cmos018_reliability/**'
       - '.github/workflows/latex_fefet_cmos018_reliability.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'papers/2025_fefet_cmos018_reliability/**'
+      - '.github/workflows/latex_fefet_cmos018_reliability.yml'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Debug file tree
+      - name: Verify sources
         run: |
-          echo "PWD=$(pwd)"
           ls -al
-          ls -al papers || true
           ls -al papers/2025_fefet_cmos018_reliability || true
-          echo "find results:"
-          find papers -maxdepth 3 -type f -iname "main*.tex" -print
+          test -f papers/2025_fefet_cmos018_reliability/main.tex
 
       - name: Build LaTeX (lualatex)
-        uses: xu-cheng/latex-action@v2
+        uses: xu-cheng/latex-action@v3
         with:
+          # ルートからの相対パスを直指定（working_directoryは使わない）
           root_file: papers/2025_fefet_cmos018_reliability/main.tex
           latexmk_use_lualatex: true
-          args: -file-line-error -interaction=nonstopmode
+          args: -interaction=nonstopmode -file-line-error
+          # 必要に応じて追加（例：画像変換/eps→pdf 等）
+          # extra_system_packages: ghostscript imagemagick
+          cache: true
 
-      - name: Upload PDF and log
+      - name: Print LaTeX errors (on failure)
+        if: failure()
+        run: |
+          echo "==== Error/Warning lines ===="
+          (grep -nE "^(!|LaTeX (Error|Warning))" papers/2025_fefet_cmos018_reliability/main.log || true)
+          echo "==== Last 200 lines of .log ===="
+          (tail -n 200 papers/2025_fefet_cmos018_reliability/main.log || true)
+
+      - name: Upload PDF and logs (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: fefet_cmos018_reliability_artifacts
           path: |
-            papers/2025_fefet_cmos018_reliability/main.pdf
-            papers/2025_fefet_cmos018_reliability/main.log
-          if-no-files-found: warn
+            papers/2025_fefet_cmos018_reliability/*.pdf
+            papers/2025_fefet_cmos018_reliability/*.log
+            papers/2025_fefet_cmos018_reliability/*.aux
+            papers/2025_fefet_cmos018_reliability/*.fls
+            papers/2025_fefet_cmos018_reliability/*.fdb_latexmk
+            papers/2025_fefet_cmos018_reliability/*.synctex.gz
+          if-no-files-found: error
