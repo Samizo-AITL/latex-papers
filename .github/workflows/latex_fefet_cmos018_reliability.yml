@@ -1,7 +1,7 @@
 name: Build LaTeX PDF (FeFET CMOS018 Reliability)
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
   push:
     paths:
       - 'papers/2025_fefet_cmos018_reliability/**'
@@ -10,51 +10,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
 
-      - name: Verify target folder
+      - name: Verify sources
         run: |
-          test -d papers/2025_fefet_cmos018_reliability
-          ls -al papers/2025_fefet_cmos018_reliability
+          ls -al papers/2025_fefet_cmos018_reliability || true
           test -f papers/2025_fefet_cmos018_reliability/main.tex
 
-      - name: Build LaTeX (lualatex, keep going)
-        uses: xu-cheng/latex-action@v3
+      - name: Build LaTeX (LuaLaTeX)
+        uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
           working_directory: papers/2025_fefet_cmos018_reliability
+          work_in_root_file_dir: true
           latexmk_use_lualatex: true
-          args: -pdf -file-line-error -interaction=nonstopmode
-          # ← ビルドに失敗しても次のステップへ進めてログを回収
-          continue_on_error: true
+          args: -file-line-error -interaction=nonstopmode
 
-      - name: Collect logs (always)
-        if: always()
-        run: |
-          set -x
-          d=papers/2025_fefet_cmos018_reliability
-          mkdir -p "$d/artifacts"
-          # main.log があれば複製（なければ空ファイルでも置く）
-          if [ -f "$d/main.log" ]; then
-            cp "$d/main.log" "$d/artifacts/build.log"
-          else
-            echo "LaTeX log not found (compile stopped before log creation)" > "$d/artifacts/build.log"
-          fi
-          # 主要生成物を artifacts に集約（存在するものだけ）
-          shopt -s nullglob
-          for f in "$d"/*.pdf "$d"/*.log "$d"/*.aux "$d"/*.fls "$d"/*.fdb_latexmk "$d"/*.synctex.gz; do
-            cp "$f" "$d/artifacts/" || true
-          done
-          ls -al "$d/artifacts" || true
-
-      - name: Upload PDF & logs (always)
+      - name: Upload PDF and log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fefet_cmos018_reliability_artifacts
-          path: papers/2025_fefet_cmos018_reliability/artifacts/**
+          name: fefet_cmos018_reliability_artifacts   # ← Reliability専用名
+          path: |
+            papers/2025_fefet_cmos018_reliability/main.pdf
+            papers/2025_fefet_cmos018_reliability/main.log
           if-no-files-found: warn
