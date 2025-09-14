@@ -13,13 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # デバッグ：リポジトリのファイルツリー確認
+      # 失敗しても続行するデバッグ（存在確認）
       - name: Debug file tree
         run: |
-          pwd
-          ls -la
-          ls -la papers
-          ls -la papers/2025_fefet_cmos018_reliability
+          pwd || true
+          ls -la || true
+          ls -la ./papers || true
+          ls -la ./papers/2025_fefet_cmos018_reliability || true
 
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v2
