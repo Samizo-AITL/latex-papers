@@ -3,39 +3,27 @@ name: Build LaTeX PDF (FeFET CMOS018 Reliability)
 on:
   push:
     paths:
-      - 'papers/**'
+      - 'papers/2025_fefet_cmos018_reliability/**'
       - '.github/workflows/latex_fefet_cmos018_reliability.yml'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      - name: Locate main.tex
-        id: locate
+      # 念のため存在確認（ログに出す）
+      - name: Verify files
         run: |
-          TEX=$(git ls-files -- 'papers/**/main.tex' | grep '2025_fefet_cmos018_reliability' || true)
-          if [ -z "$TEX" ]; then
-            TEX=$(find papers -maxdepth 4 -type f -name main.tex -print | grep '2025_fefet_cmos018_reliability' || true)
-          fi
-          if [ -z "$TEX" ]; then
-            echo "main.tex not found!"
-            exit 1
-          fi
-          echo "TEX=$TEX"           | tee -a $GITHUB_ENV
-          echo "TEX_DIR=$(dirname "$TEX")" | tee -a $GITHUB_ENV
-          echo "Found: $TEX"
+          ls -al papers/2025_fefet_cmos018_reliability
+          test -f papers/2025_fefet_cmos018_reliability/main.tex
 
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: ${{ env.TEX }}     # ← main.tex のフルパスを渡す
+          # ここを“ディレクトリ”ではなく“TeXファイルのパス”にする
+          root_file: papers/2025_fefet_cmos018_reliability/main.tex
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
@@ -45,6 +33,6 @@ jobs:
         with:
           name: fefet_cmos018_reliability_artifacts
           path: |
-            ${{ env.TEX_DIR }}/main.pdf
-            ${{ env.TEX_DIR }}/main.log
+            papers/2025_fefet_cmos018_reliability/main.pdf
+            papers/2025_fefet_cmos018_reliability/main.log
           if-no-files-found: warn
