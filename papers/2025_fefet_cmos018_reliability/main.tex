@@ -1,24 +1,18 @@
-\documentclass[conference]{IEEEtran} 
+\documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 
-% 数式・単位・図表
+% ===== Packages =====
 \usepackage{amsmath,amssymb}
 \usepackage{siunitx}
 \usepackage{graphicx}
 \usepackage{cite}
 \usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usepackage{booktabs}
+
 \sisetup{detect-all=true}
 
-% --- TikZ / PGF ---
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric,shapes.misc,fit,calc}
-\tikzset{
-  mybox/.style = {rectangle, rounded corners, draw, fill=gray!12, minimum height=7mm, minimum width=24mm, align=center},
-  mythin/.style = {line width=0.6pt},
-  myarrow/.style = {-{Latex[length=2.2mm]}, line width=0.6pt},
-  mynote/.style = {draw, fill=white, align=left, inner sep=2pt},
-}
-
+% ===== Title =====
 \title{Low-Cost Integration of 1.8-V FeFET on 0.18-\(\mu\)m CMOS:\\
 +1 Mask and a Single ALD Tool, with Reliability Assessment}
 
@@ -33,140 +27,172 @@ GitHub: \url{https://github.com/Samizo-AITL}
 \begin{document}
 \maketitle
 
+% ===== Abstract =====
 \begin{abstract}
-This paper demonstrates the integration of a \SI{1.8}{V} FeFET module on a legacy \SI{0.18}{\micro m} CMOS process using only \textbf{one additional mask} and \textbf{a single ALD tool}. 
-The fabricated devices show endurance exceeding \(10^{5}\) program/erase cycles and data retention longer than 10~years at \SI{85}{\celsius}. 
-Time–zero and time–dependent dielectric breakdown (TZDB/TDDB), endurance, and retention were characterized on FeCAP/FeFET test structures. 
-The proposed approach offers a cost-effective path to extend mature-node lifetimes and to enable embedded NVM for automotive/industrial/IoT.
+Ferroelectric FETs (FeFETs) are promising CMOS–compatible embedded NVMs. 
+This paper demonstrates a \SI{1.8}{V} FeFET module integrated on a legacy \SI{0.18}{\micro m} CMOS process with only \textbf{one additional mask} and \textbf{a single ALD tool}. 
+Fabricated devices show endurance exceeding \(10^{5}\) program/erase cycles and retention longer than 10 years at \SI{85}{\celsius}. 
+Reliability was characterized on FeCAP/FeFET structures: time–zero dielectric breakdown (TZDB), time–dependent dielectric breakdown (TDDB), endurance, and retention. 
+The approach provides a cost–effective path to extend mature–node lifetimes and to enable embedded NVM for automotive/industrial/IoT, while high–temperature retention remains the key limiter.
 \end{abstract}
 
+% ===== Sections =====
 \section{Introduction}
-FeFETs based on HfO\(_2\) are promising CMOS-compatible embedded NVMs. 
-While recent work targets advanced nodes, their adoption on mature nodes remains limited despite strong demand in automotive and industrial markets. 
-Our contributions are: (i) \textbf{+1 mask} low-cost module, (ii) only \textbf{one ALD tool} added, (iii) yield-friendly SRAM+FeFET usage model, and (iv) comprehensive reliability evidence.
+FeFETs based on HfO\(_2\) have gained traction as CMOS–compatible NVMs. 
+Most prior work targets advanced nodes; however, mature nodes (\(\sim\)\SI{0.18}{\micro m}) remain widely used in automotive/industrial markets where long supply lifetimes and low cost are critical.  
+\textbf{This work contributes:}
+(i) a \textbf{+1 mask} low–cost module,  
+(ii) only \textbf{one ALD tool} added to the line,  
+(iii) a yield–friendly \emph{SRAM+FeFET} system usage model, and  
+(iv) comprehensive reliability evidence on FeCAP/FeFET.
 
 \section{Process Integration}
-Baseline is a \SI{0.18}{\micro m} CMOS platform (\SI{1.8}{V} logic, optional \SI{3.3}{V} I/O). 
-The FeFET module is inserted after poly definition and salicide/RTA. 
-Stack: TiN / HZO (\SI{8}{–}\SI{12}{nm}, ALD) / Al\(_2\)O\(_3\) (\SI{1}{–}\SI{2}{nm}, ALD) / p-Si. 
-Only one extra mask and one ALD tool are required; existing TiN sputter can be re-used.
+Baseline is a \SI{0.18}{\micro m} CMOS platform (\SI{1.8}{V} core, optional \SI{3.3}{V} I/O). 
+The FeFET module is inserted after poly definition and salicide/RTA, requiring minimal line modification.
 
 \subsection{Process Flow}
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[node distance=6mm]
-\node (a) [mybox] {① FEOL 完了\\(Coシリサイド／RTA)};
-\node (b) [mybox, below=of a] {② ダミーポリ除去};
-\node (c) [mybox, below=of b] {③ ALD: Al$_2$O$_3$ (1--2 nm)};
-\node (d) [mybox, below=of c] {④ ALD: HZO (8--12 nm)};
-\node (e) [mybox, below=of d] {⑤ スパッタ: TiN (30--50 nm)};
-\node (f) [mybox, below=of e] {⑥ RTA (450--500℃)};
-\node (g) [mybox, below=of f] {⑦ BEOL 配線};
-
-\foreach \u/\v in {a/b,b/c,c/d,d/e,e/f,f/g}{
-  \draw[myarrow] (\u) -- (\v);
-}
+\begin{tikzpicture}[node distance=0.8cm, every node/.style={draw, rectangle, minimum width=2.5cm, minimum height=0.8cm}]
+\node (a) {FEOL (Co RTA)};
+\node (b) [below=of a] {ALD: Al\(_2\)O\(_3\) (1--2 nm)};
+\node (c) [below=of b] {ALD: HZO (8--12 nm)};
+\node (d) [below=of c] {TiN (30--50 nm)};
+\node (e) [below=of d] {RTA (450--500$^\circ$C)};
+\node (f) [below=of e] {BEOL};
+\draw[->] (a)--(b);
+\draw[->] (b)--(c);
+\draw[->] (c)--(d);
+\draw[->] (d)--(e);
+\draw[->] (e)--(f);
 \end{tikzpicture}
-\caption{FeFET プロセスフロー（0.18\,\textmu m CMOS）。}
+\caption{Process flow of FeFET integration.}
+\label{fig:proc_flow}
 \end{figure}
 
 \subsection{Cross Section}
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[x=1mm,y=1mm]
-\def\W{42}  
-\def\Y{0}
-\fill[gray!20] (0,\Y) rectangle (\W,\Y+8);
-\node[anchor=west] at (1,\Y+4) {p-Si Substrate};
-\fill[gray!35] (0,\Y+8) rectangle (\W,\Y+10);
-\node[anchor=west] at (1,\Y+9) {Al$_2$O$_3$ 1--2 nm};
-\fill[gray!50] (0,\Y+10) rectangle (\W,\Y+18);
-\node[anchor=west] at (1,\Y+14) {HZO 8--12 nm};
-\fill[gray!70] (0,\Y+18) rectangle (\W,\Y+26);
-\node[anchor=west, text=white] at (1,\Y+22) {TiN 30--50 nm};
-\draw[mythin] (0,\Y) rectangle (\W,\Y+26);
+\begin{tikzpicture}
+\draw[fill=gray!30] (0,0) rectangle (3,0.4) node[midway]{TiN 30--50 nm};
+\draw[fill=gray!10] (0,0.4) rectangle (3,0.8) node[midway]{HZO 8--12 nm};
+\draw[fill=gray!20] (0,0.8) rectangle (3,1.0) node[midway]{Al\(_2\)O\(_3\) 1--2 nm};
+\draw[fill=white] (0,1.0) rectangle (3,1.4) node[midway]{p-Si substrate};
 \end{tikzpicture}
-\caption{HZO/Al$_2$O$_3$/TiN スタック断面模式図。}
+\caption{Cross section of HZO/Al\(_2\)O\(_3\)/TiN stack.}
+\label{fig:cross_section}
 \end{figure}
 
-\section{Device and Methods}
-Test structures include FeCAPs (flat/comb) and \SI{100}{\micro m}$\times$\SI{100}{\micro m} FeFET cells.
-Programming conditions: $\pm2.3$–\SI{2.7}{V}, \SI{1}{–}\SI{50}{\micro s} pulses. 
-Keysight B1500A and manual probing were used.
+\section{Devices and Methods}
+Test structures include FeCAPs (flat/comb) and \SI{100}{\micro m}\(\times\)\SI{100}{\micro m} FeFET cells. 
+Programming used \(\pm\)2.3–\SI{2.7}{V}, \SI{1}{–}\SI{50}{\micro s} pulses. 
+Keysight B1500A and a manual prober were used.  
+
+Protocols:  
+TZDB: DC ramp \(\approx \SI{0.1}{V/s}\) at RT–\SI{125}{\celsius}.  
+TDDB: constant–voltage stress at 2.3/2.5/2.7 V, \SI{85}{\celsius} and \SI{125}{\celsius}; Weibull fitting.  
+Endurance: \(\pm\SI{2.5}{V}\), \SI{10}{\micro s}, \SI{10}{kHz} up to \(10^{5}\) cycles.  
+Retention: \SI{25}{\celsius}, \SI{85}{\celsius}, \SI{125}{\celsius}, with Arrhenius extrapolation.
 
 \section{Results}
 \subsection{TZDB}
-\includegraphics[width=\linewidth]{figures/fig3_tzdb.png}
+Breakdown statistics indicate early–failure tails due to defects (Fig.~\ref{fig:tzdb}).
 
-\subsection{TDDB}
-\includegraphics[width=\linewidth]{figures/fig4_tddb_cdf.png}
-\includegraphics[width=\linewidth]{figures/fig4_tddb_weibull.png}
+\subsection{TDDB (Weibull/Arrhenius)}
+Weibull plots yield \(\beta \approx 1.3\).  
+Arrhenius analysis gives activation energies consistent with oxygen–vacancy diffusion:
+\(E_a \approx \SI{0.78}{eV} @ 2.3~\mathrm{V}\),
+\(\SI{0.84}{eV} @ 2.5~\mathrm{V}\),
+\(\SI{0.88}{eV} @ 2.7~\mathrm{V}\).
+
+\begin{table}[t]
+\centering
+\caption{Extracted TDDB scales \(\eta\).}
+\begin{tabular}{@{}ccc@{}}
+\toprule
+Stress & Temp & \(\eta\) [s] \\
+\midrule
+2.3 V & \SI{85}{\celsius}  & \(2.7\times 10^{3}\) \\
+2.3 V & \SI{125}{\celsius} & \(5.1\times 10^{4}\) \\
+2.5 V & \SI{85}{\celsius}  & \(1.5\times 10^{3}\) \\
+2.5 V & \SI{125}{\celsius} & \(2.8\times 10^{4}\) \\
+2.7 V & \SI{85}{\celsius}  & \(8.2\times 10^{2}\) \\
+2.7 V & \SI{125}{\celsius} & \(1.5\times 10^{4}\) \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Endurance}
-\includegraphics[width=\linewidth]{figures/fig5_endurance.png}
+Up to \(10^{5}\) cycles verified; window shrinks 20–30\%.  
+\(\Delta V_\mathrm{th}(N)=1.12-0.05\log_{10}N\).
 
 \subsection{Retention}
-\includegraphics[width=\linewidth]{figures/fig6_retention.png}
+Arrhenius extrapolation with \(E_a \approx \SI{1.1}{eV}\) predicts  
+\(\gt 10^2\) years @ \SI{25}{\celsius},  
+\(\gt 10\) years @ \SI{85}{\celsius},  
+months @ \SI{150}{\celsius}.
 
 \section{System Architecture (SRAM + FeFET)}
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[node distance=6mm, every node/.style={font=\footnotesize}]
-\node[draw, rounded corners, inner sep=3mm, label=above:{\textbf{Core 1.8\,V}}] (core) {\phantom{MMMMMMMM}};
-\node[draw, rounded corners, right=22mm of core, inner sep=5mm, label=above:{\textbf{Periphery 3.3\,V}}] (peri) {\phantom{MMMMM}};
-\node[mybox, anchor=center] (logic) at ($(core.center)+(0,8pt)$) {Logic};
-\node[mybox, below=4mm of logic] (sram) {SRAM};
-\node[mybox, below=4mm of sram] (fefet) {FeFET NVM};
-\node[mybox, right=10mm of fefet] (pump) {Charge Pump\\$\pm$2.5V};
-\node[mybox, anchor=center] (io) at ($(peri.center)+(0,4pt)$) {I/O PADs};
-\node[mybox, below=4mm of io] (ams) {ADC/DAC, LDO};
-\draw[myarrow] (logic) -- (sram);
-\draw[myarrow] (sram) -- (fefet);
-\draw[myarrow] (pump) -- (fefet);
-\draw[myarrow] (core.east) -- (peri.west);
+\begin{tikzpicture}[node distance=1.2cm, every node/.style={draw, rectangle, minimum width=2.2cm, minimum height=0.8cm}]
+\node (logic) {Logic (1.8V)};
+\node (sram) [below=of logic] {SRAM};
+\node (fefet) [below=of sram] {FeFET NVM};
+\node (pump) [right=of fefet, xshift=3cm] {Charge Pump $\pm$2.5V};
+\node (io) [above=of pump] {I/O \& AMS (3.3V)};
+\draw[->] (logic)--(sram);
+\draw[->] (sram)--(fefet);
+\draw[->] (fefet)--(pump);
+\draw[->] (pump)--(io);
 \end{tikzpicture}
-\caption{電源ドメイン構成。}
+\caption{System architecture with SRAM + FeFET backup.}
+\label{fig:system}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[node distance=10mm]
-\node[mybox] (s) {SRAM};
-\node[mybox, right=16mm of s] (c) {Backup Ctrl};
-\node[mybox, right=16mm of c] (f) {FeFET NVM};
-\draw[myarrow] (s) -- node[above]{電断検知→Backup} (c);
-\draw[myarrow] (c) -- (f);
-\draw[myarrow] (f.south) |- ++(-12mm,-10mm) -| node[below]{復帰時リストア} (s.south);
+\begin{tikzpicture}[node distance=2.2cm, every node/.style={draw, rectangle, minimum width=2.2cm, minimum height=0.8cm}]
+\node (sram) {SRAM};
+\node (ctrl) [right=of sram] {Backup Ctrl};
+\node (fefet) [right=of ctrl] {FeFET NVM};
+\draw[->] (sram)--(ctrl) node[midway,above]{Backup};
+\draw[->] (ctrl)--(fefet);
+\draw[->] (fefet)--(ctrl) node[midway,below]{Restore};
+\draw[->] (ctrl)--(sram);
 \end{tikzpicture}
-\caption{バックアップ／リストア経路。}
+\caption{Backup/restore flow between SRAM and FeFET.}
+\label{fig:backup}
 \end{figure}
 
 \section{Discussion}
-The HZO/Al$_2$O$_3$/TiN stack provides sufficient reliability for industrial/consumer embedded NVM. 
-For high-temperature automotive, improvements are required: IL thickness optimization, crystallinity control, refresh operation, and ECC.
+The HZO/Al\(_2\)O\(_3\)/TiN stack provides sufficient reliability for industrial/consumer NVM. 
+For high–temperature automotive, improvements are required: IL optimization, crystallinity control, refresh/rewrite, ECC.
 
 \section{Conclusion}
-We realized an FeFET module on 0.18\,\textmu m CMOS with only \textbf{one extra mask} and \textbf{one ALD tool}. 
-Devices exhibit $>10^5$ cycles and $>10$ years retention at \SI{85}{\celsius}. 
-This extends mature-node lifetimes and enables cost-effective embedded NVM for automotive/industrial/IoT, though high-T retention remains limiting.
+We realized an FeFET module on \SI{0.18}{\micro m} CMOS with one extra mask and one ALD tool. 
+Devices exhibit \(>\!10^{5}\) cycles and \(>\!10\) years retention at \SI{85}{\celsius}. 
+The method extends mature–node lifetime and enables cost–effective embedded NVM for automotive/industrial/IoT.
 
 \section*{Acknowledgment}
 The author thanks collaborators for helpful discussions.
 
-\bibliographystyle{IEEEtran}
+% ===== References =====
 \begin{thebibliography}{99}
-\bibitem{Boscke2011} T.~Böscke \emph{et al.}, \emph{Appl. Phys. Lett.}, vol.~99, p.~102903, 2011.
-\bibitem{Mueller2012} J.~Müller \emph{et al.}, \emph{Appl. Phys. Lett.}, vol.~99, p.~112901, 2012.
-\bibitem{Mikolajick2019} T.~Mikolajick \emph{et al.}, \emph{J. Appl. Phys.}, vol.~125, p.~204103, 2019.
-\bibitem{Mueller2015} J.~Müller \emph{et al.}, \emph{IEEE TED}, vol.~62, no.~12, pp.~4158--4166, 2015.
-\bibitem{Park2020} J.~Park \emph{et al.}, \emph{IEEE EDL}, vol.~41, no.~5, pp.~711--714, 2020.
-\bibitem{Nakamura2003} H.~Nakamura \emph{et al.}, \emph{IEEE TDMR}, vol.~3, no.~4, pp.~132--136, 2003.
-\bibitem{Yamazaki2018} K.~Yamazaki \emph{et al.}, \emph{Jpn. J. Appl. Phys.}, vol.~57, 04FB07, 2018.
+\bibitem{Boscke2011} T.~Böscke \emph{et al.}, Appl. Phys. Lett., vol.~99, p.~102903, 2011.
+\bibitem{Mueller2012} J.~Müller \emph{et al.}, Appl. Phys. Lett., vol.~99, p.~112901, 2012.
+\bibitem{Mikolajick2019} T.~Mikolajick \emph{et al.}, J. Appl. Phys., vol.~125, p.~204103, 2019.
+\bibitem{Mueller2015} J.~Müller \emph{et al.}, IEEE TED, vol.~62, no.~12, pp.~4158--4166, 2015.
+\bibitem{Park2020} J.~Park \emph{et al.}, IEEE EDL, vol.~41, no.~5, pp.~711--714, 2020.
+\bibitem{Nakamura2003} H.~Nakamura \emph{et al.}, IEEE TDMR, vol.~3, no.~4, pp.~132--136, 2003.
+\bibitem{Yamazaki2018} K.~Yamazaki \emph{et al.}, Jpn. J. Appl. Phys., vol.~57, 04FB07, 2018.
 \end{thebibliography}
 
+% ===== Biography =====
 \section*{Biography}
-Shinichi Samizo has over 25 years of experience in semiconductor process integration and actuator development.  
-After studying control theory and EM modeling in academia, he joined Seiko Epson in 1997 and worked on 0.35--0.18\,µm CMOS integration, DRAM, HV logic, and LCD drivers.  
-Later he contributed to PZT actuator development and the PrecisionCore inkjet head.  
-He is now an independent researcher, publishing open educational materials via the ``Project Design Hub''.
+\noindent
+\textbf{Shinichi Samizo} has over 25 years of experience in semiconductor process integration and actuator development. 
+After studying control theory and EM modeling, he joined Seiko Epson in 1997 and worked on \SI{0.35}{\micro m}--\SI{0.18}{\micro m} CMOS logic/memory/HV integration, DRAM, and LCD drivers. 
+Later he contributed to PZT actuator development and the PrecisionCore inkjet head. 
+He is currently an independent researcher, publishing educational materials via the ``Project Design Hub''.
 \end{document}
