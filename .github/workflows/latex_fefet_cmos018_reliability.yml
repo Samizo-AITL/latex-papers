@@ -1,0 +1,33 @@
+name: Build LaTeX PDF (FeFET CMOS018 Reliability)
+
+on:
+  push:
+    paths:
+      - 'papers/2025_fefet_cmos018_reliability/**'
+      - '.github/workflows/latex_fefet_cmos018_reliability.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up LaTeX
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex
+          working_directory: papers/2025_fefet_cmos018_reliability
+          latexmk_use_lualatex: true
+
+      - name: Collect log file
+        run: |
+          # latexmk のログを main.log として残す
+          cp papers/2025_fefet_cmos018_reliability/main.log build.log || true
+
+      - name: Upload PDF and Log
+        uses: actions/upload-artifact@v3
+        with:
+          name: fefet_cmos018_reliability_artifacts
+          path: |
+            papers/2025_fefet_cmos018_reliability/main.pdf
+            build.log
