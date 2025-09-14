@@ -12,27 +12,53 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
 
-      # 念のため存在確認（ログに出す）
-      - name: Verify files
+      # まずは状況確認（どのコミットが来ているか／ツリーに papers があるか）
+      - name: Debug repo state
         run: |
-          ls -al papers/2025_fefet_cmos018_reliability
-          test -f papers/2025_fefet_cmos018_reliability/main.tex
+          echo "HEAD: $(git rev-parse --short HEAD)"
+          git log -1 --name-status
+          echo "PWD=$(pwd)"
+          ls -al
+          echo "---- top 2 levels ----"
+          find . -maxdepth 2 -type d -print
+          echo "---- find main.tex under papers ----"
+          find papers -type f -name 'main.tex' -print || true
 
+      # フォルダの存在を強制チェック（無ければ即わかる）
+      - name: Verify target folder
+        run: |
+          if [ ! -d "papers/2025_fefet_cmos018_reliability" ]; then
+            echo "::error ::'papers/2025_fefet_cmos018_reliability' not found after checkout."
+            exit 1
+          fi
+          if [ ! -f "papers/2025_fefet_cmos018_reliability/main.tex" ]; then
+            echo "::warning ::main.tex not found in target folder; will use glob fallback."
+          fi
+
+      # LaTeX ビルド（確実にヒットするようにグロブを許可）
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v3
         with:
-          # ここを“ディレクトリ”ではなく“TeXファイルのパス”にする
-          root_file: papers/2025_fefet_cmos018_reliability/main.tex
+          # ①まず目的の main.tex を直接指定
+          #   無ければ②のグロブで拾う（paths フィルタで無関係ビルドは起きにくい）
+          root_file: |
+            papers/2025_fefet_cmos018_reliability/main.tex
+            papers/**/main.tex
+          glob_root_file: true
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
+      # 成果物回収（失敗してもログは拾う）
       - name: Upload PDF and log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: fefet_cmos018_reliability_artifacts
           path: |
-            papers/2025_fefet_cmos018_reliability/main.pdf
-            papers/2025_fefet_cmos018_reliability/main.log
+            papers/2025_fefet_cmos018_reliability/*.pdf
+            papers/2025_fefet_cmos018_reliability/*.log
           if-no-files-found: warn
