@@ -12,16 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up LaTeX
+      # どのファイルが来ているか確認（デバッグ用）
+      - name: Debug file tree
+        run: ls -laR ./papers/2025_fefet_cmos018_reliability
+
+      - name: Set up LaTeX and build
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: main.tex
-          working_directory: ./papers/2025_fefet_cmos018_reliability  # ← ここだけ修正
+          # working_directory は使わない
+          root_file: papers/2025_fefet_cmos018_reliability/main.tex
           latexmk_use_lualatex: true
-
-      - name: Collect log file
-        run: |
-          cp papers/2025_fefet_cmos018_reliability/main.log build.log || true
 
       - name: Upload PDF and Log
         uses: actions/upload-artifact@v4
@@ -29,4 +29,4 @@ jobs:
           name: fefet_cmos018_reliability_artifacts
           path: |
             papers/2025_fefet_cmos018_reliability/main.pdf
-            build.log
+            papers/2025_fefet_cmos018_reliability/main.log
