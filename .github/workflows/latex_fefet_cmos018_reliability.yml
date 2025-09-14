@@ -3,7 +3,7 @@ name: Build LaTeX PDF (FeFET CMOS018 Reliability)
 on:
   push:
     paths:
-      - 'papers/2025_fefet_cmos018_reliability/**'
+      - 'papers/**'
       - '.github/workflows/latex_fefet_cmos018_reliability.yml'
 
 jobs:
@@ -16,16 +16,14 @@ jobs:
       - name: Debug file tree
         run: |
           echo "PWD=$(pwd)"
-          ls -la
-          ls -la papers || true
-          ls -la papers/2025_fefet_cmos018_reliability || true
+          ls -al
+          ls -R papers
 
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v2
         with:
           root_file: papers/2025_fefet_cmos018_reliability/main.tex
           latexmk_use_lualatex: true
-          latexmk_shell_escape: true
           args: -file-line-error -interaction=nonstopmode
 
       - name: Upload PDF and log
