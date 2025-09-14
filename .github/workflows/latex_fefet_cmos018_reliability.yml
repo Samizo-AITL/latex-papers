@@ -9,24 +9,36 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up LaTeX
+      # どこに何があるかを必ず出力（デバッグ用）
+      - name: Debug file tree
+        run: |
+          echo "PWD=$(pwd)"
+          ls -la
+          ls -la papers || true
+          ls -la papers/2025_fefet_cmos018_reliability || true
+
+      - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: main.tex
-          working_directory: papers/2025_fefet_cmos018_reliability
+          # ルートファイルを相対パスで指定（これが最も確実）
+          root_file: papers/2025_fefet_cmos018_reliability/main.tex
+          # ルートファイルのあるディレクトリでビルド
+          work_in_root_file_dir: true
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
+          # エラー時もlogが出るように
+          args: -file-line-error -interaction=nonstopmode
 
-      - name: Debug list
-        run: ls -laR papers/2025_fefet_cmos018_reliability
-
-      - name: Upload PDF and Log
+      - name: Upload PDF and log
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: fefet_cmos018_reliability_artifacts
           path: |
             papers/2025_fefet_cmos018_reliability/main.pdf
             papers/2025_fefet_cmos018_reliability/main.log
+          if-no-files-found: warn
