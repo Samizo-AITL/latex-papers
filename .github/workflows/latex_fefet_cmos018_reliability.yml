@@ -3,13 +3,12 @@ name: Build LaTeX PDF (FeFET CMOS018 Reliability)
 on:
   push:
     paths:
-      - 'papers/**'
+      - 'papers/2025_fefet_cmos018_reliability/**'
       - '.github/workflows/latex_fefet_cmos018_reliability.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -17,12 +16,14 @@ jobs:
         run: |
           echo "PWD=$(pwd)"
           ls -al
-          ls -R papers
+          ls -al papers
+          ls -al papers/2025_fefet_cmos018_reliability || true
 
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: papers/2025_fefet_cmos018_reliability/main.tex
+          root_file: main.tex
+          working_directory: papers/2025_fefet_cmos018_reliability
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
