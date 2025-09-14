@@ -1,36 +1,38 @@
 name: Build LaTeX PDF (FeFET CMOS018 Reliability)
 
 on:
-  workflow_dispatch: {}                # 手動実行
   push:
-    branches: [ main ]                 # main への push で実行
     paths:
       - 'papers/2025_fefet_cmos018_reliability/**'
       - '.github/workflows/latex_fefet_cmos018_reliability.yml'
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'papers/2025_fefet_cmos018_reliability/**'
-      - '.github/workflows/latex_fefet_cmos018_reliability.yml'
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      # ✅ チェックアウト先をリポジトリ直下に固定（edusemi/edusemi を防止）
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          path: .
 
-      # どのファイルでトリガしたか確認
-      - name: Show changed files
+      # デバッグ：今どこに何があるかを必ず表示
+      - name: Verify tree
         run: |
-          echo "Changed files:"
-          git diff --name-only HEAD~1 HEAD || true
-          echo "Tree:"
+          echo "GITHUB_WORKSPACE=${GITHUB_WORKSPACE}"
           ls -al
           ls -al papers || true
           ls -al papers/2025_fefet_cmos018_reliability || true
+          find papers -maxdepth 3 -type f -name 'main.tex' -print
 
+      # ✅ LuaLaTeX でビルド（作業ディレクトリは相対パスで指定）
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v3
         with:
@@ -40,7 +42,17 @@ jobs:
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
-      - name: Upload PDF and log (always)
+      # 失敗時でもログを残すためのフォールバック
+      - name: Fallback log (if missing)
+        if: failure()
+        run: |
+          d=papers/2025_fefet_cmos018_reliability
+          if [ ! -f "$d/main.log" ]; then
+            echo "main.log not found; creating console snapshot" > "$d/console.log"
+          fi
+
+      # ✅ 生成物を常にアップロード（PDF と LOG）
+      - name: Upload PDF and log
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -48,4 +60,6 @@ jobs:
           path: |
             papers/2025_fefet_cmos018_reliability/main.pdf
             papers/2025_fefet_cmos018_reliability/main.log
+            papers/2025_fefet_cmos018_reliability/console.log
           if-no-files-found: warn
+          retention-days: 14
