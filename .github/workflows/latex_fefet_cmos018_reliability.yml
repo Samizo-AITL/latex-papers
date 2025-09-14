@@ -12,39 +12,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: { fetch-depth: 0 }
 
-      - name: Verify target folder exists
+      - name: Verify target folder
         run: |
-          test -d papers/2025_fefet_cmos018_reliability || {
-            echo "papers/2025_fefet_cmos018_reliability not found"; exit 1; }
+          test -d papers/2025_fefet_cmos018_reliability
           ls -al papers/2025_fefet_cmos018_reliability
           test -f papers/2025_fefet_cmos018_reliability/main.tex
 
-      # latexmk が必要回数の再コンパイルを自動実行（クロスリファレンスの ?? を解消）
-      - name: Build LaTeX with latexmk (lualatex)
+      - name: Build LaTeX (lualatex, keep going)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: papers/2025_fefet_cmos018_reliability
           latexmk_use_lualatex: true
-          # -pdf は latexmk に PDF を作らせる（複数回走る）
           args: -pdf -file-line-error -interaction=nonstopmode
+          # ← ビルドに失敗しても次のステップへ進めてログを回収
+          continue_on_error: true
 
-      # 失敗時にも中身を確認できるようにログ・中間生成物を全部アップロード
-      - name: Upload PDF and logs
+      - name: Collect logs (always)
+        if: always()
+        run: |
+          set -x
+          d=papers/2025_fefet_cmos018_reliability
+          mkdir -p "$d/artifacts"
+          # main.log があれば複製（なければ空ファイルでも置く）
+          if [ -f "$d/main.log" ]; then
+            cp "$d/main.log" "$d/artifacts/build.log"
+          else
+            echo "LaTeX log not found (compile stopped before log creation)" > "$d/artifacts/build.log"
+          fi
+          # 主要生成物を artifacts に集約（存在するものだけ）
+          shopt -s nullglob
+          for f in "$d"/*.pdf "$d"/*.log "$d"/*.aux "$d"/*.fls "$d"/*.fdb_latexmk "$d"/*.synctex.gz; do
+            cp "$f" "$d/artifacts/" || true
+          done
+          ls -al "$d/artifacts" || true
+
+      - name: Upload PDF & logs (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: fefet_cmos018_reliability_artifacts
-          path: |
-            papers/2025_fefet_cmos018_reliability/*.pdf
-            papers/2025_fefet_cmos018_reliability/*.log
-            papers/2025_fefet_cmos018_reliability/*.aux
-            papers/2025_fefet_cmos018_reliability/*.fls
-            papers/2025_fefet_cmos018_reliability/*.fdb_latexmk
-            papers/2025_fefet_cmos018_reliability/*.synctex.gz
+          path: papers/2025_fefet_cmos018_reliability/artifacts/**
           if-no-files-found: warn
