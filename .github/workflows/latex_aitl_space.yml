@@ -1,23 +1,31 @@
 name: Build AITL Space Paper
 
 on:
-  workflow_dispatch:          # 手動実行ボタンを出す
-  push:                       # どのpushでも実行
-    branches:
-      - '**'
+  workflow_dispatch: {}
+  push:
+    paths:
+      - 'papers/2025_aitl_space/**'
+      - '.github/workflows/latex_aitl_space.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build_latex:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compile LaTeX document
+      - name: Compile LaTeX (LuaLaTeX)
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: papers/2025_aitl_space/main.tex
-          work_in_root_file_dir: true
+          root_file: main.tex
+          working_directory: papers/2025_aitl_space
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
           continue_on_error: false
@@ -26,23 +34,15 @@ jobs:
       - name: List outputs (debug)
         if: always()
         run: |
-          echo "PWD=$(pwd)"
-          ls -al
-          ls -al papers || true
           ls -al papers/2025_aitl_space || true
 
-      - name: Upload PDF
+      - name: Upload PDF & Log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: aitl_space_pdf
-          path: papers/2025_aitl_space/main.pdf
+          name: aitl_space_artifacts
+          path: |
+            papers/2025_aitl_space/main.pdf
+            papers/2025_aitl_space/main.log
           if-no-files-found: error
-
-      - name: Upload LaTeX log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: aitl_space_log
-          path: papers/2025_aitl_space/main.log
-          if-no-files-found: warn
+          retention-days: 14
