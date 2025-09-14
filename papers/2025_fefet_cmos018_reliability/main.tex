@@ -146,18 +146,24 @@ An optional 3.3 V peripheral domain is kept for I/O and AMS (ADC/DAC, LDO).
   \label{fig:system}
 \end{figure}
 
+% ==== Fig.5: Backup/restore flow（単カラム／はみ出し防止）====
 \begin{figure}[!t]
   \centering
-  \resizebox{\columnwidth}{!}{%
-    \begin{tikzpicture}[node distance=10mm, every node/.style={draw,rounded corners,minimum width=20mm,minimum height=6mm,align=center},>=stealth,transform shape]
-      \node (sram) {SRAM};
-      \node (ctrl) [right=of sram] {Backup Ctrl};
-      \node (fefet) [right=of ctrl] {FeFET NVM};
-      \draw[->] (sram) -- node[above]{Backup} (ctrl);
-      \draw[->] (ctrl) -- node[above]{Restore} (fefet);
-    \end{tikzpicture}}
+  % カラム幅以内に強制収容（はみ出し・重なり防止）
+  \resizebox{0.98\columnwidth}{!}{%
+  \begin{tikzpicture}[
+      node distance=8mm,
+      box/.style={draw,rounded corners,minimum width=18mm,minimum height=6mm}
+  ]
+    \node[box] (sram) {SRAM};
+    \node[box, right=12mm of sram] (ctrl) {Backup Ctrl};
+    \node[box, right=12mm of ctrl] (nvm)  {FeFET NVM};
+
+    \draw[-{Latex}] (sram) -- node[above,sloped]{Backup} (ctrl);
+    \draw[-{Latex}] (ctrl) -- node[above,sloped]{Restore} (nvm);
+  \end{tikzpicture}}
   \caption{Backup/restore flow between SRAM and FeFET.}
-  \label{fig:backup}
+  \label{fig:backup_flow}
 \end{figure}
 
 \section{Discussion}
