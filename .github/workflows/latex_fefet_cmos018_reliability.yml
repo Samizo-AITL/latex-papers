@@ -2,63 +2,63 @@ name: Build LaTeX PDF (FeFET CMOS018 Reliability)
 
 on:
   push:
-    paths:
-      - 'papers/2025_fefet_cmos018_reliability/**'
-      - '.github/workflows/latex_fefet_cmos018_reliability.yml'
+    branches: [ main ]          # まずは確実に発火させる
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: recursive
 
-      # まずは状況確認（どのコミットが来ているか／ツリーに papers があるか）
-      - name: Debug repo state
+      # 1) main.tex を自動発見（papers 以下の “*fefet*cmos018*reliability*/main.tex” を最優先）
+      - name: Locate main.tex
+        id: loc
+        shell: bash
         run: |
-          echo "HEAD: $(git rev-parse --short HEAD)"
-          git log -1 --name-status
-          echo "PWD=$(pwd)"
-          ls -al
-          echo "---- top 2 levels ----"
-          find . -maxdepth 2 -type d -print
-          echo "---- find main.tex under papers ----"
-          find papers -type f -name 'main.tex' -print || true
-
-      # フォルダの存在を強制チェック（無ければ即わかる）
-      - name: Verify target folder
-        run: |
-          if [ ! -d "papers/2025_fefet_cmos018_reliability" ]; then
-            echo "::error ::'papers/2025_fefet_cmos018_reliability' not found after checkout."
+          set -euo pipefail
+          echo "== search candidates =="
+          # 優先パターン
+          CAND=$(find papers -type f -iname "main.tex" \
+                 | grep -i "fefet" | grep -i "cmos018" | grep -i "reliability" | head -n 1 || true)
+          # 見つからなければ汎用
+          if [[ -z "${CAND}" ]]; then
+            CAND=$(find papers -type f -iname "main.tex" | head -n 1 || true)
+          fi
+          if [[ -z "${CAND}" ]]; then
+            echo "main.tex not found under papers/ . repo tree follows:" >&2
+            ls -R | sed -n '1,200p' >&2
             exit 1
           fi
-          if [ ! -f "papers/2025_fefet_cmos018_reliability/main.tex" ]; then
-            echo "::warning ::main.tex not found in target folder; will use glob fallback."
-          fi
+          echo "FOUND=${CAND}"
+          WORKDIR=$(dirname "${CAND}")
+          BASENAME=$(basename "${CAND}")
+          echo "workdir=${WORKDIR}" >> $GITHUB_OUTPUT
+          echo "root=${BASENAME}"    >> $GITHUB_OUTPUT
+          # デバッグ表示
+          echo "::notice title=Found::${WORKDIR}/${BASENAME}"
 
-      # LaTeX ビルド（確実にヒットするようにグロブを許可）
+      # 2) ビルド
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v3
         with:
-          # ①まず目的の main.tex を直接指定
-          #   無ければ②のグロブで拾う（paths フィルタで無関係ビルドは起きにくい）
-          root_file: |
-            papers/2025_fefet_cmos018_reliability/main.tex
-            papers/**/main.tex
-          glob_root_file: true
+          root_file: ${{ steps.loc.outputs.root }}
+          working_directory: ${{ steps.loc.outputs.workdir }}
+          work_in_root_file_dir: true
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
-      # 成果物回収（失敗してもログは拾う）
+      # 3) 生成物アップロード（PDF/LOG）
       - name: Upload PDF and log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: fefet_cmos018_reliability_artifacts
           path: |
-            papers/2025_fefet_cmos018_reliability/*.pdf
-            papers/2025_fefet_cmos018_reliability/*.log
+            ${{ steps.loc.outputs.workdir }}/*.pdf
+            ${{ steps.loc.outputs.workdir }}/*.log
           if-no-files-found: warn
