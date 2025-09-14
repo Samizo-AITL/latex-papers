@@ -10,13 +10,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4   # v4 に更新
+      - uses: actions/checkout@v4
 
       - name: Set up LaTeX
         uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
-          working_directory: papers/2025_fefet_cmos018_reliability
+          working_directory: ./papers/2025_fefet_cmos018_reliability  # ← ここだけ修正
           latexmk_use_lualatex: true
 
       - name: Collect log file
@@ -24,7 +24,7 @@ jobs:
           cp papers/2025_fefet_cmos018_reliability/main.log build.log || true
 
       - name: Upload PDF and Log
-        uses: actions/upload-artifact@v4   # v4 に更新
+        uses: actions/upload-artifact@v4
         with:
           name: fefet_cmos018_reliability_artifacts
           path: |
