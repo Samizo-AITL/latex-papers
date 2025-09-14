@@ -13,14 +13,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # どのファイルがあるか念のため確認
+      # デバッグ：リポジトリのファイルツリー確認
       - name: Debug file tree
-        run: ls -laR papers/2025_fefet_cmos018_reliability
+        run: |
+          pwd
+          ls -la
+          ls -la papers
+          ls -la papers/2025_fefet_cmos018_reliability
 
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: papers/2025_fefet_cmos018_reliability/main.tex
+          root_file: main.tex
+          working_directory: ./papers/2025_fefet_cmos018_reliability
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
