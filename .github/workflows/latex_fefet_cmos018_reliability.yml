@@ -1,3 +1,4 @@
+# .github/workflows/latex_fefet_cmos018_reliability.yml
 name: Build LaTeX PDF (FeFET CMOS018 Reliability)
 
 on:
@@ -11,26 +12,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Debug file tree
-        run: |
-          echo "PWD=$(pwd)"
-          ls -R papers/2025_fefet_cmos018_reliability || true
-
-      - name: Build LaTeX (lualatex)
+      # ここがポイント：論文フォルダを working_directory に指定
+      - name: Build (lualatex)
         uses: xu-cheng/latex-action@v2
         with:
-          # ディレクトリだけ指定して、ファイルは main.tex に統一
-          root_file: main.tex
           working_directory: papers/2025_fefet_cmos018_reliability
+          root_file: main.tex
           latexmk_use_lualatex: true
-          args: -file-line-error -interaction=nonstopmode
+          args: -file-line-error -interaction=nonstopmode -synctex=1
 
-      - name: Upload PDF and Log
+      - name: Debug list (optional)
+        if: always()
+        run: |
+          ls -al
+          ls -al papers/2025_fefet_cmos018_reliability || true
+
+      - name: Upload PDF and log
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: fefet_cmos018_reliability_artifacts
           path: |
             papers/2025_fefet_cmos018_reliability/main.pdf
             papers/2025_fefet_cmos018_reliability/main.log
+          if-no-files-found: warn
