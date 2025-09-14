@@ -12,6 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # どこに何があるかを先に確認（デバッグ用）
       - name: Debug file tree
         run: |
           echo "PWD=$(pwd)"
@@ -19,21 +20,26 @@ jobs:
           ls -al papers || true
           ls -al papers/2025_fefet_cmos018_reliability || true
 
-      - name: Set up LaTeX
+      - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: main.tex
-          working_directory: papers/2025_fefet_cmos018_reliability
+          # フルパスで指定（複数可なら改行区切り）
+          root_file: papers/2025_fefet_cmos018_reliability/main.tex
           latexmk_use_lualatex: true
+          # エラー時に詳細が残るように
+          args: -file-line-error -interaction=nonstopmode -synctex=1
 
       - name: Collect log file
+        if: always()
         run: |
           cp papers/2025_fefet_cmos018_reliability/main.log build.log || true
 
       - name: Upload PDF and Log
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: fefet_cmos018_reliability_artifacts
           path: |
             papers/2025_fefet_cmos018_reliability/main.pdf
             build.log
+          if-no-files-found: error
