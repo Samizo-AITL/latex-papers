@@ -16,43 +16,54 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ✅ チェックアウト先をリポジトリ直下に固定（edusemi/edusemi を防止）
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          path: .
 
-      # デバッグ：今どこに何があるかを必ず表示
-      - name: Verify tree
+      # ここで main.tex が本当に取れているか強制チェック（無ければ即失敗）
+      - name: Verify target folder & files
         run: |
+          set -euo pipefail
           echo "GITHUB_WORKSPACE=${GITHUB_WORKSPACE}"
           ls -al
           ls -al papers || true
           ls -al papers/2025_fefet_cmos018_reliability || true
-          find papers -maxdepth 3 -type f -name 'main.tex' -print
 
-      # ✅ LuaLaTeX でビルド（作業ディレクトリは相対パスで指定）
+          # Git に追跡されているかも確認（0行なら未コミット/別ブランチ）
+          echo "== git ls-files check =="
+          git ls-files papers/2025_fefet_cmos018_reliability/main.tex || true
+
+          echo "== fatal check =="
+          test -d papers/2025_fefet_cmos018_reliability || { echo "ERROR: target dir missing"; exit 1; }
+          test -f papers/2025_fefet_cmos018_reliability/main.tex || { echo "ERROR: main.tex missing"; exit 1; }
+
+      # working_directory ではなく root_file にフルパスを与え、cwdの曖昧さを排除
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: main.tex
-          working_directory: papers/2025_fefet_cmos018_reliability
+          root_file: papers/2025_fefet_cmos018_reliability/main.tex
           work_in_root_file_dir: true
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
-      # 失敗時でもログを残すためのフォールバック
-      - name: Fallback log (if missing)
-        if: failure()
+      # 失敗時でも何かしらログを残す（フォルダが無くても mkdir してから書く）
+      - name: Fallback console log (always)
+        if: always()
         run: |
+          set -e
           d=papers/2025_fefet_cmos018_reliability
+          mkdir -p "$d"
           if [ ! -f "$d/main.log" ]; then
-            echo "main.log not found; creating console snapshot" > "$d/console.log"
+            echo "==== No main.log found. Capturing some context ====" > "$d/console.log"
+            echo "date: $(date)" >> "$d/console.log"
+            echo "ls -al $d :" >> "$d/console.log"
+            ls -al "$d" >> "$d/console.log" 2>&1 || true
+            echo "git rev-parse HEAD:" >> "$d/console.log"
+            git rev-parse HEAD >> "$d/console.log" 2>&1 || true
           fi
 
-      # ✅ 生成物を常にアップロード（PDF と LOG）
-      - name: Upload PDF and log
+      - name: Upload PDF and logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
