@@ -17,38 +17,50 @@ jobs:
         with:
           fetch-depth: 0
 
-      # ここで main.tex の存在を強制チェック
       - name: Verify target files
+        id: verify
+        shell: bash
         run: |
+          set -e
+          DIR="papers/2025_fefet_cmos018_reliability"
           echo "HEAD: $(git rev-parse HEAD)"
-          echo "== git ls-files (target dir) =="
-          git ls-files 'papers/2025_fefet_cmos018_reliability/*' || true
-          echo "== list target dir =="
-          ls -al papers/2025_fefet_cmos018_reliability || true
-          test -f papers/2025_fefet_cmos018_reliability/main.tex || \
-            (echo "::error::main.tex not found in papers/2025_fefet_cmos018_reliability"; exit 1)
+          echo "== git ls-files in $DIR =="
+          git ls-files "$DIR/*" || true
+          echo "== ls -al $DIR =="
+          ls -al "$DIR" || true
+          if [[ -f "$DIR/main.tex" ]]; then
+            echo "found_main=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found_main=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Build LaTeX (LuaLaTeX)
+        if: steps.verify.outputs.found_main == 'true'
         uses: xu-cheng/latex-action@v3
         with:
-          # パスをフルで渡す（working_directory を使わない）
           root_file: papers/2025_fefet_cmos018_reliability/main.tex
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
-      # もし main.log が出来ていなければ、状況を console.log に落とす
-      - name: Fallback log (if missing)
+      - name: Fallback log (always)
         if: always()
+        shell: bash
         run: |
-          d=papers/2025_fefet_cmos018_reliability
-          if [ ! -f "$d/main.log" ]; then
-            {
-              echo "==== No main.log found. Capturing some context ===="
-              echo "date: $(date -u)"
-              echo "HEAD: $(git rev-parse HEAD)"
-              echo "== ls -al $d =="
-              ls -al "$d" || true
-            } > "$d/console.log"
+          DIR="papers/2025_fefet_cmos018_reliability"
+          OUT="reliability_run_info.txt"
+          {
+            echo "==== Reliability build context ===="
+            echo "UTC: $(date -u)"
+            echo "HEAD: $(git rev-parse HEAD)"
+            echo "found_main: ${FOUND:-${{ steps.verify.outputs.found_main }}}"
+            echo "--- repo root (top 2 levels) ---"
+            find . -maxdepth 2 -type d -printf "%p/\n" | sort
+            echo "--- ls -al $DIR ---"
+            ls -al "$DIR" || echo "(directory missing)"
+          } > "$OUT"
+          # もしディレクトリが存在すれば console.log も出す（存在しなくても失敗しない）
+          if [[ -d "$DIR" ]]; then
+            cp "$OUT" "$DIR/console.log" || true
           fi
 
       - name: Upload PDF & logs
@@ -60,4 +72,5 @@ jobs:
             papers/2025_fefet_cmos018_reliability/main.pdf
             papers/2025_fefet_cmos018_reliability/main.log
             papers/2025_fefet_cmos018_reliability/console.log
+            reliability_run_info.txt
           if-no-files-found: warn
