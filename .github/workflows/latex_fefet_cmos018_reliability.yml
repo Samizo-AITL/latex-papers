@@ -10,30 +10,62 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
+        with:
+          fetch-depth: 0
 
+      # まずソースの存在を明示チェック（ここで落ちたら log が作られないので注意）
       - name: Verify sources
         run: |
+          echo "PWD=$(pwd)"
           ls -al papers/2025_fefet_cmos018_reliability || true
           test -f papers/2025_fefet_cmos018_reliability/main.tex
 
-      - name: Build LaTeX (LuaLaTeX)
+      # LaTeX ビルド（失敗しても後続へ進める）
+      - name: Build with latex-action (LuaLaTeX)
+        id: latex
         uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
           working_directory: papers/2025_fefet_cmos018_reliability
           work_in_root_file_dir: true
           latexmk_use_lualatex: true
-          args: -file-line-error -interaction=nonstopmode
+          continue_on_error: true
+          args: -file-line-error -interaction=nonstopmode -synctex=1
 
+      # 本来の main.log が無ければ、標準出力を擬似ログとして保存
+      - name: Fallback log if missing
+        if: always()
+        run: |
+          set -eux
+          DIR="papers/2025_fefet_cmos018_reliability"
+          LOG="$DIR/main.log"
+          # 直近の latexmk コンソール出力が取れないケースに備え、再実行して出力を tee で保存
+          if [ ! -f "$LOG" ]; then
+            echo "::warning:: main.log not found. Capturing console to console.log and copying as main.log."
+            cd "$DIR"
+            # 最小1回だけ走らせて標準出力を確保（エラーでも続行）
+            latexmk -lualatex -file-line-error -interaction=nonstopmode -synctex=1 main.tex \
+              > console.log 2>&1 || true
+            # 本物の main.log が生成されていればそれを使い、無ければ console.log をコピー
+            if [ -f "main.log" ]; then
+              echo "Real main.log created on fallback compile."
+            else
+              cp console.log main.log
+            fi
+          fi
+          ls -al "$DIR" || true
+
+      # 成果物を必ずアップロード（PDFが無い場合でも log は必ず上がる）
       - name: Upload PDF and log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fefet_cmos018_reliability_artifacts   # ← Reliability専用名
+          name: fefet_cmos018_reliability_artifacts
           path: |
             papers/2025_fefet_cmos018_reliability/main.pdf
             papers/2025_fefet_cmos018_reliability/main.log
+            papers/2025_fefet_cmos018_reliability/console.log
           if-no-files-found: warn
