@@ -1,4 +1,4 @@
-name: Build LaTeX PDF (FeFET CMOS018 Reliability)
+name: Build LaTeX PDF (FeFET CMOS018 Reliability) 
 
 on:
   push:
