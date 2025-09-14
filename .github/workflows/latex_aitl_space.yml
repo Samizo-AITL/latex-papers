@@ -1,11 +1,13 @@
 name: Build AITL Space Paper
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch: {}        # 手動実行可
   push:
+    branches: [ main ]         # 必要に応じ調整
     paths:
       - 'papers/2025_aitl_space/**'
-      - '.github/workflows/latex_aitl_space.yml'
+    paths-ignore:
+      - 'papers/2025_fefet_cmos018_reliability/**'   # ← Reliability変更では走らない
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,12 +16,10 @@ concurrency:
 jobs:
   build_latex:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+    permissions: { contents: read }
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Compile LaTeX (LuaLaTeX)
         uses: xu-cheng/latex-action@v2
@@ -33,16 +33,15 @@ jobs:
 
       - name: List outputs (debug)
         if: always()
-        run: |
-          ls -al papers/2025_aitl_space || true
+        run: ls -al papers/2025_aitl_space || true
 
       - name: Upload PDF & Log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: aitl_space_artifacts
+          name: aitl_space_artifacts     # ← AITL専用名
           path: |
             papers/2025_aitl_space/main.pdf
             papers/2025_aitl_space/main.log
-          if-no-files-found: error
+          if-no-files-found: warn        # 失敗時もワークフロー全体は完走
           retention-days: 14
