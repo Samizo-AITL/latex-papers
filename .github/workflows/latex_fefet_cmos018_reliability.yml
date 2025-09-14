@@ -10,24 +10,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (no sparse)
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Debug file tree
         run: |
           echo "PWD=$(pwd)"
-          ls -al
-          ls -al papers || true
-          ls -al papers/2025_fefet_cmos018_reliability || true
-          find . -maxdepth 3 -name "main.tex" -print
+          ls -R papers/2025_fefet_cmos018_reliability
 
       - name: Build LaTeX (lualatex)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: main.tex
-          working_directory: papers/2025_fefet_cmos018_reliability
+          root_file: papers/2025_fefet_cmos018_reliability/main.tex
           latexmk_use_lualatex: true
           args: -file-line-error -interaction=nonstopmode
 
