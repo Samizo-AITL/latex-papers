@@ -6,17 +6,20 @@
 \usepackage{graphicx}
 \usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta} % ← 矢印エラー対策で追加
+\usetikzlibrary{positioning,arrows.meta}
 \usepackage{booktabs}
 \usepackage{cite}
-
-% TikZ 矢印 tip 既定（Latex 矢印を安定使用）
-\tikzset{>={Latex[length=2mm,width=2mm]}}
+\usepackage{newtxtext,newtxmath} % Times系フォント
 
 % 図まわりの間隔を調整（崩れ防止）
-\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
 \setlength{\floatsep}{8pt plus 2pt minus 2pt}
 \setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{3pt}
+
+% 孤立行の防止
+\clubpenalty=10000
+\widowpenalty=10000
 
 % 見出し直前の余白を少し空けるコマンド
 \newcommand{\tightsecspace}{\vspace{0.3\baselineskip}}
@@ -55,8 +58,7 @@ The FeFET module is inserted after poly definition and salicide/RTA, requiring m
 \subsection{Process Flow}
 \begin{figure}[!t]
   \centering
-  \begin{tikzpicture}[node distance=6mm,
-      every node/.style={draw,rectangle,minimum width=25mm,minimum height=6mm},>=stealth]
+  \begin{tikzpicture}[node distance=6mm, every node/.style={draw,rectangle,minimum width=25mm,minimum height=6mm},>=Stealth]
     \node (a) {FEOL (Co RTA)};
     \node (b) [below=of a] {ALD: Al$_2$O$_3$ (1--2 nm)};
     \node (c) [below=of b] {ALD: HZO (8--12 nm)};
@@ -134,10 +136,8 @@ An optional 3.3 V peripheral domain is kept for I/O and AMS (ADC/DAC, LDO).
 
 \begin{figure}[!t]
   \centering
-  \resizebox{\columnwidth}{!}{%
-    \begin{tikzpicture}[node distance=8mm,
-      every node/.style={draw,rounded corners,minimum width=20mm,minimum height=6mm,align=center},
-      transform shape]
+  \resizebox{0.95\columnwidth}{!}{%
+    \begin{tikzpicture}[node distance=8mm, every node/.style={draw,rounded corners,minimum width=20mm,minimum height=6mm,align=center},>=Stealth,transform shape]
       \node (logic) {Logic (1.8V)};
       \node (sram) [below=of logic] {SRAM};
       \node (fefet) [below=of sram] {FeFET NVM};
@@ -152,10 +152,10 @@ An optional 3.3 V peripheral domain is kept for I/O and AMS (ADC/DAC, LDO).
   \label{fig:system}
 \end{figure}
 
-% ==== Fig.5: Backup/restore flow（単カラム／はみ出し防止）====
+% ==== Fig.5: Backup/restore flow ====
 \begin{figure}[!t]
   \centering
-  \resizebox{0.98\columnwidth}{!}{%
+  \resizebox{0.95\columnwidth}{!}{%
   \begin{tikzpicture}[
       node distance=8mm,
       box/.style={draw,rounded corners,minimum width=18mm,minimum height=6mm}
@@ -164,8 +164,8 @@ An optional 3.3 V peripheral domain is kept for I/O and AMS (ADC/DAC, LDO).
     \node[box, right=12mm of sram] (ctrl) {Backup Ctrl};
     \node[box, right=12mm of ctrl] (nvm)  {FeFET NVM};
 
-    \draw[->] (sram) -- node[above,yshift=0.8mm]{Backup} (ctrl);
-    \draw[->] (ctrl) -- node[above,yshift=0.8mm]{Restore} (nvm);
+    \draw[-{Stealth}] (sram) -- node[above,sloped]{Backup} (ctrl);
+    \draw[-{Stealth}] (ctrl) -- node[above,sloped]{Restore} (nvm);
   \end{tikzpicture}}
   \caption{Backup/restore flow between SRAM and FeFET.}
   \label{fig:backup_flow}
@@ -182,6 +182,9 @@ The method extends mature-node lifetime and enables cost-effective embedded NVM 
 
 \section*{Acknowledgment}
 The author thanks collaborators for helpful discussions.
+
+% --- 段落揃え用 ---
+\IEEEtriggeratref{5}
 
 \begin{thebibliography}{1}
 \bibitem{boscke2011} T. Böscke et al., Appl. Phys. Lett., vol. 99, p. 102903, 2011.
