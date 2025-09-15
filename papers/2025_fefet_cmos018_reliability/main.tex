@@ -12,6 +12,18 @@
 \usepackage{newtxtext,newtxmath}                     % Times系フォント
 \usepackage[hidelinks]{hyperref}                     % \texorpdfstring等
 
+% ========= 記号・単位マクロ =========
+\newcommand{\Vth}{V_{\mathrm{th}}}
+\newcommand{\Ea}{E_{\mathrm{a}}}
+\newcommand{\betaW}{\beta} % Weibull slope
+\newcommand{\etaW}{\eta}   % Weibull scale
+\newcommand{\degreeC}{^\circ\mathrm{C}}
+\sisetup{
+  detect-all,
+  per-mode=symbol,
+  separate-uncertainty = true
+}
+
 % ========= 体裁・間隔 =========
 \setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
 \setlength{\floatsep}{8pt plus 2pt minus 2pt}
@@ -103,6 +115,22 @@ TDDB: constant-voltage stress at $\pm$2.3/2.5/2.7~V, 85$^\circ$C and 125$^\circ$
 Endurance: $\pm$2.5~V, 10~$\mu$s, 10~kHz up to $10^5$ cycles.
 Retention: 25$^\circ$C, 85$^\circ$C, 125$^\circ$C with Arrhenius extrapolation.
 
+\begin{table}[!t]
+  \centering
+  \caption{Reliability test matrix (devices: FeCAP/FeFET).}
+  \label{tab:test-matrix}
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \textbf{Item} & \textbf{Conditions} \\
+    \midrule
+    TZDB     & DC ramp $\approx 0.1$ V/s,\ RT--\SI{125}{\celsius} \\
+    TDDB     & $\pm$2.3/2.5/2.7 V,\ \SI{85}{\celsius} \& \SI{125}{\celsius}; Weibull fit \\
+    Endurance& $\pm$2.5 V,\ \SI{10}{\micro\second},\ \SI{10}{\kilo\hertz}, up to $10^5$ cycles \\
+    Retention& \SI{25}{\celsius}, \SI{85}{\celsius}, \SI{125}{\celsius}; Arrhenius extrap. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 % ========= Results (Reliability) =========
 \section{Results: Reliability}
 To keep readability high and figure sizes uniform, the reliability results are split across multiple figures (all with identical width).
@@ -148,9 +176,22 @@ To keep readability high and figure sizes uniform, the reliability results are s
 \end{figure}
 
 \subsection{Model Fits}
-Weibull slope $\beta \approx 1.3$; Arrhenius activation energies $E_a \approx 0.78$~eV (2.3~V), 0.84~eV (2.5~V), 0.88~eV (2.7~V).
-A compact endurance fit is $\Delta V_{\mathrm{th}}(N) = 1.12 - 0.05 \log_{10} N$.
-Retention extrapolation with $E_a \approx 1.1$~eV supports long retention at $\le 85^\circ$C.
+Time-to-failure under constant-voltage stress follows a Weibull law
+\begin{equation}
+  F(t)=1-\exp\!\left[-\left(\frac{t}{\etaW}\right)^{\betaW}\right],
+\end{equation}
+with slope $\betaW \approx 1.3$ and scale $\etaW$ extracted from Fig.~\ref{fig:tddb_weibull}.
+Temperature acceleration is described by an Arrhenius relation
+\begin{equation}
+  \ln\!\left(\frac{t_2}{t_1}\right)=\Ea\!\left(\frac{1}{k}\right)\!\left(\frac{1}{T_2}-\frac{1}{T_1}\right),
+\end{equation}
+yielding activation energies $\Ea \approx 0.78$~eV (2.3~V), $0.84$~eV (2.5~V), $0.88$~eV (2.7~V).
+A compact endurance fit capturing memory-window shrink is
+\begin{equation}
+  \Delta \Vth(N) \approx 1.12 - 0.05\log_{10} N,
+\end{equation}
+which matches Fig.~\ref{fig:endurance}.
+Using $\Ea \approx 1.1$~eV for retention extrapolation supports long retention at $\le \SI{85}{\celsius}$ (Fig.~\ref{fig:retention}).
 
 % ========= System Architecture =========
 \section{System Architecture (SRAM + FeFET)}
