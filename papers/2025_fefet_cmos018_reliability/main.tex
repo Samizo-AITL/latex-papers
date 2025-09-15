@@ -1,45 +1,38 @@
 \documentclass[conference]{IEEEtran}
 
-% ========= パッケージ =========
+% ========= パッケージ（順序重要：cite系→他→hyperref最後） =========
 \usepackage{cite}
 \usepackage{amsmath,amssymb}
 \usepackage{siunitx}
 \usepackage{graphicx}
-\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage[caption=false,font=footnotesize]{subfig} % IEEEtran互換
 \usepackage{booktabs}
 \usepackage{tikz}
 \usetikzlibrary{positioning,arrows.meta}
-\usepackage{newtxtext,newtxmath}
-\usepackage[hidelinks]{hyperref}
+\usepackage{newtxtext,newtxmath}                     % Times系フォント
+\usepackage[hidelinks]{hyperref}                     % \texorpdfstring等
 
 % ========= 記号・単位マクロ =========
 \newcommand{\Vth}{V_{\mathrm{th}}}
 \newcommand{\Ea}{E_{\mathrm{a}}}
 \newcommand{\betaW}{\beta} % Weibull slope
 \newcommand{\etaW}{\eta}   % Weibull scale
-\newcommand{\kB}{k_{\mathrm{B}}} % Boltzmann定数
-\sisetup{detect-all, per-mode=symbol, separate-uncertainty=true}
+\sisetup{detect-all, per-mode=symbol, separate-uncertainty = true}
 
-% ========= 体裁・間隔（少しだけ追加で詰める） =========
-\setlength{\textfloatsep}{8pt plus 1pt minus 2pt}  % 図と本文の間
-\setlength{\floatsep}{6pt plus 1pt minus 2pt}
-\setlength{\intextsep}{5pt plus 1pt minus 2pt}
-\setlength{\abovecaptionskip}{2pt}                 % キャプション上
-\setlength{\belowcaptionskip}{0pt}                 % キャプション下を詰め
+% ========= 体裁・間隔（少しだけ詰める） =========
+\setlength{\textfloatsep}{9pt plus 2pt minus 2pt}
+\setlength{\floatsep}{7pt plus 2pt minus 2pt}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{3pt}
+\clubpenalty=10000
+\widowpenalty=10000
 
-% タイトル直後の余白を詰める（IEEEtran推奨の軽微調整）
-\IEEEaftertitletext{\vspace{-1.2\baselineskip}}
-
-% 数式上下もほんの少しだけ詰める（読みやすさを損ねない範囲）
-\addtolength{\abovedisplayskip}{-2pt}
-\addtolength{\belowdisplayskip}{-2pt}
-
-% ========= 図ファイル名マクロ =========
-\newcommand{\RETENTIONFig}{figures/fig6_retention.png}
-
-\begin{document}
+% ========= 図の標準幅（統一調整） =========
+\newcommand{\figw}{0.90\linewidth}
 
 % ========= タイトル・著者 =========
+\begin{document}
+
 \title{Low-Cost Integration of 1.8-V FeFET on 0.18-$\mu$m CMOS:\\
 +1 Mask and a Single ALD Tool, with Reliability Assessment}
 
@@ -55,7 +48,7 @@ Email: shin3t72@gmail.com\quad GitHub: \url{https://github.com/Samizo-AITL}}
 \begin{abstract}
 Ferroelectric FETs (FeFETs) are promising CMOS-compatible embedded nonvolatile memories.
 This paper demonstrates a 1.8~V FeFET module integrated on a legacy 0.18~$\mu$m CMOS process with only one additional mask and a single ALD tool.
-Fabricated devices show endurance exceeding $10^5$ program/erase cycles and retention longer than 10 years at \SI{85}{\celsius}.
+Fabricated devices show endurance exceeding $10^5$ program/erase cycles and retention longer than 10 years at 85$^\circ$C.
 Reliability was characterized on FeCAP/FeFET structures: time-zero dielectric breakdown (TZDB), time-dependent dielectric breakdown (TDDB), endurance, and retention.
 The approach provides a cost-effective path to extend mature-node lifetimes and to enable embedded NVM for automotive/industrial/IoT, while high-temperature retention remains the key limiter.
 \end{abstract}
@@ -107,14 +100,14 @@ The FeFET module is inserted after poly definition and salicide/RTA, requiring m
 % ========= Devices and Methods =========
 \section{Devices and Methods}
 Test structures include FeCAPs (flat/comb) and $100~\mu\mathrm{m}\times100~\mu\mathrm{m}$ FeFET cells.
-Programming used $\pm$2.3--2.7~V, 1--50~\si{\micro\second} pulses.
+Programming used $\pm$2.3--2.7~V, 1--50~$\mu$s pulses.
 A Keysight B1500A with a manual probe station was used.
 
 \textbf{Protocols}: 
-TZDB: DC ramp $\approx 0.1$~V/s at RT--\SI{125}{\celsius}.\\
-TDDB: constant-voltage stress at $\pm$2.3/2.5/2.7~V, \SI{85}{\celsius} and \SI{125}{\celsius}; Weibull fitting.\\
-Endurance: $\pm$2.5~V, \SI{10}{\micro\second}, \SI{10}{\kilo\hertz} up to $10^5$ cycles.\\
-Retention: \SIlist{25;85;125}{\celsius} with Arrhenius extrapolation.
+TZDB: DC ramp $\approx 0.1$~V/s at RT--125$^\circ$C.
+TDDB: constant-voltage stress at $\pm$2.3/2.5/2.7~V, 85$^\circ$C and 125$^\circ$C; Weibull fitting.
+Endurance: $\pm$2.5~V, 10~$\mu$s, 10~kHz up to $10^5$ cycles.
+Retention: 25$^\circ$C, 85$^\circ$C, 125$^\circ$C with Arrhenius extrapolation.
 
 \begin{table}[!t]
   \centering
@@ -125,9 +118,9 @@ Retention: \SIlist{25;85;125}{\celsius} with Arrhenius extrapolation.
     \textbf{Item} & \textbf{Conditions} \\
     \midrule
     TZDB     & DC ramp $\approx 0.1$ V/s,\ RT--\SI{125}{\celsius} \\
-    TDDB     & $\pm$2.3/2.5/2.7 V,\ \SI{85}{\celsius} \& \SI{125}{\celsius}; Weibull fit \\
-    Endurance& $\pm$2.5 V,\ \SI{10}{\micro\second},\ \SI{10}{\kilo\hertz}, up to $10^5$ cycles \\
-    Retention& \SI{25}{\celsius}, \SI{85}{\celsius}, \SI{125}{\celsius}; Arrhenius extrap. \\
+    TDDB     & $\pm$2.3/2.5/2.7 V,\ \SI{85}{\celsius}, \SI{125}{\celsius} \\
+    Endurance& $\pm$2.5 V,\ \SI{10}{\micro\second},\ \SI{10}{\kilo\hertz}, up to $10^5$ \\
+    Retention& \SI{25}{\celsius}, \SI{85}{\celsius}, \SI{125}{\celsius} \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -139,7 +132,7 @@ To keep readability high and figure sizes uniform, the reliability results are s
 \subsection{Time-Zero Dielectric Breakdown (TZDB)}
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=0.95\linewidth]{figures/fig3_tzdb.png}
+  \includegraphics[width=\figw]{figures/fig3_tzdb.png}
   \caption{TZDB distributions of FeCAPs. Early-failure tails imply defect-driven breakdown paths.}
   \label{fig:tzdb}
 \end{figure}
@@ -147,14 +140,14 @@ To keep readability high and figure sizes uniform, the reliability results are s
 \subsection{TDDB under Constant-Voltage Stress}
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=0.95\linewidth]{figures/fig4_tddb_cdf.png}
-  \caption{TDDB cumulative failure probability (CDF) under multiple stress conditions (\SI{85}{\celsius}/\SI{125}{\celsius}, $\pm$2.3/2.5/2.7~V).}
+  \includegraphics[width=\figw]{figures/fig4_tddb_cdf.png}
+  \caption{TDDB cumulative failure probability (CDF) under multiple stress conditions (85$^\circ$C / 125$^\circ$C, $\pm$2.3/2.5/2.7~V).}
   \label{fig:tddb_cdf}
 \end{figure}
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=0.95\linewidth]{figures/fig4_tddb_weibull.png}
+  \includegraphics[width=\figw]{figures/fig4_tddb_weibull.png}
   \caption{TDDB Weibull plots with fitted slope $\beta \approx 1.3$ and scale $\eta$.}
   \label{fig:tddb_weibull}
 \end{figure}
@@ -162,92 +155,82 @@ To keep readability high and figure sizes uniform, the reliability results are s
 \subsection{Endurance}
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=0.95\linewidth]{figures/fig5_endurance.png}
-  \caption{Endurance characteristics ($\Delta V_{\mathrm{th}}$ vs. cycles). Up to $10^5$ cycles; memory window shrinks 20--30\%.}
+  \includegraphics[width=\figw]{figures/fig5_endurance.png}
+  \caption{Endurance characteristics ($\Delta V_{\mathrm{th}}$ vs. cycles). Up to $10^5$ cycles; window shrinks 20--30\%.}
   \label{fig:endurance}
 \end{figure}
 
 \subsection{Retention}
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=0.95\linewidth]{figures/fig6_retention.png}
-  \caption{Retention summary (CDF and/or Arrhenius extrapolation). Prediction: $>$100~y @ \SI{25}{\celsius}, $>$10~y @ \SI{85}{\celsius}, months @ \SI{150}{\celsius}.}
+  \includegraphics[width=\figw]{figures/fig6_retention.png}
+  \caption{Retention summary (CDF and/or Arrhenius extrapolation).}
   \label{fig:retention}
 \end{figure}
 
 \subsection{Model Fits}
 Time-to-failure under constant-voltage stress follows a Weibull law
 \begin{equation}
-  F(t)=1-\exp\!\left[-\left(\tfrac{t}{\etaW}\right)^{\betaW}\right],
-  \label{eq:weibull}
+  F(t)=1-\exp\!\left[-\left(\frac{t}{\etaW}\right)^{\betaW}\right],
 \end{equation}
 with slope $\betaW \approx 1.3$ and scale $\etaW$ extracted from Fig.~\ref{fig:tddb_weibull}.
 Temperature acceleration is described by an Arrhenius relation
 \begin{equation}
-  \ln\!\left(\tfrac{t_2}{t_1}\right)=\tfrac{\Ea}{\kB}\!\left(\tfrac{1}{T_2}-\tfrac{1}{T_1}\right),
-  \label{eq:arrhenius}
+  \ln\!\left(\frac{t_2}{t_1}\right)=\frac{\Ea}{k}\!\left(\frac{1}{T_2}-\frac{1}{T_1}\right),
 \end{equation}
-yielding activation energies $\Ea \approx \SI{0.78}{eV}$ (2.3~V), \SI{0.84}{eV} (2.5~V), \SI{0.88}{eV} (2.7~V).
+yielding activation energies $\Ea \approx 0.78$~eV (2.3~V), $0.84$~eV (2.5~V), $0.88$~eV (2.7~V).
 A compact endurance fit capturing memory-window shrink is
 \begin{equation}
-  \Delta \Vth(N) \approx 1.12 - 0.05\log_{10} N,
-  \label{eq:endurance}
+  \Delta \Vth(N) \approx 1.12 - 0.05\log_{10} N.
 \end{equation}
-which matches Fig.~\ref{fig:endurance}.
-Using $\Ea \approx \SI{1.1}{eV}$ for retention extrapolation supports long retention at $\le \SI{85}{\celsius}$ (Fig.~\ref{fig:retention}).
 
 % ========= System Architecture =========
 \section{System Architecture (SRAM + FeFET)}
 The SoC uses a single 1.8~V core domain for logic, SRAM, and FeFET access.
-Write/erase pulses ($\pm$2.3--2.7~V, 1--50~\mu s) are generated by an on-chip charge pump.
+Write/erase pulses ($\pm$2.3--2.7~V, 1--50~$\mu$s) are generated by an on-chip charge pump.
 A lightweight controller backs up SRAM contents to the FeFET array on power-fail detection and restores them at power-up.
 An optional 3.3~V peripheral domain is kept for I/O and AMS (ADC/DAC, LDO).
 
-% ---- ここでページを送って Fig.8/9 を3ページ目に強制 ----
-\clearpage
-
-% Fig.8（1欄幅）
-\begin{figure}[!t]
+% ---- page 3 top: Fig.8 (少し大きめだが左右いっぱいではない), Fig.9（1カラム）
+\begin{figure*}[t]
   \centering
-  \vspace{-2pt}
-  \resizebox{0.88\linewidth}{!}{%
-    \begin{tikzpicture}[node distance=8mm,
-      every node/.style={draw,rounded corners,minimum width=20mm,minimum height=6mm,align=center},
-      >=Stealth,transform shape]
+  \resizebox{0.80\textwidth}{!}{%
+    \begin{tikzpicture}[node distance=7mm, every node/.style={draw,rounded corners,minimum width=20mm,minimum height=6mm,align=center},>=Stealth,transform shape]
       \node (logic) {Logic (1.8V)};
-      \node (sram)  [below=of logic] {SRAM};
-      \node (fefet) [below=of sram]  {FeFET NVM};
-      \node (pump)  [right=28mm of fefet] {Charge Pump $\pm$2.5V};
-      \node (io)    [above=of pump] {I/O \& AMS (3.3V)};
-      \node (stat)  [below=of pump] {Status/Ctrl};
+      \node (sram) [below=of logic] {SRAM};
+      \node (nvm)  [below=of sram] {FeFET NVM};
+      \node (pump) [right=40mm of nvm] {Charge Pump $\pm$2.5V};
+      \node (io)   [above=of pump] {I/O \& AMS (3.3V)};
+      \node (stat) [below=of pump] {Status/Ctrl};
+      \node (vpp)  [left=18mm of pump] {$+V_{\mathrm{PP}}$};
+      \node (bk)   [left=14mm of sram, minimum width=13mm] {backup};
       \draw[->] (logic) -- (sram);
-      \draw[->] (sram) -- node[left, xshift=-1pt]{backup} (fefet);
-      \draw[->] (fefet) -- (pump);
-      \draw[->] (pump)  -- (io);
-      \draw[->] (pump)  -- (stat);
+      \draw[->] (sram) -- (nvm);
+      \draw[->] (nvm) -- (vpp);
+      \draw[->] (vpp) -- (pump);
+      \draw[->] (pump) -- (io);
+      \draw[->] (pump) -- (stat);
+      \draw[->] (bk.east) -- (sram.west);
     \end{tikzpicture}}
   \caption{System architecture with SRAM backup to FeFET.}
   \label{fig:system}
-  \vspace{-2mm}
-\end{figure}
+\end{figure*}
 
-% Fig.9（1欄幅）
-\begin{figure}[!b]
+\begin{figure}[t]
   \centering
-  \vspace{-2pt}
-  \resizebox{0.82\linewidth}{!}{%
-    \begin{tikzpicture}[
-      node distance=9mm,
-      box/.style={draw,rounded corners,minimum width=19mm,minimum height=6mm,align=center}]
-      \node[box] (sram) {SRAM};
-      \node[box, right=of sram] (ctrl) {Backup Ctrl};
-      \node[box, right=of ctrl] (nvm)  {FeFET NVM};
-      \draw[-{Stealth}] (sram) -- node[above]{Backup} (ctrl);
-      \draw[-{Stealth}] (ctrl) -- node[above]{Restore} (nvm);
-    \end{tikzpicture}}
+  \resizebox{0.85\columnwidth}{!}{%
+  \begin{tikzpicture}[
+      node distance=8mm,
+      box/.style={draw,rounded corners,minimum width=18mm,minimum height=6mm}
+  ]
+    \node[box] (sram) {SRAM};
+    \node[box, right=10mm of sram] (ctrl) {Backup Ctrl};
+    \node[box, right=10mm of ctrl] (nvm)  {FeFET NVM};
+    \draw[-{Stealth}] (sram) -- node[above]{Backup} (ctrl);
+    \draw[-{Stealth}] (ctrl) -- node[above]{Restore} (nvm);
+  \end{tikzpicture}}
   \caption{Backup/restore flow between SRAM and FeFET.}
   \label{fig:backup_flow}
-  \vspace{-2mm}
 \end{figure}
 
 % ========= Discussion =========
@@ -265,15 +248,15 @@ For high-temperature automotive, improvements are required:
 % ========= Conclusion =========
 \section{Conclusion}
 We realized a +1 mask FeFET module on 0.18~$\mu$m CMOS with only one additional ALD tool.
-Devices exhibit $>10^5$ cycles and $>10$ years retention at \SI{85}{\celsius}, verified by TZDB/TDDB/endurance/retention analyses.
+Devices exhibit $>10^5$ cycles and $>10$ years retention at 85$^\circ$C, verified by TZDB/TDDB/endurance/retention analyses.
 The method extends mature-node lifetime and enables cost-effective embedded NVM for automotive/industrial/IoT.
 
 % ========= Acknowledgment =========
 \section*{Acknowledgment}
 The author thanks collaborators for helpful discussions.
 
-% ========= 参考文献 =========
-\begin{thebibliography}{1}
+% ========= 参考文献（行間を微調整して詰める） =========
+\begin{thebibliography}{1}\setlength{\itemsep}{0pt plus 0.3pt}
 \bibitem{boscke2011} T. Böscke et al., \textit{Appl. Phys. Lett.}, vol. 99, p. 102903, 2011.
 \bibitem{mueller2012} J. Müller et al., \textit{Appl. Phys. Lett.}, vol. 99, p. 112901, 2012.
 \bibitem{mikolajick2019} T. Mikolajick et al., \textit{J. Appl. Phys.}, vol. 125, p. 204103, 2019.
@@ -283,9 +266,9 @@ The author thanks collaborators for helpful discussions.
 \bibitem{yamazaki2018} K. Yamazaki et al., \textit{Jpn. J. Appl. Phys.}, vol. 57, 04FB07, 2018.
 \end{thebibliography}
 
-% ========= Biography =========
-\begin{IEEEbiography}{Shinichi Samizo}
-has over 25 years of experience in semiconductor process integration and actuator development. After studying control theory and EM modeling in academia, he joined Seiko Epson in 1997 and worked on 0.35--0.18~$\mu$m CMOS logic/memory/HV integration, DRAM, and LCD drivers. Later he contributed to PZT actuator development and the PrecisionCore inkjet head. He is currently an independent researcher, publishing educational materials via the ``Project Design Hub''.
-\end{IEEEbiography}
+% ========= Biography（小さめにして復活） =========
+\section*{Biography}
+\small
+Shinichi Samizo has over 25 years of experience in semiconductor process integration and actuator development. After studying control theory and EM modeling in academia, he joined Seiko Epson in 1997 and worked on 0.35--0.18~$\mu$m CMOS logic/memory/HV integration, DRAM, and LCD drivers. Later he contributed to PZT actuator development and the PrecisionCore inkjet head. He is currently an independent researcher, publishing educational materials via the ``Project Design Hub''.
 
 \end{document}
