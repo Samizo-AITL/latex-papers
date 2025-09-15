@@ -62,25 +62,30 @@ While many works target advanced nodes, mature nodes (e.g., 0.18~$\mu$m) remain 
 % ========= Process Integration =========
 \section{Process Integration}
 Baseline is a 0.18~$\mu$m CMOS platform (1.8~V core, optional 3.3~V I/O).
-The FeFET module is inserted after poly definition and salicide/RTA, requiring minimal line modification.
+The FeFET module is inserted \textbf{after Co-salicide (RTA)}, requiring only one additional mask.
+The HZO/Al$_2$O$_3$ ferroelectric stack is deposited by a single ALD tool (both interlayer Al$_2$O$_3$ and HZO in one chamber), 
+and the TiN metal gate is formed by collimated or long-throw PVD sputtering.
+This integration minimizes line modification and suppresses capital expenditure.
 
 \subsection{Process Flow}
 \begin{figure}[!t]
   \centering
-  \begin{tikzpicture}[node distance=6mm, every node/.style={draw,rectangle,minimum width=25mm,minimum height=6mm},>=Stealth]
-    \node (a) {FEOL (Co RTA)};
+  \begin{tikzpicture}[node distance=6mm, every node/.style={draw,rectangle,minimum width=38mm,minimum height=6mm},>=Stealth]
+    \node (a) {Baseline CMOS (poly + Co-salicide RTA)};
     \node (b) [below=of a] {ALD: Al$_2$O$_3$ (1--2 nm)};
-    \node (c) [below=of b] {ALD: HZO (8--12 nm)};
-    \node (d) [below=of c] {TiN (30--50 nm)};
-    \node (e) [below=of d] {RTA (450--500$^\circ$C)};
-    \node (f) [below=of e] {BEOL};
+    \node (c) [below=of b] {ALD: HZO (8--12 nm) \ (same ALD tool)};
+    \node (d) [below=of c] {PVD TiN (30--50 nm, collimated/long-throw)};
+    \node (e) [below=of d] {Mask + Pattern (1 additional mask)};
+    \node (f) [below=of e] {RTA (450--500$^\circ$C)};
+    \node (g) [below=of f] {BEOL};
     \draw[->] (a) -- (b);
     \draw[->] (b) -- (c);
     \draw[->] (c) -- (d);
     \draw[->] (d) -- (e);
     \draw[->] (e) -- (f);
+    \draw[->] (f) -- (g);
   \end{tikzpicture}
-  \caption{Process flow of FeFET integration.}
+  \caption{Process flow of FeFET integration after Co-salicide. Only one mask and a single ALD tool are required.}
   \label{fig:flow}
 \end{figure}
 
