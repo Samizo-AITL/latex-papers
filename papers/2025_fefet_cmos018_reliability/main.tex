@@ -1,25 +1,27 @@
 \documentclass[conference]{IEEEtran}
 
-% ========= パッケージ（順序重要：cite系→他→hyperref最後） =========
+% ========= パッケージ =========
 \usepackage{cite}
 \usepackage{amsmath,amssymb}
 \usepackage{siunitx}
 \usepackage{graphicx}
-\usepackage[caption=false,font=footnotesize]{subfig} % IEEEtran互換
+\usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{booktabs}
 \usepackage{tikz}
 \usetikzlibrary{positioning,arrows.meta}
-\usepackage{newtxtext,newtxmath}                     % Times系フォント
-\usepackage[hidelinks]{hyperref}                     % \texorpdfstring等
+\usepackage{newtxtext,newtxmath}
+\usepackage[hidelinks]{hyperref}
+\usepackage{stfloats}
+\usepackage[section]{placeins}   % 図表を節内に固定
 
-% ========= 記号・単位マクロ =========
+% ========= 記号マクロ =========
 \newcommand{\Vth}{V_{\mathrm{th}}}
 \newcommand{\Ea}{E_{\mathrm{a}}}
-\newcommand{\betaW}{\beta} % Weibull slope
-\newcommand{\etaW}{\eta}   % Weibull scale
+\newcommand{\betaW}{\beta}
+\newcommand{\etaW}{\eta}
 \sisetup{detect-all, per-mode=symbol, separate-uncertainty = true}
 
-% ========= 体裁・間隔（少しだけ詰める） =========
+% ========= 体裁調整 =========
 \setlength{\textfloatsep}{9pt plus 2pt minus 2pt}
 \setlength{\floatsep}{7pt plus 2pt minus 2pt}
 \setlength{\intextsep}{6pt plus 2pt minus 2pt}
@@ -27,10 +29,9 @@
 \clubpenalty=10000
 \widowpenalty=10000
 
-% ========= 図の標準幅（統一調整） =========
 \newcommand{\figw}{0.90\linewidth}
 
-% ========= タイトル・著者 =========
+% ========= タイトル =========
 \begin{document}
 
 \title{Low-Cost Integration of 1.8-V FeFET on 0.18-$\mu$m CMOS:\\
@@ -73,6 +74,8 @@ which avoids aggressive scaling, improves yield, and enhances reliability.
 (iii) proposal of a yield- and reliability-friendly \textit{SRAM+FeFET} backup/restore system model, and  
 (iv) comprehensive reliability characterization (time-zero dielectric breakdown (TZDB), time-dependent dielectric breakdown (TDDB), endurance, and retention) on FeCAP/FeFET structures.
 
+\FloatBarrier
+
 % ========= Process Integration =========
 \section{Process Integration}
 Baseline is a 0.18~$\mu$m CMOS platform (1.8~V core, optional 3.3~V I/O).
@@ -82,12 +85,12 @@ and the TiN metal gate is formed by collimated or long-throw PVD sputtering.
 This integration minimizes line modification and suppresses capital expenditure.
 
 \subsection{Process Flow}
-\begin{figure}[!t]
+\begin{figure}[!htb]
   \centering
   \begin{tikzpicture}[node distance=6mm, every node/.style={draw,rectangle,minimum width=38mm,minimum height=6mm},>=Stealth]
     \node (a) {Baseline CMOS (poly + Co-salicide RTA)};
     \node (b) [below=of a] {ALD: Al$_2$O$_3$ (1--2 nm)};
-    \node (c) [below=of b] {ALD: HZO (8--12 nm) \ (same ALD tool)};
+    \node (c) [below=of b] {ALD: HZO (8--12 nm) (same ALD tool)};
     \node (d) [below=of c] {PVD TiN (30--50 nm, collimated/long-throw)};
     \node (e) [below=of d] {Mask + Pattern (1 additional mask)};
     \node (f) [below=of e] {RTA (450--500$^\circ$C)};
@@ -104,7 +107,7 @@ This integration minimizes line modification and suppresses capital expenditure.
 \end{figure}
 
 \subsection{Cross Section}
-\begin{figure}[!t]
+\begin{figure}[!htb]
   \centering
   \begin{tikzpicture}
     \node[draw,fill=gray!80,minimum width=35mm,minimum height=5mm,anchor=south west] (si) at (0,0) {p-Si substrate};
@@ -116,19 +119,11 @@ This integration minimizes line modification and suppresses capital expenditure.
   \label{fig:stack}
 \end{figure}
 
+\FloatBarrier
+
 % ========= Devices and Methods =========
 \section{Devices and Methods}
-Test structures include FeCAPs (flat/comb) and $100~\mu\mathrm{m}\times100~\mu\mathrm{m}$ FeFET cells.
-Programming used $\pm$2.3--2.7~V, 1--50~$\mu$s pulses.
-A Keysight B1500A with a manual probe station was used.
-
-\textbf{Protocols}: 
-TZDB: DC ramp $\approx 0.1$~V/s at RT--125$^\circ$C.
-TDDB: constant-voltage stress at $\pm$2.3/2.5/2.7~V, 85$^\circ$C and 125$^\circ$C; Weibull fitting.
-Endurance: $\pm$2.5~V, 10~$\mu$s, 10~kHz up to $10^5$ cycles.
-Retention: 25$^\circ$C, 85$^\circ$C, 125$^\circ$C with Arrhenius extrapolation.
-
-\begin{table}[!t]
+\begin{table}[!htb]
   \centering
   \caption{Reliability test matrix (devices: FeCAP/FeFET).}
   \label{tab:test-matrix}
@@ -144,12 +139,23 @@ Retention: 25$^\circ$C, 85$^\circ$C, 125$^\circ$C with Arrhenius extrapolation.
   \end{tabular}
 \end{table}
 
+Test structures include FeCAPs (flat/comb) and $100~\mu\mathrm{m}\times100~\mu\mathrm{m}$ FeFET cells.
+Programming used $\pm$2.3--2.7~V, 1--50~$\mu$s pulses.
+A Keysight B1500A with a manual probe station was used.
+
+\textbf{Protocols}: 
+TZDB: DC ramp $\approx 0.1$~V/s at RT--125$^\circ$C.
+TDDB: constant-voltage stress at $\pm$2.3/2.5/2.7~V, 85$^\circ$C and 125$^\circ$C; Weibull fitting.
+Endurance: $\pm$2.5~V, 10~$\mu$s, 10~kHz up to $10^5$ cycles.
+Retention: 25$^\circ$C, 85$^\circ$C, 125$^\circ$C with Arrhenius extrapolation.
+
+\FloatBarrier
+
 % ========= Results (Reliability) =========
 \section{Results: Reliability}
-To keep readability high and figure sizes uniform, the reliability results are split across multiple figures (all with identical width).
 
 \subsection{Time-Zero Dielectric Breakdown (TZDB)}
-\begin{figure}[!t]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\figw]{figures/fig3_tzdb.png}
   \caption{TZDB distributions of FeCAPs. Early-failure tails imply defect-driven breakdown paths.}
@@ -157,14 +163,14 @@ To keep readability high and figure sizes uniform, the reliability results are s
 \end{figure}
 
 \subsection{TDDB under Constant-Voltage Stress}
-\begin{figure}[!t]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\figw]{figures/fig4_tddb_cdf.png}
-  \caption{TDDB cumulative failure probability (CDF) under multiple stress conditions (85$^\circ$C / 125$^\circ$C, $\pm$2.3/2.5/2.7~V).}
+  \caption{TDDB cumulative failure probability (CDF) under multiple stress conditions.}
   \label{fig:tddb_cdf}
 \end{figure}
 
-\begin{figure}[!t]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\figw]{figures/fig4_tddb_weibull.png}
   \caption{TDDB Weibull plots with fitted slope $\beta \approx 1.3$ and scale $\eta$.}
@@ -172,15 +178,15 @@ To keep readability high and figure sizes uniform, the reliability results are s
 \end{figure}
 
 \subsection{Endurance}
-\begin{figure}[!t]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\figw]{figures/fig5_endurance.png}
-  \caption{Endurance characteristics ($\Delta V_{\mathrm{th}}$ vs. cycles). Up to $10^5$ cycles; window shrinks 20--30\%.}
+  \caption{Endurance characteristics ($\Delta V_{\mathrm{th}}$ vs. cycles). Up to $10^5$ cycles; memory window shrinks 20--30\%.}
   \label{fig:endurance}
 \end{figure}
 
 \subsection{Retention}
-\begin{figure}[!t]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\figw]{figures/fig6_retention.png}
   \caption{Retention summary (CDF and/or Arrhenius extrapolation).}
@@ -188,43 +194,37 @@ To keep readability high and figure sizes uniform, the reliability results are s
 \end{figure}
 
 \subsection{Model Fits}
-Time-to-failure under constant-voltage stress follows a Weibull law
+Time-to-failure follows a Weibull law:
 \begin{equation}
   F(t)=1-\exp\!\left[-\left(\frac{t}{\etaW}\right)^{\betaW}\right],
 \end{equation}
 with slope $\betaW \approx 1.3$ and scale $\etaW$ extracted from Fig.~\ref{fig:tddb_weibull}.
-Temperature acceleration is described by an Arrhenius relation
+Temperature acceleration is described by an Arrhenius relation:
 \begin{equation}
-  \ln\!\left(\frac{t_2}{t_1}\right)=\frac{\Ea}{k}\!\left(\frac{1}{T_2}-\frac{1}{T_1}\right),
+  \ln\!\left(\frac{t_2}{t_1}\right)=\frac{\Ea}{k}\!\left(\frac{1}{T_2}-\frac{1}{T_1}\right).
 \end{equation}
-yielding activation energies $\Ea \approx 0.78$~eV (2.3~V), $0.84$~eV (2.5~V), $0.88$~eV (2.7~V).
-A compact endurance fit capturing memory-window shrink is
+Activation energies: $\Ea \approx 0.78$~eV (2.3 V), 0.84 eV (2.5 V), 0.88 eV (2.7 V).  
+Endurance fit:
 \begin{equation}
   \Delta \Vth(N) \approx 1.12 - 0.05\log_{10} N.
 \end{equation}
 
 \subsection*{Summary of Reliability Results}
-The reliability analysis demonstrates that the fabricated FeFET devices
-exhibit endurance exceeding $10^5$ program/erase cycles (Fig.~\ref{fig:endurance}),
-together with retention longer than 10 years at 85$^\circ$C as confirmed by
-Arrhenius extrapolation (Fig.~\ref{fig:retention}).
-These results validate the feasibility of the proposed +1 mask integration
-scheme, providing sufficient reliability for automotive and industrial
-applications.
+Fabricated FeFET devices show endurance exceeding $10^5$ cycles (Fig.~\ref{fig:endurance}) and retention $>10$ years at 85$^\circ$C (Fig.~\ref{fig:retention}).  
+These results validate the proposed +1 mask integration scheme for automotive and industrial NVM.
+
+\FloatBarrier
 
 % ========= System Architecture =========
 \section{System Architecture (SRAM + FeFET)}
 The SoC uses a single 1.8~V core domain for logic, SRAM, and FeFET access.
-Write/erase pulses ($\pm$2.3--2.7~V, 1--50~$\mu$s) are generated by an on-chip charge pump.
-A lightweight controller backs up SRAM contents to the FeFET array on power-fail detection and restores them at power-up.
-An optional 3.3~V peripheral domain is kept for I/O and AMS (ADC/DAC, LDO).
+Write/erase pulses are generated by an on-chip charge pump.  
+A lightweight controller backs up SRAM contents to the FeFET array on power-fail detection and restores them at power-up.  
+An optional 3.3~V domain is kept for I/O and AMS.
 
-Unlike stand-alone high-density NVM, the FeFET array here is not intended for large-capacity storage.
-Instead, it plays a supplementary role as a backup/assistive memory for SRAM.  
-This architectural choice avoids scaling pressure, improves yield, and enhances reliability, which are essential in automotive and industrial applications.
+Unlike stand-alone high-density NVM, the FeFET array plays a supplementary role as backup/assistive memory for SRAM.  
 
-% ===== Fig.8: System architecture（片段・TikZのまま） =====
-\begin{figure}[!t]
+\begin{figure}[!htb]
   \centering
   \resizebox{0.90\columnwidth}{!}{%
     \begin{tikzpicture}[node distance=8mm,
@@ -241,16 +241,13 @@ This architectural choice avoids scaling pressure, improves yield, and enhances 
       \draw[->] (pump)  -- (io);
     \end{tikzpicture}%
   }
-  \caption{System architecture with SRAM backup to FeFET (single-column).}
-  \label{fig:system}
+  \caption{System architecture with SRAM backup to FeFET.}
 \end{figure}
 
-% ===== Fig.9: Backup/restore flow（片段・TikZのまま） =====
-\begin{figure}[!t]
+\begin{figure}[!htb]
   \centering
   \resizebox{0.90\columnwidth}{!}{%
-    \begin{tikzpicture}[
-      node distance=8mm,
+    \begin{tikzpicture}[node distance=8mm,
       box/.style={draw,rounded corners,minimum width=18mm,minimum height=6mm},
       >=Stealth,transform shape]
       \node[box] (sram) {SRAM};
@@ -260,51 +257,52 @@ This architectural choice avoids scaling pressure, improves yield, and enhances 
       \draw[-{Stealth}] (ctrl) -- node[above,sloped]{Restore} (nvm);
     \end{tikzpicture}%
   }
-  \caption{Backup/restore flow between SRAM and FeFET (single-column).}
-  \label{fig:backup_flow}
+  \caption{Backup/restore flow between SRAM and FeFET.}
 \end{figure}
+
+\FloatBarrier
 
 % ========= Discussion =========
 \section{Discussion}
-The HfZrO$_2$/Al$_2$O$_3$/TiN stack shows sufficient reliability for industrial/consumer embedded NVM.
+The HfZrO$_2$/Al$_2$O$_3$/TiN stack shows sufficient reliability for embedded NVM.  
 For high-temperature automotive, improvements are required:
 \begin{itemize}
-  \item \textbf{Interlayer (IL) optimization}: Al$_2$O$_3$ thickness/composition tuning to mitigate wake-up/fatigue and reduce leakage.
-  \item \textbf{Crystallinity control}: RTA window and TiN work-function engineering to stabilize ferroelectric phase and reduce variation.
-  \item \textbf{Defect mitigation}: Precursor purity, ALD purge optimization, and post-deposition anneal to suppress oxygen-vacancy paths (helps TDDB/retention).
-  \item \textbf{Circuit assists}: Verify-and-rewrite (background refresh at high-$T$), ECC, and adaptive write pulse shaping to slow window loss.
-  \item \textbf{Array architecture}: Redundancy/repair and SRAM+FeFET hybrid usage to keep frequent writes on SRAM, reducing FeFET stress.
+  \item \textbf{Interlayer optimization}: Al$_2$O$_3$ thickness tuning.
+  \item \textbf{Crystallinity control}: RTA window and TiN work-function.
+  \item \textbf{Defect mitigation}: Precursor purity, ALD purge, post-anneal.
+  \item \textbf{Circuit assists}: ECC, adaptive pulses, refresh. 
+  \item \textbf{Array architecture}: Redundancy/repair, SRAM+FeFET hybrid.
 \end{itemize}
 
-In addition, the decision to use FeFET only as a supplementary backup for SRAM---rather than as a stand-alone high-density memory---provides 
-clear advantages. It relaxes density requirements, improves yield, and mitigates device stress, thereby supporting higher reliability under demanding 
-industrial and automotive conditions.
+The FeFET’s role as SRAM backup (not stand-alone NVM) avoids density stress, improves yield, and enhances reliability for industrial/automotive.
+
+\FloatBarrier
 
 % ========= Conclusion =========
 \section{Conclusion}
-We demonstrated a +1 mask FeFET module integrated on a 0.18~$\mu$m CMOS platform, requiring only a single additional ALD tool. 
-Fabricated devices achieved endurance over $10^5$ cycles and retention longer than 10 years at 85$^\circ$C, verified through TZDB, TDDB, endurance, and retention analyses. 
+We demonstrated a +1 mask FeFET module on 0.18~$\mu$m CMOS, requiring only one ALD tool.  
+Devices achieved endurance $>10^5$ cycles and retention $>10$ years at 85$^\circ$C, verified by TZDB, TDDB, endurance and retention analyses.  
+Positioning the FeFET array as a supplementary backup to SRAM—rather than a stand-alone high-density NVM—reduces scaling pressure, improves yield, and enhances reliability for automotive, industrial, and IoT applications.  
+Overall, the method provides a cost-effective path to extend mature-node lifetimes while delivering dependable embedded nonvolatile memory.
 
-Rather than pursuing large-capacity stand-alone NVM, the FeFET array is used as a supplementary backup for SRAM. 
-This design choice reduces scaling pressure, improves yield, and enhances reliability, making it highly suitable for automotive, industrial, and IoT applications. 
-Overall, the method provides a cost-effective way to extend mature-node lifetimes while delivering dependable embedded nonvolatile memory.
+\FloatBarrier
 
 % ========= Acknowledgment =========
 \section*{Acknowledgment}
 The author thanks collaborators for helpful discussions.
 
-% ========= 参考文献（行間を微調整して詰める） =========
+% ========= References =========
 \begin{thebibliography}{1}\setlength{\itemsep}{0pt plus 0.3pt}
-\bibitem{boscke2011} T. Böscke et al., \textit{Appl. Phys. Lett.}, vol. 99, p. 102903, 2011.
-\bibitem{mueller2012} J. Müller et al., \textit{Appl. Phys. Lett.}, vol. 99, p. 112901, 2012.
-\bibitem{mikolajick2019} T. Mikolajick et al., \textit{J. Appl. Phys.}, vol. 125, p. 204103, 2019.
-\bibitem{mueller2015} J. Müller et al., \textit{IEEE Trans. Electron Devices}, vol. 62, no. 12, pp. 4158--4166, 2015.
-\bibitem{park2020} J. Park et al., \textit{IEEE Electron Device Lett.}, vol. 41, no. 5, pp. 711--714, 2020.
-\bibitem{nakamura2003} H. Nakamura et al., \textit{IEEE Trans. Device Mater. Rel.}, vol. 3, no. 4, pp. 132--136, 2003.
-\bibitem{yamazaki2018} K. Yamazaki et al., \textit{Jpn. J. Appl. Phys.}, vol. 57, 04FB07, 2018.
+\bibitem{boscke2011} T. Böscke \textit{et al.}, \textit{Appl. Phys. Lett.}, vol. 99, p. 102903, 2011.
+\bibitem{mueller2012} J. Müller \textit{et al.}, \textit{Appl. Phys. Lett.}, vol. 99, p. 112901, 2012.
+\bibitem{mikolajick2019} T. Mikolajick \textit{et al.}, \textit{J. Appl. Phys.}, vol. 125, p. 204103, 2019.
+\bibitem{mueller2015} J. Müller \textit{et al.}, \textit{IEEE Trans. Electron Devices}, vol. 62, no. 12, pp. 4158--4166, 2015.
+\bibitem{park2020} J. Park \textit{et al.}, \textit{IEEE Electron Device Lett.}, vol. 41, no. 5, pp. 711--714, 2020.
+\bibitem{nakamura2003} H. Nakamura \textit{et al.}, \textit{IEEE Trans. Device Mater. Rel.}, vol. 3, no. 4, pp. 132--136, 2003.
+\bibitem{yamazaki2018} K. Yamazaki \textit{et al.}, \textit{Jpn. J. Appl. Phys.}, vol. 57, 04FB07, 2018.
 \end{thebibliography}
 
-% ========= Biography（小さめにして復活） =========
+% ========= Biography =========
 \section*{Biography}
 \small
 Shinichi Samizo has over 25 years of experience in semiconductor process integration and actuator development. After studying control theory and EM modeling in academia, he joined Seiko Epson in 1997 and worked on 0.35--0.18~$\mu$m CMOS logic/memory/HV integration, DRAM, and LCD drivers. Later he contributed to PZT actuator development and the PrecisionCore inkjet head. He is currently an independent researcher, publishing educational materials via the ``Project Design Hub''.
