@@ -55,9 +55,20 @@ The approach provides a cost-effective path to extend mature-node lifetimes and 
 
 % ========= Introduction =========
 \section{Introduction}
-Ferroelectric HfO$_2$-based memories attract attention as CMOS-compatible NVMs~\cite{boscke2011,mueller2012,mikolajick2019,mueller2015}.
-While many works target advanced nodes, mature nodes (e.g., 0.18~$\mu$m) remain workhorses in automotive/industrial sectors for cost and longevity.
-\textbf{This work contributes}: (i) a +1 mask low-cost module, (ii) only one ALD tool added to the line, (iii) a yield-friendly \textit{SRAM+FeFET} system usage model, and (iv) comprehensive reliability evidence (TZDB, TDDB, endurance, retention) on FeCAP/FeFET.
+Ferroelectric Hf$_{0.5}$Zr$_{0.5}$O$_2$ (HZO) thin films have emerged as a leading candidate for CMOS-compatible nonvolatile memories (NVMs), 
+offering low-voltage operation, scalability, and compatibility with back-end thermal budgets~\cite{boscke2011,mueller2012,mikolajick2019,mueller2015}.
+Compared with embedded flash (eFlash), FeFETs provide lower process cost and superior scalability; 
+unlike MRAM and ReRAM, they require no exotic materials or additional BEOL steps, making them highly attractive for embedded integration.
+
+Most prior studies focus on advanced technology nodes, targeting embedded NVM integration in sub-28~nm platforms. 
+However, mature nodes such as 0.18~$\mu$m remain widely used in automotive and industrial electronics, 
+where cost efficiency, process stability, and long product lifetimes are critical requirements.  
+
+\textbf{This work makes four contributions:}  
+(i) demonstration of a +1 mask low-cost FeFET module on a 0.18~$\mu$m baseline CMOS process,  
+(ii) realization using only a single ALD chamber for Al$_2$O$_3$/HZO deposition and a standard TiN gate,  
+(iii) proposal of a yield-friendly \textit{SRAM+FeFET} backup/restore system model, and  
+(iv) comprehensive reliability characterization (time-zero dielectric breakdown (TZDB), time-dependent dielectric breakdown (TDDB), endurance, and retention) on FeCAP/FeFET structures.
 
 % ========= Process Integration =========
 \section{Process Integration}
