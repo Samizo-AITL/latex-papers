@@ -8,9 +8,10 @@
 \usepackage{array}
 \usepackage{siunitx}
 
-% --- TikZ ---
+% TikZ を使う
 \usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta}  % <- Stealth 矢印と位置決めに必要
+\usetikzlibrary{positioning,arrows.meta} % ← これがないと -Stealth が未定義になります
+\tikzset{>={Stealth[length=2mm,width=2mm]}} % 矢印 tip を明示（任意）
 
 \sisetup{
   mode            = match,
@@ -85,14 +86,14 @@ A high-efficiency Buck delivers most of the power; a following LDO cleans switch
     \node[blk, below=6mm of ldo, minimum width=40mm] (filter) {On-chip laminated inductor + PGS};
     % Connections
     \draw[line] (vin) -- (buck);
-    \draw[line] (buck) -- node[above,pos=0.5] {$20\,\text{MHz}$} (ldo);
+    \draw[line] (buck) -- node[above, midway] {$20\,\text{MHz}$} (ldo);
     \draw[line] (ldo) -- (sum);
     \draw[line] (sum) -- (vout);
     \draw[line] (vout) |- (filter.east);
     \draw[line] (filter.west) -| (buck.south);
     \draw[line] (fb) -| (sum.south) node[pos=0.25,below] {load step};
   \end{tikzpicture}
-  \caption{Hybrid Buck–LDO block diagram using the on-chip laminated inductor with PGS.}
+  \caption{Hybrid Buck--LDO block diagram using the on-chip laminated inductor with PGS.}
   \label{fig:block}
 \end{figure}
 
