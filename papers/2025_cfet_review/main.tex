@@ -87,6 +87,25 @@ In short, CFET reframes CMOS as a \emph{cross-sectional inverter} rather than a 
 \end{figure}
 
 % =========================
+\begin{table*}[t]
+\centering
+\caption{Technology Node Evolution: From GAA to CFET (indicative values)}
+\label{tab:node_scaling}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Node (Year)} & \textbf{Device Architecture} & \textbf{VDD (typ.)} & \textbf{Transistor Density (MTr/mm$^2$)} & \textbf{Notes} \\
+\hline
+7\,nm (2018)  & FinFET              & 0.70--0.80\,V & 90--100   & Cell height constraints, multi-patterning EUV \\
+5\,nm (2020)  & FinFET $\rightarrow$ pre-GAA & 0.65--0.75\,V & 130--170  & First high-volume EUV, RC delay dominant \\
+3\,nm (2023)  & GAA nanosheet       & 0.60--0.70\,V & 200--250  & Four-sided electrostatics, variability reduction \\
+2\,nm (2025 est.) & GAA production   & 0.55--0.65\,V & 300--400  & Multi-sheet optimization, DTCO critical \\
+$<$2\,nm (2027--2030) & CFET (stacked n/p) & 0.50--0.60\,V & 500--700  & Cross-sectional inverter, vertical RC benefit \\
+1\,nm-class (2030+) & Sequential/Forksheet CFET & $<$0.50\,V & $>$800 & 3D stacking, thermal-aware BEOL, AI-assisted design \\
+\hline
+\end{tabular}
+\end{table*}
+
+% =========================
 \section{CFET Structural Concepts}
 Two representative integration styles are considered.
 
