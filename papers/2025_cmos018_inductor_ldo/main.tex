@@ -66,7 +66,7 @@ The PGS---implemented in a lower metal with \SI{9}{\um} pitch and \SI{24}{\um} s
 \subsection{Hybrid Buck--LDO Regulator}
 A high-efficiency Buck delivers most of the power; a following LDO cleans switching ripple and boosts PSRR. The overall architecture is shown in Fig.~\ref{fig:block}. The combined approach yields ripple $<\SI{1}{\milli\volt_{rms}}$ and PSRR $>\SI{60}{\decibel}$ at \SI{1}{\mega\hertz}.
 
-% --- Fig.2: Hybrid Buck–LDO block diagram -------------------------------
+% --- Fig.2: Hybrid Buck–LDO block diagram (with FB & FF, no overlaps) ---
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}[font=\footnotesize, node distance=7mm]
@@ -74,32 +74,43 @@ A high-efficiency Buck delivers most of the power; a following LDO cleans switch
     \tikzset{
       blk/.style={draw, rounded corners, minimum width=22mm, minimum height=9mm, align=center},
       sum/.style={circle, draw, inner sep=1pt, minimum size=3mm},
+      tap/.style={circle, fill, inner sep=0.8pt}, % feedforward tap
       line/.style={-Stealth}
     }
-    % Nodes
+
+    % Blocks & nodes
     \node[blk] (buck) {Buck\\(PWM/PFM)};
     \node[blk, right=18mm of buck] (ldo) {LDO};
-    \node[sum, right=15mm of ldo] (sum) {};
-    \node[right=8mm of sum] (vout) {$V_\text{out}$};
+    \node[sum, right=14mm of ldo] (sum) {};              % summer before Vout
+    \node[right=10mm of sum] (vout) {$V_\text{out}$};    % output label
     \node[above=7mm of buck] (vin) {$V_\text{in}$};
 
-    % FBをbuckの直下に配置
-    \node[below=7mm of buck] (fb) {FB};
-
-    % Inductor block（LDOの下に大きめ配置）
+    % Inductor/PGS block (below path)
     \node[blk, below=10mm of ldo, minimum width=40mm] (filter) {On-chip laminated inductor + PGS};
 
-    % Connections
+    % Feedback & Feedforward labels (placed below to avoid overlaps)
+    \node[below=7mm of buck] (fb) {Feedback};
+    \node[below=7mm of ldo] (ff) {Feedforward};
+
+    % Main forward path
     \draw[line] (vin) -- (buck);
     \draw[line] (buck) -- node[above, midway] {$20\,\text{MHz}$} (ldo);
     \draw[line] (ldo) -- (sum);
-    \draw[line] (sum) -- (vout);
+    \draw[line] (sum) -- ++(6mm,0) node[tap] (tff) {} -- (vout); % tap node for FF
+
+    % Inductor path
     \draw[line] (vout) |- (filter.east);
     \draw[line] (filter.west) -| (buck.south);
-    \draw[line] (fb) -- (buck.south); % ← FB を buck の真下に接続
-    \draw[line] (fb) -| (sum.south) node[pos=0.25,below] {load step};
+
+    % Feedback (from Vout back to Buck)
+    \draw[line] (vout) |- (fb.east);
+    \draw[line] (fb) -- (buck.south);
+
+    % Feedforward (from tap near Vout to LDO)
+    \draw[line] (tff) |- (ff.east);
+    \draw[line] (ff) -- (ldo.south) node[midway,right] {load step};
   \end{tikzpicture}
-  \caption{Hybrid Buck--LDO block diagram using the on-chip laminated inductor with PGS.}
+  \caption{Hybrid Buck--LDO block diagram with explicit \emph{feedback} (V\_out→Buck) and \emph{feedforward} (load-step tap→LDO) using the on-chip laminated inductor with PGS.}
   \label{fig:block}
 \end{figure}
 
