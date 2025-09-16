@@ -195,10 +195,19 @@ $<$2\,nm (2027--2030) & CFET (stacked n/p) & 0.50--0.60\,V & 500--700  & Cross-s
 
 % =========================
 \section{CFET Structural Concepts}
-Two representative integration styles are considered.
+Two integration styles are considered, reflecting a likely roadmap progression:
+first the \emph{Sequential CFET} as the initial implementation candidate,
+and then the \emph{Forksheet CFET} as a possible successor if inter-tier
+interference proves problematic.
 
 \paragraph*{(i) Sequential CFET}
-nFET is fabricated first, followed by pFET under a constrained thermal budget. Selective epitaxy/etch and dielectric isolation are crucial, as is vertical contact to the inverter output.
+The first integration style expected in practice is the Sequential CFET.
+Here, the nFET tier is fabricated first, followed by the pFET tier stacked
+above it under a constrained thermal budget. Selective epitaxy/etch and
+dielectric isolation are crucial, as is vertical contact to the inverter output.
+Because n- and p-devices are stacked in close proximity, however,
+concerns arise regarding electrostatic coupling, vertical via parasitics,
+and thermal interference between tiers.
 
 \begin{figure}[t]
 \centering
@@ -224,16 +233,21 @@ nFET is fabricated first, followed by pFET under a constrained thermal budget. S
 \fill[black!30] (2.9,0.6) rectangle (3.1,2.1);
 \node[anchor=west] at (3.15,1.35) {\scriptsize Vertical via (Output)};
 
-% Supply labels (outside to avoid overlap)
+% Supply labels
 \node[anchor=east] at (-0.05,1.95) {\scriptsize VDD};
 \node[anchor=east] at (-0.05,0.75) {\scriptsize GND};
 \end{tikzpicture}}
-\caption{Sequential CFET cross-section with stacked nFET/pFET and a vertical output via.}
+\caption{Sequential CFET cross-section: stacked nFET/pFET with vertical output via.%
+Current research focuses on managing parasitic coupling and thermal interference in this architecture.}
 \label{fig:cfet_stack}
 \end{figure}
 
 \paragraph*{(ii) Forksheet CFET}
-n/p channels are placed orthogonally with a dielectric ``fork'' spacer to ease routing congestion and preserve electrostatics.
+If interference in Sequential CFETs becomes too severe, a next-step option is the
+Forksheet CFET. In this style, n- and p-channels are placed orthogonally and
+separated by a dielectric ``fork'' spacer. This geometry helps mitigate
+inter-tier parasitics, preserves electrostatic control, and eases routing
+congestion.
 
 \begin{figure}[t]
 \centering
@@ -246,12 +260,13 @@ n/p channels are placed orthogonally with a dielectric ``fork'' spacer to ease r
 % Dielectric fork (thin)
 \fill[gray!45,opacity=0.6] (1.95,-0.6) rectangle (2.05,1.2);
 
-% --- Labels: かぶらないように外側に配置 ---
+% Labels
 \node[anchor=south] at (2.00,1.25) {\scriptsize Dielectric fork};
 \node[anchor=west]  at (2.25,0.30) {\scriptsize pMOS sheets (vertical)};
 \node[anchor=north] at (2.00,-0.10) {\scriptsize nMOS sheets (horizontal)};
 \end{tikzpicture}}
-\caption{Forksheet-CFET top view: orthogonal n/p nanosheets separated by a dielectric fork for routing relief.}
+\caption{Forksheet CFET top view: orthogonal n/p nanosheets with a dielectric fork.%
+This style is envisioned as a follow-up option if Sequential CFET coupling proves too limiting.}
 \label{fig:forksheet}
 \end{figure}
 
