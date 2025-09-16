@@ -5,11 +5,14 @@
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
+\graphicspath{{figs/}} % <-- 図の既定パス
 \usepackage{cite}
 \usepackage{url}
 \usepackage{hyperref}
+
+% TikZ（座標計算に calc を追加）
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,fit,shapes.misc}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.misc}
 
 \title{Time-Response-Aware Design of CFET Interconnect Delay, Self-Heating, and Stress Coupling via PID+FSM+LLM Supervision}
 
@@ -35,29 +38,22 @@ Conventional static design optimizes for a snapshot condition, but fails to acco
 
 \section{Problem Statement: Self-Heating and Stress Challenges}
 CFET integration introduces coupled physical phenomena that cannot be captured by static assumptions:  
-
 1) \textbf{Self-heating:} Power dissipated in the top tier propagates downward, increasing the temperature of the lower tier. The rise in temperature increases via resistance, causing time-varying RC delay.  
-
 2) \textbf{Stress coupling:} Vertical stacking and thermal expansion induce asymmetric mechanical stress. This stress alters threshold voltage and carrier mobility, leading to delay variability.  
-
 3) \textbf{Static design limitations:} Traditional methods provide only a snapshot at fixed conditions. In CFETs, delay dynamically shifts due to coupled thermal and stress effects, which static optimization cannot predict or compensate.  
-
 Therefore, CFET requires a time-response-aware design methodology.
 
 \section{Modeling}
 We integrate RC delay, thermal dynamics, and stress coupling into a unified model.  
-
 \subsection{Baseline Delay}
 \[
 T_{delay} = (R_{wire} + R_{via})(C_{load} + C_{inter}).
 \]
-
 \subsection{Thermal Dynamics}
 \[
 R(T) = R_0 \left(1 + \alpha (T - T_{ref}) \right), \quad
 C_{th}\frac{dT}{dt} = P\cdot R_{th} - (T - T_{amb}).
 \]
-
 \subsection{Stress Coupling}
 \[
 \mu_{eff} = \mu_0 (1 - \gamma \sigma_{eff}),
@@ -66,11 +62,9 @@ where $\sigma_{eff}$ is proportional to $\Delta T$. Delay couples to both $T$ an
 
 \section{Control Architecture}
 We propose a three-layer architecture:  
-
 1) \textbf{PID controller:} Regulates delay deviation $\varepsilon_d$ via DVFS actuation $u$.  
 2) \textbf{FSM guard:} Enforces HOT mode when $T_{top}>85^\circ$C, bounding $u \leq u_{max}$.  
 3) \textbf{LLM supervisor:} Retunes $(K_p,K_i,K_d)$ and FSM thresholds when overshoot/error exceed tolerance.  
-
 These layers provide stability (PID), safety (FSM), and adaptability (LLM).
 
 \begin{figure}[t]
@@ -83,62 +77,34 @@ These layers provide stability (PID), safety (FSM), and adaptability (LLM).
   dashedarrow/.style={-{Latex},thick,dashed},
   note/.style={inner sep=2pt}
 ]
-
-% --- Plant: CFET stacked tiers ------------------------------------
 \node[box,minimum width=4.2cm,minimum height=2.8cm] (plant) {};
 \node at ($(plant.north)+(0,0.25)$) {\bf CFET stacked tiers (plant)};
-
-% top tier
 \node[smallbox,anchor=north west,minimum width=3.8cm] (top) at ($(plant.north west)+(0.2,-0.45)$)
   {Top tier (e.g., p-FET)\quad $P_{\text{top}}\!\to\!T_{\text{top}}$};
-% bottom tier
 \node[smallbox,anchor=north west,minimum width=3.8cm] (bot) at ($(top.south west)+(0,-0.35)$)
   {Bottom tier (e.g., n-FET)\quad $T_{\text{bot}}$};
-
-% RC label
 \node[note,anchor=west] at ($(bot.south west)+(0.05,0.05)$)
   {$R_{\text{wire}}{+}R_{\text{via}},\; C_{\text{load}}{+}C_{\text{inter}}$};
-
-% vertical thermal coupling kc
 \draw[arrow] ([xshift=0.4cm]top.south) -- node[right] {$k_c$} ([xshift=0.4cm]bot.north);
 \draw[arrow] ([xshift=1.0cm]top.south) -- ([xshift=1.0cm]bot.north);
-
-% output: delay deviation eps_d
 \node[right=1.5cm of plant.east] (epslabel) {};
 \draw[arrow] (plant.east) -- node[above,pos=0.5] {delay deviation $\varepsilon_d$} (epslabel.center);
-
-% --- PID controller ------------------------------------------------
 \node[box,minimum width=2.5cm,minimum height=1.0cm, right=2.2cm of plant] (pid)
   {{\bf PID} controller\\ $(K_p,K_i,K_d)$};
 \draw[arrow] (epslabel.center) -- (pid.west);
-
-% --- FSM guard -----------------------------------------------------
 \node[box,minimum width=2.6cm,minimum height=1.0cm, below=0.45cm of pid] (fsm)
   {{\bf FSM} guard\\ HOT mode if $T_{\text{top}}>85^\circ$C};
-\draw[arrow] (pid.south) -- node[right] {} (fsm.north);
-
-% --- Actuation u ---------------------------------------------------
+\draw[arrow] (pid.south) -- (fsm.north);
 \node[box,minimum width=1.8cm,minimum height=0.9cm, below=0.45cm of fsm] (act)
   {Actuation $u$\\ (DVFS)};
 \draw[arrow] (fsm.south) -- (act.north);
-
-% feed back into plant (u -> plant)
 \draw[arrow] (act.west) -- ++(-1.05,0) |- node[pos=0.25,left] {$u$} (plant.west);
-
-% --- LLM supervisor (retuning) ------------------------------------
 \node[box,minimum width=3.1cm,minimum height=1.1cm, below left=0.0cm and 1.1cm of fsm] (llm)
   {{\bf LLM} supervisor\\ retune $(K_p,K_i,K_d)$,\;$T_{\text{th}}$};
-% taps from signals to LLM
 \draw[dashedarrow] (plant.south) |- node[below,pos=0.25] {$T_{\text{top}},T_{\text{bot}}$} (llm.west);
 \draw[dashedarrow] (pid.east) |- node[right,pos=0.2] {$\varepsilon_d$} (llm.north);
-% retuning outputs
 \draw[dashedarrow] (llm.east) -| node[above,pos=0.25] {gain/threshold updates} (pid.north);
 \draw[dashedarrow] (llm.east) -| (fsm.west);
-
-% legend (optional)
-\node[note,below=0.2cm of act] (leg1) {\tikz{\draw[arrow] (0,0)--(0.6,0);} control signal};
-\node[note,below=0.2cm of leg1] (leg2) {\tikz{\draw[dashedarrow] (0,0)--(0.6,0);} supervision/retuning};
-
 \end{tikzpicture}
 \caption{Block diagram of the proposed time-response-aware CFET design:
 stacked tiers (plant) with vertical thermal coupling $k_c$, feedback of delay deviation $\varepsilon_d$,
@@ -154,30 +120,24 @@ Thermal RC constants were from compact models. PID initial gains via Ziegler–N
 \section{Results}
 \subsection{Without Control}
 Burst heating increased delay deviation $\sim$8\%. Stress coupling further degraded mobility.  
-
 \subsection{PID Only}
 Error reduced $>10\times$, but overshoot remained.  
-
 \subsection{PID + FSM}
 Clamped actuation under hotspots, safe but inflexible.  
-
 \subsection{PID + FSM + LLM (Proposed)}
 Smooth convergence across all conditions. Peak error $2.6 \times 10^{-3}$, steady-state error $<10^{-6}$, robust across $\gamma=0.05$--0.2.  
-
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\columnwidth]{figs/fig2_time_response.png}
+\includegraphics[width=0.9\columnwidth]{fig2_time_response.png}
 \caption{Delay deviation trajectories: no control, PID, PID+FSM, and PID+FSM+LLM.}
 \label{fig:time}
 \end{figure}
-
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\columnwidth]{figs/fig3_bode_magnitude.png}
+\includegraphics[width=0.9\columnwidth]{fig3_bode_magnitude.png}
 \caption{Bode magnitude: plant vs closed-loop with PID.}
 \label{fig:bode}
 \end{figure}
-
 \begin{table}[h]
 \renewcommand{\arraystretch}{1.1}
 \caption{Performance Comparison}
@@ -204,13 +164,10 @@ PID ensured phase margin $>45^\circ$, gain margin $>6$ dB. FSM bounded $u$, LLM 
 \section{Discussion and Limitations}
 \subsection{Significance}
 Shifts CFET design from static to dynamic compensation.  
-
 \subsection{Comparison with Static Design}
 Static methods ignore time evolution; our method uses convergence as design target.  
-
 \subsection{Limitations}
 Compact-model abstraction, unmodeled noise/variation, LLM hardware overhead.  
-
 \subsection{Future Work}
 Chip-in-loop validation, forksheet/3D CFET extension, integration with cooling and NoC control.  
 
@@ -223,5 +180,4 @@ We proposed a time-response-aware CFET design with PID+FSM+LLM supervision. Dela
 \section*{Author Biography}
 \noindent\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal devices, and contributed to inkjet MEMS and PrecisionCore printhead technology. He is now an independent researcher focusing on device physics, memory, and AI-integrated systems.\\
 Contact: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, \href{https://github.com/Samizo-AITL}{Samizo-AITL}
-
 \end{document}
