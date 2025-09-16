@@ -48,27 +48,50 @@ This paper positions CFET as both a roadmap element and an educational vehicle f
 
 % =========================
 \section{Device Evolution: From SCE Relief to Cross-Sectional CMOS}
-\subsection{Planar CMOS and SCE Motivation}
-As gate lengths entered the deep sub-100\,nm regime, planar MOSFETs suffered
-from short-channel effects (SCE): threshold-voltage roll-off, drain-induced barrier lowering, off-state leakage, and degraded subthreshold slope.
-Electrostatic control by a single top gate could no longer effectively pinch off the channel.
 
-\subsection{FinFET: Three-Sided Gate Control}
-FinFETs improved electrostatics by wrapping the gate around \emph{three} sides of a vertical fin.
-The stronger gate-to-channel coupling sharpened subthreshold slope, reduced variability, and enabled higher drive per footprint by using multiple fins per device.
-However, the tall/narrow fin introduced process and variability trade-offs and left one side of the channel uncontrolled.
+Scaling history can be viewed as a sequence of innovations in
+gate–channel electrostatics. Each generation provided stronger
+short-channel control, but also introduced new integration
+bottlenecks that motivated the next architectural shift.
 
-\subsection{GAA Nanosheet: Four-Sided Control}
-Gate-All-Around (GAA) nanosheet FETs extend control to \emph{four} sides by surrounding suspended sheets (or wires) with the gate.
-This architecture further suppresses SCE and variability and allows continued gate-length scaling \cite{bsimcmg_sispad2017}.
-Yet, at advanced nodes the delay/energy bottleneck increasingly shifts from device electrostatics to \emph{wiring}: local interconnect resistance/capacitance (RC) and the lateral footprint of standard cells.
+\subsection{Planar CMOS: Collapse under SCE}
+As gate lengths entered the deep sub-100\,nm regime, planar MOSFETs
+suffered severely from short-channel effects (SCE): threshold-voltage
+roll-off, drain-induced barrier lowering, large off-state leakage, and
+degraded subthreshold slope. Electrostatic control by a single top gate
+was insufficient, leading to the collapse of classical planar scaling.
 
-\subsection{CFET: Stacking Complementary Devices}
-CFET addresses wiring and density limits by placing nFET and pFET in the \emph{same lateral footprint} and connecting them vertically.
-Educational takeaways are:
-(i) effective cell density can approach $\sim 2\times$ by sharing diffusion/gate footprint across polarities; and
-(ii) the critical n-to-p connection in inverters and logic stacks shortens, reducing local RC and stage delay.
-In short, CFET reframes CMOS as a \emph{cross-sectional inverter} rather than a lateral pair \cite{imec_cfet_iedm2020}.
+\subsection{FinFET: Three-Sided Gate Recovery}
+FinFETs restored scalability by wrapping the gate around
+\emph{three} sides of a vertical fin. The enhanced gate coupling
+sharpened subthreshold slope, improved variability, and enabled
+multi-fin drive current scaling per device. However, the tall/narrow
+fin introduced new trade-offs: sensitivity to line-edge roughness,
+process variability, and the fact that one side of the channel
+remained ungated.
+
+\subsection{GAA Nanosheet: Four-Sided Ideal Control}
+Gate-All-Around (GAA) nanosheet FETs extended electrostatics to
+\emph{four} sides by surrounding suspended sheets with the gate. This
+architecture nearly idealized SCE suppression and variability control,
+enabling sub-3\,nm nodes \cite{bsimcmg_sispad2017}. Yet, as device
+electrostatics became nearly perfect, the performance bottleneck
+shifted toward \emph{wiring}: local interconnect resistance/capacitance
+(RC) and the lateral footprint of standard cells limited further
+delay/energy gains.
+
+\subsection{CFET: Cross-Sectional CMOS Integration}
+Complementary FETs (CFETs) address wiring and density limits by stacking
+nFET and pFET devices in the \emph{same lateral footprint} and
+connecting them vertically. Educational takeaways are:
+(i) effective cell density can nearly double by sharing
+diffusion/gate footprint across polarities; and
+(ii) the critical n-to-p connection in inverters and logic networks is
+shortened, reducing local RC and FO1 delay. In effect, CFET reframes
+CMOS as a \emph{cross-sectional inverter} rather than a lateral pair
+\cite{imec_cfet_iedm2020}. While promising, CFETs also introduce
+new integration challenges: $<5$\,nm alignment tolerance, low thermal
+budget for sequential processing, and inter-tier parasitic coupling.
 
 % =========================
 \begin{figure}[t]
