@@ -70,19 +70,54 @@ Educational takeaways are:
 (ii) the critical n-to-p connection in inverters and logic stacks shortens, reducing local RC and stage delay.
 In short, CFET reframes CMOS as a \emph{cross-sectional inverter} rather than a lateral pair \cite{imec_cfet_iedm2020}.
 
+% =========================
 \begin{figure}[t]
 \centering
 \fitfig{%
-\begin{tikzpicture}[node distance=2.4cm,>=Latex]
-\node[draw, minimum width=1.6cm, minimum height=0.8cm] (planar) {Planar};
-\node[draw, right=of planar] (finfet) {FinFET};
-\node[draw, right=of finfet] (gaa) {GAA};
-\node[draw, right=of gaa] (cfet) {CFET};
-\draw[->] (planar) -- (finfet);
-\draw[->] (finfet) -- (gaa);
-\draw[->] (gaa) -- (cfet);
+\begin{tikzpicture}[scale=0.9,>=Latex]
+
+% --- Planar ---
+\node at (0,-0.8) {\footnotesize Planar};
+\draw[fill=blue!20] (-0.6,0) rectangle (0.6,-0.3); % channel
+\draw[fill=red!20] (-0.7,0.3) rectangle (0.7,0.6);  % gate
+\draw (-0.7,0.3) rectangle (0.7,0.6);
+
+% --- arrow ---
+\draw[->,thick] (1.0,0.15) -- (1.8,0.15);
+
+% --- FinFET ---
+\node at (2.8,-0.8) {\footnotesize FinFET};
+\draw[fill=blue!20] (2.6,-0.3) rectangle (3.0,0.6); % fin
+\draw[fill=red!20,opacity=0.6] (2.3,0.6) rectangle (3.3,0.9); % gate top
+\draw[fill=red!20,opacity=0.6] (2.3,-0.3) rectangle (2.6,0.6); % gate left
+\draw[fill=red!20,opacity=0.6] (3.0,-0.3) rectangle (3.3,0.6); % gate right
+
+% --- arrow ---
+\draw[->,thick] (3.6,0.15) -- (4.4,0.15);
+
+% --- GAA ---
+\node at (5.4,-0.8) {\footnotesize GAA};
+\draw[fill=blue!20] (5.0,0.0) rectangle (5.8,0.3); % channel
+\draw[draw=red!60, ultra thick, rounded corners=2pt]
+      (4.9,-0.1) rectangle (5.9,0.4); % gate fully around
+
+% --- arrow ---
+\draw[->,thick] (6.2,0.15) -- (7.0,0.15);
+
+% --- CFET ---
+\node at (8.0,-0.8) {\footnotesize CFET};
+% lower nFET
+\draw[fill=blue!20] (7.6,0.0) rectangle (8.4,0.3);
+\draw[draw=red!60, thick, rounded corners=1pt] (7.5,-0.1) rectangle (8.5,0.4);
+% upper pFET
+\draw[fill=blue!20!red!30] (7.6,0.7) rectangle (8.4,1.0);
+\draw[draw=red!60, thick, rounded corners=1pt] (7.5,0.6) rectangle (8.5,1.1);
+% vertical via
+\draw[fill=black!40] (8.45,0.0) rectangle (8.65,1.0);
+\node[anchor=west,font=\scriptsize] at (8.7,0.5) {vertical via};
+
 \end{tikzpicture}}
-\caption{Device evolution: Planar $\rightarrow$ FinFET (3-side) $\rightarrow$ GAA (4-side) $\rightarrow$ CFET (vertical stack).}
+\caption{Device evolution: Planar (single gate) $\rightarrow$ FinFET (3-side) $\rightarrow$ GAA (4-side) $\rightarrow$ CFET (stacked n/p).}
 \label{fig:evolution}
 \end{figure}
 
