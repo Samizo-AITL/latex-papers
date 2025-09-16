@@ -109,23 +109,38 @@ $<$2\,nm (2027--2030) & CFET (stacked n/p) & 0.50--0.60\,V & 500--700  & Cross-s
 \begin{figure*}[!t]
 \centering
 \fitfig{%
-\begin{tikzpicture}[>=Latex, node distance=2.2cm, y=0.55cm]
+\begin{tikzpicture}[>=Latex, node distance=2.2cm, y=0.65cm]
 \tikzset{
-  stage/.style={draw, rounded corners=2pt, minimum width=2.35cm, minimum height=0.75cm,
-                align=center, fill=gray!10, font=\footnotesize},
+  stage/.style={
+    draw, rounded corners=2pt, align=center, fill=gray!10,
+    minimum width=2.35cm, minimum height=1.05cm, % ← 縦を少し厚く
+    inner sep=2.5pt,                               % ← 内側余白を増やす
+    font=\footnotesize, text width=2.35cm
+  },
   annot/.style={align=center, font=\scriptsize}
 }
 
-% baseline axis (薄い)
+% baseline axis
 \draw[->, semithick] (-0.4,0) -- (16.2,0);
 
-% stages
-\node[stage] (n7)  at (0,0)   {7\,nm\\ FinFET\\ (2018)};
-\node[stage] (n5)  at (3.0,0) {5\,nm\\ FinFET$\to$pre-GAA\\ (2020)};
-\node[stage] (n3)  at (6.0,0) {3\,nm\\ GAA\\ (2023)};
-\node[stage] (n2)  at (9.0,0) {2\,nm\\ GAA prod.\\ (2025 est.)};
-\node[stage] (c20) at (12.0,0){$<$2\,nm\\ CFET\\ (2027--2030)};
-\node[stage] (c10) at (15.0,0){1\,nm-class\\ Seq./Forksheet\\ (2030+)};
+% --- stages（各ノードの箱の中に数値も記載）---
+\node[stage] (n7)  at (0,0)   {7\,nm\\ \textbf{FinFET} (2018)\\[-1pt]
+  {\scriptsize VDD 0.70--0.80\,V\\ 90--100 MTr/mm$^2$}};
+
+\node[stage] (n5)  at (3.0,0) {5\,nm\\ \textbf{FinFET$\to$pre-GAA} (2020)\\[-1pt]
+  {\scriptsize 0.65--0.75\,V\\ 130--170}};
+
+\node[stage] (n3)  at (6.0,0) {3\,nm\\ \textbf{GAA} (2023)\\[-1pt]
+  {\scriptsize 0.60--0.70\,V\\ 200--250}};
+
+\node[stage] (n2)  at (9.0,0) {2\,nm\\ \textbf{GAA prod.} (2025 est.)\\[-1pt]
+  {\scriptsize 0.55--0.65\,V\\ 300--400}};
+
+\node[stage] (c20) at (12.0,0){$<$2\,nm\\ \textbf{CFET} (2027--2030)\\[-1pt]
+  {\scriptsize 0.50--0.60\,V\\ 500--700}};
+
+\node[stage] (c10) at (15.0,0){1\,nm-class\\ \textbf{Seq./Forksheet CFET} (2030+)\\[-1pt]
+  {\scriptsize $<$0.50\,V\\ $>$800}};
 
 % arrows
 \draw[->] (n7) -- (n5);
@@ -134,23 +149,14 @@ $<$2\,nm (2027--2030) & CFET (stacked n/p) & 0.50--0.60\,V & 500--700  & Cross-s
 \draw[->] (n2) -- (c20);
 \draw[->] (c20) -- (c10);
 
-% compact annotations (下側のみ)
-\node[annot] at (0,-1.2)  {VDD 0.70--0.80\,V\\ 90--100 MTr/mm$^2$};
-\node[annot] at (3.0,-1.2){0.65--0.75\,V\\ 130--170};
-\node[annot] at (6.0,-1.2){0.60--0.70\,V\\ 200--250};
-\node[annot] at (9.0,-1.2){0.55--0.65\,V\\ 300--400};
-\node[annot] at (12.0,-1.2){0.50--0.60\,V\\ 500--700};
-\node[annot] at (15.0,-1.2){$<$0.50\,V\\ $>$800};
-
-% key message（短い一行だけ）
-\node[annot] at (12.0,1.0) {CFET: vertical n/p $\Rightarrow$ density $\sim$2$\times$, shorter n$\to$p RC};
+% --- key message（上にずらす＆少し小さく） ---
+\node[annot] at (12.0,1.8) {\footnotesize CFET: vertical n/p $\Rightarrow$ density $\sim$2$\times$, shorter n$\to$p RC};
 
 \end{tikzpicture}}
 \caption{Compact roadmap timeline aligned with Table~\ref{tab:node_scaling}. Values are indicative; adapted from IRDS~\cite{irds_2023} and IMEC IEDM~\cite{imec_cfet_iedm2020}.}
 \label{fig:roadmap_timeline}
 \end{figure*}
-% 余白を少し確保
-\vspace{0.5ex}
+\vspace{0.6ex}
 
 % =========================
 \section{CFET Structural Concepts}
