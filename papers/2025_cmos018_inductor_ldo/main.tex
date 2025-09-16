@@ -45,7 +45,12 @@ On-chip inductor, magnetic lamination, patterned ground shield (PGS), CMOS power
 \end{IEEEkeywords}
 
 \section{Introduction}
-On-chip power integration in mature CMOS nodes remains important for automotive, IoT, and AMS SoCs. Conventional air-core spiral inductors suffer from low $Q$, large area, and limited current handling. We propose laminated magnetic inductors with a PGS and apply them in a hybrid Buck--LDO regulator to simultaneously improve efficiency, noise, and transient performance.
+On-chip power integration in advanced CMOS nodes is becoming increasingly important for automotive, IoT, and AMS SoCs. 
+Conventional external inductors provide high efficiency but suffer from drawbacks such as an increased number of components, larger PCB footprint, and noise coupling issues. 
+In contrast, on-chip inductors can be co-integrated within the package and represent a competitive solution. 
+
+In this work, we extend an existing 0.18-\textmu m CMOS line by adding a post-BEOL process with a patterned ground shield (PGS) and laminated magnetic films. 
+Furthermore, by combining the laminated inductor with a hybrid Buck--LDO topology, we demonstrate a power supply solution that achieves high efficiency, wide bandwidth, and low noise performance.
 
 \section{Proposed Method}
 \subsection{Magnetic-Laminated Inductor}
@@ -143,7 +148,9 @@ PSRR @ \SI{1}{\mega\hertz} & \SI{30}{\decibel} & $>\SI{60}{\decibel}$ \\
 \end{figure}
 
 \section{Conclusion}
-Magnetic lamination plus PGS improves inductance density and $Q$ within a CMOS-compatible post-BEOL flow. The hybrid Buck--LDO architecture achieves $\sim\SI{80}{\percent}$ efficiency with low ripple and high PSRR, suitable for automotive and IoT SoCs.
+This paper has presented a practical on-chip inductor approach, realized by simply adding PGS and laminated magnetic layers to a conventional 0.18-\textmu m CMOS process. 
+When applied to a hybrid Buck--LDO power supply, the proposed solution achieves external-inductor-free operation while maintaining over 80\% efficiency, wideband response, and low noise characteristics. 
+By eliminating the reliance on external passives, the proposed architecture provides a competitive power management solution for future automotive and IoT SoCs.
 
 \section*{Acknowledgment}
 The author thanks the Project Design Hub for technical support and discussions.
