@@ -67,84 +67,81 @@ We propose a three-layer architecture:
 3) \textbf{LLM supervisor:} Retunes $(K_p,K_i,K_d)$ and FSM thresholds when overshoot/error exceed tolerance.  
 These layers provide stability (PID), safety (FSM), and adaptability (LLM).
 
-% --- 全幅(2カラム)版 Fig.1 -----------------------------------------------
-\begin{figure*}[t!]
+% ===== Fig.1 : 2カラム全幅・トップ配置・重なり回避・高さ控えめ =====
+\begin{figure*}[!t]
 \centering
-% 余白を少しだけ詰めたい場合は次を有効化
-% \vspace{-2mm}
-% \addtolength{\textfloatsep}{-2mm}
-
-% 幅を本文幅に合わせて安全に拡大/縮小
-\resizebox{\textwidth}{!}{%
+% 高さを少し抑えて他図との干渉を減らす（0.92倍）
+\scalebox{0.92}{%
 \begin{tikzpicture}[
   font=\footnotesize,
   box/.style={draw,rounded corners,fill=gray!5,inner sep=5pt,align=center},
   arrow/.style={-Latex,thick},
   dashedarrow/.style={-Latex,thick,dashed},
-  lbl/.style={fill=white,inner sep=1pt}
+  % 交差が避けられない場合の“白縁取り”（下地を白で描いてから本線）
+  cut/.style={preaction={draw,white,line width=3pt}}
 ]
 
-% --- Plant (左側) ----------------------------------------------------------
-\node[draw,rounded corners,minimum width=7.6cm,minimum height=3.2cm] (plant) {};
-\node[lbl,above] at (plant.north) {CFET stacked tiers (plant)};
+% ---- 左：プラント --------------------------------------------------
+\node[draw,rounded corners,minimum width=7.2cm,minimum height=3.0cm] (plant) {};
+\node[fill=white,inner sep=1pt,above] at (plant.north) {CFET stacked tiers (plant)};
 
-\node[box,minimum width=6.9cm] (top) at ($(plant.north)+(0,-0.75)$)
+\node[box,minimum width=6.5cm] (top) at ($(plant.north)+(0,-0.70)$)
   {Top tier (e.g., p-FET)\\ $P_{top}\!\to\!T_{top}$};
-\node[box,minimum width=6.9cm,below=0.65cm of top]
-  (bot) {Bottom tier (e.g., n-FET)\\ $R_{\text{wire}}{+}R_{\text{via}},\; C_{\text{load}}{+}C_{\text{inter}}\quad\; T_{bot}$};
+\node[box,minimum width=6.5cm,below=0.60cm of top]
+  (bot) {Bottom tier (e.g., n-FET)\\ $R_{\text{wire}}{+}R_{\text{via}},\; C_{\text{load}}{+}C_{\text{inter}}\quad T_{bot}$};
 
-% thermal coupling (重なり無しの平行2本)
-\draw[arrow] ($(top.south west)!0.65!(top.south east)$)
- -- node[right]{$k_c$}
- ($(bot.north west)!0.65!(bot.north east)$);
-\draw[arrow] ($(top.south west)!0.90!(top.south east)$)
+% 縦熱結合（平行2本・被り無し）
+\draw[arrow,cut] ($(top.south west)!0.68!(top.south east)$)
+ -- node[right,fill=white,inner sep=1pt]{$k_c$}
+ ($(bot.north west)!0.68!(bot.north east)$);
+\draw[arrow,cut] ($(top.south west)!0.90!(top.south east)$)
  -- ($(bot.north west)!0.90!(bot.north east)$);
 
-% delay deviation eps_d を右へ
-\coordinate (eps) at ($(plant.east)+(1.5,0)$);
-\draw[arrow] (plant.east) -- (eps);
-\node[lbl,above] at ($(plant.east)!0.55!(eps)$) {$\varepsilon_d$};
+% ε_d を右へ（専用レーン, 上段）
+\coordinate (eps) at ($(plant.east)+(1.5,0.55)$);
+\draw[arrow,cut] ($(plant.east)+(0,0.55)$) -- (eps);
+\node[fill=white,inner sep=1pt,above] at ($(plant.east)!0.6!(eps)$) {$\varepsilon_d$};
 
-% --- 右側: PID, FSM, Act ---------------------------------------------------
-\node[box,right=3.3cm of plant] (pid)
+% ---- 右：PID, FSM, Act --------------------------------------------
+\node[box,right=3.2cm of plant] (pid)
   {PID controller\\ $(K_p,K_i,K_d)$};
-\draw[arrow] (eps) -- (pid.west);
+\draw[arrow,cut] (eps) |- (pid.west);
 
-\node[box,below=0.9cm of pid] (fsm)
+\node[box,below=0.85cm of pid] (fsm)
   {FSM guard\\ HOT if $T_{top}>85^\circ$C};
-\draw[arrow] (pid.south) -- (fsm.north);
+\draw[arrow,cut] (pid.south) -- (fsm.north);
 
-\node[box,below=0.9cm of fsm] (act)
+\node[box,below=0.85cm of fsm] (act)
   {Actuation $u$\\ (DVFS)};
-\draw[arrow] (fsm.south) -- (act.north);
+\draw[arrow,cut] (fsm.south) -- (act.north);
 
-% u を左下からプラントへ（交差回避）
-\draw[arrow] (act.west) -- ++(-1.3,0) |- node[lbl,left]{$u$} (plant.west);
+% u を左下ルートでプラントへ（交差回避）
+\draw[arrow,cut] (act.west) -- ++(-1.25,0) |- node[left,fill=white,inner sep=1pt]{$u$} (plant.west);
 
-% --- 下段: LLM -------------------------------------------------------------
-\node[box,below=1.4cm of plant] (llm)
+% ---- 下：LLM -------------------------------------------------------
+\node[box,below=1.3cm of plant] (llm)
   {LLM supervisor\\ retune $(K_p,K_i,K_d),\,T_{th}$};
 
-% 温度フィードバック（専用下ルート）
-\draw[dashedarrow] (plant.south) -- (llm.north)
-  node[midway,lbl,left]{$T_{top},\,T_{bot}$};
+% 温度フィードバック（下段専用レーン）
+\draw[dashedarrow,cut] (plant.south) -- (llm.north)
+  node[midway,left,fill=white,inner sep=1pt]{$T_{top},\,T_{bot}$};
 
-% eps_d タップ（右外周を回して重なり回避）
-\draw[dashedarrow] (pid.east) -- ++(1.0,0) |- (llm.east)
-  node[pos=0.25,lbl,right]{$\varepsilon_d$};
+% ε_d タップ（右外周をUターンして LLM へ）
+\draw[dashedarrow,cut] (pid.east) -- ++(1.0,0) |- (llm.east)
+  node[pos=0.25,right,fill=white,inner sep=1pt]{$\varepsilon_d$};
 
-% retune 出力（右側U字で PID/FSM へ）
-\draw[dashedarrow] (llm.east) -- ++(1.2,0) |- (pid.north)
-  node[pos=0.35,lbl,right]{gain/threshold updates};
-\draw[dashedarrow] (llm.east) -- ++(0.8,0) |- (fsm.west);
+% retune 出力（PID/FSM へ戻し）
+\draw[dashedarrow,cut] (llm.east) -- ++(1.2,0) |- (pid.north)
+  node[pos=0.35,right,fill=white,inner sep=1pt]{gain/threshold updates};
+\draw[dashedarrow,cut] (llm.east) -- ++(0.8,0) |- (fsm.west);
 
 \end{tikzpicture}%
-} % end resizebox
-\caption{CFET control block diagram (2-column wide) with arrow routes arranged to avoid overlaps.}
+} % end scalebox
+\caption{CFET control block diagram (2-column). Routes are assigned to exclusive lanes; labels carry white backgrounds; unavoidable crossings get white underlay to prevent visual overlap.}
 \label{fig:model_tikz}
+% 下の空きを少し詰めたいとき：
 % \vspace{-2mm}
 \end{figure*}
-% ---------------------------------------------------------------------------
 
 \section{Experimental Setup}
 Simulations were performed using SystemDK 2025 with $dt=1$ ns and horizon 1.5 s. Parameters:  
