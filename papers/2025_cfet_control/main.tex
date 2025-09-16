@@ -125,7 +125,10 @@ These layers provide stability (PID), safety (FSM), and adaptability (LLM).
 
 \end{tikzpicture}%
 }
-\caption{CFET control block diagram (2-column). $\varepsilon_d$ は上側レーンで PID 左辺へ、LLM の点線は上辺から開始、$u$ は下→上に上昇後に右折し、plant 左辺へ接続。}
+\caption{CFET control block diagram (2-column). 
+$\varepsilon_d$ runs on the upper lane into the left edge of the PID block;
+dashed lines from the LLM start at its top edge; 
+$u$ goes vertically up, then right, and finally connects to the left edge of the plant.}
 \label{fig:model_tikz}
 \end{figure*}
 
