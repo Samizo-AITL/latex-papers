@@ -1,6 +1,6 @@
 \documentclass[conference]{IEEEtran}
 
-% --- Robust preamble ---
+% --- Preamble ---
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb}
@@ -57,39 +57,40 @@ Fig.~\ref{fig:delay} shows delay deviation trajectories. Without control, error 
 Bode plots (Fig.~\ref{fig:bode}) confirm stability margins and 2-decade bandwidth extension.
 
 \subsection{Quantitative Metrics}
-\begin{table}[h]
+\begin{table}[b]
+\renewcommand{\arraystretch}{1.1}
+\caption{CONTROLLER COMPARISON}
 \centering
-\caption{Controller Comparison}
 \begin{tabular}{|l|c|c|c|}
 \hline
 Metric & No Ctrl & PID+FSM & PID+FSM+LLM \\
 \hline
 Peak deviation & $\sim$8\% & $10^{-3}$ & $2.6\times 10^{-3}$ \\
-Steady error & $10^{-2}$ & $\sim$0 & $<10^{-6}$ \\
-Overshoot & Large & Suppressed & Minimal \\
-Effort $\int|u|dt$ & N/A & Stable & Optimized \\
+Steady error   & $10^{-2}$ & $\sim$0   & $<10^{-6}$ \\
+Overshoot      & Large     & Suppressed & Minimal \\
+Effort $\int|u|dt$ & N/A   & Stable    & Optimized \\
 \hline
 \end{tabular}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
-\includegraphics[width=0.9\columnwidth]{figs/fig1_cfet_rc_thermal_equiv.png}
-\caption{Equivalent RC--thermal network of stacked CFET tiers with PID, FSM, and LLM supervisory layers.}
+\includegraphics[width=\columnwidth]{figs/fig1_cfet_rc_thermal_equiv.png}
+\caption{Equivalent RC--thermal model of stacked CFET tiers.}
 \label{fig:equiv}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
-\includegraphics[width=0.9\columnwidth]{figs/fig2_time_response.png}
-\caption{Delay deviation trajectories: no control, PID, PID+FSM, and PID+FSM+LLM.}
+\includegraphics[width=\columnwidth]{figs/fig2_time_response.png}
+\caption{Delay deviation trajectories under different controllers.}
 \label{fig:delay}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
-\includegraphics[width=0.9\columnwidth]{figs/fig3_bode_magnitude.png}
-\caption{Bode magnitude plot of plant vs closed-loop with PID.}
+\includegraphics[width=\columnwidth]{figs/fig3_bode_magnitude.png}
+\caption{Bode magnitude: plant vs closed-loop with PID.}
 \label{fig:bode}
 \end{figure}
 
@@ -97,10 +98,10 @@ Effort $\int|u|dt$ & N/A & Stable & Optimized \\
 The closed-loop transfer $T(j\omega)=L/(1+L)$ with $L=C\cdot G$ was analyzed. PID gains were selected to preserve phase margin $>45^\circ$. FSM saturation guarantees bounded actuation. LLM adaptation preserves stability under parameter drift, avoiding oscillations.
 
 \section{Discussion and Limitations}
-The proposed controller reduces delay deviation by $>100\times$ under coupled thermal stress. Limitations: compact-model abstraction, absence of layout-level parasitics, and simplified LLM supervision. Future work: chip-in-loop validation, forksheet/3D sequential CFET extension, and co-optimization with DVFS and microfluidic cooling.
+The layered PID+FSM+LLM controller reduces CFET delay deviation by more than two orders of magnitude while ensuring thermal safety. Limitations include compact-model abstraction, lack of full 3D layout parasitics, and simplified LLM policies. Future work targets chip-in-loop validation, forksheet and 3D sequential CFET extensions, and integration with DVFS and microfluidic cooling.
 
 \section{Conclusion}
-This study demonstrates that cross-layer runtime control with PID+FSM+LLM can effectively stabilize CFET interconnect delay and thermal coupling, reframing DTCO as a dynamic compensation problem. This framework opens new directions for sub-2\,nm integration.
+We demonstrated that cross-layer runtime control stabilizes CFET delay and thermal coupling under sub-2\,nm conditions. By shifting DTCO from static models to dynamic compensation, this framework offers a new methodology for future CMOS integration.
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
