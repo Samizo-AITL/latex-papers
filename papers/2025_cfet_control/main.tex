@@ -9,59 +9,68 @@
 \usepackage{url}
 \usepackage{hyperref}
 
-\title{Cross-Layer Control of CFET Interconnect Delay and Thermal Coupling via PID+FSM+LLM Supervision}
+\title{Time-Response-Aware Design of CFET Interconnect Delay, Self-Heating, and Stress Coupling via PID+FSM+LLM Supervision}
 
 \author{
-\IEEEauthorblockN{Shinichi Samizo}
-\IEEEauthorblockA{Independent Semiconductor Researcher\\
-Project Design Hub, Samizo-AITL\\
-\textit{Email:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
-\textit{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}}
+  \IEEEauthorblockN{Shinichi Samizo}
+  \IEEEauthorblockA{Independent Semiconductor Researcher\\
+  Project Design Hub, Samizo-AITL\\
+  \textit{Email:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+  \textit{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}}
 }
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Complementary FET (CFET) integration beyond gate-all-around nanosheets suffers from interconnect RC delay and vertical thermal coupling, effects that conventional compact models only predict statically. This work reframes the problem as a runtime control challenge. We propose a layered architecture combining proportional--integral--derivative (PID) feedback, finite-state machine (FSM) safety guards, and large language model (LLM) supervision. Compact RC--thermal networks were simulated using SystemDK across sweeps of via resistance, inter-tier capacitance, coupling factor, and burst power. Results show more than two orders of magnitude suppression in delay deviation, reducing peak error from $\sim$8\% to $2.6\times 10^{-3}$ and steady-state error below $10^{-6}$. FSM constraints guarantee bounded actuation at hotspots, while LLM supervision dynamically retunes gains under workload drift. These findings establish cross-layer runtime control as a novel pathway for device--technology co-optimization (DTCO) in sub-2\,nm CFET nodes.
+Gate-all-around (GAA) nanosheet FETs can be designed under static assumptions, where parasitics and thermal effects are treated as fixed values. However, complementary FETs (CFETs) with stacked n/p channels suffer from strong vertical self-heating and stress coupling. These effects vary dynamically, leading to RC delay shifts that static design cannot capture. This paper introduces a time-response-aware design paradigm: proportional--integral--derivative (PID) feedback regulates delay deviation, finite-state machine (FSM) guards ensure safety under hotspots, and large language model (LLM) supervision adapts controller gains under workload drift. Compact RC--thermal--stress networks were simulated in SystemDK across sweeps of via resistance, inter-tier capacitance, coupling factor, and burst power. Results show more than two orders of magnitude suppression of delay deviation, reducing peak error from $\sim$8\% to $2.6\times 10^{-3}$ and steady-state error below $10^{-6}$. FSM guarantees bounded actuation, while LLM retunes thresholds dynamically. This reframes CFET optimization from static prediction to dynamic compensation, addressing self-heating and stress-induced variability in sub-2\,nm integration.
 \end{abstract}
 
 \section{Introduction}
-CFETs stack nFET and pFET channels vertically, extending density and delay scaling beyond nanosheet GAA. However, vertical vias introduce additional RC delay, and stacked tiers are thermally coupled. Prior works such as Yakimets \textit{et al.}~\cite{yakimets2020cfet} and IRDS~\cite{irds2023} document these challenges, but existing approaches remain static. This paper advances the paradigm: from \emph{predictive modeling} to \emph{runtime control}. Inspired by feedback and supervisory control~\cite{franklin2015feedback,khalil2002nonlinear,anderson2007optimal}, we demonstrate a PID+FSM+LLM architecture that compensates delay and thermal deviations dynamically.
+Until the GAA generation, device and circuit design could rely on static analysis: resistance, capacitance, and temperature rise were treated as fixed values. However, as we move to CFET integration, where nFET and pFET are vertically stacked, two challenges dominate: (1) \emph{self-heating}, where the top tier's heat propagates to the bottom tier, raising resistance and delay; and (2) \emph{stress coupling}, where vertical stacking and thermal expansion generate asymmetric strain, modulating threshold voltage and carrier mobility. Both effects are strongly time-dependent and interact with RC delay.
+
+Conventional static design optimizes for a snapshot condition, but fails to account for how delay and temperature evolve over time. This limitation motivates a new paradigm: \emph{time-response-aware design}, where stability and convergence under dynamic workloads become first-class design targets. We incorporate control theory---PID feedback, FSM guards, and LLM supervision---to stabilize delay and temperature in CFET stacks. Unlike prior studies that only modeled parasitics~\cite{yakimets2020cfet,irds2023}, we demonstrate runtime compensation.
 
 \section{Modeling}
-The FO1 delay is:
+The FO1 delay is expressed as
 \begin{equation}
-T_{FO1} = (R_{wire}+R_{via})(C_{load}+C_{inter})
+T_{FO1} = (R_{wire}+R_{via})(C_{load}+C_{inter}).
 \end{equation}
-Temperature dependence:
+Resistance increases with temperature:
 \begin{equation}
-R(T) = R_0 \left(1 + \alpha (T-25^\circ C)\right)
+R(T) = R_0 \left(1 + \alpha (T-25^\circ C)\right).
 \end{equation}
-Thermal dynamics:
+Thermal dynamics follow
 \begin{equation}
-C_{th}\frac{dT}{dt} = P\cdot R_{th} - (T - T_{amb})
+C_{th}\frac{dT}{dt} = P\cdot R_{th} - (T - T_{amb}).
 \end{equation}
-Inter-tier coupling is captured by $k_c$ (0.2--0.5 from IMEC data).
+Stress-induced mobility degradation is modeled by
+\begin{equation}
+\mu_{eff} = \mu_0 (1 - \gamma \sigma_{eff}),
+\end{equation}
+where $\sigma_{eff}$ is the thermo-mechanical stress proportional to $\Delta T$ and vertical confinement. Delay therefore couples to both $T$ and $\sigma$.
 
 \section{Control Architecture}
-\textbf{PID:} regulates delay deviation $\varepsilon_d$ with DVFS actuation $u$.  
-\textbf{FSM:} enforces safety by capping $u$ when $T_{top}>85^\circ$C.  
-\textbf{LLM:} supervises by retuning $K_p,K_i,K_d$ when average error $>0.02$ or oscillations emerge.  
-Together, these layers ensure stability, safety, and adaptability.
+\textbf{PID:} regulates delay deviation $\varepsilon_d$ through DVFS actuation $u$.  
+\textbf{FSM:} enforces HOT mode when $T_{top}>85^\circ$C, bounding $u\leq u_{max}$ to avoid runaway.  
+\textbf{LLM:} supervises by retuning $(K_p,K_i,K_d)$ and FSM thresholds when overshoot or oscillation exceed tolerance.  
+
+This layered design provides stability (PID), safety (FSM), and adaptability (LLM).
 
 \section{Experimental Setup}
-Simulations used SystemDK 2025 with $dt=1$\,ns and horizon $1.5$\,s. Parameters: $R_{via}=1$--$10~\Omega$, $C_{inter}=1$--$5$\,fF, $k_c=0.3$--$0.9$, and burst power $0.1$--$1.0$\,W. Thermal RC values were calibrated from stacked CFET compact models.
+Simulations used SystemDK 2025, step size $1$\,ns, horizon $1.5$\,s. Parameters: $R_{via}=1$--$10~\Omega$, $C_{inter}=1$--$5$\,fF, $k_c=0.3$--0.9, burst power $0.1$--$1.0$\,W. Stress coupling coefficient $\gamma$ was swept 0.05--0.2. Thermal RC constants were calibrated from CFET compact models.
 
 \section{Results}
-\subsection{Transient and Frequency Response}
-Fig.~\ref{fig:delay} shows delay deviation trajectories. Without control, error remains $\sim$8\%. PID reduces error but overshoots under bursts. PID+FSM bounds control at hotspots. PID+FSM+LLM converges smoothly.  
-Bode plots (Fig.~\ref{fig:bode}) confirm stability margins and 2-decade bandwidth extension.
+\subsection{Transient Response}
+Without control, delay error rises $\sim$8\% under burst heating. PID reduces error but overshoots. PID+FSM clamps actuation at hotspots. PID+FSM+LLM converges smoothly with error $<10^{-6}$.
 
-\subsection{Quantitative Metrics}
+\subsection{Stress Impact}
+Fig.~\ref{fig:stress} shows delay deviation vs stress factor $\gamma$. Static design cannot compensate, but controlled design maintains stability across $\gamma=0.05$--0.2.
+
+\subsection{Metrics}
 \begin{table}[b]
 \renewcommand{\arraystretch}{1.1}
-\caption{CONTROLLER COMPARISON}
+\caption{CONTROLLER PERFORMANCE}
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
@@ -70,40 +79,26 @@ Metric & No Ctrl & PID+FSM & PID+FSM+LLM \\
 Peak deviation & $\sim$8\% & $10^{-3}$ & $2.6\times 10^{-3}$ \\
 Steady error   & $10^{-2}$ & $\sim$0   & $<10^{-6}$ \\
 Overshoot      & Large     & Suppressed & Minimal \\
-Effort $\int|u|dt$ & N/A   & Stable    & Optimized \\
+Stress tolerance & None    & Limited   & Wide \\
 \hline
 \end{tabular}
 \end{table}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figs/fig1_cfet_rc_thermal_equiv.png}
-\caption{Equivalent RC--thermal model of stacked CFET tiers.}
-\label{fig:equiv}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figs/fig2_time_response.png}
-\caption{Delay deviation trajectories under different controllers.}
-\label{fig:delay}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figs/fig3_bode_magnitude.png}
-\caption{Bode magnitude: plant vs closed-loop with PID.}
-\label{fig:bode}
+\includegraphics[width=\columnwidth]{figs/stress_response.png}
+\caption{Delay deviation vs stress factor $\gamma$: static vs controlled design.}
+\label{fig:stress}
 \end{figure}
 
 \section{Stability Analysis}
-The closed-loop transfer $T(j\omega)=L/(1+L)$ with $L=C\cdot G$ was analyzed. PID gains were selected to preserve phase margin $>45^\circ$. FSM saturation guarantees bounded actuation. LLM adaptation preserves stability under parameter drift, avoiding oscillations.
+The closed-loop $T(j\omega)=L/(1+L)$ with $L=C\cdot G$ was analyzed. PID gains satisfy phase margin $>45^\circ$. FSM bounds control effort under thermal runaway. LLM maintains margins when $\{k_c,\gamma,P\}$ drift.
 
 \section{Discussion and Limitations}
-The layered PID+FSM+LLM controller reduces CFET delay deviation by more than two orders of magnitude while ensuring thermal safety. Limitations include compact-model abstraction, lack of full 3D layout parasitics, and simplified LLM policies. Future work targets chip-in-loop validation, forksheet and 3D sequential CFET extensions, and integration with DVFS and microfluidic cooling.
+Our controller reduces CFET delay deviation by over 100$\times$, robust across thermal and stress variations. Limitations: compact-model abstraction, omission of full 3D parasitics, simplified LLM adaptation. Future work: chip-in-loop validation, extension to forksheet and 3D sequential CFET, and integration with cooling-aware policies.
 
 \section{Conclusion}
-We demonstrated that cross-layer runtime control stabilizes CFET delay and thermal coupling under sub-2\,nm conditions. By shifting DTCO from static models to dynamic compensation, this framework offers a new methodology for future CMOS integration.
+We proposed a time-response-aware design for CFETs, addressing both self-heating and stress coupling. By integrating PID, FSM, and LLM into the design methodology, delay and thermal behavior stabilize under dynamic workloads. This reframes CFET design from static prediction to dynamic compensation.
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
