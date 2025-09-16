@@ -67,8 +67,10 @@ We propose a three-layer architecture:
 3) \textbf{LLM supervisor:} Retunes $(K_p,K_i,K_d)$ and FSM thresholds when overshoot/error exceed tolerance.  
 These layers provide stability (PID), safety (FSM), and adaptability (LLM).
 
-% --- 本文：Fig.1（2カラム幅にしたい場合は figure* を使う）---
-\begin{figure*}[t] % 片カラムなら figure に変える
+% まだなら preamble に：
+% \usetikzlibrary{arrows.meta,positioning,fit,shapes.misc,calc}
+
+\begin{figure*}[t] % 片カラムなら figure に変更
 \centering
 \begin{tikzpicture}[
   font=\footnotesize,
@@ -76,81 +78,89 @@ These layers provide stability (PID), safety (FSM), and adaptability (LLM).
   box/.style={draw,rounded corners,fill=gray!6,inner sep=5pt,
               minimum height=10mm,align=center},
   plantbox/.style={draw,rounded corners,fill=gray!6,inner sep=6pt,
-                   minimum width=6.4cm,minimum height=3.2cm},
+                   minimum width=7.2cm,minimum height=3.2cm},
   arrow/.style={-Latex,thick},
   dashedarrow/.style={-Latex,thick,dashed},
-  lbl/.style={fill=white,inner sep=1pt}
+  lbl/.style={fill=white,inner sep=1pt,text opacity=1,fill opacity=0.95}
 ]
 
-% --- Plant ---------------------------------------------------------
+% ---------------- Plant ----------------
 \node[plantbox] (plant) {};
 \node[lbl,anchor=north] at ($(plant.north)+(0,2mm)$)
   {\bfseries CFET stacked tiers (plant)};
 
-% tiers
-\node[box,minimum width=5.8cm,anchor=north] (top)
+\node[box,minimum width=6.6cm,anchor=north] (top)
   at ($(plant.north)+(0,-7mm)$)
   {Top tier (e.g., p-FET)\quad $P_{\text{top}}\!\to\!T_{\text{top}}$};
-\node[box,minimum width=5.8cm,anchor=north] (bot)
+\node[box,minimum width=6.6cm,anchor=north] (bot)
   at ($(top.south)+(0,-4mm)$)
   {Bottom tier (e.g., n-FET)\quad $T_{\text{bot}}$};
 
-% RC text (白背景で重なり回避)
 \node[lbl,anchor=west] at ($(plant.south west)+(2mm,2mm)$)
   {$R_{\text{wire}}{+}R_{\text{via}},\; C_{\text{load}}{+}C_{\text{inter}}$};
 
-% vertical thermal coupling k_c（右寄りに2本）
-\draw[arrow] ($(top.south)!0.40!(top.south east)$)
+% vertical thermal coupling k_c（右側で2本・重なり無し）
+\draw[arrow] ($(top.south)!0.42!(top.south east)$)
   -- node[lbl,right] {$k_c$}
-  ($(bot.north)!0.40!(bot.north east)$);
-\draw[arrow] ($(top.south)!0.72!(top.south east)$)
-  -- ($(bot.north)!0.72!(bot.north east)$);
+  ($(bot.north)!0.42!(bot.north east)$);
+\draw[arrow] ($(top.south)!0.74!(top.south east)$)
+  -- ($(bot.north)!0.74!(bot.north east)$);
 
-% ε_d をプラント右から取り出し、ラベルは別ノード
-\draw[arrow] (plant.east) -- ++(1.1cm,0) coordinate (tapd);
-\node[lbl,above] at ($(plant.east)!0.5!(tapd)$) {$\varepsilon_d$};
+% ε_d：ラベルは矢印外側へ
+\draw[arrow] (plant.east) -- ++(11mm,0) coordinate (tapd);
+\node[lbl,above] at ($(plant.east)!0.55!(tapd)$) {$\varepsilon_d$};
 
-% --- PID -----------------------------------------------------------
-\node[box,minimum width=3.4cm] (pid)
-  at ($(tapd)+(2.2cm,0)$)
+% ---------------- PID / FSM / ACT ----------------
+\node[box,minimum width=3.6cm] (pid)
+  at ($(tapd)+(24mm,0)$)
   {\textbf{PID} controller\\[-1pt] $(K_p,K_i,K_d)$};
 \draw[arrow] (tapd) -- (pid.west);
 
-% --- FSM -----------------------------------------------------------
-\node[box,minimum width=3.4cm,below=10mm of pid] (fsm)
-  {\textbf{FSM} guard\\[-1pt]
-   HOT mode if $T_{\text{top}}>85^\circ\mathrm{C}$};
-\draw[arrow] (pid.south) -- ++(0,-2mm) -- (fsm.north);
+\node[box,minimum width=3.6cm,below=11mm of pid] (fsm)
+  {\textbf{FSM} guard\\[-1pt] HOT mode if $T_{\text{top}}>85^\circ\mathrm{C}$};
+\draw[arrow] (pid.south) -- ++(0,-3mm) -- (fsm.north);
 
-% --- Actuation u ---------------------------------------------------
-\node[box,minimum width=2.8cm,below=10mm of fsm] (act)
+\node[box,minimum width=3.0cm,below=11mm of fsm] (act)
   {Actuation $u$\\[-1pt] (DVFS)};
 \draw[arrow] (fsm.south) -- (act.north);
 
-% u をプラントへ（肘折れ・ラベル白背景）
-\draw[arrow] (act.west) -- ++(-1.4cm,0)
-  |- node[lbl,pos=0.25,xshift=-1mm] {$u$} (plant.west);
+% u をプラントへ：右→下→左→上の専用レーンで交差回避
+\path (act.west) -- ++(-15mm,0) coordinate (uA)
+                -- ++(0,-8mm)   coordinate (uB)
+                -- ++(-38mm,0)  coordinate (uC);
+\draw[arrow] (act.west) -- (uA) -- (uB) -- (uC) |- (plant.west);
+\node[lbl,left] at ($(uC)!0.35!(plant.west)$) {$u$};
 
-% --- LLM supervisor ------------------------------------------------
+% ---------------- LLM supervisor（プラントの真下で安全距離） -----
 \node[box,align=center] (llm)
-  at ($(plant.south)-(0,1.5cm)$)
+  at ($(plant.south)-(0,15mm)$)
   {\textbf{LLM} supervisor\\[-1pt]
    retune $(K_p,K_i,K_d),\,T_{\text{th}}$};
 
-% taps to LLM（白背景ラベル、テキスト重なり回避）
-\draw[dashedarrow] (plant.south) |- node[lbl,near start,below]
-  {$T_{\text{top}},T_{\text{bot}}$} (llm.west);
-\draw[dashedarrow] (pid.east) |- node[lbl,near start,right]
-  {$\varepsilon_d$} (llm.north);
-\draw[dashedarrow] (llm.east) -| node[lbl,near start,above]
-  {gain/threshold updates} (pid.north);
-\draw[dashedarrow] (llm.east) -| (fsm.west);
+% T_top/T_bot 計測線：ラベルは2行にして接触回避
+\draw[dashedarrow] (plant.south) |- ($(llm.west)+(0,0)$);
+\node[lbl,below] at ($(plant.south)!0.35!(llm.west)$)
+  {\shortstack{$T_{\text{top}}$\\$T_{\text{bot}}$}};
+
+% ε_d タップは PID から LLM へ：右外側に回してから下降→左折
+\path (pid.east) -- ++(10mm,0) coordinate (pout)
+                 -- ++(0,-18mm) coordinate (pturn)
+                 -- ++(-10mm,0) coordinate (pin);
+\draw[dashedarrow] (pid.east) -- (pout) -- (pturn) -- (pin) -- (llm.north);
+\node[lbl,right] at ($(pout)!0.05!(pturn)$) {$\varepsilon_d$};
+
+% LLM からの retune：長文ラベルは右端で表示して衝突回避
+\path (llm.east) -- ++(12mm,0) coordinate (r1)
+                 -- ++(0,23mm) coordinate (r2);
+\draw[dashedarrow] (llm.east) -- (r1) -- (r2) -| (pid.north);
+\draw[dashedarrow] (llm.east) -- (r1) |- (fsm.west);
+\node[lbl,above] at ($(r1)!0.65!(r2)$) {gain/threshold updates};
 
 \end{tikzpicture}
 
-\caption{Proposed architecture without line overlaps:
-stacked tiers (plant) with vertical thermal coupling $k_c$; feedback of delay deviation $\varepsilon_d$;
-PID stabilization, FSM safety guard, and LLM-based gain/threshold retuning.}
+\caption{Proposed architecture arranged to avoid any line overlap.
+All labels use white backgrounds; signal routes are kept in dedicated
+lanes outside boxes.}
 \label{fig:model_tikz}
 \end{figure*}
 
