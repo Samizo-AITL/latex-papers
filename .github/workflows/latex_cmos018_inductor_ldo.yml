@@ -1,0 +1,52 @@
+# .github/workflows/latex_cmos018_inductor_ldo.yml
+name: Build LaTeX CMOS018 Inductor LDO
+
+on:
+  push:
+    paths:
+      - "papers/2025_cmos018_inductor_ldo/**"
+      - ".github/workflows/latex_cmos018_inductor_ldo.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # TeX Live + latexmk を使うアクション（このアクション自体は v3 が最新系）
+      - name: Compile LaTeX (latexmk)
+        id: latex
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: papers/2025_cmos018_inductor_ldo
+          # エラーで止めずにログを落とす／行番号付き
+          args: -pdf -file-line-error -interaction=nonstopmode -halt-on-error
+          # (必要に応じて) xelatex/luatex を使う場合は下記を有効化
+          # latexmk_use_xelatex: true
+
+      # 標準出力をファイル化（actions のログとは別に、ビルド用の生ログを残す）
+      - name: Capture build stdout to build.log
+        if: always()
+        run: |
+          mkdir -p papers/2025_cmos018_inductor_ldo/logs
+          # 直前ステップのコンソールログは runner では直接取れないため、
+          # latexmk をもう一度ドライランで走らせてログをファイル化する
+          (cd papers/2025_cmos018_inductor_ldo && latexmk -pdf -file-line-error -interaction=nonstopmode -halt-on-error main.tex) \
+            > papers/2025_cmos018_inductor_ldo/logs/build.log 2>&1 || true
+
+      # PDF と LaTeX の .log をアーティファクトとしてアップロード
+      - name: Upload PDF and Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cmos018_inductor_ldo_artifacts
+          path: |
+            papers/2025_cmos018_inductor_ldo/main.pdf
+            papers/2025_cmos018_inductor_ldo/main.log
+            papers/2025_cmos018_inductor_ldo/logs/build.log
+          if-no-files-found: warn
+          retention-days: 30
