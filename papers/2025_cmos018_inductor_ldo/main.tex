@@ -82,8 +82,13 @@ A high-efficiency Buck delivers most of the power; a following LDO cleans switch
     \node[sum, right=15mm of ldo] (sum) {};
     \node[right=8mm of sum] (vout) {$V_\text{out}$};
     \node[above=7mm of buck] (vin) {$V_\text{in}$};
-    \node[below=10mm of buck] (fb) {FB};
-    \node[blk, below=6mm of ldo, minimum width=40mm] (filter) {On-chip laminated inductor + PGS};
+
+    % FBをbuckの直下に配置
+    \node[below=7mm of buck] (fb) {FB};
+
+    % Inductor block（LDOの下に大きめ配置）
+    \node[blk, below=10mm of ldo, minimum width=40mm] (filter) {On-chip laminated inductor + PGS};
+
     % Connections
     \draw[line] (vin) -- (buck);
     \draw[line] (buck) -- node[above, midway] {$20\,\text{MHz}$} (ldo);
@@ -91,6 +96,7 @@ A high-efficiency Buck delivers most of the power; a following LDO cleans switch
     \draw[line] (sum) -- (vout);
     \draw[line] (vout) |- (filter.east);
     \draw[line] (filter.west) -| (buck.south);
+    \draw[line] (fb) -- (buck.south); % ← FB を buck の真下に接続
     \draw[line] (fb) -| (sum.south) node[pos=0.25,below] {load step};
   \end{tikzpicture}
   \caption{Hybrid Buck--LDO block diagram using the on-chip laminated inductor with PGS.}
