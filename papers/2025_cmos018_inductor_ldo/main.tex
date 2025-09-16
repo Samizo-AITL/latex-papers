@@ -1,6 +1,7 @@
 \documentclass[journal]{IEEEtran}
 
 % -------- packages --------
+\usepackage[T1]{fontenc} % 8-bit fonts
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -10,11 +11,18 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,arrows.meta}
 
-% siunitx settings
+% siunitx settings (detect-all deprecated -> new options)
 \sisetup{
-  per-mode=symbol,
-  detect-all,
-  exponent-product = \cdot,
+  mode                 = match,
+  propagate-math-font  = true,
+  reset-math-version   = false,
+  reset-text-family    = false,
+  reset-text-series    = false,
+  reset-text-shape     = false,
+  text-family-to-math  = true,
+  text-series-to-math  = true,
+  per-mode             = symbol,
+  exponent-product     = \cdot,
 }
 
 % -------- title / author --------
@@ -73,7 +81,7 @@ Magnetic lamination plus PGS improves inductance density and \(Q\) within a CMOS
   \label{fig:cross}
 \end{figure}
 
-% Fig.2: block diagram in TikZ (spacing tuned; no overlaps)
+% Fig.2: block diagram in TikZ
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}[
@@ -88,14 +96,13 @@ Magnetic lamination plus PGS improves inductance density and \(Q\) within a CMOS
     \node[block, right=12mm of buck] (ind) {On-chip \(L\)\\(mag.\ laminated)\\\small + PGS};
     \node[block, right=12mm of ind] (ldo) {LDO};
     \node[block, right=of ldo] (vout) {V\(_\text{out}\)};
-
     % Arrows
     \draw[->] (vin) -- (buck);
     \draw[->] (buck) -- node[small,above]{FB} (ind);
     \draw[->] (ind) -- (ldo);
     \draw[->] (ldo) -- (vout);
   \end{tikzpicture}
-  \caption{Hybrid Buck--LDO regulator architecture using the on-chip laminated inductor and PGS. (重なり解消済み)}
+  \caption{Hybrid Buck--LDO regulator architecture using the on-chip laminated inductor and PGS. (overlap resolved)}
   \label{fig:block}
 \end{figure}
 
