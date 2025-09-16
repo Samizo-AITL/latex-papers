@@ -76,7 +76,7 @@ These layers provide stability (PID), safety (FSM), and adaptability (LLM).
   arrow/.style={-Latex,thick},
   bidir/.style={<->,thick},
   dashedarrow/.style={-Latex,thick,dashed},
-  cut/.style={preaction={draw,white,line width=3pt}}
+  cut/.style={preaction={draw,white,line width=3pt}} % 交差部の白抜き
 ]
 
 % ---- Plant ---------------------------------------------------------
@@ -88,60 +88,44 @@ These layers provide stability (PID), safety (FSM), and adaptability (LLM).
 \node[box,minimum width=6.5cm,below=0.60cm of top] (bot)
   {Bottom tier (e.g., n-FET)\\ $R_{\text{wire}}{+}R_{\text{via}},\; C_{\text{load}}{+}C_{\text{inter}}\quad T_{bot}$};
 
-% Top <-> Bottom coupling (single)
+% Top<->Bottom 熱結合（一本の双方向矢印）
 \draw[bidir,cut] ($(top.south west)!0.75!(top.south east)$)
  -- node[right,fill=white,inner sep=1pt]{$k_c$}
  ($(bot.north west)!0.75!(bot.north east)$);
 
-% epsilon_d lane (upper)
-\coordinate (eps) at ($(plant.east)+(1.5,0.55)$);
-\draw[arrow,cut] ($(plant.east)+(0,0.55)$) -- (eps);
-\node[fill=white,inner sep=1pt,above] at ($(plant.east)!0.6!(eps)$) {$\varepsilon_d$};
+% ---- 右側ブロック ---------------------------------------------------
+\node[box,right=3.2cm of plant] (pid) {PID controller\\ $(K_p,K_i,K_d)$};
+\node[box,below=0.85cm of pid] (fsm) {FSM guard\\ HOT if $T_{top}>85^\circ$C};
+\node[box,below=0.85cm of fsm] (act) {Actuation $u$\\ (DVFS)};
 
-% ---- Right blocks --------------------------------------------------
-\node[box,right=3.2cm of plant] (pid)
-  {PID controller\\ $(K_p,K_i,K_d)$};
-\draw[arrow,cut] (eps) |- (pid.west);
-
-\node[box,below=0.85cm of pid] (fsm)
-  {FSM guard\\ HOT if $T_{top}>85^\circ$C};
-\draw[arrow,cut] (pid.south) -- (fsm.north);
-
-\node[box,below=0.85cm of fsm] (act)
-  {Actuation $u$\\ (DVFS)};
-\draw[arrow,cut] (fsm.south) -- (act.north);
+% ---- ε_d：上側レーンで PID 左辺へ ------------------------------------
+\coordinate (epsTap) at ($(plant.east)+(0,0.95)$);
+\draw[arrow,cut] (epsTap) -| (pid.west);
+\node[fill=white,inner sep=1pt,above] at ($(plant.east)!0.55!(epsTap)$) {$\varepsilon_d$};
 
 % ---- LLM -----------------------------------------------------------
 \node[box,below=1.30cm of plant] (llm)
   {LLM supervisor\\ retune $(K_p,K_i,K_d),\,T_{th}$};
 
-% Temperature tap (bottom lane)
+% plant → LLM（温度）
 \draw[dashedarrow,cut] ($(plant.south)+(0,-0.05)$)
   |- node[pos=0.20,left,fill=white,inner sep=1pt]{$T_{top},\,T_{bot}$} (llm.north);
 
-% eps_d tap to LLM (keep)
-\draw[dashedarrow,cut] (pid.east) -- ++(1.0,0)
-  |- node[pos=0.35,right,fill=white,inner sep=1pt]{$\varepsilon_d$} (llm.east);
+% LLM からの点線は上辺から開始：PID/FSM へ
+\draw[dashedarrow,cut] (llm.north) -- ++(0,0.55) -| (pid.west);
+\draw[dashedarrow,cut] (llm.north) -- ++(0,0.20) -| (fsm.west);
 
-% retune back INTO PID: touch pid.west (left edge)
-\draw[dashedarrow,cut] (llm.east) -- ++(1.1,0)
-  |- node[pos=0.25,right,fill=white,inner sep=1pt]{gain/threshold updates} (pid.west);
-
-% retune also to FSM (unchanged)
-\draw[dashedarrow,cut] (llm.east) -- ++(0.8,0) |- (fsm.west);
-
-% ---- u route: run under LLM horizontally, then 90° up into plant ----
-% row just under LLM
-\coordinate (urow) at ($(llm.south)+(0,-0.45)$);
-% (1) act → 左へ少し出す (2) 水平に urow へ (3) プラント左の同yへ (4) 上に直角で plant.west
+% ---- u：下→上に垂直上昇 → 右へ直角 → plant の左辺に接続 --------------
+\coordinate (uRise)  at ($(act.north)+(0,1.20)$);           % 垂直上昇
+\coordinate (uStage) at ($(uRise)+(1.20,0)$);               % 右へ直角
+\coordinate (uLeft)  at ($(plant.west)+(-0.80,0)$);         % 左辺より少し左の待機点
 \draw[arrow,cut]
-  (act.west) -- ++(-0.6,0) |- (urow)
-  -- (plant.west |- urow)
-  -- node[pos=0.25,left,fill=white,inner sep=1pt]{$u$} (plant.west);
+  (act.north) -- (uRise) -- (uStage) |- (uLeft) -- (plant.west)
+  node[pos=0.15,below,fill=white,inner sep=1pt] {$u$};
 
 \end{tikzpicture}%
 }
-\caption{CFET control block diagram (2-column). Arrows are routed in non-overlapping lanes; $u$ runs horizontally beneath the LLM and then rises vertically into the plant; retune enters the PID at its left edge; labels use white backgrounds.}
+\caption{CFET control block diagram (2-column). $\varepsilon_d$ は上側レーンで PID 左辺へ、LLM の点線は上辺から開始、$u$ は下→上に上昇後に右折し、plant 左辺へ接続。}
 \label{fig:model_tikz}
 \end{figure*}
 
