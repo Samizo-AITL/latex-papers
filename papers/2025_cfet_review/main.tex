@@ -106,6 +106,53 @@ $<$2\,nm (2027--2030) & CFET (stacked n/p) & 0.50--0.60\,V & 500--700  & Cross-s
 \end{table*}
 
 % =========================
+\begin{figure*}[t]
+\centering
+\fitfig{%
+\begin{tikzpicture}[>=Latex, node distance=2.6cm]
+\tikzset{
+  stage/.style={draw, rounded corners=2pt, minimum width=2.5cm, minimum height=0.9cm, align=center, fill=gray!10},
+  annot/.style={align=left, font=\scriptsize}
+}
+
+% --- timeline axis ---
+\draw[->, thick] (-0.5,0) -- (16.5,0) node[right]{\small Time / Nodes};
+
+% --- stages (boxes) ---
+\node[stage] (n7)  at (0,0.0)  {7\,nm\\\footnotesize FinFET (2018)};
+\node[stage] (n5)  at (3.2,0.0) {5\,nm\\\footnotesize FinFET $\rightarrow$ pre-GAA (2020)};
+\node[stage] (n3)  at (6.4,0.0) {3\,nm\\\footnotesize GAA nanosheet (2023)};
+\node[stage] (n2)  at (9.6,0.0) {2\,nm\\\footnotesize GAA production (2025 est.)};
+\node[stage] (c20) at (12.8,0.0){$<$2\,nm\\\footnotesize CFET stacked n/p (2027--2030)};
+\node[stage] (c10) at (16.0,0.0){1\,nm-class\\\footnotesize Seq./Forksheet CFET (2030+)};
+
+% --- arrows between stages ---
+\draw[->] (n7)  -- (n5);
+\draw[->] (n5)  -- (n3);
+\draw[->] (n3)  -- (n2);
+\draw[->] (n2)  -- (c20);
+\draw[->] (c20) -- (c10);
+
+% --- per-stage annotations (VDD & density) ---
+\node[annot, below=4mm of n7]  {VDD: 0.70--0.80\,V\\Density: 90--100 MTr/mm$^2$};
+\node[annot, below=4mm of n5]  {VDD: 0.65--0.75\,V\\Density: 130--170};
+\node[annot, below=4mm of n3]  {VDD: 0.60--0.70\,V\\Density: 200--250};
+\node[annot, below=4mm of n2]  {VDD: 0.55--0.65\,V\\Density: 300--400};
+\node[annot, below=4mm of c20] {VDD: 0.50--0.60\,V\\Density: 500--700\\\emph{Cross-sectional inverter}};
+\node[annot, below=4mm of c10] {VDD: $<$0.50\,V\\Density: $>$800\\3D stack, thermal-aware BEOL};
+
+% --- top row: key message balloons ---
+\node[annot, above=6mm of n3]  {GAA: four-sided control,\\SCE/variability suppressed};
+\node[annot, above=6mm of c20] {CFET: vertical n/p integration\\$\Rightarrow$ effective density $\sim2\times$ \& shorter n$\rightarrow$p RC};
+
+% --- legend ---
+\node[annot, anchor=west] at (-0.4,-2.3) {\footnotesize \textbf{Notes:} Values are indicative; adapted from IRDS 2023~\cite{irds_2023} and IMEC IEDM reports~\cite{imec_cfet_iedm2020}.};
+\end{tikzpicture}}
+\caption{Roadmap-style timeline from FinFET to GAA to CFET with indicative supply voltages and transistor densities. CFET gains come from vertical n/p integration (cross-sectional inverter), improving effective standard-cell density and shortening the n$\rightarrow$p path.}
+\label{fig:roadmap_timeline}
+\end{figure*}
+
+% =========================
 \section{CFET Structural Concepts}
 Two representative integration styles are considered.
 
