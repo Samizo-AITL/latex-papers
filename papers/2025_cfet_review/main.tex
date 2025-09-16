@@ -295,48 +295,124 @@ This style is envisioned as a follow-up option if Sequential CFET coupling prove
 
 % =========================
 \section{Electrical and Layout Impacts}
-Key educational points include:
+CFET integration affects not only cell density but also delay,
+variability, and power distribution in ways that extend beyond GAA
+devices. Key educational points include:
+
 \begin{itemize}
-  \item \textbf{Area efficiency:} Near $\sim 2\times$ density for inverter cells; benefits extend to NAND/NOR by co-locating pull-up and pull-down networks.
-  \item \textbf{Delay/energy:} Vertical n-to-p via shortens RC path; FO1 delay can improve even if device $I\!-\!V$ matches GAA.
-  \item \textbf{Electrostatics:} Each tier can retain GAA-level control; inter-tier coupling introduces parasitics (capacitance, via resistance).
-  \item \textbf{Variability/noise:} Thermal coupling and VDD/GND partitioning introduce asymmetries requiring placement and routing co-optimization.
+  \item \textbf{Area efficiency:} By vertically stacking nFET and pFET
+  within the same lateral footprint, inverter density can approach
+  nearly $2\times$. This benefit extends to complex logic cells
+  (e.g., NAND/NOR) by co-locating pull-up and pull-down networks in
+  the same footprint. Students should recognize how this structural
+  gain cascades into standard-cell library design and physical design
+  rules.
+
+  \item \textbf{Delay/energy:} The vertical n-to-p via drastically
+  shortens the inverter's RC path compared to lateral wiring in GAA.
+  Even if individual $I$–$V$ device curves remain similar to GAA,
+  FO1 delay and stage energy are improved due to reduced
+  interconnect loading. This highlights the shift of scaling benefit
+  from device $I\!-\!V$ to wiring geometry.
+
+  \item \textbf{Electrostatics:} Each tier can retain GAA-level control,
+  but inter-tier electric-field coupling introduces new parasitics
+  (capacitance, via resistance). This provides an excellent tutorial
+  case where device electrostatics interact with circuit parasitics,
+  requiring students to think about multi-physics co-optimization.
+
+  \item \textbf{Variability/noise:} Vertical stacking introduces thermal
+  coupling between tiers, causing asymmetric heating of n/p devices.
+  Furthermore, VDD and GND partitioning across layers generates
+  uneven IR drop and noise susceptibility. These effects demand new
+  placement and routing strategies, illustrating how device
+  innovations ripple up into CAD tool requirements.
 \end{itemize}
 
 % =========================
 \section{Manufacturing Challenges}
-Realizing CFET integration introduces unprecedented fabrication hurdles.
-Independent n/p work-functions and junctions across stacked tiers demand highly selective epitaxy and etching steps, often at low thermal budgets ($<500^{\circ}$C) to preserve the completed tier.
-Alignment tolerance for vertical vias is sub-5\,nm, requiring EUV lithography overlay beyond current production standards.
-Dielectric isolation must simultaneously suppress dopant diffusion and maintain mechanical integrity across multiple layers.
-Recent demonstrations by IMEC indicate sequential CFET feasibility, while large-scale yield, variability control, and reliability remain open challenges \cite{imec_cfet_iedm2020}.
+Realizing CFETs requires overcoming fabrication hurdles that exceed
+previous scaling transitions. Educationally, these challenges reveal
+how device physics, materials science, and process integration are
+deeply intertwined.
+
+Independent n/p work-functions and junctions across stacked tiers
+demand highly selective epitaxy and etching, often under low thermal
+budgets ($<500^{\circ}$C) to avoid damaging the completed tier.
+Vertical via alignment must achieve sub-5\,nm overlay, pushing EUV
+lithography beyond current overlay standards. Dielectric isolation
+must simultaneously suppress dopant diffusion and preserve mechanical
+integrity across multiple stacked layers.
+
+Recent demonstrations by IMEC indicate that sequential CFETs are
+feasible at the research level. However, industrial-scale yield,
+variability control, and long-term reliability remain unresolved,
+making this a rich topic for classroom debate on manufacturability
+versus theoretical scaling.
 
 % =========================
 \section{Modeling and EDA Limitations}
-Existing compact models such as BSIM-CMG can capture GAA device behavior, but extensions to CFET remain absent.
-Key missing aspects include (i) inter-tier electrostatics, (ii) vertical thermal coupling, and (iii) parasitic RC from stacked vias and tier-to-tier contacts.
-Prototype Verilog-A implementations exist but lack consensus and calibration.
-Furthermore, no open-source CFET-ready PDKs or standard-cell libraries are available, preventing standardized design flows.
-This gap not only limits immediate design enablement but also provides a fertile educational sandbox for research-oriented coursework \cite{bsimcmg_sispad2017}.
+Existing compact models such as BSIM-CMG can capture GAA device
+behavior, but lack extensions for CFET-specific effects. Missing
+aspects include:
+\begin{enumerate}
+  \item Inter-tier electrostatics and capacitive coupling,
+  \item Vertical thermal interactions between stacked devices,
+  \item Parasitic RC from vertical vias and tier-to-tier contacts.
+\end{enumerate}
+
+Prototype Verilog-A models have been proposed but lack consensus,
+calibration, and reproducibility across foundries. Furthermore, no
+open-source CFET-ready PDKs or standard-cell libraries are available,
+preventing standardized design flows. From an educational
+perspective, this modeling gap provides fertile ground for coursework:
+students can extend compact models, explore sensitivity analysis, and
+appreciate the impact of missing parasitics on design predictions.
 
 % =========================
 \section{Educational Value}
-From a pedagogical perspective, CFET offers a unique opportunity to bridge device physics, fabrication, layout, and CAD.
-Graduate courses can integrate CFET Verilog-A models as design projects, explore sensitivity to inter-tier parasitics, and practice co-optimization with placement/routing.
-Roadmap discussions via IRDS provide context for technology forecasting and design-technology co-optimization (DTCO), bridging device-level abstraction to system-level design \cite{irds_2023}.
+From a pedagogical perspective, CFET is more than a new device—it is
+a framework for integrating physics, process, layout, and CAD.
+Graduate courses can incorporate:
+\begin{itemize}
+  \item CFET Verilog-A models as design projects,
+  \item Sensitivity studies to inter-tier parasitics,
+  \item Placement/routing co-optimization exercises,
+  \item Roadmap-based discussions linking IRDS forecasts with
+  design-technology co-optimization (DTCO).
+\end{itemize}
+
+Instructors can use CFET to demonstrate the shift from device-level
+abstraction toward system-level design, illustrating the necessity of
+DTCO in the post-GAA era.
 
 % =========================
 \section{Conclusion and Outlook}
-CFET reframes CMOS as a stacked, cross-sectional inverter that simultaneously improves density and wiring delay.
-Looking forward, forksheet CFET layouts, 3D sequential stacks, thermal-aware power partitioning, co-optimized BEOL integration, and AI-driven design-space exploration are promising directions.
-Embedding CFET into curricula not only prepares engineers for the 2030s but also cultivates critical thinking about unresolved challenges at the frontier of scaling.
+CFET reframes CMOS as a stacked, cross-sectional inverter that
+simultaneously improves density and wiring delay. Looking forward,
+several research vectors emerge:
+\begin{itemize}
+  \item Forksheet CFET layouts to mitigate inter-tier interference,
+  \item 3D sequential stacks under constrained thermal budgets,
+  \item Thermal-aware power partitioning across vertical tiers,
+  \item Co-optimized BEOL integration to reduce parasitic loading,
+  \item AI-driven exploration of design space for DTCO.
+\end{itemize}
 
+Embedding CFET into semiconductor curricula not only prepares
+engineers for the 2030s, but also fosters critical thinking about
+unresolved challenges at the scaling frontier—where physics,
+fabrication, and system design converge.
+
+% ========================
 \section*{Acknowledgment}
 The author thanks the Project Design Hub community for discussions.
 
+% ========================
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
+% ========================
 \section*{Author Biography}
 \noindent\textbf{Shinichi Samizo}
 received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
