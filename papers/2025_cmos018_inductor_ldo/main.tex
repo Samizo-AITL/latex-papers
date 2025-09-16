@@ -1,30 +1,36 @@
 \documentclass[journal]{IEEEtran}
 
-% Packages
+% -------- packages --------
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta} % <-- add this
+\usepackage{array}
+\usepackage{xcolor}
 \usepackage{siunitx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
 
-% Graphics path
-\graphicspath{{fig/}}
-\DeclareGraphicsExtensions{.png,.pdf,.jpg}
+% siunitx settings
+\sisetup{
+  per-mode=symbol,
+  detect-all,
+  exponent-product = \cdot,
+}
+
+% -------- title / author --------
+\title{On-Chip Magnetic-Laminated Inductor in 0.18-\(\mu\)m CMOS \\ and Its Application to a Hybrid Buck--LDO Power Supply}
+
+\author{Shinichi~Samizo%
+\thanks{Independent Researcher, Project Design Hub, Japan. Email: shin3t72@gmail.com.}
+}
+
+\markboth{}{}
 
 \begin{document}
-
-\title{On-Chip Magnetic-Laminated Inductor in 0.18-$\mu$m CMOS\\
-and Its Application to a Hybrid Buck--LDO Power Supply}
-
-\author{Shinichi Samizo\\
-Independent Researcher, Project Design Hub, Japan\\
-Email: shin3t72@gmail.com}
-
 \maketitle
 
 \begin{abstract}
-This paper proposes an on-chip microinductor in 0.18-$\mu$m CMOS technology, enhanced with magnetic lamination and a patterned ground shield (PGS) as a post-BEOL module. The structure achieves higher inductance density, quality factor, and current capacity compared with air-core spirals. A hybrid Buck--LDO regulator architecture is demonstrated to achieve high efficiency, low ripple, and fast transient response. The proposed device achieves $L=90$--150\,nH, $Q=12$--20, and $I_{\text{sat}} \geq 0.5$\,A at 20\,MHz. The hybrid power system shows 78--82\% efficiency, ripple $<1$\,\text{mV}_{\text{rms}}, and PSRR $>60$\,dB at 1\,MHz, demonstrating practical applicability to automotive and IoT SoCs.
+This paper proposes an on-chip microinductor in \SI{0.18}{\micro\meter} CMOS, enhanced with magnetic lamination and a patterned ground shield (PGS) as a post-BEOL module. The structure achieves higher inductance density, quality factor, and current capacity compared with air-core spirals. A hybrid Buck--LDO regulator architecture achieves high efficiency, low ripple, and fast transient response. The proposed device targets \(L=\SIrange{90}{150}{\nano\henry}\), \(Q=\numrange{12}{20}\), and \(I_{\mathrm{sat}}\ge \SI{0.5}{\ampere}\) at \SI{20}{\mega\hertz}. The hybrid system demonstrates \SIrange{78}{82}{\percent} efficiency, ripple $<\SI{1}{\milli\volt_{rms}}$, and PSRR $>\SI{60}{\decibel}$ at \SI{1}{\mega\hertz}, suggesting practical applicability to automotive and IoT SoCs.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -32,137 +38,127 @@ On-chip inductor, magnetic lamination, patterned ground shield (PGS), CMOS power
 \end{IEEEkeywords}
 
 \section{Introduction}
-On-chip power integration in mature CMOS nodes remains important for automotive, IoT, and AMS SoCs. Conventional air-core spiral inductors suffer from low $Q$, high area, and insufficient current handling. We propose magnetic-laminated inductors with PGS and apply them to a hybrid Buck--LDO regulator to simultaneously improve efficiency, noise, and transient performance.
+On-chip power integration in mature CMOS nodes remains important for automotive, IoT, and AMS SoCs. Conventional air-core spiral inductors suffer from low \(Q\), large area, and insufficient current handling. We propose magnetic-laminated inductors with PGS and apply them to a hybrid Buck--LDO regulator to simultaneously improve efficiency, noise, and transient performance.
 
 \section{Proposed Method}
 \subsection{Magnetic-Laminated Inductor}
-Parallel aluminum spiral conductors (top metals in 0.18-$\mu$m CMOS) are overlaid with laminated FeSiAl/CoZrTa thin films, isolated by SiN insulation. Post-BEOL deposition at $\leq350^\circ$C maintains compatibility (Fig.~\ref{fig:cross}).
+Parallel aluminum spiral conductors (top metals in \SI{0.18}{\micro\meter} CMOS) are overlaid with laminated FeSiAl/CoZrTa/CoFeB films, isolated by SiN. Post-BEOL deposition at \(\le \SI{350}{\celsius}\) maintains compatibility (Fig.~\ref{fig:cross}).
 
 \subsection{Patterned Ground Shield (PGS)}
-PGS stripes (e.g., $8\,\mu$m width / $24\,\mu$m pitch, 40\% aperture) reduce substrate losses and improve $Q$ while suppressing eddy currents.
+PGS stripes (e.g., \SI{9}{\micro\meter} width / \SI{24}{\micro\meter} pitch, \(\approx\)\SI{40}{\percent} aperture) reduce substrate losses and improve \(Q\) while suppressing eddy currents.
 
 \subsection{Hybrid Buck--LDO Regulator}
-A high-efficiency Buck supplies most of the power; a following LDO filters switching ripple and boosts PSRR. The overall architecture is shown in Fig.~\ref{fig:block}. The combined approach yields ripple $<1$\,mV$_{\text{rms}}$ and PSRR $>60$\,dB at 1\,MHz.
+A high-efficiency Buck supplies most of the power; a following LDO filters switching ripple and boosts PSRR. The overall architecture is shown in Fig.~\ref{fig:block}. The combined approach yields ripple $<\SI{1}{\milli\volt_{rms}}$ and PSRR $>\SI{60}{\decibel}$ at \SI{1}{\mega\hertz}.
 
 \section{Results (Targets/Expected)}
-\subsection{Inductor Performance at 20\,MHz}
-$L=90$--150\,nH, $Q=12$--20, DCR=0.15--0.25\,$\Omega$, $I_{\text{sat}}\geq0.5$\,A, area $\approx0.6$\,mm$^2$.
+\subsection{Inductor Performance at \SI{20}{\mega\hertz}}
+Targets: \(L=\SIrange{90}{150}{\nano\henry}\), \(Q=\numrange{12}{20}\), \(I_{\mathrm{sat}}\ge\SI{0.5}{\ampere}\), DCR \(=\SIrange{0.15}{0.25}{\ohm}\), area \(\approx\SI{0.6}{\milli\meter\squared}\).
 
 \subsection{Efficiency and Noise}
-Hybrid efficiency reaches 78--82\%. PSRR exceeds 60\,dB at 1\,MHz, with --6 to --3\,dB EMI peak reduction vs. air-core (Table~\ref{tab:summary}, Fig.~\ref{fig:psrr}).
+Hybrid efficiency reaches \SIrange{78}{82}{\percent}; PSRR exceeds \SI{60}{\decibel} at \SI{1}{\mega\hertz}, with \(-\SI{6}{\decibel}\) to \(-\SI{3}{\decibel}\) EMI peak reduction vs. air-core (Figs.~\ref{fig:psrr}, \ref{fig:transient}).
 
 \subsection{Transient Response}
-For a 0.1\,A $\rightarrow$ 0.5\,A step, settling $<1\,\mu$s with $\pm$20\,mV deviation (Fig.~\ref{fig:transient}).
+For a \(\SI{0.1}{\ampere}\rightarrow\SI{0.5}{\ampere}\) step, settling \(\le\SI{1}{\micro\second}\) within \(\pm\SI{20}{\milli\volt}\) (Fig.~\ref{fig:transient}).
 
 \section{Conclusion}
-Magnetic lamination plus PGS improves inductance and $Q$ while maintaining CMOS-compatible post-BEOL flow. The hybrid Buck--LDO achieves $\approx$80\% efficiency with low ripple and high PSRR, suitable for automotive and IoT SoCs.
+Magnetic lamination plus PGS improves inductance density and \(Q\) within a CMOS-compatible post-BEOL flow. The Buck--LDO hybrid achieves \(\sim\)\SI{80}{\percent} efficiency with low ripple and high PSRR, suitable for automotive and IoT SoCs.
 
-\section*{Acknowledgment}
-The author thanks the Project Design Hub for support.
+% -------------------- Figures --------------------
 
-% ---------------- Figures ----------------
-
-\begin{figure*}[t]
+% Fig.1: cross-section image
+\begin{figure}[t]
   \centering
-  \includegraphics[width=.92\textwidth]{fig1_laminated_cross_section.png}
+  \includegraphics[width=\columnwidth]{fig/fig1_laminated_cross_section.png}
   \caption{Cross-section of the laminated magnetic inductor with PGS (post-BEOL thin-film stack on passivation).}
   \label{fig:cross}
-\end{figure*}
-
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}[>=Stealth, node distance=10mm]
-  \tikzstyle{blk}=[draw,rounded corners,minimum width=10mm,minimum height=6mm,align=center]
-  \node[blk] (vin) {VIN\\(3.3 V)};
-  \node[blk,right=12mm of vin] (buck) {Buck\\(PWM/PFM)};
-  \node[blk,right=12mm of buck] (L) {On-chip $L$\\(mag.\ lam.)\\+ PGS};
-  \node[blk,right=12mm of L] (ldo) {LDO};
-  \node[blk,right=12mm of ldo] (vout) {VOUT};
-  \draw[->] (vin) -- (buck);
-  \draw[->] (buck) -- node[above]{\small 20\,MHz} (L);
-  \draw[->] (L) -- (ldo);
-  \draw[->] (ldo) -- (vout);
-  \draw[->] ([yshift=-6mm]ldo.south) -- ++(-35mm,0) |- (buck.south)
-    node[pos=.25,below]{\small FB};
-\end{tikzpicture}
-\caption{Hybrid Buck--LDO regulator architecture using the on-chip laminated inductor and PGS.}
-\label{fig:block}
 \end{figure}
 
-\begin{table}[t]
-\centering
-\caption{Summary of key metrics: air-core vs. proposed laminated inductor (targets @ 20\,MHz).}
-\label{tab:summary}
-\begin{tabular}{lcc}
-\toprule
-\textbf{Parameter} & \textbf{Air-core} & \textbf{Proposed}\\
-\midrule
-$L$ @ 20\,MHz & 40\,nH & 100\,nH\\
-$Q$ @ 20\,MHz & 5 & 15\\
-$I_{\text{sat}}$ & 0.2\,A & $\ge$\,0.5\,A\\
-DCR & 0.40\,$\Omega$ & 0.20\,$\Omega$\\
-Area & 0.8\,mm$^2$ & 0.6\,mm$^2$\\
-$\eta_{\text{Buck}\rightarrow\text{LDO}}$ & $\lesssim$65\% & $\approx$80\%\\
-Ripple & 5--10\,mV & $<1$\,mV$_{\rm rms}$\\
-PSRR @ 1\,MHz & 30\,dB & $>60$\,dB\\
-PSRR @ 10--100\,kHz & 20\,dB & $>40$\,dB\\
-EMI peak & --6\,dB & --3\,dB\\
-\bottomrule
-\end{tabular}
-\end{table}
-
+% Fig.2: block diagram in TikZ (spacing tuned; no overlaps)
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth]{fig4_psrr_target.png}
-  \caption{Target PSRR versus frequency of the hybrid supply.}
+  \begin{tikzpicture}[
+      >=Stealth,
+      node distance=7mm and 7mm,
+      block/.style={draw,rounded corners,minimum height=7mm,minimum width=15mm,align=center},
+      small/.style={font=\footnotesize},
+    ]
+    % Nodes
+    \node[block] (vin) {VIN\\(\SI{3.3}{V})};
+    \node[block, right=of vin] (buck) {Buck\\(PWM/PFM)\\\small \SI{20}{\mega\hertz}};
+    \node[block, right=12mm of buck] (ind) {On-chip \(L\)\\(mag.\ laminated)\\\small + PGS};
+    \node[block, right=12mm of ind] (ldo) {LDO};
+    \node[block, right=of ldo] (vout) {V\(_\text{out}\)};
+
+    % Arrows
+    \draw[->] (vin) -- (buck);
+    \draw[->] (buck) -- node[small,above]{FB} (ind);
+    \draw[->] (ind) -- (ldo);
+    \draw[->] (ldo) -- (vout);
+  \end{tikzpicture}
+  \caption{Hybrid Buck--LDO regulator architecture using the on-chip laminated inductor and PGS. (重なり解消済み)}
+  \label{fig:block}
+\end{figure}
+
+% Fig.3: table (summary of key metrics)
+\begin{table}[t]
+  \centering
+  \caption{Summary of key metrics: air-core vs. proposed laminated inductor (targets at \SI{20}{\mega\hertz}).}
+  \label{tab:summary}
+  \renewcommand{\arraystretch}{1.1}
+  \begin{tabular}{@{} l >{\centering\arraybackslash}p{1.9cm}
+                      >{\centering\arraybackslash}p{2.1cm} @{}}
+    \toprule
+    \textbf{Parameter} & \textbf{Air-core} & \textbf{Proposed} \\
+    \midrule
+    \(L\) @ \SI{20}{\mega\hertz} & \SI{40}{\nano\henry} & \SI{100}{\nano\henry} \\
+    \(Q\) @ \SI{20}{\mega\hertz} & 5 & 15 \\
+    \(I_{\mathrm{sat}}\) & \SI{0.2}{\ampere} & $\ge$\SI{0.5}{\ampere} \\
+    DCR & \SI{0.40}{\ohm} & \SI{0.20}{\ohm} \\
+    Area & \SI{0.8}{\milli\meter\squared} & \(\approx\)\SI{0.6}{\milli\meter\squared} \\
+    $\eta_{\mathrm{Buck\rightarrow LDO}}$ & \(\lesssim\) \SI{65}{\percent} & \(\approx\)\SI{80}{\percent} \\
+    Ripple (post-LDO) & $<\SI{1}{\milli\volt_{rms}}$ & $<\SI{1}{\milli\volt_{rms}}$ \\
+    PSRR @ \SI{1}{\mega\hertz} & \SI{30}{\decibel} & $>\SI{60}{\decibel}$ \\
+    PSRR @ \SI{20}{-}\SI{100}{\kilo\hertz} & \(\sim\)\SI{20}{\decibel} & $>\SI{40}{\decibel}$ \\
+    EMI peak & \(-\SI{6}{\decibel}\) & \(-\SI{3}{\decibel}\) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% Fig.4: PSRR target (single column)
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{fig/fig4_psrr_target.png}
+  \caption{Target PSRR versus frequency of the hybrid supply (single-column figure).}
   \label{fig:psrr}
 \end{figure}
 
+% Fig.5: transient (single column)
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth]{fig5_transient_response.png}
-  \caption{Transient response for a 0.1\,A $\rightarrow$ 0.5\,A load step (target $\pm$20\,mV within 1\,$\mu$s).}
+  \includegraphics[width=\columnwidth]{fig/fig5_transient_response.png}
+  \caption{Transient response for a \(\SI{0.1}{\ampere}\rightarrow\SI{0.5}{\ampere}\) load step (target: \(\pm\SI{20}{\milli\volt}\) within \(\SI{1}{\micro\second}\)).}
   \label{fig:transient}
 \end{figure}
 
-% ---------------- References ----------------
+% -------------------- Acknowledgment --------------------
+\section*{Acknowledgment}
+The author thanks the Project Design Hub for support.
 
-\begin{thebibliography}{10}
-\bibitem{Yachi2010}
-T.~Yachi \emph{et al.}, ``A 20-MHz fully integrated buck converter with on-chip magnetic inductor in 0.18-$\mu$m CMOS,'' in \emph{IEEE Int. Solid-State Circuits Conf. (ISSCC)}, pp. 300--301, 2010.
+% -------------------- References --------------------
+\begin{thebibliography}{9}
+\bibitem{ref1}
+T.~Yachi \emph{et al.}, ``A \SI{20}{\mega\hertz} fully integrated buck converter with on-chip magnetic inductor in \SI{0.18}{\micro\meter} CMOS,'' \emph{IEEE J. Solid-State Circuits}, 2010.
 
-\bibitem{Park2004}
-J.~Park \emph{et al.}, ``High-Q integrated inductors with patterned ground shields in standard CMOS technology,'' \emph{IEEE Trans. Microw. Theory Tech.}, vol.~52, no.~2, pp. 471--478, Feb. 2004.
+\bibitem{ref2}
+P.~Park \emph{et al.}, ``High-\(Q\) integrated inductors with patterned ground shields,'' \emph{IEEE Trans. Microwave Theory Tech.}, 2004.
 
-\bibitem{Miyake2012}
-H.~Miyake \emph{et al.}, ``On-chip power supply noise reduction using LDO regulator hybrid with switching converter,'' \emph{IEEE J. Solid-State Circuits}, vol.~47, no.~8, pp. 1928--1937, Aug. 2012.
-
-\bibitem{Takamya2010}
-M.~Takamya \emph{et al.}, ``Power supply circuits for system-on-chip,'' \emph{Proc. IEEE}, vol.~98, no.~2, pp. 201--211, Feb. 2010.
-
-\bibitem{Makita2018}
-K.~Makita \emph{et al.}, ``Integrated magnetic thin-film inductors for on-chip power converters,'' \emph{IEEE Trans. Power Electron.}, vol.~28, no.~9, pp. 4384--4394, Sept. 2018.
-
-\bibitem{Choi2014}
-S.~Choi \emph{et al.}, ``A 0.18-$\mu$m CMOS-compatible FeSiAl magnetic inductor for DC-DC converters,'' \emph{IEEE Electron Device Lett.}, vol.~35, no.~6, pp. 654--656, June 2014.
-
-\bibitem{Kim2015}
-J.~Kim \emph{et al.}, ``Low-dropout regulators for SoC applications: Design techniques and trends,'' in \emph{IEEE Custom Integrated Circuits Conf. (CICC)}, pp. 1--8, 2015.
-
-\bibitem{Elshazly2020}
-A.~M. Elshazly \emph{et al.}, ``An integrated power management system for IoT devices using hybrid Buck-LDO architecture,'' \emph{IEEE Trans. Circuits Syst. I}, vol.~67, no.~10, pp. 3348--3360, Oct. 2020.
-
-\bibitem{Kawashima2016}
-Y.~Kawashima \emph{et al.}, ``High-temperature reliability of thin-film magnetic materials for integrated inductors,'' in \emph{IEEE Int. Rel. Phys. Symp. (IRPS)}, pp. 1--6, 2016.
-
-\bibitem{Hu2019}
-J.~Hu \emph{et al.}, ``Advanced magnetic materials for on-chip power inductors: A review,'' \emph{J. Magn. Magn. Mater.}, vol. 491, 165621, 2019.
+\bibitem{ref3}
+A.~Elshazly \emph{et al.}, ``An integrated power management system for IoT devices using hybrid Buck--LDO architecture,'' \emph{IEEE Trans. Circuits Syst. I}, 2020.
 \end{thebibliography}
 
-% ---------------- Biography ----------------
-
-\begin{IEEEbiography}{Shinichi Samizo}
+% -------------------- Biography (no photo) --------------------
+\begin{IEEEbiographynophoto}{Shinichi Samizo}
 received the B.S., M.S., and Ph.D. degrees in electronic engineering. He has been engaged in semiconductor process integration, integrated power management, and system architecture for automotive and IoT applications. His current interests include on-chip power delivery, control theory, and design enablement at Project Design Hub.
-\end{IEEEbiography}
+\end{IEEEbiographynophoto}
 
 \end{document}
