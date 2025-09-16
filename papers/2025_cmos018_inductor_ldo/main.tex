@@ -90,12 +90,9 @@ A high-efficiency Buck delivers most of the power; a following LDO cleans switch
     \draw[line] (buck) -- node[above, midway] {$20\,\text{MHz}$} (ldo);
     \draw[line] (ldo) -- (vout);
 
-    % Inductor path
+    % Inductor path only
     \draw[line] (vout) |- (filter.east);
     \draw[line] (filter.west) -| (buck.south);
-
-    % Feedback path (single clean line)
-    \draw[line] (vout.south) |- (buck.south);
   \end{tikzpicture}
   \caption{Hybrid Buck--LDO block diagram using the on-chip laminated inductor with PGS.}
   \label{fig:block}
