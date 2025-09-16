@@ -71,39 +71,65 @@ These layers provide stability (PID), safety (FSM), and adaptability (LLM).
 \centering
 \begin{tikzpicture}[
   font=\footnotesize,
-  box/.style={draw,rounded corners,fill=gray!5,inner sep=6pt},
-  smallbox/.style={draw,rounded corners,fill=gray!5,inner sep=4pt},
+  box/.style={draw,rounded corners,fill=gray!5,inner sep=6pt,align=center},
+  smallbox/.style={draw,rounded corners,fill=gray!5,inner sep=4pt,align=center},
   arrow/.style={-{Latex},thick},
   dashedarrow/.style={-{Latex},thick,dashed},
   note/.style={inner sep=2pt}
 ]
+% plant
 \node[box,minimum width=4.2cm,minimum height=2.8cm] (plant) {};
-\node at ($(plant.north)+(0,0.25)$) {\bf CFET stacked tiers (plant)};
-\node[smallbox,anchor=north west,minimum width=3.8cm] (top) at ($(plant.north west)+(0.2,-0.45)$)
-  {Top tier (e.g., p-FET)\quad $P_{\text{top}}\!\to\!T_{\text{top}}$};
-\node[smallbox,anchor=north west,minimum width=3.8cm] (bot) at ($(top.south west)+(0,-0.35)$)
-  {Bottom tier (e.g., n-FET)\quad $T_{\text{bot}}$};
+\node at ($(plant.north)+(0,0.25)$) {\textbf{CFET stacked tiers (plant)}};
+
+% tiers
+\node[smallbox,anchor=north west,minimum width=3.8cm] (top)
+      at ($(plant.north west)+(0.2,-0.45)$)
+  {Top tier (e.g., p-FET)\\ $P_{\text{top}}\!\to\!T_{\text{top}}$};
+
+\node[smallbox,anchor=north west,minimum width=3.8cm] (bot)
+      at ($(top.south west)+(0,-0.35)$)
+  {Bottom tier (e.g., n-FET)\\ $T_{\text{bot}}$};
+
 \node[note,anchor=west] at ($(bot.south west)+(0.05,0.05)$)
   {$R_{\text{wire}}{+}R_{\text{via}},\; C_{\text{load}}{+}C_{\text{inter}}$};
+
+% vertical coupling
 \draw[arrow] ([xshift=0.4cm]top.south) -- node[right] {$k_c$} ([xshift=0.4cm]bot.north);
 \draw[arrow] ([xshift=1.0cm]top.south) -- ([xshift=1.0cm]bot.north);
+
+% error output
 \node[right=1.5cm of plant.east] (epslabel) {};
 \draw[arrow] (plant.east) -- node[above,pos=0.5] {delay deviation $\varepsilon_d$} (epslabel.center);
+
+% PID
 \node[box,minimum width=2.5cm,minimum height=1.0cm, right=2.2cm of plant] (pid)
-  {{\bf PID} controller\\ $(K_p,K_i,K_d)$};
+  {\textbf{PID} controller\\ $(K_p,K_i,K_d)$};
 \draw[arrow] (epslabel.center) -- (pid.west);
+
+% FSM
 \node[box,minimum width=2.6cm,minimum height=1.0cm, below=0.45cm of pid] (fsm)
-  {{\bf FSM} guard\\ HOT mode if $T_{\text{top}}>85^\circ$C};
+  {\textbf{FSM} guard\\ HOT mode if $T_{\text{top}}>85^\circ$C};
 \draw[arrow] (pid.south) -- (fsm.north);
+
+% Actuation
 \node[box,minimum width=1.8cm,minimum height=0.9cm, below=0.45cm of fsm] (act)
   {Actuation $u$\\ (DVFS)};
 \draw[arrow] (fsm.south) -- (act.north);
+
+% feedback u -> plant
 \draw[arrow] (act.west) -- ++(-1.05,0) |- node[pos=0.25,left] {$u$} (plant.west);
-\node[box,minimum width=3.1cm,minimum height=1.1cm, below left=0.0cm and 1.1cm of fsm] (llm)
-  {{\bf LLM} supervisor\\ retune $(K_p,K_i,K_d)$,\;$T_{\text{th}}$};
-\draw[dashedarrow] (plant.south) |- node[below,pos=0.25] {$T_{\text{top}},T_{\text{bot}}$} (llm.west);
-\draw[dashedarrow] (pid.east) |- node[right,pos=0.2] {$\varepsilon_d$} (llm.north);
-\draw[dashedarrow] (llm.east) -| node[above,pos=0.25] {gain/threshold updates} (pid.north);
+
+% LLM supervisor
+\node[box,minimum width=3.1cm,minimum height=1.1cm,
+      below left=0.0cm and 1.1cm of fsm] (llm)
+  {\textbf{LLM} supervisor\\ retune $(K_p,K_i,K_d)$,\;$T_{\text{th}}$};
+
+\draw[dashedarrow] (plant.south) |- node[below,pos=0.25]
+  {$T_{\text{top}},T_{\text{bot}}$} (llm.west);
+\draw[dashedarrow] (pid.east) |- node[right,pos=0.2]
+  {$\varepsilon_d$} (llm.north);
+\draw[dashedarrow] (llm.east) -| node[above,pos=0.25]
+  {gain/threshold updates} (pid.north);
 \draw[dashedarrow] (llm.east) -| (fsm.west);
 \end{tikzpicture}
 \caption{Block diagram of the proposed time-response-aware CFET design:
