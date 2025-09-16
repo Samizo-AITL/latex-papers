@@ -66,14 +66,13 @@ The PGS---implemented in a lower metal with \SI{9}{\um} pitch and \SI{24}{\um} s
 \subsection{Hybrid Buck--LDO Regulator}
 A high-efficiency Buck delivers most of the power; a following LDO cleans switching ripple and boosts PSRR. The overall architecture is shown in Fig.~\ref{fig:block}. The combined approach yields ripple $<\SI{1}{\milli\volt_{rms}}$ and PSRR $>\SI{60}{\decibel}$ at \SI{1}{\mega\hertz}.
 
-% --- Fig.2: Corrected Hybrid Buck–LDO block diagram ---------------------
+% --- Fig.2: Final Clean Hybrid Buck–LDO block diagram ---------------------
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}[font=\footnotesize, node distance=7mm]
     % Styles
     \tikzset{
       blk/.style={draw, rounded corners, minimum width=22mm, minimum height=9mm, align=center},
-      sum/.style={circle, draw, inner sep=1pt, minimum size=3mm},
       line/.style={-Stealth}
     }
 
@@ -86,9 +85,6 @@ A high-efficiency Buck delivers most of the power; a following LDO cleans switch
     % Inductor/PGS block
     \node[blk, below=10mm of ldo, minimum width=40mm] (filter) {On-chip laminated inductor + PGS};
 
-    % Feedback label
-    \node[below=7mm of buck] (fb) {Feedback};
-
     % Connections
     \draw[line] (vin) -- (buck);
     \draw[line] (buck) -- node[above, midway] {$20\,\text{MHz}$} (ldo);
@@ -98,9 +94,8 @@ A high-efficiency Buck delivers most of the power; a following LDO cleans switch
     \draw[line] (vout) |- (filter.east);
     \draw[line] (filter.west) -| (buck.south);
 
-    % Feedback path
-    \draw[line] (vout) |- (fb.east);
-    \draw[line] (fb) -- (buck.south);
+    % Feedback path (single clean line)
+    \draw[line] (vout.south) |- (buck.south);
   \end{tikzpicture}
   \caption{Hybrid Buck--LDO block diagram using the on-chip laminated inductor with PGS.}
   \label{fig:block}
