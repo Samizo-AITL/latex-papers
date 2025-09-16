@@ -4,7 +4,7 @@
 % ==== Fonts & core packages ====
 \usepackage{newtxtext,newtxmath} % IEEE推奨Times系
 \usepackage{graphicx}
-\usepackage{amsmath} % amssymb は newtxmath と衝突しやすいので未使用
+\usepackage{amsmath}
 \usepackage{cite}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,patterns}
@@ -48,11 +48,10 @@ This paper positions CFET as both a roadmap element and an educational vehicle f
 
 % =========================
 \section{Device Evolution: From SCE Relief to Cross-Sectional CMOS}
-
 Scaling history can be viewed as a sequence of innovations in
-gate–channel electrostatics. Each generation provided stronger
+gate--channel electrostatics. Each generation provided stronger
 short-channel control, but also introduced new integration
-bottlenecks that motivated the next architectural shift.
+bottlenecks that motivated the next architectural shift (see Fig.~\ref{fig:evolution}).
 
 \subsection{Planar CMOS: Collapse under SCE}
 As gate lengths entered the deep sub-100\,nm regime, planar MOSFETs
@@ -72,10 +71,10 @@ remained ungated.
 
 \subsection{GAA Nanosheet: Four-Sided Ideal Control}
 Gate-All-Around (GAA) nanosheet FETs extended electrostatics to
-\emph{four} sides by surrounding suspended sheets with the gate. This
-architecture nearly idealized SCE suppression and variability control,
-enabling sub-3\,nm nodes \cite{bsimcmg_sispad2017}. Yet, as device
-electrostatics became nearly perfect, the performance bottleneck
+\emph{four} sides by surrounding suspended sheets with the gate.
+This architecture nearly idealized SCE suppression and variability control,
+enabling sub-3\,nm nodes \cite{bsimcmg_sispad2017,loubet_imec_vlsi2019}.
+Yet, as device electrostatics became nearly perfect, the performance bottleneck
 shifted toward \emph{wiring}: local interconnect resistance/capacitance
 (RC) and the lateral footprint of standard cells limited further
 delay/energy gains.
@@ -87,67 +86,57 @@ connecting them vertically. Educational takeaways are:
 (i) effective cell density can nearly double by sharing
 diffusion/gate footprint across polarities; and
 (ii) the critical n-to-p connection in inverters and logic networks is
-shortened, reducing local RC and FO1 delay. In effect, CFET reframes
-CMOS as a \emph{cross-sectional inverter} rather than a lateral pair
-\cite{imec_cfet_iedm2020}. While promising, CFETs also introduce
-new integration challenges: $<5$\,nm alignment tolerance, low thermal
-budget for sequential processing, and inter-tier parasitic coupling.
+shortened, reducing local RC and FO1 delay.
+In effect, CFET reframes CMOS as a \emph{cross-sectional inverter}
+rather than a lateral pair \cite{imec_cfet_iedm2020,colinge_cfet_review2021}.
+While promising, CFETs also introduce new integration challenges:
+$<5$\,nm alignment tolerance, low thermal budget for sequential processing,
+and inter-tier parasitic coupling.
 
 % =========================
 \begin{figure}[t]
 \centering
 \fitfig{%
 \begin{tikzpicture}[scale=0.9,>=Latex]
-
 % --- Planar ---
 \node at (0,-0.8) {\footnotesize Planar};
-\draw[fill=blue!20] (-0.6,0) rectangle (0.6,-0.3); % channel
-\draw[fill=red!20] (-0.7,0.3) rectangle (0.7,0.6);  % gate
+\draw[fill=blue!20] (-0.6,0) rectangle (0.6,-0.3);
+\draw[fill=red!20] (-0.7,0.3) rectangle (0.7,0.6);
 \draw (-0.7,0.3) rectangle (0.7,0.6);
-
-% --- arrow ---
+% arrow
 \draw[->,thick] (1.0,0.15) -- (1.8,0.15);
-
 % --- FinFET ---
 \node at (2.8,-0.8) {\footnotesize FinFET};
-\draw[fill=blue!20] (2.6,-0.3) rectangle (3.0,0.6); % fin
-\draw[fill=red!20,opacity=0.6] (2.3,0.6) rectangle (3.3,0.9); % gate top
-\draw[fill=red!20,opacity=0.6] (2.3,-0.3) rectangle (2.6,0.6); % gate left
-\draw[fill=red!20,opacity=0.6] (3.0,-0.3) rectangle (3.3,0.6); % gate right
-
-% --- arrow ---
+\draw[fill=blue!20] (2.6,-0.3) rectangle (3.0,0.6);
+\draw[fill=red!20,opacity=0.6] (2.3,0.6) rectangle (3.3,0.9);
+\draw[fill=red!20,opacity=0.6] (2.3,-0.3) rectangle (2.6,0.6);
+\draw[fill=red!20,opacity=0.6] (3.0,-0.3) rectangle (3.3,0.6);
+% arrow
 \draw[->,thick] (3.6,0.15) -- (4.4,0.15);
-
 % --- GAA ---
 \node at (5.4,-0.8) {\footnotesize GAA};
-\draw[fill=blue!20] (5.0,0.0) rectangle (5.8,0.3); % channel
+\draw[fill=blue!20] (5.0,0.0) rectangle (5.8,0.3);
 \draw[draw=red!60, ultra thick, rounded corners=2pt]
-      (4.9,-0.1) rectangle (5.9,0.4); % gate fully around
-
-% --- arrow ---
+      (4.9,-0.1) rectangle (5.9,0.4);
+% arrow
 \draw[->,thick] (6.2,0.15) -- (7.0,0.15);
-
 % --- CFET ---
 \node at (8.0,-0.8) {\footnotesize CFET};
-% lower nFET
 \draw[fill=blue!20] (7.6,0.0) rectangle (8.4,0.3);
 \draw[draw=red!60, thick, rounded corners=1pt] (7.5,-0.1) rectangle (8.5,0.4);
-% upper pFET
 \draw[fill=blue!20!red!30] (7.6,0.7) rectangle (8.4,1.0);
 \draw[draw=red!60, thick, rounded corners=1pt] (7.5,0.6) rectangle (8.5,1.1);
-% vertical via
 \draw[fill=black!40] (8.45,0.0) rectangle (8.65,1.0);
 \node[anchor=west,font=\scriptsize] at (8.7,0.5) {vertical via};
-
 \end{tikzpicture}}
-\caption{Device evolution: Planar (single gate) $\rightarrow$ FinFET (3-side) $\rightarrow$ GAA (4-side) $\rightarrow$ CFET (stacked n/p).}
+\caption{Device evolution: Planar $\to$ FinFET (3-side) $\to$ GAA (4-side) $\to$ CFET (stacked n/p).}
 \label{fig:evolution}
 \end{figure}
 
 % =========================
 \begin{table*}[t]
 \centering
-\caption{Technology Node Evolution: From GAA to CFET (indicative values)}
+\caption{Technology Node Evolution: From GAA to CFET (indicative values, useful for coursework exercises).}
 \label{tab:node_scaling}
 \begin{tabular}{lcccc}
 \hline
@@ -171,47 +160,33 @@ $<$2\,nm (2027--2030) & CFET (stacked n/p) & 0.50--0.60\,V & 500--700  & Cross-s
 \tikzset{
   stage/.style={
     draw, rounded corners=2pt, align=center, fill=gray!10,
-    minimum width=2.35cm, minimum height=1.05cm, % ← 縦を少し厚く
-    inner sep=2.5pt,                               % ← 内側余白を増やす
+    minimum width=2.35cm, minimum height=1.05cm,
+    inner sep=2.5pt,
     font=\footnotesize, text width=2.35cm
   },
   annot/.style={align=center, font=\scriptsize}
 }
-
-% baseline axis
 \draw[->, semithick] (-0.4,0) -- (16.2,0);
-
-% --- stages（各ノードの箱の中に数値も記載）---
 \node[stage] (n7)  at (0,0)   {7\,nm\\ \textbf{FinFET} (2018)\\[-1pt]
-  {\scriptsize VDD 0.70--0.80\,V\\ 90--100 MTr/mm$^2$}};
-
+  {\scriptsize VDD 0.70--0.80\,V\\ 90--100}};
 \node[stage] (n5)  at (3.0,0) {5\,nm\\ \textbf{FinFET$\to$pre-GAA} (2020)\\[-1pt]
   {\scriptsize 0.65--0.75\,V\\ 130--170}};
-
 \node[stage] (n3)  at (6.0,0) {3\,nm\\ \textbf{GAA} (2023)\\[-1pt]
   {\scriptsize 0.60--0.70\,V\\ 200--250}};
-
 \node[stage] (n2)  at (9.0,0) {2\,nm\\ \textbf{GAA prod.} (2025 est.)\\[-1pt]
   {\scriptsize 0.55--0.65\,V\\ 300--400}};
-
 \node[stage] (c20) at (12.0,0){$<$2\,nm\\ \textbf{CFET} (2027--2030)\\[-1pt]
   {\scriptsize 0.50--0.60\,V\\ 500--700}};
-
 \node[stage] (c10) at (15.0,0){1\,nm-class\\ \textbf{Seq./Forksheet CFET} (2030+)\\[-1pt]
   {\scriptsize $<$0.50\,V\\ $>$800}};
-
-% arrows
 \draw[->] (n7) -- (n5);
 \draw[->] (n5) -- (n3);
 \draw[->] (n3) -- (n2);
 \draw[->] (n2) -- (c20);
 \draw[->] (c20) -- (c10);
-
-% --- key message（上にずらす＆少し小さく） ---
 \node[annot] at (12.0,1.8) {\footnotesize CFET: vertical n/p $\Rightarrow$ density $\sim$2$\times$, shorter n$\to$p RC};
-
 \end{tikzpicture}}
-\caption{Compact roadmap timeline aligned with Table~\ref{tab:node_scaling}. Values are indicative; adapted from IRDS~\cite{irds_2023} and IMEC IEDM~\cite{imec_cfet_iedm2020}.}
+\caption{Compact roadmap timeline aligned with Table~\ref{tab:node_scaling}. Values indicative; adapted from IRDS~\cite{irds_2023} and IMEC~\cite{imec_cfet_iedm2020}.}
 \label{fig:roadmap_timeline}
 \end{figure*}
 \vspace{0.6ex}
@@ -219,9 +194,9 @@ $<$2\,nm (2027--2030) & CFET (stacked n/p) & 0.50--0.60\,V & 500--700  & Cross-s
 % =========================
 \section{CFET Structural Concepts}
 Two integration styles are considered, reflecting a likely roadmap progression:
-first the \emph{Sequential CFET} as the initial implementation candidate,
+first the \emph{Sequential CFET} as the initial candidate,
 and then the \emph{Forksheet CFET} as a possible successor if inter-tier
-interference proves problematic.
+interference proves problematic (Figs.~\ref{fig:cfet_stack}, \ref{fig:forksheet}).
 
 \paragraph*{(i) Sequential CFET}
 The first integration style expected in practice is the Sequential CFET.
@@ -260,7 +235,7 @@ and thermal interference between tiers.
 \node[anchor=east] at (-0.05,1.95) {\scriptsize VDD};
 \node[anchor=east] at (-0.05,0.75) {\scriptsize GND};
 \end{tikzpicture}}
-\caption{Sequential CFET cross-section: stacked nFET/pFET with vertical output via.%
+\caption{Sequential CFET cross-section: stacked nFET/pFET with vertical output via.
 Current research focuses on managing parasitic coupling and thermal interference in this architecture.}
 \label{fig:cfet_stack}
 \end{figure}
@@ -288,7 +263,7 @@ congestion.
 \node[anchor=west]  at (2.25,0.30) {\scriptsize pMOS sheets (vertical)};
 \node[anchor=north] at (2.00,-0.10) {\scriptsize nMOS sheets (horizontal)};
 \end{tikzpicture}}
-\caption{Forksheet CFET top view: orthogonal n/p nanosheets with a dielectric fork.%
+\caption{Forksheet CFET top view: orthogonal n/p nanosheets with a dielectric fork.
 This style is envisioned as a follow-up option if Sequential CFET coupling proves too limiting.}
 \label{fig:forksheet}
 \end{figure}
@@ -299,18 +274,22 @@ CFET integration affects not only cell density but also delay,
 variability, and power distribution in ways that extend beyond GAA devices.
 Key educational points include:
 \begin{itemize}
-  \item \textbf{Area efficiency:} By vertically stacking nFET and pFET within the same lateral footprint, inverter density can approach nearly $2\times$.
-  This benefit extends to complex logic cells (e.g., NAND/NOR) by co-locating pull-up and pull-down networks in the same footprint.
-  Students should recognize how this structural gain cascades into standard-cell library design and physical design rules such as \emph{cell height} and \emph{routing pitch}.
+  \item \textbf{Area efficiency:} By vertically stacking nFET and pFET within the same lateral footprint, inverter density can approach
+  nearly $2\times$. This benefit extends to complex logic cells (e.g., NAND/NOR) by co-locating pull-up and pull-down networks in
+  the same footprint. Students should recognize how this structural gain cascades into standard-cell library design and physical design
+  rules such as \emph{cell height} and \emph{routing pitch}.
   \item \textbf{Delay/energy:} The vertical n-to-p via drastically shortens the inverter’s RC path compared to lateral wiring in GAA.
   Even if individual $I$–$V$ curves remain similar to GAA, FO1 delay and stage energy are improved due to reduced interconnect length.
   This highlights the shift of scaling benefit from device $I$–$V$ to \emph{wiring geometry}.
-  \item \textbf{Electrostatics:} Each tier can retain GAA-level control, but inter-tier dielectric/field coupling introduces new parasitics (capacitance, via resistance).
-  This provides an excellent tutorial case where device electrostatics interact with circuit parasitics, requiring students to think about multi-physics co-optimization.
+  \item \textbf{Electrostatics:} Each tier can retain GAA-level control, but inter-tier dielectric/field coupling introduces new parasitics
+  (capacitance, via resistance). This provides an excellent tutorial case where device electrostatics interact with circuit parasitics,
+  requiring students to think about multi-physics co-optimization.
   \item \textbf{Variability/noise:} Vertical stacking introduces thermal coupling between tiers, causing asymmetric heating of n/p devices.
-  Furthermore, VDD and GND partitioning across layers generates uneven IR drop and noise susceptibility.
-  These effects demand new placement and routing strategies, illustrating how device innovations ripple up into CAD tool requirements.
+  Furthermore, VDD and GND partitioning across layers generates uneven IR drop and noise susceptibility. These effects demand new
+  placement and routing strategies, illustrating how device innovations ripple up into CAD tool requirements.
 \end{itemize}
+From a teaching perspective, this section demonstrates how \emph{device-level innovations directly translate into EDA challenges},
+making CFET a natural case study in DTCO curricula.
 
 % =========================
 \section{Manufacturing Challenges}
@@ -320,7 +299,7 @@ often under low thermal budgets ($<500^{\circ}$C) to avoid damaging the complete
 Vertical via alignment must achieve sub-5\,nm overlay, pushing EUV lithography beyond current production standards.
 Dielectric isolation must simultaneously suppress dopant diffusion and preserve mechanical integrity across multiple stacked layers.
 
-Recent demonstrations by IMEC indicate that sequential CFETs are feasible at the research level.
+Recent demonstrations by IMEC indicate that sequential CFETs are feasible at the research level \cite{imec_cfet_iedm2020}.
 However, industrial-scale yield, variability control, and long-term reliability remain unresolved.
 In particular, \emph{independent threshold-voltage tuning of nFET/pFET tiers} is critical for SRAM stability and large-scale logic integration.
 This makes CFET a rich topic for classroom debate on manufacturability versus theoretical scaling.
@@ -338,6 +317,7 @@ Prototype Verilog-A models have been proposed but lack consensus, calibration, a
 Furthermore, no open-source CFET-ready PDKs or standard-cell libraries are available, preventing standardized design flows.
 From an educational perspective, this modeling gap provides fertile ground for coursework:
 students can extend compact models, explore sensitivity analysis, and appreciate the impact of missing parasitics on design predictions.
+This gap is also echoed in the IRDS roadmap \cite{irds_2023}.
 
 % =========================
 \section{Educational Value}
@@ -357,7 +337,7 @@ This dual-level approach illustrates how CFET can serve as both an introduction 
 % =========================
 \section{Conclusion and Outlook}
 CFET reframes CMOS as a stacked, cross-sectional inverter that simultaneously improves density and wiring delay.
-Looking forward, several research vectors emerge:
+Looking forward, several research vectors emerge \cite{colinge_cfet_review2021,irds_2023}:
 \begin{itemize}
   \item Forksheet CFET layouts to mitigate inter-tier interference,
   \item 3D sequential stacks under constrained thermal budgets,
@@ -366,7 +346,7 @@ Looking forward, several research vectors emerge:
   \item AI-driven exploration of design space for DTCO.
 \end{itemize}
 Embedding CFET into semiconductor curricula not only prepares engineers for the 2030s,
-but also fosters critical thinking about unresolved challenges at the scaling frontier—where physics, fabrication, and system design converge.
+but also fosters critical thinking about unresolved challenges at the scaling frontier---where physics, fabrication, and system design converge.
 
 % ========================
 \section*{Acknowledgment}
