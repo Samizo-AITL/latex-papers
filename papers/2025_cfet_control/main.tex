@@ -67,85 +67,92 @@ We propose a three-layer architecture:
 3) \textbf{LLM supervisor:} Retunes $(K_p,K_i,K_d)$ and FSM thresholds when overshoot/error exceed tolerance.  
 These layers provide stability (PID), safety (FSM), and adaptability (LLM).
 
-\begin{figure}[t]
+% --- 本文：Fig.1（2カラム幅にしたい場合は figure* を使う）---
+\begin{figure*}[t] % 片カラムなら figure に変える
 \centering
 \begin{tikzpicture}[
   font=\footnotesize,
-  node distance = 7mm and 9mm, % 縦/横の基本間隔
-  box/.style={draw,rounded corners,fill=gray!5,inner sep=6pt,align=left},
-  smallbox/.style={draw,rounded corners,fill=gray!5,inner sep=4pt,align=left},
-  arrow/.style={-{Latex},thick,rounded corners},
-  dashedarrow/.style={-{Latex},thick,dashed,rounded corners},
-  note/.style={inner sep=2pt}
+  node distance=6mm and 8mm,
+  box/.style={draw,rounded corners,fill=gray!6,inner sep=5pt,
+              minimum height=10mm,align=center},
+  plantbox/.style={draw,rounded corners,fill=gray!6,inner sep=6pt,
+                   minimum width=6.4cm,minimum height=3.2cm},
+  arrow/.style={-Latex,thick},
+  dashedarrow/.style={-Latex,thick,dashed},
+  lbl/.style={fill=white,inner sep=1pt}
 ]
 
-% --- Plant --------------------------------------------------------
-\node[box,minimum width=5.0cm,minimum height=3.2cm] (plant) {};
-\node[anchor=north] at ($(plant.north)+(0,0.25)$) {\bf CFET stacked tiers (plant)};
+% --- Plant ---------------------------------------------------------
+\node[plantbox] (plant) {};
+\node[lbl,anchor=north] at ($(plant.north)+(0,2mm)$)
+  {\bfseries CFET stacked tiers (plant)};
 
 % tiers
-\node[smallbox,anchor=north,minimum width=4.6cm,text width=4.6cm] (top)
-  at ($(plant.north)+(0,-0.55)$)
-  {Top tier (e.g., p-FET)\hfill $P_{\text{top}}\!\to\!T_{\text{top}}$};
-\node[smallbox,anchor=north,minimum width=4.6cm,text width=4.6cm] (bot)
-  at ($(top.south)+(0,-0.45)$)
-  {Bottom tier (e.g., n-FET)\hfill $T_{\text{bot}}$};
+\node[box,minimum width=5.8cm,anchor=north] (top)
+  at ($(plant.north)+(0,-7mm)$)
+  {Top tier (e.g., p-FET)\quad $P_{\text{top}}\!\to\!T_{\text{top}}$};
+\node[box,minimum width=5.8cm,anchor=north] (bot)
+  at ($(top.south)+(0,-4mm)$)
+  {Bottom tier (e.g., n-FET)\quad $T_{\text{bot}}$};
 
-% RC label
-\node[note,anchor=west,text width=4.5cm,align=left]
-  at ($(bot.south west)+(0.08,0.08)$)
+% RC text (白背景で重なり回避)
+\node[lbl,anchor=west] at ($(plant.south west)+(2mm,2mm)$)
   {$R_{\text{wire}}{+}R_{\text{via}},\; C_{\text{load}}{+}C_{\text{inter}}$};
 
-% vertical thermal coupling
-\path let \p1=(top.south), \p2=(bot.north) in
-  coordinate (kcx) at ($(\p1)!.45!(\p2)$);
-\draw[arrow] ($(top.south)+(0.6,0)$) -- node[right] {$k_c$} ($(bot.north)+(0.6,0)$);
-\draw[arrow] ($(top.south)+(1.2,0)$) -- ($(bot.north)+(1.2,0)$);
+% vertical thermal coupling k_c（右寄りに2本）
+\draw[arrow] ($(top.south)!0.40!(top.south east)$)
+  -- node[lbl,right] {$k_c$}
+  ($(bot.north)!0.40!(bot.north east)$);
+\draw[arrow] ($(top.south)!0.72!(top.south east)$)
+  -- ($(bot.north)!0.72!(bot.north east)$);
 
-% delay deviation port (上側に逃がす)
-\coordinate (epsTap) at ($(plant.east)+(0,0.45)$);
-\draw[arrow] (plant.east) |- (epsTap);
+% ε_d をプラント右から取り出し、ラベルは別ノード
+\draw[arrow] (plant.east) -- ++(1.1cm,0) coordinate (tapd);
+\node[lbl,above] at ($(plant.east)!0.5!(tapd)$) {$\varepsilon_d$};
 
-% --- Controllers (右側に縦配置) -----------------------------------
-\node[box,minimum width=3.1cm,minimum height=1.1cm,text width=3.1cm,
-      right=13mm of plant.east, anchor=west] (pid)
-      {{\bf PID controller}\\$(K_p,K_i,K_d)$};
+% --- PID -----------------------------------------------------------
+\node[box,minimum width=3.4cm] (pid)
+  at ($(tapd)+(2.2cm,0)$)
+  {\textbf{PID} controller\\[-1pt] $(K_p,K_i,K_d)$};
+\draw[arrow] (tapd) -- (pid.west);
 
-\node[box,minimum width=3.1cm,minimum height=1.1cm,text width=3.1cm,
-      below=7mm of pid] (fsm)
-      {{\bf FSM guard}\\ HOT mode if $T_{\text{top}}>85^\circ$C};
+% --- FSM -----------------------------------------------------------
+\node[box,minimum width=3.4cm,below=10mm of pid] (fsm)
+  {\textbf{FSM} guard\\[-1pt]
+   HOT mode if $T_{\text{top}}>85^\circ\mathrm{C}$};
+\draw[arrow] (pid.south) -- ++(0,-2mm) -- (fsm.north);
 
-\node[box,minimum width=2.3cm,minimum height=0.95cm,text width=2.3cm,
-      below=7mm of fsm] (act)
-      {Actuation $u$\\(DVFS)};
-
-% 配線：eps -> PID（上側経由）
-\draw[arrow] (epsTap) -- node[above,pos=0.6] {$\varepsilon_d$} (pid.north);
-
-% PID -> FSM -> Act
-\draw[arrow] (pid.south) -- (fsm.north);
+% --- Actuation u ---------------------------------------------------
+\node[box,minimum width=2.8cm,below=10mm of fsm] (act)
+  {Actuation $u$\\[-1pt] (DVFS)};
 \draw[arrow] (fsm.south) -- (act.north);
 
-% u を下側で plant へ戻す（交差回避）
-\draw[arrow] (act.west) -| ++(-1.2,0) |- node[pos=0.25,left] {$u$} (plant.west);
+% u をプラントへ（肘折れ・ラベル白背景）
+\draw[arrow] (act.west) -- ++(-1.4cm,0)
+  |- node[lbl,pos=0.25,xshift=-1mm] {$u$} (plant.west);
 
-% --- LLM (左下に離して配置) --------------------------------------
-\node[box,minimum width=3.6cm,minimum height=1.15cm,text width=3.6cm,
-      below left=2mm and 9mm of fsm] (llm)
-      {{\bf LLM supervisor}\\ retune $(K_p,K_i,K_d)$,\; $T_{\text{th}}$};
+% --- LLM supervisor ------------------------------------------------
+\node[box,align=center] (llm)
+  at ($(plant.south)-(0,1.5cm)$)
+  {\textbf{LLM} supervisor\\[-1pt]
+   retune $(K_p,K_i,K_d),\,T_{\text{th}}$};
 
-% taps to LLM （下側を通す）
-\draw[dashedarrow] (plant.south) |- node[below,pos=0.25] {$T_{\text{top}},T_{\text{bot}}$} (llm.west);
-\draw[dashedarrow] (pid.east) -| ++(0.6,0) |- node[right,pos=0.25] {$\varepsilon_d$} (llm.north);
-
-% retuning outputs （上側で合流）
-\draw[dashedarrow] (llm.east) -| ++(0.8,0.0) |- (pid.north);
-\draw[dashedarrow] (llm.east) -| ++(0.8,-0.1) |- (fsm.west);
+% taps to LLM（白背景ラベル、テキスト重なり回避）
+\draw[dashedarrow] (plant.south) |- node[lbl,near start,below]
+  {$T_{\text{top}},T_{\text{bot}}$} (llm.west);
+\draw[dashedarrow] (pid.east) |- node[lbl,near start,right]
+  {$\varepsilon_d$} (llm.north);
+\draw[dashedarrow] (llm.east) -| node[lbl,near start,above]
+  {gain/threshold updates} (pid.north);
+\draw[dashedarrow] (llm.east) -| (fsm.west);
 
 \end{tikzpicture}
-\caption{Proposed architecture without line overlaps.}
+
+\caption{Proposed architecture without line overlaps:
+stacked tiers (plant) with vertical thermal coupling $k_c$; feedback of delay deviation $\varepsilon_d$;
+PID stabilization, FSM safety guard, and LLM-based gain/threshold retuning.}
 \label{fig:model_tikz}
-\end{figure}
+\end{figure*}
 
 \section{Experimental Setup}
 Simulations were performed using SystemDK 2025 with $dt=1$ ns and horizon 1.5 s. Parameters:  
