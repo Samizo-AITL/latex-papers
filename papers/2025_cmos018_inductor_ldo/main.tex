@@ -45,12 +45,12 @@ On-chip power integration in mature CMOS nodes remains important for automotive,
 \subsection{Magnetic-Laminated Inductor}
 Parallel Al top-metal conductors (top two metals in \SI{0.18}{\um} CMOS) are overlaid with laminated FeSiAl/CoZrTa/CoFeB films, isolated by SiN. The lamination reduces eddy-current loss while maintaining BEOL compatibility (post-BEOL deposition at $\le\SI{350}{\celsius}$). A simplified cross-section is shown in Fig.~\ref{fig:cross}.
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=\linewidth]{fig/fig1_laminated_cross_section.png}
+  \includegraphics[width=0.85\textwidth]{fig/fig1_laminated_cross_section.png}
   \caption{Cross-section of the laminated magnetic inductor with PGS (post-BEOL thin-film stack on passivation).}
   \label{fig:cross}
-\end{figure}
+\end{figure*}
 
 \subsection{Patterned Ground Shield (PGS)}
 The PGS---implemented in a lower metal with \SI{9}{\um} pitch and \SI{24}{\um} slit---suppresses substrate loss and eddy currents, improving $Q$ while keeping coupling under control.
@@ -86,7 +86,7 @@ Parameter & Air-core & Proposed \\
 $L$ @ \SI{20}{\mega\hertz} & \SI{40}{\nano\henry} & \SI{100}{\nano\henry} \\
 $Q$ @ \SI{20}{\mega\hertz} & 5 & 15 \\
 $I_{\text{sat}}$ & \SI{0.2}{\ampere} & $\ge\SI{0.5}{\ampere}$ \\
-DCR & \SI{0.40}{\ohm} & \SI{0.20}{\ohm} \\
+DCR & 0.40~\(\Omega\) & 0.20~\(\Omega\) \\
 Area & \SI{0.8}{\milli\meter\squared} & $\approx\SI{0.6}{\milli\meter\squared}$ \\
 $\eta_{\text{Buck+LDO}}$ & $\le\SI{65}{\percent}$ & $\approx\SI{80}{\percent}$ \\
 Ripple (post-LDO) & $\sim\SI{1}{\milli\volt_{rms}}$ & $<\SI{1}{\milli\volt_{rms}}$ \\
@@ -135,11 +135,9 @@ A.~Elshazly \emph{et al.}, ``An integrated power management system for IoT devic
 % ------- Biography -------
 \begin{IEEEbiographynophoto}{Shinichi Samizo}
 is an Independent Researcher with the Project Design Hub, Japan. 
-He worked on 0.35–0.18 µm CMOS process integration and high-voltage logic at Seiko Epson, 
-focusing on volume production and productization. His research interests include 
-semiconductor process integration, integrated power management, control theory, 
-and system-level design enablement. He currently publishes educational and research 
-materials through the Project Design Hub.
+He worked on 0.35–0.18 µm CMOS process integration and high-voltage logic at Seiko Epson, focusing on volume production and productization. 
+His research interests include semiconductor process integration, integrated power management, control theory, and system-level design enablement. 
+He currently publishes educational and research materials through the Project Design Hub.
 \end{IEEEbiographynophoto}
 
 \end{document}
