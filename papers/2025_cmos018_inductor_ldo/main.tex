@@ -13,15 +13,14 @@
 \usetikzlibrary{positioning,arrows.meta} % ← これがないと -Stealth が未定義になります
 \tikzset{>={Stealth[length=2mm,width=2mm]}} % 矢印 tip を明示（任意）
 
+% ---- siunitx: 指示どおり差し替え（警告解消） ----
 \sisetup{
-  mode            = match,
+  mode = match,
   propagate-math-font = true,
   text-family-to-math = true,
   text-series-to-math = true,
-  detect-weight   = true,
-  detect-family   = true,
-  per-mode        = symbol,
-  separate-uncertainty = true
+  per-mode = symbol,
+  uncertainty-mode = separate
 }
 
 % ------- Title & Author -------
@@ -107,7 +106,7 @@ A high-efficiency Buck delivers most of the power; a following LDO cleans switch
   \centering
   \includegraphics[width=.85\linewidth]{fig/fig4_psrr_target.png}% single-column schematic/plot placeholder
   \caption{Hybrid Buck--LDO concept and target PSRR versus frequency (single-column figure).}
-  \label{fig:block}
+  \label{fig:psrr} % ← ラベル重複を回避
 \end{figure}
 
 \section{Results (Targets/Expected)}
@@ -131,7 +130,7 @@ Parameter & Air-core & Proposed \\
 $L$ @ \SI{20}{\mega\hertz} & \SI{40}{\nano\henry} & \SI{100}{\nano\henry} \\
 $Q$ @ \SI{20}{\mega\hertz} & 5 & 15 \\
 $I_{\text{sat}}$ & \SI{0.2}{\ampere} & $\ge\SI{0.5}{\ampere}$ \\
-DCR & 0.40~\(\Omega\) & 0.20~\(\Omega\) \\
+DCR & \SI{0.40}{\ohm} & \SI{0.20}{\ohm} \\ % ← ここだけ修正
 Area & \SI{0.8}{\milli\meter\squared} & $\approx\SI{0.6}{\milli\meter\squared}$ \\
 $\eta_{\text{Buck+LDO}}$ & $\le\SI{65}{\percent}$ & $\approx\SI{80}{\percent}$ \\
 Ripple (post-LDO) & $\sim\SI{1}{\milli\volt_{rms}}$ & $<\SI{1}{\milli\volt_{rms}}$ \\
