@@ -130,7 +130,8 @@ Parameter & Air-core & Proposed \\
 $L$ @ \SI{20}{\mega\hertz} & \SI{40}{\nano\henry} & \SI{100}{\nano\henry} \\
 $Q$ @ \SI{20}{\mega\hertz} & 5 & 15 \\
 $I_{\text{sat}}$ & \SI{0.2}{\ampere} & $\ge\SI{0.5}{\ampere}$ \\
-DCR & \SI{0.40}{\ohm} & \SI{0.20}{\ohm} \\ % ← ここだけ修正
+% --- Table 1（この行だけ直す）---
+DCR & 0.40~\(\Omega\) & 0.20~\(\Omega\) \\
 Area & \SI{0.8}{\milli\meter\squared} & $\approx\SI{0.6}{\milli\meter\squared}$ \\
 $\eta_{\text{Buck+LDO}}$ & $\le\SI{65}{\percent}$ & $\approx\SI{80}{\percent}$ \\
 Ripple (post-LDO) & $\sim\SI{1}{\milli\volt_{rms}}$ & $<\SI{1}{\milli\volt_{rms}}$ \\
@@ -179,11 +180,13 @@ A.~Elshazly \emph{et al.}, ``An integrated power management system for IoT devic
 \end{thebibliography}
 
 % ------- Biography -------
-\IEEEbiographynophoto{Shinichi Samizo}{%
-Shinichi Samizo is an Independent Researcher with the Project Design Hub, Japan. 
-He worked on 0.35--0.18\,\textmu m CMOS process integration and high-voltage logic at Seiko Epson, 
-focusing on volume production and productization. His research interests include semiconductor process 
-integration, integrated power management, control theory, and system-level design enablement. 
-He currently publishes educational and research materials through the Project Design Hub.}
+\clearpage
+\begin{IEEEbiographynophoto}{Shinichi Samizo}
+Shinichi Samizo is an Independent Researcher with the Project Design Hub, Japan.
+He worked on 0.35--0.18\,\textmu m CMOS process integration and high-voltage logic at Seiko Epson,
+focusing on volume production and productization. His research interests include semiconductor process
+integration, integrated power management, control theory, and system-level design enablement.
+He currently publishes educational and research materials through the Project Design Hub.
+\end{IEEEbiographynophoto}
 
 \end{document}
