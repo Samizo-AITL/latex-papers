@@ -60,6 +60,37 @@ The PGS---implemented in a lower metal with \SI{9}{\um} pitch and \SI{24}{\um} s
 \subsection{Hybrid Buck--LDO Regulator}
 A high-efficiency Buck delivers most of the power; a following LDO cleans switching ripple and boosts PSRR. The overall architecture is shown in Fig.~\ref{fig:block}. The combined approach yields ripple $<\SI{1}{\milli\volt_{rms}}$ and PSRR $>\SI{60}{\decibel}$ at \SI{1}{\mega\hertz}.
 
+% --- Fig.2: Hybrid Buck–LDO block diagram -------------------------------
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[font=\footnotesize, node distance=7mm]
+    % Styles
+    \tikzset{
+      blk/.style={draw, rounded corners, minimum width=22mm, minimum height=9mm, align=center},
+      sum/.style={circle, draw, inner sep=1pt, minimum size=3mm},
+      line/.style={-Stealth}
+    }
+    % Nodes
+    \node[blk] (buck) {Buck\\(PWM/PFM)};
+    \node[blk, right=18mm of buck] (ldo) {LDO};
+    \node[sum, right=15mm of ldo] (sum) {};
+    \node[right=8mm of sum] (vout) {$V_\text{out}$};
+    \node[above=7mm of buck] (vin) {$V_\text{in}$};
+    \node[below=10mm of buck] (fb) {FB};
+    \node[blk, below=6mm of ldo, minimum width=40mm] (filter) {On-chip laminated inductor + PGS};
+    % Connections
+    \draw[line] (vin) -- (buck);
+    \draw[line] (buck) -- node[above,pos=0.5] {$20\,\text{MHz}$} (ldo);
+    \draw[line] (ldo) -- (sum);
+    \draw[line] (sum) -- (vout);
+    \draw[line] (vout) |- (filter.east);
+    \draw[line] (filter.west) -| (buck.south);
+    \draw[line] (fb) -| (sum.south) node[pos=0.25,below] {load step};
+  \end{tikzpicture}
+  \caption{Hybrid Buck–LDO block diagram using the on-chip laminated inductor with PGS.}
+  \label{fig:block}
+\end{figure}
+
 \begin{figure}[t]
   \centering
   \includegraphics[width=.85\linewidth]{fig/fig4_psrr_target.png}% single-column schematic/plot placeholder
