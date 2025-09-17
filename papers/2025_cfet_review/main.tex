@@ -320,6 +320,28 @@ students can extend compact models, explore sensitivity analysis, and appreciate
 This gap is also echoed in the IRDS roadmap \cite{irds_2023}.
 
 % =========================
+\section{Toward a CFET-Aware Compact Model}
+While BSIM-CMG has become the de facto standard for FinFET and GAA nanosheet devices,
+an extension toward CFET requires explicit modeling of \emph{cross-tier interactions}.
+Key ingredients for a ``BSIM-CFET'' framework would include:
+
+\begin{itemize}
+  \item \textbf{Inter-tier parasitic coupling:} Coupling capacitance ($C_{np}$) and resistance ($R_{np}$) between stacked nFET and pFET tiers,
+  influencing inverter delay, noise margin, and dynamic power.
+  \item \textbf{Thermal coupling:} Vertical self-heating and cross-heating effects captured through thermal resistance ($R_{th}$) and capacitance ($C_{th}$),
+  affecting threshold voltage shift and drive-current degradation.
+  \item \textbf{Mechanical stress:} Strain induced by sequential epitaxy and dielectric stacks alters carrier mobility ($\mu_n$, $\mu_p$).
+  Compact models can adopt stress-aware correction terms, e.g., $\mu = \mu_0 (1 + \alpha \cdot \sigma)$.
+  \item \textbf{Cross-sectional inverter abstraction:} Treating the n/p stack as a single compact ``CFET inverter element,'' where
+  device-to-device interactions are parameterized rather than purely lateral.
+\end{itemize}
+
+From an educational standpoint, introducing these extensions provides students
+a fertile playground for \emph{multi-physics-aware compact modeling}.
+Exercises can involve sensitivity sweeps of $C_{np}$, $R_{th}$, or stress parameters,
+bridging the gap between device physics and DTCO-level impacts.
+
+% =========================
 \section{Educational Value}
 From a pedagogical perspective, CFET is more than a new device—it is a framework for integrating physics, process, layout, and CAD.
 Graduate courses can incorporate:
