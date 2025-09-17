@@ -43,12 +43,19 @@ applications, highlighting the potential of KNN as both actuator and sensor.
 \end{abstract}
 
 % ===== Body =====
-% 章タイトルは各 sections/*.tex の先頭の \section に任せる（main側では宣言しない）
+% 章タイトルは各 sections/*.tex の先頭の \section に任せる
 \input{sections/intro}
 \input{sections/background}
 \input{sections/proposal}
-\input{sections/aitl}          % ← ここは本文では \subsection にしておく（下記参照）
+\input{sections/aitl}
 \input{sections/applications}
+
+% ===== Results / Extended Analysis (本文として結論の前に配置) =====
+\input{sections/simulation}   % Droplet Formation Simulation（図：figs/droplet_volume_vs_voltage.png 等）
+\input{sections/comparison}   % Material Performance Comparison（表）
+\input{sections/mapping}      % Bio-Application Suitability Map（図：ヒートマップ）
+
+% ===== Conclusion =====
 \input{sections/conclusion}
 
 % 少し余白を追加
