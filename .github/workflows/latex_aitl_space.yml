@@ -1,11 +1,7 @@
 name: Build AITL Space Paper
 
 on:
-  workflow_dispatch: {}
-  push:
-    branches: [ main ]
-    paths:
-      - 'papers/2025_aitl_space/**'   # ← AITL Space 配下の変更でのみ実行
+  workflow_dispatch: {}   # ← 手動実行のみ
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
