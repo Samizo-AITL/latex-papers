@@ -159,11 +159,72 @@ safety constraints and verification hooks (``apply-if-safe'').
 eases redundancy planning; a radiation-tolerant interposer/NoC links chiplets.
 
 \section{Mathematical Model and $H_\infty$ Synthesis}
-We consider a discrete-time LTI plant with disturbance $w_k$, noise $v_k$, and performance
-output $z_k$. With mixed-sensitivity shaping weights $(W_1,W_2,W_3)$, we synthesize
-output-feedback $K$ minimizing $\|T_{w\to z}\|_\infty$ under fixed-point realizability
-constraints. Observers/filters are co-designed to meet latency and FPGA/ASIC resource
-budgets.
+
+To capture the multi-domain nature of spacecraft control, we model the plant
+as a coupled linear time-invariant (LTI) system including attitude, power, and
+memory-protection dynamics. The continuous-time state equation is
+
+\begin{equation}
+\dot{x} = A x + B_1 w + B_2 u, \quad
+z = C_1 x + D_{11} w + D_{12} u, \quad
+y = C_2 x + D_{21} w,
+\end{equation}
+
+where the state vector
+\[
+x = \begin{bmatrix}
+\omega_x & \omega_y & \theta_x & \theta_y & v_b & s & e
+\end{bmatrix}^\top
+\]
+combines attitude rates/angles $(\omega,\theta)$, bus voltage $v_b$, battery SOC $s$,
+and uncorrected memory error $e$.
+The input vector
+\[
+u = \begin{bmatrix}
+\tau_x & \tau_y & i_{\mathrm{dc}} & u_{\mathrm{scrub}}
+\end{bmatrix}^\top
+\]
+represents control torques, regulated load current, and memory scrubbing level.
+Disturbances $w$ include external torques, solar-current variation, and thermal stress.
+
+The block structure of $A$ highlights inter-domain coupling:
+\[
+A =
+\begin{bmatrix}
+A_{\mathrm{att}} & 0 & 0 \\
+A_{\mathrm{pwr}\leftarrow\mathrm{att}} & A_{\mathrm{pwr}} & 0 \\
+0 & A_{\mathrm{mem}\leftarrow\mathrm{pwr}} & A_{\mathrm{mem}}
+\end{bmatrix},
+\]
+where $A_{\mathrm{pwr}\leftarrow\mathrm{att}}$ models the load of
+reaction-wheel torque on the bus, and
+$A_{\mathrm{mem}\leftarrow\mathrm{pwr}}$ captures the effect of
+voltage/thermal variation on SEU accumulation.
+
+\subsection{Mixed-Sensitivity $H_\infty$ Design}
+
+We define the performance output
+\[
+z = \begin{bmatrix}
+W_S (r - y_{\mathrm{att}}) &
+W_V (v_b - v_b^\star) &
+W_E e &
+W_T u
+\end{bmatrix}^\top,
+\]
+where $W_S, W_V, W_E, W_T$ are frequency-dependent weights for
+attitude tracking, bus-voltage regulation, memory-error suppression,
+and actuator usage, respectively.
+
+The synthesis problem is to find an output-feedback controller $K$
+minimizing
+\begin{equation}
+\| T_{w \to z}(K) \|_\infty,
+\end{equation}
+subject to fixed-point realizability for FPGA/ASIC implementation.
+Observers and filters are co-designed to meet loop-latency and
+resource constraints, ensuring robust stability and performance
+across the coupled multi-domain plant.
 
 \section{Simulation and HIL Experiments}
 \subsection{Space-Environment Scenarios}
