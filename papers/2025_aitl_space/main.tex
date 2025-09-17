@@ -381,9 +381,15 @@ chiplet design and space-environment scenarios.
 
 \section{Discussion}
 \subsection{Effectiveness of the Three-Layer Stack}
-$H_\infty$ as the primary loop with PID auxiliary achieves the measured 20\% robustness
-gain and 1.5$\times$ faster settling; FSM+TMR renders mode-transition faults negligible;
-the AI adaptor safely updates gains/rules for long-term drift and unknown disturbances.
+The proposed three-layer control stack demonstrates clear performance gains.
+With $H_\infty$ as the primary loop and PID as an auxiliary stabilizer, the system
+achieves a measured 20\% improvement in robustness index and a 1.5$\times$ reduction
+in attitude settling time compared to a PID-only baseline. The FSM layer, reinforced
+with TMR, effectively eliminates spurious mode-transition faults, while the AI adaptor
+enables safe updates of rules and gains to compensate for long-term drift and
+unmodeled disturbances. As summarized in Fig.~\ref{fig:impl}, implementation outcomes
+further confirm these benefits, showing $>\!98\%$ suppression of FSM mis-transitions
+and a 35\% reduction in leakage power relative to a 28\,nm CMOS reference.
 
 \subsection{Semiconductor Platform Significance}
 FDSOI’s body-bias and isolation reduce leakage and SEU susceptibility; Tri-NVM’s
