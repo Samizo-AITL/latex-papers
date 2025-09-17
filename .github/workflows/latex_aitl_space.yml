@@ -1,13 +1,20 @@
 name: Build AITL Space Paper
+
 on:
-  workflow_dispatch: {}
+  workflow_dispatch: {}   # ← 手動実行ボタンを出す
 
 jobs:
   build_latex:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: xu-cheng/latex-action@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX (LuaLaTeX)
+        uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
           working_directory: papers/2025_aitl_space
@@ -15,8 +22,9 @@ jobs:
           latexmk_shell_escape: true
           continue_on_error: false
           args: -file-line-error -interaction=nonstopmode -synctex=1
-      - if: always()
-        name: Upload PDF & Log
+
+      - name: Upload PDF & Log
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: aitl_space_artifacts
