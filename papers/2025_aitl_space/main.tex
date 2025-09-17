@@ -297,28 +297,38 @@ $-50^\circ$C to $+125^\circ$C, FSM transition latency remains within 5\%.\\
 disturbance, and thruster noise, robustness index ($\mu$-analysis) improves \textbf{20\%}
 over PID-only baseline.
 
-% === Figures for VI-A (Scenarios) ===
+\section{Simulation and HIL Experiments}
+\subsection{Space-Environment Scenarios}
+(1) \textbf{Radiation Injection (SEU/SEL)}: TMR/ECC efficacy validated; MRAM/FRAM exhibit
+$\sim$60\% fewer events than SRAM under identical injection profiles.\\
+(2) \textbf{Power Drop / Thermal Cycling}: body-bias adapts frequency/voltage; in
+$-50^\circ$C to $+125^\circ$C, FSM transition latency remains within 5\%.\\
+(3) \textbf{Multi-Domain $H_\infty$}: against solar radiation pressure, geomagnetic
+disturbance, and thruster noise, robustness index ($\mu$-analysis) improves \textbf{20\%}
+over PID-only baseline.
+
+% ---------- Figures ----------
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{figs/fig_seu_event_rate.png}
-  \caption{SEUイベント率比較（相対）。MRAM/FRAMはSRAM比で60\%低減。}
+  \includegraphics[width=0.9\linewidth]{figs/fig_seu_event_rate.png}
+  \caption{SEU event rate comparison (relative). MRAM/FRAM show 60\% fewer events than SRAM.}
   \label{fig:seu}
 \end{figure}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{figs/fig_fsm_latency_temp.png}
-  \caption{温度サイクル時のFSM遷移遅延。全域で5\%以内。}
-  \label{fig:fsmtemp}
+  \includegraphics[width=0.9\linewidth]{figs/fig_fsm_latency_temp.png}
+  \caption{FSM transition latency under thermal cycling. Delay remains within 5\%.}
+  \label{fig:fsm}
 \end{figure}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{figs/fig_mu_improvement.png}
-  \caption{ロバスト性（$\mu$解析）の正規化比較。$H_\infty$で+20\%。}
+  \includegraphics[width=0.9\linewidth]{figs/fig_mu_improvement.png}
+  \caption{Robustness index ($\mu$-analysis). Multi-domain $H_\infty$ achieves +20\%.}
   \label{fig:mu}
 \end{figure}
-\FloatBarrier
+% ---------- End Figures ----------
 
 \subsection{FPGA HIL Results}
 Zynq Ultrascale+ implementation with SEU emulation shows TMR suppresses spurious FSM
@@ -326,21 +336,21 @@ transitions by $>\!98\%$. $H_\infty$ accelerates attitude settling by \textbf{1.
 vs. PID. Using a 22\,nm FDSOI device model, leakage is $\sim$\textbf{35\%} lower than
 a 28\,nm CMOS reference at matched conditions.
 
-% === Figures for VI-B (HIL results) ===
+% ---------- More Figures ----------
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{figs/fig_settling_time.png}
-  \caption{姿勢整定時間の比較。PID 1.0\,s に対し $H_\infty$ 0.65\,s。}
-  \label{fig:settle}
+  \includegraphics[width=0.9\linewidth]{figs/fig_settling_time.png}
+  \caption{Attitude settling time comparison. $H_\infty$ reduces settling to 0.65\,s versus PID (1.0\,s).}
+  \label{fig:settling}
 \end{figure}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{figs/fig_impl_outcomes.png}
-  \caption{実装効果（相対）。FSM誤遷移98\%抑制、リーク電力35\%低減。}
+  \includegraphics[width=0.9\linewidth]{figs/fig_impl_outcomes.png}
+  \caption{Implementation outcomes (relative): FSM mis-transitions suppressed by 98\%, leakage reduced by 35\%.}
   \label{fig:impl}
 \end{figure}
-\FloatBarrier
+% ---------- End Figures ----------
 
 \subsection{Power/Performance Summary}
 \begin{table*}[t]
