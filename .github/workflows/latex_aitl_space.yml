@@ -21,17 +21,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # （任意）TeX キャッシュ。速度最適化したい場合はコメント解除
-      # - name: Cache TeX Live
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: |
-      #       ~/.texlive*
-      #       ~/.cache/Tectonic
-      #     key: ${{ runner.os }}-texlive-${{ hashFiles('**/*.tex', '**/*.sty', '**/*.cls') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-texlive-
-
       - name: Compile LaTeX (LuaLaTeX)
         uses: xu-cheng/latex-action@v2
         with:
