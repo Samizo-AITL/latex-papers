@@ -226,6 +226,64 @@ Observers and filters are co-designed to meet loop-latency and
 resource constraints, ensuring robust stability and performance
 across the coupled multi-domain plant.
 
+% ---------- Additions: discretization, outputs, uncertainty, weights ----------
+\paragraph*{Discretization for Implementation}
+For implementation on FPGA/ASIC, the continuous-time model is discretized
+with sampling time $T_s$ under zero-order hold:
+\begin{equation}
+x_{k+1}=A_d x_k + B_{1d} w_k + B_{2d} u_k,\quad
+z_k = C_{1d} x_k + D_{11d} w_k + D_{12d} u_k,\quad
+y_k = C_{2d} x_k + D_{21d} w_k,
+\label{eq:disc}
+\end{equation}
+where $(A_d,B_{1d},B_{2d},C_{1d},C_{2d},D_{11d},D_{12d},D_{21d})$ are obtained from
+$(A,B_1,B_2,C_1,C_2,D_{11},D_{12},D_{21})$ by zero-order hold at $T_s$.
+
+\paragraph*{Measured Outputs Used for Feedback}
+Let the attitude measurement stack be
+\[
+y_{\mathrm{att}}=\begin{bmatrix}\theta_x & \theta_y & \omega_x & \omega_y\end{bmatrix}^\top,
+\]
+and the full measurement be $y=\begin{bmatrix}y_{\mathrm{att}}^\top & v_b & s & e\end{bmatrix}^\top$.
+Sensor noise and outages are injected via $w$ and $D_{21(\cdot)}$.
+
+\paragraph*{Uncertainty Description}
+Plant/model uncertainty is captured with a standard multiplicative form on the
+discrete plant $P_d$:
+\[
+P_\Delta(z)=P_d(z)\big(I+W_\Delta(z)\,\Delta(z)\big),\qquad \|\Delta\|_\infty\le 1,
+\]
+where $W_\Delta$ shapes frequency-dependent uncertainty (e.g., unmodeled RW
+friction, power-rail dynamics, and temperature-induced drift). The
+$H_\infty$ synthesis is performed on the lower LFT interconnection of
+$P_\Delta$ with the weighting channel.
+
+\paragraph*{Weighting Structure (Examples)}
+Typical mixed-sensitivity weights used in our study are first/second-order forms:
+\[
+\begin{aligned}
+W_S(s) &= \frac{\tfrac{s}{\omega_B}+M_S}{\tfrac{s}{\omega_B}+\varepsilon_S},\quad
+W_T(s) = \frac{\tfrac{s}{\omega_T}+\varepsilon_T}{\tfrac{s}{\omega_T}+M_T},\\
+W_V(s) &= \frac{\alpha_V}{s/\omega_V + \beta_V},\quad
+W_E(s)=\gamma_E,
+\end{aligned}
+\]
+with $\omega_B,\omega_T,\omega_V$ (bandwidths) and $M_S,M_T,\varepsilon_S,\varepsilon_T,
+\alpha_V,\beta_V,\gamma_E$ tuned from mission specs (tracking/overshoot limits,
+bus-voltage ripple, and residual error targets). Saturation and duty limits on
+actuators are handled via $W_T$.
+
+\paragraph*{Objective and Realization}
+The discrete closed-loop objective retains the mixed-sensitivity $H_\infty$ form,
+\begin{equation}
+\min_K\ \big\|T_{w\to z}(K)\big\|_\infty \quad
+\text{s.t. fixed-point realization at word length } (n_\mathrm{int}.n_\mathrm{frac}),
+\label{eq:objective}
+\end{equation}
+where scaling of observers/filters is co-designed to avoid overflow while
+meeting loop-latency constraints at $f_\mathrm{clk}$.
+% ---------- End of additions ----------
+
 \section{Simulation and HIL Experiments}
 \subsection{Space-Environment Scenarios}
 (1) \textbf{Radiation Injection (SEU/SEL)}: TMR/ECC efficacy validated; MRAM/FRAM exhibit
