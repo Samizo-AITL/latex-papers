@@ -1,13 +1,11 @@
-name: Build AITL Space Paper 
+name: Build AITL Space Paper
 
 on:
-  workflow_dispatch: {}        # 手動実行可
+  workflow_dispatch: {}
   push:
-    branches: [ main ]         # 必要に応じ調整
+    branches: [ main ]
     paths:
-      - 'papers/2025_aitl_space/**'
-    paths-ignore:
-      - 'papers/2025_fefet_cmos018_reliability/**'   # ← Reliability変更では走らない
+      - 'papers/2025_aitl_space/**'   # ← AITL Space 配下の変更でのみ実行
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -16,10 +14,23 @@ concurrency:
 jobs:
   build_latex:
     runs-on: ubuntu-latest
-    permissions: { contents: read }
+    permissions:
+      contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # （任意）TeX キャッシュ。速度最適化したい場合はコメント解除
+      # - name: Cache TeX Live
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ~/.texlive*
+      #       ~/.cache/Tectonic
+      #     key: ${{ runner.os }}-texlive-${{ hashFiles('**/*.tex', '**/*.sty', '**/*.cls') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-texlive-
 
       - name: Compile LaTeX (LuaLaTeX)
         uses: xu-cheng/latex-action@v2
@@ -39,9 +50,9 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: aitl_space_artifacts     # ← AITL専用名
+          name: aitl_space_artifacts
           path: |
             papers/2025_aitl_space/main.pdf
             papers/2025_aitl_space/main.log
-          if-no-files-found: warn        # 失敗時もワークフロー全体は完走
+          if-no-files-found: warn
           retention-days: 14
