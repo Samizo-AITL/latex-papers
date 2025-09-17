@@ -153,24 +153,31 @@ Thermal RC constants were from compact models. PID initial gains via Ziegler–N
 \section{Results}
 \subsection{Without Control}
 Burst heating increased delay deviation $\sim$8\%. Stress coupling further degraded mobility.  
+
 \subsection{PID Only}
 Error reduced $>10\times$, but overshoot remained.  
+
 \subsection{PID + FSM}
 Clamped actuation under hotspots, safe but inflexible.  
+
 \subsection{PID + FSM + LLM (Proposed)}
 Smooth convergence across all conditions. Peak error $2.6 \times 10^{-3}$, steady-state error $<10^{-6}$, robust across $\gamma=0.05$--0.2.  
+As shown in Fig.~\ref{fig:heatmap}, robustness of PID+FSM control is preserved across a wide range of coupling factors $k_c$ and burst powers $P_{\text{burst}}$, ensuring stable delay suppression under diverse operating conditions.  
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\columnwidth]{fig2_time_response.png}
 \caption{Delay deviation trajectories: no control, PID, PID+FSM, and PID+FSM+LLM.}
 \label{fig:time}
 \end{figure}
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\columnwidth]{fig3_bode_magnitude.png}
 \caption{Bode magnitude: plant vs closed-loop with PID.}
 \label{fig:bode}
 \end{figure}
+
 \begin{table}[h]
 \renewcommand{\arraystretch}{1.1}
 \caption{Performance Comparison}
