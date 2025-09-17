@@ -1,11 +1,56 @@
-name: Build AITL Space Paper  
+name: Build AITL Space Paper
 
 on:
-  workflow_dispatch: {}   # ← 手動実行ボタンだけ出す
+  push:
+    paths:
+      - 'papers/2025_aitl_space/**'
+      - '.github/workflows/latex_aitl_space.yml'
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  build_latex:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: echo "Hello from AITL Space workflow"
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 何があるか確認
+      - name: Show tree
+        run: |
+          ls -la
+          echo "----- papers/2025_aitl_space -----"
+          ls -la papers/2025_aitl_space
+
+      # LuaLaTeXでビルド（CJK対応想定）
+      - name: Compile LaTeX document
+        id: latex
+        uses: xu-cheng/latex-action@v3   # v3を推奨（cache対応）
+        with:
+          working_directory: papers/2025_aitl_space
+          root_file: main.tex
+          latexmk_use_lualatex: true
+          latexmk_shell_escape: true       # TikZやmintedを使うなら必要
+          cache: true
+          extra_system_packages: "ghostscript"
+
+      # 失敗時にログを出す（デバッグしやすく）
+      - name: Print LaTeX log on failure
+        if: failure()
+        run: |
+          echo "===== main.log (tail) ====="
+          tail -n 200 papers/2025_aitl_space/main.log || true
+          echo "===== main.fls (exists?) ====="
+          ls -la papers/2025_aitl_space || true
+
+      # 成果物アップロード
+      - name: Upload PDF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aitl_space_pdf
+          path: |
+            papers/2025_aitl_space/main.pdf
+            papers/2025_aitl_space/main.log
+          if-no-files-found: warn
