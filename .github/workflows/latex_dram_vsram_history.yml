@@ -10,13 +10,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # LaTeX ビルド
       - uses: xu-cheng/latex-action@v3
         with:
-          root_file: main.tex
           working_directory: papers/2025_dram_vsram_history
+          root_file: main.tex
           latexmk_use_xelatex: true
+          # 失敗時の原因特定をしやすくするオプション（任意）
+          args: -interaction=nonstopmode -file-line-error
+
+      # 失敗してもログを出す（コンソール表示）
+      - name: Show LaTeX log on failure
+        if: failure()
+        run: |
+          echo "===== main.log (tail) ====="
+          tail -n 200 papers/2025_dram_vsram_history/main.log || true
+          echo "===== latexmk log (if any) ====="
+          ls -l papers/2025_dram_vsram_history || true
+
+      # PDF をアップロード
       - name: Upload PDF
+        if: always()  # 失敗しても途中成果を見たい場合は always にする
         uses: actions/upload-artifact@v4
         with:
           name: dram_vsram_history_pdf
           path: papers/2025_dram_vsram_history/*.pdf
+
+      # ログ一式を必ずアップロード（デバッグ用）
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dram_vsram_history_logs
+          path: |
+            papers/2025_dram_vsram_history/*.log
+            papers/2025_dram_vsram_history/*.aux
+            papers/2025_dram_vsram_history/*.bbl
+            papers/2025_dram_vsram_history/*.blg
+            papers/2025_dram_vsram_history/*.fls
+            papers/2025_dram_vsram_history/*.fdb_latexmk
+            papers/2025_dram_vsram_history/*.out
