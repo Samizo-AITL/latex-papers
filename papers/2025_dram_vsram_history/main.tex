@@ -3,13 +3,27 @@
 % ========================
 \documentclass[conference]{IEEEtran}
 
-% ---- パッケージ ----
+% ---- Packages ----
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{newtxtext,newtxmath} % IEEE らしい Times 系フォント／XeTeX互換
 \usepackage{siunitx}
-\usepackage{hyperref} % for clickable links
+\sisetup{
+  mode = match,
+  propagate-math-font = true,
+  reset-math-version = false,
+  reset-text-family = false,
+  reset-text-series = false,
+  reset-text-shape = false,
+  text-family-to-math = true,
+  text-series-to-math = true
+}
 
-% ---- タイトル・著者 ----
+% hyperref は最後に
+\usepackage[hidelinks]{hyperref}
+% \hypersetup{colorlinks=false, pdfborder={0 0 0}} % (必要なら明示)
+
+% ---- Title & Author ----
 \title{Historical Case Study: 0.25-$\mu$m 64-Mbit DRAM Ramp-up and Pseudo-SRAM (VSRAM)}
 
 \author{
