@@ -1,13 +1,16 @@
-% ========================
-% main.tex
-% ========================
 \documentclass[conference]{IEEEtran}
 
 % ---- パッケージ ----
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{siunitx}
-\usepackage{hyperref} % for clickable links
+
+% フォント（XeLaTeX + IEEEtran での ptm 警告対策）
+\usepackage{newtxtext}
+\usepackage{newtxmath}
+
+% ハイパーリンクは最後
+\usepackage[hidelinks]{hyperref}
 
 % ---- タイトル・著者 ----
 \title{Historical Case Study: 0.25-$\mu$m 64-Mbit DRAM Ramp-up and Pseudo-SRAM (VSRAM)}
@@ -20,7 +23,6 @@ Project Design Hub, Samizo-AITL\\
 \textit{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}}
 }
 
-% ========================
 \begin{document}
 \maketitle
 
@@ -35,7 +37,10 @@ Project Design Hub, Samizo-AITL\\
 \input{sections/discussion}
 \input{sections/conclusion}
 
-% ---- References ----
+% ---- 文献
+% どれも cite していないと .bbl が空になりコンパイルエラーになるので、
+% 暫定で全件出力（ダミー）。実際に本文に \cite{...} を書けば \nocite は消してOK。
+\nocite{*}
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
