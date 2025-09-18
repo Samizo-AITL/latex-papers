@@ -1,42 +1,50 @@
+% ========================
+% main.tex
+% ========================
 \documentclass[conference]{IEEEtran}
 
+% ---- パッケージ ----
 \usepackage{graphicx}
 \usepackage{amsmath}
-\usepackage{siunitx}     % \si{\celsius}, \micro\meter
-\sisetup{detect-all}
+\usepackage{siunitx}
+\usepackage{hyperref} % for clickable links
 
-\title{Historical Case Study: 0.25-\texorpdfstring{$\mu$}{µ}m 64-Mbit DRAM Ramp-up and Pseudo-SRAM (VSRAM) for Early Mobile Systems}
+% ---- タイトル・著者 ----
+\title{Historical Case Study: 0.25-$\mu$m 64-Mbit DRAM Ramp-up and Pseudo-SRAM (VSRAM)}
 
 \author{
 \IEEEauthorblockN{Shinichi Samizo}
-\IEEEauthorblockA{Project Design Hub / Edusemi\\
-% (任意) 所属やメールを追加
-}
+\IEEEauthorblockA{Independent Semiconductor Researcher\\
+Project Design Hub, Samizo-AITL\\
+\textit{Email:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+\textit{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}}
 }
 
+% ========================
 \begin{document}
 \maketitle
 
+% ---- Abstract ----
 \input{abstract}
 
-\section{Introduction}
+% ---- Sections ----
 \input{sections/intro}
-
-\section{Background}
 \input{sections/background}
-
-\section{Methodology}
 \input{sections/methodology}
-
-\section{Results}
 \input{sections/results}
-
-\section{Discussion}
 \input{sections/discussion}
-
-\section{Conclusion}
 \input{sections/conclusion}
 
+% ---- References ----
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
+
+% ---- Author Biography ----
+\section*{Author Biography}
+\noindent\textbf{Shinichi Samizo}
+received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
+He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
+He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\[2pt]
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, \href{https://github.com/Samizo-AITL}{Samizo-AITL}
+
 \end{document}
