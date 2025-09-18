@@ -9,6 +9,12 @@
 \usepackage{tikz} % ダミー図用
 \usepackage[hidelinks]{hyperref}
 
+% === plots ===
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{pgfplotstable}
+\usepackage{tikz} % （pgfplotsが内部で読むが明示しておくと安心）
+
 % ---------- Helper: ダミー図コマンド ----------
 \newcommand{\yielddummyfigure}[1][\columnwidth]{%
   \begin{tikzpicture}
