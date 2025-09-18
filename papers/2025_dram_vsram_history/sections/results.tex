@@ -5,10 +5,33 @@ SEM and process tracing suggested cumulative plasma damage due to resist ashing 
 Switching to a wet-oriented resist strip minimized plasma exposure; together with strengthened body back-bias (e.g., from $-1$~V to $-3$~V), yield improved to about 80\% and passed long-term reliability.
 Figure~\ref{fig:yield} shows the lot-by-lot yield recovery.
 
-\begin{figure}[t]
-\centering
-% 実画像が用意できるまでのダミー図（TikZ）:
-\yielddummyfigure[\columnwidth]
-\caption{Lot-by-lot yield recovery after process modification (dummy).}
-\label{fig:yield}
+% === Yield vs. Lot plot from CSV (pgfplots) ===
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{pgfplotstable}
+
+\begin{figure}[!t]
+  \centering
+  \pgfplotstableread[col sep=comma]{data/yield_lot.csv}\yieldtable
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.45\textwidth,
+      height=0.32\textwidth,
+      xlabel={Lot \#},
+      ylabel={Yield (\%)},
+      ymin=60, ymax=85,
+      xtick=data,
+      ymajorgrids=true,
+      xmajorgrids=true,
+      grid style=dashed,
+      tick label style={/pgf/number format/fixed},
+    ]
+      \addplot+[thick,mark=*] table[x=lot,y=yield]{\yieldtable};
+      \addplot+[domain=1:11, samples=2, very thick] {80} node[pos=0.02, anchor=south west] {};
+      \addlegendentry{Measured}
+      \addlegendentry{Target 80\%}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Lot-by-lot yield recovery after process modification.}
+  \label{fig:yield}
 \end{figure}
