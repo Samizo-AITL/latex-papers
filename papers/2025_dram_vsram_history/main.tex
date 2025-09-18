@@ -1,55 +1,58 @@
 \documentclass[conference]{IEEEtran}
 
-% ---- パッケージ ----
+% ---------- Packages ----------
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{newtxtext,newtxmath} % XeLaTeXでTimes系を安定使用
 \usepackage{siunitx}
-
-% フォント（XeLaTeX + IEEEtran での ptm 警告対策）
-\usepackage{newtxtext}
-\usepackage{newtxmath}
-
-% ハイパーリンクは最後
+\usepackage{xcolor}
+\usepackage{tikz} % ダミー図用
 \usepackage[hidelinks]{hyperref}
 
-% ---- タイトル・著者 ----
-\title{Historical Case Study: 0.25-$\mu$m 64-Mbit DRAM Ramp-up and Pseudo-SRAM (VSRAM)}
+% ---------- Helper: ダミー図コマンド ----------
+\newcommand{\yielddummyfigure}[1][\columnwidth]{%
+  \begin{tikzpicture}
+    \draw[gray!60,fill=gray!10] (0,0) rectangle (#1,0.6*#1);
+    \draw[gray!60] (0.1*#1,0.1*0.6*#1) rectangle (0.9*#1,0.9*0.6*#1);
+    \node at (0.5*#1,0.3*#1) {\small DUMMY FIGURE: Yield vs. Lot};
+  \end{tikzpicture}%
+}
 
+% ---------- Title & Author ----------
+\title{Historical Case Study: 0.25-\si{\micro\meter} 64-Mbit DRAM Ramp-up and Pseudo-SRAM (VSRAM)}
 \author{
 \IEEEauthorblockN{Shinichi Samizo}
 \IEEEauthorblockA{Independent Semiconductor Researcher\\
 Project Design Hub, Samizo-AITL\\
-\textit{Email:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+\textit{Email:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com} \quad
 \textit{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}}
 }
 
 \begin{document}
 \maketitle
 
-% ---- Abstract ----
+% ---------- Abstract ----------
 \input{abstract}
 
-% ---- Sections ----
+% ---------- Sections ----------
 \input{sections/intro}
 \input{sections/background}
 \input{sections/methodology}
-\input{sections/results}
+\input{sections/results}      % ← この中でダミー図を出します
 \input{sections/discussion}
 \input{sections/conclusion}
 
-% ---- 文献
-% どれも cite していないと .bbl が空になりコンパイルエラーになるので、
-% 暫定で全件出力（ダミー）。実際に本文に \cite{...} を書けば \nocite は消してOK。
-\nocite{*}
+% ---------- References ----------
+\nocite{*} % ひとまずrefs.bibの全項目を出力（不要なら削除）
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
-% ---- Author Biography ----
+% ---------- Author Biography ----------
 \section*{Author Biography}
 \noindent\textbf{Shinichi Samizo}
 received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
 He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
-He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\[2pt]
-\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, \href{https://github.com/Samizo-AITL}{Samizo-AITL}
+He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, Samizo-AITL.
 
 \end{document}
