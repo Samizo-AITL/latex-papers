@@ -43,34 +43,23 @@ applications, highlighting the potential of KNN as both actuator and sensor.
 \end{abstract}
 
 % ===== Body =====
-% 章タイトルは各 sections/*.tex の先頭の \section に任せる
 \input{sections/intro}
 \input{sections/background}
 \input{sections/proposal}
 \input{sections/aitl}
 \input{sections/applications}
-
-% ===== Results / Extended Analysis (本文として結論の前に配置) =====
-\input{sections/simulation}   % Droplet Formation Simulation（図：figs/droplet_volume_vs_voltage.png 等）
-\input{sections/comparison}   % Material Performance Comparison（表）
-\input{sections/mapping}      % Bio-Application Suitability Map（図：ヒートマップ）
-
-% ===== Conclusion =====
+\input{sections/simulation}   % Droplet Formation Simulation
+\input{sections/comparison}   % Material Performance Comparison
+\input{sections/mapping}      % Bio-Application Suitability Map
 \input{sections/conclusion}
-
-% 少し余白を追加
-\vspace{1em}
 
 % ===== Appendix for math details =====
 \appendices
 \section{AITL Control Derivations}
 \input{sections/aitl_appendix}
 
-% 少し余白を追加
-\vspace{1em}
-
 % ===== References =====
-\nocite{Saito2004KNN,Dubois2019BioIJ}
+\nocite{Saito2004KNN,Dubois2019BioIJ,Takenaka2017BNT,Zhang2019ScAlN,Murphy2020Bioprinting}
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
@@ -82,6 +71,5 @@ Corporation as an engineer in semiconductor memory and mixed-signal
 device development, and contributed to inkjet MEMS actuators and
 PrecisionCore printhead technology. He is currently an independent
 semiconductor researcher focusing on process/device education, memory
-architecture, and AI system integration. Contact:
-\href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}.
+architecture, and AI system integration.
 \end{document}
