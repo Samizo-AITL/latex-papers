@@ -11,41 +11,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # LaTeX ビルド
+      # LaTeX ビルド（XeLaTeX→PDF を明示）
       - uses: xu-cheng/latex-action@v3
         with:
           working_directory: papers/2025_dram_vsram_history
           root_file: main.tex
-          latexmk_use_xelatex: true
-          # PDF を必ず出力 + ログを詳しく
-          latexmk_args: -pdf -interaction=nonstopmode -file-line-error
-          # パッケージのキャッシュで高速化（任意）
-          cache: true
+          latexmk_use_xelatex: true           # -xelatex を使う
+          # -pdf を明示しつつ、ログを取りやすく
+          args: -pdf -interaction=nonstopmode -file-line-error
+          # (必要なら) 外部化などで shell-escape が要るときは true
+          # extra_system_packages: "ghostscript"  # 画像の埋め込みで必要なら
 
-      # 失敗してもログを出す（コンソール表示）
+      # 失敗時のログ表示
       - name: Show LaTeX log on failure
         if: failure()
         run: |
           echo "===== main.log (tail) ====="
-          tail -n 200 papers/2025_dram_vsram_history/main.log || true
-          echo "===== latexmk products ====="
-          ls -l papers/2025_dram_vsram_history || true
+          tail -n 300 papers/2025_dram_vsram_history/main.log || true
+          echo "===== tree ====="
+          ls -la papers/2025_dram_vsram_history || true
 
-      # PDF をアップロード
-      - name: Upload PDF
+      # 生成物をアップロード（PDFが無ければ XDV も拾って確認できるように）
+      - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: dram_vsram_history_pdf
-          path: papers/2025_dram_vsram_history/*.pdf
-
-      # ログ一式を必ずアップロード（デバッグ用）
-      - name: Upload logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: dram_vsram_history_logs
+          name: dram_vsram_history_build
           path: |
+            papers/2025_dram_vsram_history/*.pdf
+            papers/2025_dram_vsram_history/*.xdv
             papers/2025_dram_vsram_history/*.log
             papers/2025_dram_vsram_history/*.aux
             papers/2025_dram_vsram_history/*.bbl
