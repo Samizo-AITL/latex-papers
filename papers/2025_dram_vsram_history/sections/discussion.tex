@@ -1,1 +1,16 @@
-Parallel margin lots efficiently confirmed the process window under mass-line conditions, avoiding delays from strictly serial confirmation. Retention behavior is framed by $\tau = C_{\mathrm{cell}} V_{\mathrm{cell}} / I_{\mathrm{leak}}$, highlighting sensitivity to junction and dielectric leakage. The disturb-refresh behavior connects conceptually to modern row-disturb/row-hammer phenomena. We discuss portability of this ramp-up template to technology transfers beyond DRAM.
+\section{From DRAM Ramp to Mobile VSRAM (2001)}
+
+Around 2000, market focus shifted from PC DRAM to mobile devices. Sharp's camera-phone project demanded \textbf{high-density, low-power memory}. Leveraging the 0.25-\si{\micro\meter} DRAM process, Epson mass-produced a \textbf{pseudo-SRAM (VSRAM)} by adding internal refresh control and extending the operating guarantee from 80~\si{\celsius} to \textbf{90~\si{\celsius}} for mobile use. Initial yield was only $\sim$30\%, yet production started as a \emph{rational business decision} to secure market entry, and yield was improved in-flight.
+
+\subsection{Integrated Challenges and Solutions}
+
+\paragraph{Pause Refresh under 90~\si{\celsius} and extended refresh interval}
+To reduce standby current, the internal refresh interval was lengthened; coupled with 90~\si{\celsius} spec, junction leakage limits surfaced. 
+\emph{Process}—building on the DRAM fix—wet stripping replaced ashing; additionally, \textbf{minimized HF cleans} preserved gate-oxide residual thickness, mitigating diffusion damage and storage-node contact leakage. 
+\emph{Device bias}—body bias was deepened from $-1$~V to \textbf{$-3$~V} to suppress temperature-sensitive leakage while maintaining switching capability.
+
+\paragraph{Disturb Refresh at short channel}
+At 0.25~\si{\micro\meter}, repeated neighboring WL activations aggravated channel disturbance. We tightened \textbf{gate CD centering} and optimized \textbf{cell-channel doping} to raise $V_\mathrm{th}$ moderately while keeping access speed; the deeper body bias also helped disturb immunity.
+
+\paragraph{Outcome}
+With these combined actions, yield improved from $\sim$30\% at launch to \textbf{80–90\%} while production continued, and high-temperature reliability was satisfied.
