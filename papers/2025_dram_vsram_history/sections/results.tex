@@ -1,32 +1,32 @@
-\section{Results}
+\section{Failure Analysis and Yield Improvement}
 
-The initial yield was about 65\%, with pause-refresh errors dominating (Bin-5).
-SEM and process tracing suggested cumulative plasma damage due to resist ashing after WSA-ET and multiple LDD steps.
-Switching to a wet-oriented resist strip minimized plasma exposure; together with strengthened body back-bias (e.g., from $-1$~V to $-3$~V), yield improved to about 80\% and passed long-term reliability.
-Figure~\ref{fig:yield} shows the lot-by-lot yield recovery.
+\subsection{Initial Observation}
+The first production lots showed $\sim$65\% yield. Wafer test was dominated by \textbf{Pause Refresh Fail (Bin5)}. Defects appeared as uniformly scattered single-bit errors across the wafer (weak clustering, no edge/line signature). Storage-node capacitance met spec; SEM cross-sections at failed cells revealed no structural anomaly. Other CDs/films/electricals were within spec.
 
-\begin{figure}[!t]
-  \centering
-  \pgfplotstableread[col sep=comma]{data/yield_lot.csv}\yieldtable
-  \begin{tikzpicture}
-    \begin{axis}[
-      width=0.45\textwidth,
-      height=0.32\textwidth,
-      xlabel={Lot \#},
-      ylabel={Yield (\%)},
-      ymin=60, ymax=85,
-      xtick=data,
-      xmajorgrids, ymajorgrids,
-      grid style=dashed,
-      tick label style={/pgf/number format/fixed},
-      legend style={at={(0.02,0.98)},anchor=north west,draw=none,fill=none}
-    ]
-      \addplot+[thick,mark=*] table[x=lot,y=yield]{\yieldtable};
-      \addplot+[domain=1:11, samples=2, very thick] {80};
-      \addlegendentry{Measured}
-      \addlegendentry{Target 80\%}
-    \end{axis}
-  \end{tikzpicture}
-  \caption{Lot-by-lot yield recovery after process modification.}
-  \label{fig:yield}
+\subsection{Hypothesis (Failure Model)}
+Directly measurable leakages were normal, suggesting a subtle leakage path. We hypothesized increased leakage at the \textbf{storage-node contact $n^+/p^-$ junction}. After gate etch, a remnant gate oxide on S/D active is repeatedly exposed to resist-stripping \emph{ashing} during multiple LDD steps. Cumulative plasma damage makes the oxide locally porous and can extend damage into the diffusion, creating minute leakage paths. This explains random single-bit distribution without visible structural defects.
+
+\subsection{Countermeasures}
+\begin{itemize}
+  \item \textbf{Process}: Replace resist stripping in LDD steps from plasma ashing to \textbf{wet stripping (sulfuric-based)} to eliminate plasma damage. 
+  \item \textbf{Integration hygiene}: Confirm downstream photo cleanliness and avoid residue risks with the wet strip.
+\end{itemize}
+
+\subsection{Effectiveness}
+Yield improved from $\sim$65\% to \textbf{$\sim$80\%}. Uniformly scattered single-bit fails decreased markedly. Burn-in and retention/reliability passed; the final recipe was fixed for volume production.
+
+% (Optional) If you want to plot yield-by-lot from CSV:
+\begin{figure}[t]
+\centering
+\pgfplotstableread[col sep=comma]{data/yield_lot.csv}\yieldtbl
+\begin{tikzpicture}
+\begin{axis}[
+  width=\columnwidth, height=0.58\columnwidth,
+  xlabel={Lot Index}, ylabel={Yield [\%]},
+  ymin=0, ymax=100, grid=both, mark=*]
+\addplot table[x=lot,y=yield]{\yieldtbl};
+\end{axis}
+\end{tikzpicture}
+\caption{Yield evolution during the 0.25-\si{\micro\meter} ramp.}
+\label{fig:yield}
 \end{figure}
