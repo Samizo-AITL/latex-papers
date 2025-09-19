@@ -1,1 +1,30 @@
-We adopted Short-Cycle Feedback (SCF): quick loops of evaluation and condition tuning per unit process, with conditions tracked in the electronic traveler. Ten \emph{formal} lots (including margin conditions) were run to optimize settings, followed by three production lots for reliability and dedicated burn-in lots. Margin lots swept NMOS/PMOS $V_{\mathrm{th}}$ (H/L/Typ) and gate-length bounds to verify the design window reproducibility.
+\section{Process Overview and Ramp-up Method}
+
+\subsection{Process Overview (0.25-\si{\micro\meter} 64~Mbit DRAM, 3rd Gen)}
+
+\begin{itemize}
+  \item \textbf{Lithography}: First adoption of a KrF stepper for 0.25-\si{\micro\meter} volume exposure.
+  \item \textbf{Isolation}: Semi-recess LOCOS.
+  \item \textbf{Wells}: Triple-well with Deep N-Well to improve cell noise immunity.
+  \item \textbf{Word-Line Gate Electrode}: CVD tungsten silicide (WSi). A dielectric \textbf{barrier cap (BRAC)} sits atop the WL stack, providing etch robustness and insulation.
+  \item \textbf{Bit Line}: \emph{Self-aligned contact} --- the bit-line contact and the bit line are formed simultaneously by WSi-CVD; the BRAC blocks contact-to-WL shorts.
+  \item \textbf{Storage Node Capacitor}: Stacked capacitor; surface roughening yields $\sim$1.5–1.8$\times$ capacitance gain.
+  \item \textbf{Metallization/Passivation}: AlCu/TiN interconnect; SOG planarization; SiN or PI passivation.
+\end{itemize}
+
+\subsection{Ramp-up Method}
+
+The node transfer followed a factory-wide, fast-turn scheme:
+
+\paragraph{Base flow: SCF $\rightarrow$ shape lots $\rightarrow$ production lots}
+\begin{enumerate}
+  \item \textbf{Short Cycle Feedback (SCF)}: Each unit process (diffusion, CVD/PVD, etch, etc.) runs short-cycle wafers per its ramp-up spec to quickly evaluate and lock conditions.
+  \item \textbf{Shape lots ($\sim$10 lots)}: Provide \emph{real product wafers} to unit teams for items only assessable on full stacks and, in parallel, (i) verify photo CDs, (ii) photo$\to$etch CD transfer, and (iii) cross-sections after interlayer films. Recipes are updated for following lots.
+  \item \textbf{Production (reliability) lots}: Multiple lots for wafer test and long-term reliability (incl.\ burn-in) to judge mass-production readiness.
+\end{enumerate}
+
+\paragraph{Practical flow (author's role)}
+Process conditions (two floppy disks) were received from the mother fab and deployed to unit teams; each team executed SCF and fed back updates. The author consolidated the latest settings into the \emph{electronic traveler}, launched $\sim$10 shape lots, fixed target CDs/films, and then ran 5 reliability lots for E-test and reliability signoff.
+
+\paragraph{Operations to compress schedule}
+Normal lots use stocker $\leftrightarrow$ rail transfer and queue at tools. For critical first-pass lots, we used \textbf{hand-carry flow}: engineers delivered cassettes to tools with operators standing by, eliminating transfer/queue loss. Even so, a full pass took about two months; the entire ramp spanned $\sim$5 months. Daily morning meetings posted a laminated traveler on a whiteboard to visualize lot progress, schedule slip (in days), and unit-team status. Technical staff also operated in a two-shift scheme (day/night) to sustain 24/7 feedback.
