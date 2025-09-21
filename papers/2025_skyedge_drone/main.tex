@@ -10,6 +10,10 @@
 \usepackage{balance}
 \usepackage{microtype}
 
+\usetikzlibrary{backgrounds}   % ← 追加
+\pgfdeclarelayer{background}   % ← 追加
+\pgfsetlayers{background,main} % ← 追加
+
 % ---------- Title ----------
 \title{SkyEdge: Secure High-Altitude Drone Platform Integrating $H_\infty$ Control, Domestic Devices, and Advanced Mechanical Design}
 
@@ -123,49 +127,44 @@ Variable pitch adjusts blade angle to keep $C_T$ within actuator limits as $\rho
 \subsection{Actuation and Fail-safe}
 The pitch servo requirement from blade torque model yields \SI{0.62}{N\,m} peak (Fig.~\ref{fig:torque}); chosen actuator provides \SI{1.3}{N\,m} stall (\,$\times$2 margin). On servo failure, a spring biases to mid-pitch delivering $T/W\approx 1.2$ at sea level for controlled descent; FSM immediately limits horizontal acceleration.
 
-% ===================== Fig.1 (TWO columns) — overlap-free (legend fix) =====================
 \begin{figure*}[t]
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
-    font=\footnotesize,
-    node distance=12mm and 20mm,
-    box/.style={draw, rounded corners, align=center, inner sep=4pt,
-                minimum width=2.8cm, minimum height=7mm},
-    hw/.style={box, fill=gray!10},
-    sw/.style={box, fill=blue!6},
-    mech/.style={box, fill=green!8},
-    sec/.style={box, fill=orange!10, dashed},
-    arrow/.style={-Latex, thick},
-    % グループ枠は塗り無し・背景へ
-    grp/.style={draw, rounded corners, inner sep=8pt, fill=none}
+  font=\footnotesize,
+  node distance=8mm and 12mm,
+  box/.style={draw, rounded corners, align=center, inner sep=4pt, minimum width=2.6cm, minimum height=7mm, fill=white},
+  hw/.style={box, fill=gray!10},
+  sw/.style={box, fill=blue!6},
+  mech/.style={box, fill=green!8},
+  sec/.style={box, fill=orange!10, dashed},
+  arrow/.style={-Latex, thick},
+  grp/.style={draw, rounded corners, inner sep=6pt, fill=white}
 ]
 
-% ===== Sensors (top row) =====
+% ===== Sensors =====
 \node[hw] (imu) {IMU\\(1 kHz)};
-\node[hw, right=25mm of imu] (gps) {GNSS\\(ZED-F9P)};
-\node[hw, right=25mm of gps] (env) {Env.\\Sensors};
+\node[hw, right=18mm of imu] (gps) {GNSS\\(ZED-F9P)};
+\node[hw, right=18mm of gps] (env) {Env.\\Sensors};
 
-% ===== Control stack =====
-\node[sw, below=16mm of gps, minimum width=14.5cm] (hinf)
-      {$H_\infty$ Controller\\Disturbance rejection, rate $\leq$ 1.0 ms};
+% ===== H-infty control (inner loop) =====
+\node[sw, below=10mm of gps, minimum width=12.5cm] (hinf) {$H_\infty$ Controller\\Disturbance rejection, rate $\leq$ 1.0 ms};
 
-\node[sw, below=16mm of hinf, minimum width=14.5cm] (fsm)
-      {FSM Supervisor: Normal / High-alt / Comm-loss / Emergency Return};
+% ===== FSM / LLM =====
+\node[sw, below=8mm of hinf, minimum width=12.5cm] (fsm) {FSM Supervisor: Normal / High-alt / Comm-loss / Emergency Return};
+\node[sw, below=8mm of fsm, minimum width=12.5cm] (llm) {LLM-assisted Planning \& Auto-tuning (simulation, policy redesign)};
 
-\node[sw, below=16mm of fsm, minimum width=14.5cm] (llm)
-      {LLM-assisted Planning \& Auto-tuning (simulation, policy redesign)};
+% ===== Hardware row =====
+\node[hw, below left=12mm and -6mm of hinf] (soc) {SoC\\(65 nm FDSOI)};
+\node[hw, right=22mm of soc] (esc) {ESC Drivers\\$\leq 100\,\mu$s};
+\node[mech, right=22mm of esc] (vp) {Variable-pitch\\20 in Rotor};
 
-% ===== Device / mechanics row =====
-\node[hw, below left=18mm and -4mm of hinf] (soc) {SoC\\(65 nm FDSOI)};
-\node[hw, right=28mm of soc] (esc) {ESC Drivers\\$\leq 100\,\mu$s};
-\node[mech, right=28mm of esc] (vp) {Variable-pitch\\20 in Rotor};
+% ===== Mechanics / Security / Comms =====
+\node[mech, below=10mm of vp] (frame) {CFRP Frame\\700--900 mm};
+\node[sec,  below=10mm of soc, minimum width=5.2cm] (secblk) {TPM + PQC\\Secure Boot / Keys};
+\node[hw,   below=8mm of secblk, minimum width=5.2cm] (comms) {Comms (FHSS/UHF, LTE/5G)};
 
-\node[mech, below=14mm of vp] (frame) {CFRP Frame\\700--900 mm};
-\node[sec,  below=14mm of soc, minimum width=5.6cm] (secblk) {TPM + PQC\\Secure Boot / Keys};
-\node[hw,   below=10mm of secblk, minimum width=5.6cm] (comms) {Comms (FHSS/UHF, LTE/5G)};
-
-% ===== Group boxes を背景レイヤーに描画 =====
+% ===== Group boxes（先に描いて重なりを無くす）=====
 \begin{pgfonlayer}{background}
   \node[grp, fit=(imu)(gps)(env), label=above:{\strut Sensors}] (gSensors) {};
   \node[grp, fit=(hinf)(fsm)(llm), label=right:{\strut Control Stack}] (gCtrl) {};
@@ -173,41 +172,43 @@ The pitch servo requirement from blade torque model yields \SI{0.62}{N\,m} peak 
         label=right:{\strut Device / Mechanics / Security}] (gHW) {};
 \end{pgfonlayer}
 
-% ===== Connections (交差回避) =====
+% ===== Connections（交差しそうな線はカーブで回避）=====
+% センサ→制御
 \draw[arrow] (imu.south) |- (hinf.west);
 \draw[arrow] (gps.south) -- (hinf.north);
-\draw[arrow] (env.south) to[out=270, in=0] (fsm.east);
+\draw[arrow] (env.south) |- (fsm.east);
 
+% 制御スタック内部
 \draw[arrow] (hinf.south) -- (fsm.north);
 \draw[arrow] (fsm.south) -- (llm.north);
 
-\draw[arrow] (hinf.south west) to[out=240, in=90] (soc.north);
+% 制御→ハード
+\draw[arrow] (hinf.south west) |- (soc.north);
 \draw[arrow] (soc.east) -- (esc.west);
 \draw[arrow] (esc.east) -- (vp.west);
 \draw[arrow] (vp.south) -- (frame.north);
 
-\draw[arrow] (fsm.east) to[out=0, in=90] (secblk.north);
+% セキュリティ/通信
+\draw[arrow] (fsm.east) -| (secblk.north);
 \draw[arrow] (secblk.south) -- (comms.north);
 
-% フィードバックは外周へ
-\draw[arrow, bend right=40, looseness=1.25] (frame.west) to (imu.south);
-\draw[arrow] (vp.north) to[out=90, in=0, looseness=1.15] (imu.east);
+% フィードバック（カーブで重なり回避）
+\draw[arrow] ([xshift=-2mm]frame.west) .. controls +(-20mm,10mm) and +(0mm,-12mm) .. ([yshift=-2mm]imu.south);
+\draw[arrow] ([yshift=2mm]vp.north) .. controls +(0mm,14mm) and +(12mm,-6mm) .. ([xshift=6mm]imu.east);
 
-% ===== Legend（さらに下へ／前面で不透明） =====
-\path (gHW.south) ++(0,-18mm) coordinate (leg); % 下げた
-\node[box, fill=blue!6,  draw=black, fill opacity=1, text opacity=1,
-      anchor=north east] (lg1) at ($(leg)+(-36mm,0)$) {\strut Software};
-\node[box, fill=gray!10, draw=black, fill opacity=1, text opacity=1,
-      anchor=north]      (lg2) at (leg)               {\strut Hardware};
-\node[box, fill=green!8, draw=black, fill opacity=1, text opacity=1,
-      anchor=north west] (lg3) at ($(leg)+(36mm,0)$)   {\strut Mechanics};
-\node[box, fill=orange!10, dashed, draw=black, fill opacity=1, text opacity=1,
-      anchor=north west] (lg4)
-      at ($(lg3.north east)+(6mm,0)$) {\strut Security};
+% ===== Legend（凡例は背景レイヤに置いて図を隠さない）=====
+\begin{pgfonlayer}{background}
+  \path (gHW.south) ++(0,-6mm) coordinate (leg);
+  \node[box, fill=blue!6,  anchor=north east] (lg1) at ($(leg)+(-28mm,0)$) {\strut Software};
+  \node[box, fill=gray!10, anchor=north]      (lg2) at (leg)               {\strut Hardware};
+  \node[box, fill=green!8, anchor=north west] (lg3) at ($(leg)+(28mm,0)$)   {\strut Mechanics};
+  \node[box, fill=orange!10, dashed, anchor=north west] (lg4)
+       at ($(lg3.north east)+(6mm,0)$) {\strut Security};
+\end{pgfonlayer}
 
 \end{tikzpicture}%
 }
-\caption{SkyEdge system architecture（重なり解消・凡例前面）。グループ枠は背景レイヤーで描画し、凡例は枠外かつ不透明で前面に配置。}
+\caption{SkyEdge system architecture（overlap-free）. Increased spacing and curved routes prevent block/arrow collisions while keeping data flow clear.}
 \label{fig:sysarch}
 \end{figure*}
 
