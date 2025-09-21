@@ -290,7 +290,8 @@ Disturbance rejection, rate $\leq$ 1.0 ms};
     width=\columnwidth, height=0.6\columnwidth,
     xmin=1e-1, xmax=1e3, ymin=-60, ymax=10,
     xlabel={Frequency [rad/s]}, ylabel={Magnitude [dB]},
-    grid=both, legend style={at={(0.02,0.98)},anchor=north west,draw=none,fill=none},
+    grid=both,
+    legend pos=outer north east,      % ← 凡例を軸の外・右上に
     legend cell align={left}
 ]
 % Target |S| and |T|
@@ -309,7 +310,6 @@ Disturbance rejection, rate $\leq$ 1.0 ms};
 \label{fig:weights}
 \end{figure}
 
-% -------------------------------------------------------------
 % =============================================================
 \section{Device Integration}
 A domestic \SI{65}{nm} FDSOI SoC runs the stack with deterministic scheduling; LDMOS ESC drivers achieve sub-\SI{100}{\micro\second} latency; sensors include 1~kHz IMU, ZED-F9P GNSS, and environmental probes. Communication redundancy: FHSS/UHF primary, LTE/5G secondary; automatic failover $<200$~ms with key rollover. Estimated BOM per prototype: \SI{596700}{JPY}; thermal design adds conformal coating and vented enclosure for low-pressure operation.
