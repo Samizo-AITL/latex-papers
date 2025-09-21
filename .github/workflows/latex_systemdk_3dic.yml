@@ -1,0 +1,53 @@
+name: Build LaTeX (systemdk_3dic) PDF + logs
+
+on:
+  push:
+    paths:
+      - 'papers/2025_systemdk_3dic/**'
+      - '.github/workflows/latex_systemdk_3dic.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: papers/2025_systemdk_3dic
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile (xelatex)
+        uses: xu-cheng/latex-action@v2
+        with:
+          working_directory: papers/2025_systemdk_3dic
+          root_file: main.tex
+          latexmk_use_xelatex: true
+          args: >
+            -interaction=nonstopmode
+            -file-line-error
+            -shell-escape
+
+      - name: Collect logs
+        run: |
+          mkdir -p build_logs
+          cp -f main.log main.aux main.blg main.bbl *.fls *.fdb_latexmk build_logs/ 2>/dev/null || true
+          if [ -f main.log ]; then
+            egrep -n "(! |^!|Warning|Error|Overfull|Underfull)" main.log > build_logs/summary.log || true
+          fi
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemdk_3dic-pdf
+          path: papers/2025_systemdk_3dic/main.pdf
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemdk_3dic-logs
+          path: papers/2025_systemdk_3dic/build_logs/**
+          if-no-files-found: warn
+          retention-days: 14
