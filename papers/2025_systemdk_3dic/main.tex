@@ -1,10 +1,12 @@
 % =========================================================
-% main.tex : Draft Paper "SystemDK for 3D-IC"
+% main.tex : Draft Paper "SystemDK for 3D-IC"  (Fig.1 = TikZ)
 % =========================================================
 \documentclass[conference]{IEEEtran}
 
-% Packages
+% ---------- Packages ----------
 \usepackage{graphicx}
+\graphicspath{{figures/}}                 % figures/ を既定探索パスに
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}% 拡張子省略時の探索順
 \usepackage{amsmath, amssymb}
 \usepackage{cite}
 \usepackage{url}
@@ -12,19 +14,22 @@
 \usepackage{listings}
 \usepackage{color}
 
+% TikZ (Fig.1)
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit}
+
 \begin{document}
 
 % ---------- Title ----------
-\title{SystemDK for 3D-IC: \\
+\title{SystemDK for 3D-IC:\\
 A Physical Constraint-Aware Design Framework}
 
 % ---------- Author ----------
 \author{
 \IEEEauthorblockN{Shinichi Samizo}
-\IEEEauthorblockA{
-Independent Semiconductor Researcher \\
-Project Design Hub, Samizo-AITL \\
-\textit{Email:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com} \\
+\IEEEauthorblockA{Independent Semiconductor Researcher\\
+Project Design Hub, Samizo-AITL\\
+\textit{Email:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\
 \textit{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}}
 }
 
@@ -32,24 +37,24 @@ Project Design Hub, Samizo-AITL \\
 
 % ---------- Abstract ----------
 \begin{abstract}
-Three-dimensional integration (3D-IC) enables high bandwidth and heterogeneous integration, but it also introduces severe physical challenges such as RC delay variation, thermal hotspots across stacked dies, TSV-induced device shifts, and electromagnetic interference (EMI/EMC). Conventional EDA flows rely on static guardbands and fail to capture cross-domain coupling or dynamic variations. 
+Three-dimensional integration (3D-IC) enables high bandwidth and heterogeneous integration, but it also introduces severe physical challenges such as RC delay variation, thermal hotspots across stacked dies, TSV-induced device shifts, and electromagnetic interference (EMI/EMC). Conventional EDA flows rely on static guardbands and fail to capture cross-domain coupling or dynamic variations.
 
 This work proposes the \textbf{System Design Kit (SystemDK)}, a constraint-driven design framework that integrates SI/PI, thermal, stress, and EMI/EMC analyses directly into the EDA flow. By translating simulation and evaluation results into design constraints, SystemDK reduces excessive guardbands and enables physically consistent closure. Case studies on TSV-based 3D-ICs demonstrate improvements in delay stability, thermal distribution, and jitter reduction, indicating SystemDK’s potential as a foundation for future DTCO methodologies.
 \end{abstract}
 
 % ---------- Section 1 ----------
 \section{Introduction}
-Beyond device scaling limits, 3D-IC technologies such as TSVs, micro-bumps, and monolithic stacking are becoming practical. 
-However, challenges such as RC delay variation, inter-die thermal coupling, stress-induced reliability issues, and EMI/EMC degradation are critical bottlenecks. 
+Beyond device scaling limits, 3D-IC technologies such as TSVs, micro-bumps, and monolithic stacking are becoming practical.
+However, challenges such as RC delay variation, inter-die thermal coupling, stress-induced reliability issues, and EMI/EMC degradation are critical bottlenecks.
 
-Conventional EDA flows rely on static margins and domain-specific analysis, which fail to reflect cross-domain interactions. 
+Conventional EDA flows rely on static margins and domain-specific analysis, which fail to reflect cross-domain interactions.
 This paper proposes SystemDK, a middleware layer that translates evaluation results into \textbf{EDA-usable constraints}, enabling physically consistent closure.
 
 % ---------- Section 2 ----------
 \section{Related Work}
-Design--Technology Co-Optimization (DTCO) integrates process, device, and design, but physical feedback remains limited.  
-PDK/IPDK/PKGDK provide hierarchical constraints, but they are static and scope-limited.  
-Chiplet Design Kits focus on 2.5D/3D interfaces but do not yet integrate cross-domain physical constraints.  
+Design--Technology Co-Optimization (DTCO) integrates process, device, and design, but physical feedback remains limited.
+PDK/IPDK/PKGDK provide hierarchical constraints, but they are static and scope-limited.
+Chiplet Design Kits focus on 2.5D/3D interfaces but do not yet integrate cross-domain physical constraints.
 
 SystemDK is novel in its ability to \textbf{treat thermal, stress, SI/PI, and EMI/EMC constraints in an integrated manner and inject them directly into the EDA flow}.
 
@@ -63,9 +68,25 @@ SystemDK integrates multiple domains:
   \item \textbf{EMI/EMC analysis:} S-parameter extraction, jitter modeling, shielded CTS and routing constraints.
 \end{itemize}
 
+% ---- Fig.1 (TikZ) ----
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.45\textwidth]{figures/systemdk_framework.png}
+  % 80% 幅にリサイズして貼付
+  \resizebox{0.8\linewidth}{!}{%
+  \begin{tikzpicture}[font=\sffamily, node distance=32mm, >=Latex,
+    box/.style={draw, rounded corners, fill=blue!10, minimum width=36mm, minimum height=12mm, very thick, align=center}]
+    \node[box] (eval) {\bfseries Evaluation};
+    \node[below=2.0mm of eval] {\footnotesize Simulation \& Measurements};
+
+    \node[box, right=of eval] (sysdk) {\bfseries SystemDK};
+    \node[below=2.0mm of sysdk] {\footnotesize Constraint Translation};
+
+    \node[box, right=of sysdk, minimum width=48mm] (eda) {\bfseries EDA Flow};
+    \node[below=2.0mm of eda] {\footnotesize STA / P\&R / CTS / Floorplan};
+
+    \draw[->, very thick] (eval) -- (sysdk);
+    \draw[->, very thick] (sysdk) -- (eda);
+  \end{tikzpicture}}
   \caption{SystemDK framework concept (Evaluation $\rightarrow$ Constraint Translation $\rightarrow$ EDA flow).}
   \label{fig:framework}
 \end{figure}
@@ -75,35 +96,35 @@ SystemDK integrates multiple domains:
 Target: a 4-die TSV stack, evaluated in three domains.
 
 \subsection{Thermal Analysis}
-FEM simulation revealed hotspots exceeding +25°C.  
+FEM simulation revealed hotspots exceeding +25\,\textdegree C.
 SystemDK translated this into \textbf{keep-out zones} in the EDA flow.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.45\textwidth]{figures/thermal_map.png}
+  \includegraphics[width=0.8\linewidth]{thermal_map}
   \caption{Thermal distribution in a 4-die TSV stack (example hotspot).}
   \label{fig:thermal}
 \end{figure}
 
 \subsection{Stress Analysis}
-Mechanical stress near TSVs caused Vth shifts of 20--30 mV.  
-SystemDK introduced this model as derating constraints in STA.  
+Mechanical stress near TSVs caused Vth shifts of 20--30\,mV.
+SystemDK introduced this model as derating constraints in STA.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.45\textwidth]{figures/stress_map.png}
+  \includegraphics[width=0.8\linewidth]{stress_map}
   \caption{Equivalent stress distribution near TSVs and Vth shift estimation.}
   \label{fig:stress}
 \end{figure}
 
 \subsection{EMI/Crosstalk Analysis}
-S-parameter extraction showed EMI-induced jitter and eye closure.  
-SystemDK added shielding and duty-control constraints to CTS.  
+S-parameter extraction showed EMI-induced jitter and eye closure.
+SystemDK added shielding and duty-control constraints to CTS.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.45\textwidth]{figures/eye_diagram.png}
-  \caption{Eye diagram under EMI (before vs. after SystemDK-aware constraints).}
+  \includegraphics[width=0.8\linewidth]{eye_diagram}
+  \caption{Eye diagram under EMI (before vs.\ after SystemDK-aware constraints).}
   \label{fig:eye}
 \end{figure}
 
@@ -112,14 +133,14 @@ SystemDK added shielding and duty-control constraints to CTS.
 SystemDK improved the following metrics:
 \begin{itemize}
   \item \textbf{Delay variation suppression:} Slack improved by X\% with stress-aware STA.
-  \item \textbf{Thermal distribution:} Hotspot temperature reduced by Y°C with placement constraints.
+  \item \textbf{Thermal distribution:} Hotspot temperature reduced by Y\,\textdegree C with placement constraints.
   \item \textbf{Jitter reduction:} Eye opening improved by Z\% with EMI-aware CTS.
 \end{itemize}
 
 % ---------- Section 6 ----------
 \section{Discussion}
 \begin{itemize}
-  \item \textbf{Constraint coupling:} Thermal-stress and SI-EMI interdependencies require co-analysis; SystemDK provides such integration.
+  \item \textbf{Constraint coupling:} Thermal--stress and SI--EMI interdependencies require co-analysis; SystemDK provides such integration.
   \item \textbf{Design trade-offs:} Hotspot-aware placement may increase wiring length and SI degradation, highlighting trade-offs.
   \item \textbf{Extension to chiplets:} While this case targeted TSV stacks, SystemDK is extendable to 2.5D interposers and chiplet integration.
   \item \textbf{Difference from static guardbands:} Instead of excessive margins, SystemDK translates \textbf{measured/evaluated results into EDA constraints}.
@@ -127,8 +148,8 @@ SystemDK improved the following metrics:
 
 % ---------- Section 7 ----------
 \section{Conclusion}
-We proposed \textbf{SystemDK for 3D-IC}, a framework that integrates SI/PI, thermal, stress, and EMI/EMC constraints into design flows.  
-Case studies showed improvements in timing stability, thermal distribution, and jitter reduction.  
+We proposed \textbf{SystemDK for 3D-IC}, a framework that integrates SI/PI, thermal, stress, and EMI/EMC constraints into design flows.
+Case studies showed improvements in timing stability, thermal distribution, and jitter reduction.
 
 Future work will extend SystemDK toward \textbf{SystemDK with AITL (PID + FSM + LLM)} for self-optimizing design flows.
 
@@ -145,7 +166,7 @@ Future work will extend SystemDK toward \textbf{SystemDK with AITL (PID + FSM + 
 \noindent\textbf{Shinichi Samizo}
 received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
 He worked at Seiko Epson Corporation as an engineer in semiconductor memory and mixed-signal device development, and also contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
-He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration. \\
+He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\
 \textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, GitHub: \href{https://github.com/Samizo-AITL}{Samizo-AITL}.
 
 \end{document}
