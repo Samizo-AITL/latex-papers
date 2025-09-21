@@ -291,15 +291,14 @@ Disturbance rejection, rate $\leq$ 1.0 ms};
     xmin=1e-1, xmax=1e3, ymin=-60, ymax=10,
     xlabel={Frequency [rad/s]}, ylabel={Magnitude [dB]},
     grid=both,
-    legend pos=outer north east,      % ← 凡例を軸の外・右上に
+    legend style={at={(0.5,-0.25)},anchor=north,draw=none,fill=none},
+    legend columns=2,                 % ← 2列で省スペース
     legend cell align={left}
 ]
-% Target |S| and |T|
 \addplot[very thick] coordinates {(0.1,-20) (1,-20) (10,-10) (100,-40) (1000,-60)};
 \addlegendentry{$|S(j\omega)|$ (target)}
 \addplot[dashed, very thick] coordinates {(0.1,0) (1,0) (10,0) (100,-20) (1000,-40)};
 \addlegendentry{$|T(j\omega)|$ (target)}
-% Weight hints
 \addplot[densely dotted] coordinates {(0.1,-40) (1,-20) (10,0) (100,0) (1000,0)};
 \addlegendentry{$1/|W_1|$ (disturbance rejection)}
 \addplot[dotted] coordinates {(0.1,0) (1,0) (10,-20) (100,-40) (1000,-60)};
