@@ -14,7 +14,6 @@ The first production lots showed $\sim$65\% yield. Wafer test was dominated by \
 \subsection{Hypothesis (Failure Model)}
 Directly measurable leakages were normal, suggesting a subtle leakage path. We hypothesized increased leakage at the \textbf{storage-node contact $n^+/p^-$ junction}. After gate etch, a remnant gate oxide on S/D active is repeatedly exposed to resist-stripping \emph{ashing} during multiple LDD steps. Cumulative plasma damage makes the oxide locally porous and can extend damage into the diffusion, creating minute leakage paths. This explains random single-bit distribution without visible structural defects.
 
-% === Storage-node contact n+/p- leakage (TikZ) ===
 % === Fig.2 Storage-node contact n+/p- leakage (pure TikZ, minimal IEEE style) ===
 \begin{figure}[t]
 \centering
@@ -53,7 +52,9 @@ Directly measurable leakages were normal, suggesting a subtle leakage path. We h
 
   % ---- 破線リークパス（コンタクト端→接合）----
   \draw[very thick, dashed] (0.60,0.85) -- (0.60,-0.18);
-  \draw[very thick, dashed, -{Latex[length=2mm]}] (0.60,-0.18) -- (0.95,-0.80);
+  \draw[very thick, dashed, ->] (0.60,-0.18) -- (0.95,-0.80);
+% もしくは（arrows.metaを使うなら）
+%\draw[very thick, dashed, -{Stealth[length=2mm]}] (0.60,-0.18) -- (0.95,-0.80); 
   \node[anchor=west, font=\scriptsize] at (1.05,-0.85) {leakage path};
 
   % ---- 注記（最小限）----
