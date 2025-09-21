@@ -1,0 +1,63 @@
+# .github/workflows/latex_skyedge_drone.yml
+name: Build SkyEdge (LaTeX)
+
+on:
+  push:
+    paths:
+      - 'papers/2025_skyedge_drone/**'
+      - '.github/workflows/latex_skyedge_drone.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      TEXDIR: papers/2025_skyedge_drone
+      ROOT_TEX: main.tex
+      ROOT_BASENAME: main   # main.tex → main.pdf / main.log
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: ${{ env.TEXDIR }}
+          root_file: ${{ env.ROOT_TEX }}
+          # 必要に応じて：
+          # latexmk_shell_escape: true
+          # latexmk_use_lualatex: true
+          # extra_system_packages: "py-pygments"
+
+      # ---- Artifacts ----
+      # 失敗時もログを取得
+      - name: Upload LaTeX logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skyedge-logs
+          path: |
+            ${{ env.TEXDIR }}/${{ env.ROOT_BASENAME }}.log
+            ${{ env.TEXDIR }}/*.aux
+            ${{ env.TEXDIR }}/*.bbl
+            ${{ env.TEXDIR }}/*.blg
+            ${{ env.TEXDIR }}/*.out
+          if-no-files-found: warn
+          retention-days: 14
+          compression-level: 6
+
+      # PDF は成功時はもちろん、存在すれば失敗時でも拾う
+      - name: Upload PDF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skyedge-pdf
+          path: ${{ env.TEXDIR }}/${{ env.ROOT_BASENAME }}.pdf
+          if-no-files-found: warn
+          retention-days: 14
+          compression-level: 6
