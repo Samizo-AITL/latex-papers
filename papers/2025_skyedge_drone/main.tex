@@ -1,5 +1,7 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{amsmath, amssymb, graphicx, cite, hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
 
 % ---------- Title ----------
 \title{SkyEdge: Secure High-Altitude Drone Platform Integrating $H_\infty$ Control, Domestic Devices, and Advanced Mechanical Design}
@@ -60,6 +62,82 @@ The proposed architecture integrates three layers:
     \item \textbf{LLM:} assists adaptive redesign of control policies in 
     unforeseen conditions (simulation environment).
 \end{itemize}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+    font=\footnotesize,
+    node distance=6pt and 8pt,
+    box/.style={draw, rounded corners, align=center, inner sep=4pt, minimum width=2.2cm},
+    hw/.style={box, fill=gray!10},
+    sw/.style={box, fill=blue!6},
+    mech/.style={box, fill=green!8},
+    sec/.style={box, fill=orange!10, dashed},
+    arrow/.style={-Latex, thick},
+    grp/.style={draw, rounded corners, inner sep=6pt}
+]
+
+% ===== Sensors / Environment =====
+\node[hw] (imu) {IMU\\(1 kHz)};
+\node[hw, right=of imu] (gps) {GNSS\\(ZED-F9P)};
+\node[hw, right=of gps] (env) {Env.\\Sensors};
+
+% ===== H-infty control (inner loop) =====
+\node[sw, below=of gps, minimum width=7.0cm] (hinf) {$H_\infty$ Controller\\
+Disturbance rejection, rate $\leq$ 1.0 ms};
+
+% ===== FSM (supervisory) =====
+\node[sw, below=of hinf, minimum width=7.0cm] (fsm) {FSM Supervisor\\
+Normal / High-alt / Comm-loss / Emergency Return};
+
+% ===== LLM planning (outer loop) =====
+\node[sw, below=of fsm, minimum width=7.0cm] (llm) {LLM-assisted Planning \& Auto-tuning\\
+(simulation, policy redesign)};
+
+% ===== Hardware stack =====
+\node[hw, below left=10pt and -8pt of hinf] (soc) {SoC\\(65 nm FDSOI)};
+\node[hw, right=1.5cm of soc] (esc) {ESC Drivers\\$\leq 100\,\mu$s};
+\node[mech, right=1.5cm of esc] (vp) {Variable-pitch\\20 in Rotor};
+\node[mech, below=of vp] (frame) {CFRP Frame\\700--900 mm};
+\node[sec, below=of soc, minimum width=4.8cm] (secblk) {TPM + PQC\\Secure Boot / Keys};
+\node[hw, below=of secblk, minimum width=4.8cm] (comms) {Comms (FHSS/UHF, LTE/5G)};
+
+% ===== Group boxes =====
+\node[grp, fit=(imu)(gps)(env), label=above:{\strut Sensors}] (gSensors) {};
+\node[grp, fit=(hinf)(fsm)(llm), label=right:{\strut Control Stack}] (gCtrl) {};
+\node[grp, fit=(soc)(esc)(vp)(frame)(secblk)(comms), 
+      label=right:{\strut Device/Mechanics/Security}] (gHW) {};
+
+% ===== Connections =====
+\draw[arrow] (imu.south) |- (hinf.west);
+\draw[arrow] (gps.south) |- (fsm.east);
+\draw[arrow] (env.south) |- (fsm.east);
+
+\draw[arrow] (hinf.south) -- (fsm.north);
+\draw[arrow] (fsm.south) -- (llm.north);
+
+\draw[arrow] (hinf.south west) |- (soc.north);
+\draw[arrow] (soc.east) -- (esc.west);
+\draw[arrow] (esc.east) -- (vp.west);
+\draw[arrow] (vp.south) -- (frame.north);
+
+\draw[arrow] (fsm.east) -| (secblk.north);
+\draw[arrow] (secblk.south) -- (comms.north);
+
+% Feedback from sensors to control stack
+\draw[arrow] (frame.west) -| ++(-1.2,0) |- (imu.south);
+\draw[arrow] (vp.north) |- (imu.east);
+
+% Legend
+\node[box, fill=blue!6, anchor=north west] at ($(gHW.south west)+(0, -8pt)$) {\strut Software};
+\node[box, fill=gray!10, right=6pt of gHW.south west, anchor=north west] {\strut Hardware};
+\node[box, fill=green!8, right=6pt of {($(gHW.south west)+(2.9cm,0)$)}, anchor=north west] {\strut Mechanics};
+\node[box, fill=orange!10, dashed, right=6pt of {($(gHW.south west)+(5.6cm,0)$)}, anchor=north west] {\strut Security};
+
+\end{tikzpicture}
+\caption{SkyEdge system architecture: three-layer control stack ($H_\infty$, FSM, LLM) integrated with sensors, secure device stack (SoC, TPM/PQC, comms), and variable-pitch mechanical design.}
+\label{fig:sysarch}
+\end{figure}
 
 \section{Device Integration}
 The device layer includes a domestic SoC (65 nm FDSOI), LDMOS motor 
