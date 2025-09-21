@@ -299,14 +299,17 @@ The pitch servo requirement from blade torque model yields \SI{0.62}{N\,m} peak 
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-    width=\columnwidth, height=0.62\columnwidth,
-    xmode=log, log basis x=10,
-    xmin=1e-1, xmax=1e3, ymin=-60, ymax=10,
-    xlabel={Frequency [rad/s]}, ylabel={Magnitude [dB]},
-    grid=both, tick align=outside,
-    legend style={at={(0.02,0.98)},anchor=north west,draw=none,fill=none,font=\footnotesize},
-    legend cell align={left}
+  width=\columnwidth, height=0.62\columnwidth,
+  xmode=log, log basis x=10,
+  xmin=1e-1, xmax=1e3, ymin=-60, ymax=10,
+  xlabel={Frequency [rad/s]}, ylabel={Magnitude [dB]},
+  grid=both, tick align=outside,
+  legend to name=HinfWeightsLegend,     % ← 凡例を外出し（名前を付ける）
+  legend columns=2,
+  legend style={draw=none,fill=none,font=\footnotesize,
+/tikz/every even column/.append style={column sep=6pt}},
 ]
+
 % |S|
 \addplot+[line width=0.9pt, mark=none, smooth, tension=0.7]
   coordinates {(0.1,-20) (1,-20) (10,-10) (100,-40) (1000,-60)};
@@ -326,8 +329,13 @@ The pitch servo requirement from blade torque model yields \SI{0.62}{N\,m} peak 
 \addplot+[line width=0.9pt, mark=none, dotted, smooth, tension=0.7]
   coordinates {(0.1,0) (1,0) (10,-20) (100,-40) (1000,-60)};
 \addlegendentry{$1/|W_3|$ (roll-off)}
+
 \end{axis}
 \end{tikzpicture}
+
+% グラフの下に凡例を表示
+\par\vspace{2pt}\small\pgfplotslegendfromname{HinfWeightsLegend}
+
 \caption{Frequency-domain intuition for $H_\infty$ design: low $|S|$ at low--mid frequency (disturbance rejection) and low $|T|$ at high frequency (noise/roll-off).}
 \label{fig:weights}
 \end{figure}
