@@ -14,31 +14,29 @@ The first production lots showed $\sim$65\% yield. Wafer test was dominated by \
 \subsection{Hypothesis (Failure Model)}
 Directly measurable leakages were normal, suggesting a subtle leakage path. We hypothesized increased leakage at the \textbf{storage-node contact $n^+/p^-$ junction}. After gate etch, a remnant gate oxide on S/D active is repeatedly exposed to resist-stripping \emph{ashing} during multiple LDD steps. Cumulative plasma damage makes the oxide locally porous and can extend damage into the diffusion, creating minute leakage paths. This explains random single-bit distribution without visible structural defects.
 
-% === Fig.2: ultra-minimal version ===
+% === Fig.2 Minimal sketch (slightly enlarged) ===
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
-    % 表面ライン
-    \draw[thick] (-2,0) -- (2,0);
+  \begin{tikzpicture}[x=2.0cm,y=1.8cm,line cap=round,line join=round]
+    % p- substrate base
+    \fill[black!5] (-1.8,-1.0) rectangle (1.8,0);
+    \draw[thick] (-1.8,0) -- (1.8,0);
+    \node[anchor=west,font=\small] at (-1.7,-0.8) {$p^{-}$ substrate};
 
-    % p- 基板（薄い背景は不要なら削除）
-    \fill[black!5] (-2,-1.1) rectangle (2,-0.05);
-    \node[anchor=west] at (-1.9,-0.9) {$p^{-}$};
+    % n+ diffusion (aligned with p- surface top)
+    \draw[thick,fill=cyan!20] (-0.8,0) rectangle (0.8,-0.45);
+    \node[font=\small] at (0,-0.22) {$n^{+}$};
 
-    % n+ ポケット（半楕円＋上辺）
-    \draw[thick] (-0.9,-0.05) .. controls (-0.9,-0.6) and (0.9,-0.6) .. (0.9,-0.05);
-    \draw[thick] (-0.9,-0.05) -- (0.9,-0.05);
-    \node at (0,-0.35) {$n^{+}$};
+    % SN contact
+    \draw[thick] (-0.3,0) -- (-0.3,0.9);
+    \draw[thick] ( 0.3,0) -- ( 0.3,0.9);
+    \node[anchor=west,font=\small] at (0.4,0.6) {SN-CNT};
 
-    % SN コンテクト（2本の縦線）
-    \draw[thick] (-0.35,0) -- (-0.35,0.9);
-    \draw[thick] ( 0.35,0) -- ( 0.35,0.9);
-    \node[anchor=west] at (0.45,0.6) {\small SN-CNT};
-
-    % リーク矢印（下向き、点線）
-    \draw[dashed,thick,->] (0,-0.62) -- (0,-1.02);
+    % Leakage path
+    \draw[dashed,thick,->] (0,-0.15) -- (0,-0.8);
+    \node[anchor=west,font=\small] at (0.05,-0.55) {leakage path};
   \end{tikzpicture}
-  \caption{Minimal sketch: SN contact on $n^{+}$ with a dashed leakage path into the $p^{-}$ substrate.}
+  \caption{Minimal sketch (enlarged): SN contact on $n^{+}$ aligned with $p^{-}$ surface, showing leakage path.}
   \label{fig:fig2_min}
 \end{figure}
 
