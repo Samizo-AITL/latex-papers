@@ -155,20 +155,24 @@ Disturbance rejection, rate $\leq$ 1.0 ms};
     width=\columnwidth, height=0.55\columnwidth,
     xmin=0, xmax=5, ymin=-0.1, ymax=2.2,
     xlabel={Time $t$ [s]}, ylabel={Angle [deg]},
-    grid=both, legend style={at={(0.02,0.98)},anchor=north west,draw=none,fill=none},
+    grid=both,
+    legend style={at={(0.02,0.98)},anchor=north west,draw=none,fill=none},
     legend cell align={left},
     ytick distance=0.5, xtick distance=0.5
 ]
 % reference
 \addplot[dashed] coordinates {(0,1) (5,1)};
 \addlegendentry{Reference (1 deg)}
-% PID (simple 2nd-order model)
-\addplot smooth domain=0:5 samples=200 {1 - exp(-4*x)*(1+4*x)};
+
+% PID（※ 角括弧あり！）
+\addplot[smooth,domain=0:5,samples=200] {1 - exp(-4*x)*(1 + 4*x)};
 \addlegendentry{PID}
-% H-infinity response with gust at t=2 s (toy model)
+
+% H-infinity response with gust at t=2 s
 \addplot[very thick] coordinates
 {(0,0) (0.5,0.7) (1,0.95) (2,1.0) (2.01,1.25) (2.3,1.05) (3,1.0) (5,1.0)};
 \addlegendentry{$H_\infty$}
+
 % gust marker
 \draw[dotted] (axis cs:2,-0.1) -- (axis cs:2,2.2);
 \end{axis}
