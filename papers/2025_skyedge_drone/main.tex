@@ -336,6 +336,65 @@ Step winds \SI{8}{m/s} at 2~km, climbs to 6, 8, 10~km (progressive), with power/
 We assume rigid body and small-angle linearization near hover; aggressive maneuvers at 10~km are out-of-scope. PQC increases bandwidth/compute; we mitigate by session-based keying. Operations will follow airspace regulations and geofencing to minimize risk to people and wildlife.
 
 % =============================================================
+\section{Applications and Use-Cases}
+SkyEdge is designed as a versatile platform, enabling multiple mission
+profiles across defense, civil, and environmental domains. By sustaining
+robust high-altitude operation with integrated security, several
+use-cases become feasible:  
+
+\subsection{Disaster Communications}
+In post-earthquake or tsunami scenarios, terrestrial communication
+infrastructure often fails. SkyEdge can provide airborne relay links
+over 50--100 km radius, supporting LTE/5G backhaul and secure emergency
+broadcasts.  
+
+\subsection{Border Surveillance}
+Persistent flights at 8--10 km enable wide-area monitoring of remote
+border regions. Integration of EO/IR payloads facilitates intrusion
+detection, with secure telemetry preventing adversarial spoofing or
+jamming.  
+
+\subsection{Environmental Monitoring}
+The platform can carry sensors for volcanic activity, glacier melt,
+forest fire detection, or greenhouse-gas measurements. The variable-pitch
+system maintains efficiency during long-endurance sampling missions
+under low-density air.  
+
+\subsection{Defense and ISR Operations}
+SkyEdge supports intelligence, surveillance, and reconnaissance (ISR)
+missions in contested airspace. With $H_\infty$-based gust rejection and
+secure comms hardened by PQC, the platform sustains operation even under
+GPS jamming or RF interference.  
+
+% =============================================================
+\section{Limitations and Ethics}
+Despite its technical contributions, SkyEdge must be deployed within
+ethical and regulatory boundaries.  
+
+\subsection{Airspace Regulation}
+Operation at 8--10 km intersects controlled civil airspace. Compliance
+with ICAO and national aviation regulations is mandatory, requiring
+coordination with air-traffic authorities for flight corridors and
+emergency descent procedures.  
+
+\subsection{Privacy and Civil Use}
+Persistent surveillance raises privacy concerns. To prevent misuse,
+mission profiles for civil deployment should enforce strict geofencing,
+data minimization, and encryption of sensitive imagery.  
+
+\subsection{Export and Security Controls}
+The integration of post-quantum cryptography may fall under export
+regulations (e.g., ITAR/EAR). Clear compliance pathways are required
+before international deployment.  
+
+\subsection{Ethical Deployment Guidelines}
+To align with humanitarian priorities, SkyEdge missions should
+prioritize disaster relief, environmental safety, and public benefit.
+Use in fully autonomous lethal applications is beyond the intended
+scope. Human oversight must remain central to mission authorization and
+system reconfiguration.  
+
+% =============================================================
 \section{Conclusion}
 SkyEdge combines $H_\infty$ control with altitude scheduling, domestic secure hardware, and variable-pitch mechanics to sustain high-altitude flight with security guarantees. The provided models, synthesis settings, timing/crypto pipeline, and KPI-based plan aim to ease reproduction and certification-oriented testing.
 
