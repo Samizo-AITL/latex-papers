@@ -123,44 +123,46 @@ Variable pitch adjusts blade angle to keep $C_T$ within actuator limits as $\rho
 \subsection{Actuation and Fail-safe}
 The pitch servo requirement from blade torque model yields \SI{0.62}{N\,m} peak (Fig.~\ref{fig:torque}); chosen actuator provides \SI{1.3}{N\,m} stall (\,$\times$2 margin). On servo failure, a spring biases to mid-pitch delivering $T/W\approx 1.2$ at sea level for controlled descent; FSM immediately limits horizontal acceleration.
 
-% ===================== Fig.1 (TWO columns) =====================
+% ===================== Fig.1 (TWO columns) — overlap-free =====================
 \begin{figure*}[t]
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
     font=\footnotesize,
-    node distance=8mm and 12mm,
-    box/.style={draw, rounded corners, align=center, inner sep=4pt, minimum width=2.6cm, minimum height=7mm},
+    node distance=12mm and 20mm,         % <-- 広げた
+    box/.style={draw, rounded corners, align=center, inner sep=4pt,
+                minimum width=2.8cm, minimum height=7mm},
     hw/.style={box, fill=gray!10},
     sw/.style={box, fill=blue!6},
     mech/.style={box, fill=green!8},
     sec/.style={box, fill=orange!10, dashed},
     arrow/.style={-Latex, thick},
-    grp/.style={draw, rounded corners, inner sep=6pt}
+    grp/.style={draw, rounded corners, inner sep=8pt}
 ]
 
-% ===== Sensors =====
+% ===== Sensors (top row) =====
 \node[hw] (imu) {IMU\\(1 kHz)};
-\node[hw, right=18mm of imu] (gps) {GNSS\\(ZED-F9P)};
-\node[hw, right=18mm of gps] (env) {Env.\\Sensors};
+\node[hw, right=25mm of imu] (gps) {GNSS\\(ZED-F9P)};
+\node[hw, right=25mm of gps] (env) {Env.\\Sensors};
 
-% ===== H-infty control (inner loop) =====
-\node[sw, below=10mm of gps, minimum width=12.5cm] (hinf) {$H_\infty$ Controller\\
-Disturbance rejection, rate $\leq$ 1.0 ms};
+% ===== Control stack =====
+\node[sw, below=16mm of gps, minimum width=14.5cm] (hinf)
+      {$H_\infty$ Controller\\Disturbance rejection, rate $\leq$ 1.0 ms};
 
-% ===== FSM / LLM =====
-\node[sw, below=8mm of hinf, minimum width=12.5cm] (fsm) {FSM Supervisor: Normal / High-alt / Comm-loss / Emergency Return};
-\node[sw, below=8mm of fsm, minimum width=12.5cm] (llm) {LLM-assisted Planning \& Auto-tuning (simulation, policy redesign)};
+\node[sw, below=16mm of hinf, minimum width=14.5cm] (fsm)
+      {FSM Supervisor: Normal / High-alt / Comm-loss / Emergency Return};
 
-% ===== Hardware stack (row) =====
-\node[hw, below left=12mm and -6mm of hinf] (soc) {SoC\\(65 nm FDSOI)};
-\node[hw, right=22mm of soc] (esc) {ESC Drivers\\$\leq 100\,\mu$s};
-\node[mech, right=22mm of esc] (vp) {Variable-pitch\\20 in Rotor};
+\node[sw, below=16mm of fsm, minimum width=14.5cm] (llm)
+      {LLM-assisted Planning \& Auto-tuning (simulation, policy redesign)};
 
-% ===== Mechanics / Security / Comms =====
-\node[mech, below=10mm of vp] (frame) {CFRP Frame\\700--900 mm};
-\node[sec, below=10mm of soc, minimum width=5.2cm] (secblk) {TPM + PQC\\Secure Boot / Keys};
-\node[hw, below=8mm of secblk, minimum width=5.2cm] (comms) {Comms (FHSS/UHF, LTE/5G)};
+% ===== Device / mechanics row =====
+\node[hw, below left=18mm and -4mm of hinf] (soc) {SoC\\(65 nm FDSOI)};
+\node[hw, right=28mm of soc] (esc) {ESC Drivers\\$\leq 100\,\mu$s};
+\node[mech, right=28mm of esc] (vp) {Variable-pitch\\20 in Rotor};
+
+\node[mech, below=14mm of vp] (frame) {CFRP Frame\\700--900 mm};
+\node[sec,  below=14mm of soc, minimum width=5.6cm] (secblk) {TPM + PQC\\Secure Boot / Keys};
+\node[hw,   below=10mm of secblk, minimum width=5.6cm] (comms) {Comms (FHSS/UHF, LTE/5G)};
 
 % ===== Group boxes =====
 \node[grp, fit=(imu)(gps)(env), label=above:{\strut Sensors}] (gSensors) {};
@@ -168,37 +170,43 @@ Disturbance rejection, rate $\leq$ 1.0 ms};
 \node[grp, fit=(soc)(esc)(vp)(frame)(secblk)(comms),
       label=right:{\strut Device / Mechanics / Security}] (gHW) {};
 
-% ===== Connections =====
+% ===== Connections (重なり回避ルーティング) =====
+% Sensors -> control
 \draw[arrow] (imu.south) |- (hinf.west);
 \draw[arrow] (gps.south) -- (hinf.north);
-\draw[arrow] (env.south) |- (fsm.east);
+\draw[arrow] (env.south) to[out=270, in=0] (fsm.east);           % bend
 
+% Control stack vertical
 \draw[arrow] (hinf.south) -- (fsm.north);
 \draw[arrow] (fsm.south) -- (llm.north);
 
-\draw[arrow] (hinf.south west) |- (soc.north);
+% Control -> devices
+\draw[arrow] (hinf.south west) to[out=240, in=90] (soc.north);   % 角度指定
 \draw[arrow] (soc.east) -- (esc.west);
 \draw[arrow] (esc.east) -- (vp.west);
 \draw[arrow] (vp.south) -- (frame.north);
 
-\draw[arrow] (fsm.east) -| (secblk.north);
+% Security / comms
+\draw[arrow] (fsm.east) to[out=0, in=90] (secblk.north);
 \draw[arrow] (secblk.south) -- (comms.north);
 
-% Feedback
-\draw[arrow] (frame.west) -| ++(-12mm,0) |- (imu.south);
-\draw[arrow] (vp.north) |- (imu.east);
+% ===== Feedback lines（外周へ逃がす） =====
+\draw[arrow, bend right=40, looseness=1.25]
+      (frame.west) to (imu.south);                               % 外周大回り
+\draw[arrow]
+      (vp.north) to[out=90, in=0, looseness=1.15] (imu.east);    % 上側へ回避
 
-% ===== Legend (centered, no overlap) =====
-\path (gHW.south) ++(0,-6mm) coordinate (leg);
-\node[box, fill=blue!6,  anchor=north east] (lg1) at ($(leg)+(-28mm,0)$) {\strut Software};
+% ===== Legend (図のさらに下で重なり回避) =====
+\path (gHW.south) ++(0,-14mm) coordinate (leg);
+\node[box, fill=blue!6,  anchor=north east] (lg1) at ($(leg)+(-34mm,0)$) {\strut Software};
 \node[box, fill=gray!10, anchor=north]      (lg2) at (leg)               {\strut Hardware};
-\node[box, fill=green!8, anchor=north west] (lg3) at ($(leg)+(28mm,0)$)   {\strut Mechanics};
+\node[box, fill=green!8, anchor=north west] (lg3) at ($(leg)+(34mm,0)$)   {\strut Mechanics};
 \node[box, fill=orange!10, dashed, anchor=north west] (lg4)
       at ($(lg3.north east)+(6mm,0)$) {\strut Security};
 
 \end{tikzpicture}%
 }
-\caption{SkyEdge system architecture (two-column figure). The three-layer control stack ($H_\infty$, FSM, LLM) integrates with sensors, a secure device stack (SoC, TPM/PQC, comms), and variable-pitch mechanical design.}
+\caption{SkyEdge system architecture (overlap-free). Increased spacing and curved routes prevent block/arrow collisions while keeping data flow clear.}
 \label{fig:sysarch}
 \end{figure*}
 
