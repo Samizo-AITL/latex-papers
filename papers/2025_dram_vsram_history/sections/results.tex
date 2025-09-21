@@ -14,82 +14,49 @@ The first production lots showed $\sim$65\% yield. Wafer test was dominated by \
 \subsection{Hypothesis (Failure Model)}
 Directly measurable leakages were normal, suggesting a subtle leakage path. We hypothesized increased leakage at the \textbf{storage-node contact $n^+/p^-$ junction}. After gate etch, a remnant gate oxide on S/D active is repeatedly exposed to resist-stripping \emph{ashing} during multiple LDD steps. Cumulative plasma damage makes the oxide locally porous and can extend damage into the diffusion, creating minute leakage paths. This explains random single-bit distribution without visible structural defects.
 
-% === Fig.2 Storage-node contact n+/p- leakage (pure TikZ, minimal IEEE style) ===
-% 事前に：\usepackage{tikz} の後で
-% \usetikzlibrary{calc,arrows.meta,patterns}
-
+% === Fig.2 (minimal TikZ) ===
 \begin{figure}[t]
   \centering
-  % \resizebox{\columnwidth}{!}{%  ←幅を必ず1カラムに収めたい場合は有効化
-  \begin{tikzpicture}[x=5cm,y=3.3cm, line cap=round, line join=round]
-    % 色とスタイル
-    \definecolor{metgray}{RGB}{120,120,120}
-    \tikzset{
-      metal/.style={fill=metgray!20,draw=metgray,thick},
-      poly/.style={fill=black!15,draw=black,thick},
-      oxide/.style={fill=orange!10,draw=orange!60!black,thick},
-      silicon/.style={fill=brown!10,draw=brown!60!black,thick},
-      anno/.style={font=\scriptsize},
-      leak/.style={very thick, dashed, -{Latex[length=2mm]}}
-    }
+  \begin{tikzpicture}[x=4cm,y=3cm,line cap=round,line join=round,>=Latex]
+    % 表面
+    \draw[black!50] (0,0) -- (1.10,0);
 
-    % 版面基準
-    \def\xWL{0.10}   % WL 左端
-    \def\wWL{0.18}   % WL 幅
-    \def\xSN{0.36}   % SN コンタークト中心
-    \def\xLOC{0.62}  % LOCOS 中心
+    % p- 基板
+    \draw[fill=black!5,draw=black!40] (0,-0.35) rectangle (1.10,-0.75);
+    \node[anchor=west,scale=0.7] at (0.02,-0.68) {$p^{-}$ substrate};
 
-    % ILD 上面（y=0.68）
-    \draw[black!40,thick] (0,0.68) -- (1.02,0.68) node[anno, right]{\small ILD};
-
-    % LOCOS（盛り上がり）
-    \draw[oxide] (\xLOC-0.14,0.00)
-      .. controls (\xLOC-0.05,0.13) and (\xLOC+0.05,0.13) ..
-      (\xLOC+0.14,0.00) -- (\xLOC+0.14,-0.20) -- (\xLOC-0.14,-0.20) -- cycle;
-    \node[anno] at (\xLOC+0.18,0.10) {LOCOS};
-
-    % p- シリコン基板
-    \draw[silicon] (0,-0.20) rectangle (1.02,-0.60);
-    \node[anno] at (0.08,-0.52) {$p^{-}$ substrate};
+    % WL（ポリ）
+    \draw[fill=black!20,draw=black] (0.12,0.06) rectangle (0.28,0.30);
+    \node[scale=0.7] at (0.20,0.36) {WL};
 
     % n+ 拡散
-    \draw[fill=cyan!15, draw=cyan!50!black, thick]
-      (\xWL+\wWL+0.02,-0.02) rectangle (\xLOC-0.06,-0.20);
-    \node[anno] at (0.44,-0.17) {$n^{+}$};
+    \draw[fill=cyan!15,draw=cyan!60!black] (0.35,-0.02) rectangle (0.70,-0.35);
+    \node[scale=0.7] at (0.525,-0.28) {$n^{+}$};
 
-    % WL（ポリゲート）
-    \draw[poly] (\xWL,0.12) rectangle (\xWL+\wWL,0.35);
-    \node[anno] at (\xWL+0.09,0.40) {WL};
-    \draw[densely dashed,black!60] (\xWL,0.12) -- (\xWL+\wWL,0.12); % チャネル
+    % LOCOS（簡易の盛り上がり）
+    \draw[draw=orange!60!black,fill=orange!15]
+      (0.70,0) .. controls (0.82,0.10) and (0.96,0.10) .. (1.08,0)
+      -- (1.08,-0.20) -- (0.70,-0.20) -- cycle;
+    \node[scale=0.7] at (0.98,0.12) {LOCOS};
 
-    % SN（上部電極）と縦コンタクト
-    \draw[metal] (\xSN-0.06,0.62) rectangle (\xSN+0.06,0.78);
-    \node[anno] at (\xSN,0.86) {SN};
-    \draw[metal] (\xSN-0.018,0.12) rectangle (\xSN+0.018,0.68); % プラグ
+    % SN（金属）と縦コンタクト
+    \draw[fill=gray!30,draw=gray!70] (0.54,0.55) rectangle (0.74,0.70);
+    \node[scale=0.7] at (0.64,0.76) {SN};
+    \draw[fill=gray!30,draw=gray!70] (0.635,0.30) rectangle (0.655,0.55);
+    % n+ 上への着地を示す短線
+    \draw[gray!70,thick] (0.58,0.30) -- (0.70,0.30);
+    \node[anchor=west,scale=0.7] at (0.72,0.30) {storage-node contact};
 
-    % 接触着地点（n+上）
-    \draw[black,thick] (\xSN-0.06,0.12) -- (\xSN+0.06,0.12);
-    \node[anno, anchor=west] at (\xSN+0.07,0.28) {storage-node contact};
-
-    % 接触端近傍ダメージ（斜線パターン）
-    \fill[pattern=north east lines, pattern color=metgray, draw=metgray, very thin]
-      (\xSN+0.06,0.12) ++(0.01,-0.06) rectangle ++(0.05,0.08);
-    \node[anno, anchor=west] at (\xSN+0.11,0.00) {plasma/LDD-induced damage};
-    \node[anno, anchor=east] at (\xSN-0.10,-0.01) {junction leakage increase};
-
-    % リーク経路
-    \draw[leak] (\xSN+0.06,0.12) to[out=-75,in=75] (\xSN+0.04,-0.10)
-                to[out=-105,in=80] (\xSN+0.02,-0.36);
-    \node[anno, anchor=west] at (\xSN+0.08,0.16) {leakage path};
-
-    % 目印（右上に LDD）
-    \node[anno] at (0.97,0.78) {LDD};
+    % リーク経路（最小要素：1本の点線矢印）
+    \draw[very thick,black!70,dashed,-{Latex[length=2mm]}]
+      (0.70,0.30) .. controls (0.66,0.10) and (0.62,-0.10) .. (0.58,-0.48);
+    \node[anchor=west,scale=0.7] at (0.72,0.18) {leakage path};
   \end{tikzpicture}
-  % } % \resizebox を使う場合はこの波括弧を閉じる
-  \caption{Storage-node contact ($n^+/p^-$) leakage consistent with the sketch:
-  WL--$n^+$--LOCOS layout, SN contact landing on $n^+$, damage near the contact
-  edge increases junction leakage and forms a leakage path.}
-  \label{fig:storage_contact_tikz}
+
+  \caption{Minimal sketch of storage-node contact ($n^+/p^-$) leakage:
+  WL--$n^+$--LOCOS layout, SN contact landing on $n^+$, and a dashed leakage
+  path into the $p^-$ substrate.}
+  \label{fig:fig2_min}
 \end{figure}
 
 \subsection{Countermeasures}
