@@ -294,27 +294,39 @@ The pitch servo requirement from blade torque model yields \SI{0.62}{N\,m} peak 
 \end{figure}
 
 % ===================== Fig.5 (ONE column) =====================
+
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
-\begin{semilogxaxis}[
-    width=\columnwidth, height=0.6\columnwidth,
+\begin{axis}[
+    width=\columnwidth, height=0.62\columnwidth,
+    xmode=log, log basis x=10,
     xmin=1e-1, xmax=1e3, ymin=-60, ymax=10,
     xlabel={Frequency [rad/s]}, ylabel={Magnitude [dB]},
-    grid=both,
-    legend style={at={(0.5,-0.25)},anchor=north,draw=none,fill=none},
-    legend columns=2,                 % ← 2列で省スペース
+    grid=both, tick align=outside,
+    legend style={at={(0.02,0.98)},anchor=north west,draw=none,fill=none,font=\footnotesize},
     legend cell align={left}
 ]
-\addplot[very thick] coordinates {(0.1,-20) (1,-20) (10,-10) (100,-40) (1000,-60)};
+% |S|
+\addplot+[line width=0.9pt, mark=none, smooth, tension=0.7]
+  coordinates {(0.1,-20) (1,-20) (10,-10) (100,-40) (1000,-60)};
 \addlegendentry{$|S(j\omega)|$ (target)}
-\addplot[dashed, very thick] coordinates {(0.1,0) (1,0) (10,0) (100,-20) (1000,-40)};
+
+% |T|
+\addplot+[line width=0.9pt, mark=none, dashed, smooth, tension=0.7]
+  coordinates {(0.1,0) (1,0) (10,0) (100,-20) (1000,-40)};
 \addlegendentry{$|T(j\omega)|$ (target)}
-\addplot[densely dotted] coordinates {(0.1,-40) (1,-20) (10,0) (100,0) (1000,0)};
+
+% 1/|W1|
+\addplot+[line width=0.9pt, mark=none, densely dotted, smooth, tension=0.7]
+  coordinates {(0.1,-40) (1,-20) (10,0) (100,0) (1000,0)};
 \addlegendentry{$1/|W_1|$ (disturbance rejection)}
-\addplot[dotted] coordinates {(0.1,0) (1,0) (10,-20) (100,-40) (1000,-60)};
+
+% 1/|W3|
+\addplot+[line width=0.9pt, mark=none, dotted, smooth, tension=0.7]
+  coordinates {(0.1,0) (1,0) (10,-20) (100,-40) (1000,-60)};
 \addlegendentry{$1/|W_3|$ (roll-off)}
-\end{semilogxaxis}
+\end{axis}
 \end{tikzpicture}
 \caption{Frequency-domain intuition for $H_\infty$ design: low $|S|$ at low--mid frequency (disturbance rejection) and low $|T|$ at high frequency (noise/roll-off).}
 \label{fig:weights}
