@@ -127,6 +127,7 @@ Variable pitch adjusts blade angle to keep $C_T$ within actuator limits as $\rho
 \subsection{Actuation and Fail-safe}
 The pitch servo requirement from blade torque model yields \SI{0.62}{N\,m} peak (Fig.~\ref{fig:torque}); chosen actuator provides \SI{1.3}{N\,m} stall (\,$\times$2 margin). On servo failure, a spring biases to mid-pitch delivering $T/W\approx 1.2$ at sea level for controlled descent; FSM immediately limits horizontal acceleration.
 
+% ===================== Fig.1 (ONE column) =====================
 \begin{figure*}[t]
 \centering
 \resizebox{\textwidth}{!}{%
@@ -208,7 +209,7 @@ The pitch servo requirement from blade torque model yields \SI{0.62}{N\,m} peak 
 
 \end{tikzpicture}%
 }
-\caption{SkyEdge system architecture（overlap-free）. Increased spacing and curved routes prevent block/arrow collisions while keeping data flow clear.}
+\caption{SkyEdge system architecture (overlap-free). Increased spacing and curved routes prevent block/arrow collisions while keeping data flow clear.}
 \label{fig:sysarch}
 \end{figure*}
 
