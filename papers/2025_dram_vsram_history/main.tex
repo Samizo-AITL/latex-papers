@@ -6,9 +6,9 @@
 \usepackage{newtxtext,newtxmath} % XeLaTeXでTimes系を安定使用
 \usepackage{siunitx}
 \usepackage{xcolor}
-\usepackage{tikz} % ダミー図用
-% 使うTikZライブラリ
-\usetikzlibrary{calc,arrows.meta}
+% --- TikZ ---
+\usepackage{tikz} % ← 1回だけでOK
+\usetikzlibrary{calc,arrows.meta,patterns,patterns.meta} % ← 追加
 
 % 例：スタイル[leak]を定義（必要に応じて調整）
 \tikzset{
