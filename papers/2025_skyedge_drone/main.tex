@@ -1,7 +1,7 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{amsmath, amssymb, graphicx, cite}
 
-\title{SkyEdge: Secure High-Altitude Drone Platform Integrating H∞ Control, Domestic Devices, and Advanced Mechanical Design}
+\title{SkyEdge: Secure High-Altitude Drone Platform Integrating $H_\infty$ Control, Domestic Devices, and Advanced Mechanical Design}
 
 \author{Shinichi Samizo \\ Project Design Hub, AITL}
 
@@ -9,29 +9,70 @@
 \maketitle
 
 \begin{abstract}
-本稿では、H∞制御・国産デバイス・可変ピッチ機体設計を統合した高高度対応ドローンプラットフォーム「SkyEdge」の基盤設計について述べる。
+This paper presents the foundational design of \emph{SkyEdge}, 
+a secure high-altitude unmanned aerial vehicle (UAV) platform that 
+integrates $H_\infty$ control, domestic devices, and a variable-pitch 
+mechanical structure. The proposed framework provides robust disturbance 
+rejection, secure hardware implementation, and reliable flight capability 
+up to 10,000 m altitude. We describe the control architecture, device 
+integration, and mechanical design, and we outline evaluation plans 
+toward a proof-of-concept prototype.
 \end{abstract}
 
-\section{序論}
-% → あなたの草稿から反映
+\section{Introduction}
+Unmanned aerial vehicles (UAVs) are increasingly important in defense, 
+disaster response, and environmental monitoring. However, most commercial 
+systems are limited to altitudes below 3,000 m, and many rely on 
+foreign-made devices with security concerns. This paper aims to establish 
+a domestic, secure UAV platform capable of robust operation in 
+high-altitude environments.
 
-\section{関連研究}
-% → PID/適応制御/H∞制御比較など
+\section{Related Work}
+Control approaches such as PID, adaptive control, and sliding-mode 
+control have been applied to UAVs, but robust performance under strong 
+disturbances remains challenging. $H_\infty$ control has potential for 
+disturbance rejection. Existing high-altitude UAV programs (NASA Helios, 
+JAXA HAPS) demonstrate feasibility but rely on specialized designs. 
+Security aspects and domestic device integration remain underexplored.
 
-\section{制御システム}
-% → 数式、図表、シミュレーション
+\section{System Architecture}
+The proposed architecture integrates three layers:
+\begin{itemize}
+    \item \textbf{$H_\infty$ Control:} ensures robustness against gusts 
+    up to 20--30 m/s.
+    \item \textbf{FSM:} manages mode transitions (normal, high-altitude, 
+    comm-loss, emergency return).
+    \item \textbf{LLM:} assists adaptive redesign of control policies in 
+    unforeseen conditions (simulation environment).
+\end{itemize}
 
-\section{デバイス統合}
-% → BOM, セキュリティ要件
+\section{Device Integration}
+The device layer includes a domestic SoC (65 nm FDSOI), LDMOS motor 
+drivers, high-rate IMU (1 kHz), and secure modules (TPM + PQC). 
+Control cycle is maintained at $\leq 1.0$ ms with ESC response $\leq 100 
+\, \mu$s. Estimated BOM cost is 596,700 JPY per unit (with reduction in 
+mass production).
 
-\section{メカ設計}
-% → 推力比、可変ピッチ
+\section{Mechanical Design}
+The UAV has a 700--900 mm frame, CFRP structure, and a variable-pitch 
+20-inch rotor system. At take-off weight 6.38 kg, the thrust-to-weight 
+ratio is $\approx 2.82$. Variable pitch enables adaptation from sea 
+level to 10,000 m (RPM from $\approx 8,339$ to $14,353$). Servo torque 
+requirement is 0.62 N$\cdot$m with safety factor of 2--3.
 
-\section{統合・評価}
-% → PoC 計画
+\section{Evaluation Plan}
+Planned evaluations include wind-tunnel testing, low-temperature chamber 
+tests, redundancy verification, and communication robustness under 
+jamming scenarios. A proof-of-concept schedule has been drafted for 
+2025--2026.
 
-\section{結論}
-% → SkyEdge & SeaEdge 展開
+\section{Conclusion}
+We presented the SkyEdge architecture integrating $H_\infty$ control, 
+domestic devices, and mechanical design for secure high-altitude UAVs. 
+The proposed system addresses robustness, security, and reliability at 
+10,000 m operation. Future work includes prototype development and 
+extension to underwater vehicles (\emph{SeaEdge}), toward a unified 
+autonomous platform for defense, disaster response, GX, and education.
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
