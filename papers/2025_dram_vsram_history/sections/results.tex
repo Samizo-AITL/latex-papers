@@ -43,21 +43,21 @@ Yield improved from $\sim$65\% to \textbf{$\sim$80\%}. Uniformly scattered singl
   xmin=0.5, xmax=12.5,
   grid=both,
   xtick=data,
-  % Xは連番(1..N)で描画し、表示ラベルはCSVのlot列から取る
   xticklabels from table={\yieldtbl}{lot},
   xticklabel style={rotate=45, anchor=east},
 ]
-  % 実データ：x座標は行番号(\coordindex+1)、yはCSVのyield列
+  % データ描画
   \addplot+[mark=*] table[x expr=\coordindex+1, y=yield]{\yieldtbl};
 
-  % 対策境界：lot04 と lot05 の「間」に縦破線（x=4.5）
+  % 対策境界: lot04とlot05の間
   \draw[dashed] (axis cs:4.5,50) -- (axis cs:4.5,95);
   \node[anchor=west, font=\footnotesize] at (axis cs:4.55,92)
-    {Countermeasure introduced (ashing $\rightarrow$ wet strip)};
+    {Countermeasure};
 \end{axis}
 \end{tikzpicture}
-\caption{Yield trend showing a step improvement at the countermeasure boundary
-between \texttt{lot04} and \texttt{lot05}. The yield jumps from $\sim$62--63\% (lot01--lot04)
-to $\sim$82--84\% (lot05 onward) after changing LDD resist stripping from ashing to wet stripping.}
+\caption{Yield step improvement at the countermeasure boundary
+between \texttt{lot04} and \texttt{lot05}. Yield jumps from $\sim$62--63\% 
+(lot01--lot04) to $\sim$82--84\% (lot05 onward) after changing 
+LDD resist stripping from ashing to wet stripping.}
 \label{fig:yield}
 \end{figure}
