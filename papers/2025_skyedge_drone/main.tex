@@ -247,6 +247,29 @@ The pitch servo requirement from blade torque model yields \SI{0.62}{N\,m} peak 
 \label{fig:step}
 \end{figure}
 
+% ===================== Table I (Prototype Specs) =====================
+\begin{table}[t]
+\caption{Prototype Specifications of SkyEdge Platform}
+\centering
+\begin{tabular}{l c}
+\hline
+\textbf{Parameter} & \textbf{Value} \\
+\hline
+Rotor span (CFRP frame) & 700--900 mm \\
+Rotor count             & 20 \\
+Variable-pitch servo    & 0.62 Nm (safety margin $\times 2$) \\
+ESC latency (LDMOS)     & $\leq 100~\mu$s \\
+IMU sampling rate       & 1 kHz \\
+GNSS module             & ZED-F9P (RTK support) \\
+SoC                     & 65 nm FDSOI, deterministic scheduling \\
+Secure boot / crypto    & TPM + PQC (Kyber KEM) \\
+Control loop latency    & $\leq 1.0$ ms \\
+Operational altitude    & up to 10 km \\
+\hline
+\end{tabular}
+\label{tab:specs}
+\end{table}
+
 % ===================== Fig.3 (ONE column) =====================
 \begin{figure}[t]
 \centering
