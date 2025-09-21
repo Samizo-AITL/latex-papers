@@ -295,68 +295,75 @@ The pitch servo requirement from blade torque model yields \SI{0.62}{N\,m} peak 
 
 % ===================== Fig.5 (ONE column) =====================
 
-% --- Fig.5 (clean mono IEEE style) ---
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{semilogxaxis}[
   width=\columnwidth, height=0.62\columnwidth,
   xmin=1e-1, xmax=1e3, ymin=-60, ymax=10,
-  xlabel={Frequency [rad/s]}, ylabel={Magnitude [dB]},
+  xmajorgrids, xminorgrids, ymajorgrids,
+  grid style={black!10}, % 目にうるさくない薄グリッド
+  minor x tick num=9,    % デケード間を9分割（典型）
+  tick align=inside,     % 目盛りを内向きに
   axis lines=left,
-  grid=both, grid style={gray!25}, minor grid style={gray!15},
-  tick pos=left, tick align=inside, tick style={black},
-  ytick distance=10,
+  xlabel={Frequency [rad/s]}, ylabel={Magnitude [dB]},
+  xtick={1e-1,1,10,100,1000},
+  xticklabel style={/pgf/number format/fixed,
+                    /pgf/number format/precision=0},
+  ytick={-60,-50,...,10},
+  legend style={font=\footnotesize,
+                at={(0.5,-0.25)}, anchor=north,
+                draw=none, fill=none},
   legend columns=2,
-  legend style={at={(0.5,-0.22)},anchor=north,draw=none,fill=none,
-                /tikz/every even column/.append style={column sep=8pt}},
-  % モノクロの線種サイクル
-  cycle list={
-    {black, solid, line width=0.9pt},
-    {black, dashed, line width=0.9pt},
-    {black, densely dotted, line width=0.9pt},
-    {black, dotted, line width=0.9pt}
-  },
-  every axis plot/.append style={mark=none, smooth}
+  clip=false
 ]
 
-% |S(jw)| (target)
-\addplot coordinates{
-  (0.1,-20) (0.2,-20) (0.5,-20) (0.8,-20) (1,-20) (1.5,-19) (2,-18)
-  (3,-17) (5,-15) (7,-13) (10,-10) (15,-13) (20,-15) (30,-18)
-  (50,-25) (70,-32) (100,-40) (150,-46) (200,-50) (300,-53)
-  (500,-55) (700,-57) (1000,-60)
-};
+% ---- 直線近似の“典型ボード線図”らしい折れ線（スムージング無し） ----
+% |S| target（低周波抑圧→クロス→高周波上昇）
+\addplot[very thick, blue, mark=none]
+  table[row sep=\\]{
+  %  デケード毎に数点入れて直線っぽく
+  0.1 -20 \\ 0.2 -20 \\ 0.5 -20 \\
+  1   -18 \\ 2   -15 \\ 5  -10 \\
+  10  -6  \\ 20  -10 \\ 50 -20 \\
+  100 -30 \\ 200 -40 \\ 500 -50 \\ 1000 -60 \\
+  };
 \addlegendentry{$|S(j\omega)|$ (target)}
 
-% |T(jw)| (target)
-\addplot coordinates{
-  (0.1,0) (0.2,0) (0.5,0) (0.8,0) (1,0) (2,0) (5,0) (7,0) (10,0)
-  (15,-2) (20,-5) (30,-7) (50,-10) (70,-14) (100,-20) (150,-26)
-  (200,-30) (300,-33) (500,-35) (700,-38) (1000,-40)
-};
+% |T| target（低周波で0 dB付近→クロス→高周波で強いロールオフ）
+\addplot[very thick, red, dashed, mark=none]
+  table[row sep=\\]{
+  0.1  0 \\ 0.2  0 \\ 0.5  0 \\
+  1   -1 \\ 2   -2 \\ 5   -5 \\
+  10  -8 \\ 20 -12 \\ 50 -18 \\
+  100 -24 \\ 200 -32 \\ 500 -42 \\ 1000 -50 \\
+  };
 \addlegendentry{$|T(j\omega)|$ (target)}
 
-% 1/|W1| (disturbance rejection)
-\addplot coordinates{
-  (0.1,-40) (0.2,-36) (0.5,-30) (0.8,-24) (1,-20) (1.5,-15) (2,-10)
-  (3,-6) (5,-2) (7,0) (10,0) (15,0) (20,0) (30,0) (50,0) (70,0)
-  (100,0) (150,0) (200,0) (300,0) (500,0) (700,0) (1000,0)
-};
+% 1/|W1|（低〜中域での外乱抑圧目標）
+\addplot[densely dotted, thick, black, mark=none]
+  table[row sep=\\]{
+  0.1 -40 \\ 0.2 -40 \\ 0.5 -35 \\ 1 -30 \\ 2 -25 \\ 5 -20 \\
+  10 -15 \\ 20 -15 \\ 50 -18 \\ 100 -22 \\ 200 -28 \\ 500 -34 \\ 1000 -40 \\
+  };
 \addlegendentry{$1/|W_1|$ (disturbance rejection)}
 
-% 1/|W3| (roll-off)
-\addplot coordinates{
-  (0.1,0) (0.2,0) (0.5,0) (0.8,0) (1,0) (1.5,-2) (2,-3) (3,-6) (5,-10)
-  (7,-14) (10,-20) (15,-23) (20,-25) (30,-30) (50,-35) (70,-38)
-  (100,-40) (150,-46) (200,-50) (300,-53) (500,-55) (700,-58) (1000,-60)
-};
+% 1/|W3|（高域ロールオフ目標：-20 dB/dec 近似）
+\addplot[dotted, thick, black, mark=none]
+  table[row sep=\\]{
+  0.1  0 \\ 0.2  -2 \\ 0.5  -6 \\ 1 -10 \\ 2 -14 \\ 5 -20 \\
+  10 -26 \\ 20 -32 \\ 50 -38 \\
+  100 -44 \\ 200 -50 \\ 500 -56 \\ 1000 -60 \\
+  };
 \addlegendentry{$1/|W_3|$ (roll-off)}
+
+% （任意）交点ガイド：クロスオーバ付近
+\addplot[gray!40, dash dot] coordinates {(10,-60) (10,10)};
+\addplot[gray!40, dash dot] coordinates {(1,-60) (1,10)};
 
 \end{semilogxaxis}
 \end{tikzpicture}
-\caption{Frequency-domain intuition for \texorpdfstring{$H_\infty$}{H-infty} design:
-low $|S|$ at low--mid frequency and low $|T|$ at high frequency.}
+\caption{Classic Bode-style targets: low $|S|$ in low–mid $\omega$ (disturbance rejection) and low $|T|$ at high $\omega$ (sensor/noise roll-off). Weighting envelopes $1/|W_1|$ and $1/|W_3|$ indicate design bounds.}
 \label{fig:weights}
 \end{figure}
 
