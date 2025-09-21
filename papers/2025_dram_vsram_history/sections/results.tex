@@ -14,48 +14,31 @@ The first production lots showed $\sim$65\% yield. Wafer test was dominated by \
 \subsection{Hypothesis (Failure Model)}
 Directly measurable leakages were normal, suggesting a subtle leakage path. We hypothesized increased leakage at the \textbf{storage-node contact $n^+/p^-$ junction}. After gate etch, a remnant gate oxide on S/D active is repeatedly exposed to resist-stripping \emph{ashing} during multiple LDD steps. Cumulative plasma damage makes the oxide locally porous and can extend damage into the diffusion, creating minute leakage paths. This explains random single-bit distribution without visible structural defects.
 
-% === Fig.2 (minimal TikZ) ===
+% === Fig.2: ultra-minimal version ===
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[x=4cm,y=3cm,line cap=round,line join=round,>=Latex]
-    % 表面
-    \draw[black!50] (0,0) -- (1.10,0);
+  \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
+    % 表面ライン
+    \draw[thick] (-2,0) -- (2,0);
 
-    % p- 基板
-    \draw[fill=black!5,draw=black!40] (0,-0.35) rectangle (1.10,-0.75);
-    \node[anchor=west,scale=0.7] at (0.02,-0.68) {$p^{-}$ substrate};
+    % p- 基板（薄い背景は不要なら削除）
+    \fill[black!5] (-2,-1.1) rectangle (2,-0.05);
+    \node[anchor=west] at (-1.9,-0.9) {$p^{-}$};
 
-    % WL（ポリ）
-    \draw[fill=black!20,draw=black] (0.12,0.06) rectangle (0.28,0.30);
-    \node[scale=0.7] at (0.20,0.36) {WL};
+    % n+ ポケット（半楕円＋上辺）
+    \draw[thick] (-0.9,-0.05) .. controls (-0.9,-0.6) and (0.9,-0.6) .. (0.9,-0.05);
+    \draw[thick] (-0.9,-0.05) -- (0.9,-0.05);
+    \node at (0,-0.35) {$n^{+}$};
 
-    % n+ 拡散
-    \draw[fill=cyan!15,draw=cyan!60!black] (0.35,-0.02) rectangle (0.70,-0.35);
-    \node[scale=0.7] at (0.525,-0.28) {$n^{+}$};
+    % SN コンテクト（2本の縦線）
+    \draw[thick] (-0.35,0) -- (-0.35,0.9);
+    \draw[thick] ( 0.35,0) -- ( 0.35,0.9);
+    \node[anchor=west] at (0.45,0.6) {\small SN-CNT};
 
-    % LOCOS（簡易の盛り上がり）
-    \draw[draw=orange!60!black,fill=orange!15]
-      (0.70,0) .. controls (0.82,0.10) and (0.96,0.10) .. (1.08,0)
-      -- (1.08,-0.20) -- (0.70,-0.20) -- cycle;
-    \node[scale=0.7] at (0.98,0.12) {LOCOS};
-
-    % SN（金属）と縦コンタクト
-    \draw[fill=gray!30,draw=gray!70] (0.54,0.55) rectangle (0.74,0.70);
-    \node[scale=0.7] at (0.64,0.76) {SN};
-    \draw[fill=gray!30,draw=gray!70] (0.635,0.30) rectangle (0.655,0.55);
-    % n+ 上への着地を示す短線
-    \draw[gray!70,thick] (0.58,0.30) -- (0.70,0.30);
-    \node[anchor=west,scale=0.7] at (0.72,0.30) {storage-node contact};
-
-    % リーク経路（最小要素：1本の点線矢印）
-    \draw[very thick,black!70,dashed,-{Latex[length=2mm]}]
-      (0.70,0.30) .. controls (0.66,0.10) and (0.62,-0.10) .. (0.58,-0.48);
-    \node[anchor=west,scale=0.7] at (0.72,0.18) {leakage path};
+    % リーク矢印（下向き、点線）
+    \draw[dashed,thick,->] (0,-0.62) -- (0,-1.02);
   \end{tikzpicture}
-
-  \caption{Minimal sketch of storage-node contact ($n^+/p^-$) leakage:
-  WL--$n^+$--LOCOS layout, SN contact landing on $n^+$, and a dashed leakage
-  path into the $p^-$ substrate.}
+  \caption{Minimal sketch: SN contact on $n^{+}$ with a dashed leakage path into the $p^{-}$ substrate.}
   \label{fig:fig2_min}
 \end{figure}
 
