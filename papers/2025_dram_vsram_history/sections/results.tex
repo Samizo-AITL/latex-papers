@@ -3,8 +3,24 @@
 \subsection{Initial Observation}
 The first production lots showed $\sim$65\% yield. Wafer test was dominated by \textbf{Pause Refresh Fail (Bin5)}. Defects appeared as uniformly scattered single-bit errors across the wafer (weak clustering, no edge/line signature). Storage-node capacitance met spec; SEM cross-sections at failed cells revealed no structural anomaly. Other CDs/films/electricals were within spec.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{fail_bitmap_bin5}
+  \caption{Typical fail bit map under pause-refresh test (Bin5).
+  Uniformly scattered single-bit errors are observed without edge/line signatures.}
+  \label{fig:fail_bitmap}
+\end{figure}
+
 \subsection{Hypothesis (Failure Model)}
 Directly measurable leakages were normal, suggesting a subtle leakage path. We hypothesized increased leakage at the \textbf{storage-node contact $n^+/p^-$ junction}. After gate etch, a remnant gate oxide on S/D active is repeatedly exposed to resist-stripping \emph{ashing} during multiple LDD steps. Cumulative plasma damage makes the oxide locally porous and can extend damage into the diffusion, creating minute leakage paths. This explains random single-bit distribution without visible structural defects.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.85\columnwidth]{storage_contact_leakage}
+  \caption{Schematic of storage-node contact (n$^+$/p$^-$) leakage path.
+  Plasma-induced damage and LDD steps increase junction leakage, degrading retention.}
+  \label{fig:storage_contact}
+\end{figure}
 
 \subsection{Countermeasures}
 \begin{itemize}
