@@ -128,11 +128,15 @@ Normal / High-alt / Comm-loss / Emergency Return};
 \draw[arrow] (frame.west) -| ++(-1.2,0) |- (imu.south);
 \draw[arrow] (vp.north) |- (imu.east);
 
-% Legend
-\node[box, fill=blue!6, anchor=north west] at ($(gHW.south west)+(0, -8pt)$) {\strut Software};
-\node[box, fill=gray!10, right=6pt of gHW.south west, anchor=north west] {\strut Hardware};
-\node[box, fill=green!8, right=6pt of {($(gHW.south west)+(2.9cm,0)$)}, anchor=north west] {\strut Mechanics};
-\node[box, fill=orange!10, dashed, right=6pt of {($(gHW.south west)+(5.6cm,0)$)}, anchor=north west] {\strut Security};
+% ===== Legend (fixed) =====
+\node[box, fill=blue!6, anchor=north west] (lg1)
+      at ($(gHW.south west)+(0,-8pt)$) {\strut Software};
+\node[box, fill=gray!10, anchor=north west, right=6pt of lg1] (lg2)
+      {\strut Hardware};
+\node[box, fill=green!8, anchor=north west, right=6pt of lg2] (lg3)
+      {\strut Mechanics};
+\node[box, fill=orange!10, dashed, anchor=north west, right=6pt of lg3] (lg4)
+      {\strut Security};
 
 \end{tikzpicture}
 \caption{SkyEdge system architecture: three-layer control stack ($H_\infty$, FSM, LLM) integrated with sensors, secure device stack (SoC, TPM/PQC, comms), and variable-pitch mechanical design.}
