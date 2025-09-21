@@ -5,49 +5,92 @@ on:
     paths:
       - 'papers/2025_systemdk_3dic/**'
       - '.github/workflows/latex_systemdk_3dic.yml'
+  pull_request:
+    paths:
+      - 'papers/2025_systemdk_3dic/**'
   workflow_dispatch:
+
+concurrency:
+  group: systemdk_3dic-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: papers/2025_systemdk_3dic
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Compile (xelatex)
+      # TeX Live のキャッシュ（latex-action 内部キャッシュも効くが、追加でディレクトリごと）
+      - name: Cache TeXLive
+        uses: actions/cache@v4
+        with:
+          path: /tmp/texlive
+          key: texlive-2024-${{ runner.os }}
+          restore-keys: |
+            texlive-2024-
+
+      - name: Compile (xelatex via latexmk)
+        id: compile
         uses: xu-cheng/latex-action@v2
         with:
           working_directory: papers/2025_systemdk_3dic
           root_file: main.tex
           latexmk_use_xelatex: true
-          args: >
-            -interaction=nonstopmode
-            -file-line-error
-            -shell-escape
+          latexmk_shell_escape: true
+          # 非対話 + 行番号付きエラー + 2回回しはlatexmkが面倒をみる
+          args: -interaction=nonstopmode -file-line-error -shell-escape
+          pre_compile: |
+            echo "== Pre compile: list files =="
+            ls -la
+          post_compile: |
+            echo "== Post compile: size of PDF =="
+            du -h main.pdf || true
 
-      - name: Collect logs
+      - name: Collect logs and aux
+        if: always()   # 失敗しても確実に拾う
         run: |
-          mkdir -p build_logs
-          cp -f main.log main.aux main.blg main.bbl *.fls *.fdb_latexmk build_logs/ 2>/dev/null || true
+          mkdir -p build_logs build_aux
+          # ログ群
+          for f in main.log main.blg main.bbl main.fls main.fdb_latexmk; do
+            [ -f "$f" ] && cp -f "$f" build_logs/ || true
+          done
+          # エラー/警告サマリ
           if [ -f main.log ]; then
-            egrep -n "(! |^!|Warning|Error|Overfull|Underfull)" main.log > build_logs/summary.log || true
+            grep -nE "(^!|Warning|Error|Overfull|Underfull)" main.log > build_logs/summary.log || true
           fi
+          # AUX一式（再現デバッグ用）
+          shopt -s nullglob
+          cp -f *.aux *.out *.toc *.lof *.lot build_aux/ 2>/dev/null || true
 
       - name: Upload PDF
+        if: always()   # 失敗しても部分成果を見れるように
         uses: actions/upload-artifact@v4
         with:
-          name: systemdk_3dic-pdf
+          name: systemdk_3dic-pdf-${{ github.run_number }}
           path: papers/2025_systemdk_3dic/main.pdf
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
 
-      - name: Upload logs
+      - name: Upload logs (full + summary)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: systemdk_3dic-logs
+          name: systemdk_3dic-logs-${{ github.run_number }}
           path: papers/2025_systemdk_3dic/build_logs/**
           if-no-files-found: warn
           retention-days: 14
+
+      - name: Upload aux bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemdk_3dic-aux-${{ github.run_number }}
+          path: papers/2025_systemdk_3dic/build_aux/**
+          if-no-files-found: warn
+          retention-days: 7
