@@ -163,22 +163,34 @@ $S_{21}$ analysis showed EMI-induced jitter of 28 ps and eye closure. With Syste
 
 % ---------- Section 5 ----------
 \section{Results}
+The impact of SystemDK-aware constraints was quantitatively evaluated on a 4-die TSV stack.
+Baseline design flows suffered from severe slack loss, thermal hotspots, and EMI-induced eye closure.
+By contrast, SystemDK translated multi-physics evaluation results into direct EDA constraints, significantly improving timing stability, thermal reliability, and signal integrity.
+
+Table~\ref{tab:results} summarizes the comparison between baseline and SystemDK-enabled flows.
+
 \begin{table}[htbp]
 \centering
 \caption{Before/After metrics with SystemDK}
 \label{tab:results}
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.25}
+\footnotesize
 \begin{tabular}{|l|c|c|c|}
 \hline
 \textbf{Metric} & \textbf{Baseline} & \textbf{SystemDK} & \textbf{Gain} \\
 \hline
-Slack variation & --120 ps & --15 ps & +87\% \\
-Hotspot temp. & 118$^\circ$C & 107$^\circ$C & --11$^\circ$C \\
-Eye opening & 0.52 UI & 0.64 UI & +23\% \\
+Slack variation & $-120$ ps & $-15$ ps & +87\% \\
+Hotspot temperature & 118$^\circ$C & 107$^\circ$C & $-11^\circ$C \\
+Eye opening (under EMI) & 0.52 UI & 0.64 UI & +23\% \\
 \hline
 \end{tabular}
 \end{table}
+
+SystemDK successfully suppressed timing slack degradation,
+reduced thermal hotspots by more than 10$^\circ$C,
+and widened the EMI-induced eye opening by over 20\%.
+These results validate SystemDK as a physically consistent bridge between evaluation domains and EDA flows.
 
 % ---------- Section 6 ----------
 \section{Discussion}
