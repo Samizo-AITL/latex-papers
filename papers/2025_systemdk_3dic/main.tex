@@ -87,22 +87,18 @@ SystemDK integrates multiple domains:
 \begin{table}[htbp]
 \centering
 \caption{Mapping FEM and S-parameter results into SystemDK constraints}
-\label{tab:constraint_mapping}
-\begin{tabular}{|p{2.6cm}|p{3.8cm}|p{3.2cm}|}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{|l|l|l|}
 \hline
-\textbf{Analysis Result} & \textbf{SystemDK Translation} & \textbf{EDA Reflection} \\
-\hline
-Thermal map (hotspot $>$ 110$^\circ$C) & Keep-out zone, delay derating & Floorplan constraints, STA derating \\
-\hline
-Stress map (TSV-induced, $\Delta V_{th}$ = 20--30 mV) & Placement blockages, Vth-aware .lib model & STA timing derate, placement restriction \\
-\hline
-S11 (reflection, impedance mismatch) & PDN/IO matching constraint & IO buffer config, PDN design rule \\
-\hline
-S21 (crosstalk, coupling $>$ -20 dB) & Shielded-net flag, spacing constraint & CTS shield insertion, routing spacing rule \\
-\hline
-Phase jitter (from S-param) & Duty-cycle correction, clock skew margin & CTS constraints, timing budget allocation \\
-\hline
-\end{tabular}
+\textbf{Analysis Result} & \textbf{SystemDK Translation} & \textbf{EDA Reflection} \\ \hline
+Thermal map (hotspot > 110°C) & Keep-out zone, delay derating & Floorplan constraints, STA derating \\ \hline
+Stress map (TSV-induced, $\Delta V_{th}$ = 20--30 mV) & Placement blockages, Vth-aware lib model & STA timing derate, placement restriction \\ \hline
+S11 (reflection, impedance mismatch) & PDN/IO matching constraint & IO buffer config, PDN design rule \\ \hline
+S21 (crosstalk coupling > -20 dB) & Shielded-net flag, spacing constraint & CTS shield insertion, routing spacing rule \\ \hline
+Phase jitter (from S-param) & Duty-cycle correction, clock skew margin & CTS constraints, timing budget allocation \\ \hline
+\end{tabular}%
+}
+\label{tab:mapping}
 \end{table}
 
 % ---------- Section 4 ----------
