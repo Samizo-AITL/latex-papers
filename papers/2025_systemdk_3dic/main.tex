@@ -13,6 +13,7 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{tabularx}   % 幅いっぱいで自動折返し
 
 % TikZ (Fig.1)
 \usepackage{tikz}
@@ -59,7 +60,6 @@ Chiplet Design Kits focus on 2.5D/3D interfaces but do not yet integrate cross-d
 SystemDK is novel in its ability to \textbf{treat thermal, stress, SI/PI, and EMI/EMC constraints in an integrated manner and inject them directly into the EDA flow}.
 
 % ---------- Section 3 ----------
-% ---------- Section 3 ----------
 \section{SystemDK Framework}
 SystemDK integrates multiple domains:
 \begin{itemize}
@@ -83,38 +83,48 @@ SystemDK integrates multiple domains:
   \label{fig:framework}
 \end{figure}
 
-% ---- Table ----
-\begin{table}[htbp]
-\caption{Mapping FEM and S-parameter results into SystemDK constraints}
+% --- Table I: stays two-column layout; table spans across both columns ---
+\begin{table*}[t]
 \centering
-\renewcommand{\arraystretch}{1.3} % 縦方向の行間を広げる
-\begin{tabular}{|p{3cm}|p{4cm}|p{5cm}|}
+\caption{Mapping FEM and S-parameter results into SystemDK constraints}
+\label{tab:mapping}
+\setlength{\tabcolsep}{6pt}          % 列間
+\renewcommand{\arraystretch}{1.25}   % 行間（縦を広げる）
+\footnotesize                        % 読みやすいサイズ
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{0.20\textwidth}|
+                                >{\raggedright\arraybackslash}p{0.41\textwidth}|
+                                >{\raggedright\arraybackslash}p{0.31\textwidth}|}
 \hline
-\textbf{Analysis Result} & \textbf{SystemDK Translation} & \textbf{EDA Reflection} \\
+\textbf{Analysis Result} &
+\textbf{SystemDK Translation} &
+\textbf{EDA Reflection} \\
 \hline
-Thermal map (hotspot $>$ 110$^\circ$C) 
-& Keep-out zone, delay derating 
-& Floorplan constraints, STA derating \\
+Thermal map (hotspot $>$ 110$^\circ$C) &
+Keep-out zone generation for hotspot tiles; temperature-aware delay derating
+$\bigl(\text{cell\_delay} \!\gets\! \text{cell\_delay}\cdot(1+\alpha\,\Delta T)\bigr)$; power-density cap per region &
+Floorplan keep-out constraints; STA temperature derate; power/thermal signoff checks \\
 \hline
-Stress map (TSV-induced, $\Delta V_{th}$ = 20--30 mV) 
-& Placement blockages, Vth-aware lib model 
-& STA timing derate, placement restriction \\
+Stress map (TSV-induced, $\Delta V_{th}=20$–$30$\,mV) &
+TSV keep-out around vias; stress-to-$V_{th}$ compact model; library/view
+selection by stress bin; timing derate
+$\bigl(\text{delay} \!\gets\! \text{delay}\cdot(1+\beta\,\Delta V_{th})\bigr)$ &
+Placement blockages and legalizer rules; stress-aware .lib usage in STA; ECO guidance \\
 \hline
-S11 (reflection, impedance mismatch) 
-& PDN/IO matching constraint 
-& IO buffer config, PDN design rule \\
+S11 (reflection / impedance mismatch) &
+PDN/IO matching constraints; package/board co-opt for target $Z_0$; return-path enforcement &
+IO buffer config selection; PDN design rules; pkg/board stack-up constraints \\
 \hline
-S21 (crosstalk coupling $>$ -20 dB) 
-& Shielded-net flag, spacing constraint 
-& CTS shield insertion, routing spacing rule \\
+S21 (crosstalk, coupling $>$ \(-20\) dB) &
+Shield-required net tags; min-spacing / layer-pair rules; differential-pair enforcement &
+CTS shield insertion; router spacing rules; preferred-layer assignment \\
 \hline
-Phase jitter (from S-param) 
-& Duty-cycle correction, clock skew margin 
-& CTS constraints, timing budget allocation \\
+Phase/jitter (from S-parameter/transfer phase) &
+Duty-cycle correction targets; skew budget allocation; jitter model injection to timing corners &
+CTS constraints (DCC, skew); STA jitter/uncertainty settings; clock-tree checks \\
 \hline
-\end{tabular}
-\label{tab:systemdk_mapping}
-\end{table}
+\end{tabularx}
+\vspace{-2mm}
+\end{table*}
 
 % ---------- Section 4 ----------
 \section{Case Studies}
