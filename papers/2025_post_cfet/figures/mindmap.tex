@@ -1,6 +1,3 @@
-\documentclass[tikz,border=5pt]{standalone}
-\usetikzlibrary{mindmap}
-\begin{document}
 \begin{tikzpicture}
 \path[mindmap,concept color=orange!60,text=white]
   node[concept] {Post-CFET}
@@ -8,13 +5,13 @@
     child[concept color=blue!60] { node[concept] {2D Material FETs}
       [clockwise from=120]
         child { node[concept] {Ion/Ioff $10^7$, SS 65 mV/dec} }
-        child { node[concept] {Challenges: $R_c\!\sim\!1$ k$\Omega\!\cdot\!\mu$m, film non-uniformity} }
+        child { node[concept] {Challenges: $R_c\sim1$ k$\Omega\!\cdot\!\mu$m, film non-uniformity} }
         child { node[concept] {Apps: IoT, Flexible, Bio-sensing} }
     }
     child[concept color=green!50!black] { node[concept] {Monolithic 3D}
       [clockwise from=210]
         child { node[concept] {Delay $-30\%$, Area $-40\%$} }
-        child { node[concept] {Challenges: $<\!450^{\circ}\mathrm{C}$, hotspots} }
+        child { node[concept] {Challenges: $<450^{\circ}\mathrm{C}$, hotspots} }
         child { node[concept] {Apps: AI, Memory-centric} }
     }
     child[concept color=purple!60] { node[concept] {Spintronics / Quantum}
@@ -30,4 +27,3 @@
         child { node[concept] {Apps: Optical I/O, Medical, Space} }
     };
 \end{tikzpicture}
-\end{document}
