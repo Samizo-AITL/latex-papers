@@ -1,0 +1,176 @@
+% --------------------------------------------------
+% Post-CFET Device Architecture Paper (English Version)
+% --------------------------------------------------
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+% Packages
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+
+% --------------------------------------------------
+% Title & Author
+% --------------------------------------------------
+\title{Post-CFET Device Architectures: Materials, Integration, and Design Perspectives}
+
+\author{
+\IEEEauthorblockN{Shinichi Samizo}
+\IEEEauthorblockA{Independent Semiconductor Researcher\\
+Project Design Hub, Samizo-AITL\\
+\textit{Email:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\
+\textit{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}}
+}
+
+\begin{document}
+\maketitle
+
+% --------------------------------------------------
+% Abstract
+% --------------------------------------------------
+\begin{abstract}
+CMOS scaling has evolved from Planar MOSFETs to FinFETs, Gate-All-Around (GAA) nanosheets, and Complementary FETs (CFETs). CFET improves electrostatic control and mitigates wiring bottlenecks, but silicon is approaching its material and thermal limits. This paper reviews \textbf{post-CFET device candidates} including \textit{two-dimensional (2D) material FETs, monolithic 3D integration, spintronics/quantum devices, and heterogeneous atomic-scale integration}. Their physical principles, fabrication challenges, experimental demonstrations, reliability concerns, application domains, and implications for design and education are compared.
+\end{abstract}
+
+% --------------------------------------------------
+% Introduction
+% --------------------------------------------------
+\section{Introduction}
+The semiconductor industry has advanced for more than five decades through device scaling and structural innovation. 
+The trajectory from Planar MOSFET $\to$ FinFET $\to$ GAA $\to$ CFET represents the pursuit of enhanced electrostatic control and integration efficiency.  
+However, mobility degradation, leakage, wiring delay, and thermal density have become limiting factors, demanding exploration of \textbf{post-CFET technologies}.
+
+% --------------------------------------------------
+% Evolution Path
+% --------------------------------------------------
+\section{Evolution from CMOS to Post-CFET}
+Fig.~\ref{fig:evolution} shows the historical pathway of CMOS device evolution.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/evolution_tree.pdf}
+  \caption{Evolution tree: CMOS $\to$ CFET $\to$ Post-CFET candidates.}
+  \label{fig:evolution}
+\end{figure}
+
+\subsection{Planar MOSFET to FinFET}
+Short-channel effects and leakage became critical below 45 nm. Tri-gate FinFETs improved gate control and became the industry standard.
+
+\subsection{FinFET to GAA}
+Cell height constraints required nanosheets fully surrounded by gates. GAA provides stronger electrostatics but increases process variability.
+
+\subsection{GAA to CFET}
+CFET vertically stacks nFET and pFET, improving cell density and reducing interconnect delay. Challenges include heat removal and process complexity.
+
+\subsection{Beyond CFET}
+Silicon material limits and wiring dominance demand novel materials, new integration schemes, and alternative state variables (spin, photon, bio).
+
+% --------------------------------------------------
+% Candidate Technologies
+% --------------------------------------------------
+\section{Post-CFET Candidate Technologies}
+
+\subsection{2D Material FETs}
+\begin{itemize}
+  \item \textbf{Demonstrations:} MoS$_2$ FET ($L_g$=12 nm, IEDM 2023) with Ion/Ioff=$10^7$, SS=65 mV/dec. 
+  \item \textbf{Challenges:} High contact resistance ($R_c \approx 1$ k$\Omega\cdot\mu$m), film non-uniformity (5–10\%), interface traps.  
+  \item \textbf{Applications:} Ultra-low power IoT, flexible electronics, bio-sensing.  
+  \item \textbf{Design impact:} Immature SPICE models, poor statistical variability data.  
+\end{itemize}
+
+\subsection{Monolithic 3D Integration (M3D)}
+\begin{itemize}
+  \item \textbf{Demonstrations:} SRAM stacking (IEDM 2019): delay -30\%, area -40\%. AI SoC (Nat. Electronics 2022): energy efficiency +1.7$\times$.  
+  \item \textbf{Challenges:} Low-temperature processing ($<450^\circ$C), inter-layer $V_{th}$ variation, thermal hotspots $>1$ W/mm$^2$.  
+  \item \textbf{Applications:} AI accelerators, memory-centric computing.  
+  \item \textbf{Design impact:} Requires 3D P\&R EDA, thermal/mechanical co-simulation.  
+\end{itemize}
+
+\subsection{Spintronics / Quantum Devices}
+\begin{itemize}
+  \item \textbf{Demonstrations:} STT-MRAM endurance $10^{12}$ cycles (IBM), SOT-MRAM write current -40\%, Topological FET on/off=$10^3$ at RT.  
+  \item \textbf{Challenges:} CMOS compatibility, reducing write current from mA to $\mu$A.  
+  \item \textbf{Applications:} Neuromorphic computing, radiation-hardened space systems, in-memory logic.  
+  \item \textbf{Design impact:} Logic-memory fusion beyond von Neumann architecture.  
+\end{itemize}
+
+\subsection{Heterogeneous Atomic-Scale Integration}
+\begin{itemize}
+  \item \textbf{Demonstrations:} Si + MoS$_2$ photodetector, responsivity 200 mA/W @ 1.55 $\mu$m (Nat. Photonics 2020). CMOS+MEMS sensor chips.  
+  \item \textbf{Challenges:} Interface stability, lattice/thermal mismatch, yield.  
+  \item \textbf{Applications:} Optical interconnect, medical sensing, aerospace.  
+  \item \textbf{Design impact:} Cross-domain EDA required (electrical + optical + mechanical).  
+\end{itemize}
+
+% --------------------------------------------------
+% Comparison Table
+% --------------------------------------------------
+\section{Comparison Matrix}
+Table~\ref{tab:matrix} compares the four candidate technologies.
+
+\begin{table}[ht]
+\centering
+\caption{Comparison of Post-CFET candidate technologies}
+\label{tab:matrix}
+\begin{tabular}{lccccc}
+\toprule
+Tech. & Demonstrations & Rc/Thermal & Reliability & Applications & TRL \\
+\midrule
+2D-FET & Ion/Ioff=1e7 & 1k$\Omega\mu$m & Film variation & IoT/Flex & 3--5 \\
+M3D & Delay-30\% & $<450^\circ$C & $V_{th}$ shift & AI/Memory & 4--6 \\
+Spin & MRAM 1e12 cyc & RT stability & Write stress & Neuro/Space & 3--5 \\
+Hetero & Si+MoS$_2$ PD & Interface limits & Yield & Optics/Med & 2--4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% --------------------------------------------------
+% Design and Education
+% --------------------------------------------------
+\section{Design and Educational Perspectives}
+Future EDA must integrate multi-physics: heat, stress, quantum, and cross-domain effects.  
+Educational curricula should include: (1) scaling history, (2) candidate technology reviews, (3) multi-physics simulations, (4) case studies, (5) system-level design integration.
+
+% --------------------------------------------------
+% Future Scenarios
+% --------------------------------------------------
+\section{Future Scenarios}
+\begin{itemize}
+  \item \textbf{2030s (early):} Lab-scale demonstrations of 2D+CFET and M3D+2D hybrids.  
+  \item \textbf{2030s (late):} Partial adoption in IoT/AI edge devices.  
+  \item \textbf{2040s:} Mainstream in HPC and aerospace. Fusion of spintronics and M3D enabling non-volatile 3D logic-memory.  
+\end{itemize}
+
+% --------------------------------------------------
+% Conclusion
+% --------------------------------------------------
+\section{Conclusion}
+Post-CFET represents a paradigm shift from structural scaling to material innovation, integration schemes, alternative physical states, and heterogeneous fusion.  
+It holds educational, design, and industrial significance, bridging the gap beyond the silicon era.
+
+% --------------------------------------------------
+% References
+% --------------------------------------------------
+\begin{thebibliography}{00}
+\bibitem{irds2024} IRDS, International Roadmap for Devices and Systems, 2024.
+\bibitem{takagi2023} S. Takagi et al., IEDM Tech Digest, 2023.
+\bibitem{liu2022} Liu et al., Nature Electronics, 2022.
+\bibitem{fert2019} A. Fert et al., Rev. Mod. Phys., 2019.
+\bibitem{wong2020} H.-S. P. Wong, Nat. Rev. Mater., 2020.
+\bibitem{batude2019} P. Batude et al., IEDM, 2019.
+\end{thebibliography}
+
+% --------------------------------------------------
+% Author Biography
+% --------------------------------------------------
+\section*{Author Biography}
+\noindent\textbf{Shinichi Samizo}
+received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
+He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
+He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, GitHub: \href{https://github.com/Samizo-AITL}{Samizo-AITL}.
+
+\end{document}
