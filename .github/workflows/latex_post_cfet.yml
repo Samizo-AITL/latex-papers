@@ -1,0 +1,51 @@
+name: Build LaTeX Paper (Post-CFET)
+
+on:
+  push:
+    paths:
+      - 'papers/2025_post_cfet/**'
+      - '.github/workflows/latex_post_cfet.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build PDF with XeLaTeX
+        uses: xu-cheng/latex-action@v2
+        with:
+          working_directory: papers/2025_post_cfet
+          root_file: main.tex
+          latexmk_use_xelatex: true
+          latexmk_shell_escape: true
+          # エラー時でもログが残るよう、非対話&詳細ログを有効化
+          args: "-interaction=nonstopmode -halt-on-error -file-line-error"
+
+      - name: Upload PDF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: post_cfet_paper
+          path: papers/2025_post_cfet/main.pdf
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: post_cfet_logs
+          path: |
+            papers/2025_post_cfet/*.log
+            papers/2025_post_cfet/*.blg
+            papers/2025_post_cfet/*.bbl
+            papers/2025_post_cfet/*.aux
+            papers/2025_post_cfet/*.fls
+            papers/2025_post_cfet/*.fdb_latexmk
+          if-no-files-found: warn
+          retention-days: 14
