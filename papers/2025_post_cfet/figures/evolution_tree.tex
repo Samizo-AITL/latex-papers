@@ -1,0 +1,34 @@
+\documentclass[tikz,border=5pt]{standalone}
+\usetikzlibrary{shapes,arrows.meta,positioning}
+
+\tikzset{
+  node/.style={rectangle,rounded corners,draw=black,fill=blue!10,minimum width=2.8cm,minimum height=0.8cm,align=center},
+  arrow/.style={-{Latex[length=3mm,width=2mm]},thick}
+}
+
+\begin{document}
+\begin{tikzpicture}[node distance=1.6cm]
+  \node[node] (planar) {Planar MOSFET \\ \scriptsize $\sim$0.25 µm};
+  \node[node, right=of planar] (finfet) {FinFET \\ \scriptsize $\sim$22 nm};
+  \node[node, right=of finfet] (gaa) {GAA Nanosheet \\ \scriptsize $\sim$5 nm};
+  \node[node, right=of gaa] (cfet) {CFET \\ \scriptsize $\sim$2 nm};
+  \node[node, right=of cfet,fill=orange!20] (post) {Post-CFET};
+
+  \draw[arrow] (planar) -- (finfet);
+  \draw[arrow] (finfet) -- (gaa);
+  \draw[arrow] (gaa) -- (cfet);
+  \draw[arrow] (cfet) -- (post);
+
+  % Branches
+  \node[node, above right=1.5cm and 1.5cm of post, fill=green!15] (f2d) {2D Material FETs};
+  \node[node, right=of post, fill=green!15, yshift=1.2cm] (m3d) {Monolithic 3D};
+  \node[node, right=of post, fill=green!15, yshift=-1.2cm] (spin) {Spintronics / Quantum};
+  \node[node, below right=1.5cm and 1.5cm of post, fill=green!15] (hetero) {Heterogeneous Integration};
+
+  \draw[arrow] (post.east) -- (f2d.west);
+  \draw[arrow] (post.east) -- (m3d.west);
+  \draw[arrow] (post.east) -- (spin.west);
+  \draw[arrow] (post.east) -- (hetero.west);
+
+\end{tikzpicture}
+\end{document}
