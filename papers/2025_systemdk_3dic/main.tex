@@ -59,6 +59,7 @@ Chiplet Design Kits focus on 2.5D/3D interfaces but do not yet integrate cross-d
 SystemDK is novel in its ability to \textbf{treat thermal, stress, SI/PI, and EMI/EMC constraints in an integrated manner and inject them directly into the EDA flow}.
 
 % ---------- Section 3 ----------
+% ---------- Section 3 ----------
 \section{SystemDK Framework}
 SystemDK integrates multiple domains:
 \begin{itemize}
@@ -71,25 +72,38 @@ SystemDK integrates multiple domains:
 % ---- Fig.1 (TikZ) ----
 \begin{figure}[htbp]
   \centering
-  % 80% 幅にリサイズして貼付
-  \resizebox{0.8\linewidth}{!}{%
-  \begin{tikzpicture}[font=\sffamily, node distance=32mm, >=Latex,
-    box/.style={draw, rounded corners, fill=blue!10, minimum width=36mm, minimum height=12mm, very thick, align=center}]
-    \node[box] (eval) {\bfseries Evaluation};
-    \node[below=2.0mm of eval] {\footnotesize Simulation \& Measurements};
-
-    \node[box, right=of eval] (sysdk) {\bfseries SystemDK};
-    \node[below=2.0mm of sysdk] {\footnotesize Constraint Translation};
-
-    \node[box, right=of sysdk, minimum width=48mm] (eda) {\bfseries EDA Flow};
-    \node[below=2.0mm of eda] {\footnotesize STA / P\&R / CTS / Floorplan};
-
-    \draw[->, very thick] (eval) -- (sysdk);
-    \draw[->, very thick] (sysdk) -- (eda);
-  \end{tikzpicture}}
-  \caption{SystemDK framework concept (Evaluation $\rightarrow$ Constraint Translation $\rightarrow$ EDA flow).}
+  \begin{tikzpicture}[node distance=1.5cm, >=latex, scale=0.9, every node/.style={transform shape}]
+    \node (eval) [draw, rounded corners, align=center, fill=blue!10] {Multi-Physics Evaluation \\ (FEM, S-parameters)};
+    \node (sysdk) [draw, rounded corners, align=center, below of=eval, fill=green!10] {SystemDK \\ Constraint Translation};
+    \node (eda) [draw, rounded corners, align=center, below of=sysdk, fill=orange!10] {EDA Flow \\ (STA / P\&R / CTS / Floorplan)};
+    \draw[->, thick] (eval) -- (sysdk);
+    \draw[->, thick] (sysdk) -- (eda);
+  \end{tikzpicture}
+  \caption{SystemDK vertical workflow (Evaluation → Constraint Translation → EDA).}
   \label{fig:framework}
 \end{figure}
+
+% ---- Table ----
+\begin{table}[htbp]
+\centering
+\caption{Mapping FEM and S-parameter results into SystemDK constraints}
+\label{tab:constraint_mapping}
+\begin{tabular}{|p{2.6cm}|p{3.8cm}|p{3.2cm}|}
+\hline
+\textbf{Analysis Result} & \textbf{SystemDK Translation} & \textbf{EDA Reflection} \\
+\hline
+Thermal map (hotspot $>$ 110$^\circ$C) & Keep-out zone, delay derating & Floorplan constraints, STA derating \\
+\hline
+Stress map (TSV-induced, $\Delta V_{th}$ = 20--30 mV) & Placement blockages, Vth-aware .lib model & STA timing derate, placement restriction \\
+\hline
+S11 (reflection, impedance mismatch) & PDN/IO matching constraint & IO buffer config, PDN design rule \\
+\hline
+S21 (crosstalk, coupling $>$ -20 dB) & Shielded-net flag, spacing constraint & CTS shield insertion, routing spacing rule \\
+\hline
+Phase jitter (from S-param) & Duty-cycle correction, clock skew margin & CTS constraints, timing budget allocation \\
+\hline
+\end{tabular}
+\end{table}
 
 % ---------- Section 4 ----------
 \section{Case Studies}
