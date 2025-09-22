@@ -11,6 +11,8 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{url}
+\usepackage{standalone}   % for \includestandalone
+\usepackage{tikz}         % required by standalone TikZ figures
 
 % --------------------------------------------------
 % Title & Author
@@ -49,9 +51,10 @@ However, mobility degradation, leakage, wiring delay, and thermal density have b
 \section{Evolution from CMOS to Post-CFET}
 Fig.~\ref{fig:evolution} shows the historical pathway of CMOS device evolution.
 
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
-  \includegraphics[width=0.45\textwidth]{figures/evolution_tree.pdf}
+  % Compile figures/evolution_tree.tex (standalone TikZ) on the fly
+  \includestandalone[width=0.46\textwidth]{figures/evolution_tree}
   \caption{Evolution tree: CMOS $\to$ CFET $\to$ Post-CFET candidates.}
   \label{fig:evolution}
 \end{figure}
@@ -76,7 +79,7 @@ Silicon material limits and wiring dominance demand novel materials, new integra
 \subsection{2D Material FETs}
 \begin{itemize}
   \item \textbf{Demonstrations:} MoS$_2$ FET ($L_g$=12 nm, IEDM 2023) with Ion/Ioff=$10^7$, SS=65 mV/dec. 
-  \item \textbf{Challenges:} High contact resistance ($R_c \approx 1$ k$\Omega\cdot\mu$m), film non-uniformity (5–10\%), interface traps.  
+  \item \textbf{Challenges:} High contact resistance ($R_c \approx 1$ k$\Omega\cdot\mu$m), film non-uniformity (5--10\%), interface traps.  
   \item \textbf{Applications:} Ultra-low power IoT, flexible electronics, bio-sensing.  
   \item \textbf{Design impact:} Immature SPICE models, poor statistical variability data.  
 \end{itemize}
@@ -106,6 +109,26 @@ Silicon material limits and wiring dominance demand novel materials, new integra
 \end{itemize}
 
 % --------------------------------------------------
+% Block diagram
+% --------------------------------------------------
+\begin{figure}[t]
+  \centering
+  \includestandalone[width=0.47\textwidth]{figures/block_diagram}
+  \caption{Conceptual block diagrams of Post-CFET candidate devices.}
+  \label{fig:block}
+\end{figure}
+
+% --------------------------------------------------
+% Mindmap
+% --------------------------------------------------
+\begin{figure}[t]
+  \centering
+  \includestandalone[width=0.47\textwidth]{figures/mindmap}
+  \caption{Mindmap of Post-CFET technologies (demonstrations, challenges, applications).}
+  \label{fig:mindmap}
+\end{figure}
+
+% --------------------------------------------------
 % Comparison Table
 % --------------------------------------------------
 \section{Comparison Matrix}
@@ -126,6 +149,16 @@ Hetero & Si+MoS$_2$ PD & Interface limits & Yield & Optics/Med & 2--4 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+% --------------------------------------------------
+% Roadmap
+% --------------------------------------------------
+\begin{figure}[t]
+  \centering
+  \includestandalone[width=0.49\textwidth]{figures/roadmap}
+  \caption{Roadmap toward 2030--2045 for Post-CFET technologies (materials, integration, applications, and EDA/PDK).}
+  \label{fig:roadmap}
+\end{figure}
 
 % --------------------------------------------------
 % Design and Education
