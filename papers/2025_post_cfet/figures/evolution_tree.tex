@@ -1,14 +1,3 @@
-\documentclass[tikz,border=5pt]{standalone}
-\usetikzlibrary{shapes,arrows.meta,positioning}
-
-% NOTE: don't use style name 'node' (reserved). Use 'blk'.
-\tikzset{
-  blk/.style={rectangle,rounded corners,draw=black,fill=blue!10,
-              minimum width=2.8cm,minimum height=0.8cm,align=center},
-  flowarrow/.style={-{Latex[length=3mm,width=2mm]},thick}
-}
-
-\begin{document}
 \begin{tikzpicture}[node distance=1.6cm]
   \node[blk] (planar) {Planar MOSFET \\ \scriptsize $\sim$0.25\,\textmu m};
   \node[blk, right=of planar] (finfet) {FinFET \\ \scriptsize $\sim$22\,nm};
@@ -21,7 +10,6 @@
   \draw[flowarrow] (gaa) -- (cfet);
   \draw[flowarrow] (cfet) -- (post);
 
-  % Branches
   \node[blk, above right=1.5cm and 1.5cm of post, fill=green!15] (f2d) {2D Material FETs};
   \node[blk, right=of post, yshift=1.2cm, fill=green!15] (m3d) {Monolithic 3D};
   \node[blk, right=of post, yshift=-1.2cm, fill=green!15] (spin) {Spintronics / Quantum};
@@ -32,4 +20,3 @@
   \draw[flowarrow] (post.east) -- (spin.west);
   \draw[flowarrow] (post.east) -- (hetero.west);
 \end{tikzpicture}
-\end{document}
