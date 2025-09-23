@@ -1,46 +1,41 @@
 \begin{tikzpicture}[
   mindmap, grow cyclic,
   every node/.style={font=\bfseries\footnotesize, align=center, text=white},
-  root concept/.style={concept color=orange!75, font=\bfseries\large, minimum size=22mm},
-  % ---- L1/L2 ノードのサイズと配置（円のまま） ----
+  root concept/.style={concept color=orange!80, font=\bfseries\large, minimum size=22mm},
   level 1 concept/.append style={
-    sibling angle=90,          % 4象限にきっちり配置
-    level distance=38mm,       % 中心からの距離
-    minimum size=18mm,         % 円サイズ（縦長を防止）
-    text width=23mm            % 折返しだけを制御（形は円のまま）
+    sibling angle=90, level distance=40mm,
+    minimum size=20mm, text width=25mm
   },
   level 2 concept/.append style={
-    sibling angle=36,          % 子ノード同士の角度
-    level distance=22mm,
-    minimum size=11mm,
-    text width=26mm
+    sibling angle=45, level distance=25mm,
+    minimum size=12mm, text width=28mm
   },
-  % ---- 形崩れ（星型化）を避ける ----
+  % ---- 重要！変なグラデーション禁止 ----
   concept/.append style={shade=false, circular drop shadow=none}
 ]
 \node[root concept]{Post-CFET}
-  % ===== 2D =====
-  child[grow=30, concept color=blue!65]{ node {2D Material FETs}
-    child[grow=350] { node {Ion/Ioff $10^7$\\ SS $\approx 65$ mV/dec} }
-    child[grow=30]  { node {Challenges:\\ $R_c\!\approx\!0.5$--$1$ k$\Omega\!\cdot\!\mu$m\\ film non-uniformity} }
-    child[grow=70]  { node {Apps:\\ IoT, flexible, bio-sensing} }
+  % ==== 2D ====
+  child[concept color=blue!65, grow=0] { node {2D Material FETs}
+    child { node {Ion/Ioff $10^7$, SS 65 mV/dec} }
+    child { node {Challenges:\\ $R_c\sim0.5$--1 k$\Omega\!\cdot\!\mu$m, non-uniformity} }
+    child { node {Apps:\\ IoT, Flexible, Bio-sensing} }
   }
-  % ===== M3D =====
-  child[grow=330, concept color=green!55!black]{ node {Monolithic 3D}
-    child[grow=300] { node {Delay $-30\%$\\ Area $-40\%$} }
-    child[grow=340] { node {Challenges:\\ $T<450^{\circ}$C, hotspots} }
-    child[grow=20]  { node {Apps:\\ AI, memory-centric} }
+  % ==== Monolithic 3D ====
+  child[concept color=green!55!black, grow=270] { node {Monolithic 3D}
+    child { node {Delay −30\%, Area −40\%} }
+    child { node {Challenges:\\ $<450^\circ$C, hotspots} }
+    child { node {Apps:\\ AI, Memory-centric} }
   }
-  % ===== Spin / Quantum =====
-  child[grow=210, concept color=magenta!60]{ node {Spintronics\\ / Quantum}
-    child[grow=180] { node {MRAM $10^{12}$ cycles} }
-    child[grow=220] { node {Challenges:\\ write current, CMOS process} }
-    child[grow=260] { node {Apps:\\ Neuromorphic, space} }
+  % ==== Spin / Quantum ====
+  child[concept color=magenta!70, grow=180] { node {Spintronics / Quantum}
+    child { node {MRAM $10^{12}$ cycles} }
+    child { node {Challenges:\\ write current, CMOS process} }
+    child { node {Apps:\\ Neuromorphic, Space} }
   }
-  % ===== Heterogeneous =====
-  child[grow=135, concept color=teal!65]{ node {Heterogeneous\\ Integration}
-    child[grow=100] { node {Si+MoS$_2$ PD\\ 200 mA/W} }
-    child[grow=140] { node {Challenges:\\ interface, yield} }
-    child[grow=180] { node {Apps:\\ Optical I/O, medical, space} }
+  % ==== Heterogeneous ====
+  child[concept color=teal!70, grow=90] { node {Heterogeneous Integration}
+    child { node {Si+MoS$_2$ PD 200 mA/W} }
+    child { node {Challenges:\\ interface, yield} }
+    child { node {Apps:\\ Optical I/O, Medical, Space} }
   };
 \end{tikzpicture}
