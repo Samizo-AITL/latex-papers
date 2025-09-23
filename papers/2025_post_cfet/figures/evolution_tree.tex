@@ -1,22 +1,36 @@
-\begin{tikzpicture}[node distance=1.6cm]
-  \node[blk] (planar) {Planar MOSFET \\ \scriptsize $\sim$0.25\,\textmu m};
-  \node[blk, right=of planar] (finfet) {FinFET \\ \scriptsize $\sim$22\,nm};
-  \node[blk, right=of finfet] (gaa) {GAA Nanosheet \\ \scriptsize $\sim$5\,nm};
-  \node[blk, right=of gaa] (cfet) {CFET \\ \scriptsize $\sim$2\,nm};
-  \node[blk, right=of cfet, fill=orange!20] (post) {Post-CFET};
+% figures/evolution_tree.tex
+\begin{tikzpicture}[node distance=10mm, >=Stealth]
+% ---- local styles (self-contained) ----
+\tikzset{
+  blk/.style={draw, rounded corners=2pt, minimum width=20mm,
+              minimum height=6mm, align=center, font=\footnotesize,
+              inner sep=2pt, fill=blue!10},
+  stage/.style={blk},
+  post/.style={blk, fill=orange!20},
+  cand/.style={blk, fill=green!15, minimum width=28mm},
+  link/.style={-Stealth, thick}
+}
 
-  \draw[flowarrow] (planar) -- (finfet);
-  \draw[flowarrow] (finfet) -- (gaa);
-  \draw[flowarrow] (gaa) -- (cfet);
-  \draw[flowarrow] (cfet) -- (post);
+% ---- main evolution chain ----
+\node[stage] (planar) {Planar MOSFET\\\scriptsize $\sim$0.25\,\textmu m};
+\node[stage, right=8mm of planar] (fin) {FinFET\\\scriptsize $\sim$22\,nm};
+\node[stage, right=8mm of fin] (gaa) {GAA Nanosheet\\\scriptsize $\sim$5\,nm};
+\node[stage, right=8mm of gaa] (cfet) {CFET\\\scriptsize $\sim$2\,nm};
+\node[post,  right=8mm of cfet] (postcfet) {Post-CFET};
 
-  \node[blk, above right=1.5cm and 1.5cm of post, fill=green!15] (f2d) {2D Material FETs};
-  \node[blk, right=of post, yshift=1.2cm, fill=green!15] (m3d) {Monolithic 3D};
-  \node[blk, right=of post, yshift=-1.2cm, fill=green!15] (spin) {Spintronics / Quantum};
-  \node[blk, below right=1.5cm and 1.5cm of post, fill=green!15] (hetero) {Heterogeneous Integration};
+\draw[link] (planar) -- (fin);
+\draw[link] (fin) -- (gaa);
+\draw[link] (gaa) -- (cfet);
+\draw[link] (cfet) -- (postcfet);
 
-  \draw[flowarrow] (post.east) -- (f2d.west);
-  \draw[flowarrow] (post.east) -- (m3d.west);
-  \draw[flowarrow] (post.east) -- (spin.west);
-  \draw[flowarrow] (post.east) -- (hetero.west);
+% ---- candidate branches ----
+\node[cand, right=16mm of postcfet, yshift=12mm] (cand2d) {2D Material FETs};
+\node[cand, below=3mm of cand2d]                    (candm3d){Monolithic 3D};
+\node[cand, below=3mm of candm3d]                   (candspin){Spintronics / Quantum};
+\node[cand, below=3mm of candspin]                  (candhet){Heterogeneous Integration};
+
+\draw[link] (postcfet.east) -- ++(6mm,0) |- (cand2d.west);
+\draw[link] (postcfet.east) -- ++(6mm,0) |- (candm3d.west);
+\draw[link] (postcfet.east) -- ++(6mm,0) |- (candspin.west);
+\draw[link] (postcfet.east) -- ++(6mm,0) |- (candhet.west);
 \end{tikzpicture}
