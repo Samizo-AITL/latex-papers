@@ -1,41 +1,56 @@
+% figures/mindmap.tex  —  Post-CFET mind map (no mindmap lib)
 \begin{tikzpicture}[
-  mindmap, grow cyclic,
-  every node/.style={font=\bfseries\footnotesize, align=center, text=white},
-  root concept/.style={concept color=orange!80, font=\bfseries\large, minimum size=22mm},
-  level 1 concept/.append style={
-    sibling angle=90, level distance=40mm,
-    minimum size=20mm, text width=25mm
-  },
-  level 2 concept/.append style={
-    sibling angle=45, level distance=25mm,
-    minimum size=12mm, text width=28mm
-  },
-  % ---- 重要！変なグラデーション禁止 ----
-  concept/.append style={shade=false, circular drop shadow=none}
+  font=\footnotesize,
+  bubble/.style={circle, draw=none, minimum size=22mm, align=center, text=white},
+  topic/.style ={bubble, minimum size=26mm},
+  sub/.style   ={rounded corners=2pt, draw=black!25, fill=white, text=black,
+                 inner sep=2pt, minimum width=30mm, align=center},
+  link/.style  ={-Latex, thick}
 ]
-\node[root concept]{Post-CFET}
-  % ==== 2D ====
-  child[concept color=blue!65, grow=0] { node {2D Material FETs}
-    child { node {Ion/Ioff $10^7$, SS 65 mV/dec} }
-    child { node {Challenges:\\ $R_c\sim0.5$--1 k$\Omega\!\cdot\!\mu$m, non-uniformity} }
-    child { node {Apps:\\ IoT, Flexible, Bio-sensing} }
-  }
-  % ==== Monolithic 3D ====
-  child[concept color=green!55!black, grow=270] { node {Monolithic 3D}
-    child { node {Delay −30\%, Area −40\%} }
-    child { node {Challenges:\\ $<450^\circ$C, hotspots} }
-    child { node {Apps:\\ AI, Memory-centric} }
-  }
-  % ==== Spin / Quantum ====
-  child[concept color=magenta!70, grow=180] { node {Spintronics / Quantum}
-    child { node {MRAM $10^{12}$ cycles} }
-    child { node {Challenges:\\ write current, CMOS process} }
-    child { node {Apps:\\ Neuromorphic, Space} }
-  }
-  % ==== Heterogeneous ====
-  child[concept color=teal!70, grow=90] { node {Heterogeneous Integration}
-    child { node {Si+MoS$_2$ PD 200 mA/W} }
-    child { node {Challenges:\\ interface, yield} }
-    child { node {Apps:\\ Optical I/O, Medical, Space} }
-  };
+% --- center ---
+\node[bubble, fill=orange!80] (core) {Post-CFET};
+
+% --- 4 main topics (東西南北に固定) ---
+\node[topic,  fill=teal!70]        (hetero) at (0,  3.9) {Heterogeneous\\Integration};
+\node[topic,  fill=blue!65]        (twod)   at (4.8,0)   {2D Material\\FETs};
+\node[topic,  fill=green!60!black] (m3d)    at (0, -3.9) {Monolithic\\3D};
+\node[topic,  fill=magenta!70]     (spin)   at (-4.8,0)  {Spintronics\\/ Quantum};
+
+% --- connections from center ---
+\draw[link] (core) -- (hetero);
+\draw[link] (core) -- (twod);
+\draw[link] (core) -- (m3d);
+\draw[link] (core) -- (spin);
+
+% --- Heterogeneous sub-nodes (上側) ---
+\node[sub, above=6mm of hetero]                 (h-app) {Apps: Optical I/O, Medical, Space};
+\node[sub, left=6mm  of hetero]                 (h-demo){Si+MoS$_2$ PD 200 mA/W};
+\node[sub, right=6mm of hetero]                 (h-ch)  {Challenges: interface, yield};
+\draw[link] (hetero) -- (h-app);
+\draw[link] (hetero) -- (h-demo);
+\draw[link] (hetero) -- (h-ch);
+
+% --- 2D FETs sub-nodes（右側） ---
+\node[sub, right=6mm of twod]                   (d-ion) {Ion/Ioff $10^7$, SS $\approx$ 65 mV/dec};
+\node[sub, above=6mm of twod]                   (d-app) {Apps: IoT, Flexible, Bio-sensing};
+\node[sub, below=6mm of twod, text width=38mm]  (d-rc)  {Challenges: $R_c\!\approx\!0.5$–$1\,\mathrm{k}\Omega\!\cdot\!\mu$m, film non-uniformity};
+\draw[link] (twod) -- (d-ion);
+\draw[link] (twod) -- (d-app);
+\draw[link] (twod) -- (d-rc);
+
+% --- Monolithic 3D sub-nodes（下側） ---
+\node[sub, below=6mm of m3d]                    (m-app) {Apps: AI, memory-centric};
+\node[sub, left =6mm of m3d]                    (m-perf){Delay $-30\%$, Area $-40\%$};
+\node[sub, right=6mm of m3d]                    (m-ch)  {Challenges: $T<450^{\circ}$C, hotspots};
+\draw[link] (m3d) -- (m-app);
+\draw[link] (m3d) -- (m-perf);
+\draw[link] (m3d) -- (m-ch);
+
+% --- Spin/Quantum sub-nodes（左側） ---
+\node[sub, left =6mm of spin]                   (s-mram){MRAM $10^{12}$ cycles};
+\node[sub, above=6mm of spin]                   (s-app) {Apps: Neuromorphic, Space};
+\node[sub, below=6mm of spin]                   (s-ch)  {Challenges: write current, CMOS process};
+\draw[link] (spin) -- (s-mram);
+\draw[link] (spin) -- (s-app);
+\draw[link] (spin) -- (s-ch);
 \end{tikzpicture}
