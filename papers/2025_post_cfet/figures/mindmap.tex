@@ -1,70 +1,70 @@
-% figures/mindmap.tex — clean pro look (no mindmap lib)
+% figures/mindmap_clean.tex — wide, legible
 \begin{tikzpicture}[
+  % 全体スケール（文字も一緒に拡大）
+  scale=1.18, every node/.style={transform shape},
   %----- styles -----
-  font=\footnotesize,
+  font=\small,                  % 文字を一段階大きく
   >=Latex,
   card/.style={
     draw=black!18, rounded corners=3pt, fill=white, align=left,
-    inner sep=3pt, minimum width=38mm
+    inner sep=3pt, minimum width=50mm, text width=48mm
   },
   topic/.style={
     rounded corners=6pt, align=center, text=white, semithick,
-    minimum width=35mm, minimum height=14mm
+    minimum width=42mm, minimum height=16mm, inner sep=2pt
   },
   link/.style={-Latex, very thick, draw=black!35},
   dot/.style={circle, fill=black!35, inner sep=1pt}
 ]
-%----- palette (淡色で印刷も可) -----
-\definecolor{cCore}{RGB}{243,156,18}   % orange
-\definecolor{c2D}{RGB}{88, 86,214}     % blue-violet
-\definecolor{cM3D}{RGB}{46,125,50}     % green
-\definecolor{cSpin}{RGB}{216,27,96}    % magenta
-\definecolor{cHet}{RGB}{0,150,136}     % teal
+%----- palette -----
+\definecolor{cCore}{RGB}{243,156,18}
+\definecolor{c2D}{RGB}{88, 86,214}
+\definecolor{cM3D}{RGB}{46,125,50}
+\definecolor{cSpin}{RGB}{216,27,96}
+\definecolor{cHet}{RGB}{0,150,136}
 
-%----- layout points -----
+%----- layout points（距離を少し広げる） -----
 \node[topic, fill=cCore] (core) at (0,0) {\bfseries Post-CFET};
 
-\node[topic, fill=cHet]  (het)  at (0, 3.9) {\bfseries Heterogeneous\\ Integration};
-\node[topic, fill=c2D]   (twod) at (4.9,0) {\bfseries 2D Material\\ FETs};
-\node[topic, fill=cM3D]  (m3d)  at (0,-3.9) {\bfseries Monolithic\\ 3D};
-\node[topic, fill=cSpin] (spin) at (-4.9,0) {\bfseries Spintronics\\ / Quantum};
+\node[topic, fill=cHet]  (het)  at (0, 4.3) {\bfseries Heterogeneous\\ Integration};
+\node[topic, fill=c2D]   (twod) at (6.0,0) {\bfseries 2D Material\\ FETs};
+\node[topic, fill=cM3D]  (m3d)  at (0,-4.3) {\bfseries Monolithic\\ 3D};
+\node[topic, fill=cSpin] (spin) at (-6.0,0) {\bfseries Spintronics\\ / Quantum};
 
-% connectors from center
 \draw[link] (core) -- (het);
 \draw[link] (core) -- (twod);
 \draw[link] (core) -- (m3d);
 \draw[link] (core) -- (spin);
 
-%----- Heterogeneous cards (top) -----
-\node[card, above=5mm of het]   (h-app) {\textbf{Apps}\,: Optical I/O, medical, space};
-\node[card, left=6mm  of het]   (h-demo){\textbf{Demo}\,: Si+MoS$_2$ PD 200 mA/W};
-\node[card, right=6mm of het]   (h-ch)  {\textbf{Challenges}\,: interface, yield};
+%----- Heterogeneous -----
+\node[card, above=6mm of het]   (h-app) {\textbf{Apps}\,: Optical I/O, medical, space};
+\node[card, left=7mm  of het]   (h-demo){\textbf{Demo}\,: Si+MoS$_2$ PD 200 mA/W};
+\node[card, right=7mm of het]   (h-ch)  {\textbf{Challenges}\,: interface, yield};
 \foreach \x in {h-app,h-demo,h-ch} {\draw[link] (het) -- (\x);}
 
-%----- 2D FETs cards (right) -----
-\node[card, above=6mm of twod, anchor=south west, text width=44mm] (d-app)
+%----- 2D FETs -----
+\node[card, above=7mm of twod, anchor=south west] (d-app)
   {\textbf{Apps}\,: IoT, flexible, bio-sensing};
-\node[card, right=6mm of twod, anchor=west, text width=48mm] (d-ion)
+\node[card, right=7mm of twod, anchor=west] (d-ion)
   {\textbf{State-of-art}\,: $I_{\rm on}/I_{\rm off}\!\sim\!10^7$, $SS\!\approx\!65$ mV/dec};
-\node[card, below=6mm of twod, anchor=north west, text width=48mm] (d-ch)
+\node[card, below=7mm of twod, anchor=north west] (d-ch)
   {\textbf{Challenges}\,: $R_c\!\approx\!0.5$–$1\,\mathrm{k}\Omega\!\cdot\!\mu$m, film non-uniformity};
 \foreach \x in {d-app,d-ion,d-ch} {\draw[link] (twod) -- (\x);}
 
-%----- M3D cards (bottom) -----
-\node[card, below=6mm of m3d] (m-app) {\textbf{Apps}\,: AI, memory-centric};
-\node[card, left=6mm  of m3d] (m-perf){\textbf{Benefits}\,: Delay $-30\%$, Area $-40\%$};
-\node[card, right=6mm of m3d] (m-ch)  {\textbf{Challenges}\,: $T{<}450^{\circ}$C, hotspots};
+%----- M3D -----
+\node[card, below=7mm of m3d] (m-app) {\textbf{Apps}\,: AI, memory-centric};
+\node[card, left=7mm  of m3d] (m-perf){\textbf{Benefits}\,: Delay $-30\%$, Area $-40\%$};
+\node[card, right=7mm of m3d] (m-ch)  {\textbf{Challenges}\,: $T{<}450^{\circ}$C, hotspots};
 \foreach \x in {m-app,m-perf,m-ch} {\draw[link] (m3d) -- (\x);}
 
-%----- Spin/Quantum cards (left) -----
-\node[card, above=6mm of spin, anchor=south east, text width=42mm] (s-app)
+%----- Spin/Quantum -----
+\node[card, above=7mm of spin, anchor=south east] (s-app)
   {\textbf{Apps}\,: Neuromorphic, space};
-\node[card, left=6mm of spin, anchor=east, text width=44mm]   (s-mram)
+\node[card, left=7mm of spin, anchor=east]   (s-mram)
   {\textbf{Demo}\,: MRAM $10^{12}$ cycles};
-\node[card, below=6mm of spin, anchor=north east, text width=44mm] (s-ch)
+\node[card, below=7mm of spin, anchor=north east] (s-ch)
   {\textbf{Challenges}\,: write current, CMOS process};
 \foreach \x in {s-app,s-mram,s-ch} {\draw[link] (spin) -- (\x);}
 
-% small dots at topic midpoints (飾り)
 \foreach \n in {het,twod,m3d,spin} \fill[dot] (\n) circle (0pt);
 \end{tikzpicture}
