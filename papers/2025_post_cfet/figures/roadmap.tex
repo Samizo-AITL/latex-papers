@@ -1,7 +1,13 @@
 \begin{tikzpicture}[
-  >=LaTeX,
+  x=1cm, y=1cm, >=LaTeX,
+  % text styles
   year/.style={font=\bfseries\small},
-  lane/.style={font=\footnotesize,align=left}
+  lane/.style={font=\footnotesize,align=left},
+  % new styles
+  milestone/.style={circle, draw, fill=red!60, minimum size=3mm, inner sep=0pt},
+  bubble/.style={draw, rounded corners=2pt, fill=white,
+                 inner sep=2pt, font=\scriptsize, align=left, text width=3.6cm},
+  arrow/.style={-Latex, thick},
 ]
 % Axis
 \draw[thick] (0,0) -- (15,0);
@@ -9,7 +15,7 @@
   \draw (\x,0.15) -- (\x,-0.15) node[below=2pt,year] {\y};
 }
 
-% Lanes
+% Lane labels + guides
 \node[lane, anchor=east] at (-0.2, -1.2) {Materials};
 \node[lane, anchor=east] at (-0.2, -2.6) {Integration};
 \node[lane, anchor=east] at (-0.2, -4.0) {Applications};
@@ -21,43 +27,56 @@
 
 % Milestones + bubbles
 \node[milestone] (m1) at (1.2,-1.2) {};
-\node[bubble, above=2pt of m1] {MoS$_2$/WSe$_2$ nanosheet FETs \\ $L_g$ 12--20 nm lab demos};
+\node[bubble, above=2pt of m1] {MoS$_2$/WSe$_2$ nanosheet FETs\\$L_g$ 12--20 nm lab demos};
+
 \node[milestone] (m2) at (4.2,-1.2) {};
-\node[bubble, above=2pt of m2] {Contact $R_c\!\downarrow$ ($\sim$0.5 k$\Omega\!\cdot\!\mu$m) \\ Large-area CVD uniformity $\pm$5\%};
+\node[bubble, above=2pt of m2] {Contact $R_c\!\downarrow$ ($\sim$0.5 k$\Omega\!\cdot\!\mu$m)\\Large-area CVD uniformity $\pm$5\%};
+
 \node[milestone] (m3) at (7.5,-1.2) {};
-\node[bubble, above=2pt of m3] {2D-CFET hybrid \\ Reliability datasets};
+\node[bubble, above=2pt of m3] {2D-CFET hybrid\\Reliability datasets};
+
 \node[milestone] (m4) at (11.0,-1.2) {};
-\node[bubble, above=2pt of m4] {Radiation-hard 2D stacks \\ Qualified for space};
+\node[bubble, above=2pt of m4] {Radiation-hard 2D stacks\\Qualified for space};
 
 \node[milestone] (i1) at (2.0,-2.6) {};
-\node[bubble, below=2pt of i1] {Monolithic 3D SRAM/Logic \\ Low-$T$ ($<450^\circ$C) flow};
+\node[bubble, below=2pt of i1] {Monolithic 3D SRAM/Logic\\Low-$T$ ($<450^\circ$C) flow};
+
 \node[milestone] (i2) at (5.5,-2.6) {};
-\node[bubble, below=2pt of i2] {2D-on-CMOS sequential \\ ILV pitch $<$ 200 nm};
+\node[bubble, below=2pt of i2] {2D-on-CMOS sequential\\ILV pitch $<$ 200 nm};
+
 \node[milestone] (i3) at (9.0,-2.6) {};
-\node[bubble, below=2pt of i3] {Spin-MRAM + 3D \\ Non-volatile compute stack};
+\node[bubble, below=2pt of i3] {Spin-MRAM + 3D\\Non-volatile compute stack};
+
 \node[milestone] (i4) at (13.0,-2.6) {};
-\node[bubble, below=2pt of i4] {Hetero 3D (CMOS+Photonics+MEMS) \\ Production lines};
+\node[bubble, below=2pt of i4] {Hetero 3D (CMOS+Photonics+MEMS)\\Production lines};
 
 \node[milestone] (a1) at (3.0,-4.0) {};
-\node[bubble, above=2pt of a1] {IoT/Edge pilots \\ $<$10 mW nodes};
+\node[bubble, above=2pt of a1] {IoT/Edge pilots\\$<$10 mW nodes};
+
 \node[milestone] (a2) at (6.8,-4.0) {};
-\node[bubble, above=2pt of a2] {AI accelerators \\ Near/In-memory compute};
+\node[bubble, above=2pt of a2] {AI accelerators\\Near/In-memory compute};
+
 \node[milestone] (a3) at (10.5,-4.0) {};
-\node[bubble, above=2pt of a3] {Space/aerospace \\ Rad-hard Post-CFET};
+\node[bubble, above=2pt of a3] {Space/aerospace\\Rad-hard Post-CFET};
+
 \node[milestone] (a4) at (14.0,-4.0) {};
-\node[bubble, above=2pt of a4] {HPC adoption \\ 3D non-volatile logic-memory};
+\node[bubble, above=2pt of a4] {HPC adoption\\3D non-volatile logic-memory};
 
 \node[milestone] (e1) at (2.5,-5.4) {};
-\node[bubble, below=2pt of e1] {2D/Spin compact models \\ Variability kits};
-\node[milestone] (e2) at (6.0,-5.4) {};
-\node[bubble, below=2pt of e2] {3D P\&R + Thermal/Stress \\ Co-simulation flows};
-\node[milestone] (e3) at (9.5,-5.4) {};
-\node[bubble, below=2pt of e3] {Reliability sign-off \\ (BTI/EM/Thermal)};
-\node[milestone] (e4) at (12.8,-5.4) {};
-\node[bubble, below=2pt of e4] {Cross-domain EDA \\ (Electrical+Optical+Mechanical)};
+\node[bubble, below=2pt of e1] {2D/Spin compact models\\Variability kits};
 
-\draw[arrow, gray!70] (m1) -- (m2); \draw[arrow, gray!70] (m2) -- (m3); \draw[arrow, gray!70] (m3) -- (m4);
-\draw[arrow, gray!70] (i1) -- (i2); \draw[arrow, gray!70] (i2) -- (i3); \draw[arrow, gray!70] (i3) -- (i4);
-\draw[arrow, gray!70] (a1) -- (a2); \draw[arrow, gray!70] (a2) -- (a3); \draw[arrow, gray!70] (a3) -- (a4);
-\draw[arrow, gray!70] (e1) -- (e2); \draw[arrow, gray!70] (e2) -- (e3); \draw[arrow, gray!70] (e3) -- (e4);
+\node[milestone] (e2) at (6.0,-5.4) {};
+\node[bubble, below=2pt of e2] {3D P\&R + Thermal/Stress\\Co-simulation flows};
+
+\node[milestone] (e3) at (9.5,-5.4) {};
+\node[bubble, below=2pt of e3] {Reliability sign-off\\(BTI/EM/Thermal)};
+
+\node[milestone] (e4) at (12.8,-5.4) {};
+\node[bubble, below=2pt of e4] {Cross-domain EDA\\(Electrical+Optical+Mechanical)};
+
+% Progress arrows
+\draw[arrow, gray!70] (m1) -- (m2) (m2) -- (m3) (m3) -- (m4);
+\draw[arrow, gray!70] (i1) -- (i2) (i2) -- (i3) (i3) -- (i4);
+\draw[arrow, gray!70] (a1) -- (a2) (a2) -- (a3) (a3) -- (a4);
+\draw[arrow, gray!70] (e1) -- (e2) (e2) -- (e3) (e3) -- (e4);
 \end{tikzpicture}
