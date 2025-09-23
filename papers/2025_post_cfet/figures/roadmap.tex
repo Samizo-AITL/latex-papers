@@ -1,15 +1,15 @@
-% figures/roadmap_fullpage.tex  — Full-page Roadmap
+% figures/roadmap_fullpage.tex — Full-page Roadmap (no overlaps)
 \begin{tikzpicture}[
   x=1cm,y=1cm, >=LaTeX,
   year/.style={font=\bfseries\normalsize},
   lane/.style={font=\normalsize,align=left},
   milestone/.style={circle,draw=red!70,fill=red!60,minimum size=5pt,inner sep=0pt},
   bubble/.style={rectangle,rounded corners=2pt,draw=black!25,fill=white,
-                 font=\normalsize,align=center,inner sep=3pt, text width=5.6cm},
+                 font=\normalsize,align=center,inner sep=3pt, text width=4.4cm},
   arrow/.style={-Latex,thick}
 ]
-% ---- enlarge bounding box to avoid clipping ----
-\path[use as bounding box] (-2.2,-8.0) rectangle (18.4,1.8);
+% ---- generous bounding box to avoid clipping ----
+\path[use as bounding box] (-2.2,-9.6) rectangle (18.4,2.0);
 
 % ---- Axis (2030→2045) ----
 \draw[thick] (0,0) -- (16.5,0);
@@ -17,68 +17,73 @@
   \draw (\x,0.18) -- (\x,-0.18) node[below=3pt,year] {\y};
 }
 
-% ---- Lane labels & guide lines ----
-\node[lane, anchor=east] at (-0.35, -1.6) {Materials};
-\node[lane, anchor=east] at (-0.35, -3.6) {Integration};
-\node[lane, anchor=east] at (-0.35, -5.6) {Applications};
-\node[lane, anchor=east] at (-0.35, -7.6) {EDA/PDK};
+% ---- Lane Y positions (wider spacing to stop cross-lane overlap) ----
+\def\yM{-2.0}   % Materials
+\def\yI{-4.4}   % Integration
+\def\yA{-6.8}   % Applications
+\def\yE{-9.2}   % EDA/PDK
 
-\draw[gray!60] (0,-1.6) -- (16.5,-1.6);
-\draw[gray!60] (0,-3.6) -- (16.5,-3.6);
-\draw[gray!60] (0,-5.6) -- (16.5,-5.6);
-\draw[gray!60] (0,-7.6) -- (16.5,-7.6);
+\node[lane, anchor=east] at (-0.35, \yM) {Materials};
+\node[lane, anchor=east] at (-0.35, \yI) {Integration};
+\node[lane, anchor=east] at (-0.35, \yA) {Applications};
+\node[lane, anchor=east] at (-0.35, \yE) {EDA/PDK};
 
-% ---- Materials ----
-\node[milestone] (m1) at (1.3,-1.6) {};
-\node[bubble, above=3pt of m1] {MoS$_2$/WSe$_2$ nanosheet FETs\\ $L_g$ 12--20 nm lab demos};
+\draw[gray!60] (0,\yM) -- (16.5,\yM);
+\draw[gray!60] (0,\yI) -- (16.5,\yI);
+\draw[gray!60] (0,\yA) -- (16.5,\yA);
+\draw[gray!60] (0,\yE) -- (16.5,\yE);
 
-\node[milestone] (m2) at (4.6,-1.6) {};
-\node[bubble, above=3pt of m2] {Contact $R_c\!\downarrow$ ($\sim$0.5--1 k$\Omega\!\cdot\!\mu$m)\\ Wafer-scale CVD uniformity $\pm$5\%};
+% ===== Materials (alternate up/down to avoid overlaps) =====
+\node[milestone] (m1) at (1.3,\yM) {};
+\node[bubble, above=6pt of m1] {MoS$_2$/WSe$_2$ nanosheet FETs\\ $L_g$ 12--20 nm lab demos};
 
-\node[milestone] (m3) at (8.3,-1.6) {};
-\node[bubble, above=3pt of m3] {2D--CFET hybrid\\ Reliability datasets};
+\node[milestone] (m2) at (4.8,\yM) {};
+\node[bubble, below=6pt of m2] {Contact $R_c\!\downarrow$ ($\sim$0.5--1 k$\Omega\!\cdot\!\mu$m)\\ Wafer-scale CVD uniformity $\pm$5\%};
 
-\node[milestone] (m4) at (12.2,-1.6) {};
-\node[bubble, above=3pt of m4] {Radiation-hard 2D stacks\\ Qualified for space};
+\node[milestone] (m3) at (8.5,\yM) {};
+\node[bubble, above=6pt of m3] {2D--CFET hybrid\\ Reliability datasets};
 
-% ---- Integration ----
-\node[milestone] (i1) at (2.2,-3.6) {};
-\node[bubble, below=3pt of i1] {Monolithic 3D SRAM/Logic\\ Low-$T$ ($<450^\circ$C) flow};
+\node[milestone] (m4) at (12.6,\yM) {};
+\node[bubble, below=6pt of m4] {Radiation-hard 2D stacks\\ Qualified for space};
 
-\node[milestone] (i2) at (6.0,-3.6) {};
-\node[bubble, below=3pt of i2] {2D-on-CMOS sequential\\ ILV pitch $<$ 200 nm};
+% ===== Integration =====
+\node[milestone] (i1) at (2.2,\yI) {};
+\node[bubble, below=6pt of i1] {Monolithic 3D SRAM/Logic\\ Low-$T$ ($<450^\circ$C) flow};
 
-\node[milestone] (i3) at (9.8,-3.6) {};
-\node[bubble, below=3pt of i3] {Spin-MRAM + 3D\\ Non-volatile compute stack};
+\node[milestone] (i2) at (6.0,\yI) {};
+\node[bubble, above=6pt of i2] {2D-on-CMOS sequential\\ ILV pitch $<$ 200 nm};
 
-\node[milestone] (i4) at (14.2,-3.6) {};
-\node[bubble, below=3pt of i4] {Hetero 3D (CMOS+Photonics+MEMS)\\ Production lines};
+\node[milestone] (i3) at (9.8,\yI) {};
+\node[bubble, below=6pt of i3] {Spin-MRAM + 3D\\ Non-volatile compute stack};
 
-% ---- Applications ----
-\node[milestone] (a1) at (3.4,-5.6) {};
-\node[bubble, above=3pt of a1] {IoT/Edge pilots\\ $<$10 mW nodes};
+\node[milestone] (i4) at (14.2,\yI) {};
+\node[bubble, above=6pt of i4] {Hetero 3D (CMOS+Photonics+MEMS)\\ Production lines};
 
-\node[milestone] (a2) at (7.2,-5.6) {};
-\node[bubble, above=3pt of a2] {AI accelerators\\ Near/In-memory compute};
+% ===== Applications =====
+\node[milestone] (a1) at (3.4,\yA) {};
+\node[bubble, above=6pt of a1] {IoT/Edge pilots\\ $<$10 mW nodes};
 
-\node[milestone] (a3) at (11.0,-5.6) {};
-\node[bubble, above=3pt of a3] {Space/aerospace\\ Rad-hard Post-CFET};
+\node[milestone] (a2) at (7.2,\yA) {};
+\node[bubble, below=6pt of a2] {AI accelerators\\ Near/In-memory compute};
 
-\node[milestone] (a4) at (15.3,-5.6) {};
-\node[bubble, above=3pt of a4] {HPC adoption\\ 3D non-volatile logic-memory};
+\node[milestone] (a3) at (11.0,\yA) {};
+\node[bubble, above=6pt of a3] {Space/aerospace\\ Rad-hard Post-CFET};
 
-% ---- EDA/PDK ----
-\node[milestone] (e1) at (2.9,-7.6) {};
-\node[bubble, below=3pt of e1] {2D/Spin compact models\\ Variability kits};
+\node[milestone] (a4) at (15.0,\yA) {};
+\node[bubble, below=6pt of a4] {HPC adoption\\ 3D non-volatile logic-memory};
 
-\node[milestone] (e2) at (6.6,-7.6) {};
-\node[bubble, below=3pt of e2] {3D P\&R + Thermal/Stress\\ Co-simulation flows};
+% ===== EDA/PDK =====
+\node[milestone] (e1) at (2.9,\yE) {};
+\node[bubble, below=6pt of e1] {2D/Spin compact models\\ Variability kits};
 
-\node[milestone] (e3) at (10.2,-7.6) {};
-\node[bubble, below=3pt of e3] {Reliability sign-off\\ (BTI/EM/Thermal)};
+\node[milestone] (e2) at (6.6,\yE) {};
+\node[bubble, above=6pt of e2] {3D P\&R + Thermal/Stress\\ Co-simulation flows};
 
-\node[milestone] (e4) at (13.8,-7.6) {};
-\node[bubble, below=3pt of e4] {Cross-domain EDA\\ (Electrical+Optical+Mechanical)};
+\node[milestone] (e3) at (10.4,\yE) {};
+\node[bubble, below=6pt of e3] {Reliability sign-off\\ (BTI/EM/Thermal)};
+
+\node[milestone] (e4) at (13.9,\yE) {};
+\node[bubble, above=6pt of e4] {Cross-domain EDA\\ (Electrical+Optical+Mechanical)};
 
 % ---- Arrows ----
 \draw[arrow, gray!70] (m1) -- (m2); \draw[arrow, gray!70] (m2) -- (m3); \draw[arrow, gray!70] (m3) -- (m4);
