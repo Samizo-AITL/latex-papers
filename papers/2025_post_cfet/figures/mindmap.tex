@@ -1,29 +1,33 @@
-\begin{tikzpicture}
-\path[mindmap,concept color=orange!60,text=white]
-  node[concept] {Post-CFET}
-    [clockwise from=0]
-    child[concept color=blue!60] { node[concept] {2D Material FETs}
-      [clockwise from=120]
-        child { node[concept] {Ion/Ioff $10^7$, SS 65 mV/dec} }
-        child { node[concept] {Challenges: $R_c\sim1$ k$\Omega\!\cdot\!\mu$m, film non-uniformity} }
-        child { node[concept] {Apps: IoT, Flexible, Bio-sensing} }
-    }
-    child[concept color=green!50!black] { node[concept] {Monolithic 3D}
-      [clockwise from=210]
-        child { node[concept] {Delay $-30\%$, Area $-40\%$} }
-        child { node[concept] {Challenges: $<450^{\circ}\mathrm{C}$, hotspots} }
-        child { node[concept] {Apps: AI, Memory-centric} }
-    }
-    child[concept color=purple!60] { node[concept] {Spintronics / Quantum}
-      [clockwise from=-30]
-        child { node[concept] {MRAM $10^{12}$ cycles} }
-        child { node[concept] {Challenges: write current, CMOS process} }
-        child { node[concept] {Apps: Neuromorphic, Space} }
-    }
-    child[concept color=teal!60] { node[concept] {Heterogeneous Integration}
-      [clockwise from=60]
-        child { node[concept] {Si+MoS$_2$ PD 200 mA/W} }
-        child { node[concept] {Challenges: interface, yield} }
-        child { node[concept] {Apps: Optical I/O, Medical, Space} }
-    };
+\begin{tikzpicture}[
+  mindmap, grow cyclic,
+  every node/.style   ={concept, text=white, font=\bfseries\footnotesize, minimum size=1.6cm},
+  root concept/.style ={concept color=orange!70, font=\bfseries\large, minimum size=2.2cm},
+  level 1 concept/.append style={sibling angle=90,  level distance=35mm, font=\bfseries\small},
+  level 2 concept/.append style={sibling angle=40,  level distance=22mm, text width=28mm, align=center, minimum size=0pt}
+]
+\node[root concept]{Post-CFET}
+% ---- 2D ----
+  child[grow=30, concept color=blue!65] { node {2D Material FETs}
+    child[grow=20]  { node {Challenges:\\ $R_c\!\approx\!0.5$--$1\,\mathrm{k}\Omega\!\cdot\!\mu\mathrm{m}$\\ film non-uniform.} }
+    child[grow=60]  { node {Ion/Ioff $10^7$\\ SS $\approx 65$ mV/dec} }
+    child[grow=100] { node {Apps:\\ IoT, flexible, bio-sensing} }
+  }
+% ---- M3D ----
+  child[grow=330, concept color=green!55!black] { node {Monolithic 3D}
+    child[grow=340] { node {Challenges:\\ $T<450^{\circ}\mathrm{C}$, hotspots} }
+    child[grow=300] { node {Delay $-30\%$\\ Area $-40\%$} }
+    child[grow=260] { node {Apps:\\ AI, memory-centric} }
+  }
+% ---- Spin/Quantum ----
+  child[grow=210, concept color=magenta!55] { node {Spintronics / Quantum}
+    child[grow=200] { node {Challenges:\\ write current, CMOS process} }
+    child[grow=240] { node {MRAM $10^{12}$ cycles} }
+    child[grow=280] { node {Apps:\\ Neuromorphic, space} }
+  }
+% ---- Heterogeneous ----
+  child[grow=150, concept color=teal!65] { node {Heterogeneous\\ Integration}
+    child[grow=160] { node {Challenges:\\ interface, yield} }
+    child[grow=120] { node {Si+MoS$_2$ PD\\ $200\,\mathrm{mA/W}$} }
+    child[grow=80]  { node {Apps:\\ Optical I/O, medical, space} }
+  };
 \end{tikzpicture}
