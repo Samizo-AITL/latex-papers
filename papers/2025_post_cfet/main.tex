@@ -35,6 +35,22 @@
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}      % <-- keep last
 
+% --- siunitx（v3向け設定）---
+\usepackage{siunitx}
+\sisetup{
+  mode = match,
+  propagate-math-font = true,
+  reset-math-version = false,
+  reset-text-family = false,
+  reset-text-series = false,
+  reset-text-shape = false,
+  text-family-to-math = true,
+  text-series-to-math = true,
+}
+
+% mV/dec 用：decade を定義
+\DeclareSIUnit{\decade}{dec}
+
 % Figures path
 \graphicspath{{figures/}}
 
