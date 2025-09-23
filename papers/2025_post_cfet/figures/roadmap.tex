@@ -1,93 +1,95 @@
-% figures/roadmap_fullpage.tex — Full-page Roadmap (no overlaps)
+% Full-page roadmap with wider text width and larger lane spacing
 \begin{tikzpicture}[
   x=1cm,y=1cm, >=LaTeX,
   year/.style={font=\bfseries\normalsize},
   lane/.style={font=\normalsize,align=left},
   milestone/.style={circle,draw=red!70,fill=red!60,minimum size=5pt,inner sep=0pt},
-  bubble/.style={rectangle,rounded corners=2pt,draw=black!25,fill=white,
-                 font=\normalsize,align=center,inner sep=3pt, text width=4.4cm},
+  bubble/.style={rectangle,rounded corners=2pt,draw=black!40,fill=white,
+                 font=\small,align=center,inner sep=4pt, text width=5.8cm},
   arrow/.style={-Latex,thick}
 ]
-% ---- generous bounding box to avoid clipping ----
-\path[use as bounding box] (-2.2,-9.6) rectangle (18.4,2.0);
 
-% ---- Axis (2030→2045) ----
+% bounding box
+\path[use as bounding box] (-2.2,-11.0) rectangle (18.5,2.0);
+
+% ---- Axis ----
 \draw[thick] (0,0) -- (16.5,0);
 \foreach \x/\y in {0/2030,3.3/2033,6.6/2036,9.9/2039,13.2/2042,16.5/2045} {
   \draw (\x,0.18) -- (\x,-0.18) node[below=3pt,year] {\y};
 }
 
-% ---- Lane Y positions (wider spacing to stop cross-lane overlap) ----
-\def\yM{-2.0}   % Materials
-\def\yI{-4.4}   % Integration
-\def\yA{-6.8}   % Applications
-\def\yE{-9.2}   % EDA/PDK
+% ---- Lane Y positions (more spacing) ----
+\def\yM{-2.5}
+\def\yI{-5.0}
+\def\yA{-7.5}
+\def\yE{-10.0}
 
-\node[lane, anchor=east] at (-0.35, \yM) {Materials};
-\node[lane, anchor=east] at (-0.35, \yI) {Integration};
-\node[lane, anchor=east] at (-0.35, \yA) {Applications};
-\node[lane, anchor=east] at (-0.35, \yE) {EDA/PDK};
+\node[lane, anchor=east] at (-0.4, \yM) {Materials};
+\node[lane, anchor=east] at (-0.4, \yI) {Integration};
+\node[lane, anchor=east] at (-0.4, \yA) {Applications};
+\node[lane, anchor=east] at (-0.4, \yE) {EDA/PDK};
 
 \draw[gray!60] (0,\yM) -- (16.5,\yM);
 \draw[gray!60] (0,\yI) -- (16.5,\yI);
 \draw[gray!60] (0,\yA) -- (16.5,\yA);
 \draw[gray!60] (0,\yE) -- (16.5,\yE);
 
-% ===== Materials (alternate up/down to avoid overlaps) =====
+% ===== Materials =====
 \node[milestone] (m1) at (1.3,\yM) {};
-\node[bubble, above=6pt of m1] {MoS$_2$/WSe$_2$ nanosheet FETs\\ $L_g$ 12--20 nm lab demos};
+\node[bubble, above=8pt of m1] {MoS$_2$/WSe$_2$ nanosheet FETs, $L_g$ 12--20 nm lab demos};
 
 \node[milestone] (m2) at (4.8,\yM) {};
-\node[bubble, below=6pt of m2] {Contact $R_c\!\downarrow$ ($\sim$0.5--1 k$\Omega\!\cdot\!\mu$m)\\ Wafer-scale CVD uniformity $\pm$5\%};
+\node[bubble, below=8pt of m2] {Contact $R_c \!\downarrow$ (0.5--1 k$\Omega\cdot\mu$m), wafer-scale CVD uniformity $\pm$5\%};
 
 \node[milestone] (m3) at (8.5,\yM) {};
-\node[bubble, above=6pt of m3] {2D--CFET hybrid\\ Reliability datasets};
+\node[bubble, above=8pt of m3] {2D--CFET hybrid, reliability datasets};
 
 \node[milestone] (m4) at (12.6,\yM) {};
-\node[bubble, below=6pt of m4] {Radiation-hard 2D stacks\\ Qualified for space};
+\node[bubble, below=8pt of m4] {Radiation-hard 2D stacks, qualified for space};
 
 % ===== Integration =====
 \node[milestone] (i1) at (2.2,\yI) {};
-\node[bubble, below=6pt of i1] {Monolithic 3D SRAM/Logic\\ Low-$T$ ($<450^\circ$C) flow};
+\node[bubble, below=8pt of i1] {Monolithic 3D SRAM/Logic, low-$T$ ($<450^\circ$C) flow};
 
 \node[milestone] (i2) at (6.0,\yI) {};
-\node[bubble, above=6pt of i2] {2D-on-CMOS sequential\\ ILV pitch $<$ 200 nm};
+\node[bubble, above=8pt of i2] {2D-on-CMOS sequential, ILV pitch $<$200 nm};
 
 \node[milestone] (i3) at (9.8,\yI) {};
-\node[bubble, below=6pt of i3] {Spin-MRAM + 3D\\ Non-volatile compute stack};
+\node[bubble, below=8pt of i3] {Spin-MRAM + 3D non-volatile compute stack};
 
 \node[milestone] (i4) at (14.2,\yI) {};
-\node[bubble, above=6pt of i4] {Hetero 3D (CMOS+Photonics+MEMS)\\ Production lines};
+\node[bubble, above=8pt of i4] {Hetero 3D (CMOS+Photonics+MEMS) production lines};
 
 % ===== Applications =====
 \node[milestone] (a1) at (3.4,\yA) {};
-\node[bubble, above=6pt of a1] {IoT/Edge pilots\\ $<$10 mW nodes};
+\node[bubble, above=8pt of a1] {IoT/Edge pilots, $<$10 mW nodes};
 
 \node[milestone] (a2) at (7.2,\yA) {};
-\node[bubble, below=6pt of a2] {AI accelerators\\ Near/In-memory compute};
+\node[bubble, below=8pt of a2] {AI accelerators, near/in-memory compute};
 
 \node[milestone] (a3) at (11.0,\yA) {};
-\node[bubble, above=6pt of a3] {Space/aerospace\\ Rad-hard Post-CFET};
+\node[bubble, above=8pt of a3] {Space/aerospace, radiation-hard Post-CFET};
 
 \node[milestone] (a4) at (15.0,\yA) {};
-\node[bubble, below=6pt of a4] {HPC adoption\\ 3D non-volatile logic-memory};
+\node[bubble, below=8pt of a4] {HPC adoption, 3D non-volatile logic-memory};
 
 % ===== EDA/PDK =====
 \node[milestone] (e1) at (2.9,\yE) {};
-\node[bubble, below=6pt of e1] {2D/Spin compact models\\ Variability kits};
+\node[bubble, below=8pt of e1] {2D/Spin compact models, variability kits};
 
 \node[milestone] (e2) at (6.6,\yE) {};
-\node[bubble, above=6pt of e2] {3D P\&R + Thermal/Stress\\ Co-simulation flows};
+\node[bubble, above=8pt of e2] {3D P\&R + thermal/stress co-simulation flows};
 
 \node[milestone] (e3) at (10.4,\yE) {};
-\node[bubble, below=6pt of e3] {Reliability sign-off\\ (BTI/EM/Thermal)};
+\node[bubble, below=8pt of e3] {Reliability sign-off (BTI/EM/Thermal)};
 
 \node[milestone] (e4) at (13.9,\yE) {};
-\node[bubble, above=6pt of e4] {Cross-domain EDA\\ (Electrical+Optical+Mechanical)};
+\node[bubble, above=8pt of e4] {Cross-domain EDA (electrical+optical+mechanical)};
 
 % ---- Arrows ----
-\draw[arrow, gray!70] (m1) -- (m2); \draw[arrow, gray!70] (m2) -- (m3); \draw[arrow, gray!70] (m3) -- (m4);
-\draw[arrow, gray!70] (i1) -- (i2); \draw[arrow, gray!70] (i2) -- (i3); \draw[arrow, gray!70] (i3) -- (i4);
-\draw[arrow, gray!70] (a1) -- (a2); \draw[arrow, gray!70] (a2) -- (a3); \draw[arrow, gray!70] (a3) -- (a4);
-\draw[arrow, gray!70] (e1) -- (e2); \draw[arrow, gray!70] (e2) -- (e3); \draw[arrow, gray!70] (e3) -- (e4);
+\draw[arrow, gray!70] (m1) -- (m2) -- (m3) -- (m4);
+\draw[arrow, gray!70] (i1) -- (i2) -- (i3) -- (i4);
+\draw[arrow, gray!70] (a1) -- (a2) -- (a3) -- (a4);
+\draw[arrow, gray!70] (e1) -- (e2) -- (e3) -- (e4);
+
 \end{tikzpicture}
