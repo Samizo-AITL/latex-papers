@@ -9,13 +9,6 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
-\usepackage{siunitx}                  % Consistent units and numbers
-\sisetup{
-  detect-all,
-  per-mode=symbol,
-  range-phrase=--,
-  separate-uncertainty=true
-}
 \usepackage{standalone}               % \input tikz figures
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows.meta,positioning,fit,mindmap,calc}
@@ -32,24 +25,24 @@
   milestone/.style={circle, draw, fill=black, minimum size=2pt, inner sep=0pt},
   arrow/.style={-{Latex[length=3mm,width=2mm]}, thick}
 }
-\usepackage{url}
-\usepackage[hidelinks]{hyperref}      % <-- keep last
 
-% --- siunitx（v3向け設定）---
+% ---- siunitx (v3) ----  ※二重読み込みをやめてここで1度だけ
 \usepackage{siunitx}
 \sisetup{
   mode = match,
   propagate-math-font = true,
-  reset-math-version = false,
-  reset-text-family = false,
-  reset-text-series = false,
-  reset-text-shape = false,
-  text-family-to-math = true,
-  text-series-to-math = true,
+  per-mode = symbol,           % 例: mV/dec
+  range-phrase = --,
+  uncertainty-mode = separate,
+  detect-weight = true, detect-family = true
 }
+\DeclareSIUnit{\decade}{dec}   % mV/dec 用
 
-% mV/dec 用：decade を定義
-\DeclareSIUnit{\decade}{dec}
+% 図を列幅/紙面幅にフィットさせるヘルパー
+\newcommand{\tikzcol}[2][\linewidth]{\resizebox{#1}{!}{\input{#2}}}
+
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}      % <-- must be last
 
 % Figures path
 \graphicspath{{figures/}}
@@ -85,7 +78,7 @@ Fig.~\ref{fig:evolution} summarizes the historical pathway of CMOS device evolut
 
 \begin{figure}[t]
   \centering
-  \input{figures/evolution_tree.tex}
+  \tikzcol{\figures/evolution_tree.tex} % ← 列幅に自動フィット
   \caption{Evolution tree: CMOS $\rightarrow$ CFET $\rightarrow$ post-CFET candidates.}
   \label{fig:evolution}
 \end{figure}
@@ -137,19 +130,19 @@ Silicon material limits and wiring dominance demand novel materials, new integra
   \item \textbf{Design impact:} Cross-domain EDA required (electrical + optical + mechanical).
 \end{itemize}
 
-% ---------------- Block diagram ---------------------------------------------
-\begin{figure}[t]
+% ---------------- Block diagram (wide) --------------------------------------
+\begin{figure*}[t]
   \centering
-  \input{figures/block_diagram.tex}
+  \tikzcol[.95\textwidth]{\figures/block_diagram.tex}
   \caption{Conceptual block diagrams of candidate device/integration options.}
-\end{figure}
+\end{figure*}
 
-% ---------------- Mindmap ----------------------------------------------------
-\begin{figure}[t]
+% ---------------- Mindmap (wide) --------------------------------------------
+\begin{figure*}[t]
   \centering
-  \input{figures/mindmap.tex}
+  \tikzcol[.95\textwidth]{\figures/mindmap.tex}
   \caption{Post-CFET technology mind map.}
-\end{figure}
+\end{figure*}
 
 % ---------------- 4. Comparison Table ---------------------------------------
 \section{Comparison Matrix}
@@ -171,12 +164,12 @@ Hetero & Si+MoS$_2$ PD \SI{200}{mA/W}         & Interface limits         & Yield
 \end{tabular}
 \end{table}
 
-% ---------------- Roadmap ----------------------------------------------------
-\begin{figure}[t]
+% ---------------- Roadmap (wide) --------------------------------------------
+\begin{figure*}[t]
   \centering
-  \input{figures/roadmap.tex}
+  \tikzcol[.95\textwidth]{\figures/roadmap.tex}
   \caption{2030--2045 roadmap (materials, integration, applications, EDA).}
-\end{figure}
+\end{figure*}
 
 % ---------------- 5. Design/Education --------------------------------------
 \section{Design and Educational Perspectives}
