@@ -1,4 +1,4 @@
-% main.tex : Post-CFET paper (IEEEtran, two-column, detailed fixed version)
+% main.tex : Post-CFET paper (IEEEtran, two-column) — conference-safe full text
 
 \documentclass[conference]{IEEEtran}
 
@@ -8,15 +8,18 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
-\usepackage{standalone}          % for TikZ input
+\usepackage{standalone}
+\usepackage{gincltex}
 \usepackage{tikz}
 \usetikzlibrary{positioning,fit,shapes,arrows.meta,mindmap,trees,calc}
 \usepackage{siunitx}
+\sisetup{per-mode=symbol,range-phrase=\text{--},range-units=single}
 \usepackage{url}
-\usepackage[hidelinks]{hyperref}
-\usepackage{placeins}
+\usepackage{hyperref}
+\usepackage{placeins}   % \FloatBarrier
+\usepackage{balance}    % 段バランス（最終ページ安定）
 
-% ---------- TikZ styles ----------
+% ---------- TikZ styles (for roadmap etc.) ----------
 \tikzset{
   milestone/.style={circle,draw=red!70,fill=red!60,minimum size=4pt,inner sep=0pt},
   bubble/.style={rectangle,rounded corners=2pt,draw=black!25,fill=white,
@@ -28,18 +31,6 @@
 \newcommand{\figpath}{figures}
 \newcommand{\tikzcol}[2][\linewidth]{\resizebox{#1}{!}{\input{#2}}}
 \newcommand{\etal}{\textit{et al.}}
-
-% ---------- siunitx setup ----------
-\sisetup{
-  mode = match,
-  propagate-math-font = true,
-  detect-weight = true,
-  detect-family = true,
-  per-mode = symbol,
-  range-phrase = --,
-  range-units = single
-}
-\DeclareSIUnit{\decade}{dec}
 
 % ---------- Title & Author ----------
 \title{Post-CFET Device Architectures: Materials, Integration, and Design Perspectives}
@@ -64,17 +55,35 @@ We discuss their physical principles, process and integration challenges, demons
 A comparison matrix and a 2030--2045 roadmap are provided.
 \end{abstract}
 
-\FloatBarrier % prevent floats before abstract
-
 % ---------- 1. Introduction ----------
 \section{Introduction}
 Over five decades, the industry advanced by shrinking devices and re-architecting transistors: Planar $\rightarrow$ FinFET $\rightarrow$ GAA $\rightarrow$ CFET.
-Dennard scaling has long broken; beyond \SI{\sim 3}{\nano\meter} nodes, \emph{interconnect delay and power density} dominate, and device self-heating and variability constrain further gains.
-Wiring RC delay already exceeds intrinsic device delay for many paths; thermal design power densities approach \SI{1}{\watt\per\square\milli\meter} in high-performance logic, stressing reliability (BTI, EM) and packaging.
-Consequently, progress increasingly relies on \textbf{materials innovation}, \textbf{vertical integration}, and \textbf{alternative state variables} (spin, photon, bio) rather than lateral device scaling alone.
+Dennard scaling has long broken; beyond \SI{\sim 3}{nm} nodes, \emph{interconnect delay and power density} dominate, and device self-heating and variability constrain further gains.
+Wiring RC delay already exceeds intrinsic device delay for many paths; thermal design power densities approach \SI{1}{W/mm^2} in high-performance logic, stressing reliability (BTI, EM) and packaging.
+Consequently, progress increasingly relies on \textbf{materials innovation}, \textbf{vertical integration}, and \textbf{alternative state variables} (spin, photon, charge+heat co-design) rather than lateral device scaling alone.
+This work positions ``post-CFET'' as that transition and compares four concrete vectors.
 
 % ---------- 2. Evolution ----------
 \section{Evolution from CMOS to Post-CFET}
+Fig.~\ref{fig:evolution} sketches the pathway from CMOS to post-CFET candidates.
+
+\subsection{Planar MOSFET to FinFET}
+Below \SI{45}{nm} gate lengths, short-channel effects (SCE) and junction leakage degraded $SS$ and $I_{off}$.
+Tri-gate FinFETs provided stronger gate coupling and reduced SCE, enabling continued voltage scaling and variability control.
+
+\subsection{FinFET to GAA}
+To further compress cell height and suppress corner leakage, stacked nanosheets fully surrounded by the gate were introduced.
+GAA improves electrostatics and $V_{T}$ tunability, at the cost of increased process complexity (sacrificial layers, release uniformity) and tighter variability control (line-edge roughness, work-function granularity).
+
+\subsection{GAA to CFET}
+CFET vertically stacks complementary devices (nFET over pFET or vice versa), improving cell density and reducing local interconnect delay by gate-level vertical proximity.
+Key challenges include \emph{thermal budget management}, \emph{alignment of stacked devices}, and \emph{contact/via resistance} between tiers.
+
+\subsection{Beyond CFET}
+As wiring dominance and heat density increase, simply stacking silicon devices hits diminishing returns.
+Post-CFET options expand along three axes: (i) introduce new channel or functional materials (2D/TMDs), (ii) pursue true \emph{monolithic} 3D integration to shorten interconnects and co-locate memory/logic, and (iii) adopt \emph{non-charge} state variables (spin) and cross-domain fusion (photonics/MEMS/bio).
+
+% ---------- wide figure ----------
 \begin{figure*}[!t]
   \centering
   \tikzcol[0.9\textwidth]{\figpath/evolution_tree.tex}
@@ -82,153 +91,200 @@ Consequently, progress increasingly relies on \textbf{materials innovation}, \te
   \label{fig:evolution}
 \end{figure*}
 
-\subsection{Planar $\rightarrow$ FinFET}
-Below \SI{45}{\nano\meter}, short-channel effects (SCE) and junction leakage degraded $SS$ and $I_{off}$.
-Tri-gate FinFETs provided stronger gate coupling and reduced SCE.
-
-\subsection{FinFET $\rightarrow$ GAA}
-Nanosheets fully surrounded by the gate improved electrostatics and $V_T$ tunability, at the cost of process complexity and variability.
-
-\subsection{GAA $\rightarrow$ CFET}
-CFET stacks nFET and pFET vertically, cutting local wiring delay but raising thermal and alignment challenges.
-
-\subsection{Beyond CFET}
-Post-CFET requires new materials (2D), vertical monolithic integration, and non-charge state variables (spin, photon, bio).
-
 % ---------- 3. Technologies ----------
 \section{Post-CFET Candidate Technologies}
 
 \subsection{2D Material FETs}
+\textbf{Principle:}
+Atomically thin semiconductors (e.g., MoS$_2$, WSe$_2$) provide excellent electrostatic control and suppressed short-channel leakage owing to sub-nm body thickness.
+Van der Waals interfaces relax lattice matching constraints, enabling heterogeneous stacks.
+
 \textbf{State-of-the-art:}
-\SIrange{10}{20}{\nano\meter} MoS$_2$ FETs show $I_{on}/I_{off}\sim10^7$ and $SS\sim\SIrange{60}{70}{\milli\volt\per\decade}$.
-Contact resistivity remains \SIrange{0.5}{1}{\kilo\ohm\cdot\micro\meter}, with \SIrange{5}{10}{\percent} wafer non-uniformity.
+Lab-scale devices with $L_g\!\sim\!10$--\SI{20}{nm} show $I_{on}/I_{off}\!\sim\!10^7$ and $SS\!\sim\!60$--\SI{70}{mV/dec}.
+Contact resistivity remains high ($R_c\!\sim\!0.5$--\SI{1}{k\Omega\cdot\mu m}); wafer-scale CVD growth shows \SI{5}{\%}--\SI{10}{\%} non-uniformity and grain-boundary-induced variability.
 
 \textbf{Integration:}
-Low-$T$ BEOL-compatible growth/transfer, defect control, and metal/TMD contacts are central.
+Low-temperature BEOL-compatible processes (\SI{<450}{^\circ C}) are desired for sequential stacking or CFET+2D hybrids.
+Key knobs are phase/defect control, substitutional/charge-transfer doping, metal/TMD interface engineering, and clean transfer (or direct growth) on dielectrics and Cu-compatible liners.
 
-\textbf{Design/EDA:}
-Compact models need to include Schottky contacts, confinement, and variability.
+\textbf{Reliability:}
+Interface traps, charge trapping/de-trapping, and self-heating through low-$k$ dielectrics impact BTI-like shifts and mobility.
+Environmental stability (oxidation, moisture) requires encapsulation (e.g., h-BN, ALD Al$_2$O$_3$).
+
+\textbf{Design/EDA implications:}
+Compact models must capture quantum confinement, Schottky contacts, and variability (grain boundaries, thickness steps).
+PDKs need parameter corners for $R_c$, mobility, contact asymmetry, and layout rules addressing transfer seams and 2D-specific proximity effects.
 
 \textbf{Applications:}
-Flexible electronics, IoT, bio-sensing, steep-slope concepts.
+Ultra-low-power edge nodes, flexible/bio electronics, steep-slope concepts and sensor-logic co-integration.
+Near term, 2D devices likely \emph{complement} CFETs (e.g., analog sensing layers atop logic).
 
 \subsection{Monolithic 3D Integration (M3D)}
+\textbf{Principle:}
+Sequential device fabrication forms multiple active layers on a single wafer with fine-pitch inter-layer vias (ILVs), shortening interconnects by \(\gg\!100\times\) versus 2.5D/TSV stacks.
+
 \textbf{State-of-the-art:}
-3D SRAM/logic prototypes cut delay by 30\% and area by 40\%; AI SoCs achieved 1.7$\times$ energy efficiency.
+Demonstrations include 3D SRAM/logic with delay reductions ($\sim$30\%) and area savings ($\sim$40\%), as well as memory-centric AI tiles showing $>\!1.5\times$ system energy efficiency.
 
-\textbf{Challenges:}
-Thermal budget \SI{<450}{\celsius}, ILV pitch $<\SI{200}{\nano\meter}$, alignment, yield.
+\textbf{Integration:}
+Main constraints are \textbf{thermal budget} (\SI{<450}{^\circ C} after the first tier), dopant activation at low-$T$, and \textbf{alignment/yield}.
+Laser/flash anneal, solid-phase epitaxy, and low-$T$ materials (oxide semiconductors, 2D) are active areas.
+ILV pitch $<\SI{200}{nm}$ with acceptable resistance and electromigration margins is a key milestone.
 
-\textbf{Design/EDA:}
-3D P\&R, ILV budgeting, thermal/stress co-simulation.
+\textbf{Thermal/mechanical:}
+Vertical heat flow and local hotspots require thermal-aware placement, TSV/ILV planning, and stress-aware signoff (Coffin--Manson fatigue, wafer bow).
+
+\textbf{Design/EDA implications:}
+3D placement \& routing with layer assignment, ILV budgeting, thermal and stress co-simulation, and timing closure that includes vertical parasitics.
+Power delivery network (PDN) partitioning across tiers and integrated thermal throttling policies are needed.
 
 \textbf{Applications:}
-AI accelerators, memory-centric computing.
+AI accelerators (near-/in-memory compute), memory-wall mitigation for graph/transformer workloads, and low-latency sensor fusion.
 
-\subsection{Spintronics / Quantum}
+\subsection{Spintronics / Quantum Devices}
+\textbf{Principle:}
+Magnetic tunnel junctions (MTJs) exploit spin-dependent tunneling (CoFeB/MgO stacks), enabling non-volatile memory (STT/SOT-MRAM) and logic-in-memory concepts.
+Quantum/topological devices explore spin--orbit coupling and edge states.
+
 \textbf{State-of-the-art:}
-STT-MRAM endurance $10^{12}$ cycles; SOT-MRAM reduces write current.
+STT-MRAM endurance of $10^{12}$ cycles at room temperature; SOT-MRAM reduces write latency and improves endurance by separating read/write paths, at the expense of area/driver complexity.
 
-\textbf{Challenges:}
-Lower $I_\text{write}$ from mA to $\mu$A, compatibility, read disturb.
+\textbf{Integration:}
+BEOL-friendly temperatures (\SI{<400}{^\circ C}) are feasible; challenges include write current reduction (mA $\rightarrow$ $\mu$A), variability of $H_k$/$TMR$, and read disturb.
+Hybrid stacks (e.g., MRAM over logic tiers in M3D) enable ultra-fast, non-volatile buffers and checkpointing.
 
-\textbf{Design/EDA:}
-Stochastic models, CIM-aware mapping.
+\textbf{Design/EDA implications:}
+Compact models must include stochastic switching, retention distributions, and temperature dependence.
+For compute-in-memory (CIM), EDA flows need array-level analog behavior, error-rate aware mapping, and ECC co-design.
 
 \textbf{Applications:}
-Radiation-hard, neuromorphic, last-level caches.
+Radiation-tolerant systems (space/avionics), last-level cache augmentation, always-on inference, neuromorphic primitives.
 
-\subsection{Heterogeneous Atomic-Scale}
+\subsection{Heterogeneous Atomic-Scale Integration}
+\textbf{Principle:}
+Fuse dissimilar domains (Si CMOS + photonics + MEMS + sensors + 2D) by leveraging van der Waals interfaces, direct wafer bonding, or hybrid bonding.
+
 \textbf{State-of-the-art:}
-Si+MoS$_2$ PD with \SI{200}{\milli\ampere\per\watt} at \SI{1.55}{\micro\meter}; CMOS+MEMS sensors; photonic I/O.
+Examples include Si+MoS$_2$ photodetectors (responsivity $\sim\SI{200}{mA/W}$ at \SI{1.55}{\micro m}), CMOS+MEMS inertial sensors, and on-chip photonics for low-latency I/O.
 
-\textbf{Challenges:}
-Bonding yield, CTE mismatch.
+\textbf{Integration:}
+Interface cleanliness/planarity, CTE/lattice mismatch, and bonding yield dominate.
+Cross-domain verification (optical S-parameters, mechanical eigenmodes) must be integrated with electrical timing and power.
 
-\textbf{Design/EDA:}
-Cross-domain PDKs (optical/mechanical/electrical).
+\textbf{Design/EDA implications:}
+Compact models spanning domains, co-simulation backplanes (SPICE + FDTD/RCWA + FEM), and PDKs that provide optical/mechanical layer stacks, DRC, and reliability rules.
 
 \textbf{Applications:}
-Optical interconnect, aerospace, medical sensing.
+Optical interconnect, medical/industrial sensing, aerospace instruments, and co-packaged optics.
 
-% ---------- 4. Comparison ----------
-\begin{table}[!t]
+% ---------- 4. Comparison Matrix (two-column safe) ----------
+\FloatBarrier
+\begin{table*}[!t]
 \centering
-\caption{Comparison of post-CFET candidate technologies}
+\caption{Comparison of post-CFET candidates (representative, not exhaustive)}
 \label{tab:comparison}
+\small
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-Tech & Demo & Bottlenecks & Reliability & Design impact \\
+Tech. & Demo (rep.) & Bottlenecks & Reliability & Design impact \\
 \midrule
-2D-FET & $I_{on}/I_{off}=10^7$ & $R_c$, uniformity & Traps, heat & New models \\
-M3D & Delay −30\%, Area −40\% & $<450^\circ$C, ILV $R$ & Hotspots, stress & 3D P\&R \\
-Spin & MRAM $10^{12}$ cyc & $I_\text{write}$, TMR var. & Retention & Stochastic models \\
-Hetero & Si+2D PD 200 mA/W & Bonding, mismatch & Interface aging & Cross-domain EDA \\
+2D-FET & $I_{on}/I_{off}\!\sim\!10^7$, $SS\!\sim\!65$ mV/dec &
+$R_c$, film uniform. & Traps, self-heat &
+New compact models, var. kits \\
+M3D & Delay $-30$\%, Area $-40$\% &
+$<\!450^\circ$C, ILV $R$ & Hotspots, stress &
+3D P\&R, thermal/stress co-sim \\
+Spin & MRAM $10^{12}$ cyc &
+$I_\mathrm{write}$, $TMR$ var. & Retention, disturb &
+Stochastic models, ECC/CIM \\
+Hetero & Si+2D PD \SI{200}{mA/W} &
+Bonding, CTE mismatch & Interface aging &
+Cross-domain EDA/PDK \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
+\FloatBarrier
 
 \section{Comparison and Positioning}
-Table~\ref{tab:comparison} shows contrasts.  
-Practical roadmap is hybrid: CFET density + M3D distance reduction + spin non-volatility + 2D/photonics I/O.
+Table~\ref{tab:comparison} contrasts each vector from \emph{device}, \emph{integration}, and \emph{design} angles.
+A pragmatic path is hybrid: CFET for density, M3D for distance reduction, spintronics for non-volatility, and 2D materials or photonics for sensing/I/O.
+The \emph{system} wins when interconnect energy is minimized and memory/compute locality is maximized.
 
 % ---------- 5. Design / Education ----------
 \section{Design and Educational Perspectives}
+
 \subsection{EDA/PDK Requirements}
 \begin{itemize}
-  \item Multi-physics compact models (quantum, stochastic, thermo-mechanical).
-  \item 3D P\&R with ILV planning and thermal-aware signoff.
-  \item Reliability kits (BTI, EM, retention, bonding voids).
+  \item \textbf{Compact models:} Quantum confinement, Schottky contacts (2D), stochastic switching (spin), thermo--electro--mechanical coupling (M3D/hetero).
+  \item \textbf{3D physical design:} Tier-aware floorplanning, ILV budgeting, thermal-aware placement, vertical timing/parasitics extraction.
+  \item \textbf{Multi-physics co-simulation:} Electrical--thermal--mechanical--optical closed loops with sign-off criteria (hotspot temp., stress limits, optical loss budgets).
+  \item \textbf{Reliability sign-off:} BTI/HCI/EM with temperature gradients, MRAM retention/disturb models, interface aging for bonded stacks.
+  \item \textbf{Variability/DFM:} Film thickness, grain boundary density, $R_c$ spread, bonding voids; provide statistical corners and Monte Carlo kits.
 \end{itemize}
 
-\subsection{Education}
-Curricula: scaling history, candidate reviews, modeling labs, 3D thermal projects, cross-domain design capstones.
+\subsection{Curriculum and Workforce Development}
+Graduate curricula should include: (i) device-to-system co-design, (ii) variability-aware modeling labs, (iii) 3D PDN/thermal projects, (iv) cross-domain capstone (e.g., CMOS+photonics+MEMS).
+Industry--academia pilot lines (multi-project wafers, shuttle services) can accelerate translational education.
 
 % ---------- 6. Roadmap ----------
 \section{Future Scenarios (2030--2045)}
-2030s: Lab demos of 2D+CFET, M3D+SRAM, MRAM caches.  
-2035–2040: Sequential 3D logic-memory, SOT-MRAM adoption.  
-2040–2045: HPC/aerospace using non-volatile 3D stacks, radiation-hard 2D, co-packaged optics.
+
+\noindent\textbf{2030--2035 (TRL 3--4):}
+2D-FET/CFET hybrid cells and M3D SRAM/logic pilots; ILV pitch \(\lesssim\)\SI{200}{nm}; MRAM pervasive in caches; first cross-domain PDKs.
+
+\noindent\textbf{2035--2040 (TRL 5--6):}
+Sequential 3D logic+memory tiles in AI accelerators; reliable $<\SI{450}{^\circ C}$ flows; SOT-MRAM adoption; wafer-level bonding for photonics/2D stacks.
+
+\noindent\textbf{2040--2045 (TRL 7--8):}
+HPC/aerospace systems using non-volatile 3D logic--memory, radiation-hard 2D stacks, and co-packaged optics; cross-domain EDA becomes mainstream.
 
 % ---------- 7. Conclusion ----------
 \section{Conclusion}
-Post-CFET shifts progress from lateral scaling to co-optimized materials, vertical integration, and new states.
-Hybridization is key; success requires multi-physics EDA/PDKs and workforce trained across device–system levels.
+Post-CFET shifts progress from lateral device scaling to a co-optimized space of materials, vertical integration, and new state variables.
+A hybrid trajectory---CFET density, M3D distance reduction, spintronic non-volatility, and heterogeneous fusion---offers the best path to energy-efficient systems.
+Success hinges on multi-physics EDA/PDKs, reliability- and variability-aware models, and curricula that train device-to-system engineers.
 
 % ---------- Figures at end ----------
 \FloatBarrier
+
 \begin{figure*}[!t]
   \centering
   \tikzcol[0.95\textwidth]{\figpath/block_diagram.tex}
-  \caption{Conceptual block diagram of candidate options.}
+  \caption{Conceptual block diagram of candidate device/integration options.}
+  \label{fig:block}
 \end{figure*}
 
 \begin{figure*}[!t]
   \centering
   \tikzcol[0.95\textwidth]{\figpath/mindmap.tex}
   \caption{Post-CFET technology mind map.}
+  \label{fig:mindmap}
 \end{figure*}
 
 \begin{figure*}[!t]
   \centering
   \tikzcol[0.95\textwidth]{\figpath/roadmap.tex}
   \caption{2030--2045 roadmap (materials, integration, applications, EDA).}
+  \label{fig:roadmap}
 \end{figure*}
 
 % ---------- References ----------
+\balance % 段バランスをここで発動
 \begin{thebibliography}{1}
 \bibitem{irds2024} IRDS, \emph{International Roadmap for Devices and Systems}, 2024.
-\bibitem{takagi2023} S. Takagi \etal, IEDM Tech Digest, 2023.
-\bibitem{liu2022} Z. Liu \etal, \emph{Nature Electronics}, 2022.
-\bibitem{fert2019} A. Fert \etal, \emph{Rev. Mod. Phys.}, 2019.
-\bibitem{wong2020} H.-S. P. Wong, \emph{Nat. Rev. Mater.}, 2020.
-\bibitem{batude2019} P. Batude \etal, IEDM, 2019.
+\bibitem{takagi2023} S. Takagi, \etal, IEDM Tech Digest, 2023.
+\bibitem{liu2022} Z. Liu, \etal, \emph{Nature Electronics}, 2022.
+\bibitem{ferr2019} A. Fert, \etal, \emph{Rev. Mod. Phys.}, 2019.
+\bibitem{wong2020} H. S. P. Wong, \emph{Nat. Rev. Mater.}, 2020.
+\bibitem{batude2019} P. Batude, \etal, IEDM, 2019.
 \end{thebibliography}
 
-% ---------- Biography ----------
+% ---------- Author Biography (conference-safe, non-float) ----------
 \section*{Author Biography}
-\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.  
-He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal device development, contributing to inkjet MEMS actuators and PrecisionCore printhead technology.  
-He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.  
-\par\smallskip Contact: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}, GitHub: \href{https://github.com/Samizo-AITL}{Samizo-AITL}.
+\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
+He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal device development and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
+He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\
+\emph{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+\emph{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}.
+
 \end{document}
