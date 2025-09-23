@@ -261,11 +261,10 @@ Success hinges on multi-physics EDA/PDKs, reliability- and variability-aware mod
   \label{fig:mindmap}
 \end{figure*}
 
-% --- 末尾の Roadmap 図を差し替え ---
-\begin{figure*}[p]
+% --- Roadmap 図（通常表示, 文字サイズ固定） ---
+\begin{figure*}[!t]
   \centering
-  % 幅いっぱい＋高さ 0.8*本文高さで拡大（アスペクト比は保持）
-  \resizebox{\textwidth}{0.80\textheight}{\input{\figpath/roadmap.tex}}
+  \input{\figpath/roadmap.tex}% ← そのまま入力（拡大・縮小しない）
   \caption{2030–2045 roadmap (materials, integration, applications, EDA).}
   \label{fig:roadmap}
 \end{figure*}
