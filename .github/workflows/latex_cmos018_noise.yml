@@ -3,39 +3,40 @@ name: Build LaTeX (0.18um 1f-noise paper)
 on:
   push:
     paths:
-      - "latex-papers/papers/2025_cmos018_noise/**"
+      - "papers/2025_cmos018_noise/**"
       - ".github/workflows/latex_cmos018_noise.yml"
   pull_request:
     paths:
-      - "latex-papers/papers/2025_cmos018_noise/**"
+      - "papers/2025_cmos018_noise/**"
       - ".github/workflows/latex_cmos018_noise.yml"
   workflow_dispatch:
 
 jobs:
   build-pdf:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Show repo tree (debug)
         run: |
-          ls -R latex-papers/papers/2025_cmos018_noise || true
+          echo "Workspace: $GITHUB_WORKSPACE"
+          ls -la
+          echo "---- target dir ----"
+          ls -la papers/2025_cmos018_noise || true
 
       - name: Compile LaTeX (latexmk → PDF)
         uses: xu-cheng/latex-action@v3
         with:
-          # ← papers を二重にしない
+          # repo 直下からの相対パスを指定（working_directoryは使わない）
           root_file: papers/2025_cmos018_noise/main.tex
-          working_directory: latex-papers
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
 
       - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
           name: cmos018_noise_pdf
-          path: latex-papers/papers/2025_cmos018_noise/main.pdf
+          path: papers/2025_cmos018_noise/main.pdf
           if-no-files-found: error
           retention-days: 14
 
@@ -43,6 +44,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cmos018_noise_logs
-          path: latex-papers/papers/2025_cmos018_noise/*.log
+          path: |
+            papers/2025_cmos018_noise/*.log
+            papers/2025_cmos018_noise/*.aux
+            papers/2025_cmos018_noise/*.bbl
+            papers/2025_cmos018_noise/*.blg
+            papers/2025_cmos018_noise/*.out
+            papers/2025_cmos018_noise/*.toc
           if-no-files-found: warn
           retention-days: 14
