@@ -11,37 +11,26 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
-% siunitx: 推奨設定 + μ を数式で固定
+% siunitx 設定（µを確実に数式で）
 \sisetup{
   mode = match,
-  propagate-math-font = true,
-  reset-math-version = false,
-  reset-text-family = false,
-  reset-text-series = false,
-  reset-text-shape = false,
-  text-family-to-math = true,
-  text-series-to-math = true,
-  text-micro = \ensuremath{\mu}, % テキスト中の μ を数式で
+  text-micro = \ensuremath{\mu},
   math-micro = \mu,
   per-mode = symbol,
   separate-uncertainty = true
 }
-\DeclareSIUnit{\um}{\micro\meter} % 便利マクロ（μm）
+\DeclareSIUnit{\um}{\micro\meter} % 便利マクロ
 
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
+% --- IEEEtran + XeLaTeX では不要なので削除 ---
+% \usepackage[T1]{fontenc}
+% \usepackage{lmodern}
 
-% --- 追加（preamble） ---
-\usepackage{upgreek}               % 立体μ
-\sisetup{text-micro=\ensuremath{\upmu}}  % micro 接頭辞は \upmu を使う
-
-% --- 追加（preamble） ---
-\usepackage[section]{placeins}  % \FloatBarrier 用（セクション毎に自動バリア）
+\usepackage[section]{placeins} % \FloatBarrier
 
 % ---------- Title / Author ----------
 \title{Differentiated Analog Modules via Manufacturing Technology:\\
 Achieving Over 50\% Reduction in $1/f$ Noise on
-\texorpdfstring{\SI{0.18}{\um}}{0.18 um} CMOS}
+\texorpdfstring{\mbox{$0.18\,\mu\mathrm{m}$}}{0.18 µm} CMOS}
 
 \author{
 \IEEEauthorblockN{Shinichi Samizo}
@@ -195,23 +184,23 @@ Combined      & 1.00 & 0.50 & \SI{50}{\percent} \\
 
 % ---------- Figure 4: Long-term (1-column, keep near) ----------
 \FloatBarrier
-\begin{figure}[!t]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-  width=\linewidth, height=5cm,
-  xlabel={Time at \SI{85}{\celsius} (h)}, ylabel={$S_{id}$ (norm.)},
-  xmin=0, xmax=1000, ymin=0.4, ymax=1.25,
-  grid=both, legend pos=north west
-]
-\addplot+[thick, mark=none] coordinates {(0,1.0) (200,1.05) (500,1.12) (1000,1.20)};
-\addlegendentry{Baseline}
-\addplot+[thick, mark=none] coordinates {(0,0.6) (200,0.61) (500,0.60) (1000,0.60)};
-\addlegendentry{Improved}
-\end{axis}
-\end{tikzpicture}
-\caption{Long-term stability at \SI{85}{\celsius}: improved split is stable; baseline drifts by $\sim$20\%.}
-\label{fig:aging}
+\begin{figure}[!htbp]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[
+    width=\linewidth, height=5cm,
+    xlabel={Time at \SI{85}{\celsius} (h)}, ylabel={$S_{id}$ (norm.)},
+    xmin=0, xmax=1000, ymin=0.4, ymax=1.25,
+    grid=both, legend pos=north west
+  ]
+    \addplot+[thick, mark=none] coordinates {(0,1.0) (200,1.05) (500,1.12) (1000,1.20)};
+    \addlegendentry{Baseline}
+    \addplot+[thick, mark=none] coordinates {(0,0.6) (200,0.61) (500,0.60) (1000,0.60)};
+    \addlegendentry{Improved}
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Long-term stability at \SI{85}{\celsius}: improved split is stable; baseline drifts by $\sim$20\%.}
+  \label{fig:aging}
 \end{figure}
 \FloatBarrier
 
