@@ -60,12 +60,34 @@ If the transformation remains incomplete, residual C49 grains act as high-resist
 Boron absorption from halo implants into Ti further aggravated resistivity variation.  
 While these effects were tolerable in smaller SRAM macros (e.g., 500~kbit), they became fatal when scaled to 1~Mbit capacity.
 
+\section{Node Trade-off: 0.25 µm vs 0.18 µm}
+Table~\ref{tab:node_comparison} summarizes the trade-offs between the extended
+0.25~µm LOCOS-based process and the migrated 0.18~µm STI-based process.
+The 0.25~µm process was not simply a cost decision; it was a strategic selection to ensure safe HV co-integration for aTFT driver requirements.
+
+\begin{table*}[!t]
+\centering
+\caption{Comparison of 0.25 µm (LOCOS) and 0.18 µm (STI) nodes for LCD driver ICs}
+\label{tab:node_comparison}
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & \textbf{0.25 µm (LOCOS)} & \textbf{0.18 µm (STI)} \\
+\midrule
+Isolation method & LOCOS (thick field oxide) & STI (trench isolation; edge thinning at HV corners) \\
+HV device support & Proven $\sim$30 V integration & New HV platform needed; 30 V reliability to be re-validated \\
+Chip size / density & Larger / lower density & Smaller / higher density \\
+Yield stability & Moderate (silicide/C49 risk dominant) & Generally stable baseline process \\
+Adoption rationale & Safe HV co-integration with aTFT logic & Not adopted for HV driver products at that time \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
 \section{Failure Analysis}
 \subsection{Observation: 1~Mbit SRAM}
 In mass production, random single-bit failures appeared in the 1~Mbit SRAM macro. Since redundancy was not implemented in the embedded macro, even a single defective bit caused rejection of the entire device.
 
 \subsection{Redundancy Limitation in Embedded Macros}
-In stand-alone memory products, redundancy circuits are standard practice. Defective cells can be repaired during testing via laser trimming.  
+In stand-alone memory products, redundancy circuits are standard practice, and defective cells can be repaired during testing via laser trimming.  
 In embedded memory macros, however, redundancy is generally excluded due to design complexity, timing, and area overhead.  
 As a result, large-capacity embedded SRAM macros carry inherent risks: every localized resistive defect directly leads to yield loss.  
 This case illustrates why scaling from 500~kbit to 1~Mbit without explicit redundancy was a high-risk assumption.
@@ -126,7 +148,7 @@ where $\lambda$ is the average defect count and $k$ is the redundancy capacity.
 \subsection{Teaching Tools}
 \begin{itemize}
     \item Cause-effect diagrams: process $\rightarrow$ defect $\rightarrow$ yield
-    \item Comparative analysis: 0.25~µm (LOCOS) vs 0.18~µm (STI) for HV devices
+    \item Comparative analysis: 0.25~µm (LOCOS) vs 0.18~µm (STI) for HV devices (Table~\ref{tab:node_comparison})
     \item Exercises: prioritize process fix vs. redundancy adoption
 \end{itemize}
 
@@ -141,7 +163,8 @@ Despite the availability of a denser, yield-stable 0.18~µm STI process, the req
 Yield loss from incomplete TiSi\textsubscript{2} phase transformation (with boron absorption) became critical at the 1~Mbit SRAM scale.  
 The educational value lies in showing how scaling, process technology, and reliability intersect, and why continuous empirical feedback is essential.
 
-\section*{References}
+% Do not print a second "References" heading:
+% \section*{References}
 \begin{thebibliography}{99}
 \bibitem{Sze2007} S. M. Sze and K. K. Ng, \textit{Physics of Semiconductor Devices}, 3rd ed. Wiley, 2007.
 \bibitem{Wolf1986} S. Wolf and R. N. Tauber, \textit{Silicon Processing for the VLSI Era, Vol. 1: Process Technology}. Lattice Press, 1986.
