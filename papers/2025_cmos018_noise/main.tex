@@ -31,6 +31,13 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 
+% --- 追加（preamble） ---
+\usepackage{upgreek}               % 立体μ
+\sisetup{text-micro=\ensuremath{\upmu}}  % micro 接頭辞は \upmu を使う
+
+% --- 追加（preamble） ---
+\usepackage[section]{placeins}  % \FloatBarrier 用（セクション毎に自動バリア）
+
 % ---------- Title / Author ----------
 \title{Differentiated Analog Modules via Manufacturing Technology:\\
 Achieving Over 50\% Reduction in $1/f$ Noise on
@@ -186,12 +193,13 @@ Combined      & 1.00 & 0.50 & \SI{50}{\percent} \\
 \label{fig:area}
 \end{figure}
 
-% ---------- Figure 4: Long-term (two-column, top) ----------
-\begin{figure*}[!t]
+% ---------- Figure 4: Long-term (1-column, keep near) ----------
+\FloatBarrier
+\begin{figure}[!t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.9\textwidth, height=5cm,
+  width=\linewidth, height=5cm,
   xlabel={Time at \SI{85}{\celsius} (h)}, ylabel={$S_{id}$ (norm.)},
   xmin=0, xmax=1000, ymin=0.4, ymax=1.25,
   grid=both, legend pos=north west
@@ -204,8 +212,8 @@ Combined      & 1.00 & 0.50 & \SI{50}{\percent} \\
 \end{tikzpicture}
 \caption{Long-term stability at \SI{85}{\celsius}: improved split is stable; baseline drifts by $\sim$20\%.}
 \label{fig:aging}
-\end{figure*}
-\vspace{-2mm} % 余白調整（不要なら削除）
+\end{figure}
+\FloatBarrier
 
 % ---------- 5. Applications ----------
 \section{Applications}
