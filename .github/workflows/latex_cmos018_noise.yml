@@ -95,3 +95,44 @@ jobs:
             papers/2025_cmos018_noise/*.toc
           if-no-files-found: warn
           retention-days: 14
+
+      - name: Make human-readable previews of main.tex
+        if: always()
+        run: |
+          set -eu
+          SRC="papers/2025_cmos018_noise/main.tex"
+          PREV_DIR="papers/2025_cmos018_noise"
+          # テキスト/Markdownのプレビューを作成（iOSでも見える拡張子に）
+          cp "$SRC" "${PREV_DIR}/main_preview.txt"
+          {
+            echo '## main.tex preview'
+            echo ''
+            echo '```latex'
+            cat "$SRC"
+            echo '```'
+          } > "${PREV_DIR}/main_preview.md"
+          # Actions サマリーにも埋め込む（UI上で直接読める）
+          {
+            echo '### main.tex (head)'
+            echo ''
+            echo '```latex'
+            sed -n '1,120p' "$SRC"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload preview files (txt/md)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cmos018_noise_source_previews
+          path: |
+            papers/2025_cmos018_noise/main_preview.txt
+            papers/2025_cmos018_noise/main_preview.md
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload source tarball (robust)
+        if: always()
+        run: |
+          tar -C papers/2025_cmos018_noise -czf papers/2025_cmos018_noise/source_bundle.tgz .
+        shell: bash
