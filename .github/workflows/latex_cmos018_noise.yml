@@ -27,24 +27,35 @@ jobs:
           ls -la papers/2025_cmos018_noise || true
 
       - name: Compile LaTeX (latexmk → PDF)
-        # ← ここがポイント：Step側オプション
-        continue-on-error: true
+        continue-on-error: true   # ← ビルド失敗でも後続を継続
         uses: xu-cheng/latex-action@v3
         with:
           root_file: papers/2025_cmos018_noise/main.tex
           args: -pdf -interaction=nonstopmode -file-line-error
 
-      - name: Show main.log tail (debug)
+      - name: Verify generated files
         if: always()
         run: |
-          echo "---- main.log (tail) ----"
-          if [ -f papers/2025_cmos018_noise/main.log ]; then
-            tail -n 200 papers/2025_cmos018_noise/main.log
+          echo "---- file list ----"
+          find papers/2025_cmos018_noise -maxdepth 1 -type f -printf "%p\t(%s bytes)\n" | sort
+          echo "---- check main.tex ----"
+          if [ -f papers/2025_cmos018_noise/main.tex ]; then
+            wc -c papers/2025_cmos018_noise/main.tex
           else
-            echo "main.log not found"
+            echo "main.tex NOT FOUND"
           fi
 
-      # PDF を回収
+      # ▼ main.tex を単体でアップロード（必ず入る）
+      - name: Upload source main.tex
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cmos018_noise_source_maintex
+          path: papers/2025_cmos018_noise/main.tex
+          if-no-files-found: warn
+          retention-days: 30
+
+      # PDF（存在すれば）
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
@@ -54,7 +65,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      # LOG 等を回収（ワイルドカードを広めに）
+      # LOG 類
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -72,7 +83,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      # 念のため、作業フォルダ一式もアーカイブ
+      # ディレクトリ全体のスナップショット
       - name: Upload workdir snapshot
         if: always()
         uses: actions/upload-artifact@v4
