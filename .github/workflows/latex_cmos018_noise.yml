@@ -14,6 +14,7 @@ on:
 jobs:
   build-pdf:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -28,9 +29,10 @@ jobs:
       - name: Compile LaTeX (latexmk → PDF)
         uses: xu-cheng/latex-action@v3
         with:
-          # repo 直下からの相対パスを指定（working_directoryは使わない）
+          # リポジトリ直下からの相対パス
           root_file: papers/2025_cmos018_noise/main.tex
-          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+          # 未解決参照で停止しない（latexmkが必要回数まわして解決）
+          args: -pdf -interaction=nonstopmode -file-line-error
 
       - name: Upload PDF
         uses: actions/upload-artifact@v4
