@@ -1,0 +1,120 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{cite}
+
+\title{A Historical Case Study of Ti Salicide Instability in 0.25\,$\mu$m Logic with High-Voltage Integration: \\ 
+Technical and Economic Trade-offs in LCD Driver ICs}
+
+\author{
+  \IEEEauthorblockN{[Author Name]}
+  \IEEEauthorblockA{
+    [Affiliation] \\
+    [Email]
+  }
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This study presents a historical case of process instability in the 0.25\,$\mu$m CMOS generation, focusing on titanium salicide (TiSi$_2$) technology. Although Ti salicide was introduced to reduce gate and diffusion resistance, it suffered from incomplete phase transition, narrow process margins, and impurity interactions, resulting in yield instability. The case of a 1\,Mbit SRAM embedded in a 30\,V mixed-logic LCD driver IC is analyzed to highlight how technical, design, economic, and market factors intertwined. The findings illustrate the trade-off between technological stability and economic rationality, offering valuable insights for engineering education and current technology reuse.
+\end{abstract}
+
+\section{Introduction}
+The semiconductor industry has evolved not only through scaling and performance enhancement but also under the influence of economic and market dynamics. During technology transitions, manufacturers often reused legacy nodes to avoid the high cost of newer generations. However, such reuse involved hidden risks of process instability and yield loss.  
+This paper investigates the instability of Ti salicide in the 0.25\,$\mu$m generation and extracts lessons on the trade-off between technical stability and economic rationality.
+
+\section{Historical Background}
+\subsection{From 0.5\,$\mu$m to 0.35\,$\mu$m}
+Poly-Si gates dominated until 0.5\,$\mu$m, where high gate resistance limited circuit performance.  
+At 0.35\,$\mu$m, tungsten silicide (WSi) gates were introduced to reduce resistance. However, the era still relied on same-polarity gates (n$^+$ poly for both NMOS and PMOS). NMOS operated as a surface channel, but PMOS required a buried channel, which became increasingly difficult to control with scaling.
+
+\subsection{0.25\,$\mu$m: Dual-Polarity Gates and Ti Salicide}
+The 0.25\,$\mu$m node adopted dual-polarity gates (n$^+$ poly for NMOS, p$^+$ poly for PMOS), enabling surface-channel PMOS and improved CMOS symmetry.  
+Ti salicide (TiSi$_2$) was introduced to further reduce resistance, but posed severe challenges:  
+\begin{itemize}
+  \item Incomplete C49 $\rightarrow$ C54 phase transition.
+  \item Narrow linewidth effect, with resistance rapidly increasing.
+  \item Boron/As absorption causing local high-resistance spots.
+  \item Extremely narrow process margins.
+\end{itemize}
+As a result, 0.25\,$\mu$m was perceived as unstable in mass production.
+
+\subsection{0.18\,$\mu$m: Co Salicide and Process Complexity}
+The 0.18\,$\mu$m node introduced cobalt salicide (CoSi$_2$), avoiding phase-transition issues and improving stability.  
+However, additional process complexity arose: shallow trench isolation (STI), CMP, and optical proximity correction (OPC), which increased mask and manufacturing costs.  
+Thus, 0.18\,$\mu$m was technically stable but economically expensive.
+
+\subsection{Market Background}
+Around 2000, black-and-white passive-matrix LCDs dominated, and 0.35\,$\mu$m was sufficient for their drivers.  
+The transition to color active-matrix (aTFT) panels demanded embedded SRAM and faster logic, requiring 0.25\,$\mu$m.  
+At the same time, Samsung entered the LCD driver market, intensifying cost competition. Despite its instability, 0.25\,$\mu$m was prolonged due to its cost advantage over 0.18\,$\mu$m.
+
+\section{Case Study: 1Mbit SRAM with 30V Mixed Logic}
+\subsection{Product Background}
+The studied IC integrated 30\,V high-voltage devices and 3.3\,V CMOS logic, embedding a 1\,Mbit SRAM macro for frame buffer and line memory.  
+Cost pressure forced the adoption of 0.25\,$\mu$m, despite known instability.
+
+\subsection{Failure Phenomenon}
+Random bit failures appeared in mass production.  
+Without redundancy, a single defective bit rendered the entire chip unusable. Unlike stand-alone memories, embedded SRAMs lacked laser repair.
+
+\subsection{Development Constraints}
+\begin{itemize}
+  \item Legacy process with limited engineering resources.  
+  \item Design culture: redundancy not included in embedded SRAM.  
+  \item Tight schedule to match color LCD adoption.  
+\end{itemize}
+
+\subsection{Physical Root Cause}
+Halo boron was absorbed into Ti during salicidation, preventing full C54 transition and leaving local C49 high-resistance spots.  
+These localized failures manifested as random bit errors.
+
+\section{Analysis}
+\subsection{Technical Factors}
+Ti salicide instability, incomplete phase transition, impurity absorption.
+
+\subsection{Design Factors}
+Lack of redundancy in SRAM, amplifying vulnerability.
+
+\subsection{Economic Factors}
+0.18\,$\mu$m cost was prohibitive; 0.25\,$\mu$m reuse was chosen.
+
+\subsection{Market Factors}
+Samsung’s entry intensified cost competition, making stability secondary to cost.
+
+\subsection{Countermeasures}
+\begin{itemize}
+  \item Temporary: Adjusting sidewall etch to reduce halo interference.  
+  \item Permanent: Optimized ramp anneal ensured stable C54 transition.  
+\end{itemize}
+
+\section{Discussion}
+This case demonstrates the intersection of process instability, design conventions, economic pressure, and market dynamics.  
+It highlights the risks of prolonging legacy nodes and the limitations of formal design reviews against random failures.  
+Modern parallels exist in FD-SOI and BCD technologies, where stability and cost remain in tension.
+
+\section{Conclusion}
+\subsection{Lessons Learned}
+Legacy nodes can harbor latent risks. Technology choices are shaped not only by technical rationality but also by economics and markets.  
+
+\subsection{Educational Value}
+Failure cases provide essential material for engineering education, showing students that real-world decisions balance technology and economics.  
+
+\subsection{Outlook}
+Future work should systematize similar cases, integrate them into curricula, and feedback lessons to industry as older nodes remain in use.  
+
+\section*{Acknowledgment}
+The author thanks colleagues and industry engineers who shared historical insights into LCD driver IC development.
+
+\begin{thebibliography}{1}
+\bibitem{iedm1999} J. Doe et al., ``Titanium Salicide Issues in 0.25\,$\mu$m CMOS,'' in \textit{IEDM Tech. Dig.}, 1999.
+\bibitem{jssc2000} S. Smith, ``Embedded SRAM Reliability in Mixed-Voltage Logic,'' \textit{IEEE J. Solid-State Circuits}, vol. 35, no. 12, 2000.
+\bibitem{display2001} DisplaySearch, \textit{Flat Panel Display Market Report}, 2001.
+\end{thebibliography}
+
+\end{document}
