@@ -1,19 +1,23 @@
 \documentclass[conference]{IEEEtran} 
 
-% ---------------- Packages ----------------
+% --- Packages ---
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{siunitx}
 \usepackage{cite}
 \usepackage[hidelinks]{hyperref}
 
-% Figures without external files
+% Figures
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
-% siunitx: detect-all は非推奨なので置換
+% ===== Fonts (IEEEtran との相性優先) =====
+% ※ lmodern と fontenc は外す
+\usepackage{newtxtext,newtxmath} % Times系＋数式。µも正しく出ます
+
+% siunitx（新書式）
+\usepackage{siunitx}
 \sisetup{
   mode = match,
   propagate-math-font = true,
@@ -235,7 +239,7 @@ Compared with design-only methods, process-based techniques provide fundamental 
 A manufacturing strategy combining Epi substrate, oxide/interface engineering, hydrogen anneal, and geometry choices achieves over 50\% reduction in 1/f noise at the \SI{0.18}{\micro\meter} node. The approach is robust across temperature and aging, and its didactic value makes it suitable for curricula and industrial training.
 
 % ---------- References ----------
-\section*{References}
+%\section*{References}
 \begin{thebibliography}{10}
 
 \bibitem{Sze}
