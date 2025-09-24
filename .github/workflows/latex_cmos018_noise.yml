@@ -44,13 +44,12 @@ jobs:
           if [ -f "$DIR/main.tex" ]; then
             wc -c "$DIR/main.tex"
             sed -n '1,60p' "$DIR/main.tex"
-            # 明示的に別名へコピー（念のため）
             cp "$DIR/main.tex" "$DIR/main_source_copy.tex"
           else
             echo "main.tex NOT FOUND" >&2
           fi
-          # ソース一式のtgzを作成（展開確認しやすい）
-          tar -C "$DIR" -czf source_bundle.tgz .
+          # ここで一度だけ tar 作成（以降は同フォルダに書き込まない）
+          tar -C "$DIR" -czf "$DIR/source_bundle.tgz" .
 
       - name: Upload source bundle (tgz)
         if: always()
@@ -71,16 +70,15 @@ jobs:
           retention-days: 30
 
       - name: Upload PDF
-        if: always()
+        if: ${{ always() && hashFiles('papers/2025_cmos018_noise/main.pdf') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: cmos018_noise_pdf
           path: papers/2025_cmos018_noise/main.pdf
-          if-no-files-found: warn
           retention-days: 14
 
       - name: Upload logs
-        if: always()
+        if: ${{ always() && hashFiles('papers/2025_cmos018_noise/*.log') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: cmos018_noise_logs
@@ -93,7 +91,6 @@ jobs:
             papers/2025_cmos018_noise/*.fdb_latexmk
             papers/2025_cmos018_noise/*.out
             papers/2025_cmos018_noise/*.toc
-          if-no-files-found: warn
           retention-days: 14
 
       - name: Make human-readable previews of main.tex
@@ -102,7 +99,6 @@ jobs:
           set -eu
           SRC="papers/2025_cmos018_noise/main.tex"
           PREV_DIR="papers/2025_cmos018_noise"
-          # テキスト/Markdownのプレビューを作成（iOSでも見える拡張子に）
           cp "$SRC" "${PREV_DIR}/main_preview.txt"
           {
             echo '## main.tex preview'
@@ -111,7 +107,6 @@ jobs:
             cat "$SRC"
             echo '```'
           } > "${PREV_DIR}/main_preview.md"
-          # Actions サマリーにも埋め込む（UI上で直接読める）
           {
             echo '### main.tex (head)'
             echo ''
@@ -128,11 +123,4 @@ jobs:
           path: |
             papers/2025_cmos018_noise/main_preview.txt
             papers/2025_cmos018_noise/main_preview.md
-          if-no-files-found: warn
           retention-days: 30
-
-      - name: Upload source tarball (robust)
-        if: always()
-        run: |
-          tar -C papers/2025_cmos018_noise -czf papers/2025_cmos018_noise/source_bundle.tgz .
-        shell: bash
