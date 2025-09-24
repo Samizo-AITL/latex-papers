@@ -1,74 +1,51 @@
-name: Build LaTeX (0.18um 1f-noise paper)
+name: Build LaTeX Paper (CMOS018 1f-noise)
 
 on:
   push:
     paths:
-      - "papers/2025_cmos018_noise/**"
-      - ".github/workflows/latex_cmos018_noise.yml"
-  pull_request:
-    paths:
-      - "papers/2025_cmos018_noise/**"
-      - ".github/workflows/latex_cmos018_noise.yml"
+      - 'papers/2025_cmos018_noise/**'
+      - '.github/workflows/latex_cmos018_noise.yml'
   workflow_dispatch:
 
 jobs:
-  build-pdf:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compile LaTeX (latexmk → PDF)
-        continue-on-error: true
-        uses: xu-cheng/latex-action@v3
+      - name: Build PDF with XeLaTeX
+        uses: xu-cheng/latex-action@v2
         with:
-          root_file: papers/2025_cmos018_noise/main.tex
-          args: -pdf -interaction=nonstopmode -file-line-error
+          working_directory: papers/2025_cmos018_noise
+          root_file: main.tex
+          latexmk_use_xelatex: true
+          latexmk_shell_escape: true
+          args: "-interaction=nonstopmode -halt-on-error -file-line-error"
 
-      - name: Upload PDF (if exists)
-        if: ${{ always() && hashFiles('papers/2025_cmos018_noise/main.pdf') != '' }}
+      - name: Upload PDF artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cmos018_noise_pdf
+          name: cmos018_noise_paper
           path: papers/2025_cmos018_noise/main.pdf
+          if-no-files-found: error
           retention-days: 14
 
-      - name: Upload logs (if any)
-        if: ${{ always() && hashFiles('papers/2025_cmos018_noise/*.log') != '' }}
+      - name: Upload build logs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cmos018_noise_logs
           path: |
             papers/2025_cmos018_noise/*.log
+            papers/2025_cmos018_noise/*.blg
+            papers/2025_cmos018_noise/*.bbl
             papers/2025_cmos018_noise/*.aux
             papers/2025_cmos018_noise/*.fls
             papers/2025_cmos018_noise/*.fdb_latexmk
-            papers/2025_cmos018_noise/*.out
-            papers/2025_cmos018_noise/*.toc
+          if-no-files-found: warn
           retention-days: 14
-
-      - name: Make preview & snapshot (for iOS viewing)
-        if: always()
-        run: |
-          set -eu
-          SRC="papers/2025_cmos018_noise/main.tex"
-          PREV="papers/2025_cmos018_noise"
-          # iOSでも読めるプレビューを生成
-          cp "$SRC" "${PREV}/main_preview.txt"
-          { echo '## main.tex preview'; echo; echo '```latex'; cat "$SRC"; echo '```'; } > "${PREV}/main_preview.md"
-          { echo '### main.tex (head)'; echo; echo '```latex'; sed -n '1,120p' "$SRC"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
-          # tar は作業ディレクトリ外に作る（同時更新による exit 1 を回避）
-          TARPATH="${RUNNER_TEMP}/source_bundle.tgz"
-          tar --warning=no-file-changed --ignore-failed-read -C "$PREV" -czf "$TARPATH" . || true
-          echo "TARPATH=$TARPATH" >> $GITHUB_ENV
-
-      - name: Upload source bundle & previews
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cmos018_noise_source
-          path: |
-            ${{ env.TARPATH }}
-            papers/2025_cmos018_noise/main_preview.txt
-            papers/2025_cmos018_noise/main_preview.md
-          retention-days: 30
