@@ -11,21 +11,26 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
-% siunitx 設定（µを確実に数式で）
+% --- µ を確実に統一（XeLaTeX向け） ---
+\usepackage{upgreek} % 立体ギリシャ
 \sisetup{
   mode = match,
-  text-micro = \ensuremath{\mu},
-  math-micro = \mu,
+  text-micro = \ensuremath{\upmu}, % テキスト中の µ
+  math-micro = \upmu,              % 数式中の µ
   per-mode = symbol,
   separate-uncertainty = true
 }
-\DeclareSIUnit{\um}{\micro\meter} % 便利マクロ
+\DeclareSIUnit{\um}{\micro\meter} % 例：\SI{0.18}{\um}
 
-% --- IEEEtran + XeLaTeX では不要なので削除 ---
+% --- IEEEtran + XeLaTeX では fontenc/lmodern は不要 ---
 % \usepackage[T1]{fontenc}
 % \usepackage{lmodern}
 
-\usepackage[section]{placeins} % \FloatBarrier
+% --- フロートは自由に動かす（空欄の主因を解消） ---
+% \usepackage[section]{placeins} % ←削除
+% 必要な箇所だけバリアしたい場合のみ：
+% \usepackage{placeins}
+% ... 図の直後などに \FloatBarrier を**局所的に**入れる
 
 % ---------- Title / Author ----------
 \title{Differentiated Analog Modules via Manufacturing Technology:\\
@@ -182,9 +187,8 @@ Combined      & 1.00 & 0.50 & \SI{50}{\percent} \\
 \label{fig:area}
 \end{figure}
 
-% ---------- Figure 4: Long-term (1-column, bottom-left) ----------
-% \FloatBarrier   % ←削除（バリアが詰まりの原因）
-\begin{figure}[!b]  % ← [!t] を [!b] に変更して左カラムの“下”へ
+% ---------- Figure 4: Long-term ----------
+\begin{figure}[!t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
@@ -202,7 +206,6 @@ Combined      & 1.00 & 0.50 & \SI{50}{\percent} \\
 \caption{Long-term stability at \SI{85}{\celsius}: improved split is stable; baseline drifts by $\sim$20\%.}
 \label{fig:aging}
 \end{figure}
-% \FloatBarrier   % ←これも不要
 
 % ---------- 5. Applications ----------
 \section{Applications}
