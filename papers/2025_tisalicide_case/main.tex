@@ -1,25 +1,21 @@
 \documentclass[conference]{IEEEtran}
 
+% -------------------- Packages --------------------
 \usepackage{cite}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tikz}
 \usepackage{xcolor}
-\usepackage{hyperref}
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
+\usepackage[hidelinks]{hyperref}
 
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    citecolor=blue,
-    urlcolor=blue
-}
-
+% -------------------- Document --------------------
 \begin{document}
 
-\title{Historical Case Study on Ti Silicide (TiSi\textsubscript{2}) \\ Reliability Issues in Legacy CMOS Nodes}
+\title{Historical Case Study on Ti Silicide (TiSi\textsubscript{2})\\
+Reliability Issues in Legacy CMOS Driver ICs}
 
 \author{
 \IEEEauthorblockN{Shinichi Samizo}
@@ -31,53 +27,81 @@ Project Design Hub, Samizo-AITL\\
 
 \maketitle
 
+% -------------------- Abstract --------------------
 \begin{abstract}
-This paper analyzes a historical failure case related to Ti silicide (TiSi\textsubscript{2}) phase transition instability at the 0.25~µm CMOS node. 
-The incomplete C49$\rightarrow$C54 transformation, coupled with boron absorption, caused localized high-resistance spots that directly reduced SRAM yield. 
-The case illustrates how process optimization and empirical feedback cycles became indispensable in semiconductor development, particularly when economic pressure and high-voltage compatibility shaped process selection.
+This paper analyzes a historical failure case at the 0.25\,\textmu m CMOS node related to Ti silicide (TiSi\textsubscript{2}) phase-transition instability. 
+For active-matrix TFT (aTFT) LCD driver ICs that required mixed 3.3~V logic and $\sim$30~V devices, manufacturers selected the 0.25\,\textmu m node because its LOCOS isolation safely supported high-voltage (HV) co-integration; the 0.18\,\textmu m STI-based node, although denser and yield-stable, posed edge-thinning risks for $\sim$30~V devices. 
+Under this context, incomplete C49$\rightarrow$C54 transformation with boron absorption created localized high-resistance spots, directly reducing 1~Mbit SRAM yield.
+The study highlights how process optimization and empirical feedback cycles were indispensable when isolation technology and device requirements constrained node selection.
 \end{abstract}
 
+% -------------------- Introduction --------------------
 \section{Introduction}
-In the late 1990s, LCD drivers for passive monochrome panels were commonly fabricated in 0.35~µm nodes supporting 3.3~V logic and 40~V high-voltage transistors.  
-With the transition to active-matrix TFT (aTFT) color panels in the early 2000s, demand increased for higher-performance logic and embedded SRAM, along with high-voltage device integration.  
+In the late 1990s, LCD drivers for monochrome passive panels were commonly fabricated in 0.35\,\textmu m processes supporting 3.3~V logic and 40~V HV devices.
+With the shift to color aTFT panels in the early 2000s, driver ICs required higher-performance logic, embedded large SRAM macros, and continued HV device integration around 30~V.
 
-Although the 0.18~µm process was already in mass production and offered smaller chip size and stable yield, it relied on shallow trench isolation (STI). STI edge thinning posed risks for 30~V device reliability.  
-By contrast, the 0.25~µm process used local oxidation of silicon (LOCOS), which had a proven track record in high-voltage isolation.  
-Therefore, manufacturers adopted the 0.25~µm LOCOS process (3.3~V + 30~V) for LCD driver ICs despite disadvantages in chip area.
+Although the 0.18\,\textmu m CMOS process was already in mass production with small die size and stable yield, it relied on Shallow Trench Isolation (STI), where edge thinning introduced a reliability risk for $\sim$30~V devices.
+By contrast, the 0.25\,\textmu m process used Local Oxidation of Silicon (LOCOS), which had a proven track record for HV isolation.
+Therefore, manufacturers adopted the 0.25\,\textmu m LOCOS-based process for 3.3~V + 30~V LCD driver ICs, accepting area disadvantages to guarantee HV compatibility.
 
-\begin{table}[!t]
-\centering
-\caption{Comparison of 0.25~µm (LOCOS) vs 0.18~µm (STI) nodes}
-\begin{tabular}{@{}lll@{}}
-\toprule
- & 0.25~µm (LOCOS) & 0.18~µm (STI) \\ \midrule
-Isolation method & LOCOS (thick field oxide) & STI (trench oxide) \\
-HV support & Proven 30~V & Edge thinning risk at 30~V \\
-Chip size & Larger & Smaller \\
-Yield stability & Moderate (silicide risk) & Generally stable \\
-Adoption reason & Safe HV integration & Not adopted for HV products \\ \bottomrule
-\end{tabular}
-\label{tab:process_comparison}
-\end{table}
+% -------------------- Full-width Table --------------------
+\begin{table*}[t]
+  \centering
+  \caption{Comparison of 0.25\,\textmu m (LOCOS) and 0.18\,\textmu m (STI) nodes for LCD driver ICs}
+  \label{tab:node-comparison}
+  \begin{tabular}{lcc}
+    \toprule
+    & \textbf{0.25\,\textmu m (LOCOS)} & \textbf{0.18\,\textmu m (STI)} \\
+    \midrule
+    Isolation method      & LOCOS (thick field oxide)             & STI (trench isolation; edge thinning at isolation corners) \\
+    HV device support     & Proven $\sim$30~V integration          & New HV platform needed; 30~V reliability risk to be re-validated \\
+    Chip size / density   & Larger die; lower density              & Smaller die; higher density \\
+    Yield stability       & Moderate (silicide/C49 risk dominant)  & Generally stable baseline process \\
+    Adoption rationale    & Safe HV co-integration with aTFT logic & Not adopted for HV driver products at that time \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
 
+% -------------------- Technical Background --------------------
 \section{Technical Background}
-TiSi\textsubscript{2} was widely adopted for its low resistivity. 
-However, the silicide undergoes a phase transition from metastable C49 to stable C54 during rapid thermal annealing (RTA). 
-If the transition is incomplete, residual C49 grains act as high-resistance regions. 
-Furthermore, boron absorption into TiSi\textsubscript{2} aggravated resistance fluctuation, directly manifesting as random SRAM bit failures.
+\subsection{Isolation Choice for HV Devices}
+\begin{itemize}
+  \item \textbf{0.25\,\textmu m LOCOS}: mature, thick field oxide; well-established margins for $\sim$30~V device isolation.
+  \item \textbf{0.18\,\textmu m STI}: shallow trench isolation; better density, but isolation-corner thinning required a new HV device development and qualification flow.
+\end{itemize}
 
+\subsection{Ti Silicide Issues}
+TiSi\textsubscript{2} was adopted for low resistivity but requires a C49$\rightarrow$C54 phase transformation during RTA.
+If the transformation is incomplete, residual C49 grains remain as high-resistance regions.
+Boron absorption from halo implants into Ti/TiSi\textsubscript{2} aggravated local resistivity variation.
+These effects were largely latent at smaller memory macros (e.g., 500~kbit), but became visible when the array scaled to 1~Mbit.
+
+% -------------------- Failure Analysis --------------------
 \section{Failure Analysis}
-In early products embedding 500k-bit SRAM macros, the instability did not critically manifest.  
-However, with 1M-bit macros, single-bit failures became frequent due to localized high-resistance spots in transistor contact regions.  
-Because no redundancy was included, each defect directly caused chip rejection.  
-At the development review stage, these issues were not anticipated, as empirical data from smaller SRAM macros suggested acceptable yield.
+\subsection{Observation: 1 Mbit SRAM}
+In mass production, random single-bit failures appeared in the 1~Mbit SRAM macro.
+Because redundancy was not implemented in the embedded macro, even one defective bit caused device rejection.
 
-\begin{figure}[!t]
+\subsection{Root Cause}
+Failure localization indicated that:
+\begin{itemize}
+  \item Halo boron was partially absorbed into Ti during silicide formation.
+  \item The local B uptake inhibited C54 formation, leaving high-resistance C49 regions.
+  \item These high-resistance spots manifested as random SRAM cell failures.
+\end{itemize}
+
+\subsection{Review Limitation}
+Earlier products integrating 500~kbit SRAM macros had not shown this issue.
+Based on those precedents, the team assumed that scaling to 1~Mbit would be acceptable.
+Consequently, the failure mode was not identified during the initial development review stage.
+
+% -------------------- Yield Model Figure --------------------
+\begin{figure}[t]
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=0.9\linewidth,
-      height=6cm,
+      width=\linewidth,
+      height=5.5cm,
       xlabel={$\lambda$ (average defects per chip)},
       ylabel={Yield $Y_k$},
       xmin=0, xmax=1,
@@ -86,62 +110,70 @@ At the development review stage, these issues were not anticipated, as empirical
       grid=both,
       major grid style={line width=.2pt,draw=gray!50},
       minor grid style={line width=.1pt,draw=gray!20},
-      thick,
+      thick
     ]
-      \addplot[blue, very thick, domain=0:1, samples=200] {exp(-x)};
+      % k = 0  (no redundancy): Y = exp(-λ)
+      \addplot[blue, very thick, domain=0:1, samples=200]{exp(-x)};
       \addlegendentry{No redundancy ($k=0$)}
-
-      \addplot[red, dashed, very thick, domain=0:1, samples=200] {exp(-x)*(1+x)};
-      \addlegendentry{With redundancy ($k=1$)}
+      % k = 1  (one spare): Y = exp(-λ)*(1+λ)
+      \addplot[red, dashed, very thick, domain=0:1, samples=200]{exp(-x)*(1+x)};
+      \addlegendentry{Redundancy ($k=1$)}
     \end{axis}
   \end{tikzpicture}
   \caption{Illustrative yield sensitivity (Poisson model) with and without redundancy.}
   \label{fig:yield}
 \end{figure}
 
-\section{Design Review Limitations}
-Design reviews (DR) primarily checked rule compliance and did not evaluate risks arising from incomplete silicide transformation.  
-Since prior SRAM macros (≤500k bits) had not shown systematic failure, extrapolation to 1M-bit macros appeared reasonable but proved incorrect.  
-
+% -------------------- Countermeasures --------------------
 \section{Countermeasures}
-\subsection{Provisional Measures}
-Etch profiles were adjusted to slightly undercut sidewalls, ensuring sufficient separation between halo implants and active regions.  
-This temporarily improved yield.
+\subsection{Provisional}
+Etch profiles were tuned to slightly undercut sidewalls, increasing separation between halo regions and Ti, which improved yield significantly.
 
-\subsection{Permanent Measures}
-RTA conditions were optimized to stabilize C54 phase formation.  
-However, this altered device parameters, requiring re-characterization of process-device models.
+\subsection{Permanent}
+RTA conditions were optimized to favor stable C54 formation.
+However, this altered device parameters and required re-characterization of process/device models.
 
+% -------------------- Educational Application --------------------
 \section{Educational Application}
-\subsection{Teaching Materials}
+\subsection{Teaching Tools}
 \begin{itemize}
-    \item Cause-effect diagrams (process $\rightarrow$ defect $\rightarrow$ yield)
-    \item Comparative table: 0.25~µm (LOCOS) vs 0.18~µm (STI) for HV devices
-    \item Exercises: prioritize process fix vs introduce redundancy
+  \item Cause–effect diagrams: process $\rightarrow$ defect $\rightarrow$ yield.
+  \item Comparative table: 0.25\,\textmu m (LOCOS) vs.\ 0.18\,\textmu m (STI) for HV devices (Table~\ref{tab:node-comparison}).
+  \item Exercises: prioritize process improvement vs.\ introduce redundancy.
 \end{itemize}
 
-\subsection{Universality}
-The trade-off was not merely cost vs. stability but meeting the integration requirements of active-matrix LCD drivers: high-performance logic, large SRAM, and safe HV operation.  
-Such process-selection dilemmas remain relevant in later nodes (e.g., 28~nm FD-SOI reuse, 40~nm BCD continuity).
+\subsection{Lessons}
+Relying only on 500~kbit SRAM yield data led to an incorrect assumption at 1~Mbit.
+Given STI was not yet qualified for 30~V devices at that time, 0.25\,\textmu m LOCOS was the only feasible platform—yet it carried a silicide-instability risk that required explicit mitigation.
 
+% -------------------- Conclusion --------------------
 \section{Conclusion}
-This case demonstrates how the need for HV compatibility constrained process selection, leading to the adoption of 0.25~µm LOCOS despite the availability of a smaller, stable 0.18~µm STI process.  
-Yield degradation from incomplete TiSi\textsubscript{2} phase transition highlighted the necessity of empirical feedback cycles in design and process development.  
-Its educational value lies in using historical semiconductor case studies to teach the interaction of technology, reliability, and market context.
+This case demonstrates how HV compatibility constraints can dominate node selection.
+Despite the availability of a denser, yield-stable 0.18\,\textmu m STI process, the need for safe $\sim$30~V integration drove adoption of 0.25\,\textmu m LOCOS.
+Yield loss from incomplete TiSi\textsubscript{2} phase transformation (with boron absorption) became critical at the 1~Mbit SRAM scale.
+The educational value lies in showing how scaling, isolation technology, and process reliability intersect, and why continuous empirical feedback is essential.
 
+% -------------------- References (single title) --------------------
 \section*{References}
 \begin{thebibliography}{99}
-\bibitem{Sze2007} S. M. Sze and K. K. Ng, \textit{Physics of Semiconductor Devices}, 3rd ed. Wiley, 2007.
-\bibitem{Wolf1986} S. Wolf and R. N. Tauber, \textit{Silicon Processing for the VLSI Era, Volume 1: Process Technology}. Lattice Press, 1986.
-\bibitem{Colinge2004} J.-P. Colinge, \textit{Silicon-on-Insulator Technology: Materials to VLSI}, 3rd ed. Springer, 2004.
-\bibitem{ITRS2001} International Technology Roadmap for Semiconductors (ITRS), ``Process Integration, Devices, and Structures,'' 2001.
-\bibitem{Takeda1994} E. Takeda, C. Y. Yang, and A. S. Grove, ``Silicide technology for ULSI applications,'' \textit{IEEE Trans. Electron Devices}, vol. 41, no. 12, pp. 2133--2141, Dec. 1994.
-\bibitem{Chang1996} J. P. Chang and A. J. Steckl, ``Titanium silicide formation and stability in submicron CMOS technology,'' \textit{J. Appl. Phys.}, vol. 79, no. 9, pp. 4536--4364, 1996.
+\bibitem{Sze2007}
+S.~M. Sze and K.~K. Ng, \emph{Physics of Semiconductor Devices}, 3rd ed.\ Wiley, 2007.
+\bibitem{WolfTauber1986}
+S.~Wolf and R.~N. Tauber, \emph{Silicon Processing for the VLSI Era, Vol.~1: Process Technology}.\ Lattice Press, 1986.
+\bibitem{Colinge2004}
+J.-P. Colinge, \emph{Silicon-on-Insulator Technology: Materials to VLSI}, 3rd ed.\ Springer, 2004.
+\bibitem{ITRS2001}
+International Technology Roadmap for Semiconductors (ITRS), ``Process Integration, Devices, and Structures,'' 2001.
+\bibitem{Takeda1994}
+E.~Takeda, C.~Y. Yang, and A.~S. Grove, ``Silicide technology for ULSI applications,'' \emph{IEEE Trans. Electron Devices}, vol.~41, no.~12, pp.~2133--2141, Dec.~1994.
+\bibitem{ChangSteckl1996}
+J.~P. Chang and A.~J. Steckl, ``Titanium silicide formation and stability in submicron CMOS technology,'' \emph{J. Appl. Phys.}, vol.~79, no.~9, pp.~4536--4364, 1996.
 \end{thebibliography}
 
+% -------------------- Author Bio --------------------
 \section*{Author Biography}
-\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.  
-He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal device development and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.  
+\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.
+He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal device development, and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.
 He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\
 \emph{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
 \emph{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}.
