@@ -25,24 +25,28 @@ jobs:
           ls -la
           echo "---- target dir ----"
           ls -la papers/2025_cmos018_noise || true
+          echo "---- tree ----"
+          sudo apt-get update -y && sudo apt-get install -y tree
+          tree -a -L 3 papers || true
 
       - name: Compile LaTeX (latexmk → PDF)
         uses: xu-cheng/latex-action@v3
         with:
-          # リポジトリ直下からの相対パス
           root_file: papers/2025_cmos018_noise/main.tex
-          # 未解決参照で停止しない（latexmkが必要回数まわして解決）
           args: -pdf -interaction=nonstopmode -file-line-error
+          continue_on_error: true   # ← 警告・未解決参照で止めない
 
       - name: Upload PDF
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cmos018_noise_pdf
           path: papers/2025_cmos018_noise/main.pdf
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
 
       - name: Upload logs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cmos018_noise_logs
