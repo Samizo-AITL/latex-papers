@@ -35,13 +35,13 @@ Project Design Hub, Samizo-AITL\\
 This paper analyzes a historical failure case related to Ti silicide (TiSi\textsubscript{2}) phase transition instability at the 0.25~µm CMOS node. 
 For aTFT-LCD driver ICs requiring $\sim$30~V devices, manufacturers selected the 0.25~µm node because its LOCOS isolation allowed co-integration of existing 30~V modules without redesign. 
 In contrast, migrating to 0.18~µm (STI) required a new HV platform. 
-Under this context, incomplete C49$\rightarrow$C54 transformation with boron absorption created localized high-resistance spots, directly reducing SRAM yield. 
+Within this context, incomplete C49$\rightarrow$C54 transformation with boron absorption created localized high-resistance spots, directly reducing SRAM yield. 
 The case further illustrates how process optimization and empirical feedback cycles became indispensable in semiconductor development under market and cost pressure.
 \end{abstract}
 
 \section{Introduction}
 Around 2000, the demand for large SRAM and mixed-signal logic in aTFT-LCD drivers surged. 
-To ensure reliable 30~V IC functions, many manufacturers adopted the 0.25~µm LOCOS-based node, which was compatible with existing HV device modules. 
+To ensure reliable 30~V IC devices, many manufacturers adopted the 0.25~µm LOCOS-based node, which was compatible with existing HV device modules. 
 In contrast, migrating to 0.18~µm (STI) required a new STI-compatible 30~V device development, posing schedule and ramp risks. 
 This decision context exposed vulnerabilities when Ti silicide instabilities degraded yield.
 
@@ -53,18 +53,18 @@ Furthermore, boron absorption into TiSi\textsubscript{2} aggravated resistance f
 
 Additionally, the isolation scheme played a crucial role:
 \begin{itemize}
-  \item 0.25~µm LOCOS: Mature, thick field oxide, tolerant for HV ($\sim$30~V) integration.
-  \item 0.18~µm STI: Shallow trench, better density, but required re-development of HV devices.
+    \item 0.25~µm LOCOS: mature, thick field oxide, tolerant for HV ($\sim$30~V) integration.
+    \item 0.18~µm STI: shallow trench, better density, but required re-development of HV devices due to thinning at trench edges.
 \end{itemize}
 
 \section{Node Trade-off: 0.25 µm vs 0.18 µm}
-Table~\ref{tab:node} summarizes the trade-offs.  
+Table~\ref{tab:comparison} summarizes the trade-offs.  
 The 0.25~µm LOCOS node was not simply a cost-driven ``extension,'' but a strategic choice to guarantee HV compatibility with existing aTFT driver requirements.
 
 \begin{table}[!t]
-\caption{Comparison of 0.25 µm (LOCOS) and 0.18 µm (STI) CMOS Nodes for aTFT driver ICs}
-\label{tab:node}
 \centering
+\caption{Comparison of 0.25 µm (LOCOS) and 0.18 µm (STI) CMOS Nodes for aTFT driver ICs}
+\label{tab:comparison}
 \begin{tabular}{@{}lll@{}}
 \toprule
  & \textbf{0.25 µm (LOCOS)} & \textbf{0.18 µm (STI)} \\
@@ -80,11 +80,15 @@ Cost note & Simpler flow & Higher mask/process cost \\
 \end{table}
 
 \section{Failure Analysis}
-The yield impact was confirmed through SRAM testing.  
-Without redundancy, single-bit random defects directly caused device rejection.  
+The yield impact was confirmed through SRAM testing. 
+Without redundancy, single-bit random defects directly caused device rejection. 
 Failure localization pointed to silicide regions at transistor contacts, with boron diffusion assisting local resistivity increase.
 
-% ===== 図をここに配置 =====
+Notably, 1~Mbit SRAM macros amplified single-bit failures, making the issue visible.  
+Before this generation, 500k-bit SRAM macros had been shipped without issue, leading the team to assume that 1~Mbit integration would also be safe.  
+Thus, the problem was not extracted during the initial design review stage.
+
+% ===== 図 =====
 \begin{figure}[!t]
   \centering
   \begin{tikzpicture}
@@ -115,22 +119,17 @@ Failure localization pointed to silicide regions at transistor contacts, with bo
 \end{figure}
 
 \section{Design Review Limitations}
-Design reviews (DR) could only verify rule compliance and formal specifications.  
+Design reviews (DR) could only verify rule compliance and formal specifications. 
 They failed to predict scalability risks arising from incomplete silicide phase transformation.  
-
-Before this product generation, SRAM macros had already been integrated, but only up to the 500~kbit level, where the issue had not yet manifested.  
-Based on those successful precedents, the team assumed that integration of a 1~Mbit macro would also be safe.  
-However, the larger array size amplified single-bit failures, and the issue was not extracted during the initial development review stage.  
-
 This case shows that DR without continuous empirical feedback was insufficient.
 
 \section{Countermeasures}
 \subsection{Provisional Measures}
-Etch profiles were adjusted to slightly undercut sidewalls, ensuring sufficient separation between halo implants and active regions.  
+Etch profiles were adjusted to slightly undercut sidewalls, ensuring sufficient separation between halo implants and active regions. 
 This measure temporarily improved yield.
 
 \subsection{Permanent Measures}
-RTA conditions were optimized to stabilize C54 phase formation.  
+RTA conditions were optimized to stabilize C54 phase formation. 
 However, this changed device parameters, requiring re-characterization of process-device models.
 
 \section{Educational Application}
@@ -142,15 +141,14 @@ However, this changed device parameters, requiring re-characterization of proces
 \end{itemize}
 
 \subsection{Universality}
-Trade-offs between technical stability and economic pressure remain relevant today.  
+Trade-offs between technical stability and economic pressure remain relevant today. 
 Similar cases exist in re-use of 28~nm FD-SOI or 40~nm BCD.
 
 \section{Conclusion}
-This historical case demonstrates that residual risks remain in legacy nodes.  
-Yield degradation due to incomplete silicide phase transition highlighted the inseparability of process optimization and empirical feedback.  
+This historical case demonstrates that residual risks remain in legacy nodes. 
+Yield degradation due to incomplete silicide phase transition highlighted the inseparability of process optimization and empirical feedback. 
 The educational value lies in integrating such case studies into semiconductor engineering curricula.
 
-\section*{References}
 \begin{thebibliography}{99}
 \bibitem{Sze2007} S. M. Sze and K. K. Ng, \textit{Physics of Semiconductor Devices}, 3rd ed. Hoboken, NJ: Wiley, 2007.
 \bibitem{Wolf1986} S. Wolf and R. N. Tauber, \textit{Silicon Processing for the VLSI Era, Volume 1: Process Technology}. Sunset Beach, CA, USA: Lattice Press, 1986.
@@ -162,8 +160,8 @@ The educational value lies in integrating such case studies into semiconductor e
 
 % ---------- Author Biography ----------
 \section*{Author Biography}
-\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan.  
-He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal device development and contributed to inkjet MEMS actuators and PrecisionCore printhead technology.  
+\textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. 
+He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal device development and contributed to inkjet MEMS actuators and PrecisionCore printhead technology. 
 He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.\\
 \emph{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
 \emph{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}.
