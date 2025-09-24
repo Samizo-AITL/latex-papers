@@ -25,17 +25,26 @@ jobs:
           ls -la
           echo "---- target dir ----"
           ls -la papers/2025_cmos018_noise || true
-          echo "---- tree ----"
-          sudo apt-get update -y && sudo apt-get install -y tree
-          tree -a -L 3 papers || true
 
       - name: Compile LaTeX (latexmk → PDF)
+        # ← ここがポイント：Step側オプション
+        continue-on-error: true
         uses: xu-cheng/latex-action@v3
         with:
           root_file: papers/2025_cmos018_noise/main.tex
           args: -pdf -interaction=nonstopmode -file-line-error
-          continue_on_error: true   # ← 警告・未解決参照で止めない
 
+      - name: Show main.log tail (debug)
+        if: always()
+        run: |
+          echo "---- main.log (tail) ----"
+          if [ -f papers/2025_cmos018_noise/main.log ]; then
+            tail -n 200 papers/2025_cmos018_noise/main.log
+          else
+            echo "main.log not found"
+          fi
+
+      # PDF を回収
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
@@ -45,6 +54,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      # LOG 等を回収（ワイルドカードを広めに）
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -55,7 +65,19 @@ jobs:
             papers/2025_cmos018_noise/*.aux
             papers/2025_cmos018_noise/*.bbl
             papers/2025_cmos018_noise/*.blg
+            papers/2025_cmos018_noise/*.fls
+            papers/2025_cmos018_noise/*.fdb_latexmk
             papers/2025_cmos018_noise/*.out
             papers/2025_cmos018_noise/*.toc
           if-no-files-found: warn
           retention-days: 14
+
+      # 念のため、作業フォルダ一式もアーカイブ
+      - name: Upload workdir snapshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cmos018_noise_all
+          path: papers/2025_cmos018_noise/**
+          if-no-files-found: warn
+          retention-days: 7
