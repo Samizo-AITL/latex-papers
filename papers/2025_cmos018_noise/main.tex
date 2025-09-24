@@ -12,7 +12,18 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\sisetup{detect-all=true}
+
+% siunitx: detect-all は非推奨なので置換
+\sisetup{
+  mode = match,
+  propagate-math-font = true,
+  reset-math-version = false,
+  reset-text-family = false,
+  reset-text-series = false,
+  reset-text-shape = false,
+  text-family-to-math = true,
+  text-series-to-math = true
+}
 
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
@@ -95,30 +106,30 @@ Improvements persist up to \SI{125}{\celsius}. High-temperature operation (\SI{8
   legend pos=south west,
   grid=both,
 ]
-\addplot+[thick, mark=none] table[row sep=\\] {
-x y
-1 1e-1
-3 3.3e-2
-10 1e-2
-30 3.3e-3
-100 1e-3
-300 3.3e-4
-1000 1e-4
-3000 3.3e-5
-10000 1e-5
+% ---- Baseline ----
+\addplot+[thick, mark=none] coordinates {
+  (1,1e-1)
+  (3,3.3e-2)
+  (10,1e-2)
+  (30,3.3e-3)
+  (100,1e-3)
+  (300,3.3e-4)
+  (1000,1e-4)
+  (3000,3.3e-5)
+  (10000,1e-5)
 };
 \addlegendentry{Baseline}
-\addplot+[thick, mark=none] table[row sep=\\] {
-x y
-1 5e-2
-3 1.65e-2
-10 5e-3
-30 1.65e-3
-100 5e-4
-300 1.65e-4
-1000 5e-5
-3000 1.65e-5
-10000 5e-6
+% ---- Improved ----
+\addplot+[thick, mark=none] coordinates {
+  (1,5e-2)
+  (3,1.65e-2)
+  (10,5e-3)
+  (30,1.65e-3)
+  (100,5e-4)
+  (300,1.65e-4)
+  (1000,5e-5)
+  (3000,1.65e-5)
+  (10000,5e-6)
 };
 \addlegendentry{Improved (-50\%)}
 \end{loglogaxis}
