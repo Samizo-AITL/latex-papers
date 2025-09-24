@@ -14,17 +14,9 @@ on:
 jobs:
   build-pdf:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Show repo tree (debug)
-        run: |
-          echo "Workspace: $GITHUB_WORKSPACE"
-          ls -la
-          echo "---- target dir ----"
-          ls -la papers/2025_cmos018_noise || true
 
       - name: Compile LaTeX (latexmk → PDF)
         continue-on-error: true
@@ -33,43 +25,7 @@ jobs:
           root_file: papers/2025_cmos018_noise/main.tex
           args: -pdf -interaction=nonstopmode -file-line-error
 
-      - name: Verify & snapshot sources
-        if: always()
-        run: |
-          set -eux
-          DIR="papers/2025_cmos018_noise"
-          echo "---- file list & sizes ----"
-          find "$DIR" -maxdepth 1 -type f -printf "%p\t(%s bytes)\n" | sort || true
-          echo "---- head of main.tex ----"
-          if [ -f "$DIR/main.tex" ]; then
-            wc -c "$DIR/main.tex"
-            sed -n '1,60p' "$DIR/main.tex"
-            cp "$DIR/main.tex" "$DIR/main_source_copy.tex"
-          else
-            echo "main.tex NOT FOUND" >&2
-          fi
-          # ここで一度だけ tar 作成（以降は同フォルダに書き込まない）
-          tar -C "$DIR" -czf "$DIR/source_bundle.tgz" .
-
-      - name: Upload source bundle (tgz)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cmos018_noise_source_bundle
-          path: papers/2025_cmos018_noise/source_bundle.tgz
-          if-no-files-found: warn
-          retention-days: 30
-
-      - name: Upload main.tex (direct copy)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cmos018_noise_maintex_copy
-          path: papers/2025_cmos018_noise/main_source_copy.tex
-          if-no-files-found: warn
-          retention-days: 30
-
-      - name: Upload PDF
+      - name: Upload PDF (if exists)
         if: ${{ always() && hashFiles('papers/2025_cmos018_noise/main.pdf') != '' }}
         uses: actions/upload-artifact@v4
         with:
@@ -77,7 +33,7 @@ jobs:
           path: papers/2025_cmos018_noise/main.pdf
           retention-days: 14
 
-      - name: Upload logs
+      - name: Upload logs (if any)
         if: ${{ always() && hashFiles('papers/2025_cmos018_noise/*.log') != '' }}
         uses: actions/upload-artifact@v4
         with:
@@ -85,42 +41,29 @@ jobs:
           path: |
             papers/2025_cmos018_noise/*.log
             papers/2025_cmos018_noise/*.aux
-            papers/2025_cmos018_noise/*.bbl
-            papers/2025_cmos018_noise/*.blg
             papers/2025_cmos018_noise/*.fls
             papers/2025_cmos018_noise/*.fdb_latexmk
             papers/2025_cmos018_noise/*.out
             papers/2025_cmos018_noise/*.toc
           retention-days: 14
 
-      - name: Make human-readable previews of main.tex
+      - name: Make preview & snapshot (for iOS viewing)
         if: always()
         run: |
-          set -eu
           SRC="papers/2025_cmos018_noise/main.tex"
-          PREV_DIR="papers/2025_cmos018_noise"
-          cp "$SRC" "${PREV_DIR}/main_preview.txt"
-          {
-            echo '## main.tex preview'
-            echo ''
-            echo '```latex'
-            cat "$SRC"
-            echo '```'
-          } > "${PREV_DIR}/main_preview.md"
-          {
-            echo '### main.tex (head)'
-            echo ''
-            echo '```latex'
-            sed -n '1,120p' "$SRC"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+          PREV="papers/2025_cmos018_noise"
+          cp "$SRC" "${PREV}/main_preview.txt"
+          { echo '## main.tex preview'; echo; echo '```latex'; cat "$SRC"; echo '```'; } > "${PREV}/main_preview.md"
+          { echo '### main.tex (head)'; echo; echo '```latex'; sed -n '1,120p' "$SRC"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          tar -C "$PREV" -czf "${PREV}/source_bundle.tgz" .
 
-      - name: Upload preview files (txt/md)
+      - name: Upload source bundle & previews
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cmos018_noise_source_previews
+          name: cmos018_noise_source
           path: |
+            papers/2025_cmos018_noise/source_bundle.tgz
             papers/2025_cmos018_noise/main_preview.txt
             papers/2025_cmos018_noise/main_preview.md
           retention-days: 30
