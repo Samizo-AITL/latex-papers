@@ -47,22 +47,26 @@ Although the 0.18~µm CMOS process was already in mass production with small die
 By contrast, the 0.25~µm process used Local Oxidation of Silicon (LOCOS), which had a proven track record for HV isolation. 
 Therefore, manufacturers adopted the 0.25~µm LOCOS-based process for 3.3~V + 30~V LCD driver ICs, accepting area disadvantages to guarantee HV compatibility.
 
+% ===== 2カラム幅の比較表（Introduction直後） =====
 \begin{table*}[!t]
 \centering
-\caption{Comparison of 0.25 µm LOCOS and 0.18 µm STI nodes for LCD driver ICs}
-\begin{tabular}{@{}lll@{}}
+\caption{Comparison of 0.25\,\textmu m LOCOS and 0.18\,\textmu m STI nodes for LCD driver ICs}
+\label{tab:node_compare}
+\setlength{\tabcolsep}{4pt}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}lYY@{}}
 \toprule
- & \textbf{0.25 µm (LOCOS)} & \textbf{0.18 µm (STI)} \\
+& \textbf{0.25\,\textmu m (LOCOS)} & \textbf{0.18\,\textmu m (STI)} \\
 \midrule
-Isolation method & Thick field oxide (LOCOS); proven HV margin & Shallow trench isolation; edge thinning at HV corners \\
-HV device support (at that time) & Existing $\sim$30 V HV design reusable & New HV platform required (re-qualification) \\
+Isolation method & Thick field oxide (LOCOS); proven HV margin & Shallow trench isolation; edge thinning risk at HV corners \\
+HV device support (at that time) & Existing $\sim$30\,V HV design reusable & New HV platform required (re-qualification) \\
 Die size / density & Larger die, lower density & Smaller die, higher density \\
-Yield stability & Moderate: yield impacted by TiSi$_2$ instability & Generally stable baseline process \\
-Embedded SRAM redundancy & Not implemented (design/area/timing overhead); no laser repair in mixed-signal testers & Same limitation; redundancy infeasible in LCD driver IC test flow \\
-Risk at 1 Mbit SRAM & High: localized resistive defects $\rightarrow$ chip rejection & Lower base risk, but HV co-integration not yet qualified \\
-Adoption rationale & Safe HV compatibility outweighed cost/density & Density/yield advantage offset by HV risk; not adopted \\
+Yield stability & Moderate; yield impacted by TiSi\textsubscript{2} instability & Generally stable baseline process \\
+Embedded SRAM redundancy & Not implemented (design/area/timing overhead); no laser repair in mixed-signal testers & Same limitation; redundancy/laser repair infeasible in LCD driver IC test flow \\
+Risk at 1\,Mbit SRAM & High: localized resistive defects $\Rightarrow$ chip rejection & Lower base risk, but HV co-integration not yet qualified \\
+Adoption rationale & Safe HV compatibility outweighed cost/density & Density/yield advantage offset by HV risk; not adopted for HV driver products \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table*}
 
 \section{Technical Background}
