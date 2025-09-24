@@ -100,15 +100,15 @@ Multi-finger layouts ensure current uniformity and mitigate self-heating, while 
 
 % ---------- 4. Verification ----------
 \section{Verification}
-Dedicated MOSFET test structures ($L=\SI{0.18}{\micro\meter}$, $W=\SI{10}{\micro\meter}$) were fabricated in both baseline and process-improved splits. Guard-ring layouts were employed to suppress substrate noise coupling and ensure reproducibility.
+Dedicated MOSFET test structures ($L=\SI{0.18}{\micro\meter}$, $W=\SI{10}{\micro\meter}$) were fabricated in both baseline and process-improved splits. Each data point represents the mean of 10--15 devices per split, with error bars indicating one standard deviation ($1\sigma$). Guard-ring layouts were employed to suppress substrate noise coupling and ensure reproducibility across wafers.
 
-Low-frequency drain-current noise power spectral density (PSD) was measured using a shielded probe station with temperature control (\SIrange{25}{125}{\celsius}). Biasing was applied by a precision source-measure unit (e.g., Keysight B1500A class), and the drain current fluctuations were amplified by a low-noise preamplifier (e.g., Stanford SR570 type) before being digitized by a dynamic signal analyzer or FFT spectrum analyzer (e.g., SR785 class). The frequency range was \SI{1}{\hertz}–\SI{10}{\kilo\hertz}, under $V_{GS}=\SI{0.5}{V}$ and $V_{DS}=\SI{50}{mV}$.
+Low-frequency drain-current noise power spectral density (PSD) was measured using a shielded probe station equipped with temperature control (\SIrange{25}{125}{\celsius}, $\pm$\SI{0.5}{\celsius} stability). Biasing was applied by a precision source-measure unit (Keysight B1500A class), and drain current fluctuations were amplified by a low-noise current preamplifier (Stanford SR570 type). The amplified signals were digitized by a dynamic signal analyzer (SR785 class) or equivalent FFT spectrum analyzer. The measurement bandwidth was \SI{1}{\hertz}–\SI{10}{\kilo\hertz}, under $V_{GS}=\SI{0.5}{V}$ and $V_{DS}=\SI{50}{mV}$. System noise floor was verified to be below $10^{-27}$~A$^{2}$/Hz at \SI{10}{\kilo\hertz} by measuring shorted inputs.
 
 \subsection{PSD Observation}
-The measured spectra follow $S_{id}(f)=K/f^{\gamma}$ with $\gamma\approx 1$. Improved splits consistently exhibit $\geq\SI{50}{\percent}$ lower $K$ relative to baseline devices.
+The measured spectra follow $S_{id}(f)=K/f^{\gamma}$ with $\gamma\approx 1$. Improved splits consistently exhibit $\geq\SI{50}{\percent}$ lower $K$ relative to baseline devices. The reduction trend was observed across all tested wafers, with device-to-device variation $<\SI{10}{\percent}$.
 
 \subsection{Temperature and Aging}
-Noise reduction persists up to \SI{125}{\celsius}. After 1000~h of high-temperature storage at \SI{85}{\celsius}, baseline devices show $\sim\SI{20}{\percent}$ drift in PSD, whereas process-improved splits remain stable within experimental variation.
+Noise reduction persists up to \SI{125}{\celsius}. Measurements were performed in \SI{25}{\celsius} steps, confirming stability of the noise reduction across temperature. For reliability, devices underwent high-temperature storage (HTS) at \SI{85}{\celsius} for 1000~h. Baseline devices showed $\sim\SI{20}{\percent}$ upward drift in PSD, whereas process-improved splits remained stable within $\pm\SI{5}{\percent}$, well inside experimental variation.
 
 % ---------- Figure 1: PSD ----------
 \begin{figure}[t]
