@@ -50,12 +50,17 @@ jobs:
       - name: Make preview & snapshot (for iOS viewing)
         if: always()
         run: |
+          set -eu
           SRC="papers/2025_cmos018_noise/main.tex"
           PREV="papers/2025_cmos018_noise"
+          # iOSでも読めるプレビューを生成
           cp "$SRC" "${PREV}/main_preview.txt"
           { echo '## main.tex preview'; echo; echo '```latex'; cat "$SRC"; echo '```'; } > "${PREV}/main_preview.md"
           { echo '### main.tex (head)'; echo; echo '```latex'; sed -n '1,120p' "$SRC"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
-          tar -C "$PREV" -czf "${PREV}/source_bundle.tgz" .
+          # tar は作業ディレクトリ外に作る（同時更新による exit 1 を回避）
+          TARPATH="${RUNNER_TEMP}/source_bundle.tgz"
+          tar --warning=no-file-changed --ignore-failed-read -C "$PREV" -czf "$TARPATH" . || true
+          echo "TARPATH=$TARPATH" >> $GITHUB_ENV
 
       - name: Upload source bundle & previews
         if: always()
@@ -63,7 +68,7 @@ jobs:
         with:
           name: cmos018_noise_source
           path: |
-            papers/2025_cmos018_noise/source_bundle.tgz
+            ${{ env.TARPATH }}
             papers/2025_cmos018_noise/main_preview.txt
             papers/2025_cmos018_noise/main_preview.md
           retention-days: 30
