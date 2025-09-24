@@ -19,7 +19,8 @@
 
 \begin{document}
 
-\title{Historical Case Study on Ti Silicide (TiSi\textsubscript{2}) \\ Reliability Issues in Legacy CMOS Nodes}
+\title{Historical Case Study on Ti Silicide (TiSi\textsubscript{2}) \\
+Reliability Issues in Legacy CMOS Nodes}
 
 \author{
 \IEEEauthorblockN{Shinichi Samizo}
@@ -34,26 +35,63 @@ Project Design Hub, Samizo-AITL\\
 \begin{abstract}
 This paper analyzes a historical failure case related to Ti silicide (TiSi\textsubscript{2}) phase transition instability at the 0.25~µm CMOS node. 
 The incomplete C49$\rightarrow$C54 transformation, coupled with boron absorption, caused localized high-resistance spots that directly reduced SRAM yield. 
-The case illustrates how process optimization and empirical feedback cycles became indispensable in semiconductor development under cost and market pressure.
+The study further reveals why manufacturers extended the 0.25~µm node instead of migrating to 0.18~µm: the former still relied on LOCOS isolation, enabling co-integration of 30V high-voltage devices without redesign. 
+In contrast, the 0.18~µm STI-based node required a new development effort for high-voltage transistors. 
+This case illustrates how process optimization and empirical feedback cycles became indispensable in semiconductor development under cost and market pressure.
 \end{abstract}
 
+% ----------------------------
 \section{Introduction}
 Around 2000, passive-matrix monochrome panels were being replaced by TFT-LCDs, driving demand for large-scale SRAM and mixed-signal logic in driver ICs. 
-Under market pressure from Korean and Taiwanese competitors, some manufacturers attempted to extend the 0.25~µm process instead of migrating to 0.18~µm, in order to reduce cost. 
+Under market pressure from Korean and Taiwanese competitors, some manufacturers attempted to extend the 0.25~µm process instead of migrating to 0.18~µm, in order to reduce cost and reuse qualified process modules. 
+The decisive reason was that 0.25~µm still used LOCOS isolation, which allowed co-integration of $\sim$30V high-voltage devices required in LCD drivers. 
+In contrast, the 0.18~µm node introduced shallow trench isolation (STI), which required a full redesign of high-voltage devices. 
 This historical decision revealed vulnerabilities when Ti silicide process instabilities degraded yield.
 
+% ----------------------------
 \section{Technical Background}
 TiSi\textsubscript{2} was widely adopted for its low resistivity. 
 However, the silicide undergoes a phase transition from metastable C49 to stable C54 during rapid thermal annealing (RTA). 
 If the transition is incomplete, residual C49 grains act as high-resistance regions. 
-Furthermore, boron absorption into TiSi\textsubscript{2} aggravated resistance fluctuation, directly manifesting as random SRAM bit failures.
+Furthermore, boron absorption into TiSi\textsubscript{2} aggravated resistance fluctuation, directly manifesting as random SRAM bit failures. 
 
+Additionally, the isolation scheme played a crucial role:  
+\begin{itemize}
+  \item \textbf{0.25~µm LOCOS}: Mature, thick field oxide, tolerant for HV ($\sim$30V) integration.  
+  \item \textbf{0.18~µm STI}: Scaled isolation, better for density, but required re-development of HV devices.  
+\end{itemize}
+
+% ----------------------------
+\section{Node Trade-off: 0.25~µm vs 0.18~µm}
+Table~\ref{tab:node} summarizes the trade-offs between the extended 0.25~µm LOCOS-based node and the migrated 0.18~µm STI-based node.
+
+\begin{table}[!t]
+\centering
+\caption{Comparison of 0.25~µm (LOCOS) and 0.18~µm (STI) CMOS Nodes}
+\label{tab:node}
+\begin{tabular}{@{}llll@{}}
+\toprule
+ & \textbf{0.25 µm (LOCOS)} & \textbf{0.18 µm (STI)} \\
+\midrule
+Isolation & LOCOS & STI \\
+HV device integration & Native 30V possible & New 30V design req. \\
+Mask count & $\sim$25 & $\sim$28 \\
+Chip density & Lower & Higher \\
+Process cost & Lower (reuse modules) & Higher (new dev.) \\
+Risk & Yield loss by silicide & Longer dev. cycle \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The short-term cost advantage of 0.25~µm LOCOS was offset by long-term reliability issues stemming from Ti silicide instability.
+
+% ----------------------------
 \section{Failure Analysis}
 The yield impact was confirmed through SRAM testing. 
 Without redundancy, single-bit random defects directly caused device rejection. 
 Failure localization pointed to silicide regions at transistor contacts, with boron diffusion assisting local resistivity increase.
 
-% ===== 図をここに配置 =====
+% ===== Yield Simulation Figure =====
 \begin{figure}[!t]
   \centering
   \begin{tikzpicture}
@@ -70,11 +108,11 @@ Failure localization pointed to silicide regions at transistor contacts, with bo
       minor grid style={line width=.1pt,draw=gray!20},
       thick,
     ]
-      % 冗長なし (k=0): Y0 = exp(-λ)
+      % No redundancy (k=0): Y0 = exp(-λ)
       \addplot[blue, very thick, domain=0:1, samples=200] {exp(-x)};
       \addlegendentry{No redundancy ($k=0$)}
 
-      % 冗長あり (k=1): Y1 = exp(-λ) * (1+λ)
+      % With redundancy (k=1): Y1 = exp(-λ) * (1+λ)
       \addplot[red, dashed, very thick, domain=0:1, samples=200] {exp(-x)*(1+x)};
       \addlegendentry{With redundancy ($k=1$)}
     \end{axis}
@@ -83,11 +121,13 @@ Failure localization pointed to silicide regions at transistor contacts, with bo
   \label{fig:yield}
 \end{figure}
 
+% ----------------------------
 \section{Design Review Limitations}
 Design reviews (DR) could only verify rule compliance and formal specifications. 
 They failed to predict scalability risks arising from incomplete silicide phase transformation. 
 This case shows that DR without continuous empirical feedback was insufficient.
 
+% ----------------------------
 \section{Countermeasures}
 \subsection{Provisional Measures}
 Etch profiles were adjusted to slightly undercut sidewalls, ensuring sufficient separation between halo implants and active regions. 
@@ -97,6 +137,7 @@ This measure temporarily improved yield.
 RTA conditions were optimized to stabilize C54 phase formation. 
 However, this changed device parameters, requiring re-characterization of process-device models.
 
+% ----------------------------
 \section{Educational Application}
 \subsection{Teaching Materials}
 \begin{itemize}
@@ -109,11 +150,13 @@ However, this changed device parameters, requiring re-characterization of proces
 Trade-offs between technical stability and economic pressure remain relevant today. 
 Similar cases exist in re-use of 28~nm FD-SOI or 40~nm BCD.
 
+% ----------------------------
 \section{Conclusion}
 This historical case demonstrates that residual risks remain in legacy nodes. 
 Yield degradation due to incomplete silicide phase transition highlighted the inseparability of process optimization and empirical feedback. 
 The educational value lies in integrating such case studies into semiconductor engineering curricula.
 
+% ----------------------------
 \section*{References}
 \begin{thebibliography}{99}
 \bibitem{Sze2007} S. M. Sze and K. K. Ng, \textit{Physics of Semiconductor Devices}, 3rd ed. Hoboken, NJ: Wiley, 2007.
@@ -124,7 +167,7 @@ The educational value lies in integrating such case studies into semiconductor e
 \bibitem{Chang1996} J. P. Chang and A. J. Steckl, ``Titanium silicide formation and stability in submicron CMOS technology,'' \textit{Journal of Applied Physics}, vol. 79, no. 9, pp. 4536--4364, 1996.
 \end{thebibliography}
 
-% ---------- Author Biography ----------
+% ----------------------------
 \section*{Author Biography}
 \textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. 
 He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal device development and contributed to inkjet MEMS actuators and PrecisionCore printhead technology. 
