@@ -15,35 +15,33 @@ jobs:
   build-pdf:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        shell: bash
-        working-directory: latex-papers/papers/2025_cmos018_noise
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 必要なら TeX Live パッケージのキャッシュを有効化（オプション）
-      - name: Cache TeX Live packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.texlive
-          key: texlive-${{ runner.os }}-cache-v1
-          restore-keys: |
-            texlive-${{ runner.os }}-cache-
+      # どのパスに main.tex があるかを可視化（デバッグ）
+      - name: Show repo tree (debug)
+        run: |
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          ls -la
+          echo "---- latex-papers ----"
+          ls -la latex-papers || true
+          echo "---- latex-papers/papers ----"
+          ls -la latex-papers/papers || true
+          echo "---- target dir ----"
+          ls -la latex-papers/papers/2025_cmos018_noise || true
 
+      # TeX Live コンテナで latexmk 実行
       - name: Compile LaTeX (latexmk → PDF)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: main.tex
-          working_directory: latex-papers/papers/2025_cmos018_noise
+          # ★ working_directory は使わず、フル相対パスを root_file に指定 ★
+          root_file: latex-papers/papers/2025_cmos018_noise/main.tex
           latexmk_use_xelatex: false
           latexmk_shell_escape: false
-          # エラー時もログを取れるように強めのオプションを付与
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
 
-      # 主要生成物を artifacts に出力（PDF + LOG）
+      # 生成物（PDF）
       - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
@@ -53,6 +51,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      # ログ類（.log を含む）
       - name: Upload logs
         uses: actions/upload-artifact@v4
         with:
