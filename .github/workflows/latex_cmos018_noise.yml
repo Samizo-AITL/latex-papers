@@ -19,49 +19,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # どのパスに main.tex があるかを可視化（デバッグ）
       - name: Show repo tree (debug)
         run: |
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-          ls -la
-          echo "---- latex-papers ----"
-          ls -la latex-papers || true
-          echo "---- latex-papers/papers ----"
-          ls -la latex-papers/papers || true
-          echo "---- target dir ----"
-          ls -la latex-papers/papers/2025_cmos018_noise || true
+          ls -R latex-papers/papers/2025_cmos018_noise || true
 
-      # TeX Live コンテナで latexmk 実行
       - name: Compile LaTeX (latexmk → PDF)
         uses: xu-cheng/latex-action@v3
         with:
-          # ★ working_directory は使わず、フル相対パスを root_file に指定 ★
-          root_file: latex-papers/papers/2025_cmos018_noise/main.tex
-          latexmk_use_xelatex: false
-          latexmk_shell_escape: false
+          # ← papers を二重にしない
+          root_file: papers/2025_cmos018_noise/main.tex
+          working_directory: latex-papers
           args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
 
-      # 生成物（PDF）
       - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
           name: cmos018_noise_pdf
-          path: |
-            latex-papers/papers/2025_cmos018_noise/main.pdf
+          path: latex-papers/papers/2025_cmos018_noise/main.pdf
           if-no-files-found: error
           retention-days: 14
 
-      # ログ類（.log を含む）
       - name: Upload logs
         uses: actions/upload-artifact@v4
         with:
           name: cmos018_noise_logs
-          path: |
-            latex-papers/papers/2025_cmos018_noise/*.log
-            latex-papers/papers/2025_cmos018_noise/*.aux
-            latex-papers/papers/2025_cmos018_noise/*.bbl
-            latex-papers/papers/2025_cmos018_noise/*.blg
-            latex-papers/papers/2025_cmos018_noise/*.out
-            latex-papers/papers/2025_cmos018_noise/*.toc
+          path: latex-papers/papers/2025_cmos018_noise/*.log
           if-no-files-found: warn
           retention-days: 14
