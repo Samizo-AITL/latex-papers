@@ -11,21 +11,17 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \sisetup{
-  mode = match,
-  propagate-math-font = true,
-  reset-math-version = false,
-  reset-text-family = false,
-  reset-text-series = false,
-  reset-text-shape = false,
-  text-family-to-math = true,
-  text-series-to-math = true
+  detect-all = true,
+  per-mode = symbol,
+  separate-uncertainty = true
 }
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 
 % ---------- Title / Author ----------
 \title{Differentiated Analog Modules via Manufacturing Technology:\\
-Achieving Over 50\% Reduction in 1/f Noise on \SI{0.18}{\micro\meter} CMOS}
+Achieving Over 50\% Reduction in 1/f Noise on 
+\texorpdfstring{\SI{0.18}{\micro\meter}}{0.18 µm} CMOS}
 
 \author{
 \IEEEauthorblockN{Shinichi Samizo}
