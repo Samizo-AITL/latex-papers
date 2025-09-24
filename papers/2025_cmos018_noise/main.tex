@@ -71,21 +71,32 @@ where $f$ is frequency, $W$/$L$ are channel dimensions, and $C_{ox}$ the oxide c
 
 % ---------- 3. Proposed Manufacturing Techniques ----------
 \section{Proposed Manufacturing Techniques}
+
 \subsection{Substrate and Well Engineering}
-Epitaxial substrates suppress bulk defects near channels. Well-doping optimization reshapes vertical fields and mitigates trap interaction. Typical improvement: \SI{20}{\percent}--\SI{30}{\percent} in fitted $K$.
+Epitaxial (epi) substrates suppress bulk defects near channels. 
+Practical epi thickness is typically \SIrange{1}{3}{\micro\meter}; thicker epi lowers bulk traps but raises wafer cost and latch-up risk. 
+Well-doping concentrations in the range of $1\times10^{17}$--$5\times10^{17}$~cm$^{-3}$ reshape vertical fields and mitigate trap interaction. 
+Typical improvement: \SI{20}{\percent}--\SI{30}{\percent} reduction in fitted $K$.
 
 \subsection{Gate Oxide Optimization}
-Increasing $t_{ox}$ weakens coupling ($S_{id}\!\propto\! C_{ox}^{-2}\!\propto\! t_{ox}^{2}$). Optimized pre-clean (SC1/SC2) and oxidation further reduce $D_{it}$.
+Increasing oxide thickness $t_{ox}$ weakens trap coupling 
+($S_{id}\!\propto\! C_{ox}^{-2}\!\propto\! t_{ox}^{2}$). 
+For analog/I/O devices, $t_{ox}$ is often set at 4--7~nm, balancing noise reduction with speed. 
+Optimized pre-clean (e.g., SC1/SC2 at 70--80~\si{\celsius} for a few minutes) and dry oxidation at 850--950~\si{\celsius} further reduce $D_{it}$. 
+Optional nitridation enhances BTI reliability but may slightly worsen $1/f$ noise.
 
 \subsection{Hydrogen Annealing}
-H$_2$ anneal passivates interface states (Si--H), reducing $D_{it}$ from $\sim$\num{1e11} to \num{1e10}~cm$^{-2}$eV$^{-1}$ while maintaining junction/series resistance.
+Forming-gas anneal (5--10\% H$_2$ in N$_2$) at 400--450~\si{\celsius} for 20--40~min effectively passivates interface states by forming Si--H bonds. 
+This lowers $D_{it}$ from $\sim$\num{1e11} to \num{1e10}~cm$^{-2}$eV$^{-1}$ while maintaining junction/series resistance. 
+Temperatures above 450~\si{\celsius} risk Si--H bond breakage, while lower temperatures yield insufficient passivation.
 
 \subsection{Device Geometry}
-Geometric scaling still applies:
+Geometric scaling remains valid:
 \begin{equation}
   S_{id}(f) \propto \frac{1}{W\cdot L}.
 \end{equation}
-Multi-finger layouts help thermal and current uniformity.
+Typical analog input MOSFETs adopt $W/L$ ratios of 10--50. 
+Multi-finger layouts ensure current uniformity and mitigate self-heating, while guard rings and dummy structures improve reproducibility.
 
 % ---------- 4. Verification ----------
 \section{Verification}
