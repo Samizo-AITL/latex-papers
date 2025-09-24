@@ -27,35 +27,49 @@ jobs:
           ls -la papers/2025_cmos018_noise || true
 
       - name: Compile LaTeX (latexmk → PDF)
-        continue-on-error: true   # ← ビルド失敗でも後続を継続
+        continue-on-error: true
         uses: xu-cheng/latex-action@v3
         with:
           root_file: papers/2025_cmos018_noise/main.tex
           args: -pdf -interaction=nonstopmode -file-line-error
 
-      - name: Verify generated files
+      - name: Verify & snapshot sources
         if: always()
         run: |
-          echo "---- file list ----"
-          find papers/2025_cmos018_noise -maxdepth 1 -type f -printf "%p\t(%s bytes)\n" | sort
-          echo "---- check main.tex ----"
-          if [ -f papers/2025_cmos018_noise/main.tex ]; then
-            wc -c papers/2025_cmos018_noise/main.tex
+          set -eux
+          DIR="papers/2025_cmos018_noise"
+          echo "---- file list & sizes ----"
+          find "$DIR" -maxdepth 1 -type f -printf "%p\t(%s bytes)\n" | sort || true
+          echo "---- head of main.tex ----"
+          if [ -f "$DIR/main.tex" ]; then
+            wc -c "$DIR/main.tex"
+            sed -n '1,60p' "$DIR/main.tex"
+            # 明示的に別名へコピー（念のため）
+            cp "$DIR/main.tex" "$DIR/main_source_copy.tex"
           else
-            echo "main.tex NOT FOUND"
+            echo "main.tex NOT FOUND" >&2
           fi
+          # ソース一式のtgzを作成（展開確認しやすい）
+          tar -C "$DIR" -czf source_bundle.tgz .
 
-      # ▼ main.tex を単体でアップロード（必ず入る）
-      - name: Upload source main.tex
+      - name: Upload source bundle (tgz)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cmos018_noise_source_maintex
-          path: papers/2025_cmos018_noise/main.tex
+          name: cmos018_noise_source_bundle
+          path: papers/2025_cmos018_noise/source_bundle.tgz
           if-no-files-found: warn
           retention-days: 30
 
-      # PDF（存在すれば）
+      - name: Upload main.tex (direct copy)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cmos018_noise_maintex_copy
+          path: papers/2025_cmos018_noise/main_source_copy.tex
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
@@ -65,7 +79,6 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      # LOG 類
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -82,13 +95,3 @@ jobs:
             papers/2025_cmos018_noise/*.toc
           if-no-files-found: warn
           retention-days: 14
-
-      # ディレクトリ全体のスナップショット
-      - name: Upload workdir snapshot
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cmos018_noise_all
-          path: papers/2025_cmos018_noise/**
-          if-no-files-found: warn
-          retention-days: 7
