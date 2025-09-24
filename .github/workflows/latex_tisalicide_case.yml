@@ -1,0 +1,51 @@
+name: Build LaTeX Paper (Ti Salicide Case)
+
+on:
+  push:
+    paths:
+      - 'papers/2025_tisalicide_case/**'
+      - '.github/workflows/latex_tisalicide_case.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build PDF with XeLaTeX
+        uses: xu-cheng/latex-action@v2
+        with:
+          working_directory: papers/2025_tisalicide_case
+          root_file: main.tex
+          latexmk_use_xelatex: true
+          latexmk_shell_escape: true
+          args: "-interaction=nonstopmode -halt-on-error -file-line-error"
+
+      - name: Upload PDF artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tisalicide_case_paper
+          path: papers/2025_tisalicide_case/main.pdf
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tisalicide_case_logs
+          path: |
+            papers/2025_tisalicide_case/*.log
+            papers/2025_tisalicide_case/*.blg
+            papers/2025_tisalicide_case/*.bbl
+            papers/2025_tisalicide_case/*.aux
+            papers/2025_tisalicide_case/*.fls
+            papers/2025_tisalicide_case/*.fdb_latexmk
+          if-no-files-found: warn
+          retention-days: 14
