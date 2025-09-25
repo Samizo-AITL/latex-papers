@@ -20,14 +20,21 @@
 \usepackage[capitalize,nameinlink]{cleveref}
 \usepackage{xcolor}
 
+% siunitx × physics の \qty 名称衝突を解消（警告消し）
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
+
 % Figures: allow importing standalone TikZ sources placed under figs/
 \usepackage{standalone}     % \includestandalone{...}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,calc,shapes,decorations.markings}
-\input{figs/_tikz_styles.tex} % <-- 共通TikZスタイルを読み込み（本体側では定義しない）
+\input{figs/_tikz_styles.tex} % 共通TikZスタイル（本体では重複定義しない）
 
 % 画像探索パス
 \graphicspath{{figs/}{figs/pdfs/}}
+
+% テーブルを詰め気味に（はみ出し対策）
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
 
 % ---------- Metadata ----------
 \title{Inkjet Technology: Principles, Materials, and Emerging Applications}
@@ -71,14 +78,14 @@ Three representative modes are used in practice.
 
 \begin{figure}[!t]
   \centering
-  % Use mode=tex to avoid shell-escape on CI
+  % shell-escape不要化: mode=tex
   \includestandalone[mode=tex,width=\linewidth]{figs/actuation_modes_tikz}
-  \caption{Actuation principles: (left) piezoelectric deformation, (middle) thermal bubble expansion, (right) EHD Taylor cone.}
+  \caption{Actuation principles: piezo, thermal, and EHD.}
   \label{fig:actuation_modes}
 \end{figure}
 
 \subsection{Piezoelectric (Piezo)}
-A PZT transducer converts voltage into cavity deformation and pressure pulses. Typical drive is tens of volts to about \SI{100}{V} with pulse widths of a few microseconds. Advantages: non-thermal, broad ink compatibility (including bio and nanoparticle inks), high reliability (>$10^{10}$ shots).
+A PZT transducer converts voltage into cavity deformation and pressure pulses. Typical drive is tens of volts to about \SI{100}{V} with pulse widths of a few microseconds. Advantages: non-thermal, broad ink compatibility (including bio and nanoparticle inks), high reliability (>\,$10^{10}$ shots).
 
 \subsection{Thermal (Bubble Jet)}
 A micro-heater nucleates a vapor bubble whose expansion ejects a droplet. Drive voltage is low (\SIrange{10}{20}{V}) and the structure is simple and cost-effective, but ink choices are thermally constrained and lifetime is typically shorter than piezo heads.
@@ -87,18 +94,18 @@ A micro-heater nucleates a vapor bubble whose expansion ejects a droplet. Drive 
 A strong electric field forms a Taylor cone at the meniscus; sub-micron droplets can be produced at the expense of high voltage (hundreds of volts to kV) and lower throughput. Stability and safety remain challenges for wide industrial adoption.
 
 \begin{table}[!t]
-\caption{Comparison of Actuation Modes}
+\caption{Comparison of actuation modes}
 \label{tab:actuation}
-\centering
-\begin{tabular}{@{}lllll@{}}
+\centering\footnotesize
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lllll@{}}
 \toprule
 Mode & Voltage & Freq. & Reliability & Typical Use \\
 \midrule
-Piezo & tens--\SI{100}{V} & up to $\sim$\SI{100}{kHz} & High & Industrial, bio \\
-Thermal & \SIrange{10}{20}{V} & $\sim$\SI{30}{kHz} & Medium & Home/office \\
-EHD & $>$\SI{200}{V} & kHz & Early-stage & Nano-patterning \\
+Piezo   & tens--\SI{100}{V} & up to $\sim$\SI{100}{kHz} & High   & Industrial, bio \\
+Thermal & \SIrange{10}{20}{V} & $\sim$\SI{30}{kHz}       & Medium & Home/office \\
+EHD     & $>$\SI{200}{V}    & kHz                       & Early-stage & Nano-patterning \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{table}
 
 %==============================================================================
@@ -108,24 +115,24 @@ A short liquid column emitted from a nozzle breaks into droplets via the Rayleig
 \begin{figure}[!t]
   \centering
   \includestandalone[mode=tex,width=\linewidth]{figs/droplet_instability_tikz}
-  \caption{Schematic of jet breakup: initial perturbation $\rightarrow$ growth $\rightarrow$ main drop and satellite formation.}
+  \caption{Jet breakup: perturbation $\to$ growth $\to$ main drop and satellites.}
   \label{fig:droplet_instability}
 \end{figure}
 
 \subsection{Dimensionless Numbers}
 \begin{align}
-\Rey &= \frac{\rho U D}{\mu}, \\
-\We  &= \frac{\rho U^2 D}{\sigma}, \\
+\Rey &= \frac{\rho U D}{\mu}, &
+\We  &= \frac{\rho U^2 D}{\sigma}, &
 \Oh  &= \frac{\mu}{\sqrt{\rho \sigma D}} .
 \end{align}
 Here $\rho$ is density, $U$ velocity, $D$ nozzle diameter, $\mu$ viscosity, and $\sigma$ surface tension.
-Stable printable regimes often satisfy $0.1<\Oh<1$ and $\We>1$, while too small $\Oh$ tends to generate satellites and too large $\Oh$ inhibits breakup.
+Stable printable regimes often satisfy $0.1<\Oh<1$ and $\We>1$; too small $\Oh$ tends to generate satellites and too large $\Oh$ inhibits breakup.
 
 \subsection{Typical Operating Ranges}
-Nozzle diameter \SIrange{10}{50}{\micro\meter}, droplet velocity \SIrange{1}{10}{m/s}, droplet diameter \SIrange{10}{80}{\micro\meter}, $\Rey\sim10$--$500$, $\We\sim1$--$20$, $\Oh\sim0.1$--$1$.
+Nozzle diameter \SIrange{10}{50}{\micro\meter}, droplet velocity \SIrange{1}{10}{\meter\per\second}, droplet diameter \SIrange{10}{80}{\micro\meter}, $\Rey\sim10$--$500$, $\We\sim1$--$20$, $\Oh\sim0.1$--$1$.
 
 \subsection{Substrate Interaction}
-Post-impact spreading is governed by wettability; hydrophilic surfaces (contact angle $<90^\circ$) promote larger footprints, whereas hydrophobic surfaces confine spots. Surface treatments (plasma, SAMs, patterning) enable spatial control.
+Post-impact spreading is governed by wettability; hydrophilic surfaces (contact angle $<\SI{90}{\degree}$) promote larger footprints, whereas hydrophobic surfaces confine spots. Surface treatments (plasma, SAMs, patterning) enable spatial control.
 
 %==============================================================================
 \section{Ink Materials}
@@ -133,7 +140,7 @@ Post-impact spreading is governed by wettability; hydrophilic surfaces (contact 
 \begin{figure}[!t]
   \centering
   \includestandalone[mode=tex,width=\linewidth]{figs/ink_classification_tikz}
-  \caption{Ink categorization and typical traits: dye, pigment, bio, and conductive inks.}
+  \caption{Ink categories: dye, pigment, bio, and conductive.}
   \label{fig:ink_classes}
 \end{figure}
 
@@ -144,22 +151,22 @@ Post-impact spreading is governed by wettability; hydrophilic surfaces (contact 
 \textbf{Conductive inks}: Ag/Cu nanoparticles, CNT/graphene, or PEDOT:PSS; often require post-print sintering.
 
 \subsection{Key Properties}
-Viscosity typically \SIrange{2}{20}{mPa.s}; surface tension \SIrange{25}{50}{mN/m}; density around \SI{1000}{kg/m^3} (aqueous). Volatility affects nozzle dry-out and on-substrate leveling.
+Viscosity typically \SIrange{2}{20}{\milli\pascal\second}; surface tension \SIrange{25}{50}{\milli\newton\per\meter}; density around \SI{1000}{\kilogram\per\cubic\meter} (aqueous). Volatility affects nozzle dry-out and on-substrate leveling.
 
 \begin{table}[!t]
-\caption{Typical Ink Property Windows}
+\caption{Typical ink property windows}
 \label{tab:inks}
-\centering
-\begin{tabular}{@{}llll@{}}
+\centering\footnotesize
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}llll@{}}
 \toprule
 Type & $\mu$ (mPa$\cdot$s) & $\sigma$ (mN/m) & Notes \\
 \midrule
-Dye    & 2--5  & 30--40 & vivid color \\
-Pigment& 5--15 & 25--35 & durable, needs dispersants \\
-Bio    & 2--20 & 30--50 & viability/activity critical \\
+Dye        & 2--5   & 30--40 & vivid color \\
+Pigment    & 5--15  & 25--35 & durable, needs dispersants \\
+Bio        & 2--20  & 30--50 & viability/activity critical \\
 Conductive & 10--20 & 25--40 & sintering needed \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{table}
 
 \subsection{Bio Considerations}
@@ -171,7 +178,7 @@ For piezo printing, cell viability of 80--95\% is achievable with careful shear/
 \begin{figure}[!t]
   \centering
   \includestandalone[mode=tex,width=\linewidth]{figs/system_flow_tikz}
-  \caption{Ink system flow: cartridge $\rightarrow$ filter $\rightarrow$ degassing $\rightarrow$ recirculation $\rightarrow$ nozzles.}
+  \caption{System flow: cartridge $\to$ filter $\to$ degassing $\to$ recirculation $\to$ nozzles.}
   \label{fig:system_flow}
 \end{figure}
 
@@ -182,19 +189,19 @@ Cartridge (level sensing, anti-bubble design), filter (0.2--\SI{1}{\micro\meter}
 Reservoir pressure regulation (precision within hundreds of Pa), slight negative pressure at the nozzle to avoid self-dripping, nozzle dry-out prevention (capping, purge, humidity), and ejection stabilization (temperature control, synchronized pressure-waveform).
 
 \begin{table}[!t]
-\caption{System Trade-offs}
+\caption{System trade-offs}
 \label{tab:trade}
-\centering
-\begin{tabular}{@{}lll@{}}
+\centering\footnotesize
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lll@{}}
 \toprule
 Element & Desirable & Challenge \\
 \midrule
-Filter & Remove particles & Clogging risk \\
-Degassing & Stable ejection & Cost/complexity \\
-Recirculation & Anti-sedimentation & Pressure loss \\
-Neg. pressure & No drip & Misfire risk if excessive \\
+Filter         & Remove particles   & Clogging risk \\
+Degassing      & Stable ejection    & Cost/complexity \\
+Recirculation  & Anti-sedimentation & Pressure loss \\
+Neg. pressure  & No drip            & Misfire risk if excessive \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{table}
 
 %==============================================================================
@@ -203,7 +210,7 @@ Neg. pressure & No drip & Misfire risk if excessive \\
 \begin{figure}[!t]
   \centering
   \includestandalone[mode=tex,width=\linewidth]{figs/piezo_materials_tikz}
-  \caption{Piezoelectric material landscape for printhead actuation (PZT, KNN, ScAlN).}
+  \caption{Piezoelectric materials for actuation (PZT, KNN, ScAlN).}
   \label{fig:piezo_materials}
 \end{figure}
 
@@ -218,25 +225,25 @@ Neg. pressure & No drip & Misfire risk if excessive \\
 \textbf{ScAlN} (thin film): CMOS-compatible sputtering, enhanced $e_{31,f}$, good for high-frequency thin actuators.
 
 \begin{table}[!t]
-\caption{Piezoelectric Material Snapshot}
+\caption{Piezoelectric material snapshot}
 \label{tab:piezo}
-\centering
-\begin{tabular}{@{}lllll@{}}
+\centering\footnotesize
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lllll@{}}
 \toprule
 Material & Displacement & CMOS & Environment & Note \\
 \midrule
-PZT   & \textbf{High} & $\triangle$ & $\triangle$ & Industry standard \\
-KNN   & Medium & $\triangle$ & \textbf{Good} & Pb-free candidate \\
-ScAlN & Med--High & \textbf{Good} & \textbf{Good} & Thin-film, RF \\
+PZT   & \textbf{High}   & $\triangle$ & $\triangle$ & Industry standard \\
+KNN   & Medium          & $\triangle$ & \textbf{Good} & Pb-free candidate \\
+ScAlN & Med--High       & \textbf{Good} & \textbf{Good} & Thin-film, RF \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{table}
 
 \subsection{Integration with CMOS}
-Thousands of channels require HV level shifters, charge-recycling, tight skew control (sub-\si{\micro s}), and careful EMC/ESD design. 2.5D/3D integration reduces parasitics and preserves waveform fidelity; thermal management becomes critical.
+Thousands of channels require HV level shifters, charge-recycling, tight skew control (sub-\si{\micro\second}), and careful EMC/ESD design. 2.5D/3D integration reduces parasitics and preserves waveform fidelity; thermal management becomes critical.
 
 \subsection{Protection, Sealing, Reliability}
-Hydrophobic anti-wetting (e.g., fluorinated coatings) stabilizes the meniscus; barrier layers (SiN/SiC/DLC/Al$_2$O$_3$) protect against corrosion/erosion. Reliability concerns include mechanical fatigue ($10^9$–$10^{11}$ cycles), cavitation/erosion under steep waveforms, thin-film delamination, and bubble/particle tolerance.
+Hydrophobic anti-wetting (e.g., fluorinated coatings) stabilizes the meniscus; barrier layers (SiN/SiC/DLC/Al$_2$O$_3$) protect against corrosion/erosion. Reliability concerns include mechanical fatigue ($10^{9}$--$10^{11}$ cycles), cavitation/erosion under steep waveforms, thin-film delamination, and bubble/particle tolerance.
 
 %==============================================================================
 \section{Design and Analysis Approaches}
@@ -249,7 +256,7 @@ Z_f(\omega)\approx R + j\omega L + \frac{1}{j\omega C}.
 \textbf{CFD/FSI}: level-set/VOF for meniscus motion, jetting, breakup, and impact.
 
 \subsection{Meshing and Numerics}
-Spatial resolution near the free surface $\le D/50$; time step $\Delta t \lesssim 0.1D/\sqrt{\sigma/(\rho D)}$. Distinguish advancing/receding contact angles (e.g., $80^\circ/110^\circ$). Include finite compressibility of the cavity liquid for accurate acoustic coupling.
+Spatial resolution near the free surface $\le D/50$; time step $\Delta t \lesssim 0.1D/\sqrt{\sigma/(\rho D)}$. Distinguish advancing/receding contact angles (e.g., \SI{80}{\degree}/\SI{110}{\degree}). Include finite compressibility of the cavity liquid for accurate acoustic coupling.
 
 \subsection{Waveform Design}
 Bipolar/multi-pulse patterns: \emph{push} (jet formation), \emph{dwell} (pressure settle), \emph{pull} (meniscus recovery, satellite suppression), and \emph{damp} (ringing control). Charge recycling reduces power; per-nozzle calibration corrects variation.
@@ -277,19 +284,19 @@ Localized deposition of insulating films, RDL metallization, and patterning assi
 Cell printing for tissue models and drug screening; protein microarrays with nL--pL consumption. Maintain viability and activity via non-thermal actuation and gentle waveforms.
 
 \begin{table}[!t]
-\caption{Application Summary}
+\caption{Application summary}
 \label{tab:apps}
-\centering
-\begin{tabular}{@{}llll@{}}
+\centering\footnotesize
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}llll@{}}
 \toprule
 Domain & Use & Advantage & Challenge \\
 \midrule
-Printing & Commercial/photo & High dpi & Throughput, durability \\
-Electronics & Circuits/electrodes & Maskless, flexible & Sintering, uniformity \\
-Semiconductor & Films/RDL/assist & Material savings & Alignment, CD control \\
-Bio & Cells/proteins & Precise placement & Viability/activity \\
+Printing     & Commercial/photo     & High dpi        & Throughput, durability \\
+Electronics  & Circuits/electrodes  & Maskless, flexible & Sintering, uniformity \\
+Semiconductor& Films/RDL/assist     & Material savings & Alignment, CD control \\
+Bio          & Cells/proteins       & Precise placement & Viability/activity \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{table}
 
 %==============================================================================
@@ -305,7 +312,7 @@ Inkjet matured into a platform technology for printing, electronics, semiconduct
 The author thanks collaborators and colleagues in the inkjet, MEMS, and semiconductor communities for discussions that shaped this tutorial.
 
 %==============================================================================
-% (Optional) Appendix: repository screenshots — guarded to avoid build break
+% Appendix (guarded; missing filesでもビルドが止まらない)
 \section*{Appendix: Repository Context (Illustrative Figures)}
 \IfFileExists{figs/github_papers.jpeg}{%
 \begin{figure}[!t]
@@ -336,15 +343,8 @@ J.-U.~Park \emph{et al.}, ``High-resolution electrohydrodynamic jet printing,'' 
 \end{thebibliography}
 
 %==============================================================================
-% Author Biography (conference modeではbiography環境は使えない)
+% Author Biography（conferenceでは biography 環境不可）
 \section*{Author Biography}
-\textbf{Shinichi Samizo} received the M.S.\ degree in Electrical and Electronic
-Engineering from Shinshu University, Japan. He worked at Seiko Epson Corporation
-on semiconductor memory and mixed-signal device development and contributed to
-inkjet MEMS actuators and PrecisionCore printhead technology. He is currently an
-independent semiconductor researcher focusing on process/device education,
-memory architecture, and AI system integration. Contact:
-\href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}; GitHub:
-\href{https://github.com/Samizo-AITL}{Samizo-AITL}.
+\textbf{Shinichi Samizo} received the M.S.\ degree in Electrical and Electronic Engineering from Shinshu University, Japan. He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal device development and contributed to inkjet MEMS actuators and PrecisionCore printhead technology. He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration. \emph{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\, / \emph{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}.
 %==============================================================================
 \end{document}
