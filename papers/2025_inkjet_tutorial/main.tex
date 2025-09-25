@@ -25,7 +25,7 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,calc,shapes,decorations.markings}
 
-% --- TikZ global styles (used by figs/*.tex) ---
+% ---------- TikZ Styles ----------
 \tikzset{
   box/.style={
     draw, rectangle, rounded corners,
@@ -38,8 +38,10 @@
   node/.style={circle, draw, minimum size=6mm, inner sep=0pt},
   group/.style={draw, rounded corners, inner sep=6pt},
   small/.style={font=\footnotesize},
-  note/.style={rectangle, draw, fill=yellow!20, rounded corners,
-               inner sep=3pt, font=\scriptsize\sffamily},
+  note/.style={
+    rectangle, draw, fill=yellow!20, rounded corners,
+    inner sep=3pt, font=\scriptsize\sffamily
+  },
 }
 
 % Optional: if you later export PDFs to figs/pdfs, add both to the path
