@@ -15,14 +15,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # XeLaTeX でビルド（日本語パッケージも追加）
+      # XeLaTeX ビルド（logを多めに出す設定）
       - name: Build PDF with XeLaTeX
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: papers/2025_inkjet_tutorial
           latexmk_use_xelatex: true
-          # 追加で入れる TeX Live パッケージ
+          latexmk_args: -interaction=nonstopmode -halt-on-error -file-line-error
           extra_packages: >
             collection-langjapanese
             xecjk
@@ -42,26 +42,37 @@ jobs:
             microtype
             pgf
             pgfplots
+            standalone   # TikZのstandalone用
             bxjscls
 
+      # 失敗しても必ず成果物を集める
       - name: Collect build artifacts (PDF, logs)
+        if: always()
         run: |
-          mkdir -p papers/2025_inkjet_tutorial/dist
-          cp -f papers/2025_inkjet_tutorial/main.pdf papers/2025_inkjet_tutorial/dist/main.pdf
-          # ログは存在しなくても続行
-          cp -f papers/2025_inkjet_tutorial/main.log papers/2025_inkjet_tutorial/dist/main.log || true
-          # latexmk が吐く補助ログを一つにまとめたい場合
-          ls -la papers/2025_inkjet_tutorial > papers/2025_inkjet_tutorial/dist/dirlist.txt || true
-          echo "Build finished at $(date -u)" > papers/2025_inkjet_tutorial/dist/build.log
+          set -x
+          OUT="papers/2025_inkjet_tutorial/dist"
+          mkdir -p "$OUT"
+          # PDF（存在しなくても続行）
+          cp -f papers/2025_inkjet_tutorial/main.pdf "$OUT/main.pdf" 2>/dev/null || true
+          # TeX補助ファイル一式を収集
+          for ext in log fls fdb_latexmk aux synctex.gz out toc lof lot bbl blg; do
+            cp -f papers/2025_inkjet_tutorial/*.$ext "$OUT/" 2>/dev/null || true
+          done
+          # ディレクトリ一覧と時刻
+          ls -la papers/2025_inkjet_tutorial > "$OUT/dirlist.txt" || true
+          echo "Build finished at $(date -u)" > "$OUT/build.log"
 
+      # 失敗しても必ずアップロード
       - name: Upload PDF and logs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: inkjet_tutorial_artifacts
           path: |
             papers/2025_inkjet_tutorial/dist/main.pdf
-            papers/2025_inkjet_tutorial/dist/main.log
-            papers/2025_inkjet_tutorial/dist/build.log
+            papers/2025_inkjet_tutorial/dist/*.log
+            papers/2025_inkjet_tutorial/dist/*.fls
+            papers/2025_inkjet_tutorial/dist/*.fdb_latexmk
             papers/2025_inkjet_tutorial/dist/dirlist.txt
           if-no-files-found: warn
           compression-level: 6
