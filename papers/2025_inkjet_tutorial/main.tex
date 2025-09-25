@@ -29,6 +29,10 @@
 \usetikzlibrary{arrows.meta,positioning,fit,calc,shapes,decorations.markings}
 \input{figs/_tikz_styles.tex} % 共通TikZスタイル（本体では重複定義しない）
 
+% 幅に合わせて自動で折り返す表
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
 % 画像探索パス
 \graphicspath{{figs/}{figs/pdfs/}}
 
@@ -284,19 +288,28 @@ Localized deposition of insulating films, RDL metallization, and patterning assi
 Cell printing for tissue models and drug screening; protein microarrays with nL--pL consumption. Maintain viability and activity via non-thermal actuation and gentle waveforms.
 
 \begin{table}[!t]
-\caption{Application summary}
+\caption{Application Summary}
 \label{tab:apps}
-\centering\footnotesize
-\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}llll@{}}
+\small
+\setlength{\tabcolsep}{4pt}      % 列間を少し詰める（デフォルト6pt）
+\renewcommand{\arraystretch}{1.1} % 行間をやや広げて可読性UP
+\begin{tabularx}{\columnwidth}{@{}lYYY@{}}
 \toprule
 Domain & Use & Advantage & Challenge \\
 \midrule
-Printing     & Commercial/photo     & High dpi        & Throughput, durability \\
-Electronics  & Circuits/electrodes  & Maskless, flexible & Sintering, uniformity \\
-Semiconductor& Films/RDL/assist     & Material savings & Alignment, CD control \\
-Bio          & Cells/proteins       & Precise placement & Viability/activity \\
+Printing & Commercial/photo &
+High dpi & Throughput, durability \\
+
+Electronics & Circuits/electrodes &
+Maskless, flexible & Sintering, uniformity \\
+
+Semiconductor & Films/RDL/assist &
+Material savings & Alignment, CD control \\
+
+Bio & Cells/proteins &
+Precise placement & Viability/activity \\
 \bottomrule
-\end{tabular*}
+\end{tabularx}
 \end{table}
 
 %==============================================================================
