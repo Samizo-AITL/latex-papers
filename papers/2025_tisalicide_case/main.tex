@@ -162,57 +162,77 @@ tight process-window control (liner thickness, etch-back dose, corner profile),
 lot-to-lot robustness was not guaranteed; therefore the measure was treated
 as a provisional fix.
 
-% ===== Fig.2: poly + SW cross-sections (clean version) =====
+% ===== Fig.2: poly+SW 断面（修正版：SW白四角除去） =====
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
   \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
-    % styles
     \tikzstyle{si}=[fill=gray!10,draw=gray!60]
     \tikzstyle{poly}=[fill=cyan!30,draw=cyan!70!black]
     \tikzstyle{silicide}=[fill=orange!40,draw=orange!80!black]
     \tikzstyle{halo}=[fill=blue!30,draw=blue!70]
-    \tikzstyle{residual}=[fill=red!75,draw=red!90!black,opacity=0.95]
+    \tikzstyle{residual}=[fill=red!70,draw=red!80!black,opacity=0.9]
     \tikzstyle{label}=[font=\scriptsize]
 
-    % ===== (a) BEFORE =====
+    % ===================== (a) BEFORE =====================
     \begin{scope}[shift={(0,0)}]
       \node[font=\small] at (3,2.2) {(a) Before: C49+B residual at poly/SW corner};
-      % substrate & surface
-      \path[si] (0,-1.0) rectangle (6,0); \draw[gray!60,thick] (0,0)--(6,0);
-      % poly & SW
-      \path[poly] (0,0) rectangle (0.60,1.20);   \node[label,anchor=south] at (0.30,1.20) {poly};
-      \path[fill=gray!55] (0.60,0) rectangle (1.00,1.20); \node[label,anchor=south] at (0.80,1.20) {SW};
-      % TiSi
-      \path[silicide] (0,1.20) rectangle (0.60,1.35);
-      \path[silicide] (1.00,-0.05) rectangle (6,0.10); \node[label] at (5.0,0.25) {TiSi};
-      % halo (共通サイズ) – 右端TiSi接触
-      \draw[halo] (0.78,-0.25) ellipse (0.65 and 0.25);
-      \node[label,blue!70] at (0.78,-0.56) {halo};
-      % residual
-      \draw[residual] (1.02,0.03) circle (0.10);
-      \node[label,red!80] at (1.58,0.22) {high-R spot (C49+B)};
+
+      % Si substrate
+      \path[si] (0,-1.0) rectangle (6,0); 
+      \draw[gray!60,thick] (0,0)--(6,0);
+
+      % Poly gate
+      \path[poly] (0,0) rectangle (0.6,1.2); 
+      \node[label] at (0.30,1.35) {poly};
+
+      % Sidewall
+      \path[fill=gray!55] (0.6,0) rectangle (1.0,1.2); 
+      \node[label] at (0.80,1.35) {SW};
+
+      % Silicide
+      \path[silicide] (0,1.2) rectangle (0.6,1.35);
+      \path[silicide] (1.0,-0.05) rectangle (6,0.10); 
+      \node[label] at (5.0,0.25) {TiSi};
+
+      % Halo
+      \draw[halo] (0.75,-0.25) ellipse (0.65 and 0.25);
+      \node[label,blue!70] at (0.75,-0.55) {halo};
+
+      % Residual spot
+      \draw[residual] (1.00,0.02) circle (0.10);
+      \node[label,red!70] at (1.55,0.22) {high-R spot (C49+B)};
     \end{scope}
 
-    % ===== (b) AFTER =====
+    % ===================== (b) AFTER =====================
     \begin{scope}[shift={(8,0)}]
       \node[font=\small] at (3,2.2) {(b) After: SW under-etch, separation secured};
-      % substrate & surface
-      \path[si] (0,-1.0) rectangle (6,0); \draw[gray!60,thick] (0,0)--(6,0);
-      % poly & SW (slightly wider)
-      \path[poly] (0,0) rectangle (0.60,1.20);   \node[label,anchor=south] at (0.30,1.20) {poly};
-      \path[fill=gray!55] (0.60,0.20) -- (1.10,0.20) -- (1.10,1.20) -- (0.60,1.20) -- cycle;
-      \node[label,anchor=south] at (0.85,1.20) {SW};
-      % TiSi
-      \path[silicide] (0,1.20) rectangle (0.60,1.35);
-      \path[silicide] (1.10,-0.05) rectangle (6,0.10); \node[label] at (5.0,0.25) {TiSi};
-      % halo (同じサイズ, 非接触)
+
+      % Si substrate
+      \path[si] (0,-1.0) rectangle (6,0); 
+      \draw[gray!60,thick] (0,0)--(6,0);
+
+      % Poly gate
+      \path[poly] (0,0) rectangle (0.6,1.2); 
+      \node[label] at (0.30,1.35) {poly};
+
+      % SW（下端を0まで伸ばし、白四角を消去）
+      \path[fill=gray!55] (0.6,0) rectangle (1.10,1.2); 
+      \node[label] at (0.85,1.35) {SW};
+
+      % Silicide
+      \path[silicide] (0,1.2) rectangle (0.6,1.35);
+      \path[silicide] (1.10,-0.05) rectangle (6,0.10); 
+      \node[label] at (5.0,0.25) {TiSi};
+
+      % Halo（非接触）
       \draw[halo] (0.70,-0.25) ellipse (0.65 and 0.25);
-      \node[label,blue!70] at (0.70,-0.56) {halo};
+      \node[label,blue!70] at (0.70,-0.55) {halo};
+
       \node[label,green!50!black] at (2.2,-0.30) {no C49+B residual (no contact)};
     \end{scope}
   \end{tikzpicture}}
-  \caption{Cross-sections near poly and sidewall (SW). (a) Halo under SW barely touches TiSi edge, forming a high-resistance C49+B spot. (b) With SW under-etch and slightly wider SW, halo stays under SW and avoids TiSi contact, eliminating the defect.}
+  \caption{Cross-sections near poly and sidewall (SW). (a) Halo under SW barely touches the TiSi edge, forming a high-resistance C49+B spot. (b) With SW under-etch and slightly wider SW, the halo remains under SW without contacting TiSi, eliminating the defect.}
   \label{fig:fig2_poly}
 \end{figure*}
 
