@@ -25,6 +25,18 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,calc,shapes,decorations.markings}
 
+% --- TikZ global styles (used by figs/*.tex) ---
+\tikzset{
+  box/.style={
+    draw, rectangle, rounded corners,
+    minimum width=2.6cm, minimum height=1.0cm,
+    align=center
+  },
+  arrow/.style={-{Stealth}, thick},
+  group/.style={draw, rounded corners, inner sep=6pt},
+  small/.style={font=\footnotesize},
+}
+
 % Optional: if you later export PDFs to figs/pdfs, add both to the path
 \graphicspath{{figs/}{figs/pdfs/}}
 
@@ -70,8 +82,8 @@ Three representative modes are used in practice.
 
 \begin{figure}[!t]
   \centering
-  % standalone TikZ sources under figs/
-  \includestandalone[width=\linewidth]{figs/actuation_modes_tikz}
+  % Use mode=tex to avoid shell-escape on CI
+  \includestandalone[mode=tex,width=\linewidth]{figs/actuation_modes_tikz}
   \caption{Actuation principles: (left) piezoelectric deformation, (middle) thermal bubble expansion, (right) EHD Taylor cone.}
   \label{fig:actuation_modes}
 \end{figure}
@@ -106,7 +118,7 @@ A short liquid column emitted from a nozzle breaks into droplets via the Rayleig
 
 \begin{figure}[!t]
   \centering
-  \includestandalone[width=\linewidth]{figs/droplet_instability_tikz}
+  \includestandalone[mode=tex,width=\linewidth]{figs/droplet_instability_tikz}
   \caption{Schematic of jet breakup: initial perturbation $\rightarrow$ growth $\rightarrow$ main drop and satellite formation.}
   \label{fig:droplet_instability}
 \end{figure}
@@ -131,7 +143,7 @@ Post-impact spreading is governed by wettability; hydrophilic surfaces (contact 
 
 \begin{figure}[!t]
   \centering
-  \includestandalone[width=\linewidth]{figs/ink_classification_tikz}
+  \includestandalone[mode=tex,width=\linewidth]{figs/ink_classification_tikz}
   \caption{Ink categorization and typical traits: dye, pigment, bio, and conductive inks.}
   \label{fig:ink_classes}
 \end{figure}
@@ -169,7 +181,7 @@ For piezo printing, cell viability of 80--95\% is achievable with careful shear/
 
 \begin{figure}[!t]
   \centering
-  \includestandalone[width=\linewidth]{figs/system_flow_tikz}
+  \includestandalone[mode=tex,width=\linewidth]{figs/system_flow_tikz}
   \caption{Ink system flow: cartridge $\rightarrow$ filter $\rightarrow$ degassing $\rightarrow$ recirculation $\rightarrow$ nozzles.}
   \label{fig:system_flow}
 \end{figure}
@@ -184,7 +196,7 @@ Reservoir pressure regulation (precision within hundreds of Pa), slight negative
 \caption{System Trade-offs}
 \label{tab:trade}
 \centering
-\begin{tabular}{@{}lll@{}}
+\begin{tabular}{@}{lll@{}}
 \toprule
 Element & Desirable & Challenge \\
 \midrule
@@ -201,7 +213,7 @@ Neg. pressure & No drip & Misfire risk if excessive \\
 
 \begin{figure}[!t]
   \centering
-  \includestandalone[width=\linewidth]{figs/piezo_materials_tikz}
+  \includestandalone[mode=tex,width=\linewidth]{figs/piezo_materials_tikz}
   \caption{Piezoelectric material landscape for printhead actuation (PZT, KNN, ScAlN).}
   \label{fig:piezo_materials}
 \end{figure}
@@ -258,7 +270,7 @@ Bipolar/multi-pulse patterns: \emph{push} (jet formation), \emph{dwell} (pressur
 
 \begin{figure*}[!t]
   \centering
-  \includestandalone[width=0.9\textwidth]{figs/application_matrix_tikz}
+  \includestandalone[mode=tex,width=0.9\textwidth]{figs/application_matrix_tikz}
   \caption{Application landscape across printing, electronics, semiconductor, and bio domains.}
   \label{fig:application_matrix}
 \end{figure*}
@@ -304,25 +316,25 @@ Inkjet matured into a platform technology for printing, electronics, semiconduct
 The author thanks collaborators and colleagues in the inkjet, MEMS, and semiconductor communities for discussions that shaped this tutorial.
 
 %==============================================================================
-% (Optional) Appendix: repository screenshots — remove for submission if not needed.
+% (Optional) Appendix: repository screenshots — guarded to avoid build break
 \section*{Appendix: Repository Context (Illustrative Figures)}
+\IfFileExists{figs/github_papers.jpeg}{%
 \begin{figure}[!t]
   \centering
-  % Place JPEGs to figs/ (or comment out for submission)
-  \includegraphics[width=\linewidth]{github_papers.jpeg}
+  \includegraphics[width=\linewidth]{figs/github_papers.jpeg}
   \caption{Example \texttt{papers/} hierarchy for multiple manuscripts.}
   \label{fig:papers}
-\end{figure}
+\end{figure}}{}
 
+\IfFileExists{figs/github_workflows.jpeg}{%
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=\linewidth]{github_workflows.jpeg}
+  \includegraphics[width=\linewidth]{figs/github_workflows.jpeg}
   \caption{Example GitHub Actions workflow directory for automated PDF builds.}
   \label{fig:workflows}
-\end{figure}
+\end{figure}}{}
 
 %==============================================================================
-% References (placeholder style; replace with your BibTeX/IEEE items)
 \begin{thebibliography}{99}
 \bibitem{Derby2003}
 B.~Derby, ``Inkjet printing of functional and structural materials: Fluid property requirements, feature stability, and resolution,'' \emph{Annu. Rev. Mater. Res.}, vol.~40, pp.~395--414, 2010.
