@@ -8,7 +8,7 @@
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{pgfplots}
-\usepackage{tabularx}   % ★ 2カラム表用
+\usepackage{tabularx}   % 2カラム表用
 \usepackage{array}
 \pgfplotsset{compat=newest}
 
@@ -52,7 +52,6 @@ Although the 0.18~µm CMOS process was already in mass production with small die
 By contrast, the 0.25~µm process used Local Oxidation of Silicon (LOCOS), which had a proven track record for HV isolation.
 Therefore, manufacturers adopted the 0.25~µm LOCOS-based process for 3.3~V + 30~V LCD driver ICs, accepting area disadvantages to guarantee HV compatibility.
 
-% ===== 2カラム幅の比較表（Introduction直後） =====
 \begin{table*}[!t]
 \centering
 \caption{Comparison of 0.25\,\textmu m LOCOS and 0.18\,\textmu m STI nodes for LCD driver ICs}
@@ -80,11 +79,15 @@ Adoption rationale & Safe HV compatibility outweighed cost/density & Density/yie
     \item \textbf{0.18~µm STI:} Provided density and yield benefits, but corner thinning at the trench edge raised leakage and breakdown concerns for HV devices, necessitating a new HV device platform.
 \end{itemize}
 
-\subsection{Ti Silicide Instability}
-TiSi\textsubscript{2} was widely adopted for its low resistivity. However, it undergoes a phase transformation from metastable C49 to stable C54 during rapid thermal annealing (RTA).
-If the transformation remains incomplete, residual C49 grains act as high-resistance spots.
-Boron absorption from halo implants into Ti further aggravated resistivity variation.
-While these effects were tolerable in smaller SRAM macros (e.g., 500~kbit), they became fatal when scaled to 1~Mbit capacity.
+\subsection{Ti Silicide Phase Transformation in Detail}
+TiSi\textsubscript{2} undergoes a polymorphic phase transition from
+the metastable C49 phase (orthorhombic, resistivity $\sim$60--90~µ$\Omega\cdot$cm)
+to the stable C54 phase (tetragonal, $\sim$15--20~µ$\Omega\cdot$cm).
+This transformation is typically induced by RTA in the 650--750~°C range.
+Incomplete transformation leaves residual C49 grains, which behave as
+localized resistive defects.
+Boron absorption from halo implants further aggravated resistivity variation,
+narrowing the process window for stable transformation.
 
 \section{Failure Analysis}
 \subsection{Observation: 1~Mbit SRAM}
@@ -108,6 +111,21 @@ Failure localization confirmed that:
 Earlier 500~kbit SRAM macro products had not shown this issue. Based on those precedents, engineers assumed that scaling to 1~Mbit would be safe.
 Consequently, the failure mode was not identified during the initial development review stage, demonstrating the limitation of relying on past yield experience without revalidation.
 
+\begin{table}[!t]
+\centering
+\caption{Estimated yield impact from scaling embedded SRAM capacity}
+\label{tab:yield_scaling}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcc}
+\toprule
+Macro Size & Observed Failures & Yield Estimate \\
+\midrule
+500 kbit & Rare, localized & $\sim$95\% \\
+1 Mbit   & Frequent, random & $\sim$70\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Countermeasures}
 \subsection{Provisional Measures}
 Etch profiles were tuned to slightly undercut sidewalls.
@@ -117,7 +135,7 @@ However, this countermeasure relied on process-window tuning and could not guara
 
 \subsection{Permanent Measures}
 RTA conditions were optimized to promote complete transformation to the stable C54 phase.
-By carefully controlling temperature ramp rate and soak time, the process minimized residual C49 grains.
+By carefully controlling temperature ramp rate (e.g., 50~°C/s) and soak time (e.g., 30~s), the process minimized residual C49 grains.
 This measure stabilized silicide resistivity, but at the cost of altering transistor series resistance and junction leakage, requiring re-characterization of device models and circuit timing libraries.
 Thus, the permanent solution involved a trade-off between silicide stability and overall device parameter shifts.
 
@@ -162,6 +180,12 @@ where $\lambda$ is the average defect count and $k$ is the redundancy capacity.
     \item Exercises: prioritize process fix vs. redundancy adoption
 \end{itemize}
 
+\subsection{Exercises}
+\begin{enumerate}
+  \item Using Eq.~(1), compute the yield for $\lambda=0.2$ and 0.5 with and without redundancy ($k=0,1$).
+  \item Based on Table~\ref{tab:node_compare}, discuss which node (0.25~µm LOCOS or 0.18~µm STI) you would adopt if tasked with designing a 3.3~V + 30~V mixed-signal IC in 2000.
+\end{enumerate}
+
 \subsection{Lessons}
 This case shows the risk of extrapolating from small macros (500~kbit) to larger ones (1~Mbit) without reassessing defect sensitivity.
 It also emphasizes that process-related instability, invisible at smaller scales, can dominate yield once redundancy is unavailable.
@@ -172,6 +196,7 @@ This case demonstrates how HV compatibility constraints dominated node selection
 Despite the availability of a denser, yield-stable 0.18~µm STI process, the requirement for safe $\sim$30~V HV integration drove adoption of 0.25~µm LOCOS.
 Yield loss from incomplete TiSi\textsubscript{2} phase transformation (with boron absorption) became critical at the 1~Mbit SRAM scale.
 The educational value lies in showing how scaling, process technology, and reliability intersect, and why continuous empirical feedback is essential.
+Although the analysis here focused on SRAM macros, the same lesson applies to mixed-signal SoCs and aTFT driver ICs: process-induced variability, once coupled with system-level design constraints, can dominate yield and reliability.
 
 \begin{thebibliography}{99}
 \bibitem{Sze2007} S. M. Sze and K. K. Ng, \textit{Physics of Semiconductor Devices}, 3rd ed. Wiley, 2007.
