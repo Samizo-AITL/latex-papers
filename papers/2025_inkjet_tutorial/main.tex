@@ -1,1 +1,288 @@
+%==============================================================================
+% Inkjet Tutorial — International (English) Version
+% IEEEtran (conference) template, XeLaTeX/pdfLaTeX compatible
+%==============================================================================
 
+\documentclass[conference]{IEEEtran}
+
+% ---------- Packages ----------
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{physics}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{xcolor}
+
+% ---------- Metadata ----------
+\title{Inkjet Technology: Principles, Materials, and Emerging Applications}
+
+\author{
+\IEEEauthorblockN{Shinichi Samizo}
+\IEEEauthorblockA{Independent Semiconductor Researcher\\
+Project Design Hub, Samizo-AITL\\
+\textit{Email:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+\textit{GitHub:} \href{https://github.com/Samizo-AITL}{Samizo-AITL}}
+}
+
+% ---------- Macros ----------
+\newcommand{\Oh}{\mathrm{Oh}}
+\newcommand{\We}{\mathrm{We}}
+\newcommand{\Rey}{\mathrm{Re}}
+
+%==============================================================================
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Inkjet printing has evolved from a consumer technology to a versatile platform spanning industrial manufacturing, semiconductor processing, and biomedical applications. This tutorial reviews actuation principles, droplet formation physics, ink materials and system engineering, device structures, design and analysis methods, and representative applications. Emphasis is placed on practically useful ranges, co-design hints for MEMS/CMOS systems, and educational use. Future directions include Pb-free piezoelectrics, low-voltage actuation, digital-twin workflows, and bio-integration.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Inkjet printing, piezoelectric actuation, thermal inkjet, EHD, Rayleigh--Plateau instability, MEMS nozzle, conductive ink, bio-printing, semiconductor processing, multi-physics modeling.
+\end{IEEEkeywords}
+
+%==============================================================================
+\section{Introduction}
+Since the 1970s, inkjet has progressed from home/office printers to an \emph{industrial} method for maskless, material-efficient patterning. The shift was enabled by improved heads (MEMS nozzles, robust piezoelectric stacks), waveform design, and materials engineering. Today, inkjet bridges fluid mechanics, materials science, control engineering, and semiconductor device technology, making it both a practical manufacturing tool and an effective educational platform.
+
+%------------------------------------------------------------------------------
+\subsection{Historical Milestones}
+1950s: fundamentals of continuous inkjet; 1970s: thermal (bubble) inkjet; 1980s: commercial piezo inkjet; 2000s: industrial/functional printing; 2010s: bio-printing and 3D printing; 2020s: semiconductor assist, multi-material printing.
+
+%==============================================================================
+\section{Actuation Principles}
+Three representative modes are used in practice.
+
+\subsection{Piezoelectric (Piezo)}
+A PZT transducer converts voltage into cavity deformation and pressure pulses. Typical drive is tens of volts to about \SI{100}{V} with pulse widths of a few microseconds. Advantages: non-thermal, broad ink compatibility (including bio and nanoparticle inks), high reliability (>$10^{10}$ shots).
+
+\subsection{Thermal (Bubble Jet)}
+A micro-heater nucleates a vapor bubble whose expansion ejects a droplet. Drive voltage is low (\SIrange{10}{20}{V}) and the structure is simple and cost-effective, but ink choices are thermally constrained and lifetime is typically shorter than piezo heads.
+
+\subsection{Electrohydrodynamic (EHD)}
+A strong electric field forms a Taylor cone at the meniscus; sub-micron droplets can be produced at the expense of high voltage (hundreds of volts to kV) and lower throughput. Stability and safety remain challenges for wide industrial adoption.
+
+\begin{table}[!t]
+\caption{Comparison of Actuation Modes}
+\label{tab:actuation}
+\centering
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Mode & Voltage & Freq. & Reliability & Typical Use \\
+\midrule
+Piezo & tens--\SI{100}{V} & up to $\sim$\SI{100}{kHz} & High & Industrial, bio \\
+Thermal & \SIrange{10}{20}{V} & $\sim$\SI{30}{kHz} & Medium & Home/office \\
+EHD & $>$\SI{200}{V} & kHz & Early-stage & Nano-patterning \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%==============================================================================
+\section{Droplet Formation Physics}
+A short liquid column emitted from a nozzle breaks into droplets via the Rayleigh--Plateau instability. The fastest-growing disturbance wavelength is on the order of $4.5$ times the jet diameter, guiding stable breakup and spacing.
+
+\subsection{Dimensionless Numbers}
+\begin{align}
+\Rey &= \frac{\rho U D}{\mu}, \\
+\We  &= \frac{\rho U^2 D}{\sigma}, \\
+\Oh  &= \frac{\mu}{\sqrt{\rho \sigma D}} .
+\end{align}
+Here $\rho$ is density, $U$ velocity, $D$ nozzle diameter, $\mu$ viscosity, and $\sigma$ surface tension.
+Stable printable regimes often satisfy $0.1<\Oh<1$ and $\We>1$, while too small $\Oh$ tends to generate satellites and too large $\Oh$ inhibits breakup.
+
+\subsection{Typical Operating Ranges}
+Nozzle diameter \SIrange{10}{50}{\micro\meter}, droplet velocity \SIrange{1}{10}{m/s}, droplet diameter \SIrange{10}{80}{\micro\meter}, $\Rey\sim10$--$500$, $\We\sim1$--$20$, $\Oh\sim0.1$--$1$.
+
+\subsection{Substrate Interaction}
+Post-impact spreading is governed by wettability; hydrophilic surfaces (contact angle $<90^\circ$) promote larger footprints, whereas hydrophobic surfaces confine spots. Surface treatments (plasma, SAMs, patterning) enable spatial control.
+
+%==============================================================================
+\section{Ink Materials}
+\subsection{Classification}
+\textbf{Dye-based}: bright color, clog-resistant, lower durability. 
+\textbf{Pigment-based}: high light/water fastness, needs dispersants and recirculation. 
+\textbf{Bioinks}: cells/proteins/NA in aqueous media; viability and activity retention are critical. 
+\textbf{Conductive inks}: Ag/Cu nanoparticles, CNT/graphene, or PEDOT:PSS; often require post-print sintering.
+
+\subsection{Key Properties}
+Viscosity typically \SIrange{2}{20}{mPa.s}; surface tension \SIrange{25}{50}{mN/m}; density around \SI{1000}{kg/m^3} (aqueous). Volatility affects nozzle dry-out and on-substrate leveling.
+
+\begin{table}[!t]
+\caption{Typical Ink Property Windows}
+\label{tab:inks}
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+Type & $\mu$ (mPa$\cdot$s) & $\sigma$ (mN/m) & Notes \\
+\midrule
+Dye    & 2--5  & 30--40 & vivid color \\
+Pigment& 5--15 & 25--35 & durable, needs dispersants \\
+Bio    & 2--20 & 30--50 & viability/activity critical \\
+Conductive & 10--20 & 25--40 & sintering needed \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Bio Considerations}
+For piezo printing, cell viability of 80--95\% is achievable with careful shear/pressure management. Proteins benefit from non-thermal actuation and stabilizers (e.g., glycerol, trehalose).
+
+%==============================================================================
+\section{Ink System Engineering}
+\subsection{Components}
+Cartridge (level sensing, anti-bubble design), filter (0.2--\SI{1}{\micro\meter}), degassing (vacuum or membrane), and recirculation (preventing sedimentation/aging).
+
+\subsection{Controls}
+Reservoir pressure regulation (precision within hundreds of Pa), slight negative pressure at the nozzle to avoid self-dripping, nozzle dry-out prevention (capping, purge, humidity), and ejection stabilization (temperature control, synchronized pressure-waveform).
+
+\begin{table}[!t]
+\caption{System Trade-offs}
+\label{tab:trade}
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+Element & Desirable & Challenge \\
+\midrule
+Filter & Remove particles & Clogging risk \\
+Degassing & Stable ejection & Cost/complexity \\
+Recirculation & Anti-sedimentation & Pressure loss \\
+Neg. pressure & No drip & Misfire risk if excessive \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%==============================================================================
+\section{Device Structures and Materials}
+\subsection{Nozzles and Cavities}
+\textbf{Silicon} (DRIE, thin-film stacks): high precision and MEMS maturity. 
+\textbf{Glass} (laser drilling, anodic bonding): chemical stability, low moisture uptake. 
+\textbf{Polymer} (SU-8/PI/parylene): low-cost prototyping, bio-friendly processing.
+
+\subsection{Piezoelectric Materials}
+\textbf{PZT}: high $d_{31}/d_{33}$, proven reliability; RoHS exemptions typically apply for piezo use. 
+\textbf{KNN} (Pb-free): promising $d_{33}$, sintering/process window challenging. 
+\textbf{ScAlN} (thin film): CMOS-compatible sputtering, enhanced $e_{31,f}$, good for high-frequency thin actuators.
+
+\begin{table}[!t]
+\caption{Piezoelectric Material Snapshot}
+\label{tab:piezo}
+\centering
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Material & Displacement & CMOS & Environment & Note \\
+\midrule
+PZT   & \textbf{High} & $\triangle$ & $\triangle$ & Industry standard \\
+KNN   & Medium & $\triangle$ & \textbf{Good} & Pb-free candidate \\
+ScAlN & Med--High & \textbf{Good} & \textbf{Good} & Thin-film, RF \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Integration with CMOS}
+Thousands of channels require HV level shifters, charge-recycling, tight skew control (sub-\si{\micro s}), and careful EMC/ESD design. 2.5D/3D integration reduces parasitics and preserves waveform fidelity; thermal management becomes critical.
+
+\subsection{Protection, Sealing, Reliability}
+Hydrophobic anti-wetting (e.g., fluorinated coatings) stabilizes the meniscus; barrier layers (SiN/SiC/DLC/Al$_2$O$_3$) protect against corrosion/erosion. Reliability concerns include mechanical fatigue ($10^9$–$10^{11}$ cycles), cavitation/erosion under steep waveforms, thin-film delamination, and bubble/particle tolerance.
+
+%==============================================================================
+\section{Design and Analysis Approaches}
+\subsection{Modeling Stack}
+\textbf{0D/1D}: Equivalent RLC acoustic models with an electro-mechanical transformer representing the piezo; fluid impedance
+\begin{equation}
+Z_f(\omega)\approx R + j\omega L + \frac{1}{j\omega C}.
+\end{equation}
+\textbf{2D/3D FEM}: modal analysis (resonance/anti-resonance), displacement fields, cavity pressure response. 
+\textbf{CFD/FSI}: level-set/VOF for meniscus motion, jetting, breakup, and impact.
+
+\subsection{Meshing and Numerics}
+Spatial resolution near the free surface $\le D/50$; time step $\Delta t \lesssim 0.1D/\sqrt{\sigma/(\rho D)}$. Distinguish advancing/receding contact angles (e.g., $80^\circ/110^\circ$). Include finite compressibility of the cavity liquid for accurate acoustic coupling.
+
+\subsection{Waveform Design}
+Bipolar/multi-pulse patterns: \emph{push} (jet formation), \emph{dwell} (pressure settle), \emph{pull} (meniscus recovery, satellite suppression), and \emph{damp} (ringing control). Charge recycling reduces power; per-nozzle calibration corrects variation.
+
+%==============================================================================
+\section{Applications}
+\subsection{Printing}
+High-resolution digital printing (>\,1200\,dpi), on-demand variable data printing, packaging.
+
+\subsection{Printed Electronics}
+Ag/Cu nanoparticle interconnects, RFID antennas, transparent electrodes, and energy devices. Post-print sintering and sheet resistance uniformity are key.
+
+\subsection{Semiconductor Manufacturing}
+Localized deposition of insulating films, RDL metallization, and patterning assist (defect repair, resist trimming). Alignment and feature-size control are the main challenges.
+
+\subsection{Biotechnology}
+Cell printing for tissue models and drug screening; protein microarrays with nL--pL consumption. Maintain viability and activity via non-thermal actuation and gentle waveforms.
+
+\begin{table}[!t]
+\caption{Application Summary}
+\label{tab:apps}
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+Domain & Use & Advantage & Challenge \\
+\midrule
+Printing & Commercial/photo & High dpi & Throughput, durability \\
+Electronics & Circuits/electrodes & Maskless, flexible & Sintering, uniformity \\
+Semiconductor & Films/RDL/assist & Material savings & Alignment, CD control \\
+Bio & Cells/proteins & Precise placement & Viability/activity \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%==============================================================================
+\section{Educational Insights}
+Inkjet provides rare, direct links between theory and practice across fluid mechanics (instability, scaling), materials (ink formulation, piezoelectrics), control (waveforms, pressure/temperature), and semiconductor engineering (MEMS/CMOS integration). Example exercises include (i) computing $\Rey$, $\We$, $\Oh$ and assessing printability; (ii) RLC-based system analysis; (iii) droplet simulation vs.\ measured dropwatch data.
+
+%==============================================================================
+\section{Conclusion}
+Inkjet matured into a platform technology for printing, electronics, semiconductors, and biotechnology. Progress will hinge on eco-friendly materials (Pb-free piezoelectrics), low-power actuation and charge recycling, reliability engineering, and data-driven design (digital twins, AI-based waveform optimization).
+
+%==============================================================================
+\section*{Acknowledgment}
+The author thanks collaborators and colleagues in the inkjet, MEMS, and semiconductor communities for discussions that shaped this tutorial.
+
+%==============================================================================
+\section*{Appendix: Repository Context (Illustrative Figures)}
+The following screenshots illustrate a typical repository layout used to manage \LaTeX{} sources and CI builds (GitHub Actions). They are not essential to the technical content but help reproducibility.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/github_papers.jpeg}
+  \caption{Example \texttt{papers/} hierarchy for multiple manuscripts.}
+  \label{fig:papers}
+\end{figure}
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/github_workflows.jpeg}
+  \caption{Example GitHub Actions workflow directory for automated PDF builds.}
+  \label{fig:workflows}
+\end{figure}
+
+%==============================================================================
+% References (placeholder style; replace with your BibTeX/IEEE items)
+\begin{thebibliography}{99}
+\bibitem{Derby2003}
+B.~Derby, ``Inkjet printing of functional and structural materials: Fluid property requirements, feature stability, and resolution,'' \emph{Annu. Rev. Mater. Res.}, vol.~40, pp.~395--414, 2010.
+
+\bibitem{Calvert2001}
+P.~Calvert, ``Inkjet printing for materials and devices,'' \emph{Chem. Mater.}, vol.~13, no.~10, pp.~3299--3305, 2001.
+
+\bibitem{Park2010}
+J.-U.~Park and et al., ``High-resolution electrohydrodynamic jet printing,'' \emph{Nature Materials}, vol.~6, pp.~782--789, 2007.
+\end{thebibliography}
+
+%==============================================================================
+% IEEE Biography
+\IEEEbiographynophoto{Shinichi Samizo}
+received the M.S.\ degree in Electrical and Electronic Engineering from Shinshu University, Japan. He worked at Seiko Epson Corporation on semiconductor memory and mixed-signal device development and contributed to inkjet MEMS actuators and PrecisionCore printhead technology. He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration. Contact: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}; GitHub: \href{https://github.com/Samizo-AITL}{Samizo-AITL}.
+%==============================================================================
+
+\end{document}
