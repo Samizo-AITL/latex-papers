@@ -2,38 +2,20 @@
 \documentclass[tikz]{standalone}
 \input{_tikz_styles.tex} % 共通スタイル
 \begin{document}
-\begin{tikzpicture}[font=\footnotesize, every node/.style={align=center}]
-  % 共通フレーム
-  \node[box, minimum width=3.2cm, minimum height=2.2cm] (piezo)   {Piezo};
-  \node[box, minimum width=3.2cm, minimum height=2.2cm, right=8mm of piezo] (thermal) {Thermal\\(bubble)};
-  \node[box, minimum width=3.2cm, minimum height=2.2cm, right=8mm of thermal] (ehd) {EHD};
+\begin{tikzpicture}[x=3.2cm,y=1cm]
+  % Piezo
+  \node[box] (piezo) at (0,0) {Piezo};
+  \node[note,above=2mm of piezo.north] {low temp / broad inks};
+  \draw[arrow] (piezo.south) -- ++(0,-0.6) node[below,small]{PZT deformation};
 
-  % Piezo 模式図
-  \draw[line] ([yshift=6mm]piezo.west)++(3mm,0) -- ++(10mm,0)
-              node[above,pos=0.5]{nozzle};
-  \draw[line] (piezo.south)++(-8mm,4mm) -- ++(0,-8mm);
-  \draw[line] (piezo.south)++( 8mm,4mm) -- ++(0,-8mm);
-  \draw[<->,thick] (piezo.south)++(-8mm,-3mm) -- ++(16mm,0)
-       node[midway,below]{PZT deformation};
+  % Thermal
+  \node[box] (thermal) at (1,0) {Thermal (bubble)};
+  \node[note,above=2mm of thermal.north] {low V / ink limited};
+  \draw[arrow] (thermal.south) -- ++(0,-0.6) node[below,small]{heater $\to$ bubble};
 
-  % Thermal 模式図
-  \draw[line] (thermal.south)++(-8mm,4mm) -- ++(16mm,0); % ヒータ面
-  \draw[line] (thermal)++(0,-4mm) circle (3.5mm);        % 蒸気泡
-  \node[below=2mm of thermal]{heater pulse $\rightarrow$ vapor bubble};
-
-  % EHD 模式図
-  \draw[line] ([yshift=6mm]ehd.west)++(3mm,0) -- ++(10mm,0);
-  \draw[line] (ehd.north)++(0,-4mm) -- ++(0,12mm);
-  \draw[fill=black] (ehd.north)++(0,-4mm) circle (0.7mm); % ノズル先端
-  \draw[line] (ehd.north)++(0,6mm) -- ++(10mm,0) node[right]{HV};
-  \draw[line] (ehd.north)++(0,-4mm) -- ++(0,-7mm);        % テイラーコーン
-  \draw[line] (ehd.north)++(0,-7mm) -- ++(2mm,-6mm);
-  \draw[line] (ehd.north)++(0,-7mm) -- ++(-2mm,-6mm);
-  \node[below=2mm of ehd]{Taylor cone $\downarrow$ fine droplets};
-
-  % タグ
-  \node[note, above=1mm of piezo]   {low temp / broad inks};
-  \node[note, above=1mm of thermal] {low V / ink limited};
-  \node[note, above=1mm of ehd]     {sub-$\mu$m / high V};
+  % EHD
+  \node[box] (ehd) at (2,0) {EHD};
+  \node[note,above=2mm of ehd.north] {sub-$\mu$m / high V};
+  \draw[arrow] (ehd.south) -- ++(0,-0.6) node[below,small]{Taylor cone $\to$ droplets};
 \end{tikzpicture}
 \end{document}
