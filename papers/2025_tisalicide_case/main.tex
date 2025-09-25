@@ -162,7 +162,7 @@ tight process-window control (liner thickness, etch-back dose, corner profile),
 lot-to-lot robustness was not guaranteed; therefore the measure was treated
 as a provisional fix.
 
-% ===== Fig.2: poly+SW 断面（最終修正版） =====
+% ===== Fig.2: poly + SW cross-sections (final tuned) =====
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
@@ -171,66 +171,69 @@ as a provisional fix.
     \tikzstyle{poly}=[fill=cyan!30,draw=cyan!70!black]
     \tikzstyle{silicide}=[fill=orange!40,draw=orange!80!black]
     \tikzstyle{halo}=[fill=blue!30,draw=blue!70]
-    \tikzstyle{residual}=[fill=red!70,draw=red!80!black,opacity=0.95]
+    \tikzstyle{residual}=[fill=red!75,draw=red!90!black,opacity=0.95]
     \tikzstyle{label}=[font=\scriptsize]
 
-    % ===================== (a) BEFORE =====================
+    % ---------------------------- (a) BEFORE ----------------------------
     \begin{scope}[shift={(0,0)}]
       \node[font=\small] at (3,2.2) {(a) Before: C49+B residual at poly/SW corner};
 
-      % Si substrate + surface
-      \path[si] (0,-1.0) rectangle (6,0);
-      \draw[gray!60,thick] (0,0) -- (6,0);
+      % Si substrate & surface
+      \path[si] (0,-1.0) rectangle (6,0); \draw[gray!60,thick] (0,0)--(6,0);
 
-      % Poly（左端=基板左端） & SW
+      % Poly (LEFT EDGE = substrate left)
       \path[poly] (0,0) rectangle (0.60,1.20);
       \node[label,anchor=south] at (0.30,1.20) {poly};
 
+      % SW (right of poly, vertical)
       \path[fill=gray!55] (0.60,0) rectangle (1.00,1.20);
       \node[label,anchor=south] at (0.80,1.20) {SW};
 
-      % TiSi（poly上 と 拡散表面）
+      % TiSi on poly top and on diffusion (start x = 1.00)
       \path[silicide] (0,1.20) rectangle (0.60,1.35);
       \path[silicide] (1.00,-0.05) rectangle (6,0.10);
       \node[label] at (5.0,0.25) {TiSi};
 
-      % Halo：SW直下（右端がTiSiにわずか接触）
-      \draw[halo] (0.75,-0.25) ellipse (0.65 and 0.25);
-      \node[label,blue!70] at (0.75,-0.55) {halo};
+      % Halo: large, under SW; top at y=0 (no protrusion). RIGHT EDGE slightly overlaps TiSi region.
+      % center=(0.78,-0.25), rx=0.68, ry=0.25 -> right edge = 1.46 (> 1.00)
+      \draw[halo] (0.78,-0.25) ellipse (0.68 and 0.25);
+      \node[label,blue!70] at (0.78,-0.56) {halo};
 
-      % C49+B 高抵抗スポット（接触点付近を強調）
-      \draw[residual] (1.03,0.03) circle (0.10);
-      \node[label,red!70] at (1.58,0.22) {high-R spot (C49+B)};
+      % High-R spot (C49+B) ~ at the first-contact corner
+      \draw[residual] (1.02,0.03) circle (0.10);
+      \node[label,red!80] at (1.58,0.22) {high-R spot (C49+B)};
     \end{scope}
 
-    % ===================== (b) AFTER =====================
+    % ---------------------------- (b) AFTER ----------------------------
     \begin{scope}[shift={(8,0)}]
       \node[font=\small] at (3,2.2) {(b) After: SW under-etch, separation secured};
 
-      % Si substrate + surface
-      \path[si] (0,-1.0) rectangle (6,0);
-      \draw[gray!60,thick] (0,0) -- (6,0);
+      % Si substrate & surface
+      \path[si] (0,-1.0) rectangle (6,0); \draw[gray!60,thick] (0,0)--(6,0);
 
-      % Poly（左端合わせ） & SW（幅を少し広げ、白四角なし）
+      % Poly (same alignment)
       \path[poly] (0,0) rectangle (0.60,1.20);
       \node[label,anchor=south] at (0.30,1.20) {poly};
 
+      % SW (slightly wider; under-etch profile at bottom by raising foot line ONLY — no white patch)
       \path[fill=gray!55] (0.60,0.20) -- (1.10,0.20) -- (1.10,1.20) -- (0.60,1.20) -- cycle;
       \node[label,anchor=south] at (0.85,1.20) {SW};
 
-      % TiSi
+      % TiSi on poly & diffusion (start x = 1.10 here)
       \path[silicide] (0,1.20) rectangle (0.60,1.35);
       \path[silicide] (1.10,-0.05) rectangle (6,0.10);
       \node[label] at (5.0,0.25) {TiSi};
 
-      % Halo：SW直下・非接触（右端 < TiSi開始）
-      \draw[halo] (0.70,-0.25) ellipse (0.50 and 0.25);
-      \node[label,blue!70] at (0.70,-0.55) {halo};
+      % Halo under SW, NON-CONTACT: right edge < 1.10
+      % center=(0.70,-0.25), rx=0.50 -> right edge = 1.20? adjust to 0.48 so 0.70+0.48=1.18 < 1.10? we want non-contact:
+      % Use rx=0.38 -> right edge=1.08 < 1.10
+      \draw[halo] (0.70,-0.25) ellipse (0.38 and 0.25);
+      \node[label,blue!70] at (0.70,-0.56) {halo};
 
-      \node[label,green!50!black] at (2.2,-0.30) {no C49+B residual (no contact)};
+      \node[label,green!50!black] at (2.20,-0.30) {no C49+B residual (no contact)};
     \end{scope}
   \end{tikzpicture}}
-  \caption{Cross-sections near poly and sidewall (SW). (a) Halo under SW barely touches the TiSi edge, forming a high-resistance C49+B spot. (b) With SW under-etch and slightly wider SW, the halo remains under SW without contacting TiSi, eliminating the defect.}
+  \caption{Cross-sections near poly and sidewall (SW). (a) Post-poly oblique halo lies under SW and its right edge barely meets the diffusion TiSi, creating a C49+B high-R spot. (b) With SW under-etch geometry (foot raised), halo stays under SW but does \emph{not} contact TiSi, eliminating the defect.}
   \label{fig:fig2_poly}
 \end{figure*}
 
