@@ -159,9 +159,10 @@ spots}, resulting in stabilized yield. However, because the effect
 depended strongly on process-window control, lot-to-lot robustness
 could not be guaranteed, and the measure was treated as a provisional fix.
 
-% ===== Improved Fig.2: Cross-sections before/after sidewall under-etch =====
-\begin{figure}[!t]
+% ===== Fig.2 (two-column wide): Cross-sections before/after sidewall under-etch =====
+\begin{figure*}[!t]
   \centering
+  \resizebox{\textwidth}{!}{%
   \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
     % Common styles
     \tikzstyle{oxide}=[fill=gray!25,draw=gray!60]
@@ -172,88 +173,70 @@ could not be guaranteed, and the measure was treated as a provisional fix.
     \tikzstyle{label}=[font=\scriptsize]
     \tikzstyle{residual}=[fill=red!70,draw=red!80!black]
 
-    % ---------- (a) BEFORE: no under-etch, halo touches Ti during silicidation ----------
+    % ---------- (a) BEFORE ----------
     \begin{scope}[shift={(0,0)}]
-      % Title
       \node[font=\small] at (2.4,3.1) {(a) Before: halo–Ti contact (C49 residuals)};
-
-      % STI oxide trench at left
       \path[oxide] (0,0) rectangle (1.2,2.4);  % STI
       \node[label,rotate=90] at (0.15,1.2) {STI Oxide};
-
-      % Silicon substrate + active
-      \path[si] (0,-1.6) rectangle (5,0);      % bulk Si
+      \path[si] (0,-1.6) rectangle (5,0);      % Si
       \node[label] at (3.8,-1.3) {Si Substrate};
 
-      % Active region (right of trench) top surface at y=0
-      % Halo implant under sidewall (touching top surface region)
-      \draw[halo] (1.15,-0.05) ellipse (0.6 and 0.28); % shallow part
-      \draw[halo] (1.35,-0.35) ellipse (0.9 and 0.42); % deeper spread
+      % Halo near sidewall (contacts Ti during silicidation)
+      \draw[halo] (1.15,-0.05) ellipse (0.6 and 0.28);
+      \draw[halo] (1.35,-0.35) ellipse (0.9 and 0.42);
       \node[label,blue!60] at (1.55,0.35) {Halo B};
 
-      % Ti blanket (pre-silicidation) / silicide over active
+      % Ti layer & silicide
       \path[metal] (0,2.4) rectangle (5,2.7); \node[label] at (4.4,2.95) {Ti layer};
-      % Silicide on Si (active) forms but impeded near sidewall
       \path[silicide] (1.2,-0.02) rectangle (5,0.10);
       \node[label] at (3.6,0.28) {TiSi$_2$ (target C54)};
 
-      % C49 residual grains near contact region
+      % C49 residuals
       \foreach \x/\y in {1.35/0.05,1.55/0.02,1.75/0.00}
         \draw[residual] (\x,\y) circle (0.045);
-      \node[label,red!70] at (2.15,0.35) {C49 residual (high-$\rho$)};
+      \node[label,red!70] at (2.2,0.35) {C49 residual (high-$\rho$)};
 
       % Callouts
-      \draw[->,label] (1.00,1.9) -- (1.18,0.05) node[pos=0.0,above] {};
-      \node[label] at (0.95,2.05) {Sidewall corner};
-      \draw[->,label] (2.0,2.0) -- (1.4,-0.35);
-      \node[label] at (2.25,2.15) {Halo diffusion};
+      \draw[->,label] (0.9,2.0) -- (1.18,0.05); \node[label] at (0.9,2.15) {Sidewall corner};
+      \draw[->,label] (2.1,2.0) -- (1.4,-0.35); \node[label] at (2.4,2.15) {Halo diffusion};
 
-      % Ground line
       \draw[gray!60] (0,-1.6) -- (5,-1.6);
     \end{scope}
 
-    % ---------- (b) AFTER: with sidewall under-etch (recess), separation increased ----------
+    % ---------- (b) AFTER ----------
     \begin{scope}[shift={(6.4,0)}]
-      % Title
       \node[font=\small] at (2.4,3.1) {(b) After: sidewall under-etch (separation)};
-
-      % STI oxide with intentional under-etch notch at the corner
+      % STI with intentional recess (under-etch)
       \path[oxide] (0,0) -- (1.2,0) -- (1.2,2.4) -- (0,2.4) -- cycle;
-      % create recess notch (undercut) at top inner corner
       \fill[white] (1.20,0) -- (1.20,0.35) .. controls (1.10,0.28) and (1.00,0.22) .. (0.92,0.18)
                      -- (0.92,0) -- cycle;
       \draw[gray!60] (0.92,0) -- (0.92,0.18) .. controls (1.00,0.22) and (1.10,0.28) .. (1.20,0.35);
-
       \node[label,rotate=90] at (0.15,1.2) {STI Oxide};
-      \node[label] at (1.25,0.55) {Under-etch recess};
+      \node[label] at (1.28,0.55) {Under-etch recess};
 
-      % Silicon substrate
-      \path[si] (0,-1.6) rectangle (5,0);
-      \node[label] at (3.8,-1.3) {Si Substrate};
+      \path[si] (0,-1.6) rectangle (5,0); \node[label] at (3.8,-1.3) {Si Substrate};
 
-      % Halo implant now further from surface due to recess geometry
+      % Halo pulled away by recess geometry
       \draw[halo] (1.45,-0.18) ellipse (0.65 and 0.30);
       \draw[halo] (1.70,-0.45) ellipse (1.0 and 0.46);
       \node[label,blue!60] at (1.95,0.35) {Halo B};
 
-      % Ti layer and silicide (now cleaner C54)
+      % Ti layer & clean C54 silicide
       \path[metal] (0,2.4) rectangle (5,2.7); \node[label] at (4.4,2.95) {Ti layer};
       \path[silicide] (1.2,-0.02) rectangle (5,0.10);
       \node[label] at (3.6,0.28) {TiSi$_2$ (C54 completed)};
-
-      % No residuals near the corner (show check mark)
       \node[label,green!60!black] at (1.55,0.28) {No C49 residual};
 
-      % Separation arrow
+      % Separation indicator
       \draw[<->,thick,gray!70] (1.00,0.10) -- (1.45,0.10);
       \node[label] at (1.225,0.32) {increased separation};
 
       \draw[gray!60] (0,-1.6) -- (5,-1.6);
     \end{scope}
-  \end{tikzpicture}
-  \caption{Cross-sections near the STI sidewall. (a) Without countermeasure: halo diffusion reaches Ti during silicidation, leaving C49 residual grains. (b) With sidewall under-etch: a recess increases the spacing between halo implant and silicide front, suppressing C49 residuals and stabilizing yield.}
-  \label{fig:crosssection_improved}
-\end{figure}
+  \end{tikzpicture}}
+  \caption{Two-column cross-sections near the STI sidewall. (a) Without countermeasure: halo diffusion reaches Ti during silicidation, leaving C49 residual grains. (b) With sidewall under-etch: a recess increases the spacing between halo implant and the silicide front, suppressing C49 residuals and stabilizing yield.}
+  \label{fig:crosssection}
+\end{figure*}
 
 \subsection{Permanent Measures: Ramp Anneal Optimization}
 Ramp-anneal conditions were optimized (ramp rate and soak time)
