@@ -1,32 +1,39 @@
-\documentclass[tikz,border=2pt]{standalone}
-\usepackage{amsmath}
-\usepackage{newtxtext,newtxmath} % Times-like to match IEEEtran
-\usetikzlibrary{arrows.meta,positioning,calc,fit,shapes.multipart,decorations.pathmorphing}
-\tikzset{>=Latex, line/.style={line width=0.8pt}, box/.style={draw, rounded corners=2pt, minimum width=28mm, minimum height=12mm, align=center},
-note/.style={font=\footnotesize}}
-
+% figs/actuation_modes_tikz.tex
+\documentclass[tikz]{standalone}
+\input{_tikz_styles.tex} % 共通スタイル
 \begin{document}
-\begin{tikzpicture}[node distance=10mm]
-% Boxes
-\node[box] (piezo) {Piezoelectric\\ \footnotesize $V(t)\!\rightarrow$ strain $\rightarrow \Delta p$};
-\node[box, right=18mm of piezo] (thermal) {Thermal (Bubble)\\ \footnotesize $I^2R\!\rightarrow \Delta T \rightarrow$ bubble $\rightarrow \Delta p$};
-\node[box, right=18mm of thermal] (ehd) {EHD\\ \footnotesize $\mathbf{E}\!\rightarrow$ Taylor cone $\rightarrow$ ejection};
+\begin{tikzpicture}[font=\footnotesize, every node/.style={align=center}]
+  % 共通フレーム
+  \node[box, minimum width=3.2cm, minimum height=2.2cm] (piezo)   {Piezo};
+  \node[box, minimum width=3.2cm, minimum height=2.2cm, right=8mm of piezo] (thermal) {Thermal\\(bubble)};
+  \node[box, minimum width=3.2cm, minimum height=2.2cm, right=8mm of thermal] (ehd) {EHD};
 
-% Icons (minimal, monochrome)
-\draw[line] ([yshift=-6mm]piezo.south west) rectangle ++(16mm,8mm); % cavity
-\draw[line] ([xshift=14mm,yshift=-5mm]piezo.south east) -- ++(6mm,0) -- ++(0,6mm) -- ++(-6mm,0); % nozzle
-\draw[->,line] ([xshift=20mm,yshift=-2mm]piezo.south east) -- ++(6mm,0);
+  % Piezo 模式図
+  \draw[line] ([yshift=6mm]piezo.west)++(3mm,0) -- ++(10mm,0)
+              node[above,pos=0.5]{nozzle};
+  \draw[line] (piezo.south)++(-8mm,4mm) -- ++(0,-8mm);
+  \draw[line] (piezo.south)++( 8mm,4mm) -- ++(0,-8mm);
+  \draw[<->,thick] (piezo.south)++(-8mm,-3mm) -- ++(16mm,0)
+       node[midway,below]{PZT deformation};
 
-\draw[line] ([yshift=-6mm]thermal.south west) rectangle ++(16mm,8mm); % chamber
-\draw[line] ([xshift=1mm,yshift=-2mm]thermal.south west) -- ++(14mm,0);
-\draw[line] ([xshift=12mm,yshift=-5mm]thermal.south east) -- ++(6mm,0) -- ++(0,6mm) -- ++(-6mm,0); % nozzle
-\draw (thermal.south) ++(0,-2mm) circle (2.5mm); % bubble
-\draw[->,line] ([xshift=20mm,yshift=-2mm]thermal.south east) -- ++(6mm,0);
+  % Thermal 模式図
+  \draw[line] (thermal.south)++(-8mm,4mm) -- ++(16mm,0); % ヒータ面
+  \draw[line] (thermal)++(0,-4mm) circle (3.5mm);        % 蒸気泡
+  \node[below=2mm of thermal]{heater pulse $\rightarrow$ vapor bubble};
 
-\draw[line] ([yshift=-6mm]ehd.south west) -- ++(16mm,0) -- ++(0,8mm) -- ++(-16mm,0);
-\draw[line] ([xshift=12mm,yshift=-5mm]ehd.south east) -- ++(6mm,0) -- ++(0,6mm) -- ++(-6mm,0); % nozzle
-\draw[line] ([xshift=5mm,yshift=-6mm]ehd.south west) -- ++(3mm,8mm) -- ++(-6mm,0) -- cycle; % cone
-\draw[line] ([xshift=26mm,yshift=-10mm]ehd.center) -- ++(0,20mm); % counter electrode
-\draw[<->,line] ([xshift=23mm,yshift=6mm]ehd.center) -- ++(6mm,0);
+  % EHD 模式図
+  \draw[line] ([yshift=6mm]ehd.west)++(3mm,0) -- ++(10mm,0);
+  \draw[line] (ehd.north)++(0,-4mm) -- ++(0,12mm);
+  \draw[fill=black] (ehd.north)++(0,-4mm) circle (0.7mm); % ノズル先端
+  \draw[line] (ehd.north)++(0,6mm) -- ++(10mm,0) node[right]{HV};
+  \draw[line] (ehd.north)++(0,-4mm) -- ++(0,-7mm);        % テイラーコーン
+  \draw[line] (ehd.north)++(0,-7mm) -- ++(2mm,-6mm);
+  \draw[line] (ehd.north)++(0,-7mm) -- ++(-2mm,-6mm);
+  \node[below=2mm of ehd]{Taylor cone $\downarrow$ fine droplets};
+
+  % タグ
+  \node[note, above=1mm of piezo]   {low temp / broad inks};
+  \node[note, above=1mm of thermal] {low V / ink limited};
+  \node[note, above=1mm of ehd]     {sub-$\mu$m / high V};
 \end{tikzpicture}
 \end{document}
