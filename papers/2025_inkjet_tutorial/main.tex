@@ -20,6 +20,14 @@
 \usepackage[capitalize,nameinlink]{cleveref}
 \usepackage{xcolor}
 
+% Figures: allow importing standalone TikZ sources placed under figs/
+\usepackage{standalone}     % \includestandalone{...}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes,decorations.markings}
+
+% Optional: if you later export PDFs to figs/pdfs, add both to the path
+\graphicspath{{figs/}{figs/pdfs/}}
+
 % ---------- Metadata ----------
 \title{Inkjet Technology: Principles, Materials, and Emerging Applications}
 
@@ -60,6 +68,14 @@ Since the 1970s, inkjet has progressed from home/office printers to an \emph{ind
 \section{Actuation Principles}
 Three representative modes are used in practice.
 
+\begin{figure}[!t]
+  \centering
+  % standalone TikZ sources under figs/
+  \includestandalone[width=\linewidth]{figs/actuation_modes_tikz}
+  \caption{Actuation principles: (left) piezoelectric deformation, (middle) thermal bubble expansion, (right) EHD Taylor cone.}
+  \label{fig:actuation_modes}
+\end{figure}
+
 \subsection{Piezoelectric (Piezo)}
 A PZT transducer converts voltage into cavity deformation and pressure pulses. Typical drive is tens of volts to about \SI{100}{V} with pulse widths of a few microseconds. Advantages: non-thermal, broad ink compatibility (including bio and nanoparticle inks), high reliability (>$10^{10}$ shots).
 
@@ -88,6 +104,13 @@ EHD & $>$\SI{200}{V} & kHz & Early-stage & Nano-patterning \\
 \section{Droplet Formation Physics}
 A short liquid column emitted from a nozzle breaks into droplets via the Rayleigh--Plateau instability. The fastest-growing disturbance wavelength is on the order of $4.5$ times the jet diameter, guiding stable breakup and spacing.
 
+\begin{figure}[!t]
+  \centering
+  \includestandalone[width=\linewidth]{figs/droplet_instability_tikz}
+  \caption{Schematic of jet breakup: initial perturbation $\rightarrow$ growth $\rightarrow$ main drop and satellite formation.}
+  \label{fig:droplet_instability}
+\end{figure}
+
 \subsection{Dimensionless Numbers}
 \begin{align}
 \Rey &= \frac{\rho U D}{\mu}, \\
@@ -105,6 +128,14 @@ Post-impact spreading is governed by wettability; hydrophilic surfaces (contact 
 
 %==============================================================================
 \section{Ink Materials}
+
+\begin{figure}[!t]
+  \centering
+  \includestandalone[width=\linewidth]{figs/ink_classification_tikz}
+  \caption{Ink categorization and typical traits: dye, pigment, bio, and conductive inks.}
+  \label{fig:ink_classes}
+\end{figure}
+
 \subsection{Classification}
 \textbf{Dye-based}: bright color, clog-resistant, lower durability. 
 \textbf{Pigment-based}: high light/water fastness, needs dispersants and recirculation. 
@@ -135,6 +166,14 @@ For piezo printing, cell viability of 80--95\% is achievable with careful shear/
 
 %==============================================================================
 \section{Ink System Engineering}
+
+\begin{figure}[!t]
+  \centering
+  \includestandalone[width=\linewidth]{figs/system_flow_tikz}
+  \caption{Ink system flow: cartridge $\rightarrow$ filter $\rightarrow$ degassing $\rightarrow$ recirculation $\rightarrow$ nozzles.}
+  \label{fig:system_flow}
+\end{figure}
+
 \subsection{Components}
 Cartridge (level sensing, anti-bubble design), filter (0.2--\SI{1}{\micro\meter}), degassing (vacuum or membrane), and recirculation (preventing sedimentation/aging).
 
@@ -159,6 +198,14 @@ Neg. pressure & No drip & Misfire risk if excessive \\
 
 %==============================================================================
 \section{Device Structures and Materials}
+
+\begin{figure}[!t]
+  \centering
+  \includestandalone[width=\linewidth]{figs/piezo_materials_tikz}
+  \caption{Piezoelectric material landscape for printhead actuation (PZT, KNN, ScAlN).}
+  \label{fig:piezo_materials}
+\end{figure}
+
 \subsection{Nozzles and Cavities}
 \textbf{Silicon} (DRIE, thin-film stacks): high precision and MEMS maturity. 
 \textbf{Glass} (laser drilling, anodic bonding): chemical stability, low moisture uptake. 
@@ -208,6 +255,14 @@ Bipolar/multi-pulse patterns: \emph{push} (jet formation), \emph{dwell} (pressur
 
 %==============================================================================
 \section{Applications}
+
+\begin{figure*}[!t]
+  \centering
+  \includestandalone[width=0.9\textwidth]{figs/application_matrix_tikz}
+  \caption{Application landscape across printing, electronics, semiconductor, and bio domains.}
+  \label{fig:application_matrix}
+\end{figure*}
+
 \subsection{Printing}
 High-resolution digital printing (>\,1200\,dpi), on-demand variable data printing, packaging.
 
@@ -249,19 +304,19 @@ Inkjet matured into a platform technology for printing, electronics, semiconduct
 The author thanks collaborators and colleagues in the inkjet, MEMS, and semiconductor communities for discussions that shaped this tutorial.
 
 %==============================================================================
+% (Optional) Appendix: repository screenshots — remove for submission if not needed.
 \section*{Appendix: Repository Context (Illustrative Figures)}
-The following screenshots illustrate a typical repository layout used to manage \LaTeX{} sources and CI builds (GitHub Actions). They are not essential to the technical content but help reproducibility.
-
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=\linewidth]{figs/github_papers.jpeg}
+  % Place JPEGs to figs/ (or comment out for submission)
+  \includegraphics[width=\linewidth]{github_papers.jpeg}
   \caption{Example \texttt{papers/} hierarchy for multiple manuscripts.}
   \label{fig:papers}
 \end{figure}
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=\linewidth]{figs/github_workflows.jpeg}
+  \includegraphics[width=\linewidth]{github_workflows.jpeg}
   \caption{Example GitHub Actions workflow directory for automated PDF builds.}
   \label{fig:workflows}
 \end{figure}
@@ -276,7 +331,7 @@ B.~Derby, ``Inkjet printing of functional and structural materials: Fluid proper
 P.~Calvert, ``Inkjet printing for materials and devices,'' \emph{Chem. Mater.}, vol.~13, no.~10, pp.~3299--3305, 2001.
 
 \bibitem{Park2010}
-J.-U.~Park and et al., ``High-resolution electrohydrodynamic jet printing,'' \emph{Nature Materials}, vol.~6, pp.~782--789, 2007.
+J.-U.~Park \emph{et al.}, ``High-resolution electrohydrodynamic jet printing,'' \emph{Nature Materials}, vol.~6, pp.~782--789, 2007.
 \end{thebibliography}
 
 %==============================================================================
