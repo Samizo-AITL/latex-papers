@@ -36,6 +36,9 @@
 \usepackage{array,makecell}         % 表の行内改行など
 \newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 
+% 浮動体がセクションを越えて前方に出ないようにする
+\usepackage[section]{placeins}
+
 % 画像探索パス
 \graphicspath{{figs/}{figs/pdfs/}}
 
@@ -71,6 +74,9 @@ Inkjet printing has evolved from a consumer technology to a versatile platform s
 Inkjet printing, piezoelectric actuation, thermal inkjet, EHD, Rayleigh--Plateau instability, MEMS nozzle, conductive ink, bio-printing, semiconductor processing, multi-physics modeling.
 \end{IEEEkeywords}
 
+% ← これを追加（この行より前に図が出ない）
+\FloatBarrier
+
 %==============================================================================
 \section{Introduction}
 Since the 1970s, inkjet has progressed from home/office printers to an \emph{industrial} method for maskless, material-efficient patterning. The shift was enabled by improved heads (MEMS nozzles, robust piezoelectric stacks), waveform design, and materials engineering. Today, inkjet bridges fluid mechanics, materials science, control engineering, and semiconductor device technology, making it both a practical manufacturing tool and an effective educational platform.
@@ -83,11 +89,10 @@ Since the 1970s, inkjet has progressed from home/office printers to an \emph{ind
 \section{Actuation Principles}
 Three representative modes are used in practice.
 
-\begin{figure}[!t]
+\begin{figure}[!tbp]   % もとの [!t] を [!tbp] に
   \centering
-  % shell-escape不要化: mode=tex
   \includestandalone[mode=tex,width=\linewidth]{figs/actuation_modes_tikz}
-  \caption{Actuation principles: piezo, thermal, and EHD.}
+  \caption{Actuation principles: (left) piezoelectric deformation, (middle) thermal bubble expansion, (right) EHD Taylor cone.}
   \label{fig:actuation_modes}
 \end{figure}
 
