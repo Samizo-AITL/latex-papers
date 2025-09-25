@@ -1,0 +1,25 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath}
+\usepackage{newtxtext,newtxmath} % Times-like to match IEEEtran
+\usetikzlibrary{arrows.meta,positioning,calc,fit,shapes.multipart,decorations.pathmorphing}
+\tikzset{>=Latex, line/.style={line width=0.8pt}, box/.style={draw, rounded corners=2pt, minimum width=28mm, minimum height=12mm, align=center},
+note/.style={font=\footnotesize}}
+
+\begin{document}
+\begin{tikzpicture}
+% Axes box
+\draw[line] (0,0) rectangle (10,10);
+\node[note, anchor=west] at (10,0) {Color Gamut $\rightarrow$};
+\node[note, rotate=90] at (-0.8,5) {Durability $\uparrow$};
+% Points/ellipses
+\draw[line] (8,3) circle (0.6) node[above=2pt] {\footnotesize Dye};
+\draw[line] (3,8) circle (0.6) node[above=2pt] {\footnotesize Pigment};
+\draw[line] (2.5,3.5) circle (0.6) node[above=2pt] {\footnotesize Bio};
+\draw[line] (7,7) circle (0.6) node[above=2pt] {\footnotesize Conductive};
+% Notes
+\node[note] at (8,1.8) {Bright / clog-resist.};
+\node[note] at (3,9.2) {Light/Water fast};
+\node[note] at (2.0,2.4) {Viability/Activity};
+\node[note] at (7,6.0) {Sintering / $R_{\rm sheet}$};
+\end{tikzpicture}
+\end{document}
