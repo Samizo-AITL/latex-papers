@@ -1,7 +1,8 @@
 \documentclass[conference]{IEEEtran}
 
 % ---------------- Packages ----------------
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{siunitx}
@@ -22,14 +23,9 @@
 % --- フォント（XeLaTeX + IEEEtran の警告回避：Times 系） ---
 \usepackage{newtxtext,newtxmath}
 
-% --- 余白の主因になっていた強制バリアは使わない ---
-% \usepackage[section]{placeins} % ←削除のままでOK
-% 必要な場所だけ \FloatBarrier を局所的に挿入
-
 % ---------- Title / Author ----------
 \title{Differentiated Analog Modules via Manufacturing Technology:\\
-Achieving Over 50\% Reduction in $1/f$ Noise on
-\texorpdfstring{\mbox{$0.18\,\mu\mathrm{m}$}}{0.18 µm} CMOS}
+Achieving Over 50\% Reduction in $1/f$ Noise on \SI{0.18}{\um} CMOS}
 
 \author{
 \IEEEauthorblockN{Shinichi Samizo}
@@ -44,7 +40,7 @@ Project Design Hub, Samizo--AITL\\
 
 % ---------- Abstract ----------
 \begin{abstract}
-This paper presents a process-based differentiation strategy that achieves more than 50\% reduction in MOSFET \emph{1/f} noise on \SI{0.18}{\micro\meter} CMOS. By combining epitaxial substrate engineering, well-doping optimization, gate-oxide thickness control with optimized pre-clean, and hydrogen annealing for interface-trap passivation, measured drain-current PSD is reduced across \SIrange{1}{10}{\kilo\hertz} and \SIrange{25}{125}{\celsius}. Dedicated devices ($L=\SI{0.18}{\micro\meter}$, $W=\SI{10}{\micro\meter}$) validate stability up to 1000~h at \SI{85}{\celsius}. The approach provides circuit-level benefits without proportional area/power penalties and offers educational value by linking process/device optimization to analog performance.
+This paper presents a process-based differentiation strategy that achieves more than 50\% reduction in MOSFET \emph{1/f} noise on \SI{0.18}{\um} CMOS. By combining epitaxial substrate engineering, well-doping optimization, gate-oxide thickness control with optimized pre-clean, and hydrogen annealing for interface-trap passivation, measured drain-current PSD is reduced across \SIrange{1}{10}{\kilo\hertz} and \SIrange{25}{125}{\celsius}. Dedicated devices ($L=\SI{0.18}{\um}$, $W=\SI{10}{\um}$) validate stability up to 1000~h at \SI{85}{\celsius}. The approach provides circuit-level benefits without proportional area/power penalties and offers educational value by linking process/device optimization to analog performance.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -53,22 +49,22 @@ This paper presents a process-based differentiation strategy that achieves more 
 
 % ---------- 1. Introduction ----------
 \section{Introduction}
-Analog mixed-signal (AMS) systems at the \SI{0.18}{\micro\meter} node remain vital in automotive, industrial, medical, and sensing markets. Low-frequency (\emph{1/f}) noise frequently dominates front-end amplifiers and sensor interfaces, limiting SNR and long-term stability. Because its origin is tied to interface traps and process-induced variability, design-only mitigation (device sizing, symmetry, chopper) cannot universally meet noise targets without cost in area, power, or complexity. We therefore pursue a process-centric path that physically lowers device noise while retaining design freedom.
+Analog mixed-signal (AMS) systems at the \SI{0.18}{\um} node remain vital in automotive, industrial, medical, and sensing markets. Low-frequency (\emph{1/f}) noise frequently dominates front-end amplifiers and sensor interfaces, limiting SNR and long-term stability. Because its origin is tied to interface traps and process-induced variability, design-only mitigation (device sizing, symmetry, chopper) cannot universally meet noise targets without cost in area, power, or complexity. We therefore pursue a process-centric path that physically lowers device noise while retaining design freedom.
 
 % ---------- 2. Background ----------
 \section{Background}
 For MOSFETs, the drain-current noise PSD can be written compactly as
 \begin{equation}
-  S_{id}(f) \propto \frac{1}{f \cdot W L \cdot C_{ox}^{2}},
+  S_{id}(f) \propto \frac{1}{f \cdot W L \cdot C_{ox}^{2}}.
 \end{equation}
-where $f$ is frequency, $W$/$L$ are channel dimensions, and $C_{ox}$ the oxide capacitance per area. This stems from number-fluctuation models (McWhorter) and their interface-trap formulations~\cite{Takeda,Ghibaudo}. Reducing trap density $D_{it}$ and weakening trap--carrier coupling lowers the proportionality constant $K$ in $S_{id}=K/f^{\gamma}$.
+Here $f$ is frequency, $W$/$L$ are channel dimensions, and $C_{ox}$ the oxide capacitance per area. This stems from number-fluctuation models (McWhorter) and their interface-trap formulations~\cite{Takeda,Ghibaudo}. Reducing trap density $D_{it}$ and weakening trap--carrier coupling lowers the proportionality constant $K$ in $S_{id}=K/f^{\gamma}$.
 
 % ---------- 3. Proposed Manufacturing Techniques ----------
 \section{Proposed Manufacturing Techniques}
 
 \subsection{Substrate and Well Engineering}
 Epitaxial (epi) substrates suppress bulk defects near channels. 
-Practical epi thickness is typically \SIrange{1}{3}{\micro\meter}; thicker epi lowers bulk traps but raises wafer cost and latch-up risk. 
+Practical epi thickness is typically \SIrange{1}{3}{\um}; thicker epi lowers bulk traps but raises wafer cost and latch-up risk. 
 Well-doping concentrations in the range of $1\times10^{17}$--$5\times10^{17}$~cm$^{-3}$ reshape vertical fields and mitigate trap interaction. 
 Typical improvement: \SI{20}{\percent}--\SI{30}{\percent} reduction in fitted $K$.
 
@@ -94,7 +90,7 @@ Multi-finger layouts ensure current uniformity and mitigate self-heating, while 
 
 % ---------- 4. Verification ----------
 \section{Verification}
-Dedicated MOSFET test structures ($L=\SI{0.18}{\micro\meter}$, $W=\SI{10}{\micro\meter}$) were fabricated in both baseline and process-improved splits. Each data point represents the mean of 10--15 devices per split, with error bars indicating one standard deviation ($1\sigma$). Guard-ring layouts were employed to suppress substrate noise coupling and ensure reproducibility across wafers.
+Dedicated MOSFET test structures ($L=\SI{0.18}{\um}$, $W=\SI{10}{\um}$) were fabricated in both baseline and process-improved splits. Each data point represents the mean of 10--15 devices per split, with error bars indicating one standard deviation ($1\sigma$). Guard-ring layouts were employed to suppress substrate noise coupling and ensure reproducibility across wafers.
 
 Low-frequency drain-current noise power spectral density (PSD) was measured using a shielded probe station equipped with temperature control (\SIrange{25}{125}{\celsius}, $\pm$\SI{0.5}{\celsius} stability). Biasing was applied by a precision source-measure unit (Keysight B1500A class), and drain current fluctuations were amplified by a low-noise current preamplifier (Stanford SR570 type). The amplified signals were digitized by a dynamic signal analyzer (SR785 class) or equivalent FFT spectrum analyzer. The measurement bandwidth was \SI{1}{\hertz}–\SI{10}{\kilo\hertz}, under $V_{GS}=\SI{0.5}{V}$ and $V_{DS}=\SI{50}{mV}$. System noise floor was verified to be below $10^{-27}$~A$^{2}$/Hz at \SI{10}{\kilo\hertz} by measuring shorted inputs.
 
@@ -111,9 +107,9 @@ Noise reduction persists up to \SI{125}{\celsius}. Measurements were performed i
 \begin{loglogaxis}[
   width=\linewidth, height=5cm,
   xlabel={Frequency $f$ (Hz)}, ylabel={$S_{id}(f)$ (norm.)},
-  xmin=1, xmax=1e4, ymin=1e-4, ymax=1,
+  xmin=1, xmax=1e4, ymin=1e-5, ymax=1e-1,
   grid=both,
-  legend style={at={(0.98,0.98)}, anchor=north east} % ←右上
+  legend style={at={(0.98,0.98)}, anchor=north east}
 ]
 \addplot+[thick, mark=none] table[row sep=\\] {%
 x y\\
@@ -205,7 +201,7 @@ Combined      & 1.00 & 0.50 & \SI{50}{\percent} \\
   xlabel={Time at \SI{85}{\celsius} (h)}, ylabel={$S_{id}$ (norm.)},
   xmin=0, xmax=1000, ymin=0.4, ymax=1.25,
   grid=both,
-  legend style={at={(0.98,0.5)}, anchor=east} % ←中央右（枠内）
+  legend style={at={(0.98,0.5)}, anchor=east}
 ]
 \addplot+[thick, mark=none] coordinates {(0,1.0) (200,1.05) (500,1.12) (1000,1.20)};
 \addlegendentry{Baseline}
@@ -243,7 +239,7 @@ Educationally, this work bridges device physics with circuit/system impact. It s
 
 % ---------- 7. Conclusion ----------
 \section{Conclusion}
-We demonstrated that a combined manufacturing strategy---epitaxial substrate, optimized well doping, controlled oxide thickness with pre-clean, hydrogen anneal, and suitable device geometry---achieves over 50\% reduction in MOSFET \emph{1/f} noise at the \SI{0.18}{\micro\meter} node. 
+We demonstrated that a combined manufacturing strategy---epitaxial substrate, optimized well doping, controlled oxide thickness with pre-clean, hydrogen anneal, and suitable device geometry---achieves over 50\% reduction in MOSFET \emph{1/f} noise at the \SI{0.18}{\um} node. 
 
 The improvements are robust across temperature up to \SI{125}{\celsius} and under long-term aging at \SI{85}{\celsius} for 1000~h. This approach enables higher SNR in biomedical and sensor front-ends, better reliability in automotive/industrial analog, and reduced design overhead for precision instrumentation. 
 
