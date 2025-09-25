@@ -103,6 +103,19 @@ stable yield.
 \subsection{Observation: 1~Mbit SRAM}
 In mass production, random single-bit failures appeared in the 1~Mbit SRAM macro. Since redundancy was not implemented in the embedded macro, even a single defective bit caused rejection of the entire device.
 
+\begin{figure}[!t]
+  \centering
+  \begin{tikzpicture}[scale=0.5]
+    \draw[step=1cm,gray!50,thin] (0,0) grid (16,16);
+    % Defect points
+    \foreach \x/\y in {2/3, 5/10, 7/12, 9/5, 11/8, 14/14, 4/15} {
+      \fill[red] (\x-0.5,\y-0.5) circle (0.15);
+    }
+  \end{tikzpicture}
+  \caption{Example of random single-bit failure map in a 1~Mbit SRAM. Red dots represent defective bits scattered randomly across the array.}
+  \label{fig:failmap}
+\end{figure}
+
 \subsection{Redundancy Limitation in Embedded Macros}
 In stand-alone memory products, redundancy circuits are standard practice and defective cells can be repaired during testing via laser trimming.
 In embedded memory macros, however, redundancy is generally excluded due to design complexity, timing, and area overhead.
@@ -145,6 +158,28 @@ and \textbf{prevented the formation of residual C49 high-resistivity
 spots}, resulting in stabilized yield. However, because the effect
 depended strongly on process-window control, lot-to-lot robustness
 could not be guaranteed, and the measure was treated as a provisional fix.
+
+\begin{figure}[!t]
+  \centering
+  \begin{tikzpicture}[scale=1.0]
+    % STI oxide
+    \fill[gray!20] (0,0) rectangle (5,2);
+    \node at (2.5,1.8) {STI Oxide};
+    % Silicon substrate
+    \fill[gray!10] (0,-2) rectangle (5,0);
+    \node at (2.5,-1.5) {Si Substrate};
+    % Halo implant region
+    \fill[blue!30] (1.2,-0.2) ellipse (0.8 and 0.4);
+    \node[blue] at (1.2,0.4) {Halo B};
+    % Ti layer
+    \fill[orange!40] (0,2) rectangle (5,2.3);
+    \node at (2.5,2.5) {Ti layer};
+    % Label defective case
+    \node[red] at (3.5,0.5) {C49 residual};
+  \end{tikzpicture}
+  \caption{Schematic cross-section of halo implant diffusion beneath the STI sidewall contacting Ti during silicidation. Sidewall under-etch increases separation, suppressing C49 residual grains.}
+  \label{fig:crosssection}
+\end{figure}
 
 \subsection{Permanent Measures: Ramp Anneal Optimization}
 Ramp-anneal conditions were optimized (ramp rate and soak time)
