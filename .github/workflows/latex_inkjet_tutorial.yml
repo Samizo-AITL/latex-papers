@@ -10,23 +10,26 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up TeX Live (XeLaTeX + Japanese)
-        uses: teatimeguest/setup-texlive-action@v3
+      # XeLaTeX でビルド（日本語パッケージも追加）
+      - name: Build PDF with XeLaTeX
+        uses: xu-cheng/latex-action@v3
         with:
-          packages: >
-            scheme-small
-            xetex
-            latexmk
+          root_file: main.tex
+          working_directory: papers/2025_inkjet_tutorial
+          latexmk_use_xelatex: true
+          # 追加で入れる TeX Live パッケージ
+          extra_packages: >
             collection-langjapanese
+            xecjk
+            fontspec
             siunitx
             physics
             mhchem
-            xecjk
-            fontspec
             amsmath
             amsfonts
             amssymb
@@ -41,15 +44,15 @@ jobs:
             pgfplots
             bxjscls
 
-      - name: Build with latexmk (XeLaTeX)
-        working-directory: papers/2025_inkjet_tutorial
+      - name: Collect build artifacts (PDF, logs)
         run: |
-          mkdir -p dist
-          set -o pipefail
-          latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex 2>&1 | tee dist/build.log
-          cp -f main.pdf dist/main.pdf || true
-          cp -f main.log dist/main.log || true
-          ls -la dist
+          mkdir -p papers/2025_inkjet_tutorial/dist
+          cp -f papers/2025_inkjet_tutorial/main.pdf papers/2025_inkjet_tutorial/dist/main.pdf
+          # ログは存在しなくても続行
+          cp -f papers/2025_inkjet_tutorial/main.log papers/2025_inkjet_tutorial/dist/main.log || true
+          # latexmk が吐く補助ログを一つにまとめたい場合
+          ls -la papers/2025_inkjet_tutorial > papers/2025_inkjet_tutorial/dist/dirlist.txt || true
+          echo "Build finished at $(date -u)" > papers/2025_inkjet_tutorial/dist/build.log
 
       - name: Upload PDF and logs
         uses: actions/upload-artifact@v4
@@ -57,7 +60,8 @@ jobs:
           name: inkjet_tutorial_artifacts
           path: |
             papers/2025_inkjet_tutorial/dist/main.pdf
-            papers/2025_inkjet_tutorial/dist/build.log
             papers/2025_inkjet_tutorial/dist/main.log
+            papers/2025_inkjet_tutorial/dist/build.log
+            papers/2025_inkjet_tutorial/dist/dirlist.txt
           if-no-files-found: warn
           compression-level: 6
