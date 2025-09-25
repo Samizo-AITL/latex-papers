@@ -162,47 +162,59 @@ tight process-window control (liner thickness, etch-back dose, corner profile),
 lot-to-lot robustness was not guaranteed; therefore the measure was treated
 as a provisional fix.
 
-% ===== Fig.2 (a: 接触, b: SWアンダーで非接触) =====
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
   \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
     \tikzstyle{si}=[fill=gray!10,draw=gray!60]
-    \tikzstyle{silicide}=[fill=orange!35,draw=orange!80!black]
-    \tikzstyle{halo}=[fill=blue!35,draw=blue!60]
+    \tikzstyle{poly}=[fill=cyan!30,draw=cyan!70!black]
+    \tikzstyle{silicide}=[fill=orange!40,draw=orange!80!black]
+    \tikzstyle{halo}=[fill=blue!30,draw=blue!70]
     \tikzstyle{residual}=[fill=red!70,draw=red!80!black,opacity=0.9]
     \tikzstyle{label}=[font=\scriptsize]
 
     % ===================== (a) BEFORE =====================
     \begin{scope}[shift={(0,0)}]
-      \node[font=\small] at (3,2.0) {(a) Before: C49+B residual at SW corner};
+      \node[font=\small] at (3,2.2) {(a) Before: C49+B residual at poly/SW corner};
+      % Substrate
       \path[si] (0,-1.0) rectangle (6,0); \draw[gray!60,thick] (0,0)--(6,0);
-      \path[fill=gray!50] (0,0) rectangle (1.2,1.6); \node[label] at (0.6,1.8) {SW};
-      \path[silicide] (1.2,-0.05) rectangle (6,0.10); \node[label] at (5.0,0.25) {TiSi};
-      % halo: SW直下、大きめ。右端がわずかにTiSiへ接触
-      \draw[halo] (0.95,-0.22) ellipse (0.70 and 0.22);
-      \node[label,blue!60] at (0.95,-0.50) {halo};
-      % 残渣：接触点付近
-      \draw[residual] (1.62,0.02) circle (0.10);
-      \node[label,red!70] at (2.10,0.20) {C49+B residual};
+      % Poly gate
+      \path[poly] (1.0,0) rectangle (1.6,1.2); \node[label] at (1.3,1.35) {poly};
+      % Sidewall oxide
+      \path[fill=gray!50] (1.6,0) rectangle (2.0,1.2); \node[label] at (1.8,1.35) {SW};
+      % Silicide on poly and diffusion
+      \path[silicide] (1.0,1.2) rectangle (1.6,1.35);
+      \path[silicide] (2.0,-0.05) rectangle (6,0.10); \node[label] at (5.0,0.25) {TiSi};
+      % Halo implant (ellipse below poly/SW corner)
+      \draw[halo] (1.4,-0.25) ellipse (0.6 and 0.25);
+      \node[label,blue!60] at (1.4,-0.55) {halo};
+      % Residual defect at contact point
+      \draw[residual] (1.95,0.02) circle (0.10);
+      \node[label,red!70] at (2.5,0.2) {high-R spot};
     \end{scope}
 
-    % ===================== (b) AFTER (非接触) =====================
+    % ===================== (b) AFTER =====================
     \begin{scope}[shift={(8,0)}]
-      \node[font=\small] at (3,2.0) {(b) After: SW under-etch, no contact};
+      \node[font=\small] at (3,2.2) {(b) After: SW under-etch, separation secured};
+      % Substrate
       \path[si] (0,-1.0) rectangle (6,0); \draw[gray!60,thick] (0,0)--(6,0);
-      \path[fill=gray!50] (0,0) rectangle (1.2,1.6); \node[label] at (0.6,1.8) {SW};
-      \path[silicide] (1.2,-0.05) rectangle (6,0.10); \node[label] at (5.0,0.25) {TiSi};
-      % halo: SW直下（非接触になるよう左寄せ＆少し小さめ）
-      % 中心 x=0.75, 半径 rx=0.45 -> 右端 x=1.20（TiSi開始ライン）より 0.00〜0.05 左でクリア
-      \draw[halo] (0.75,-0.20) ellipse (0.45 and 0.20);
-      \node[label,blue!60] at (0.75,-0.48) {halo};
-      % 非接触を明示（必要なら小さな隙間矢印を追加可：ここでは省略）
-      \node[label,green!50!black] at (2.2,-0.30) {no C49+B residual (no contact)};
+      % Poly gate
+      \path[poly] (1.0,0) rectangle (1.6,1.2); \node[label] at (1.3,1.35) {poly};
+      % Sidewall oxide (etched back -> narrower at bottom)
+      \path[fill=gray!50] (1.6,0.3) -- (2.0,0.3) -- (2.0,1.2) -- (1.6,1.2) -- cycle;
+      \node[label] at (1.8,1.35) {SW};
+      % Silicide on poly and diffusion
+      \path[silicide] (1.0,1.2) rectangle (1.6,1.35);
+      \path[silicide] (2.0,-0.05) rectangle (6,0.10); \node[label] at (5.0,0.25) {TiSi};
+      % Halo implant (still under poly/SW but not touching TiSi)
+      \draw[halo] (1.4,-0.25) ellipse (0.6 and 0.25);
+      \node[label,blue!60] at (1.4,-0.55) {halo};
+      % 注記：no residual
+      \node[label,green!50!black] at (2.6,-0.25) {no C49+B residual};
     \end{scope}
   \end{tikzpicture}}
-  \caption{Cross-sections near a sidewall (SW). (a) Oblique post-poly halo lies under SW and its right edge barely meets the TiSi front, where a C49+B residual can form. (b) With SW under-etch geometry, the halo remains under SW but \emph{does not contact} the TiSi front, eliminating the residual.}
-  \label{fig:fig2_sketch}
+  \caption{Cross-sections near poly and sidewall (SW). (a) Halo touches TiSi at the SW corner, forming a high-resistance C49+B spot. (b) After SW under-etch, halo remains under SW but does not contact TiSi, eliminating the defect.}
+  \label{fig:fig2_poly}
 \end{figure*}
 
 \subsection{Permanent Measures: Ramp Anneal Optimization}
