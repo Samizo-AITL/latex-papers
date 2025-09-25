@@ -24,28 +24,9 @@
 \usepackage{standalone}     % \includestandalone{...}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,calc,shapes,decorations.markings}
-\input{figs/_tikz_styles.tex}
+\input{figs/_tikz_styles.tex} % <-- 共通TikZスタイルを読み込み（本体側では定義しない）
 
-% ---------- TikZ Styles ----------
-\tikzset{
-  box/.style={
-    draw, rectangle, rounded corners,
-    minimum width=2.6cm, minimum height=1.0cm,
-    align=center
-  },
-  arrow/.style={-{Stealth}, thick},
-  line/.style={draw, thick, -},
-  dashedline/.style={draw, dashed},
-  node/.style={circle, draw, minimum size=6mm, inner sep=0pt},
-  group/.style={draw, rounded corners, inner sep=6pt},
-  small/.style={font=\footnotesize},
-  note/.style={
-    rectangle, draw, fill=yellow!20, rounded corners,
-    inner sep=3pt, font=\scriptsize\sffamily
-  },
-}
-
-% Optional: if you later export PDFs to figs/pdfs, add both to the path
+% 画像探索パス
 \graphicspath{{figs/}{figs/pdfs/}}
 
 % ---------- Metadata ----------
@@ -204,7 +185,7 @@ Reservoir pressure regulation (precision within hundreds of Pa), slight negative
 \caption{System Trade-offs}
 \label{tab:trade}
 \centering
-\begin{tabular}{@}{lll@{}}
+\begin{tabular}{@{}lll@{}}
 \toprule
 Element & Desirable & Challenge \\
 \midrule
