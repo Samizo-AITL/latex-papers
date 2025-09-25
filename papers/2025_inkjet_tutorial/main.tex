@@ -33,6 +33,9 @@
 \usepackage{tabularx}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 
+\usepackage{array,makecell}         % 表の行内改行など
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
 % 画像探索パス
 \graphicspath{{figs/}{figs/pdfs/}}
 
@@ -291,25 +294,33 @@ Cell printing for tissue models and drug screening; protein microarrays with nL-
 \caption{Application Summary}
 \label{tab:apps}
 \small
-\setlength{\tabcolsep}{4pt}      % 列間を少し詰める（デフォルト6pt）
-\renewcommand{\arraystretch}{1.1} % 行間をやや広げて可読性UP
-\begin{tabularx}{\columnwidth}{@{}lYYY@{}}
+\setlength{\tabcolsep}{3.5pt}        % 列間
+\renewcommand{\arraystretch}{1.12}    % 行間
+\begin{tabular}{@{}P{0.20\columnwidth}P{0.28\columnwidth}P{0.22\columnwidth}P{0.28\columnwidth}@{}}
 \toprule
 Domain & Use & Advantage & Challenge \\
 \midrule
-Printing & Commercial/photo &
-High dpi & Throughput, durability \\
-
-Electronics & Circuits/electrodes &
-Maskless, flexible & Sintering, uniformity \\
-
-Semiconductor & Films/RDL/assist &
-Material savings & Alignment, CD control \\
-
-Bio & Cells/proteins &
-Precise placement & Viability/activity \\
+Printing &
+\makecell[l]{Commercial\\photo} &
+High dpi &
+Throughput, durability \\
+%
+Electronics &
+\makecell[l]{Circuits/\!electrodes} &
+Maskless, flexible &
+Sintering, uniformity \\
+%
+Semiconductor &
+\makecell[l]{Films, RDL,\\patterning assist} &
+Material savings &
+Alignment, CD control \\
+%
+Bio &
+\makecell[l]{Cells/\!proteins} &
+Precise placement &
+Viability, activity \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 
 %==============================================================================
