@@ -162,7 +162,7 @@ tight process-window control (liner thickness, etch-back dose, corner profile),
 lot-to-lot robustness was not guaranteed; therefore the measure was treated
 as a provisional fix.
 
-% ===== Fig.2: poly+SW 断面（指定修正反映版） =====
+% ===== Fig.2: poly+SW 断面（最終修正版） =====
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
@@ -171,50 +171,57 @@ as a provisional fix.
     \tikzstyle{poly}=[fill=cyan!30,draw=cyan!70!black]
     \tikzstyle{silicide}=[fill=orange!40,draw=orange!80!black]
     \tikzstyle{halo}=[fill=blue!30,draw=blue!70]
-    \tikzstyle{residual}=[fill=red!70,draw=red!80!black,opacity=0.9]
+    \tikzstyle{residual}=[fill=red!70,draw=red!80!black,opacity=0.95]
     \tikzstyle{label}=[font=\scriptsize]
 
     % ===================== (a) BEFORE =====================
     \begin{scope}[shift={(0,0)}]
       \node[font=\small] at (3,2.2) {(a) Before: C49+B residual at poly/SW corner};
 
-      % Si substrate (left edge at x=0) + surface
-      \path[si] (0,-1.0) rectangle (6,0); \draw[gray!60,thick] (0,0)--(6,0);
+      % Si substrate + surface
+      \path[si] (0,-1.0) rectangle (6,0);
+      \draw[gray!60,thick] (0,0) -- (6,0);
 
-      % Poly gate (LEFT EDGE ALIGNED TO SUBSTRATE LEFT)
-      \path[poly] (0,0) rectangle (0.6,1.2); \node[label] at (0.30,1.35) {poly};
-      % Sidewall (to the right of poly)
-      \path[fill=gray!55] (0.6,0) rectangle (1.0,1.2); \node[label] at (0.80,1.35) {SW};
+      % Poly（左端=基板左端） & SW
+      \path[poly] (0,0) rectangle (0.60,1.20);
+      \node[label,anchor=south] at (0.30,1.20) {poly};
 
-      % Silicide on poly top and on diffusion surface
-      \path[silicide] (0,1.2) rectangle (0.6,1.35);
-      \path[silicide] (1.0,-0.05) rectangle (6,0.10); \node[label] at (5.0,0.25) {TiSi};
+      \path[fill=gray!55] (0.60,0) rectangle (1.00,1.20);
+      \node[label,anchor=south] at (0.80,1.20) {SW};
 
-      % Halo: under poly/SW, 右端がTiSiにわずか接触
+      % TiSi（poly上 と 拡散表面）
+      \path[silicide] (0,1.20) rectangle (0.60,1.35);
+      \path[silicide] (1.00,-0.05) rectangle (6,0.10);
+      \node[label] at (5.0,0.25) {TiSi};
+
+      % Halo：SW直下（右端がTiSiにわずか接触）
       \draw[halo] (0.75,-0.25) ellipse (0.65 and 0.25);
       \node[label,blue!70] at (0.75,-0.55) {halo};
 
-      % 高抵抗スポット（接触点付近）
-      \draw[residual] (1.00,0.02) circle (0.10);
-      \node[label,red!70] at (1.55,0.22) {high-R spot (C49+B)};
+      % C49+B 高抵抗スポット（接触点付近を強調）
+      \draw[residual] (1.03,0.03) circle (0.10);
+      \node[label,red!70] at (1.58,0.22) {high-R spot (C49+B)};
     \end{scope}
 
     % ===================== (b) AFTER =====================
     \begin{scope}[shift={(8,0)}]
       \node[font=\small] at (3,2.2) {(b) After: SW under-etch, separation secured};
 
-      % Si substrate + surface（同じ左基準）
-      \path[si] (0,-1.0) rectangle (6,0); \draw[gray!60,thick] (0,0)--(6,0);
+      % Si substrate + surface
+      \path[si] (0,-1.0) rectangle (6,0);
+      \draw[gray!60,thick] (0,0) -- (6,0);
 
-      % Poly gate（左端合わせ）
-      \path[poly] (0,0) rectangle (0.6,1.2); \node[label] at (0.30,1.35) {poly};
-      % SW：幅を若干広げ（右へ）、下の白四角は無し
-      \path[fill=gray!55] (0.6,0.20) -- (1.10,0.20) -- (1.10,1.2) -- (0.6,1.2) -- cycle;
-      \node[label] at (0.85,1.35) {SW};
+      % Poly（左端合わせ） & SW（幅を少し広げ、白四角なし）
+      \path[poly] (0,0) rectangle (0.60,1.20);
+      \node[label,anchor=south] at (0.30,1.20) {poly};
 
-      % Silicide
-      \path[silicide] (0,1.2) rectangle (0.6,1.35);
-      \path[silicide] (1.10,-0.05) rectangle (6,0.10); \node[label] at (5.0,0.25) {TiSi};
+      \path[fill=gray!55] (0.60,0.20) -- (1.10,0.20) -- (1.10,1.20) -- (0.60,1.20) -- cycle;
+      \node[label,anchor=south] at (0.85,1.20) {SW};
+
+      % TiSi
+      \path[silicide] (0,1.20) rectangle (0.60,1.35);
+      \path[silicide] (1.10,-0.05) rectangle (6,0.10);
+      \node[label] at (5.0,0.25) {TiSi};
 
       % Halo：SW直下・非接触（右端 < TiSi開始）
       \draw[halo] (0.70,-0.25) ellipse (0.50 and 0.25);
