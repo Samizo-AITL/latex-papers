@@ -162,88 +162,80 @@ tight process-window control (liner thickness, etch-back dose, corner profile),
 lot-to-lot robustness was not guaranteed; therefore the measure was treated
 as a provisional fix.
 
-% ===== Fig.2: Cross-sections based on user's sketch =====
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
   \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
     % styles
     \tikzstyle{si}=[fill=gray!10,draw=gray!60]
-    \tikzstyle{oxide}=[fill=gray!25,draw=gray!60]
-    \tikzstyle{silicide}=[fill=yellow!60!orange!35,draw=orange!80!black]
+    \tikzstyle{silicide}=[fill=orange!35,draw=orange!80!black]
     \tikzstyle{halo}=[fill=blue!35,draw=blue!60]
-    \tikzstyle{spacer}=[fill=green!35,draw=green!60]
-    \tikzstyle{label}=[font=\scriptsize]
     \tikzstyle{residual}=[fill=red!70,draw=red!80!black,opacity=0.9]
+    \tikzstyle{label}=[font=\scriptsize]
 
     % ----------------------------------------------------
-    % (a) BEFORE : per sketch
+    % (a) BEFORE
     % ----------------------------------------------------
     \begin{scope}[shift={(0,0)}]
-      \node[font=\small] at (3.0,2.8) {(a) Before: C49 + B agglomerate at corner};
-      % silicon substrate (right side active)
-      \path[si] (0,-1.2) rectangle (6,0);
-      % surface line
+      \node[font=\small] at (3,2.0) {(a) Before: C49+B residual at SW corner};
+
+      % substrate
+      \path[si] (0,-1.0) rectangle (6,0);
       \draw[gray!60,thick] (0,0) -- (6,0);
+
       % sidewall (SW)
-      \path[oxide] (2.0,-1.2) rectangle (2.8,1.6);
-      \node[label] at (2.4,1.75) {SW};
+      \path[fill=gray!50] (2.5,0) rectangle (3.0,1.6);
+      \node[label] at (2.75,1.8) {SW};
 
-      % TiSi (silicide) on surface (active to the right of SW)
-      \path[silicide] (2.8,-0.02) rectangle (6,0.10);
-      \node[label] at (5.2,0.28) {TiSi};
+      % TiSi silicide
+      \path[silicide] (3.0,-0.05) rectangle (6,0.10);
+      \node[label] at (5.0,0.25) {TiSi};
 
-      % halo (touching the corner)
-      \draw[halo] (2.25,-0.05) ellipse (0.55 and 0.25);
-      \node[label,blue!60] at (1.6,0.35) {halo};
+      % halo
+      \draw[halo] (2.6,-0.05) ellipse (0.5 and 0.25);
+      \node[label,blue!60] at (1.9,0.3) {halo};
 
-      % C49 + B agglomerate (at the corner)
-      \draw[residual] (2.80,0.00) circle (0.08);
-      \draw[residual] (2.66,0.02) circle (0.06);
-      \draw[residual] (2.55,0.04) circle (0.05);
-      \node[label,red!70] at (3.6,0.35) {C49 + B agglomerate};
+      % C49 + B residual (at contact point)
+      \draw[residual] (3.0,0.0) circle (0.10);
+      \node[label,red!70] at (3.7,0.3) {C49+B residual};
     \end{scope}
 
     % ----------------------------------------------------
-    % (b) AFTER : sidewall deposition + etch-back (foot recess)
+    % (b) AFTER
     % ----------------------------------------------------
-    \begin{scope}[shift={(8.2,0)}]
-      \node[font=\small] at (3.0,2.8) {(b) After: SW deposition + etch-back (foot recess)};
-      % silicon
-      \path[si] (0,-1.2) rectangle (6,0);
+    \begin{scope}[shift={(8,0)}]
+      \node[font=\small] at (3,2.0) {(b) After: SW etch-back, separation secured};
+
+      % substrate
+      \path[si] (0,-1.0) rectangle (6,0);
       \draw[gray!60,thick] (0,0) -- (6,0);
-      % sidewall body
-      \path[oxide] (2.0,-1.2) rectangle (2.8,1.6);
-      \node[label] at (2.4,1.75) {SW};
 
-      % sidewall liner (deposition) and foot recess after etch-back
-      \path[spacer] (2.70,-1.2) -- (2.60,-1.2) -- (2.60,1.6) -- (2.70,1.6) -- cycle; % liner
-      % foot recess (small under at the foot)
-      \fill[spacer] (2.60,0) -- (2.60,0.16)
-         .. controls (2.54,0.12) and (2.48,0.09) .. (2.42,0.07)
-         -- (2.42,0) -- cycle;
-      \node[label,green!50!black] at (2.25,0.35) {SW dep. + etch-back (foot)};
+      % sidewall (SW with foot recess)
+      \path[fill=gray!50] (2.5,0) rectangle (3.0,1.6);
+      \node[label] at (2.75,1.8) {SW};
+      % foot recess (small cut at bottom corner)
+      \fill[white] (2.5,0) -- (2.7,0) -- (2.7,0.15) -- (2.5,0.15) -- cycle;
 
-      % TiSi (silicide) on surface
-      \path[silicide] (2.8,-0.02) rectangle (6,0.10);
-      \node[label] at (5.2,0.28) {TiSi};
+      % TiSi silicide
+      \path[silicide] (3.0,-0.05) rectangle (6,0.10);
+      \node[label] at (5.0,0.25) {TiSi};
 
-      % halo (now separated from corner)
-      \draw[halo] (3.05,-0.18) ellipse (0.60 and 0.28);
-      \node[label,blue!60] at (3.9,0.35) {halo};
+      % halo (shifted right, separated)
+      \draw[halo] (3.4,-0.05) ellipse (0.55 and 0.25);
+      \node[label,blue!60] at (4.2,0.3) {halo};
 
-      % spacing arrow (lateral separation)
-      \draw[<->,thick,gray!70] (2.62,0.10) -- (3.05,0.10);
-      \node[label] at (2.84,0.32) {increased distance};
+      % distance arrow
+      \draw[<->,thick,gray!70] (3.0,0.15) -- (3.4,0.15);
+      \node[label] at (3.2,0.35) {separation};
 
-      % no residual marker
-      \node[label,green!60!black] at (3.9,0.00) {no C49+B agglomerate};
+      % no residual
+      \node[label,green!50!black] at (3.7,-0.3) {no C49+B residual};
     \end{scope}
   \end{tikzpicture}}
-  \caption{Cross-sections near a sidewall (SW) following the user's sketch.
-  (a) Before: the halo approaches the surface at the SW corner, forming a C49\,+\,B agglomerate that perturbs silicidation.
-  (b) After: sidewall \emph{deposition} and anisotropic \emph{etch-back} create a liner and a slight foot recess, securing lateral distance between the halo extension and the TiSi front.}
-  \label{fig:fig2_sw_sketch}
+  \caption{Cross-sections near a sidewall (SW) based on the sketch.
+  (a) Before: halo touches TiSi at SW corner, forming a C49+B residual. 
+  (b) After: sidewall deposition and etch-back form a recess, securing distance between halo and TiSi, eliminating C49+B residuals.}
+  \label{fig:fig2_sketch}
 \end{figure*}
 
 \subsection{Permanent Measures: Ramp Anneal Optimization}
