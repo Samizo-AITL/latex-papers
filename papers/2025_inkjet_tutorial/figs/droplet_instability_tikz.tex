@@ -1,0 +1,26 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath}
+\usepackage{newtxtext,newtxmath} % Times-like to match IEEEtran
+\usetikzlibrary{arrows.meta,positioning,calc,fit,shapes.multipart,decorations.pathmorphing}
+\tikzset{>=Latex, line/.style={line width=0.8pt}, box/.style={draw, rounded corners=2pt, minimum width=28mm, minimum height=12mm, align=center},
+note/.style={font=\footnotesize}}
+
+\begin{document}
+\begin{tikzpicture}
+% Nozzle
+\draw[line] (0,0.4) rectangle (0.4,1.0) node[pos=.5,above=7mm] {\footnotesize Nozzle};
+% Jet (radius modulation)
+\begin{scope}[xscale=1,yscale=20]
+  \draw[line] plot[smooth] coordinates {(0.45,0.75) (0.60,0.78) (0.75,0.72) (0.90,0.79) (1.05,0.71) (1.20,0.80) (1.35,0.70)};
+  \draw[line] plot[smooth] coordinates {(0.45,0.65) (0.60,0.62) (0.75,0.68) (0.90,0.61) (1.05,0.69) (1.20,0.60) (1.35,0.70)};
+\end{scope}
+% Primary and satellite droplets
+\draw[line] (8.8,0.90) circle [radius=0.35];
+\draw[line] (9.8,0.55) circle [radius=0.12];
+\node[note] at (8.8,1.35) {Primary};
+\node[note] at (9.8,0.25) {Satellite};
+% Lambda annotation
+\draw[<->,line] (3.4,1.25) -- node[above, note] {$\lambda_{\max}\!\approx 4.5D$} (6.4,1.25);
+\node[note] at (5.0,0.15) {Rayleigh--Plateau breakup};
+\end{tikzpicture}
+\end{document}
