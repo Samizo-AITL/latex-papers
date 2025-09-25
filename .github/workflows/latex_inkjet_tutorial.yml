@@ -1,0 +1,63 @@
+name: latex_inkjet_tutorial
+
+on:
+  push:
+    paths:
+      - "papers/2025_inkjet_tutorial/**"
+      - ".github/workflows/latex_inkjet_tutorial.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up TeX Live (XeLaTeX + Japanese)
+        uses: teatimeguest/setup-texlive-action@v3
+        with:
+          packages: >
+            scheme-small
+            xetex
+            latexmk
+            collection-langjapanese
+            siunitx
+            physics
+            mhchem
+            xecjk
+            fontspec
+            amsmath
+            amsfonts
+            amssymb
+            booktabs
+            multirow
+            caption
+            subcaption
+            hyperref
+            cleveref
+            microtype
+            pgf
+            pgfplots
+            bxjscls
+
+      - name: Build with latexmk (XeLaTeX)
+        working-directory: papers/2025_inkjet_tutorial
+        run: |
+          mkdir -p dist
+          set -o pipefail
+          latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex 2>&1 | tee dist/build.log
+          cp -f main.pdf dist/main.pdf || true
+          cp -f main.log dist/main.log || true
+          ls -la dist
+
+      - name: Upload PDF and logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: inkjet_tutorial_artifacts
+          path: |
+            papers/2025_inkjet_tutorial/dist/main.pdf
+            papers/2025_inkjet_tutorial/dist/build.log
+            papers/2025_inkjet_tutorial/dist/main.log
+          if-no-files-found: warn
+          compression-level: 6
