@@ -6,28 +6,14 @@
 note/.style={font=\footnotesize}}
 
 \begin{document}
-\begin{tikzpicture}[node distance=12mm]
-\node[box] (cart) {Cartridge};
-\node[box, right=of cart] (filter) {Filter};
-\node[box, right=of filter] (degas) {Degasser};
-\node[box, right=of degas] (nozzle) {Nozzle};
-
-\draw[->,line] (cart) -- (filter);
-\draw[->,line] (filter) -- (degas);
-\draw[->,line] (degas) -- (nozzle);
-
-% filter mesh
-\foreach \y in {-4,-2,0,2,4} {
-  \draw[line] ($(filter.south west)+(3mm, \y pt)$) -- ($(filter.south east)+(-3mm, \y pt)$);
-}
-
-% membrane line in degasser
-\draw[line] ($(degas.south)!0.5!(degas.north)$) -- ++(0,0.9);
-\node[note] at ($(degas.south)+(0,-5mm)$) {membrane};
-
-% recirculation loop
-\draw[line] (nozzle.south east) ++(3mm,-3mm) |- ($(cart.south)-(0,5mm)$) -| (cart.south west);
-\draw[->,line] ($(cart.south west)$) -- ++(0,5mm);
-\node[note] at ($(cart.south)!0.5!(nozzle.south)+(0,-12mm)$) {Recirculation};
+\begin{tikzpicture}[node distance=8mm and 6mm]
+  \node[box] (cart) {Cartridge};
+  \node[box,right=of cart] (filter) {Filter};
+  \node[box,right=of filter] (degas) {Degasser};
+  \node[box,right=of degas] (noz) {Nozzle};
+  \draw[arrow] (cart) -- (filter);
+  \draw[arrow] (filter) -- (degas);
+  \draw[arrow] (degas) -- (noz);
+  \node[note,below=5mm of degas.south] {Recirculation};
 \end{tikzpicture}
 \end{document}
