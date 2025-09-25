@@ -1,0 +1,23 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath}
+\usepackage{newtxtext,newtxmath} % Times-like to match IEEEtran
+\usetikzlibrary{arrows.meta,positioning,calc,fit,shapes.multipart,decorations.pathmorphing}
+\tikzset{>=Latex, line/.style={line width=0.8pt}, box/.style={draw, rounded corners=2pt, minimum width=28mm, minimum height=12mm, align=center},
+note/.style={font=\footnotesize}}
+
+\begin{document}
+\begin{tikzpicture}
+\draw[line] (0,0) rectangle (10,7);
+\node[note, anchor=west] at (10,0) {CMOS Compatibility $\rightarrow$};
+\node[note, rotate=90] at (-0.8,3.5) {Displacement Efficiency $\uparrow$};
+
+\fill (3.5,6.0) circle (1.2pt) node[above left=2pt] {PZT};
+\fill (4.6,4.8) circle (1.2pt) node[above left=2pt] {KNN};
+\fill (8.0,5.0) circle (1.2pt) node[above left=2pt] {ScAlN};
+
+\draw[line, dashed] (1,5.5) -- (9,5.5);
+\draw[line, dashed] (6.5,1) -- (6.5,6);
+\node[note] at (2.0,5.8) {High efficiency};
+\node[note, rotate=90] at (6.8,2.0) {High CMOS};
+\end{tikzpicture}
+\end{document}
