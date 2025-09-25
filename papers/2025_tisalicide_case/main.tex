@@ -150,91 +150,108 @@ Macro Size & Observed Failures & Yield Estimate \\
 \end{table}
 
 \section{Countermeasures}
-\subsection{Provisional Measures: Sidewall Under-Etch}
-Etch profiles were tuned to introduce a \textbf{slight sidewall under-etch},
-increasing the physical separation between halo implant regions and the
-silicide formation front. This suppressed boron encroachment into Ti
-and \textbf{prevented the formation of residual C49 high-resistivity
-spots}, resulting in stabilized yield. However, because the effect
-depended strongly on process-window control, lot-to-lot robustness
-could not be guaranteed, and the measure was treated as a provisional fix.
+\subsection{Provisional Measures: Sidewall Deposition + Etch-Back (Foot Under-etch)}
+A conformal dielectric (e.g., oxide or nitride) was deposited on the STI
+sidewall and then anisotropically etched back, leaving a slight recess/foot
+at the sidewall bottom. This \textbf{sidewall deposition + etch-back} flow
+increased the lateral separation between the halo implant extension and the
+silicide formation front at the active edge. As a result, boron encroachment
+into Ti was suppressed and the \textbf{generation of residual C49 high-resistivity
+grains was prevented}, stabilizing yield. Because the effect still relied on
+tight process-window control (liner thickness, etch-back dose, corner profile),
+lot-to-lot robustness was not guaranteed; therefore the measure was treated
+as a provisional fix.
 
-% ===== Fig.2 (two-column wide): Cross-sections before/after sidewall under-etch =====
+% ===== Fig.2 (two-column): Cross-sections before vs. sidewall deposition + etch-back =====
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
   \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
-    % Common styles
+    % Styles
     \tikzstyle{oxide}=[fill=gray!25,draw=gray!60]
     \tikzstyle{si}=[fill=gray!10,draw=gray!60]
     \tikzstyle{metal}=[fill=orange!45,draw=orange!70!black]
     \tikzstyle{silicide}=[fill=yellow!50!orange!40,draw=orange!80!black]
     \tikzstyle{halo}=[fill=blue!35,draw=blue!60]
+    \tikzstyle{spacer}=[fill=green!35,draw=green!60]
     \tikzstyle{label}=[font=\scriptsize]
     \tikzstyle{residual}=[fill=red!70,draw=red!80!black]
 
     % ---------- (a) BEFORE ----------
     \begin{scope}[shift={(0,0)}]
-      \node[font=\small] at (2.4,3.1) {(a) Before: halo–Ti contact (C49 residuals)};
-      \path[oxide] (0,0) rectangle (1.2,2.4);  % STI
-      \node[label,rotate=90] at (0.15,1.2) {STI Oxide};
-      \path[si] (0,-1.6) rectangle (5,0);      % Si
-      \node[label] at (3.8,-1.3) {Si Substrate};
+      \node[font=\small] at (2.6,3.2) {(a) Before: halo--Ti contact (C49 residuals)};
+      % STI oxide trench (left)
+      \path[oxide] (0,0) rectangle (1.2,2.6);
+      \node[label,rotate=90] at (0.15,1.3) {STI Oxide};
 
-      % Halo near sidewall (contacts Ti during silicidation)
-      \draw[halo] (1.15,-0.05) ellipse (0.6 and 0.28);
-      \draw[halo] (1.35,-0.35) ellipse (0.9 and 0.42);
-      \node[label,blue!60] at (1.55,0.35) {Halo B};
+      % Si substrate
+      \path[si] (0,-1.6) rectangle (5,0);
+      \node[label] at (3.7,-1.3) {Si Substrate};
 
-      % Ti layer & silicide
-      \path[metal] (0,2.4) rectangle (5,2.7); \node[label] at (4.4,2.95) {Ti layer};
+      % Halo near sidewall
+      \draw[halo] (1.15,-0.05) ellipse (0.60 and 0.28);
+      \draw[halo] (1.35,-0.35) ellipse (0.95 and 0.42);
+      \node[label,blue!60] at (1.55,0.40) {Halo B};
+
+      % Ti blanket + silicide (target C54)
+      \path[metal] (0,2.6) rectangle (5,2.9); \node[label] at (4.4,3.05) {Ti layer};
       \path[silicide] (1.2,-0.02) rectangle (5,0.10);
-      \node[label] at (3.6,0.28) {TiSi$_2$ (target C54)};
+      \node[label] at (3.5,0.28) {TiSi$_2$ (target C54)};
 
-      % C49 residuals
-      \foreach \x/\y in {1.35/0.05,1.55/0.02,1.75/0.00}
+      % Residual C49 grains
+      \foreach \x/\y in {1.35/0.05,1.55/0.02,1.72/0.00}
         \draw[residual] (\x,\y) circle (0.045);
-      \node[label,red!70] at (2.2,0.35) {C49 residual (high-$\rho$)};
+      \node[label,red!70] at (2.15,0.38) {C49 residual (high-$\rho$)};
 
       % Callouts
-      \draw[->,label] (0.9,2.0) -- (1.18,0.05); \node[label] at (0.9,2.15) {Sidewall corner};
-      \draw[->,label] (2.1,2.0) -- (1.4,-0.35); \node[label] at (2.4,2.15) {Halo diffusion};
+      \draw[->,label] (2.1,2.1) -- (1.4,-0.35);
+      \node[label] at (2.45,2.25) {Halo diffusion};
+      \draw[->,label] (0.9,2.1) -- (1.18,0.06);
+      \node[label] at (0.9,2.25) {Sidewall corner};
 
       \draw[gray!60] (0,-1.6) -- (5,-1.6);
     \end{scope}
 
-    % ---------- (b) AFTER ----------
-    \begin{scope}[shift={(6.4,0)}]
-      \node[font=\small] at (2.4,3.1) {(b) After: sidewall under-etch (separation)};
-      % STI with intentional recess (under-etch)
-      \path[oxide] (0,0) -- (1.2,0) -- (1.2,2.4) -- (0,2.4) -- cycle;
-      \fill[white] (1.20,0) -- (1.20,0.35) .. controls (1.10,0.28) and (1.00,0.22) .. (0.92,0.18)
-                     -- (0.92,0) -- cycle;
-      \draw[gray!60] (0.92,0) -- (0.92,0.18) .. controls (1.00,0.22) and (1.10,0.28) .. (1.20,0.35);
-      \node[label,rotate=90] at (0.15,1.2) {STI Oxide};
-      \node[label] at (1.28,0.55) {Under-etch recess};
+    % ---------- (b) AFTER: sidewall deposition + etch-back (foot recess) ----------
+    \begin{scope}[shift={(6.6,0)}]
+      \node[font=\small] at (2.6,3.2) {(b) After: sidewall deposition + etch-back (foot recess)};
 
-      \path[si] (0,-1.6) rectangle (5,0); \node[label] at (3.8,-1.3) {Si Substrate};
+      % STI oxide trench
+      \path[oxide] (0,0) rectangle (1.2,2.6);
+      \node[label,rotate=90] at (0.15,1.3) {STI Oxide};
 
-      % Halo pulled away by recess geometry
-      \draw[halo] (1.45,-0.18) ellipse (0.65 and 0.30);
-      \draw[halo] (1.70,-0.45) ellipse (1.0 and 0.46);
-      \node[label,blue!60] at (1.95,0.35) {Halo B};
+      % Conformal spacer (deposited) + anisotropic etch-back leaving foot recess
+      % Sidewall liner
+      \path[spacer] (1.10,0) -- (1.10,2.6) -- (1.00,2.6) -- (1.00,0) -- cycle;
+      % Foot recess wedge at bottom after etch-back (slight under at foot)
+      \fill[spacer] (1.00,0) -- (1.00,0.18) .. controls (0.94,0.14) and (0.90,0.10) .. (0.86,0.08)
+                    -- (0.86,0) -- cycle;
+      \node[label,green!50!black] at (0.96,0.36) {liner \& foot recess};
 
-      % Ti layer & clean C54 silicide
-      \path[metal] (0,2.4) rectangle (5,2.7); \node[label] at (4.4,2.95) {Ti layer};
+      % Si substrate
+      \path[si] (0,-1.6) rectangle (5,0);
+      \node[label] at (3.7,-1.3) {Si Substrate};
+
+      % Halo now further from active edge due to spacer geometry
+      \draw[halo] (1.55,-0.18) ellipse (0.65 and 0.30);
+      \draw[halo] (1.80,-0.46) ellipse (1.00 and 0.46);
+      \node[label,blue!60] at (2.05,0.40) {Halo B};
+
+      % Ti blanket + silicide (C54 completed)
+      \path[metal] (0,2.6) rectangle (5,2.9); \node[label] at (4.4,3.05) {Ti layer};
       \path[silicide] (1.2,-0.02) rectangle (5,0.10);
       \node[label] at (3.6,0.28) {TiSi$_2$ (C54 completed)};
+
       \node[label,green!60!black] at (1.55,0.28) {No C49 residual};
 
-      % Separation indicator
-      \draw[<->,thick,gray!70] (1.00,0.10) -- (1.45,0.10);
-      \node[label] at (1.225,0.32) {increased separation};
+      % Separation indicator (lateral)
+      \draw[<->,thick,gray!70] (1.02,0.10) -- (1.55,0.10);
+      \node[label] at (1.285,0.32) {increased lateral separation};
 
       \draw[gray!60] (0,-1.6) -- (5,-1.6);
     \end{scope}
   \end{tikzpicture}}
-  \caption{Two-column cross-sections near the STI sidewall. (a) Without countermeasure: halo diffusion reaches Ti during silicidation, leaving C49 residual grains. (b) With sidewall under-etch: a recess increases the spacing between halo implant and the silicide front, suppressing C49 residuals and stabilizing yield.}
+  \caption{Two-column cross-sections near the STI sidewall. (a) Before: halo diffusion reaches the silicidation region, leaving C49 residual grains. (b) After: \emph{sidewall deposition + anisotropic etch-back} forms a liner and a slight foot recess, increasing the lateral spacing between the halo implant and the silicide front; C49 residuals are suppressed and yield is stabilized.}
   \label{fig:crosssection}
 \end{figure*}
 
