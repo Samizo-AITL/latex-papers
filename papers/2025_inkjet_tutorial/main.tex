@@ -342,8 +342,30 @@ Inkjet matured into a platform technology for printing, electronics, semiconduct
 The author thanks collaborators and colleagues in the inkjet, MEMS, and semiconductor communities for discussions that shaped this tutorial.
 
 %==============================================================================
-% Appendix (guarded; missing filesでもビルドが止まらない)
+% Appendix (guarded; missing files will not stop the build)
 \section*{Appendix: Repository Context (Illustrative Figures)}
+
+This appendix illustrates the repository organization and workflow 
+supporting this tutorial. The project relies on open and reproducible 
+infrastructure so that manuscripts, figures, and automated builds can 
+be consistently maintained and extended. This structure enhances both 
+transparency and reusability, allowing the same materials to be used for 
+research dissemination as well as for educational purposes.
+
+In particular:
+\begin{itemize}
+  \item The \texttt{papers/} directory organizes multiple manuscripts and 
+        their associated figures.
+  \item The \texttt{.github/workflows/} directory contains automated 
+        PDF build pipelines using GitHub Actions.
+  \item The \texttt{figs/} directory centralizes TikZ sources, raster 
+        images, and supporting artwork.
+\end{itemize}
+
+Such repository design improves reproducibility of the tutorial figures 
+and tables, and facilitates efficient collaboration and continuous 
+revision.
+
 \IfFileExists{figs/github_papers.jpeg}{%
 \begin{figure}[!t]
   \centering
@@ -359,7 +381,6 @@ The author thanks collaborators and colleagues in the inkjet, MEMS, and semicond
   \caption{Example GitHub Actions workflow directory for automated PDF builds.}
   \label{fig:workflows}
 \end{figure}}{}
-
 %==============================================================================
 \begin{thebibliography}{99}
 \bibitem{Derby2003}
