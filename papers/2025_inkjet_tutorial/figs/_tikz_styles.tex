@@ -13,7 +13,7 @@
 \tikzset{line/.style={draw, very thick}}
 \tikzset{dashedline/.style={draw, dashed, thick}}
 
-% "node" は予約キーなので再定義しない
+% 点・小丸
 \tikzset{point/.style={circle, draw, minimum size=5.5mm, inner sep=0pt, thick}}
 \tikzset{dot/.style={circle, fill, inner sep=0pt, minimum size=2.2pt}}
 
@@ -34,7 +34,7 @@
 \tikzset{note/.style={rectangle, draw, fill=yellow!18, rounded corners,
   inner sep=2.5pt, font=\scriptsize\sffamily, thick}}
 
-% ===== Droplet スタイル =====
+% ===== Droplet =====
 \tikzset{
   drop/.style={
     circle, draw, very thick,
@@ -46,10 +46,19 @@
   dropS/.style={drop, minimum size=7mm} % 小さめ
 }
 
-% ===== Satellite droplet スタイル =====
+% ===== Satellite droplet =====
 \tikzset{
   sat/.style={circle, draw, fill=black, inner sep=0pt, minimum size=2.2pt}, % 黒丸
   satO/.style={circle, draw, inner sep=0pt, minimum size=2.2pt},            % 中抜き
   satS/.style={sat, minimum size=1.6pt},                                    % 小さめ
-  satL/.style={circle, draw, fill=gray!40, inner sep=0pt, minimum size=2.6pt} % 大きめグレー
+  satL/.style={circle, draw, fill=gray!40, inner sep=0pt, minimum size=2.6pt} % 少し大きめ
+}
+
+% ===== 互換: \node[node] 用（ink_classification_tikz.tex が要求） =====
+% ここでの 'node' は TikZ オプションのキー名。コマンド \node とは衝突しません。
+\tikzset{
+  node/.style={circle, draw, inner sep=0pt, minimum size=5.5mm, thick},
+  nodeF/.style={node, fill=gray!12},  % 薄め塗り
+  nodeS/.style={node, minimum size=4.5mm},
+  nodeDot/.style={circle, fill, inner sep=0pt, minimum size=2.2pt} % 極小点
 }
