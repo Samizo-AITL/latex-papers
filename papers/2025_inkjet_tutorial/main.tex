@@ -276,12 +276,13 @@ Bipolar/multi-pulse patterns: \emph{push} (jet formation), \emph{dwell} (pressur
 %==============================================================================
 \section{Applications}
 
-\begin{figure*}[!t]
+\begin{figure}[t]
   \centering
-  \includestandalone[mode=tex,width=0.9\textwidth]{figs/application_matrix_tikz}
-  \caption{Application landscape across printing, electronics, semiconductor, and bio domains.}
+  % ← “.tex” のまま include して OK（log にも type tex と出てます）
+  \includegraphics[width=\columnwidth]{figs/application_matrix_tikz.tex}
+  \caption{Application landscape across domains.}
   \label{fig:application_matrix}
-\end{figure*}
+\end{figure}
 
 \subsection{Printing}
 High-resolution digital printing (>\,1200\,dpi), on-demand variable data printing, packaging.
