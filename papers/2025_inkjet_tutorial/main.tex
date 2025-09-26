@@ -333,9 +333,27 @@ Viability, activity \\
 \section{Educational Insights}
 Inkjet provides rare, direct links between theory and practice across fluid mechanics (instability, scaling), materials (ink formulation, piezoelectrics), control (waveforms, pressure/temperature), and semiconductor engineering (MEMS/CMOS integration). Example exercises include (i) computing $\Rey$, $\We$, $\Oh$ and assessing printability; (ii) RLC-based system analysis; (iii) droplet simulation vs.\ measured dropwatch data.
 
+\subsection*{Suggested Exercises}
+\begin{enumerate}
+  \item \textbf{Dimensionless Analysis:}  
+  Given nozzle diameter $D=\SI{30}{\micro\meter}$, droplet velocity $U=\SI{5}{m/s}$, viscosity $\mu=\SI{3}{mPa\cdot s}$, density $\rho=\SI{1000}{kg/m^3}$, and surface tension $\sigma=\SI{35}{mN/m}$, calculate $\Rey$, $\We$, and $\Oh$. Discuss whether this condition falls in the printable regime.
+  
+  \item \textbf{Waveform Optimization:}  
+  Design a bipolar voltage waveform sequence (\emph{push--dwell--pull--damp}) for a piezo actuator, targeting droplet volume $\SI{20}{pL}$ with minimal satellites. Justify the expected effect of each phase.
+\end{enumerate}
+
 %==============================================================================
 \section{Conclusion}
 Inkjet matured into a platform technology for printing, electronics, semiconductors, and biotechnology. Progress will hinge on eco-friendly materials (Pb-free piezoelectrics), low-power actuation and charge recycling, reliability engineering, and data-driven design (digital twins, AI-based waveform optimization).
+
+\subsection*{Research Outlook (Next 5--10 Years)}
+\begin{itemize}
+  \item \textbf{Pb-free piezoelectrics:} Scalable KNN, ScAlN thin films, and composite stacks for sustainable actuators.
+  \item \textbf{Low-voltage operation:} Integration of high-efficiency MEMS transducers enabling $<\SI{10}{V}$ drive.
+  \item \textbf{Multi-material integration:} Hybrid printing of functional inks (semiconductor, bio, conductive).
+  \item \textbf{Digital-twin workflows:} Coupling CFD/FEM with machine learning for predictive jetting models.
+  \item \textbf{Bio-integration:} Tissue printing, organ-on-chip, and personalized medicine applications.
+\end{itemize}
 
 %==============================================================================
 \section*{Acknowledgment}
