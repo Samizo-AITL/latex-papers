@@ -1,39 +1,21 @@
-% Common TikZ styles (no change to main.tex needed)
+% Common TikZ styles (standalone, robust)
 \usetikzlibrary{arrows.meta,positioning,fit,calc,shapes,decorations.markings}
 
-\tikzset{
-  every picture/.style={line cap=round,line join=round},
+% 予約キー衝突や引数取りこぼしを避けるため分割宣言
+\tikzset{every picture/.style={line cap=round, line join=round}}
+\tikzset{box/.style={draw, rectangle, rounded corners,
+  minimum width=2.2cm, minimum height=0.9cm, align=center, very thick}}
+\tikzset{arrow/.style={-{Stealth}, very thick}}
+\tikzset{line/.style={draw, very thick}}
+\tikzset{dashedline/.style={draw, dashed, thick}}
 
-  % basic drawing
-  line/.style={draw, very thick, -},
-  dashedline/.style={draw, dashed, thick},
-  arrow/.style={-{Stealth}, very thick},
+% "node" は再定義しない。点用スタイルは独自名を使う
+\tikzset{point/.style={circle, draw, minimum size=5.5mm, inner sep=0pt, thick}}
 
-  % boxes / groups
-  box/.style={
-    draw, rectangle, rounded corners,
-    minimum width=2.2cm, minimum height=0.9cm,
-    align=center, very thick
-  },
-  group/.style={draw, rounded corners, inner sep=5pt, thick},
+% 小さな実線ドット（Fig.2 が使う）
+\tikzset{dot/.style={circle, fill, inner sep=0pt, minimum size=2.2pt}}
 
-  % nodes & small text
-  node/.style={circle, draw, minimum size=5.5mm, inner sep=0pt, thick},
-  small/.style={font=\footnotesize},
-
-  % annotation label (white background to avoid overlaps with lines)
-  lbl/.style={font=\footnotesize, fill=white, inner sep=1pt, rounded corners=1pt},
-
-  % sticky notes
-  note/.style={
-    rectangle, draw, fill=yellow!18, rounded corners,
-    inner sep=2.5pt, font=\scriptsize\sffamily, thick
-  },
-
-  % NEW: dot used in several figures
-  dot/.style={circle, inner sep=0pt, minimum size=2.2pt, fill=black, draw=none},
-
-  % NEW: main/satellite drops for Fig.2 等
-  drop/.style={circle, draw, fill=white, minimum size=3.6mm, line width=.8pt},
-  sat/.style ={drop, minimum size=2.8mm},
-}
+\tikzset{group/.style={draw, rounded corners, inner sep=5pt, thick}}
+\tikzset{small/.style={font=\footnotesize}}
+\tikzset{note/.style={rectangle, draw, fill=yellow!18, rounded corners,
+  inner sep=2.5pt, font=\scriptsize\sffamily, thick}}
