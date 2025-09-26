@@ -6,19 +6,60 @@
 note/.style={font=\footnotesize}}
 
 \begin{document}
-\begin{tikzpicture}[x=2.1cm,y=0.9cm]
-  \draw[thick] (0,0) rectangle (5,4);
-  \foreach \y in {1,2,3} \draw (0,\y) -- (5,\y);
-  \foreach \x in {1,2,3,4} \draw (\x,0) -- (\x,4);
-  \node[small] at (0.5,3.7) {Domain};
-  \node[small] at (1.5,3.7) {Throughput};
-  \node[small] at (2.5,3.7) {Uniformity};
-  \node[small] at (3.5,3.7) {Alignment};
-  \node[small] at (4.5,3.7) {Viability};
-  \node[small] at (0.5,2.5) {Printing};
-  \node[small] at (0.5,1.5) {Electronics};
-  \node[small] at (0.5,0.5) {Bio};
-  \node[small] at (0.5,3.5-2) {Semiconductor};
-  \foreach \x/\y in {2/2.5,3/2.5,2/1.5,4/1.5,3/0.5,4/0.5,3/1.5} \fill (\x,\y) circle (2pt);
+% Fig.6: Application matrix (one-column friendly, no overlaps)
+\begin{tikzpicture}[font=\footnotesize,x=1cm,y=1cm]
+  % ---- geometry (column width/row height) ----
+  \def\W{8.2}   % total width ~ IEEEtran 1-column
+  \def\H{4.8}   % total height
+  % column x positions: 0 | 2.3 | 4.2 | 6.1 | 8.2
+  \def\xA{0} \def\xB{2.3} \def\xC{4.2} \def\xD{6.1} \def\xE{8.2}
+  % rows y positions: 0 | 1.2 | 2.4 | 3.6 | 4.8
+  \def\yA{0} \def\yB{1.2} \def\yC{2.4} \def\yD{3.6} \def\yE{4.8}
+
+  % ---- grid ----
+  \draw[line width=0.5pt] (\xA,\yA) rectangle (\xE,\yE);
+  \foreach \x in {\xB,\xC,\xD} \draw (\x,\yA)--(\x,\yE);
+  \foreach \y in {\yB,\yC,\yD} \draw (\xA,\y)--(\xE,\y);
+
+  % ---- headers ----
+  \node[align=left,text width=2.1cm,anchor=mid] at ({(\xA+\xB)/2}, {\yD+0.6}) {Domain};
+  \node at ({(\xB+\xC)/2}, {\yD+0.6}) {Throughput};
+  \node at ({(\xC+\xD)/2}, {\yD+0.6}) {Uniformity};
+  \node at ({(\xD+\xE)/2}, {\yD+0.6}) {Alignment};
+  \node at ({(\xE+\xE)/2-0.6}, {\yD+0.6}) {Viability};
+
+  % ---- row labels (fixed width => automatic wrapping) ----
+  \node[align=left,text width=2.1cm,anchor=mid] at ({(\xA+\xB)/2}, {(\yC+\yD)/2}) {Printing};
+  \node[align=left,text width=2.1cm,anchor=mid] at ({(\xA+\xB)/2}, {(\yB+\yC)/2}) {Electronics};
+  \node[align=left,text width=2.1cm,anchor=mid] at ({(\xA+\xB)/2}, {(\yA+\yB)/2}) {Semi\-conductor};
+  \node[align=left,text width=2.1cm,anchor=mid] at ({(\xA+\xB)/2}, {(\yD+\yE)/2}) {Bio};
+
+  % ---- helper for bullets ----
+  \newcommand{\dotat}[2]{\fill (#1,#2) circle[radius=0.06cm];}
+
+  % cell centers for columns B..E at each row
+  % y centers:
+  \def\yRowPrinting{(\yC+\yD)/2}
+  \def\yRowElectro{(\yB+\yC)/2}
+  \def\yRowSemi{(\yA+\yB)/2}
+  \def\yRowBio{(\yD+\yE)/2}
+  % x centers:
+  \def\xColThru{(\xB+\xC)/2}
+  \def\xColUni{(\xC+\xD)/2}
+  \def\xColAlign{(\xD+\xE)/2}
+  \def\xColViab{(\xE-0.55)}
+
+  % ---- bullets (edit as needed) ----
+  % Printing
+  \dotat{\xColThru}{\yRowPrinting}
+  \dotat{\xColUni}{\yRowPrinting}
+  % Electronics
+  \dotat{\xColAlign}{\yRowElectro}
+  % Semiconductor
+  \dotat{\xColUni}{\yRowSemi}
+  \dotat{\xColAlign}{\yRowSemi}
+  % Bio
+  \dotat{\xColViab}{\yRowBio}
+
 \end{tikzpicture}
 \end{document}
