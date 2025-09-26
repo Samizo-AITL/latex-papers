@@ -1,65 +1,71 @@
 \documentclass[tikz,border=2pt]{standalone}
 \usepackage{amsmath}
-\usepackage{newtxtext,newtxmath} % Times-like to match IEEEtran
+\usepackage{newtxtext,newtxmath} % IEEEtranのTimes系に合わせる
 \usetikzlibrary{arrows.meta,positioning,calc,fit,shapes.multipart,decorations.pathmorphing}
-\tikzset{>=Latex, line/.style={line width=0.8pt}, box/.style={draw, rounded corners=2pt, minimum width=28mm, minimum height=12mm, align=center},
-note/.style={font=\footnotesize}}
+\tikzset{
+  >=Latex,
+  line/.style={line width=0.5pt},
+}
 
 \begin{document}
-% Fig.6: Application matrix (one-column friendly, no overlaps)
-\begin{tikzpicture}[font=\footnotesize,x=1cm,y=1cm]
-  % ---- geometry (column width/row height) ----
-  \def\W{8.2}   % total width ~ IEEEtran 1-column
-  \def\H{4.8}   % total height
-  % column x positions: 0 | 2.3 | 4.2 | 6.1 | 8.2
+% Fig.6: Application matrix（1カラム向け／重なり無し）
+\begin{tikzpicture}[font=\footnotesize, x=1cm, y=1cm]
+  % ---- 全体サイズ（1カラム幅想定） ----
+  \def\W{8.2}   % 横幅
+  \def\H{4.8}   % 高さ
+  % 縦横の罫線位置
   \def\xA{0} \def\xB{2.3} \def\xC{4.2} \def\xD{6.1} \def\xE{8.2}
-  % rows y positions: 0 | 1.2 | 2.4 | 3.6 | 4.8
   \def\yA{0} \def\yB{1.2} \def\yC{2.4} \def\yD{3.6} \def\yE{4.8}
 
-  % ---- grid ----
-  \draw[line width=0.5pt] (\xA,\yA) rectangle (\xE,\yE);
-  \foreach \x in {\xB,\xC,\xD} \draw (\x,\yA)--(\x,\yE);
-  \foreach \y in {\yB,\yC,\yD} \draw (\xA,\y)--(\xE,\y);
+  % ---- 外枠とグリッド ----
+  \draw[line] (\xA,\yA) rectangle (\xE,\yE);
+  \foreach \x in {\xB,\xC,\xD} \draw[line] (\x,\yA)--(\x,\yE);
+  \foreach \y in {\yB,\yC,\yD} \draw[line] (\xA,\y)--(\xE,\y);
 
-  % ---- headers ----
-  \node[align=left,text width=2.1cm,anchor=mid] at ({(\xA+\xB)/2}, {\yD+0.6}) {Domain};
-  \node at ({(\xB+\xC)/2}, {\yD+0.6}) {Throughput};
-  \node at ({(\xC+\xD)/2}, {\yD+0.6}) {Uniformity};
-  \node at ({(\xD+\xE)/2}, {\yD+0.6}) {Alignment};
-  \node at ({(\xE+\xE)/2-0.6}, {\yD+0.6}) {Viability};
+  % ---- ヘッダ（枠の外、上側に配置＝重なり回避） ----
+  \def\yHead{\yE + 0.35}
+  \node[align=left, text width=2.0cm, anchor=mid] at ($(\xA,0)!0.5!(\xB,0)$ |- 0,\yHead) {Domain};
+  \node[anchor=mid] at ($(\xB,0)!0.5!(\xC,0)$ |- 0,\yHead) {Throughput};
+  \node[anchor=mid] at ($(\xC,0)!0.5!(\xD,0)$ |- 0,\yHead) {Uniformity};
+  \node[anchor=mid] at ($(\xD,0)!0.5!(\xE,0)$ |- 0,\yHead) {Alignment};
+  \node[anchor=mid] at ($(\xD,0)!0.5!(\xE,0)$!1!+(\xC-\xB,0) |- 0,\yHead) {Viability};
 
-  % ---- row labels (fixed width => automatic wrapping) ----
-  \node[align=left,text width=2.1cm,anchor=mid] at ({(\xA+\xB)/2}, {(\yC+\yD)/2}) {Printing};
-  \node[align=left,text width=2.1cm,anchor=mid] at ({(\xA+\xB)/2}, {(\yB+\yC)/2}) {Electronics};
-  \node[align=left,text width=2.1cm,anchor=mid] at ({(\xA+\xB)/2}, {(\yA+\yB)/2}) {Semi\-conductor};
-  \node[align=left,text width=2.1cm,anchor=mid] at ({(\xA+\xB)/2}, {(\yD+\yE)/2}) {Bio};
+  % ---- 行ラベル（セル内・自動折返し）----
+  \node[align=left, text width=2.0cm, anchor=center]
+        at ($(\xA,\yC)!0.5!(\xB,\yD)$) {Printing};
+  \node[align=left, text width=2.0cm, anchor=center]
+        at ($(\xA,\yB)!0.5!(\xB,\yC)$) {Electronics};
+  \node[align=left, text width=2.0cm, anchor=center]
+        at ($(\xA,\yA)!0.5!(\xB,\yB)$) {Semi\-conductor};
+  \node[align=left, text width=2.0cm, anchor=center]
+        at ($(\xA,\yD)!0.5!(\xB,\yE)$) {Bio};
 
-  % ---- helper for bullets ----
-  \newcommand{\dotat}[2]{\fill (#1,#2) circle[radius=0.06cm];}
+  % ---- セル中心座標（列B〜E／各行）----
+  % 横方向
+  \coordinate (cThru)  at ($(\xB,0)!0.5!(\xC,0)$);
+  \coordinate (cUnif)  at ($(\xC,0)!0.5!(\xD,0)$);
+  \coordinate (cAlign) at ($(\xD,0)!0.5!(\xE,0)$);
+  \coordinate (cViab)  at ($(\xD,0)!0.5!(\xE,0)$); % Viability列は右端列と同じ中心
+  % 縦方向
+  \coordinate (rPrint) at ($(0,\yC)!0.5!(0,\yD)$);
+  \coordinate (rElec)  at ($(0,\yB)!0.5!(0,\yC)$);
+  \coordinate (rSemi)  at ($(0,\yA)!0.5!(0,\yB)$);
+  \coordinate (rBio)   at ($(0,\yD)!0.5!(0,\yE)$);
 
-  % cell centers for columns B..E at each row
-  % y centers:
-  \def\yRowPrinting{(\yC+\yD)/2}
-  \def\yRowElectro{(\yB+\yC)/2}
-  \def\yRowSemi{(\yA+\yB)/2}
-  \def\yRowBio{(\yD+\yE)/2}
-  % x centers:
-  \def\xColThru{(\xB+\xC)/2}
-  \def\xColUni{(\xC+\xD)/2}
-  \def\xColAlign{(\xD+\xE)/2}
-  \def\xColViab{(\xE-0.55)}
+  % ---- ●用マクロ ----
+  \newcommand{\putdot}[2]{\fill ($(#1)!(#2)$) circle[radius=0.06cm];}
 
-  % ---- bullets (edit as needed) ----
+  % ---- ドット配置（例は元データと同じ意味）----
   % Printing
-  \dotat{\xColThru}{\yRowPrinting}
-  \dotat{\xColUni}{\yRowPrinting}
+  \fill ($(cThru)+(rPrint)$)  circle[radius=0.06cm];
+  \fill ($(cUnif)+(rPrint)$)  circle[radius=0.06cm];
   % Electronics
-  \dotat{\xColAlign}{\yRowElectro}
+  \fill ($(cAlign)+(rElec)$)  circle[radius=0.06cm];
   % Semiconductor
-  \dotat{\xColUni}{\yRowSemi}
-  \dotat{\xColAlign}{\yRowSemi}
+  \fill ($(cUnif)+(rSemi)$)   circle[radius=0.06cm];
+  \fill ($(cAlign)+(rSemi)$)  circle[radius=0.06cm];
   % Bio
-  \dotat{\xColViab}{\yRowBio}
+  \fill  ($(cViab)+(rBio)$)   circle[radius=0.06cm];
 
 \end{tikzpicture}
 \end{document}
