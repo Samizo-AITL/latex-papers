@@ -51,7 +51,8 @@
   \def\ySemi{(\yA+\yB)/2}
 
   %---- ドット（セル中心に配置） -----------------------------------
-  \newcommand{\dotat}[2]{\fill (#1,#2) circle[radius=0.06cm];}
+% 新:
+　\newcommand{\dotat}[2]{\fill $({#1},{#2})$ circle[radius=0.06cm];}
 
   % Printing
   \dotat{\xThru}{\yPrint}
