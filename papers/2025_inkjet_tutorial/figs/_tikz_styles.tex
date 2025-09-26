@@ -27,3 +27,15 @@
 
 \tikzset{note/.style={rectangle, draw, fill=yellow!18, rounded corners,
   inner sep=2.5pt, font=\scriptsize\sffamily, thick}}
+
+% ======== 追加：droplet（\node[drop] ... 用）========
+\tikzset{
+  drop/.style={
+    circle, draw, very thick,
+    inner sep=0pt,
+    minimum size=9mm,      % 図の縮尺に合わせて 7–11mm で調整可
+    fill=white
+  },
+  dropF/.style={drop, fill=gray!12}, % 薄め塗りつぶし
+  dropS/.style={drop, minimum size=7mm} % 小さめ
+}
