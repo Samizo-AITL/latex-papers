@@ -1,31 +1,37 @@
-\documentclass[tikz,border=2pt]{standalone}
-\usepackage{amsmath}
-\usepackage{newtxtext,newtxmath} % Times-like to match IEEEtran
-\usetikzlibrary{arrows.meta,positioning,calc}
+\documentclass[tikz,border=1pt]{standalone}
+\usepackage{newtxtext,newtxmath}
+\usetikzlibrary{arrows.meta,positioning,calc,decorations.pathmorphing}
+
 \tikzset{
   >=Latex,
   line/.style={line width=0.8pt},
-  note/.style={font=\footnotesize},
-  dot/.style={draw,circle,fill=white,inner sep=0pt,minimum size=3.2mm,line width=0.8pt}
+  % ラベルは白背景で塗って、線と重なっても可読に
+  note/.style={font=\footnotesize,fill=white,inner sep=1pt,rounded corners=2pt},
+  % Fig.2 のドロップ用
+  dot/.style={draw,circle,fill=white,inner sep=0pt,minimum size=3.0mm,line width=0.8pt},
+  smalldot/.style={dot,minimum size=2.6mm}
 }
 
 \begin{document}
-\begin{tikzpicture}[x=0.9cm,y=0.9cm]
-  % Jet axis and growing disturbance
+\begin{tikzpicture}[x=1.0cm,y=1.0cm]
+  % --- jet axis
   \draw[line] (0,0) -- (7,0);
-  \foreach \x/\a in {1/0.2,2/0.35,3/0.55,4/0.85,5/1.2}{
-    \draw[line] (\x,0) .. controls +(-0.3,\a) and +(0.3,-\a) .. (\x+1,0);
+
+  % --- growing sinusoid-ish disturbance (段々振幅増加)
+  \foreach \x/\a in {0/0.15,1/0.30,2/0.45,3/0.65,4/0.95,5/1.25}{
+    \draw[line] (\x,0) .. controls +(.45,\a) and +(-.45,-\a) .. (\x+1,0);
   }
 
-  % Annotations
-  \node[note,above] at (1.5,0.9) {perturbation};
-  \node[note,above] at (3.2,1.3) {growth};
-  \node[note,above] at (5.2,1.6) {breakup};
+  % --- labels (白背景で上側に配置して重なり回避)
+  \node[note,above=4pt] at (1.1,0.7) {perturbation};
+  \node[note,above=6pt] at (3.0,1.1) {growth};
+  \node[note,above=6pt] at (5.0,1.5) {breakup};
 
-  % Main drop and satellite (with labels placed below, slightly offset)
-  \node[dot]                 (main) at (6.10,0) {};
-  \node[dot,minimum size=3mm](sat)  at (6.60,0) {};
+  % --- main & satellite drops
+  \node[dot]      (main) at (6.10,0) {};
+  \node[smalldot] (sat)  at (6.60,0) {};
 
+  % --- captions (下側に少し余白をとって配置)
   \node[below=3pt of main, font=\footnotesize] {Primary};
   \node[below=3pt of sat,  font=\footnotesize] {Satellite};
 \end{tikzpicture}
