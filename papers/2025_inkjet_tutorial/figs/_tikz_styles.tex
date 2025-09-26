@@ -1,7 +1,7 @@
-% Common TikZ styles (standalone, robust)
+% Common TikZ styles (robust & clash-safe)
 \usetikzlibrary{arrows.meta,positioning,fit,calc,shapes,decorations.markings}
 
-% 予約キー衝突や引数取りこぼしを避けるため分割宣言
+% 分割宣言で Runaway 回避
 \tikzset{every picture/.style={line cap=round, line join=round}}
 \tikzset{box/.style={draw, rectangle, rounded corners,
   minimum width=2.2cm, minimum height=0.9cm, align=center, very thick}}
@@ -9,13 +9,21 @@
 \tikzset{line/.style={draw, very thick}}
 \tikzset{dashedline/.style={draw, dashed, thick}}
 
-% "node" は再定義しない。点用スタイルは独自名を使う
+% "node" は予約キーなので再定義しない
 \tikzset{point/.style={circle, draw, minimum size=5.5mm, inner sep=0pt, thick}}
-
-% 小さな実線ドット（Fig.2 が使う）
 \tikzset{dot/.style={circle, fill, inner sep=0pt, minimum size=2.2pt}}
 
 \tikzset{group/.style={draw, rounded corners, inner sep=5pt, thick}}
 \tikzset{small/.style={font=\footnotesize}}
+
+% ===== ラベル用（今回の未定義キー対策） =====
+\tikzset{
+  lbl/.style={font=\footnotesize, inner sep=1.5pt, fill=white, text=black, draw=none},
+  lblW/.style={lbl, anchor=west},   % 右に余白が欲しいとき
+  lblE/.style={lbl, anchor=east},   % 左に余白が欲しいとき
+  lblN/.style={lbl, anchor=south},  % 上側配置（"above" 相当）
+  lblS/.style={lbl, anchor=north},  % 下側配置（"below" 相当）
+}
+
 \tikzset{note/.style={rectangle, draw, fill=yellow!18, rounded corners,
   inner sep=2.5pt, font=\scriptsize\sffamily, thick}}
