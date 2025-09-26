@@ -1,8 +1,12 @@
+% ============================================================
 % Common TikZ styles (robust & clash-safe)
+% ============================================================
 \usetikzlibrary{arrows.meta,positioning,fit,calc,shapes,decorations.markings}
 
 % 分割宣言で Runaway 回避
 \tikzset{every picture/.style={line cap=round, line join=round}}
+
+% 基本図形
 \tikzset{box/.style={draw, rectangle, rounded corners,
   minimum width=2.2cm, minimum height=0.9cm, align=center, very thick}}
 \tikzset{arrow/.style={-{Stealth}, very thick}}
@@ -13,29 +17,39 @@
 \tikzset{point/.style={circle, draw, minimum size=5.5mm, inner sep=0pt, thick}}
 \tikzset{dot/.style={circle, fill, inner sep=0pt, minimum size=2.2pt}}
 
+% グループ枠・文字サイズ
 \tikzset{group/.style={draw, rounded corners, inner sep=5pt, thick}}
 \tikzset{small/.style={font=\footnotesize}}
 
-% ===== ラベル用（今回の未定義キー対策） =====
+% ===== ラベル用（未定義キー対策） =====
 \tikzset{
   lbl/.style={font=\footnotesize, inner sep=1.5pt, fill=white, text=black, draw=none},
-  lblW/.style={lbl, anchor=west},   % 右に余白が欲しいとき
-  lblE/.style={lbl, anchor=east},   % 左に余白が欲しいとき
-  lblN/.style={lbl, anchor=south},  % 上側配置（"above" 相当）
-  lblS/.style={lbl, anchor=north},  % 下側配置（"below" 相当）
+  lblW/.style={lbl, anchor=west},   % 右に余白
+  lblE/.style={lbl, anchor=east},   % 左に余白
+  lblN/.style={lbl, anchor=south},  % 上側配置
+  lblS/.style={lbl, anchor=north},  % 下側配置
 }
 
+% ===== ノート用 =====
 \tikzset{note/.style={rectangle, draw, fill=yellow!18, rounded corners,
   inner sep=2.5pt, font=\scriptsize\sffamily, thick}}
 
-% ======== 追加：droplet（\node[drop] ... 用）========
+% ===== Droplet スタイル =====
 \tikzset{
   drop/.style={
     circle, draw, very thick,
     inner sep=0pt,
-    minimum size=9mm,      % 図の縮尺に合わせて 7–11mm で調整可
+    minimum size=9mm,      % 図の縮尺に合わせて調整可
     fill=white
   },
   dropF/.style={drop, fill=gray!12}, % 薄め塗りつぶし
   dropS/.style={drop, minimum size=7mm} % 小さめ
+}
+
+% ===== Satellite droplet スタイル =====
+\tikzset{
+  sat/.style={circle, draw, fill=black, inner sep=0pt, minimum size=2.2pt}, % 黒丸
+  satO/.style={circle, draw, inner sep=0pt, minimum size=2.2pt},            % 中抜き
+  satS/.style={sat, minimum size=1.6pt},                                    % 小さめ
+  satL/.style={circle, draw, fill=gray!40, inner sep=0pt, minimum size=2.6pt} % 大きめグレー
 }
