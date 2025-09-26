@@ -3,19 +3,37 @@
 
 \tikzset{
   every picture/.style={line cap=round,line join=round},
+
+  % basic drawing
+  line/.style={draw, very thick, -},
+  dashedline/.style={draw, dashed, thick},
+  arrow/.style={-{Stealth}, very thick},
+
+  % boxes / groups
   box/.style={
     draw, rectangle, rounded corners,
     minimum width=2.2cm, minimum height=0.9cm,
     align=center, very thick
   },
-  arrow/.style={-{Stealth}, very thick},
-  line/.style={draw, very thick, -},
-  dashedline/.style={draw, dashed, thick},
-  node/.style={circle, draw, minimum size=5.5mm, inner sep=0pt, thick},
   group/.style={draw, rounded corners, inner sep=5pt, thick},
+
+  % nodes & small text
+  node/.style={circle, draw, minimum size=5.5mm, inner sep=0pt, thick},
   small/.style={font=\footnotesize},
+
+  % annotation label (white background to avoid overlaps with lines)
+  lbl/.style={font=\footnotesize, fill=white, inner sep=1pt, rounded corners=1pt},
+
+  % sticky notes
   note/.style={
     rectangle, draw, fill=yellow!18, rounded corners,
     inner sep=2.5pt, font=\scriptsize\sffamily, thick
   },
+
+  % NEW: dot used in several figures
+  dot/.style={circle, inner sep=0pt, minimum size=2.2pt, fill=black, draw=none},
+
+  % NEW: main/satellite drops for Fig.2 等
+  drop/.style={circle, draw, fill=white, minimum size=3.6mm, line width=.8pt},
+  sat/.style ={drop, minimum size=2.8mm},
 }
