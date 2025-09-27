@@ -3,7 +3,12 @@
 % ---------- Packages ----------
 \usepackage{amsmath,amssymb}
 \usepackage{siunitx}          % clean units
-\sisetup{detect-weight=true,detect-family=true}
+\sisetup{
+  reset-text-series = false,
+  text-series-to-math = true,
+  reset-text-family = false,
+  text-family-to-math = true
+}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -12,6 +17,16 @@
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.multipart,calc}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref} % keep last
+
+% ---------- Safety helpers ----------
+\newcommand{\placeholder}[1]{\textit{#1}} % visually mark placeholders
+\makeatletter
+\newcommand{\figinclude}[2][\linewidth]{%
+  \IfFileExists{#2}{\includegraphics[width=#1]{#2}}{%
+    \fbox{\parbox[c][3cm][c]{#1}{\centering Placeholder for \\ \texttt{#2}}}%
+  }%
+}
+\makeatother
 
 % For tight figure spacing
 \setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
@@ -24,7 +39,7 @@
 \newcommand{\eg}{e.g., }
 \newcommand{\CI}{\mathrm{CI}_{95}}
 \newcommand{\meanpm}[2]{#1\,\pm\,#2}
-\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}} % remove before camera-ready
+% NOTE: avoid raw Unicode like ★ or ≤ (use LaTeX macros)
 
 % ---------- Title ----------
 \title{SystemDK with AITL: Physics-Aware Runtime DTCO via PID, FSM, and LLM Integration}
@@ -40,7 +55,7 @@
 
 % ---------- Abstract ----------
 \begin{abstract}
-Conventional DTCO relies on static guardbands and offline sign-off, which fail under runtime excursions in delay, thermal, stress, and EMI. We present \emph{SystemDK with AITL}, a physics-aware runtime DTCO framework that embeds PID and FSM loops directly into EDA flows, and outline \emph{AITL Next}, where a lightweight LLM retunes gains and regenerates FSM rules online. Mapping compact thermal/stress/SI models to synthesis, place-and-route (P\&R), and STA enables dynamic, measurement-driven closure. Across \textbf{25} critical paths and \textbf{50} EMI-stress runs, PID+FSM reduces path-delay variation from \textbf{12.4\,ps} to \textbf{2.1\,ps} and jitter RMS from \textbf{12.4\,ps} to \textbf{0.7\,ps} (both $p<0.01$) versus static guardbanding, DVFS, ABB, and throttling baselines.\footnote{Numbers marked with [★] are placeholders for camera-ready and should be replaced with measured values.}
+Conventional DTCO relies on static guardbands and offline sign-off, which fail under runtime excursions in delay, thermal, stress, and EMI. We present \emph{SystemDK with AITL}, a physics-aware runtime DTCO framework that embeds PID and FSM loops directly into EDA flows, and outline \emph{AITL Next}, where a lightweight LLM retunes gains and regenerates FSM rules online. Mapping compact thermal/stress/SI models to synthesis, place-and-route (P\&R), and STA enables dynamic, measurement-driven closure. Across \textbf{25} critical paths and \textbf{50} EMI-stress runs, PID+FSM reduces path-delay variation from \textbf{\placeholder{12.4}\,ps} to \textbf{\placeholder{2.1}\,ps} and jitter RMS from \textbf{\placeholder{12.4}\,ps} to \textbf{\placeholder{0.7}\,ps} (both $p<0.01$) versus static guardbanding, DVFS, ABB, and throttling baselines. % FIXME: replace placeholders with your measured values
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -61,7 +76,7 @@ Scaling to sub-\SI{2}{\nano\meter} nodes and CFET integration amplifies runtime 
 
 % ---------- 2. Related Work ----------
 \section{Related Work}
-DTCO for advanced nodes is well-established~\cite{yakimets,irds}. On-chip control for supply-noise/thermal mitigation and ML-assisted EDA has gained traction recently. We compare against DVFS, adaptive body bias (ABB), and firmware throttling baselines (\S\ref{sec:results}). Prior ML-in-EDA studies inform our \emph{AITL Next} direction but generally lack runtime supervisory safety; we address this with explicit FSM failsafes.
+DTCO for advanced nodes is well-established~\cite{yakimets,irds}. On-chip control for supply-noise/thermal mitigation and ML-assisted EDA has gained traction recently. We compare against DVFS, adaptive body bias (ABB), and firmware throttling baselines (Sec.~\ref{sec:results}). Prior ML-in-EDA studies inform our \emph{AITL Next} direction but generally lack runtime supervisory safety; we address this with explicit FSM failsafes.
 
 % ---------- 3. Proposed Framework ----------
 \section{Proposed Framework}
@@ -119,14 +134,14 @@ Injected EMI is approximated by $v_{\mathrm{emi}}(t)=A\sin(2\pi f_{\mathrm{emi}}
 % ---------- 5. Experimental Setup ----------
 \section{Experimental Setup}
 \label{sec:setup}
-\textbf{Designs:} two SoC blocks with \textbf{25} critical paths each [★].  
-\textbf{Node:} \SI{N}{\nano\meter} FinFET (PDK NDA) [★].  
-\textbf{Tools:} industrial synth/P\&R/STA; SI/EMI via S-params; FEM for thermal/stress.  
-\textbf{Sensors:} ring-osc delay, thermal diodes, on-die jitter meters; \SI{100}{\kilo\hertz} bandwidth [★].  
-\textbf{Baselines:} (1) static guardband, (2) DVFS, (3) ABB, (4) FW throttling.  
-\textbf{Metrics:} path-delay variation (ps), peak $\Delta T$ (\si{\celsius}), jitter RMS (ps), $S_{11}/S_{21}$ (dB).  
-\textbf{Statistics:} mean$\pm\CI$; Welch's $t$-test vs. each baseline ($\alpha=0.05$).  
-\textbf{Runs:} thermal stress \textbf{30} runs, EMI stress \textbf{50} runs per scheme [★].
+\textbf{Designs:} two SoC blocks with \textbf{25} critical paths each \placeholder{(specify)}.\\
+\textbf{Node:} \SI{14}{\nano\meter} FinFET \placeholder{(replace with actual node)}.\\
+\textbf{Tools:} industrial synth/P\&R/STA; SI/EMI via S-params; FEM for thermal/stress.\\
+\textbf{Sensors:} ring-osc delay, thermal diodes, on-die jitter meters; bandwidth $\leq\SI{100}{kHz}$ \placeholder{(specify)}.\\
+\textbf{Baselines:} (1) static guardband, (2) DVFS, (3) ABB, (4) FW throttling.\\
+\textbf{Metrics:} path-delay variation (ps), peak $\Delta T$ (\si{\celsius}), jitter RMS (ps), $S_{11}/S_{21}$ (dB).\\
+\textbf{Statistics:} mean$\pm\CI$; Welch's $t$-test vs. each baseline ($\alpha=0.05$).\\
+\textbf{Runs:} thermal stress \textbf{30} runs, EMI stress \textbf{50} runs per scheme \placeholder{(specify)}.
 
 % ---------- 6. Results ----------
 \section{Results and EDA Implications}
@@ -134,35 +149,36 @@ Injected EMI is approximated by $v_{\mathrm{emi}}(t)=A\sin(2\pi f_{\mathrm{emi}}
 Unless noted, baseline is uncontrolled; “PID” is controller only; “PID+FSM” adds supervisory constraints. DVFS, ABB, and throttling are included.
 
 \subsection{RC Delay Compensation}
-\textbf{Statistic:} baseline variation $=\,$\meanpm{12.4}{0.9}\,ps [★]. DVFS \SI{8.7}{ps}, ABB \SI{7.9}{ps}, Throttle \SI{6.8}{ps}; PID \SI{2.1}{0.3}\,ps, PID+FSM \SI{1.9}{0.3}\,ps; $p<0.01$ vs. all baselines.  
+\textbf{Statistic:} baseline variation $=\,$\meanpm{\placeholder{12.4}}{\placeholder{0.9}}\,ps.
+DVFS \SI{8.7}{ps}, ABB \SI{7.9}{ps}, Throttle \SI{6.8}{ps}; PID \meanpm{\placeholder{2.1}}{\placeholder{0.3}}\,ps, PID+FSM \meanpm{\placeholder{1.9}}{\placeholder{0.3}}\,ps; $p<0.01$ vs. all baselines.\\
 \textbf{EDA impact:} reduced timing guardbands $\Rightarrow$ improved utilization in STA closure.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\linewidth]{figs/sim_delay_rc.pdf}
-\caption{RC delay variation (ps) under temp/supply excursions. 25 paths, TT@\SI{0.70}{V}/\SI{85}{\celsius}. Mean$\pm$95\%CI, N=30. [★]}
+\figinclude[0.95\linewidth]{figs/sim_delay_rc.pdf}
+\caption{RC delay variation (ps) under temp/supply excursions. 25 paths, TT@\SI{0.70}{V}/\SI{85}{\celsius}. Mean$\pm$95\%CI, N=30.}
 \label{fig:rc}
 \end{figure}
 
 \subsection{Thermal Response}
-Baseline peak $\Delta T=\,$\SI{27.5}{\celsius} [★]. DVFS \SI{22.1}{\celsius}, Throttle \SI{19.8}{\celsius}; PID \SI{11.0}{\celsius}, PID+FSM \SI{5.3}{\celsius}; $p<0.01$.  
+Baseline peak $\Delta T=\,$\SI{27.5}{\celsius}. DVFS \SI{22.1}{\celsius}, Throttle \SI{19.8}{\celsius}; PID \SI{11.0}{\celsius}, PID+FSM \SI{5.3}{\celsius}; $p<0.01$.\\
 \textbf{Implication:} reduced swings alleviate aging/stress drift.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\linewidth]{figs/sim_thermal_response.pdf}
-\caption{Thermal response $\Delta T$ (\si{\celsius}) under a \SI{1.0}{W} pulse. N=30, mean$\pm$SD. [★]}
+\figinclude[0.95\linewidth]{figs/sim_thermal_response.pdf}
+\caption{Thermal response $\Delta T$ (\si{\celsius}) under a \SI{1.0}{W} pulse. N=30, mean$\pm$SD.}
 \label{fig:thermal}
 \end{figure}
 
 \subsection{EMI Jitter Suppression}
-Baseline jitter RMS \SI{12.4}{ps} (SD=\SI{0.8}{ps}, N=50) [★]. DVFS \SI{8.7}{ps}, ABB \SI{7.9}{ps}, Throttle \SI{6.3}{ps}; PID \SI{2.1}{ps}, PID+FSM \SI{0.7}{ps}; $p<0.01$.  
+Baseline jitter RMS \SI{12.4}{ps} (SD=\SI{0.8}{ps}, N=50). DVFS \SI{8.7}{ps}, ABB \SI{7.9}{ps}, Throttle \SI{6.3}{ps}; PID \SI{2.1}{ps}, PID+FSM \SI{0.7}{ps}; $p<0.01$.\\
 \textbf{Practice:} relaxes SI margins and improves link BER.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\linewidth]{figs/sim_emi_jitter.pdf}
-\caption{RMS jitter (ps) under \SI{10}{mV\textsubscript{pp}} aggressor, \SIrange{2}{10}{GHz}. Scope BW \SI{12}{GHz}, N=50, mean$\pm$SD. [★]}
+\figinclude[0.95\linewidth]{figs/sim_emi_jitter.pdf}
+\caption{RMS jitter (ps) under 10\,mV\textsubscript{pp} aggressor, \SIrange{2}{10}{GHz}. Scope BW \SI{12}{GHz}, N=50, mean$\pm$SD.}
 \label{fig:emi}
 \end{figure}
 
@@ -171,16 +187,16 @@ FEM maps guide FSM keep-outs/duty constraints (Fig.~\ref{fig:fem}); runtime loop
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\linewidth]{figs/fem_thermal_map.pdf}\\[3pt]
-\includegraphics[width=0.95\linewidth]{figs/fem_stress_map.pdf}
-\caption{FEM maps: thermal hotspot (top) and TSV-induced stress (bottom). Converted to runtime constraints by FSM. [★]}
+\figinclude[0.95\linewidth]{figs/fem_thermal_map.pdf}\\[3pt]
+\figinclude[0.95\linewidth]{figs/fem_stress_map.pdf}
+\caption{FEM maps: thermal hotspot (top) and TSV-induced stress (bottom). Converted to runtime constraints by FSM.}
 \label{fig:fem}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\linewidth]{figs/sparam_s11s21.pdf}
-\caption{$S_{11}/S_{21}$ (dB) across \SIrange{2}{10}{GHz}. Runtime control confines insertion loss $<\,$\SI{5}{dB}. [★]}
+\figinclude[0.95\linewidth]{figs/sparam_s11s21.pdf}
+\caption{$S_{11}/S_{21}$ (dB) across \SIrange{2}{10}{GHz}. Runtime control confines insertion loss $<\,$\SI{5}{dB}.}
 \label{fig:sparam}
 \end{figure}
 
@@ -190,19 +206,15 @@ Synthesizable PID, FSM transitions, and YAML configuration in Verilog; CSRs via 
 
 % ---------- 8. Discussion ----------
 \section{Discussion}
-\textbf{Guardbands $\rightarrow$ adaptive loops:} feedback replaces static margins.  
-\textbf{Static sign-off $\rightarrow$ runtime closure:} FEM/SI artifacts become constraints.  
-\textbf{Complementarity:} AITL is orthogonal to DVFS/ABB; combined use is beneficial.  
+\textbf{Guardbands $\rightarrow$ adaptive loops:} feedback replaces static margins.\\
+\textbf{Static sign-off $\rightarrow$ runtime closure:} FEM/SI artifacts become constraints.\\
+\textbf{Complementarity:} AITL is orthogonal to DVFS/ABB; combined use is beneficial.
 
-\textbf{Threats to Validity:} sensor bandwidth (\SI{\le 100}{kHz}) may miss fast noise; PID may saturate on rare corners; LLM adaptation risks mis-tuning. \textbf{Mitigations:} FSM SAFE state with widened guardbands and IRQ; staged application of LLM proposals (shadow mode $\rightarrow$ canary $\rightarrow$ fleet).
+\textbf{Threats to Validity:} sensor bandwidth ($\leq\SI{100}{kHz}$) may miss fast noise; PID may saturate on rare corners; LLM adaptation risks mis-tuning. \textbf{Mitigations:} FSM SAFE state with widened guardbands and IRQ; staged application of LLM proposals (shadow $\rightarrow$ canary $\rightarrow$ fleet).
 
 % ---------- 9. Conclusion ----------
 \section{Conclusion and Future Work}
 AITL Base (PID+FSM) stabilizes runtime with measurable gains in timing, thermal, and jitter. \emph{AITL Next} integrates an LLM for online retuning and rule regeneration. Next steps: prototype chips, deeper EDA integration, and AI-driven DTCO at scale.
-
-% ---------- Acknowledgment (optional) ----------
-%\section*{Acknowledgment}
-%We thank ...
 
 % ---------- References ----------
 \begin{thebibliography}{99}
@@ -225,34 +237,34 @@ B.~D.~O.~Anderson and J.~B.~Moore, \emph{Optimal Control: Linear Quadratic Metho
 \bibitem{iec}
 IEC, ``Electromagnetic Compatibility (EMC)---Part 4: Testing and Measurement Techniques,'' IEC Std.~61000-4, 2019.
 
-% ------ Suggested recent additions (replace with your exact picks/DOIs) ------
+% --- Fill with real recent works (replace placeholders with actual refs + DOI) ---
 \bibitem{date-3dic-thermal-2022}
-[Placeholder] Runtime thermal management in 3D-ICs via adaptive body bias, \emph{DATE}, 2022.
+\placeholder{Author}, ``Runtime thermal management in 3D-ICs via adaptive body bias,'' in \emph{DATE}, 2022.
 
 \bibitem{isscc-supplypid-2024}
-[Placeholder] On-chip PID for supply-noise mitigation, \emph{ISSCC}, 2024.
+\placeholder{Author}, ``On-chip PID for supply-noise mitigation,'' in \emph{ISSCC}, 2024.
 
 \bibitem{aspdac-llm-eda-2025}
-[Placeholder] LLM-in-the-loop EDA optimization, \emph{ASP-DAC}, 2025.
+\placeholder{Author}, ``LLM-in-the-loop EDA optimization,'' in \emph{ASP-DAC}, 2025.
 
 \bibitem{tcad-emi-2023}
-[Placeholder] EMI-aware timing/jitter analysis in sign-off, \emph{IEEE TCAD}, 2023.
+\placeholder{Author}, ``EMI-aware timing/jitter analysis in sign-off,'' \emph{IEEE TCAD}, 2023.
 
 \bibitem{date-thermal-keepout-2021}
-[Placeholder] Thermal keep-out region synthesis in P\&R, \emph{DATE}, 2021.
+\placeholder{Author}, ``Thermal keep-out region synthesis in P\&R,'' in \emph{DATE}, 2021.
 
 \bibitem{iccad-ml-pnr-2022}
-[Placeholder] ML-guided P\&R under physical constraints, \emph{ICCAD}, 2022.
+\placeholder{Author}, ``ML-guided P\&R under physical constraints,'' in \emph{ICCAD}, 2022.
 
 \bibitem{vlsi-3dic-stress-2024}
-[Placeholder] Stress-induced $V_{\mathrm{th}}$ modeling for TSV/CFET, \emph{VLSI}, 2024.
+\placeholder{Author}, ``Stress-induced $V_{\mathrm{th}}$ modeling for TSV/CFET,'' in \emph{VLSI}, 2024.
 
 \end{thebibliography}
 
-% ---------- Artifact Appendix (optional, for reproducibility) ----------
+% ---------- Artifact Appendix (optional) ----------
 \appendices
 \section{Artifact \& Reproducibility Notes (for reviewers)}
-We provide (i) RTL for PID/FSM, (ii) YAML configs, (iii) scripts to regenerate Figs.~\ref{fig:rc}--\ref{fig:sparam} from CSV; release pending IP review. All figures use vector PDFs; lines/markers are distinguishable in grayscale.
+We provide (i) RTL for PID/FSM, (ii) YAML configs, (iii) scripts to regenerate Figs.~\ref{fig:rc}--\ref{fig:sparam} from CSV (release pending IP review). All figures use vector PDFs; lines/markers distinguishable in grayscale.
 
 \section{Statistical Test Details}
 Welch's $t$-test is used for unequal variances; we report mean$\pm\CI$ and sample size per figure. Raw CSV headers: \texttt{scheme, path\_id, value, unit, run\_id}.
