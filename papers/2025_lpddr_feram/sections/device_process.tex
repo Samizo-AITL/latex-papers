@@ -105,3 +105,29 @@ Values are order-of-magnitude estimates for policy exploration; silicon-specific
     \bottomrule
   \end{tabular}
 \end{table}
+
+\subsection{Comparison with Other NVM Options}
+Beyond FeRAM, several emerging NVMs are considered for assistive integration.
+Table~\ref{tab:nvm_comparison} summarizes key features of ReRAM, MRAM, and FeFET relative to FeRAM.
+This comparison motivates our choice of FeRAM chiplets for near-term manufacturability, while clarifying future upgrade paths.
+
+\begin{table}[t]
+  \centering
+  \caption{Comparison of candidate NVM options for LPDDR assistive integration.}
+  \label{tab:nvm_comparison}
+  \vspace{2pt}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    & FeRAM & ReRAM & MRAM & FeFET \\
+    \midrule
+    Write speed & 10~ns & 50--100~ns & 1--10~ns & 1--10~ns \\
+    Retention   & $10^7$--$10^8$~s & $10^5$--$10^6$~s & $>10$~years & $10^6$--$10^7$~s \\
+    Endurance   & $10^8$--$10^{12}$ & $10^6$--$10^9$ & $>10^{15}$ & $10^6$--$10^9$ \\
+    Process temp. & 350--450$^\circ$C & BEOL-friendly & BEOL mismatch & $<$400$^\circ$C \\
+    Integration  & CMOS-compatible & CMOS-friendly & MTJ-specific & Gate-stack CMOS \\
+    Maturity     & High & Medium & High & Emerging \\
+    \bottomrule
+  \end{tabular}
+\end{table}
