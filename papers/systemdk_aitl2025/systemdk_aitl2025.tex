@@ -2,26 +2,42 @@
 
 % -------------------- Packages --------------------
 \usepackage{amsmath,amssymb}
+
 \usepackage{siunitx}
 \sisetup{
   reset-text-series=false, text-series-to-math=true,
-  reset-text-family=false, text-family-to-math=true
+  reset-text-family=false, text-family-to-math=true,
+  detect-all,
+  per-mode=symbol,
+  group-minimum-digits=4
 }
+
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{newtxtext,newtxmath}
+
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.multipart,calc}
+\tikzset{>=Latex} % 矢印の既定
 
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\usepgfplotslibrary{colormaps,patchplots} % ← 追加：colormap/surf系のキーを有効化
+\usepgfplotslibrary{colormaps,patchplots}
+
+% --- pgfplots: 白黒カラーマップを定義して既定に ---
+\pgfplotsset{
+  colormap={bw}{
+    rgb(0cm)=(0,0,0);
+    rgb(1cm)=(1,1,1)
+  },
+  colormap name=bw
+}
 
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 
 % ---------- Plot styles ----------
-% 無名 cycle list だと /tikz/... キー誤解釈が出る環境があるため、名前付きに変更
+% 安全のため cycle list を名前付きで宣言
 \pgfplotscreateplotcyclelist{aitlCycle}{
   {solid, mark=*},
   {densely dashed, mark=square*},
@@ -40,7 +56,7 @@
     major grid style={line width=.2pt, draw=black!35},
     tick style={black},
     every axis plot/.append style={line width=0.9pt},
-    cycle list name=aitlCycle, % ← 追加：上で定義したリストを常用
+    cycle list name=aitlCycle,
   },
 }
 
@@ -304,7 +320,7 @@ As shown in Fig.~\ref{fig:emi}, the uncontrolled design suffers 12.4\,ps RMS jit
 
 \subsection{FEM Thermal and Stress Maps}
 Figure~\ref{fig:fem} illustrates FEM-derived maps. The top map shows uncontrolled thermal hotspots reaching $\Delta T>\SI{14}{\celsius}$. The bottom map shows TSV-induced stress gradients exceeding \SI{18}{MPa}. Compact models distilled from such FEM data are consumed by the PID/FSM runtime loop.
-\noindent\textbf{EDA implication:} these maps enable dynamic keep-outs and stress-aware duty-cycle control.
+\par\noindent\textbf{EDA implication:} these maps enable dynamic keep-outs and stress-aware duty-cycle control.
 
 \begin{figure}[t]
 \centering
@@ -316,7 +332,7 @@ Figure~\ref{fig:fem} illustrates FEM-derived maps. The top map shows uncontrolle
     xlabel={x (mm)}, ylabel={y (mm)},
     colorbar,
     colorbar style={ylabel={\(\Delta T\) (\si{\celsius})}},
-    colormap name=gray,
+    colormap name=bw,
 ]
 \addplot [surf, shader=flat, draw=none, mesh/cols=4]
 table[row sep=\\]{
@@ -338,7 +354,7 @@ table[row sep=\\]{
     xlabel={x (mm)}, ylabel={y (mm)},
     colorbar,
     colorbar style={ylabel={stress (\si{MPa})}},
-    colormap name=gray,
+    colormap name=bw,
 ]
 \addplot [surf, shader=flat, draw=none, mesh/cols=4]
 table[row sep=\\]{
