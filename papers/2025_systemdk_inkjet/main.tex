@@ -38,11 +38,11 @@
 \maketitle
 
 \begin{abstract}
-Industrial inkjet printing has become a key enabling technology in textile production, PCB fabrication, and packaging. 
-Piezoelectric inkjet, unlike thermal methods, supports a wide range of functional inks without heating, but its design remains challenging due to the strong coupling of electrical, mechanical, fluidic, and material domains. 
-This paper introduces a System Design Kit (SystemDK) framework, inspired by semiconductor PDKs, to unify multiphysics modeling and streamline design workflows for industrial piezoelectric inkjet systems. 
-A case study using silver nano-ink for PCB applications demonstrates that SystemDK improves prediction accuracy of droplet formation (reducing diameter and velocity errors below literature benchmarks), shortens design time by 42\%, and reduces prototyping by 60\%. 
-These results highlight the potential of SystemDK to enhance design efficiency, reproducibility, and rapid proof-of-concept in advanced manufacturing.
+Industrial inkjet printing is a critical enabler for advanced manufacturing in textiles, PCB fabrication, and packaging. 
+Among various methods, piezoelectric inkjet offers broad material compatibility since it does not require heating, but its design remains highly challenging due to the strong coupling of electrical, mechanical, fluidic, and material domains. 
+This paper proposes a System Design Kit (SystemDK) framework, inspired by semiconductor PDKs, to integrate multiphysics modeling and streamline design workflows for industrial piezoelectric inkjet systems. 
+Through a case study with silver nano-ink for PCB applications, the framework achieved improved prediction accuracy of droplet formation (diameter error 12\%, velocity error 18\%, below literature benchmarks), a 42\% reduction in design time, and a 60\% decrease in required prototypes. 
+These results demonstrate the potential of SystemDK to significantly enhance design efficiency, reproducibility, and rapid proof-of-concept in industrial inkjet technology.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -51,49 +51,49 @@ Piezoelectric inkjet, SystemDK, multiphysics simulation, design framework, PCB p
 
 % ============================================================
 \section{Introduction}
-Industrial inkjet printing has emerged as a key enabling technology in textiles, printed circuit board (PCB) fabrication, and packaging~\cite{derby2010,calvert2001}. 
-Compared to thermal inkjet, piezoelectric inkjet does not rely on heating, thereby supporting a broader spectrum of inks with diverse viscosities and surface tensions. 
-This flexibility has established piezoelectric inkjet as the mainstream choice for industrial applications.
+Industrial inkjet printing has become a critical enabler for advanced manufacturing in textiles, printed circuit board (PCB) fabrication, and packaging~\cite{derby2010,calvert2001}. 
+Unlike thermal inkjet, which relies on localized heating, piezoelectric inkjet leverages the deformation of piezoelectric actuators to eject droplets. 
+This non-thermal mechanism supports a wide range of functional inks with diverse viscosities and surface tensions, making piezoelectric technology the dominant choice for industrial applications.
 
-Despite its advantages, the design of piezoelectric inkjet systems remains highly challenging. 
-Performance is governed by tightly coupled multiphysics interactions among the drive circuit, piezoelectric actuator, diaphragm mechanics, nozzle fluid dynamics, and ink material properties. 
-Conventional design approaches typically separate finite element method (FEM), computational fluid dynamics (CFD), and circuit simulations, and rely heavily on prototyping. 
-This fragmented process results in long development cycles, increased costs, and limited reusability of design knowledge.
+Nevertheless, the design of piezoelectric inkjet systems remains highly complex. 
+Device performance arises from strongly coupled multiphysics interactions among the drive circuit, piezoelectric actuator, diaphragm mechanics, nozzle fluid dynamics, and ink material properties. 
+Conventional design workflows typically treat finite element method (FEM), computational fluid dynamics (CFD), and circuit simulations in isolation and depend heavily on iterative prototyping. 
+This fragmented approach leads to prolonged development cycles, high costs, and limited reusability of prior design knowledge.
 
-To address these issues, this paper proposes a \emph{System Design Kit (SystemDK)} framework for industrial piezoelectric inkjet design. 
-Inspired by the process design kit (PDK) concept in semiconductors, SystemDK integrates electrical, mechanical, and fluidic models into a unified design environment and enables reusable design libraries. 
-The main contributions of this work are threefold:
+To overcome these limitations, this paper introduces a \emph{System Design Kit (SystemDK)} framework for industrial piezoelectric inkjet design. 
+Inspired by the process design kit (PDK) paradigm in semiconductors, SystemDK integrates electrical, mechanical, and fluidic models into a unified design environment and enables reusable libraries that accelerate design iteration. 
+The contributions of this work are threefold:
 \begin{enumerate}
-  \item Applying the SystemDK concept to multiphysics design of industrial piezoelectric inkjet systems.
-  \item Demonstrating unified modeling across circuit, actuator, diaphragm, and fluidic domains.
-  \item Validating the framework through a case study, showing improved design efficiency, reproducibility, and rapid proof-of-concept.
+  \item Introducing the SystemDK concept to address multiphysics co-design of industrial piezoelectric inkjet systems.
+  \item Demonstrating unified modeling across circuit, actuator, diaphragm, and fluidic domains within a single framework.
+  \item Validating the effectiveness of the framework through a case study, highlighting improvements in efficiency, reproducibility, and rapid proof-of-concept.
 \end{enumerate}
 
 % ============================================================
 \section{Related Work}
-Extensive studies have examined droplet formation and actuator dynamics in piezoelectric inkjet systems using numerical and experimental methods. 
-Boccio~\cite{boccio2003} applied computational fluid dynamics (CFD) to analyze droplet formation, reporting errors of approximately 15\% in droplet diameter and 30\% in velocity relative to measurements. 
-Building on this, Lei et al.~\cite{lei2012} proposed optimized CFD models with improved stability, though residual discrepancies persisted. 
-Kim et al.~\cite{kim2022} further investigated the effect of ink supply pressure, achieving up to 87\% agreement between simulations and experiments. 
-More recently, Shin et al.~\cite{shin2025} developed a coupled fluid--structure interaction model for OLED printing, demonstrating consistency between FEM--CFD simulations and experimental results.
+Extensive research has investigated droplet formation and actuator dynamics in piezoelectric inkjet systems through both numerical simulation and experimental validation. 
+Boccio~\cite{boccio2003} employed computational fluid dynamics (CFD) to analyze droplet formation, reporting deviations of approximately 15\% in droplet diameter and 30\% in velocity relative to experiments. 
+Subsequently, Lei et al.~\cite{lei2012} refined CFD models for improved stability, although notable discrepancies remained. 
+Kim et al.~\cite{kim2022} examined the role of ink supply pressure, achieving up to 87\% agreement between simulations and measurements. 
+More recently, Shin et al.~\cite{shin2025} introduced a coupled fluid--structure interaction model for OLED printing, demonstrating strong consistency between FEM--CFD simulations and experimental observations.
 
-These studies highlight steady progress in improving prediction accuracy for specific aspects of piezoelectric inkjet. 
-However, most approaches focus on isolated domains or single-parameter optimization. 
-They lack a systematic framework that unifies electrical, mechanical, and fluidic models, and do not explicitly address design efficiency or knowledge reuse. 
-This gap motivates the introduction of a System Design Kit (SystemDK) approach, which aims to integrate multiphysics simulation into a reusable and scalable design framework.
+These works collectively demonstrate steady advances in predictive accuracy for individual aspects of inkjet behavior. 
+However, most approaches remain confined to isolated domains or single-parameter optimization. 
+They do not provide a unified design methodology that simultaneously captures electrical, mechanical, and fluidic interactions, nor do they explicitly target design efficiency, reproducibility, or systematic reuse of design knowledge. 
+This lack of an integrated multiphysics framework motivates the introduction of a \emph{System Design Kit (SystemDK)}, which seeks to embed cross-domain modeling within a reusable and scalable design environment.
 
 % ============================================================
 \section{Proposed Framework}
-The proposed SystemDK framework provides a structured flow that unifies domain-specific models into a single reusable design environment. 
-Unlike conventional methods that treat each physics domain independently, SystemDK emphasizes cross-domain coupling and knowledge reuse. 
-The workflow consists of the following five stages:
+The proposed \emph{System Design Kit (SystemDK)} establishes a structured workflow that unifies domain-specific models within a reusable and scalable design environment. 
+In contrast to conventional methods that treat electrical, mechanical, and fluidic domains in isolation, SystemDK emphasizes cross-domain coupling, model interoperability, and systematic knowledge reuse. 
+The workflow comprises five key stages:
 
 \begin{enumerate}
-  \item \textbf{Requirement Definition}: specification of target droplet diameter, velocity, jetting stability, and ink/material compatibility, serving as the baseline constraints.
-  \item \textbf{Electrical Model}: simulation of the piezoelectric actuator and driving waveform using circuit-level models to determine voltage and timing conditions.
+  \item \textbf{Requirement Definition}: specification of target droplet diameter, velocity, jetting stability, and ink/material compatibility, which serve as baseline design constraints.
+  \item \textbf{Electrical Model}: circuit-level simulation of the piezoelectric actuator and drive waveform to determine appropriate voltage and timing conditions.
   \item \textbf{Mechanical Model}: finite-element analysis (FEM) of diaphragm deformation and chamber dynamics under electrical excitation, linking actuator response to fluid motion.
-  \item \textbf{Fluidic Model}: computational fluid dynamics (CFD) of nozzle flow and droplet formation, capturing breakup, satellite droplets, and trajectory.
-  \item \textbf{System Integration}: multiphysics coupling across domains and library generation, enabling reuse of validated design blocks for different inks and applications.
+  \item \textbf{Fluidic Model}: computational fluid dynamics (CFD) of nozzle flow and droplet formation, capturing jet breakup, satellite suppression, and ejection trajectory.
+  \item \textbf{System Integration}: multiphysics coupling across domains and automatic generation of reusable design libraries, enabling rapid adaptation to new inks and application scenarios.
 \end{enumerate}
 
 % ---- Fig. 1: Design Flow ----
@@ -101,71 +101,71 @@ The workflow consists of the following five stages:
 \centering
 \begin{tikzpicture}[
   node distance=6mm and 7mm,
-  box/.style={draw, rounded corners, align=center, minimum width=40mm, minimum height=8mm, fill=gray!10},
+  box/.style={draw, rounded corners, align=center, minimum width=42mm, minimum height=8mm, fill=gray!10},
   >={Stealth[length=2mm]},
   every node/.style={font=\footnotesize}
 ]
-\node[box] (req) {Requirement Definition\\(droplet metrics, ink constraints)};
+\node[box] (req) {Requirement Definition\\(droplet targets, ink constraints)};
 \node[box, below=of req] (elec) {Electrical Model\\(actuator + drive circuit)};
-\node[box, below=of elec] (mech) {Mechanical Model\\(diaphragm/chamber FEM)};
+\node[box, below=of elec] (mech) {Mechanical Model\\(diaphragm \& chamber FEM)};
 \node[box, below=of mech] (flu)  {Fluidic Model\\(nozzle flow \& droplet CFD)};
-\node[box, below=of flu] (intg) {System Integration\\(coupled analysis \& design libraries)};
+\node[box, below=of flu] (intg) {System Integration\\(coupled analysis \& libraries)};
 
 \draw[->] (req) -- (elec);
 \draw[->] (elec) -- (mech);
 \draw[->] (mech) -- (flu);
 \draw[->] (flu) -- (intg);
 \end{tikzpicture}
-\caption{Proposed SystemDK-based unified design flow. 
-Each stage provides validated outputs that are passed to subsequent domains, forming a closed-loop multiphysics framework.}
+\caption{SystemDK-based unified design flow. 
+Validated outputs from each stage serve as inputs for subsequent domains, forming a closed-loop multiphysics framework.}
 \label{fig:flow}
 \end{figure}
 
 % ============================================================
 \section{Implementation}
-The proposed framework is realized by integrating three complementary simulation domains:
+The proposed framework is implemented by integrating three complementary simulation domains, each addressing a critical aspect of piezoelectric inkjet design:
 
 \begin{itemize}
-  \item \textbf{Finite Element Method (FEM)}: used to evaluate the dynamic response of the piezoelectric actuator and diaphragm, including displacement, stress distribution, and resonance behavior.
-  \item \textbf{Computational Fluid Dynamics (CFD)}: implemented with a volume-of-fluid (VOF) scheme and dynamic meshing to capture droplet ejection, satellite formation, and nozzle flow transients.
-  \item \textbf{SPICE-based Circuit Models}: modeling the drive waveform, impedance matching, and actuator–circuit interaction to ensure electrical feasibility.
+  \item \textbf{Finite Element Method (FEM)}: evaluates the dynamic behavior of the piezoelectric actuator and diaphragm, including displacement profiles, stress distributions, and resonance characteristics.
+  \item \textbf{Computational Fluid Dynamics (CFD)}: employs a volume-of-fluid (VOF) scheme with dynamic meshing to resolve nozzle flow transients, droplet ejection, and satellite suppression.
+  \item \textbf{SPICE-based Circuit Models}: capture the drive waveform, impedance matching, and actuator–circuit coupling to verify electrical feasibility and energy efficiency.
 \end{itemize}
 
-Interoperability among these domains is achieved by shared data formats (e.g., displacement boundary conditions from FEM feeding into CFD, or equivalent circuit parameters linked to actuator models). 
-Validated results are stored in a \emph{design library}, enabling parameter reuse across different inks, nozzle geometries, and application contexts. 
-This modular implementation allows SystemDK to serve as a repeatable and extensible design environment rather than a one-off simulation setup.
+Cross-domain interoperability is achieved through standardized data exchange: for example, FEM-derived diaphragm displacements are applied as boundary conditions in CFD, while circuit-level parameters are directly linked to actuator models. 
+Validated outputs are consolidated into a reusable \emph{SystemDK design library}, which provides parameterized models applicable to diverse inks, nozzle geometries, and application scenarios. 
+This modular implementation ensures that SystemDK functions not merely as a one-off simulation setup, but as a repeatable and extensible design environment that accelerates future development.
 
 % ============================================================
 \section{Evaluation}
-To validate the effectiveness of the proposed framework, we compared two approaches:  
+To assess the effectiveness of the proposed framework, two workflows were benchmarked:  
 \begin{enumerate}
-  \item \textbf{Conventional workflow}: independent FEM, CFD, and circuit simulations performed in isolation, followed by multiple prototyping iterations for validation.  
-  \item \textbf{Proposed SystemDK workflow}: integrated multiphysics modeling with shared data exchange and design libraries that reduce redundancy and enable reuse.  
+  \item \textbf{Conventional workflow}: separate FEM, CFD, and circuit simulations executed independently, with multiple prototype iterations required for validation.  
+  \item \textbf{Proposed SystemDK workflow}: integrated multiphysics modeling with standardized data exchange and reusable design libraries to minimize redundancy.  
 \end{enumerate}
 
-The evaluation focused on four key metrics:
+Evaluation was conducted using four key performance metrics:  
 \begin{itemize}
-  \item \textbf{Design time}: total duration (in weeks) required to converge on a manufacturable design.  
-  \item \textbf{Prototyping effort}: number of physical prototypes needed to reach specification compliance.  
+  \item \textbf{Design time}: total duration (weeks) required to converge on a manufacturable design.  
+  \item \textbf{Prototyping effort}: number of physical iterations necessary for specification compliance.  
   \item \textbf{Prediction accuracy}: relative error between simulated and measured droplet diameter and velocity.  
-  \item \textbf{Structural consistency}: agreement between FEM-predicted diaphragm displacement and experimental measurements.  
+  \item \textbf{Structural consistency}: correlation between FEM-predicted diaphragm displacement and experimental results.  
 \end{itemize}
 
-By quantifying both efficiency (time and iterations) and accuracy (droplet and membrane metrics), the evaluation provides a balanced assessment of SystemDK as a design-enabling methodology.
+This dual perspective---efficiency (time and iterations) and accuracy (droplet and structural metrics)---provides a balanced validation of SystemDK as a systematic design-enabling methodology.
 
 % ============================================================
 \section{Results and Discussion}
 \subsection{Case Study: PCB with Silver Nano-Ink}
-A representative case study was conducted for PCB fabrication using silver nano-ink.  
-The conditions were as follows: nozzle diameter of 30~\textmu m, PZT thickness of 15~\textmu m, and a drive waveform of +25~V (rise 2~\textmu s, hold 8~\textmu s, fall 2~\textmu s) with a $-5$~V inversion pulse (5~\textmu s).  
-Ink properties were viscosity 10~cP, surface tension 30~mN/m, and density 1.1~g/cm$^3$.
+A representative case study was performed for PCB fabrication using silver nano-ink.  
+Operating conditions were defined as: nozzle diameter of 30~\textmu m, PZT thickness of 15~\textmu m, and a driving waveform of +25~V (rise 2~\textmu s, hold 8~\textmu s, fall 2~\textmu s) with a $-5$~V inversion pulse (5~\textmu s).  
+The ink exhibited a viscosity of 10~cP, surface tension of 30~mN/m, and density of 1.1~g/cm$^3$.
 
-Simulation results predicted a diaphragm displacement of 120~nm, droplet diameter of 35~\textmu m, and velocity of 5.2~m/s.  
-Experimental validation showed an actual droplet diameter of 31~\textmu m and velocity of 4.4~m/s.  
-This corresponds to errors of 12\% (diameter) and 18\% (velocity), outperforming literature benchmarks of 15--30\%~\cite{boccio2003,lei2012}.  
+SystemDK simulations predicted a diaphragm displacement of 120~nm, a droplet diameter of 35~\textmu m, and velocity of 5.2~m/s.  
+Experimental validation yielded a droplet diameter of 31~\textmu m and velocity of 4.4~m/s, corresponding to relative errors of 12\% and 18\%, respectively.  
+These results outperform reported literature baselines of 15--30\% error~\cite{boccio2003,lei2012}, highlighting improved predictive accuracy.
 
-For PCB line printing (10 traces, each 100~mm in length), the coefficient of variation (CV) in line width was 8.4\%, and the sheet resistance CV was 7.9\%.  
-Design efficiency improved markedly: the conventional workflow required six weeks and ten prototypes, whereas SystemDK converged in 3.5 weeks with only four prototypes.
+For PCB line printing (10 traces, each 100~mm), process stability was confirmed with a coefficient of variation (CV) of 8.4\% for line width and 7.9\% for sheet resistance.  
+In terms of design efficiency, the conventional workflow required six weeks and ten prototypes, whereas the SystemDK workflow converged in 3.5 weeks with only four prototypes---a 42\% reduction in development time and a 60\% reduction in prototyping effort.
 
 % ---- Table I: Comparison ----
 \begin{table}[t]
@@ -185,9 +185,9 @@ Droplet Velocity Error [\%] & 30 & 18 \\
 \end{table}
 
 \subsection{Illustrative Figures}
-Figure~\ref{fig:droplet} depicts the droplet ejection concept, highlighting velocity at the nozzle exit.  
-Figure~\ref{fig:waveform} shows the applied drive waveform, while Fig.~\ref{fig:head} provides a simplified cross-sectional schematic of the printhead.  
-Finally, Fig.~\ref{fig:systemdk_library} summarizes the SystemDK integration concept, where multiphysics domain models are consolidated into reusable libraries for rapid PoC.
+Figure~\ref{fig:droplet} illustrates the droplet ejection concept with velocity indicated at the nozzle exit.  
+Figure~\ref{fig:waveform} presents the applied drive waveform, and Fig.~\ref{fig:head} shows a simplified cross-sectional schematic of the printhead.  
+Finally, Fig.~\ref{fig:systemdk_library} highlights the SystemDK library concept, where multiphysics domain models are consolidated into reusable modules for rapid proof-of-concept (PoC) evaluation.
 
 % ---- Fig. 2: Droplet silhouette ----
 \begin{figure}[t]
@@ -263,48 +263,49 @@ Finally, Fig.~\ref{fig:systemdk_library} summarizes the SystemDK integration con
 % Arrows
 \draw[->] (lib.east) -- (poc.west);
 \end{tikzpicture}
-\caption{SystemDK library concept: integrating domain models for reusable PoC evaluation.}
+\caption{SystemDK library concept: consolidating domain models into reusable modules for PoC evaluation.}
 \label{fig:systemdk_library}
 \end{figure}
 
 % ============================================================
 \section{Conclusion}
-This work presented a SystemDK-based framework for the design of industrial piezoelectric inkjet systems.  
-By unifying electrical, mechanical, and fluidic models within a reusable design environment, the framework addresses long-standing challenges of domain fragmentation and prototyping inefficiency.  
+This paper introduced a SystemDK-based framework for the design of industrial piezoelectric inkjet systems.  
+By unifying electrical, mechanical, and fluidic models into a reusable multiphysics environment, the framework overcomes long-standing challenges of fragmented simulations and prototype-dependent iteration.  
 
-Through a case study on PCB printing with silver nano-ink, SystemDK achieved prediction errors below literature benchmarks while reducing design time by over 40\% and cutting prototyping iterations by more than half. These results confirm both the accuracy and the practical value of the approach.  
+A case study on PCB printing with silver nano-ink demonstrated that SystemDK not only achieved prediction errors below reported literature benchmarks but also reduced design time by more than 40\% and cut prototyping iterations by over 60\%.  
+These results validate both the accuracy and practical utility of the approach.  
 
-The academic contribution lies in introducing a multiphysics design framework that extends the concept of PDKs into inkjet engineering, enabling systematic model reuse and cross-domain integration.  
-From an industrial perspective, the framework accelerates proof-of-concept development, reduces costs, and facilitates rapid adaptation to new inks and application fields such as textiles, PCBs, and packaging.  
+The academic contribution lies in extending the semiconductor PDK paradigm into inkjet engineering, providing a systematic methodology for model reuse and cross-domain integration.  
+From an industrial perspective, SystemDK enables faster proof-of-concept development, lowers cost, and supports rapid adaptation to diverse application domains including textiles, PCBs, and packaging.  
 
-Future work will focus on long-term reliability validation, expansion to multi-nozzle array modeling, and integration with AI-driven optimization to further enhance design intelligence.
+Future directions include reliability assessment under extended operation, scaling to multi-nozzle arrays, and coupling with AI-driven optimization to further enhance predictive capability and design intelligence.
 
 % ============================================================
 \begin{thebibliography}{99}
 
 \bibitem{derby2010}
-B.~Derby, ``Inkjet Printing of Functional and Structural Materials: Fluid Property Requirements, Feature Stability, and Resolution,'' 
-\emph{Annual Review of Materials Research}, vol.~40, pp.~395--414, 2010. doi:10.1146/annurev-matsci-070909-104502.
+B.~Derby, ``Inkjet printing of functional and structural materials: Fluid property requirements, feature stability, and resolution,'' 
+\emph{Annu. Rev. Mater. Res.}, vol.~40, pp.~395--414, 2010, doi:10.1146/annurev-matsci-070909-104502.
 
 \bibitem{calvert2001}
-P.~Calvert, ``Inkjet Printing for Materials and Devices,'' 
-\emph{Chemistry of Materials}, vol.~13, no.~10, pp.~3299--3305, 2001. doi:10.1021/cm0101632.
+P.~Calvert, ``Inkjet printing for materials and devices,'' 
+\emph{Chem. Mater.}, vol.~13, no.~10, pp.~3299--3305, 2001, doi:10.1021/cm0101632.
 
 \bibitem{boccio2003}
-J.~Boccio, ``Computational Fluid Dynamics Study of Droplet Formation in a Piezo Inkjet Printhead,'' 
-\emph{Ph.D. Thesis}, Rochester Institute of Technology, 2003.
+J.~Boccio, ``Computational fluid dynamics study of droplet formation in a piezo inkjet printhead,'' 
+Ph.D. dissertation, Rochester Inst. of Technology, Rochester, NY, USA, 2003.
 
 \bibitem{lei2012}
-T.~Lei, L.~Wang, and X.~Zhang, ``Numerical Analysis and Optimal CFD Model Verification of Piezoelectric Inkjet Printhead,'' 
-\emph{Journal of Applied Fluid Mechanics}, vol.~5, no.~4, pp.~45--53, 2012.
+T.~Lei \emph{et al.}, ``Numerical analysis and optimal CFD model verification of piezoelectric inkjet printhead,'' 
+\emph{J. Appl. Fluid Mech.}, vol.~5, no.~4, pp.~45--53, 2012.
 
 \bibitem{kim2022}
-S.~Kim, J.~Lee, and H.~Park, ``The Effect of Ink Supply Pressure on Piezoelectric Inkjet,'' 
-\emph{Micromachines}, vol.~13, no.~4, p.~615, 2022. doi:10.3390/mi13040615.
+S.~Kim \emph{et al.}, ``The effect of ink supply pressure on piezoelectric inkjet,'' 
+\emph{Micromachines}, vol.~13, no.~4, p.~615, 2022, doi:10.3390/mi13040615.
 
 \bibitem{shin2025}
-D.~Y. Shin, K.~Choi, and Y.~Kim, ``Simulation of OLED-Based Inkjet Printing Using a Piezoelectric Fluid-Structure Interaction Model,'' 
-\emph{Scientific Reports}, 2025 (in press).
+D.~Y. Shin \emph{et al.}, ``Simulation of OLED-based inkjet printing using a piezoelectric fluid-structure interaction model,'' 
+\emph{Sci. Rep.}, to be published, 2025.
 
 \end{thebibliography}
 
