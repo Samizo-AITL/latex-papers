@@ -1,0 +1,11 @@
+flowchart TD
+    A[Requirement Definition<br/>(Droplet size, velocity, ink compatibility)]
+    B[Electrical Model<br/>(Piezo actuator + Drive circuit)]
+    C[Mechanical Model<br/>(Diaphragm + Cavity deformation)]
+    D[Fluidic Model<br/>(Nozzle flow + Droplet formation CFD)]
+    E[System Integration<br/>(Coupled analysis + Design library)]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
