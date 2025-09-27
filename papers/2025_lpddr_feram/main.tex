@@ -30,12 +30,17 @@ Chiplet/SiP Integration as a Practical Path}
 
 % ===== Abstract =====
 \begin{abstract}
-Low-power DRAM (LPDDR) is the dominant main memory for mobile edge AI accelerators, balancing bandwidth and energy efficiency.
-However, LPDDR remains volatile and incurs standby power due to periodic refresh.
-Ferroelectric RAM (FeRAM), based on HfO$_2$, provides non-volatility, low-voltage operation, and fast rewriting, making it suitable as an assistive memory for checkpointing and state retention.
-Because monolithic LPDDR+FeRAM co-fabrication is infeasible due to process-temperature mismatch, this work proposes \textbf{chiplet-level LPDDR+FeRAM integration} using SiP/PoP packaging.
-System-level analysis shows that FeRAM chiplets can reduce standby power by up to 20\%, shorten resume latency from $\sim$10~ms (baseline LPDDR) to sub-ms range ($<$500~$\mu$s), and improve overall energy efficiency by 15--25\% under representative mobile edge AI workloads.
-\textbf{Target implementation nodes:} SoC at 5--3\,nm (FinFET/GAAFET), LPDDR5/5X at 1$\alpha$--1$\gamma$ DRAM nodes ($\sim$14--10\,nm), and a 28--22\,nm CMOS FeRAM chiplet integrated via SiP/PoP.
+Low-power DRAM (LPDDR) is the dominant main memory for mobile edge AI accelerators, balancing bandwidth and energy efficiency. 
+However, LPDDR remains volatile and incurs standby power due to periodic refresh. 
+Ferroelectric RAM (FeRAM), based on HfO$_2$, provides non-volatility, low-voltage operation, and fast rewriting, making it suitable as an assistive memory for checkpointing and state retention. 
+Because monolithic LPDDR+FeRAM co-fabrication is infeasible due to process--temperature mismatch, this work proposes \textbf{chiplet-level LPDDR+FeRAM integration} using SiP/PoP packaging. 
+
+System-level analysis, based on representative LPDDR5/5X and HfO$_2$-FeRAM parameters from prior silicon reports, shows that FeRAM chiplets can reduce standby power by up to 20\%, shorten resume latency from $\sim$10~ms (baseline LPDDR) to sub-ms range ($<$500~$\mu$s), and improve overall energy efficiency by 15--25\% under mobile edge AI workloads such as on-device inference, federated learning, and AR/VR. 
+These results are derived from analytical modeling rather than prototype measurements, positioning the study as a \emph{design framework exploration} rather than a device demonstration.
+
+The proposed architecture is coordinated by the \textbf{SystemDK co-design framework}, which manages checkpoint and refresh-offload policies across architecture, package, and runtime layers. 
+\textbf{Target implementation nodes:} SoC at 5--3\,nm (FinFET/GAAFET), LPDDR5/5X at 1$\alpha$--1$\gamma$ DRAM nodes ($\sim$14--10\,nm), and a 28--22\,nm CMOS FeRAM chiplet integrated via SiP/PoP. 
+This approach highlights a near-term, manufacturable path toward energy-efficient and responsive memory subsystems, while providing an educational reference for heterogeneous memory integration.
 \end{abstract}
 
 % ===== Sections =====
