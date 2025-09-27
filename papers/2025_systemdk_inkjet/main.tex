@@ -92,19 +92,60 @@ Predictions: membrane displacement 120~nm, droplet diameter 35~\textmu m, veloci
 
 \begin{table}[t]
 \centering
-\caption{Conventional vs SystemDK (PCB case)}
+\caption{Conventional vs SystemDK Performance (PCB case with silver nano-ink)}
 \begin{tabular}{lcc}
 \toprule
  & Conventional & SystemDK \\
 \midrule
-Design Time [weeks] & 6.0 & 3.5 \\
-Prototypes Required & 10  & 4   \\
-Droplet Diameter Error [\%] & 15 & 12 \\
-Droplet Velocity Error [\%] & 30 & 18 \\
+Design Time [weeks]        & 6.0   & 3.5 \\
+Prototypes Required        & 10    & 4   \\
+Droplet Diameter Error [\%] & 15    & 12  \\
+Droplet Velocity Error [\%] & 30    & 18  \\
+Line Width CV [\%]         & 15.2  & 8.4 \\
+Sheet Resistance CV [\%]   & 14.7  & 7.9 \\
 \bottomrule
 \end{tabular}
 \label{tab:comparison}
 \end{table}
+
+% ---- SystemDK vs Conventional flow diagram ----
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  node distance=7mm and 9mm,
+  box/.style={draw, rounded corners, align=center, minimum width=34mm, minimum height=8mm, fill=gray!10},
+  >={Stealth[length=2mm]},
+  every node/.style={font=\footnotesize}
+]
+
+% Conventional flow
+\node[box] (reqc) {Requirement};
+\node[box, below=of reqc] (elecc) {Separate FEM/CFD/Circuit};
+\node[box, below=of elecc] (protc) {Multiple Prototyping};
+\node[box, below=of protc] (outc) {Final Result};
+
+\draw[->] (reqc) -- (elecc);
+\draw[->] (elecc) -- (protc);
+\draw[->] (protc) -- (outc);
+
+% SystemDK flow
+\node[box, right=45mm of reqc] (reqs) {Requirement};
+\node[box, below=of reqs] (intgs) {SystemDK Unified Simulation};
+\node[box, below=of intgs] (libs) {Reusable Design Libraries};
+\node[box, below=of libs] (outs) {Final Result (fast)};
+
+\draw[->] (reqs) -- (intgs);
+\draw[->] (intgs) -- (libs);
+\draw[->] (libs) -- (outs);
+
+% Labels
+\node[above=0mm of reqc, font=\footnotesize\bfseries] {Conventional};
+\node[above=0mm of reqs, font=\footnotesize\bfseries] {SystemDK};
+
+\end{tikzpicture}
+\caption{Comparison of conventional and SystemDK-based design flows.}
+\label{fig:comparison}
+\end{figure}
 
 \subsection{Discussion}
 SystemDK achieved literature-level prediction accuracy while reducing design time and prototyping. Remaining challenges include long-term reliability validation and robustness against ink-property variations.
