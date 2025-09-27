@@ -1,0 +1,55 @@
+name: Build SystemDK Inkjet Paper (PDF + logs)
+
+on:
+  push:
+    paths:
+      - 'latex-papers/papers/2025_systemdk_inkjet/**'
+      - 'latex-papers/.github/workflows/latex_systemdk_inkjet.yml'
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX (latexmk)
+        id: latex
+        uses: xu-cheng/latex-action@v3
+        with:
+          # ここを必要に応じて変更（メインのTeXファイル名）
+          root_file: main.tex
+          # ここをプロジェクトのパスに合わせる
+          working_directory: latex-papers/papers/2025_systemdk_inkjet
+          # synctex, shell-escape等が必要なら追加
+          args: -pdf -interaction=nonstopmode -file-line-error
+          # latexmkrc があれば true に
+          # latexmk_use_lualatex: true
+
+      # 失敗時でもログを必ず回収
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemdk_inkjet_logs
+          path: |
+            latex-papers/papers/2025_systemdk_inkjet/*.log
+            latex-papers/papers/2025_systemdk_inkjet/*.fls
+            latex-papers/papers/2025_systemdk_inkjet/*.fdb_latexmk
+            latex-papers/papers/2025_systemdk_inkjet/*.aux
+            latex-papers/papers/2025_systemdk_inkjet/*.out
+            latex-papers/papers/2025_systemdk_inkjet/*.bbl
+            latex-papers/papers/2025_systemdk_inkjet/*.blg
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Upload PDF
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemdk_inkjet_pdf
+          path: latex-papers/papers/2025_systemdk_inkjet/main.pdf
+          retention-days: 30
+          if-no-files-found: error
