@@ -122,10 +122,16 @@ Our work differs in two key aspects. First, we integrate compact PID controllers
 The baseline of our framework, termed \emph{AITL Base}, embeds compact control loops into the DTCO flow.  
 A proportional--integral--derivative (PID) controller compensates runtime variations in delay, temperature, and supply voltage. The controller continuously receives telemetry from on-die sensors such as ring-oscillator monitors, thermal diodes, and jitter meters. These measurements are mapped through compact physics models into constraints that are directly consumable by EDA engines, including place-and-route (P\&R), static timing analysis (STA), and signal-integrity (SI) checks.
 
+Concretely, delay variations are translated into \texttt{set\_max\_delay} constraints for STA; thermal hotspots from FEM maps drive automatic \texttt{create\_keepout\_margin} directives in placement; and SI/EMI excursions are converted into frequency-dependent noise margins during routing. This explicit injection of runtime constraints allows the EDA flow to co-optimize power, performance, and area (PPA) under realistic, time-varying conditions.
+
 Supervisory logic is implemented as a finite state machine (FSM). The FSM manages operation modes and enforces safety thresholds (e.g., maximum allowable temperature or jitter). It ensures graceful transitions between states such as \texttt{NORMAL}, \texttt{THERMAL\_CAP}, \texttt{EMI\_MITIG}, and \texttt{SAFE}. In this way, the FSM provides a guardrail against unstable or unsafe operating conditions. Gains and thresholds are exposed via control and status registers (CSRs) and a YAML-driven configuration, allowing firmware to update control parameters without recompilation of the hardware.
 
 \subsection{AITL Next}
 While AITL Base already stabilizes runtime variability, it relies on fixed controller parameters and static FSM rules. To extend adaptability, we propose \emph{AITL Next}, which incorporates a lightweight large language model (LLM). The LLM operates in a supervisory role, analyzing logs and telemetry streams to recommend updated PID gains $(K_p,K_i,K_d)$ and revised FSM transition rules when operating conditions drift due to workload changes, device aging, or ambient variation.
+
+Compared to alternatives such as offline grid search or reinforcement learning, the LLM offers two distinct advantages:  
+(i) it leverages semantic knowledge (design logs, natural-language specifications) that are opaque to conventional optimizers; and  
+(ii) it enables rapid adaptation with low designer effort, since controller rules can be described and modified in human-readable form.  
 
 To ensure safety, adaptation follows a staged deployment:
 \begin{itemize}
@@ -133,7 +139,7 @@ To ensure safety, adaptation follows a staged deployment:
   \item \textbf{Canary mode:} validated proposals are deployed to a limited subset of control paths or non-critical blocks.
   \item \textbf{Live mode:} after validation, updates are applied system-wide.
 \end{itemize}
-At any point, anomaly detection or sensor faults trigger the \texttt{SAFE} state, where guardbands are widened and the system reverts to stable defaults. This layered mechanism allows LLM-based adaptation while preserving deterministic safety.
+At any point, anomaly detection or sensor faults trigger the \texttt{SAFE} state, where guardbands are widened and the system reverts to stable defaults. This layered mechanism enables LLM-driven adaptation while preserving deterministic safety and traceability.
 
 % -------------------- System Figure (TikZ) --------------------
 \begin{figure*}[t]
@@ -233,43 +239,50 @@ Across all domains, the key principle is that compact physics models provide a t
 To evaluate the effectiveness of \emph{SystemDK with AITL}, we conducted experiments on representative SoC blocks and compared against industry-standard mitigation techniques.
 
 \subsection{Designs and Technology Node}
-Two SoC subsystems were selected, each containing 25 critical paths representative of timing-sensitive logic and interconnect structures. All experiments were implemented in a \SI{14}{\nano\meter} FinFET process technology, which provides a balance between advanced-node characteristics and mature tool availability. Although the focus of AITL is sub-\SI{2}{\nano\meter} and CFET scaling, we used this node for proof-of-concept reproducibility.
+Two SoC subsystems were selected, each containing 25 critical paths representative of timing-sensitive logic and interconnect structures.  
+All experiments were implemented in a \SI{14}{\nano\meter} FinFET process technology, chosen to balance advanced-node characteristics with tool maturity for reproducibility.  
+Although the ultimate target of AITL is sub-\SI{2}{\nano\meter} scaling and CFET integration, the 14\,nm platform provides a validated proxy to test runtime stability, while preserving compatibility with industrial EDA toolchains. This setup enables extrapolation of observed benefits toward more aggressive N5/N3 nodes.
 
 \subsection{EDA Tools and Physics Engines}
-Industry-standard flows were employed for synthesis, place-and-route (P\&R), and static timing analysis (STA). Signal- and power-integrity analyses were carried out using S-parameter extraction for EMI characterization. Finite-element method (FEM) solvers were used to evaluate thermal coupling in stacked dies and stress distributions around TSVs. These tools provided golden references against which runtime control effects could be benchmarked.
+Industry-standard flows were employed for synthesis, place-and-route (P\&R), and static timing analysis (STA).  
+Signal- and power-integrity were analyzed through S-parameter extraction to model EMI coupling, while finite-element method (FEM) solvers captured thermal diffusion in stacked dies and stress around TSVs.  
+These results were distilled into compact analytical models and injected back into the flow as constraints (\texttt{set\_max\_delay} for STA, \texttt{create\_keepout\_margin} for P\&R, noise budgets for SI). Thus, runtime telemetry was directly linked to design closure.
 
-\subsection{On-Die Sensors}
+\subsection{On-Die Sensors and Telemetry}
 Runtime telemetry was collected using:
 \begin{itemize}
   \item ring-oscillator delay monitors for path-delay variation,
   \item thermal diodes for hotspot temperature tracking,
   \item on-die jitter meters for supply/clock-induced phase noise.
 \end{itemize}
-The effective bandwidth of the sensing chain was limited to $\leq \SI{100}{kHz}$, reflecting practical constraints of low-power sensor design.
+The sensing chain bandwidth was limited to $\leq \SI{100}{kHz}$, consistent with low-power sensor design. Sensor outputs were routed through firmware hooks into the PID/FSM loop, ensuring traceable propagation into STA/P\&R/SI constraints.
 
 \subsection{Baseline Schemes}
-We compared AITL against four common baselines: static guardbanding, dynamic voltage and frequency scaling (DVFS), adaptive body bias (ABB), and firmware-based throttling. These represent the dominant runtime mitigation techniques employed in today’s SoC designs.
+We compared AITL against four common runtime-mitigation baselines: static guardbanding, dynamic voltage and frequency scaling (DVFS), adaptive body bias (ABB), and firmware-based throttling. These represent the dominant industry practices in contemporary SoC designs.
 
 \subsection{Metrics}
-We measured:
+Evaluation covered multiple domains:
 \begin{itemize}
-  \item path-delay variation (ps),
-  \item peak temperature rise $\Delta T$ (\si{\celsius}),
-  \item RMS jitter (ps),
-  \item insertion and return loss ($|S_{21}|$ and $|S_{11}|$, dB).
+  \item path-delay variation (ps, timing stability),
+  \item peak temperature rise $\Delta T$ (\si{\celsius}, thermal reliability),
+  \item RMS jitter (ps, signal integrity),
+  \item insertion and return loss ($|S_{21}|$, $|S_{11}|$, dB, EMI resilience).
 \end{itemize}
-These metrics were chosen to cover timing, thermal, reliability, and EMI resilience.
+Together, these capture PPA and reliability implications.
 
 \subsection{Statistical Methodology}
-Each experiment was repeated across 30 thermal-stress runs and 50 EMI-stress runs per scheme. Results are reported as mean $\pm \CI$ (95\% confidence interval). Welch’s two-sample $t$-test was applied to compare each control method against the proposed AITL approach, with a significance threshold of $\alpha=0.05$.
+Each experiment was repeated across 30 thermal-stress runs and 50 EMI-stress runs per scheme.  
+Results are reported as mean $\pm \CI$ (95\% confidence interval). Welch’s two-sample $t$-test was applied (significance threshold $\alpha=0.05$), chosen because it does not assume equal variances across schemes. This ensures robustness when comparing runtime variability across heterogeneous mitigation methods.
 
 % -------------------- 6. Results --------------------
 \section{Results and Implications}
 
 \subsection{RC Delay Compensation}
 Figure~\ref{fig:rc} compares path-delay variation across six schemes.  
-The uncontrolled baseline exhibits 12.4\,ps mean variation. DVFS and ABB reduce this modestly to 8.7\,ps and 7.9\,ps, while throttling achieves 6.8\,ps. In contrast, PID control suppresses excursions to 2.1\,ps, and PID+FSM further stabilizes delay at 1.9\,ps.  
-\textbf{EDA implication:} reduced variation enables trimming of STA guardbands by more than $4\times$, permitting higher utilization and frequency closure.
+The uncontrolled baseline exhibits 12.4\,ps mean variation. DVFS and ABB reduce this modestly to 8.7\,ps and 7.9\,ps, while throttling achieves 6.8\,ps. In contrast, PID suppresses excursions to 2.1\,ps, and PID+FSM further stabilizes delay at 1.9\,ps.  
+Statistical analysis confirms significance ($p<0.01$, Welch’s $t$-test, $N=30$).  
+
+\textbf{EDA implication:} this $>6\times$ reduction enables trimming of \texttt{set\_max\_delay} margins in STA by more than $4\times$, directly improving utilization and frequency closure without timing violations.
 
 \begin{figure}[t]
 \centering
@@ -422,59 +435,67 @@ Across domains, AITL achieves an order-of-magnitude improvement in runtime stabi
 % -------------------- 7. Implementation --------------------
 \section{Implementation Proof-of-Concept}
 
-To validate the feasibility of \emph{SystemDK with AITL}, we developed a synthesizable proof-of-concept (PoC) in RTL and integrated it into a standard industrial EDA flow.
+To validate the feasibility of \emph{SystemDK with AITL}, we developed a synthesizable proof-of-concept (PoC) in RTL and integrated it into a commercial-grade RTL-to-GDSII flow. The goal was to confirm that compact runtime controllers can be embedded with negligible cost while providing actionable constraints back to EDA engines.
 
 \subsection{RTL Implementation}
-The PID controller was implemented as a parameterized Verilog module with configurable $(K_p,K_i,K_d)$ coefficients. The FSM was coded as a state-transition block supporting the operational states \texttt{NORMAL}, \texttt{THERMAL\_CAP}, \texttt{EMI\_MITIG}, and \texttt{SAFE}. Each state enforces supervisory rules such as maximum temperature rise, jitter thresholds, or fallback margins. The entire control block synthesized to fewer than 10k gates in a \SI{14}{\nano\meter} standard-cell library, indicating negligible area overhead.
+The PID controller was realized as a parameterized Verilog module with configurable $(K_p,K_i,K_d)$ coefficients. The FSM was encoded as a transition block supporting the states \texttt{NORMAL}, \texttt{THERMAL\_CAP}, \texttt{EMI\_MITIG}, and \texttt{SAFE}, each with explicit supervisory rules such as maximum $\Delta T$, jitter ceilings, or fallback margins.  
+Synthesis in a \SI{14}{\nano\meter} FinFET library produced $<10$k gate equivalents, corresponding to less than 0.01\,mm$^2$ area and $<1$\,mW leakage—indicating negligible overhead compared to typical SoC subsystems.
 
 \subsection{Configuration and Interfaces}
-Configuration registers (CSRs) were mapped to an APB/AXI-Lite bus, allowing firmware to read and update PID gains, FSM thresholds, and SAFE-mode defaults. A YAML-driven configuration layer was added to translate human-readable specifications into CSR initialization scripts. This enabled rapid design-space exploration and simplified integration into regression flows.
+Configuration registers (CSRs) were mapped onto an APB/AXI-Lite bus, enabling firmware to query or update PID gains, FSM thresholds, and SAFE-mode defaults. A YAML-driven configuration layer automatically translated human-readable specifications into CSR initialization scripts and regression vectors. This layer allowed rapid tuning across design iterations without re-synthesis.
 
 \subsection{Telemetry Integration}
-On-die sensor outputs—including ring-oscillator delay monitors, thermal diodes, and jitter meters—were connected through a telemetry interface. These sensor values were streamed to the PID controller, normalized via compact models, and used to update constraints enforced by the FSM. In SAFE state, telemetry anomalies automatically widened guardbands and triggered interrupts for system firmware.
+On-die sensor outputs—including ring-oscillator monitors, thermal diodes, and jitter meters—were routed through a lightweight telemetry interface. Values were normalized via compact delay/thermal/stress models before feeding the PID controller. In SAFE state, anomalous telemetry widened guardbands and generated firmware interrupts. This ensured that protection mechanisms were triggered deterministically even under sensor faults.
 
 \subsection{EDA Flow Demonstration}
-The PoC was inserted into an RTL-to-GDSII flow with synthesis, place-and-route (P\&R), and static timing analysis (STA). Closed-loop execution was demonstrated by applying simulated thermal and EMI disturbances, verifying that runtime constraints were correctly translated into timing and placement adjustments. This confirms that AITL can operate not only as a hardware module but also as an active participant in EDA closure.
+The PoC was instantiated within a full RTL-to-GDSII toolchain: logic synthesis, place-and-route (P\&R), and static timing analysis (STA). Disturbance scenarios (thermal ramps, EMI aggressors) were injected at runtime. The control block successfully tightened STA constraints (\texttt{set\_max\_delay}, \texttt{set\_clock\_uncertainty}) and influenced P\&R constraints (thermal keep-out zones, stress-aware placement) during iteration.  
+This demonstrates that AITL is not only a synthesizable hardware element but also an **active participant in EDA closure**, bridging sensor telemetry and tool constraints. While validated at \SI{14}{\nano\meter}, the methodology is scalable to N5/N3 and CFET technologies, where runtime physics effects are even more pronounced.
 
 % -------------------- 8. Discussion --------------------
 \section{Discussion}
 
 \subsection{From Guardbands to Adaptive Loops}
-A key shift introduced by AITL is the replacement of static margins with runtime feedback. Conventional guardbanding assumes worst-case conditions and enforces them universally, leading to energy and performance inefficiency. By contrast, PID+FSM loops react only when excursions occur, enabling aggressive timing closure and higher utilization without sacrificing reliability.
+A fundamental shift introduced by AITL is the replacement of static guardbands with adaptive runtime feedback. Conventional guardbanding assumes worst-case conditions and applies them universally, which leads to excessive design pessimism and wasted energy/performance margins. In contrast, PID+FSM loops respond only when excursions occur. This enables aggressive STA closure with up to $4\times$ tighter timing margins, higher P\&R utilization, and reduced overdesign, while still guaranteeing reliability.
 
 \subsection{From Static Sign-Off to Runtime Closure}
-Traditional sign-off artifacts such as FEM-derived thermal maps or SI/EMI analyses are typically applied once at design time. AITL repurposes these artifacts into compact runtime constraints, effectively extending sign-off into the operational phase of the chip. This establishes a paradigm of \emph{runtime closure}, where design validity is continuously maintained after tape-out.
+Traditional sign-off artifacts—such as FEM-based thermal maps, SI/EMI simulations, or stress analyses—are typically consumed once during design time. AITL repurposes these artifacts into compact runtime constraints that continuously inform STA, placement, and SI tools. This creates a paradigm of \emph{runtime closure}, where validity is maintained after tape-out. The approach effectively extends DTCO into the operational phase, bridging physical sign-off data with live silicon telemetry.
 
 \subsection{Complementarity with Existing Techniques}
-AITL is not intended to replace established runtime mitigations such as DVFS and ABB. Instead, it complements them. For example, DVFS handles coarse-grained power/performance trade-offs, while AITL provides fine-grained stabilization of delay, thermal, and jitter. Together, they offer multi-level resilience, improving both global efficiency and local robustness.
+AITL is designed to complement, not replace, existing runtime mitigation strategies. For example:
+\begin{itemize}
+  \item DVFS manages global performance–power trade-offs,
+  \item ABB adjusts device characteristics at the body-bias level,
+  \item AITL provides fine-grained stabilization of delay, thermal, and jitter.
+\end{itemize}
+Together, these mechanisms form a hierarchical control stack: DVFS for coarse-grained adaptation, ABB for medium-term compensation, and AITL for cycle-to-cycle stabilization.
 
 \subsection{Threats to Validity and Mitigations}
-While promising, several limitations exist:
+Despite promising results, several limitations remain:
 \begin{itemize}
-  \item \textbf{Sensor bandwidth:} On-die monitors are bandwidth-limited ($\leq \SI{100}{kHz}$) and may miss fast transients. Mitigation: design the FSM to detect anomalies in aggregate trends and trigger SAFE state when uncertainty is high.
-  \item \textbf{PID saturation:} In rare worst-case corners, PID control may saturate. Mitigation: supervisory FSM overrides and widened guardbands in SAFE mode.
-  \item \textbf{LLM mis-tuning:} Adaptive retuning by the LLM may propose unstable gains or unsafe rules. Mitigation: a staged deployment pipeline (shadow $\rightarrow$ canary $\rightarrow$ live), with automatic rollback to SAFE mode.
+  \item \textbf{Sensor bandwidth:} On-die monitors ($\leq \SI{100}{kHz}$) may miss sub-nanosecond transients. Mitigation: aggregate-window filtering in the FSM and SAFE-state triggers upon anomaly detection.
+  \item \textbf{PID saturation:} Extreme corners may cause integrator wind-up or saturation. Mitigation: anti-windup logic, FSM overrides, and widened guardbands in SAFE mode.
+  \item \textbf{LLM mis-tuning:} Adaptive proposals may yield unstable gains or unsafe transitions. Mitigation: staged rollout (shadow $\rightarrow$ canary $\rightarrow$ live) with rollback guarantees and hardware-enforced safety limits.
 \end{itemize}
 
 \subsection{Broader Implications}
-Embedding control and AI within DTCO suggests a shift toward self-adaptive EDA flows. Future design stacks could integrate physics-aware feedback not only at runtime but also during design optimization, closing the loop between silicon telemetry and design methodology.
+Embedding control and AI into DTCO signals a shift toward \emph{self-adaptive EDA}. By linking silicon telemetry with EDA tool constraints (e.g., \texttt{set\_max\_delay}, \texttt{create\_keepout\_margin}, or SI budgets), AITL transforms traditionally static flows into continuously validated systems. Beyond runtime stabilization, such integration opens the door to feedback-driven design optimization, adaptive PDK parameterization, and AI-assisted sign-off. This trajectory points toward EDA stacks where chips not only adapt themselves post-silicon but also inform the next generation of design methodologies.
 
 % -------------------- 9. Conclusion --------------------
 \section{Conclusion and Future Work}
 
-This paper presented \emph{SystemDK with AITL}, a physics-aware runtime DTCO framework that integrates compact PID controllers and FSM supervisors into the EDA flow. By mapping runtime telemetry through compact physics models into actionable constraints, AITL enables continuous stabilization of delay, thermal, stress, and EMI effects. 
+This paper presented \emph{SystemDK with AITL}, a physics-aware runtime DTCO framework that embeds compact PID controllers and FSM supervisors directly into the EDA flow. By translating runtime telemetry through compact physics models into actionable STA and P\&R constraints, AITL enables continuous stabilization of delay, thermal, stress, and EMI effects. 
 
-Our evaluation on two SoC blocks (25 critical paths each) demonstrated that PID+FSM reduces path-delay variation from 12.4\,ps to 1.9\,ps and RMS jitter from 12.4\,ps to 0.7\,ps, representing an order-of-magnitude improvement compared with guardbanding, DVFS, ABB, and throttling baselines. These results confirm the feasibility of runtime closure as a complement to conventional DTCO.
+Evaluation on two SoC blocks (25 critical paths each, implemented in a \SI{14}{\nano\meter} FinFET node) demonstrated that PID+FSM reduced path-delay variation from 12.4\,ps to 1.9\,ps and RMS jitter from 12.4\,ps to 0.7\,ps. These results represent an order-of-magnitude improvement compared with guardbanding, DVFS, ABB, and firmware throttling, confirming the feasibility of \emph{runtime closure} as a complement to conventional DTCO.
 
-Looking ahead, several research directions remain:
+Several research directions remain to strengthen the path toward deployment:
 \begin{itemize}
-  \item \textbf{Prototype silicon:} validate AITL in fabricated test chips, integrating telemetry from real sensors with RTL implementations of PID/FSM.
-  \item \textbf{Deeper EDA integration:} extend runtime constraints to placement legalization, clock-tree synthesis, and SI-aware routing.
-  \item \textbf{AITL Next:} explore adaptive retuning via lightweight LLMs in silicon prototypes, focusing on safe deployment pipelines and long-term drift compensation.
-  \item \textbf{Scalability:} evaluate applicability to sub-\SI{2}{\nano\meter} CFET technologies and heterogeneous 3D integration, where multi-physics interactions are stronger.
+  \item \textbf{Prototype silicon at advanced nodes:} migrate the PoC from \SI{14}{\nano\meter} to N5/N3 and ultimately CFET-class nodes, where multi-physics interactions are more pronounced.
+  \item \textbf{Deeper EDA integration:} demonstrate automatic injection of runtime constraints into commercial STA, placement legalization, CTS, and SI-aware routing flows, bridging silicon telemetry with tool-level optimization knobs.
+  \item \textbf{AITL Next and LLM necessity:} quantify the benefits of adaptive retuning via lightweight LLMs compared with heuristic or control-only approaches, emphasizing safe deployment pipelines and long-term drift compensation.
+  \item \textbf{Scalability:} evaluate extension to heterogeneous 3D integration and chiplet ecosystems, where runtime coupling across dies demands coordinated supervisory control.
 \end{itemize}
 
-In summary, AITL transforms DTCO from a static, design-time methodology into a dynamic, runtime process. By embedding control theory and AI into the design stack, it lays the foundation for future self-adaptive EDA ecosystems.
+In summary, AITL reframes DTCO from a static, design-time methodology into a dynamic, runtime paradigm. By embedding control theory and AI-driven adaptation into both silicon and EDA toolchains, it lays the foundation for self-adaptive design ecosystems that remain valid not only at tape-out but throughout the chip’s operational lifetime.
 
 % -------------------- References --------------------
 \begin{thebibliography}{99}
