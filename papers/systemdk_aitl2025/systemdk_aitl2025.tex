@@ -17,8 +17,9 @@
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 
-% -------------------- PGFPlots style --------------------
+% ---------- Plot styles ----------
 \pgfplotsset{
+  compat=1.18,
   every axis/.append style={
     legend cell align=left,
     legend pos=north east,
@@ -27,12 +28,13 @@
     major grid style={line width=.2pt, draw=black!35},
     tick style={black},
     every axis plot/.append style={line width=0.9pt},
-    cycle list={
-      {solid, mark=*}
-      {densely dashed, mark=square*}
-      {dotted, mark=triangle*}
-      {dashdotted, mark=o}
-      {loosely dashed, mark=diamond*}
+    cycle list/.list={
+      {solid, mark=*},
+      {densely dashed, mark=square*},
+      {dotted, mark=triangle*},
+      {dashdotted, mark=o},
+      {loosely dashed, mark=diamond*},
+      {dashdotdotted, mark=x}
     },
   }
 }
@@ -296,36 +298,50 @@ As shown in Fig.~\ref{fig:emi}, the uncontrolled design suffers 12.4\,ps RMS jit
 \end{figure}
 
 \subsection{FEM Thermal and Stress Maps}
-Figure~\ref{fig:fem} illustrates FEM-derived maps. The top map shows uncontrolled thermal hotspots reaching $\Delta T>14^{\circ}$C. The bottom map shows TSV-induced stress gradients exceeding 18\,MPa. Compact models derived from such FEM data are used by the PID/FSM runtime loop.  
-\textbf{EDA implication:} these maps enable dynamic keep-outs and stress-aware duty-cycle control.
+Figure~\ref{fig:fem} illustrates FEM-derived maps. The top map shows uncontrolled thermal hotspots reaching $\Delta T>\SI{14}{\celsius}$. The bottom map shows TSV-induced stress gradients exceeding \SI{18}{MPa}. Compact models derived from such FEM data are used by the PID/FSM runtime loop.%
+\textbf{ EDA implication:} these maps enable dynamic keep-outs and stress-aware duty-cycle control.
 
 \begin{figure}[t]
 \centering
+% --- Thermal map (top) ---
 \begin{tikzpicture}
 \begin{axis}[
     width=0.95\linewidth, height=4.2cm,
     view={0}{90}, axis on top,
     xlabel={x (mm)}, ylabel={y (mm)},
-    colorbar, colorbar style={ylabel=$\Delta T$ (\si{\celsius})},
-    colormap/gray,
+    colorbar, colorbar style={ylabel={$ \Delta T$ (\si{\celsius})}},
+    colormap name=gray,
 ]
 \addplot [surf, shader=flat, draw=none, mesh/cols=4]
-table[row sep=\\]{0 0 2\\0 1 3\\0 2 4\\0 3 5\\1 0 3\\1 1 5\\1 2 8\\1 3 10\\2 0 4\\2 1 8\\2 2 14\\2 3 10\\3 0 5\\3 1 10\\3 2 10\\3 3 6\\};
+table[row sep=\\]{
+x  y  z \\
+0 0  2\\ 0 1  3\\ 0 2  4\\ 0 3  5\\
+1 0  3\\ 1 1  5\\ 1 2  8\\ 1 3 10\\
+2 0  4\\ 2 1  8\\ 2 2 14\\ 2 3 10\\
+3 0  5\\ 3 1 10\\ 3 2 10\\ 3 3  6\\
+};
 \end{axis}
 \end{tikzpicture}
 
 \vspace{3pt}
 
+% --- Stress map (bottom) ---
 \begin{tikzpicture}
 \begin{axis}[
     width=0.95\linewidth, height=4.2cm,
     view={0}{90}, axis on top,
     xlabel={x (mm)}, ylabel={y (mm)},
-    colorbar, colorbar style={ylabel=stress (MPa)},
-    colormap/gray,
+    colorbar, colorbar style={ylabel={stress (\si{MPa})}},
+    colormap name=gray,
 ]
 \addplot [surf, shader=flat, draw=none, mesh/cols=4]
-table[row sep=\\]{0 0 2\\0 1 4\\0 2 6\\0 3 4\\1 0 4\\1 1 8\\1 2 12\\1 3 8\\2 0 6\\2 1 12\\2 2 18\\2 3 12\\3 0 4\\3 1 8\\3 2 12\\3 3 8\\};
+table[row sep=\\]{
+x  y  z \\
+0 0  2\\ 0 1  4\\ 0 2  6\\ 0 3  4\\
+1 0  4\\ 1 1  8\\ 1 2 12\\ 1 3  8\\
+2 0  6\\ 2 1 12\\ 2 2 18\\ 2 3 12\\
+3 0  4\\ 3 1  8\\ 3 2 12\\ 3 3  8\\
+};
 \end{axis}
 \end{tikzpicture}
 \caption{FEM maps (demo): thermal hotspot (top) and TSV-induced stress (bottom). These serve as compact-model references for runtime control.}
