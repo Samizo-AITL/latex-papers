@@ -116,18 +116,17 @@ This comparison motivates our choice of FeRAM chiplets for near-term manufactura
   \caption{Comparison of candidate NVM options for LPDDR assistive integration.}
   \label{tab:nvm_comparison}
   \vspace{2pt}
-  \small
-  \setlength{\tabcolsep}{4pt}
+  \scriptsize % ← small よりさらに圧縮
+  \setlength{\tabcolsep}{2pt}
   \begin{tabular}{@{}lcccc@{}}
     \toprule
     & FeRAM & ReRAM & MRAM & FeFET \\
     \midrule
-    Write speed & 10~ns & 50--100~ns & 1--10~ns & 1--10~ns \\
-    Retention   & $10^7$--$10^8$~s & $10^5$--$10^6$~s & $>10$~years & $10^6$--$10^7$~s \\
-    Endurance   & $10^8$--$10^{12}$ & $10^6$--$10^9$ & $>10^{15}$ & $10^6$--$10^9$ \\
-    Process temp. & 350--450$^\circ$C & BEOL-friendly & BEOL mismatch & $<$400$^\circ$C \\
-    Integration  & CMOS-compatible & CMOS-friendly & MTJ-specific & Gate-stack CMOS \\
-    Maturity     & High & Medium & High & Emerging \\
+    Write speed & 10 ns & 50--100 ns & 1--10 ns & 1--10 ns \\
+    Retention   & $10^7$--$10^8$ s & $10^5$--$10^6$ s & $>$10 yr & $10^6$--$10^7$ s \\
+    Endurance   & $10^8$--$10^{12}$ & $10^6$--$10^9$ & $>$10$^{15}$ & $10^6$--$10^9$ \\
+    Proc. temp. & 350--450$^\circ$C & BEOL-friendly & BEOL mismatch & $<$400$^\circ$C \\
+    Integr./Mat. & CMOS, High & CMOS, Med. & MTJ, High & Gate-CMOS, Emerging \\
     \bottomrule
   \end{tabular}
 \end{table}
