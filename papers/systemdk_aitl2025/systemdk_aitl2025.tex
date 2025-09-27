@@ -19,7 +19,6 @@
 
 % ---------- Plot styles ----------
 \pgfplotsset{
-  compat=1.18,
   every axis/.append style={
     legend cell align=left,
     legend pos=north east,
@@ -28,15 +27,15 @@
     major grid style={line width=.2pt, draw=black!35},
     tick style={black},
     every axis plot/.append style={line width=0.9pt},
-    cycle list/.list={
-      {solid, mark=*},
-      {densely dashed, mark=square*},
-      {dotted, mark=triangle*},
-      {dashdotted, mark=o},
-      {loosely dashed, mark=diamond*},
-      {dashdotdotted, mark=x}
-    },
-  }
+  },
+  cycle list={
+    {solid, mark=*},
+    {densely dashed, mark=square*},
+    {dotted, mark=triangle*},
+    {dashdotted, mark=o},
+    {loosely dashed, mark=diamond*},
+    {dashdotdotted, mark=x},
+  },
 }
 
 % -------------------- Macros --------------------
@@ -298,8 +297,8 @@ As shown in Fig.~\ref{fig:emi}, the uncontrolled design suffers 12.4\,ps RMS jit
 \end{figure}
 
 \subsection{FEM Thermal and Stress Maps}
-Figure~\ref{fig:fem} illustrates FEM-derived maps. The top map shows uncontrolled thermal hotspots reaching $\Delta T>\SI{14}{\celsius}$. The bottom map shows TSV-induced stress gradients exceeding \SI{18}{MPa}. Compact models derived from such FEM data are used by the PID/FSM runtime loop.%
-\textbf{ EDA implication:} these maps enable dynamic keep-outs and stress-aware duty-cycle control.
+Figure~\ref{fig:fem} illustrates FEM-derived maps. The top map shows uncontrolled thermal hotspots reaching $\Delta T>\SI{14}{\celsius}$. The bottom map shows TSV-induced stress gradients exceeding \SI{18}{MPa}. Compact models distilled from such FEM data are consumed by the PID/FSM runtime loop.%
+\noindent\textbf{EDA implication:} these maps enable dynamic keep-outs and stress-aware duty-cycle control.
 
 \begin{figure}[t]
 \centering
@@ -309,7 +308,8 @@ Figure~\ref{fig:fem} illustrates FEM-derived maps. The top map shows uncontrolle
     width=0.95\linewidth, height=4.2cm,
     view={0}{90}, axis on top,
     xlabel={x (mm)}, ylabel={y (mm)},
-    colorbar, colorbar style={ylabel={$ \Delta T$ (\si{\celsius})}},
+    colorbar,
+    colorbar style={ylabel={\(\Delta T\) (\si{\celsius})}},
     colormap name=gray,
 ]
 \addplot [surf, shader=flat, draw=none, mesh/cols=4]
@@ -323,7 +323,7 @@ x  y  z \\
 \end{axis}
 \end{tikzpicture}
 
-\vspace{3pt}
+\medskip
 
 % --- Stress map (bottom) ---
 \begin{tikzpicture}
@@ -331,7 +331,8 @@ x  y  z \\
     width=0.95\linewidth, height=4.2cm,
     view={0}{90}, axis on top,
     xlabel={x (mm)}, ylabel={y (mm)},
-    colorbar, colorbar style={ylabel={stress (\si{MPa})}},
+    colorbar,
+    colorbar style={ylabel={stress (\si{MPa})}},
     colormap name=gray,
 ]
 \addplot [surf, shader=flat, draw=none, mesh/cols=4]
