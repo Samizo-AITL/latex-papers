@@ -143,37 +143,44 @@ At any point, anomaly detection or sensor faults trigger the \texttt{SAFE} state
   node distance=9mm and 11mm,
   box/.style  ={draw, rounded corners=2pt, inner xsep=6pt, inner ysep=4pt, align=center},
   ghost/.style={draw, dashed, rounded corners=2pt, inner xsep=6pt, inner ysep=4pt, align=center},
-  >={Latex[length=2mm]}
+  a/.style={->,>=Latex,semithick,shorten >=1pt,shorten <=1pt},
+  ad/.style={->,>=Latex,semithick,dashed,shorten >=1pt,shorten <=1pt}
 ]
-\node[ghost] (llm) at (0,2.8)
+
+%--- layout (座標を素直に) ---
+\node[ghost] (llm) at (0,3.3)
   {LLM Analyzer (Next):\\retunes $K_p,K_i,K_d$; regenerates FSM rules};
 
-\node[box] (yaml) at (-4.6,0.6) {YAML Config\\FW / CSR};
-\node[box] (pid)  at (-0.6,0.6) {PID Controller};
-\node[box] (fsm)  [right=18mm of pid] {FSM Supervisor};
+\node[box] (yaml) at (-4.8,1.8) {YAML Config\\FW / CSR};
+\node[box] (pid)  at (-1.8,1.8) {PID Controller};
+\node[box] (fsm)  at ( 1.8,1.8) {FSM Supervisor};
 
-\node[box] (tele) [below=12mm of pid] {Telemetry:\\Delay / Temp / Jitter};
-\node[box] (fem)  [below=10mm of tele] {FEM\\(Thermal / Stress)};
-\node[box] (spar) [below=10mm of fem] {S-parameters (SI/EMI)};
+\node[box] (tele) at (0,0) {Telemetry:\\Delay / Temp / Jitter};
 
-\node[box] (eda)  [left=18mm of tele] {EDA Flow\\(Synth / P\&R / STA)};
+% Physics models stack (囲み)
+\node[box] (fem)  at (0,-1.8) {FEM\\(Thermal / Stress)};
+\node[box] (spar) at (0,-3.4) {S-parameters (SI/EMI)};
+\node[ghost,fit=(fem)(spar),inner xsep=10pt,inner ysep=8pt,label=below:{\strut Compact Physics Models}] (phys) {};
 
-% --- LLM -> PID / FSM : 個別に点線で提案の意を表現 ---
-\draw[dashed,->,shorten >=2pt,shorten <=2pt]
-  (llm.south east) to[bend right=12] (pid.north);
-\draw[dashed,->,shorten >=2pt,shorten <=2pt]
-  (llm.south west)  to[bend left=12]  (fsm.north);
+\node[box] (eda)  at (-4.8,0) {EDA Flow\\(Synth / P\&R / STA)};
 
-% --- 設定/監督系 ---
-\draw[->,shorten >=1pt] (yaml.east) -- (pid.west);
-% FSM -> EDA : 南側に回り込まず、右→左へ直接
-\draw[->,shorten >=1pt] (fsm.west) to[out=180,in=0] (eda.east);
+%--- LLM proposals (点線で助言のニュアンス) ---
+\draw[ad] (llm.south) to[out=-90,in=90] (pid.north);
+\draw[ad] (llm.south) to[out=-90,in=90] (fsm.north);
 
-% --- 計測/物理モデル連鎖 ---
-\draw[->] (tele.north) -- (pid.south);
-\draw[->] (spar.north) -- (fem.south);
-\draw[->] (fem.north)  -- (tele.south);
-\draw[->] (eda.east) -- ++(0.8,0) |- (tele.west);
+%--- 設定／監督 ---
+\draw[a] (yaml.east) -- (pid.west);
+\draw[a] (fsm.west)  to[out=180,in=0] (eda.east);
+
+%--- 計測／物理モデル連鎖 ---
+\draw[a] (tele.north) -- (pid.south);
+\draw[a] (spar.north) -- (fem.south);
+\draw[a] (fem.north)  -- (tele.south);
+
+% EDA -> Telemetry：交差を避けるため、一旦右へ逃がしてから縦折れ
+\path let \p1 = (eda.east) in
+  \draw[a]  (\x1+6mm,\y1) |- (tele.west);
+
 \end{tikzpicture}
 \caption{System overview: runtime telemetry is converted into compact physics models, stabilized through PID/FSM control, and enforced as constraints within the EDA flow. An optional LLM extension (AITL Next) adaptively retunes controller parameters and FSM rules under drift.}
 \label{fig:system}
