@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'latex-papers/papers/2025_systemdk_inkjet/**'
-      - 'latex-papers/.github/workflows/latex_systemdk_inkjet.yml'
+      - '.github/workflows/latex_systemdk_inkjet.yml'
   workflow_dispatch: {}
 
 jobs:
@@ -19,16 +19,13 @@ jobs:
         id: latex
         uses: xu-cheng/latex-action@v3
         with:
-          # ここを必要に応じて変更（メインのTeXファイル名）
           root_file: main.tex
-          # ここをプロジェクトのパスに合わせる
           working_directory: latex-papers/papers/2025_systemdk_inkjet
-          # synctex, shell-escape等が必要なら追加
           args: -pdf -interaction=nonstopmode -file-line-error
-          # latexmkrc があれば true に
+          # bibtex/biberやLuaLaTeXが必要なら下記を有効化
           # latexmk_use_lualatex: true
+          # pre_compile: tlmgr update --self --all
 
-      # 失敗時でもログを必ず回収
       - name: Upload build logs
         if: always()
         uses: actions/upload-artifact@v4
