@@ -1,8 +1,9 @@
 \documentclass[conference]{IEEEtran}
 
 % ===== Safe preamble for IEEEtran on GitHub Actions =====
-\usepackage[T1]{fontenc}       % フォント出力エンコード
-\usepackage[utf8]{inputenc}    % 入力文字コード（utf8）
+\usepackage[T1]{fontenc}        % フォント出力エンコード
+\usepackage[utf8]{inputenc}     % 入力文字コード（utf8）
+\usepackage{lmodern}            % 安定した欧文フォント
 
 % 数式
 \usepackage{amsmath,amssymb}
@@ -20,7 +21,7 @@
 \usepackage{cite}
 \usepackage{url}
 
-% hyperref は最後に（エラー防止）
+% hyperref は最後に
 \usepackage[hidelinks]{hyperref}
 
 \title{A Design Support Framework for Industrial Piezoelectric Inkjet Using SystemDK}
