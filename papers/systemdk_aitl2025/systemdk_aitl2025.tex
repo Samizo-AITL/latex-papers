@@ -286,15 +286,17 @@ The uncontrolled system peaks at $\Delta T=27.5^{\circ}$C. DVFS reduces this to 
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.95\linewidth, height=5.5cm,
+  width=0.95\linewidth, height=6.0cm, % ← 高さ少し拡張
   xlabel={Time (ms)}, ylabel={$\Delta T$ (\si{\celsius})},
-  xmin=0, xmax=30, ymin=0, ymax=15,
-  tick align=inside
+  xmin=0, xmax=30, ymin=0, ymax=35,   % ← 縦軸を35まで拡張
+  legend columns=-1,
+  legend style={at={(0.5,-0.25)}, anchor=north},
+  tick align=inside                  % ← 目盛り内向き
 ]
-\addplot table[row sep=\\]{0 0\\1 10\\2 18\\3 22\\5 27.5\\10 25\\20 20\\30 15\\};
-\addplot[densely dashed, mark=square*] table[row sep=\\]{0 0\\1 8\\2 14\\3 18\\5 22.1\\10 19\\20 15\\30 11\\};
-\addplot[dashdotted, mark=o] table[row sep=\\]{0 0\\1 4\\2 7\\3 9\\5 11.0\\10 8\\20 5\\30 3\\};
-\addplot[loosely dashed, mark=diamond*] table[row sep=\\]{0 0\\1 2\\2 3\\3 4\\5 5.3\\10 4\\20 3\\30 2\\};
+\addplot table[row sep=\\]{0 0\\1 10\\2 18\\3 22\\5 27.5\\10 25\\20 20\\30 15\\}; \addlegendentry{Unctrl}
+\addplot[densely dashed, mark=square*] table[row sep=\\]{0 0\\1 8\\2 14\\3 18\\5 22.1\\10 19\\20 15\\30 11\\}; \addlegendentry{DVFS}
+\addplot[dashdotted, mark=o] table[row sep=\\]{0 0\\1 4\\2 7\\3 9\\5 11.0\\10 8\\20 5\\30 3\\}; \addlegendentry{PID}
+\addplot[loosely dashed, mark=diamond*] table[row sep=\\]{0 0\\1 2\\2 3\\3 4\\5 5.3\\10 4\\20 3\\30 2\\}; \addlegendentry{PID+FSM}
 \end{axis}
 \end{tikzpicture}
 \caption{Thermal response to a \SI{1.0}{W} power pulse. PID reduces peak rise by $\sim$60\%; PID+FSM constrains it to $<20\%$ of baseline.}
