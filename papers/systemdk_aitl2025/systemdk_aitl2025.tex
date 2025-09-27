@@ -263,10 +263,12 @@ The uncontrolled baseline exhibits 12.4\,ps mean variation. DVFS and ABB reduce 
 \begin{axis}[
     width=0.95\linewidth, height=5.0cm,
     ybar, bar width=7pt,
-    ymin=0, ylabel={RC delay variation (ps)},
+    ymin=0, ymax=15,
+    ylabel={RC delay variation (ps)},
     symbolic x coords={Unctrl,DVFS,ABB,Throttle,PID,PID+FSM},
     xtick=data, x tick label style={rotate=20,anchor=east},
     nodes near coords, nodes near coords align={vertical},
+    tick align=inside
 ]
 \addplot coordinates {(Unctrl,12.4) (DVFS,8.7) (ABB,7.9) (Throttle,6.8) (PID,2.1) (PID+FSM,1.9)};
 \end{axis}
@@ -284,16 +286,15 @@ The uncontrolled system peaks at $\Delta T=27.5^{\circ}$C. DVFS reduces this to 
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.95\linewidth, height=5.0cm,
+  width=0.95\linewidth, height=5.5cm,
   xlabel={Time (ms)}, ylabel={$\Delta T$ (\si{\celsius})},
-  xmin=0, xmax=30, ymin=0, ymax=30,
-  legend columns=-1,
-  legend style={at={(0.5,-0.25)}, anchor=north}
+  xmin=0, xmax=30, ymin=0, ymax=15,
+  tick align=inside
 ]
-\addplot table[row sep=\\]{0 0\\1 10\\2 18\\3 22\\5 27.5\\10 25\\20 20\\30 15\\}; \addlegendentry{Unctrl}
-\addplot[densely dashed, mark=square*] table[row sep=\\]{0 0\\1 8\\2 14\\3 18\\5 22.1\\10 19\\20 15\\30 11\\}; \addlegendentry{DVFS}
-\addplot[dashdotted, mark=o] table[row sep=\\]{0 0\\1 4\\2 7\\3 9\\5 11.0\\10 8\\20 5\\30 3\\}; \addlegendentry{PID}
-\addplot[loosely dashed, mark=diamond*] table[row sep=\\]{0 0\\1 2\\2 3\\3 4\\5 5.3\\10 4\\20 3\\30 2\\}; \addlegendentry{PID+FSM}
+\addplot table[row sep=\\]{0 0\\1 10\\2 18\\3 22\\5 27.5\\10 25\\20 20\\30 15\\};
+\addplot[densely dashed, mark=square*] table[row sep=\\]{0 0\\1 8\\2 14\\3 18\\5 22.1\\10 19\\20 15\\30 11\\};
+\addplot[dashdotted, mark=o] table[row sep=\\]{0 0\\1 4\\2 7\\3 9\\5 11.0\\10 8\\20 5\\30 3\\};
+\addplot[loosely dashed, mark=diamond*] table[row sep=\\]{0 0\\1 2\\2 3\\3 4\\5 5.3\\10 4\\20 3\\30 2\\};
 \end{axis}
 \end{tikzpicture}
 \caption{Thermal response to a \SI{1.0}{W} power pulse. PID reduces peak rise by $\sim$60\%; PID+FSM constrains it to $<20\%$ of baseline.}
@@ -310,20 +311,14 @@ As shown in Fig.~\ref{fig:emi}, the uncontrolled design suffers 12.4\,ps RMS jit
 \begin{axis}[
     width=0.95\linewidth, height=5.0cm,
     ybar, bar width=7pt,
-    ymin=0, ylabel={RMS jitter (ps)},
+    ymin=0, ymax=15,
+    ylabel={RMS jitter (ps)},
     symbolic x coords={Unctrl,DVFS,ABB,Throttle,PID,PID+FSM},
     xtick=data, x tick label style={rotate=20,anchor=east},
     nodes near coords, nodes near coords align={vertical},
-    legend columns=-1,
-    legend style={at={(0.5,-0.25)}, anchor=north}
+    tick align=inside
 ]
 \addplot coordinates {(Unctrl,12.4) (DVFS,8.7) (ABB,7.9) (Throttle,6.3) (PID,2.1) (PID+FSM,0.7)};
-\addlegendentry{Unctrl}
-\addlegendentry{DVFS}
-\addlegendentry{ABB}
-\addlegendentry{Throttle}
-\addlegendentry{PID}
-\addlegendentry{PID+FSM}
 \end{axis}
 \end{tikzpicture}
 \caption{RMS jitter under \SI{10}{mV_{pp}} aggressor across \SIrange{2}{10}{GHz}. Scope BW \SI{12}{GHz}, $N=50$.}
@@ -331,16 +326,16 @@ As shown in Fig.~\ref{fig:emi}, the uncontrolled design suffers 12.4\,ps RMS jit
 \end{figure}
 
 \subsection{FEM Thermal and Stress Maps}
-Figure~\ref{fig:fem} illustrates FEM-derived maps with finer mesh resolution.  
+Figure~\ref{fig:fem} illustrates FEM-derived maps with interpolation.  
 The top map shows thermal hotspots reaching $\Delta T>\SI{14}{\celsius}$, while the bottom map shows TSV-induced stress gradients exceeding \SI{18}{MPa}. Compact models distilled from such FEM data are consumed by the PID/FSM runtime loop.  
-\noindent\textbf{EDA implication:} these maps enable dynamic keep-outs and stress-aware duty-cycle control.
+\textbf{EDA implication:} these maps enable dynamic keep-outs and stress-aware duty-cycle control.
 
 \begin{figure}[t]
 \centering
 % --- Thermal map (top) ---
 \begin{tikzpicture}
 \begin{axis}[
-    width=0.95\linewidth, height=4.2cm,
+    width=0.95\linewidth, height=5.5cm,
     view={0}{90}, axis on top, axis equal image,
     xlabel={x (mm)}, ylabel={y (mm)},
     colorbar,
@@ -362,7 +357,7 @@ table[row sep=\\]{
 % --- Stress map (bottom) ---
 \begin{tikzpicture}
 \begin{axis}[
-    width=0.95\linewidth, height=4.2cm,
+    width=0.95\linewidth, height=5.5cm,
     view={0}{90}, axis on top, axis equal image,
     xlabel={x (mm)}, ylabel={y (mm)},
     colorbar,
@@ -378,7 +373,6 @@ table[row sep=\\]{
 };
 \end{axis}
 \end{tikzpicture}
-
 \caption{FEM maps with interpolation: thermal hotspot (top) and TSV-induced stress (bottom). These serve as compact-model references for runtime control.}
 \label{fig:fem}
 \end{figure}
@@ -391,7 +385,7 @@ Figure~\ref{fig:sparam} shows $S$-parameter trends. Insertion loss $|S_{21}|$ in
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-    width=0.95\linewidth, height=5.0cm,
+    width=0.95\linewidth, height=5.5cm,
     xlabel={Frequency (GHz)}, ylabel={$|S_{11}|, |S_{21}|$ (dB)},
     xmin=2, xmax=10, ymin=-30, ymax=0,
     legend columns=-1,
