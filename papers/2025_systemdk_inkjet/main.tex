@@ -1,8 +1,8 @@
 \documentclass[conference]{IEEEtran}
 
-% ===== Safe preamble =====
-\usepackage[T1]{fontenc} % 出力フォント
-\usepackage[utf8]{inputenc} % 入力文字コード
+% ===== Safe preamble for IEEEtran on GitHub Actions =====
+\usepackage[T1]{fontenc}       % フォント出力エンコード
+\usepackage[utf8]{inputenc}    % 入力文字コード（utf8）
 
 % 数式
 \usepackage{amsmath,amssymb}
@@ -12,16 +12,15 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 
-% TikZ
+% TikZ（最低限のライブラリ）
 \usepackage{tikz}
-% 必要なライブラリだけに絞る（環境依存で失敗する場合あり）
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 
-% URL と参考文献
-\usepackage{url}
+% 参考文献・URL
 \usepackage{cite}
+\usepackage{url}
 
-% hyperref は最後に
+% hyperref は最後に（エラー防止）
 \usepackage[hidelinks]{hyperref}
 
 \title{A Design Support Framework for Industrial Piezoelectric Inkjet Using SystemDK}
