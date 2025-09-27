@@ -235,7 +235,7 @@ Finally, Fig.~\ref{fig:systemdk_library} highlights the SystemDK library concept
 \label{fig:head}
 \end{figure}
 
-% ---- Fig. 5: SystemDK Library Concept ----
+% ---- Fig. 5: SystemDK Library Concept (fixed arrows) ----
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[
@@ -244,24 +244,30 @@ Finally, Fig.~\ref{fig:systemdk_library} highlights the SystemDK library concept
   node distance=8mm and 8mm,
   every node/.style={font=\footnotesize}
 ]
-% Domain models
+% Domain models (左カラム)
 \node[box] (elec) {Electrical\\Model};
 \node[box, below=of elec] (mech) {Mechanical\\Model};
-\node[box, below=of mech] (flu) {Fluidic\\Model};
+\node[box, below=of mech] (flu)  {Fluidic\\Model};
 
-% SystemDK Library
+% SystemDK Library（中央）
 \node[box, right=40mm of mech, minimum width=28mm, fill=blue!10] (lib) {SystemDK\\Library};
 
-% Arrows into library
-\draw[->] (elec.east) -- (lib.west |- elec.east);
-\draw[->] (mech.east) -- (lib.west);
-\draw[->] (flu.east)  -- (lib.west |- flu.east);
+% ライブラリ左端に「受け口」座標を作る（上・中・下）
+\path (lib.west) ++(0, 8mm)  coordinate (lib_in_elec);  % Electrical用
+\path (lib.west)              coordinate (lib_in_mech);  % Mechanical用（中心）
+\path (lib.west) ++(0,-8mm)  coordinate (lib_in_flu);   % Fluidic用
 
-% PoC block
+% 受け口に確実に接続（必ず左端に刺さる）
+\draw[->] (elec.east) -- (lib_in_elec);
+\draw[->] (mech.east) -- (lib_in_mech);
+\draw[->] (flu.east)  -- (lib_in_flu);
+
+% PoC ブロック（右）
 \node[box, right=20mm of lib, fill=green!10] (poc) {PoC Evaluation};
 
-% Arrows
+% ライブラリ → PoC
 \draw[->] (lib.east) -- (poc.west);
+
 \end{tikzpicture}
 \caption{SystemDK library concept: consolidating domain models into reusable modules for PoC evaluation.}
 \label{fig:systemdk_library}
