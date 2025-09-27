@@ -3,7 +3,7 @@ name: Build SystemDK Inkjet Paper (PDF + logs)
 on:
   push:
     paths:
-      - 'latex-papers/papers/2025_systemdk_inkjet/**'
+      - 'papers/2025_systemdk_inkjet/**'
       - '.github/workflows/latex_systemdk_inkjet.yml'
   workflow_dispatch: {}
 
@@ -20,9 +20,9 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
-          working_directory: latex-papers/papers/2025_systemdk_inkjet
+          working_directory: papers/2025_systemdk_inkjet
           args: -pdf -interaction=nonstopmode -file-line-error
-          # bibtex/biberやLuaLaTeXが必要なら下記を有効化
+          # 例：LuaLaTeXやtlmgrが必要なら下記を有効化
           # latexmk_use_lualatex: true
           # pre_compile: tlmgr update --self --all
 
@@ -32,13 +32,13 @@ jobs:
         with:
           name: systemdk_inkjet_logs
           path: |
-            latex-papers/papers/2025_systemdk_inkjet/*.log
-            latex-papers/papers/2025_systemdk_inkjet/*.fls
-            latex-papers/papers/2025_systemdk_inkjet/*.fdb_latexmk
-            latex-papers/papers/2025_systemdk_inkjet/*.aux
-            latex-papers/papers/2025_systemdk_inkjet/*.out
-            latex-papers/papers/2025_systemdk_inkjet/*.bbl
-            latex-papers/papers/2025_systemdk_inkjet/*.blg
+            papers/2025_systemdk_inkjet/*.log
+            papers/2025_systemdk_inkjet/*.fls
+            papers/2025_systemdk_inkjet/*.fdb_latexmk
+            papers/2025_systemdk_inkjet/*.aux
+            papers/2025_systemdk_inkjet/*.out
+            papers/2025_systemdk_inkjet/*.bbl
+            papers/2025_systemdk_inkjet/*.blg
           retention-days: 14
           if-no-files-found: warn
 
@@ -47,6 +47,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: systemdk_inkjet_pdf
-          path: latex-papers/papers/2025_systemdk_inkjet/main.pdf
+          path: papers/2025_systemdk_inkjet/main.pdf
           retention-days: 30
           if-no-files-found: error
