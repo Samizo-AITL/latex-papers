@@ -140,58 +140,44 @@ At any point, anomaly detection or sensor faults trigger the \texttt{SAFE} state
 \centering
 \begin{tikzpicture}[
   font=\small,
-  node distance=9mm and 12mm,
+  node distance=10mm and 14mm,
   box/.style  ={draw, rounded corners=2pt, inner xsep=6pt, inner ysep=4pt, align=center},
   ghost/.style={draw, dashed, rounded corners=2pt, inner xsep=6pt, inner ysep=4pt, align=center},
-  flow/.style={->, line width=0.5pt, shorten >=2pt, shorten <=2pt, rounded corners=2pt, >=Latex},
-  ghostflow/.style={flow, dashed, very thin, draw=black!50},
-  bend/.style={flow, rounded corners=4pt},
+  >={Latex[length=2mm]}
 ]
 
-% --- Nodes ----------------------------------------------------
-\node[ghost] (llm) at (0,2.7)
+%--- nodes -----------------------------------------------------
+\node[ghost] (llm) at (2.2,2.4)
   {LLM Analyzer (Next):\\retunes $K_p,K_i,K_d$; regenerates FSM rules};
 
-\node[box] (yaml) at (-4.9,0.7) {YAML Config\\FW / CSR};
-\node[box] (pid)  at (-0.7,0.7) {PID Controller};
-\node[box] (fsm)  [right=20mm of pid] {FSM Supervisor};
+\node[box] (yaml) at (-5.2,0.6) {YAML Config\\FW / CSR};
+\node[box] (pid)  at (-0.6,0.6) {PID Controller};
+\node[box] (fsm)  at (3.4,0.6)  {FSM Supervisor};
 
-\node[box] (tele) [below=12mm of pid] {Telemetry:\\Delay / Temp / Jitter};
+\node[box] (tele) at (-0.6,-1.2) {Telemetry:\\Delay / Temp / Jitter};
+\node[box] (fem)  at (-0.6,-3.1) {FEM\\(Thermal / Stress)};
+\node[box] (spar) at (-0.6,-5.0) {S-parameters (SI/EMI)};
 
-\node[box] (fem)  [below=10mm of tele] {FEM\\(Thermal / Stress)};
-\node[box] (spar) [below=10mm of fem]  {S-parameters (SI/EMI)};
+\node[box] (eda)  at (-5.2,-1.2) {EDA Flow\\(Synth / P\&R / STA)};
 
-\node[box] (eda)  [left=20mm of tele] {EDA Flow\\(Synth / P\&R / STA)};
+%--- dashed LLM routes (curved, non-crossing) ------------------
+\draw[dashed,->] (llm.south west) to[out=240,in=60,looseness=0.9] (pid.north east);
+\draw[dashed,->] (llm.south east) to[out=300,in=80,looseness=0.9] (fsm.north);
 
-% --- Ghost (LLM) dashed arrows, routed clear of boxes ----------
-\draw[ghostflow]
-  (llm.south) .. controls +(-1.6,-0.8) and +(0,1.0) .. (pid.north);
-\draw[ghostflow]
-  (llm.south) .. controls +(1.6,-0.8) and +(0,1.0) .. (fsm.north);
+%--- config / supervisors --------------------------------------
+\draw[->] (yaml.east) to[out=0,in=180] (pid.west);
+\draw[->] (pid.east)  -- ++(0.6,0) |- (fsm.north); % optional: PID → FSM hook
 
-% --- Main flows (no overlaps) ---------------------------------
-\draw[flow] (yaml.east) -- (pid.west);                 % YAML -> PID
-\draw[bend] (tele.north) -- (pid.south);               % Telemetry -> PID
-\draw[bend] (pid.east) -- ++(6mm,0) -- (fsm.west);     % PID -> FSM (水平短距離)
+%--- telemetry / physics chain ---------------------------------
+\draw[->] (tele.north) -- (pid.south);
+\draw[->] (fem.north)  -- (tele.south);
+\draw[->] (spar.north) -- (fem.south);
 
-% Telemetry sourcing from models (bottom-up)
-\draw[bend] (spar.north) -- (fem.south);
-\draw[bend] (fem.north)  -- (tele.south);
+%--- EDA couplings (reworked) ----------------------------------
+\draw[->] (fsm.west) to[out=180,in=0] (eda.east);         % FSM → EDA
+\draw[->] (fem.west) to[out=180,in=270] (eda.south);      % FEM → EDA（新設）
 
-% Models -> EDA (左側に曲げて交差を回避)
-\draw[bend]
-  (fem.west) -- ++(-7mm,0) |- (eda.south);
-\draw[bend]
-  (spar.west) -- ++(-9mm,0) |- (eda.south);
-
-% EDA -> Telemetry (設計制約の反映をループ化)
-\draw[bend]
-  (eda.east) -- ++(7mm,0) |- (tele.west);
-
-% FSM -> EDA（運用モードに応じた制約適用）
-\draw[bend]
-  (fsm.south) |- ++(0,-6mm) -| (eda.north);
-
+%（旧）EDA→Telemetry の矢印は削除：流れの向きを「Telemetry/Models→PID/FSM→EDA」に統一
 \end{tikzpicture}
 \caption{System overview: runtime telemetry is converted into compact physics models, stabilized through PID/FSM control, and enforced as constraints within the EDA flow. An optional LLM extension (AITL Next) adaptively retunes controller parameters and FSM rules under drift.}
 \label{fig:system}
