@@ -166,18 +166,22 @@ At any point, anomaly detection or sensor faults trigger the \texttt{SAFE} state
 
 %--- config / supervisors --------------------------------------
 \draw[->] (yaml.east) to[out=0,in=180] (pid.west);
-\draw[->] (pid.east)  -- ++(0.6,0) |- (fsm.north); % optional: PID → FSM hook
+
+% PID → FSM は FSM の左辺に到着
+\draw[->] (pid.east) to[out=0,in=180] (fsm.west);
 
 %--- telemetry / physics chain ---------------------------------
 \draw[->] (tele.north) -- (pid.south);
 \draw[->] (fem.north)  -- (tele.south);
 \draw[->] (spar.north) -- (fem.south);
 
-%--- EDA couplings (reworked) ----------------------------------
-\draw[->] (fsm.west) to[out=180,in=0] (eda.east);         % FSM → EDA
-\draw[->] (fem.west) to[out=180,in=270] (eda.south);      % FEM → EDA（新設）
+%--- EDA couplings ----------------------------------------------
+% FSM → EDA は FSM の下辺を起点
+\draw[->] (fsm.south) |- (eda.east);
 
-%（旧）EDA→Telemetry の矢印は削除：流れの向きを「Telemetry/Models→PID/FSM→EDA」に統一
+% FEM → EDA（モデル→フローの明示）
+\draw[->] (fem.west) to[out=180,in=270] (eda.south);
+
 \end{tikzpicture}
 \caption{System overview: runtime telemetry is converted into compact physics models, stabilized through PID/FSM control, and enforced as constraints within the EDA flow. An optional LLM extension (AITL Next) adaptively retunes controller parameters and FSM rules under drift.}
 \label{fig:system}
