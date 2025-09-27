@@ -38,11 +38,11 @@
 \maketitle
 
 \begin{abstract}
-Industrial inkjet printing is a critical enabler for advanced manufacturing in textiles, PCB fabrication, and packaging. 
-Among various methods, piezoelectric inkjet offers broad material compatibility since it does not require heating, but its design remains highly challenging due to the strong coupling of electrical, mechanical, fluidic, and material domains. 
-This paper proposes a System Design Kit (SystemDK) framework, inspired by semiconductor PDKs, to integrate multiphysics modeling and streamline design workflows for industrial piezoelectric inkjet systems. 
-Through a case study with silver nano-ink for PCB applications, the framework achieved improved prediction accuracy of droplet formation (diameter error 12\%, velocity error 18\%, below literature benchmarks), a 42\% reduction in design time, and a 60\% decrease in required prototypes. 
-These results demonstrate the potential of SystemDK to significantly enhance design efficiency, reproducibility, and rapid proof-of-concept in industrial inkjet technology.
+Industrial inkjet printing has become a cornerstone technology for advanced manufacturing in textiles, PCB fabrication, and packaging. 
+Among competing methods, piezoelectric inkjet offers superior material compatibility by eliminating the need for thermal excitation, yet its design remains highly challenging due to the strong coupling of electrical, mechanical, fluidic, and material domains. 
+This paper introduces a \emph{System Design Kit (SystemDK)} framework, inspired by semiconductor process design kits (PDKs), to unify multiphysics modeling and streamline design workflows for industrial piezoelectric inkjet systems. 
+A case study using silver nano-ink for PCB applications demonstrates that SystemDK improves droplet prediction accuracy (reducing errors to 12\% in diameter and 18\% in velocity, outperforming reported benchmarks), shortens design time by 42\%, and reduces prototyping iterations by 60\%. 
+Academically, this work extends the PDK paradigm into inkjet engineering as a reusable multiphysics framework; industrially, it enables reproducible, cost-efficient, and rapid proof-of-concept development for emerging applications.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -269,16 +269,16 @@ Finally, Fig.~\ref{fig:systemdk_library} highlights the SystemDK library concept
 
 % ============================================================
 \section{Conclusion}
-This paper introduced a SystemDK-based framework for the design of industrial piezoelectric inkjet systems.  
-By unifying electrical, mechanical, and fluidic models into a reusable multiphysics environment, the framework overcomes long-standing challenges of fragmented simulations and prototype-dependent iteration.  
+This paper presented a SystemDK-based framework for industrial piezoelectric inkjet design.  
+By integrating electrical, mechanical, and fluidic models into a unified multiphysics environment, the framework addresses long-standing challenges of fragmented simulations and prototype-driven iteration.  
 
-A case study on PCB printing with silver nano-ink demonstrated that SystemDK not only achieved prediction errors below reported literature benchmarks but also reduced design time by more than 40\% and cut prototyping iterations by over 60\%.  
-These results validate both the accuracy and practical utility of the approach.  
+The case study on PCB printing with silver nano-ink demonstrated that SystemDK outperformed reported literature benchmarks in prediction accuracy while reducing design time by over 40\% and lowering prototyping effort by more than 60\%.  
+These results confirm both the technical validity and the practical value of the proposed approach.  
 
-The academic contribution lies in extending the semiconductor PDK paradigm into inkjet engineering, providing a systematic methodology for model reuse and cross-domain integration.  
-From an industrial perspective, SystemDK enables faster proof-of-concept development, lowers cost, and supports rapid adaptation to diverse application domains including textiles, PCBs, and packaging.  
+Academically, this work extends the semiconductor PDK paradigm into inkjet engineering, providing a systematic methodology for multiphysics integration and model reuse.  
+Industrially, it enables accelerated proof-of-concept development, cost reduction, and rapid adaptation to diverse domains including textiles, PCBs, and packaging.  
 
-Future directions include reliability assessment under extended operation, scaling to multi-nozzle arrays, and coupling with AI-driven optimization to further enhance predictive capability and design intelligence.
+Future work will focus on long-term reliability testing, scaling to multi-nozzle arrays, and coupling with AI-driven optimization to further advance predictive capability and design automation.
 
 % ============================================================
 \begin{thebibliography}{99}
