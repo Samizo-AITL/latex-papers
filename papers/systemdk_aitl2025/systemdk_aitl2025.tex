@@ -12,12 +12,25 @@
 \usepackage{newtxtext,newtxmath}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.multipart,calc}
+
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usepgfplotslibrary{colormaps,patchplots} % ← 追加：colormap/surf系のキーを有効化
+
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 
 % ---------- Plot styles ----------
+% 無名 cycle list だと /tikz/... キー誤解釈が出る環境があるため、名前付きに変更
+\pgfplotscreateplotcyclelist{aitlCycle}{
+  {solid, mark=*},
+  {densely dashed, mark=square*},
+  {dotted, mark=triangle*},
+  {dashdotted, mark=o},
+  {loosely dashed, mark=diamond*},
+  {dashdotdotted, mark=x},
+}
+
 \pgfplotsset{
   every axis/.append style={
     legend cell align=left,
@@ -27,14 +40,7 @@
     major grid style={line width=.2pt, draw=black!35},
     tick style={black},
     every axis plot/.append style={line width=0.9pt},
-  },
-  cycle list={
-    {solid, mark=*},
-    {densely dashed, mark=square*},
-    {dotted, mark=triangle*},
-    {dashdotted, mark=o},
-    {loosely dashed, mark=diamond*},
-    {dashdotdotted, mark=x},
+    cycle list name=aitlCycle, % ← 追加：上で定義したリストを常用
   },
 }
 
@@ -297,7 +303,7 @@ As shown in Fig.~\ref{fig:emi}, the uncontrolled design suffers 12.4\,ps RMS jit
 \end{figure}
 
 \subsection{FEM Thermal and Stress Maps}
-Figure~\ref{fig:fem} illustrates FEM-derived maps. The top map shows uncontrolled thermal hotspots reaching $\Delta T>\SI{14}{\celsius}$. The bottom map shows TSV-induced stress gradients exceeding \SI{18}{MPa}. Compact models distilled from such FEM data are consumed by the PID/FSM runtime loop.%
+Figure~\ref{fig:fem} illustrates FEM-derived maps. The top map shows uncontrolled thermal hotspots reaching $\Delta T>\SI{14}{\celsius}$. The bottom map shows TSV-induced stress gradients exceeding \SI{18}{MPa}. Compact models distilled from such FEM data are consumed by the PID/FSM runtime loop.
 \noindent\textbf{EDA implication:} these maps enable dynamic keep-outs and stress-aware duty-cycle control.
 
 \begin{figure}[t]
@@ -306,7 +312,7 @@ Figure~\ref{fig:fem} illustrates FEM-derived maps. The top map shows uncontrolle
 \begin{tikzpicture}
 \begin{axis}[
     width=0.95\linewidth, height=4.2cm,
-    view={0}{90}, axis on top,
+    view={0}{90}, axis on top, axis equal image,
     xlabel={x (mm)}, ylabel={y (mm)},
     colorbar,
     colorbar style={ylabel={\(\Delta T\) (\si{\celsius})}},
@@ -314,7 +320,6 @@ Figure~\ref{fig:fem} illustrates FEM-derived maps. The top map shows uncontrolle
 ]
 \addplot [surf, shader=flat, draw=none, mesh/cols=4]
 table[row sep=\\]{
-x  y  z \\
 0 0  2\\ 0 1  3\\ 0 2  4\\ 0 3  5\\
 1 0  3\\ 1 1  5\\ 1 2  8\\ 1 3 10\\
 2 0  4\\ 2 1  8\\ 2 2 14\\ 2 3 10\\
@@ -329,7 +334,7 @@ x  y  z \\
 \begin{tikzpicture}
 \begin{axis}[
     width=0.95\linewidth, height=4.2cm,
-    view={0}{90}, axis on top,
+    view={0}{90}, axis on top, axis equal image,
     xlabel={x (mm)}, ylabel={y (mm)},
     colorbar,
     colorbar style={ylabel={stress (\si{MPa})}},
@@ -337,7 +342,6 @@ x  y  z \\
 ]
 \addplot [surf, shader=flat, draw=none, mesh/cols=4]
 table[row sep=\\]{
-x  y  z \\
 0 0  2\\ 0 1  4\\ 0 2  6\\ 0 3  4\\
 1 0  4\\ 1 1  8\\ 1 2 12\\ 1 3  8\\
 2 0  6\\ 2 1 12\\ 2 2 18\\ 2 3 12\\
