@@ -145,7 +145,7 @@ At any point, anomaly detection or sensor faults trigger the \texttt{SAFE} state
   ghost/.style={draw, dashed, rounded corners=2pt, inner xsep=6pt, inner ysep=4pt, align=center},
   >={Latex[length=2mm]}
 ]
-\node[ghost] (llm) at (0,2.6)
+\node[ghost] (llm) at (0,2.8)
   {LLM Analyzer (Next):\\retunes $K_p,K_i,K_d$; regenerates FSM rules};
 
 \node[box] (yaml) at (-4.6,0.6) {YAML Config\\FW / CSR};
@@ -158,12 +158,18 @@ At any point, anomaly detection or sensor faults trigger the \texttt{SAFE} state
 
 \node[box] (eda)  [left=18mm of tele] {EDA Flow\\(Synth / P\&R / STA)};
 
-\draw[dashed,->] (llm.south) |- (pid.north);
-\draw[dashed,->] (llm.south) |- (fsm.north);
+% --- LLM -> PID / FSM : 個別に点線で提案の意を表現 ---
+\draw[dashed,->,shorten >=2pt,shorten <=2pt]
+  (llm.south east) to[bend right=12] (pid.north);
+\draw[dashed,->,shorten >=2pt,shorten <=2pt]
+  (llm.south west)  to[bend left=12]  (fsm.north);
 
-\draw[->] (yaml.east) -- (pid.west);
-\draw[->] (fsm.south) |- (eda.south);
+% --- 設定/監督系 ---
+\draw[->,shorten >=1pt] (yaml.east) -- (pid.west);
+% FSM -> EDA : 南側に回り込まず、右→左へ直接
+\draw[->,shorten >=1pt] (fsm.west) to[out=180,in=0] (eda.east);
 
+% --- 計測/物理モデル連鎖 ---
 \draw[->] (tele.north) -- (pid.south);
 \draw[->] (spar.north) -- (fem.south);
 \draw[->] (fem.north)  -- (tele.south);
