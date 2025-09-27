@@ -115,6 +115,22 @@ Errors: 12\% (diameter), 18\% (velocity), improving on reported benchmarks of 15
 For PCB line printing (100~mm traces $\times$ 10), CV of line width = 8.4\%, sheet resistance CV = 7.9\%.  
 Design efficiency: conventional (6 weeks, 10 prototypes) vs SystemDK (3.5 weeks, 4 prototypes), showing 42\% faster design and 60\% fewer prototypes.
 
+\begin{table}[ht]
+\centering
+\caption{Comparison of Conventional vs SystemDK Approach}
+\begin{tabular}{lcc}
+\toprule
+ & Conventional & SystemDK \\
+\midrule
+Design Time [weeks] & 6.0 & 3.5 \\
+Prototypes Required & 10  & 4   \\
+Droplet Diameter Error [\%] & 15 & 12 \\
+Droplet Velocity Error [\%] & 30 & 18 \\
+\bottomrule
+\end{tabular}
+\label{tab:comparison}
+\end{table}
+
 \subsection{Discussion}
 SystemDK achieved literature-level prediction accuracy while reducing design time and prototyping. 
 Remaining challenges include long-term reliability validation and robustness against ink property variations.
@@ -124,13 +140,14 @@ We proposed a SystemDK-based framework for industrial piezo inkjet design.
 It integrates electrical, mechanical, and fluidic models, achieving improved efficiency and prediction accuracy. 
 This work contributes both academically—by introducing ``design efficiency'' as an evaluation axis—and industrially, by enabling rapid adaptation to diverse materials and markets.
 
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
 \section*{Author Biography}
 \textbf{Shinichi Samizo} received the M.S. degree in Electrical and Electronic Engineering from Shinshu University, Japan. 
 He worked at Seiko Epson Corporation in semiconductor memory and mixed-signal device development and contributed to inkjet MEMS actuators and PrecisionCore printhead technology. 
 He is currently an independent semiconductor researcher focusing on process/device education, memory architecture, and AI system integration.  
-\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}
 
-\bibliographystyle{IEEEtran}
-\bibliography{references}
+\textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}
 
 \end{document}
