@@ -82,7 +82,7 @@ Scaling to sub-\SI{2}{\nano\meter} nodes and CFET integration amplifies runtime 
 
 % ---------- 2. Related Work ----------
 \section{Related Work}
-DTCO at advanced nodes is well-studied~\cite{yakimets,irds}. On-chip thermal and noise mitigation via DVFS/ABB and firmware throttling remains dominant, while control-theoretic and ML-in-EDA approaches are emerging. Prior works often lack runtime supervisory safety or cross-domain coupling; we address these with explicit FSM failsafes and multi-physics mapping.
+DTCO at advanced nodes is well-studied~\cite{yakimets,irds}. On-chip thermal/noise mitigation via DVFS/ABB and firmware throttling remains dominant, while control-theoretic and ML-in-EDA approaches are emerging. Prior works often lack runtime supervisory safety or cross-domain coupling; we address these with explicit FSM failsafes and multi-physics mapping.
 
 % ---------- 3. Proposed Framework ----------
 \section{Proposed Framework}
@@ -214,7 +214,7 @@ Unless noted, baseline is uncontrolled; ``PID'' is controller only; ``PID+FSM'' 
 \addplot coordinates {(Unctrl,12.4) (DVFS,8.7) (ABB,7.9) (Throttle,6.8) (PID,2.1) (PID+FSM,1.9)};
 \end{axis}
 \end{tikzpicture}
-\caption{RC delay variation under temp/supply excursions (25 paths, TT@0.70\,V/85\,\textdegree C). Mean$\pm$95\%CI, N=30.}
+\caption{RC delay variation under temp/supply excursions (25 paths, TT@\SI{0.70}{V}/\SI{85}{\celsius}). Mean$\pm$95\%CI, N=30.}
 \label{fig:rc}
 \end{figure}
 
@@ -256,7 +256,7 @@ t   dT \\
 }; \addlegendentry{PID+FSM}
 \end{axis}
 \end{tikzpicture}
-\caption{Thermal response to a 1.0\,W pulse. Reduced peaks and faster cooldown with PID/PID+FSM.}
+\caption{Thermal response to a \SI{1.0}{W} pulse. Reduced peaks and faster cooldown with PID/PID+FSM.}
 \label{fig:thermal}
 \end{figure}
 
@@ -293,9 +293,9 @@ t   dT \\
     colorbar, colorbar style={ylabel=$\Delta T$ (\si{\celsius})},
     colormap/gray,
 ]
-% synthetic hotspot demo grid
-\addplot [surf, shader=flat, draw=none, point meta=\thisrow{z}] 
-table[row sep=\\, x=x, y=y, meta=z] {
+% 4x4 grid, row-major; specify mesh/cols for stable surf
+\addplot [surf, shader=flat, draw=none, mesh/cols=4]
+table[row sep=\\] {
 x  y  z \\
 0  0  2\\ 0 1  3\\ 0 2  4\\ 0 3  5\\
 1  0  3\\ 1 1  5\\ 1 2  8\\ 1 3 10\\
@@ -315,9 +315,8 @@ x  y  z \\
     colorbar, colorbar style={ylabel=stress (MPa)},
     colormap/gray,
 ]
-% synthetic TSV ring stress
-\addplot [surf, shader=flat, draw=none, point meta=\thisrow{z}] 
-table[row sep=\\, x=x, y=y, meta=z] {
+\addplot [surf, shader=flat, draw=none, mesh/cols=4]
+table[row sep=\\] {
 x  y  z \\
 0  0  2\\ 0 1  4\\ 0 2  6\\ 0 3  4\\
 1  0  4\\ 1 1  8\\ 1 2 12\\ 1 3  8\\
@@ -339,21 +338,22 @@ x  y  z \\
     xlabel={Frequency (GHz)}, ylabel={$|S_{11}|, |S_{21}|$ (dB)},
     xmin=2, xmax=10, ymin=-30, ymax=0,
 ]
-\addplot table[row sep=\\] {
-f  s21 \\
+\addplot table[row sep=\\, x index=0, y index=1] {
 2  -6\\ 4 -8\\ 6 -10\\ 8 -11\\ 10 -12\\
 }; \addlegendentry{$S_{21}$ Unctrl}
 
-\addplot[densely dashed, mark=square*] table[row sep=\\] {
+\addplot[densely dashed, mark=square*]
+table[row sep=\\, x index=0, y index=1] {
 2 -3.5\\ 4 -4.0\\ 6 -4.5\\ 8 -4.8\\ 10 -5.0\\
 }; \addlegendentry{$S_{21}$ PID+FSM}
 
-\addplot[dotted, mark=triangle*] table[row sep=\\] {
+\addplot[dotted, mark=triangle*]
+table[row sep=\\, x index=0, y index=1] {
 2 -12\\ 4 -14\\ 6 -15\\ 8 -14\\ 10 -13\\
 }; \addlegendentry{$S_{11}$}
 \end{axis}
 \end{tikzpicture}
-\caption{Measured $S_{11}/S_{21}$ magnitude vs.\ frequency. Runtime control confines insertion loss $<\,$\SI{5}{dB} across \SIrange{2}{10}{GHz}.}
+\caption{Measured $|S_{11}|/|S_{21}|$ magnitude vs.\ frequency. Runtime control confines insertion loss $<\,$\SI{5}{dB} across \SIrange{2}{10}{GHz}.}
 \label{fig:sparam}
 \end{figure}
 
