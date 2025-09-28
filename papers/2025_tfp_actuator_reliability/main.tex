@@ -35,55 +35,59 @@
 \pgfmathsetseed{20250928} % 再現性のため乱数シード固定
 
 % =====================================================
-% 内蔵図コマンド
+% 内蔵図コマンド（本文で呼ぶ前＝\begin{document}より前に置く）
+% 使い方例：\figVoidDonutInline            % 既定サイズ
+%           \figVoidDonutInline[0.050]     % 少し大きめ
 % =====================================================
 
-% ドーナツ状のボイド分布（1カラム対応＋幅広分布）
-\newcommand{\figVoidDonutInline}{%
-  \begin{tikzpicture}[scale=0.045] % ←1カラムに収めるため縮小
-    % 外周参照円
+% ---- Fig.1: ドーナツ状のボイド分布（1カラム対応・幅広リング）----
+\newcommand{\figVoidDonutInline}[1][0.045]{%
+  \begin{tikzpicture}[scale=#1]
+    % 再現性（この図だけの種にする）
+    \pgfmathsetseed{20250928}
+    % 外周参照円（薄め）
     \draw[line width=0.6pt, gray!60] (0,0) circle (100);
-    % 散布点（ボイド）：半径分布幅を広げる (40–70付近)
-    \foreach \i in {1,...,350}{%
+    % 半径分布を広めに（中心55、±15）
+    \foreach \i in {1,...,360}{%
       \pgfmathsetmacro{\ang}{rnd*360}
-      \pgfmathsetmacro{\rad}{55 + 15*(rnd-0.5)} % ←幅を広げる
+      \pgfmathsetmacro{\rad}{55 + 15*(rnd-0.5)}
       \fill[gray!30] (\ang:\rad) circle (1.0);
     }
   \end{tikzpicture}%
 }
 
-% ====== Fig.2: 6層のPZT断面（1層にボイドをハイライト）======
-\newcommand{\figPZTLayersVoidInline}{%
-  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
-    % ---- パラメータ（必要ならここを微調整）----
+% ---- Fig.2: 6層PZT断面（1層だけボイド枠でハイライト）----
+\newcommand{\figPZTLayersVoidInline}[1][0.90]{%
+  \begin{tikzpicture}[x=#1cm,y=#1cm]
+    % パラメータ（この図のローカル変数）
     \def\W{6.0}   % 横幅
-    \def\H{0.45}  % 各層の厚み
-    \def\G{0.10}  % 層間ギャップ（描画上の見やすさ用）
-    \def\N{6}     % 層数（固定：6）
-    \def\voidLayer{4} % ボイドを示す層番号（1..6）。例：第4層
+    \def\H{0.45}  % 各層厚
+    \def\G{0.10}  % 層間ギャップ（見やすさ用）
+    \def\voidLayer{4} % ボイドを示す層（1..6）
 
-    % ---- 6層の描画（必ず6回）----
-    \foreach \i in {0,...,5}{% 0～5 で計6層
+    % 6層のみ（0..5 で6回）※絶対に増えない
+    \foreach \i in {0,...,5}{%
       \pgfmathsetmacro{\yy}{\i*(\H+\G)}%
       \draw[fill=gray!15,draw=black,line width=0.4pt]
         (0,\yy) rectangle (\W,\yy+\H);
     }
 
-    % ---- ボイドを示す破線枠（\voidLayer だけに描く）----
+    % ボイド枠（破線）— 指定層のみ
     \pgfmathsetmacro{\idx}{\voidLayer-1}%
     \pgfmathsetmacro{\yv}{\idx*(\H+\G)}%
     \draw[line width=0.8pt,gray!50,dashed]
       (2.1,\yv+0.08) rectangle (3.0,\yv+\H-0.08);
 
-    % ---- 上下の基準線（電極イメージ）----
+    % 上下の基準線（電極イメージ）
     \draw[line width=0.6pt,gray!70] (0,-0.30) -- (\W,-0.30);
-    \draw[line width=0.6pt,gray!70] (0,\N*(\H+\G)+0.10) -- (\W,\N*(\H+\G)+0.10);
+    \pgfmathsetmacro{\totalH}{6*(\H+\G)}%
+    \draw[line width=0.6pt,gray!70] (0,\totalH+0.10) -- (\W,\totalH+0.10);
   \end{tikzpicture}%
 }
 
-% 端部焼損の模式（モノクロ）
-\newcommand{\figEdgeBurnoutInline}{%
-  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+% ---- Fig.3: 端部焼損の模式図（モノクロ）----
+\newcommand{\figEdgeBurnoutInline}[1][0.90]{%
+  \begin{tikzpicture}[x=#1cm,y=#1cm]
     \def\W{10}\def\pztH{1.2}\def\beH{0.20}\def\teH{0.20}
     % Bottom Electrode (BE)
     \fill[gray!55] (0,0) rectangle (\W,\beH);
@@ -91,7 +95,7 @@
     \fill[gray!15] (0,\beH) rectangle (\W,\beH+\pztH);
     % Top Electrode = VBS
     \fill[gray!80] (0,\beH+\pztH) rectangle (4,\beH+\pztH+\teH);
-    % Au pad = COM（明るめ）
+    % Au pad = COM
     \fill[gray!30] (6,\beH+\pztH) rectangle (\W,\beH+\pztH+0.60);
     % Exposed sidewall（電界集中）
     \draw[line width=1pt,black] (4,\beH) -- (4,\beH+\pztH);
@@ -226,15 +230,15 @@ RTA後の外気由来成分が起因している可能性を裏付けた。
 
 \begin{figure}[t]
   \centering
-  \figVoidDonutInline
-  \caption{ウエハ上のドーナツ状ボイド分布（反射条件最適化）。外周：参照円，灰点：欠陥検出点。}
+  \figVoidDonutInline % or \figVoidDonutInline[0.050]
+  \caption{ウエハ上のドーナツ状ボイド分布}
   \label{fig:donut}
 \end{figure}
 
 \begin{figure}[t]
   \centering
   \figPZTLayersVoidInline
-  \caption{PZT 6層のうち特定層にボイド（破線枠）を含む断面模式図。}
+  \caption{PZT 6層のうち特定層のボイド（破線枠）}
   \label{fig:layer-void}
 \end{figure}
 
@@ -253,7 +257,7 @@ VBS上電極が最も接近するチップ端部に集中して観測された�
 \begin{figure}[t]
   \centering
   \figEdgeBurnoutInline
-  \caption{端部焼損の模式図：側壁露出部で電界集中。破線はAlOx被覆案。}
+  \caption{端部焼損の模式図}
   \label{fig:edge}
 \end{figure}
 
