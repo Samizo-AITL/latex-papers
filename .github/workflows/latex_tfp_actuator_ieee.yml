@@ -1,0 +1,38 @@
+name: Build LaTeX PDF (IEEEtran TFP Actuator)
+
+on:
+  push:
+    paths:
+      - 'latex-papers/papers/2025_tfp_actuator_reliability_ieee/**'
+      - '.github/workflows/latex_tfp_actuator_ieee.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build with LuaLaTeX (latex-action)
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: latex-papers/papers/2025_tfp_actuator_reliability_ieee
+          root_file: main.tex
+          latexmk_use_lualatex: true
+          # 必要パッケージ（TeXLiveに同梱だが明示インストールして安全側に）
+          pre_compile: |
+            tlmgr update --self
+            tlmgr install luatexja luatexja-fontspec siunitx pgf xcolor booktabs hyperref geometry cite
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfp_actuator_ieee_pdf
+          path: latex-papers/papers/2025_tfp_actuator_reliability_ieee/main.pdf
+
+      - name: Upload LOG
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfp_actuator_ieee_log
+          path: latex-papers/papers/2025_tfp_actuator_reliability_ieee/main.log
