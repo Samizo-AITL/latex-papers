@@ -79,78 +79,51 @@
   \end{tikzpicture}%
 }
 
-% ====== Fig.3 ======
-% 端部焼損の模式（スリット＋CAVを含む断面）
-\newcommand{\figEdgeBurnoutInline}{%
-\begin{tikzpicture}[x=0.9cm,y=0.9cm]
-  % ===== パラメータ =====
-  \def\W{10.5}
-  \def\siT{-0.60}   % Si 下端
-  \def\zrT{-0.10}   % ZrO2 厚み（Si上面=-0.60..0、ZrO2=-0.10..0）
-  \def\beH{0.18}    % BE 厚み
-  \def\pztH{1.20}   % PZT 厚み（左＝駆動部）
-  \def\teH{0.15}    % TE 厚み（VBS 側）
-  \def\xslit{3.70}  % スリット位置（PZT終端＝側壁露出）
-  \def\xwall{2.60}  % CAV 垂直壁（←ここで止まり、端部は抜かない）
-  \def\xpadsA{4.40} % BE ビア柱1
-  \def\xpadsB{6.20} % BE ビア柱2
-  \def\viaW{0.55}   % ビア柱幅
-  \def\auTop{1.80}  % Au 配線上面
+% ==== Fig.3 端部焼損 図コマンド定義（未定義なら新規定義）====
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc}
+\tikzset{>=Stealth, every picture/.style={line cap=round,line join=round}}
 
-  % ===== 基板 (Si) と ZrO2 =====
-  % Si（上面=0、下面=\siT）— CAV をくり抜く
-  \fill[gray!20] (0,\siT) rectangle (\W,0);
-  % CAV：左側を開口、ただし xwall より右は残す（＝端部はクランプ）
-  \fill[white] (0,\siT) -- (0, -0.30) -- (\xwall,-0.30) -- (\xwall,0) -- (0,0) -- cycle;
-  \draw[gray!60,line width=0.4pt] (0,-0.30) -- (\xwall,-0.30); % CAV の底面を示す
-  % ZrO2 （Si 上に薄層）
-  \fill[gray!35] (0,\zrT) rectangle (\W,0);
-
-  % ===== 下電極 BE =====
-  \fill[gray!55] (0,0) rectangle (\W,\beH);
-
-  % ===== PZT（左：駆動部のみ） =====
-  % 駆動部（左ブロック）— スリットで終端
-  \fill[gray!15] (0,\beH) rectangle (\xslit,\beH+\pztH);
-
-  % ===== 上電極 TE（VBS）— 左ブロック上にのみ =====
-  \fill[gray!70] (0,\beH+\pztH) rectangle (\xslit,\beH+\pztH+\teH);
-  % VBS 端子（簡素ラベル）
-  \draw[black,line width=0.5pt] (\xslit-2.8,\beH+\pztH+\teH) -- ++(0,0.60)
-                                node[above,scale=0.85]{\scriptsize VBS};
-
-  % ===== スリット側壁（電界集中部位）=====
-  \draw[black,line width=1.2pt] (\xslit,\beH) -- (\xslit,\beH+\pztH); % 露出側壁＝太線
-  % 提案：AlOx (ALD) 被覆（破線で囲う）
-  \draw[gray!70,dashed,line width=0.7pt]
-       (\xslit-0.18,\beH) -- (\xslit-0.18,\beH+\pztH);
-  \draw[gray!70,dashed,line width=0.7pt]
-       (\xslit+0.18,\beH) -- (\xslit+0.18,\beH+\pztH);
-
-  % ===== 右側：COM(Au) 配線と BE へのコンタクト =====
-  % BE へのビア柱（絶縁上に立つピラー）
-  \fill[gray!55] (\xpadsA,0) rectangle (\xpadsA+\viaW,\beH+0.85);
-  \fill[gray!55] (\xpadsB,0) rectangle (\xpadsB+\viaW,\beH+0.65);
-  % Au 配線（COM）
-  \fill[gray!30] (\xpadsA-0.25,\beH+0.85) rectangle (\xpadsB+\viaW+0.25,\auTop);
-  % COM 端子（簡素ラベル）
-  \draw[black,line width=0.5pt]
-       ({(\xpadsA+\xpadsB)/2},\auTop) -- ++(0,0.70) node[above,scale=0.85]{\scriptsize COM};
-
-  % ===== レイヤ名の控えめラベル（IEEE 風に淡色）=====
-  \node[anchor=west,gray!60,scale=0.85] at (0.1,-0.47) {\scriptsize Si};
-  \node[anchor=west,gray!60,scale=0.85] at (0.1,-0.05) {\scriptsize ZrO$_2$};
-  \node[anchor=west,gray!60,scale=0.85] at (0.1,0.06) {\scriptsize BE};
-  \node[anchor=west,gray!60,scale=0.85] at (0.1,\beH+0.12) {\scriptsize PZT};
-  \node[anchor=west,gray!60,scale=0.85] at (0.1,\beH+\pztH+0.05) {\scriptsize TE};
-
-  % CAV の注記（薄め）
-  \node[anchor=west,gray!60,scale=0.85] at (0.15,-0.33) {\scriptsize CAV（インク流路）};
-
-  % ===== 仕上げ枠（最小限）=====
-  \draw[black,line width=0.4pt] (0,\siT) rectangle (\W,\auTop+0.15);
-\end{tikzpicture}%
+\makeatletter
+\@ifundefined{figEdgeBurnoutInline}{%
+  % まだ定義されていなければ新規定義
+  \newcommand{\figEdgeBurnoutInline}{%
+    \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+      \def\W{10}\def\pztH{1.2}\def\beH{0.20}\def\teH{0.20}
+      % Bottom Electrode (BE)
+      \fill[gray!55] (0,0) rectangle (\W,\beH);
+      % PZT layer
+      \fill[gray!15] (0,\beH) rectangle (\W,\beH+\pztH);
+      % Top Electrode = VBS
+      \fill[gray!80] (0,\beH+\pztH) rectangle (4,\beH+\pztH+\teH);
+      % Au pad = COM（明るめ）
+      \fill[gray!30] (6,\beH+\pztH) rectangle (\W,\beH+\pztH+0.60);
+      % Exposed sidewall（電界集中箇所を太線で）
+      \draw[line width=1pt,black] (4,\beH) -- (4,\beH+\pztH);
+      % 提案 AlOx（ALD）— 破線で囲う
+      \draw[line width=0.7pt,gray!70,dashed] (3.8,\beH) -- (3.8,\beH+\pztH);
+      \draw[line width=0.7pt,gray!70,dashed] (4.2,\beH) -- (4.2,\beH+\pztH);
+    \end{tikzpicture}%
+  }%
+}{%
+  % すでに定義済みなら、ここで内容を差し替えたい場合は renewcommand を使用
+  \renewcommand{\figEdgeBurnoutInline}{%
+    \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+      \def\W{10}\def\pztH{1.2}\def\beH{0.20}\def\teH{0.20}
+      \fill[gray!55] (0,0) rectangle (\W,\beH);
+      \fill[gray!15] (0,\beH) rectangle (\W,\beH+\pztH);
+      \fill[gray!80] (0,\beH+\pztH) rectangle (4,\beH+\pztH+\teH);
+      \fill[gray!30] (6,\beH+\pztH) rectangle (\W,\beH+\pztH+0.60);
+      \draw[line width=1pt,black] (4,\beH) -- (4,\beH+\pztH);
+      \draw[line width=0.7pt,gray!70,dashed] (3.8,\beH) -- (3.8,\beH+\pztH);
+      \draw[line width=0.7pt,gray!70,dashed] (4.2,\beH) -- (4.2,\beH+\pztH);
+    \end{tikzpicture}%
+  }%
 }
+\makeatother
+
+% 本文側で \figEdgeBurnoutSketch を呼んでいるなら別名を用意
+\providecommand{\figEdgeBurnoutSketch}{\figEdgeBurnoutInline}
 
 % =====================================================
 % タイトル/著者
