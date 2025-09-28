@@ -89,57 +89,46 @@
   \newcommand{\figEdgeBurnoutInline}{%
     \begin{tikzpicture}[x=0.9cm,y=0.9cm]
       % ========= パラメータ =========
-      \def\W{10}       % 全体幅
-      \def\beH{0.20}   % 下部電極(BE)厚
-      \def\pztH{1.20}  % PZT厚
-      \def\teH{0.20}   % 上部電極(TE)厚
-      \def\xPZT{4.0}   % 駆動部PZT右端(側壁)
-      \def\xGapR{6.0}  % 右側スタック開始（スリット左端）
-      \def\xViaL{7.6}  % BEコンタクト開口 左端
-      \def\xViaR{8.2}  % BEコンタクト開口 右端
+      \def\W{10}\def\beH{0.20}\def\pztH{1.20}\def\teH{0.20}
+      \def\xPZT{4.0}\def\xGapR{6.0}\def\xViaL{7.6}\def\xViaR{8.2}
 
       % ========= 下地〜層 =========
-      % BE（全面）
-      \fill[gray!55] (0,0) rectangle (\W,\beH);
-
-      % 左：駆動部の PZT と TE（VBS）
-      \fill[gray!15] (0,\beH) rectangle (\xPZT,\beH+\pztH);                  % PZT
-      \fill[gray!80] (0,\beH+\pztH) rectangle (\xPZT,\beH+\pztH+\teH);        % TE
-
-      % 右：Au配線の下にも BE/PZT/TE を敷設（柱開口のみ除去）
-      %   PZT
-      \fill[gray!15] (\xGapR,\beH) rectangle (\W,\beH+\pztH);
-      %   TE（全面に敷き、後で柱開口だけ白で抜く）
-      \fill[gray!80] (\xGapR,\beH+\pztH) rectangle (\W,\beH+\pztH+\teH);
-      %   柱開口（PZT+TE を抜いて BE 露出）
-      \fill[white]   (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH+\teH);
-
-      % Au パッド（COM）— TE の上に載る（←ここが修正点）
-      \fill[gray!30] (\xGapR,\beH+\pztH+\teH) rectangle (\W,\beH+\pztH+\teH+0.60);
-
-      % Au のコンタクト柱（1本）：Au 底面から BE まで貫通
-      \fill[gray!30] (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH+\teH);
+      \fill[gray!55] (0,0) rectangle (\W,\beH);                                   % BE
+      \fill[gray!15] (0,\beH) rectangle (\xPZT,\beH+\pztH);                        % 左PZT
+      \fill[gray!80] (0,\beH+\pztH) rectangle (\xPZT,\beH+\pztH+\teH);             % 左TE
+      \fill[gray!15] (\xGapR,\beH) rectangle (\W,\beH+\pztH);                      % 右PZT（全面）
+      \fill[gray!80] (\xGapR,\beH+\pztH) rectangle (\W,\beH+\pztH+\teH);           % 右TE（全面）
+      \fill[white]   (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH+\teH);             % 柱開口（BE露出）
+      \fill[gray!30] (\xGapR,\beH+\pztH+\teH) rectangle (\W,\beH+\pztH+\teH+0.60); % Au配線(TE上)
+      \fill[gray!30] (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH+\teH);             % Au柱（BEまで）
 
       % ========= 強調表示 =========
-      % 露出PZT側壁（電界集中箇所）
-      \draw[line width=1.0pt] (\xPZT,\beH) -- (\xPZT,\beH+\pztH);
-      % 側壁保護(提案)を破線で示す
+      \draw[line width=1.0pt] (\xPZT,\beH) -- (\xPZT,\beH+\pztH);                  % 側壁
       \draw[gray!70,dashed,line width=0.7pt] (\xPZT-0.2,\beH) -- (\xPZT-0.2,\beH+\pztH);
       \draw[gray!70,dashed,line width=0.7pt] (\xPZT+0.2,\beH) -- (\xPZT+0.2,\beH+\pztH);
 
-      % ========= ラベル =========
+      % ========= ラベル（日英併記） =========
+      % 端子
       \draw[->] (0.3,\beH+\pztH+\teH+0.4) -- (0.8,\beH+\pztH+\teH+0.05);
-      \node[anchor=south] at (0.3,\beH+\pztH+\teH+0.4) {\scriptsize VBS = -10V};
+      \node[anchor=south] at (0.3,\beH+\pztH+\teH+0.4)
+        {\scriptsize VBS = -10\,V};
+
       \draw[->] (7.2,\beH+\pztH+\teH+0.9) -- (7.2,\beH+\pztH+\teH+0.62);
-      \node[anchor=south] at (7.2,\beH+\pztH+\teH+0.9) {\scriptsize COM = 10V〜30V};
+      \node[anchor=south] at (7.2,\beH+\pztH+\teH+0.9)
+        {\scriptsize COM = 10–30\,V};
 
-      \node[anchor=east] at (0,\beH/2) {\scriptsize BE};
-      \node[anchor=east] at (0,\beH+\pztH/2) {\scriptsize PZT};
-      \node[anchor=east] at (0,\beH+\pztH+\teH/2) {\scriptsize TE};
+      % 層名（JP / EN）
+      \node[anchor=east] at (0,\beH/2)
+        {\scriptsize BE（下部電極）/ Bottom electrode};
+      \node[anchor=east] at (0,\beH+\pztH/2)
+        {\scriptsize PZT（圧電膜）/ Piezoelectric layer};
+      \node[anchor=east] at (0,\beH+\pztH+\teH/2)
+        {\scriptsize TE（上部電極）/ Top electrode};
 
-      % 焼損箇所の注記
+      % 焼損注記（JP / EN）
       \draw[->,thick] (\xPZT+0.4,\beH+0.6) -- (\xPZT+0.05,\beH+0.6);
-      \node[anchor=west] at (\xPZT+0.45,\beH+0.6) {\scriptsize 焼損発生点（PZT側壁露出）};
+      \node[anchor=west] at (\xPZT+0.45,\beH+0.6)
+        {\scriptsize 焼損発生点 / Burnout spot（PZT側壁露出 / exposed sidewall）};
     \end{tikzpicture}%
   }%
 }{%
@@ -148,6 +137,7 @@
     \begin{tikzpicture}[x=0.9cm,y=0.9cm]
       \def\W{10}\def\beH{0.20}\def\pztH{1.20}\def\teH{0.20}
       \def\xPZT{4.0}\def\xGapR{6.0}\def\xViaL{7.6}\def\xViaR{8.2}
+
       \fill[gray!55] (0,0) rectangle (\W,\beH);
       \fill[gray!15] (0,\beH) rectangle (\xPZT,\beH+\pztH);
       \fill[gray!80] (0,\beH+\pztH) rectangle (\xPZT,\beH+\pztH+\teH);
@@ -162,16 +152,23 @@
       \draw[gray!70,dashed,line width=0.7pt] (\xPZT+0.2,\beH) -- (\xPZT+0.2,\beH+\pztH);
 
       \draw[->] (0.3,\beH+\pztH+\teH+0.4) -- (0.8,\beH+\pztH+\teH+0.05);
-      \node[anchor=south] at (0.3,\beH+\pztH+\teH+0.4) {\scriptsize VBS};
-      \draw[->] (7.2,\beH+\pztH+\teH+0.9) -- (7.2,\beH+\pztH+\teH+0.62);
-      \node[anchor=south] at (7.2,\beH+\pztH+\teH+0.9) {\scriptsize COM};
+      \node[anchor=south] at (0.3,\beH+\pztH+\teH+0.4)
+        {\scriptsize VBS = -10\,V};
 
-      \node[anchor=east] at (0,\beH/2) {\scriptsize BE};
-      \node[anchor=east] at (0,\beH+\pztH/2) {\scriptsize PZT};
-      \node[anchor=east] at (0,\beH+\pztH+\teH/2) {\scriptsize TE};
+      \draw[->] (7.2,\beH+\pztH+\teH+0.9) -- (7.2,\beH+\pztH+\teH+0.62);
+      \node[anchor=south] at (7.2,\beH+\pztH+\teH+0.9)
+        {\scriptsize COM = 10–30\,V};
+
+      \node[anchor=east] at (0,\beH/2)
+        {\scriptsize BE（下部電極）/ Bottom electrode};
+      \node[anchor=east] at (0,\beH+\pztH/2)
+        {\scriptsize PZT（圧電膜）/ Piezoelectric layer};
+      \node[anchor=east] at (0,\beH+\pztH+\teH/2)
+        {\scriptsize TE（上部電極）/ Top electrode};
 
       \draw[->,thick] (\xPZT+0.4,\beH+0.6) -- (\xPZT+0.05,\beH+0.6);
-      \node[anchor=west] at (\xPZT+0.45,\beH+0.6) {\scriptsize 焼損発生点（PZT側壁露出）};
+      \node[anchor=west] at (\xPZT+0.45,\beH+0.6)
+        {\scriptsize 焼損発生点 / Burnout spot（PZT側壁露出 / exposed sidewall）};
     \end{tikzpicture}%
   }%
 }
@@ -181,14 +178,17 @@
 \providecommand{\figEdgeBurnoutSketch}{\figEdgeBurnoutInline}
 
 % =====================================================
-% タイトル/著者
+% タイトル/著者（日英併記）
 % =====================================================
 
-\title{PZT薄膜アクチュエータにおける振動板クラックと端部焼損の原因解析・対策提案}
+\title{%
+  PZT薄膜アクチュエータにおける振動板クラックと端部焼損の原因解析・対策提案\\
+  \large Cause Analysis and Countermeasure Proposal for Diaphragm Cracks and Edge Burnout in PZT Thin-Film Actuators
+}
 
 \author{%
-  \IEEEauthorblockN{三溝 真一}%
-  \IEEEauthorblockA{独立系半導体研究者（元セイコーエプソン）\\%
+  \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
+  \IEEEauthorblockA{独立系半導体研究者（元セイコーエプソン） / Independent Semiconductor Researcher (ex-Seiko Epson)\\%
   Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
   GitHub: \url{https://github.com/Samizo-AITL}}%
 }
@@ -197,10 +197,11 @@
 \maketitle
 
 % =====================================================
-% 要旨・キーワード
+% 要旨・キーワード（日英併記）
 % =====================================================
 
 \begin{abstract}
+\textbf{和文要旨} — 
 本研究では、Epson $\mu$TFP（薄膜PZT $d_{33}$駆動方式）アクチュエータにおいて量産工程で観測された
 (1) 振動板クラック不良および (2) セグメント端部焼損不良について、原因解析と対策検討を行った。
 振動板クラックについては、ユニットスクリーニング時にウエハ上で同心円状に発生し、
@@ -217,10 +218,21 @@
 本研究により、薄膜PZTアクチュエータに固有の欠陥発生メカニズムを解明するとともに、
 プロセス条件制御による恒久改善事例と、構造的制約に対するデバイス設計提案を提示した。
 これらの成果は、今後の高密度ノズル化および高耐圧駆動化に資するものである。
+
+\medskip
+\textbf{Abstract (English)} — 
+This study analyzes the causes and proposes countermeasures for two major reliability issues observed in mass production of Epson $\mu$TFP thin-film PZT ($d_{33}$ mode) actuators:  
+(1) diaphragm cracks and (2) segment edge burnout.  
+For the cracks, wafer-level screening revealed concentric defect distribution, and cross-sectional analysis identified voids localized within specific PZT layers. These were attributed to surface hydrophobicity induced by residual airborne contaminants after RTA, leading to bubble entrapment during sol–gel spin coating. Introducing an acetic-acid pre-wet step restored surface hydrophilicity, suppressed bubble incorporation, and reduced the defect rate from 5–10\% to nearly zero, establishing stable mass-production conditions.
+
+For edge burnout, failures were found at exposed PZT sidewalls where the COM bottom electrode (via Au wiring) and VBS top electrode are in closest proximity. A potential difference up to \SI{40}{V}, combined with transient currents during trapezoidal wave rise, was concluded to cause local insulation breakdown. As a permanent solution, sidewall passivation by AlOx films using atomic layer deposition (ALD) was proposed. While requiring new equipment investment, this provides a strategic pathway toward reliable high-voltage operation.
+
+The findings elucidate defect mechanisms unique to thin-film PZT actuators, demonstrate a permanent process-based countermeasure, and propose a design-oriented solution for structural limitations. These results contribute to achieving higher nozzle density and improved high-voltage reliability in future MEMS inkjet devices.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Inkjet printing, MEMS actuator, PrecisionCore ($\mu$TFP), Thin-film PZT, $d_{33}$ mode, Reliability, Process optimization, Crack suppression, Edge burnout, Insulation breakdown
+\textbf{和文キーワード} — インクジェット, MEMSアクチュエータ, PrecisionCore ($\mu$TFP), 薄膜PZT, $d_{33}$駆動, 信頼性, プロセス最適化, クラック抑制, 端部焼損, 絶縁破壊  
+\textbf{Keywords} — Inkjet printing, MEMS actuator, PrecisionCore ($\mu$TFP), Thin-film PZT, $d_{33}$ mode, Reliability, Process optimization, Crack suppression, Edge burnout, Insulation breakdown
 \end{IEEEkeywords}
 
 % =====================================================
