@@ -1,0 +1,37 @@
+name: Build LaTeX PDF (TFP Actuator)
+
+on:
+  push:
+    paths:
+      - 'latex-papers/papers/2025_tfp_actuator_reliability/**'
+      - '.github/workflows/latex_tfp_actuator.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build with LuaLaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: latex-papers/papers/2025_tfp_actuator_reliability
+          root_file: main.tex
+          latexmk_use_lualatex: true
+          pre_compile: |
+            tlmgr update --self
+            tlmgr install luatexja siunitx standalone pgf xcolor booktabs hyperref caption subcaption geometry
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfp_actuator_pdf
+          path: latex-papers/papers/2025_tfp_actuator_reliability/main.pdf
+
+      - name: Upload LOG
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfp_actuator_log
+          path: latex-papers/papers/2025_tfp_actuator_reliability/main.log
