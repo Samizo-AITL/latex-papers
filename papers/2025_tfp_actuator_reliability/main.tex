@@ -79,65 +79,46 @@
   \end{tikzpicture}%
 }
 
-% --- Fig.3: 端部焼損の模式図（スケッチ準拠）---
-\renewcommand{\figEdgeBurnoutInline}{%
-  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
-    % 基本パラメータ
-    \def\W{10.0}
-    \def\pztH{1.20}   % PZT厚さ（相対表示；1.2 µmイメージ）
-    \def\teH{0.20}    % Top Electrode厚み
-    \def\beY{0.00}    % BE基準高さ
-    % 線幅（界面は太め）
-    \def\iflw{0.9pt}  % 界面線
-    \def\edgw{0.8pt}  % 輪郭線
+% ===== Fig.3: 端部焼損模式図（スケッチ準拠） =====
+\newcommand{\figEdgeBurnoutSketch}{%
+  \begin{tikzpicture}[x=0.8cm,y=0.8cm]
 
-    % ===== Bottom Electrode (BE) 基準線（太線）=====
-    \draw[line width=\iflw] (0,\beY) -- (\W,\beY);
-    % BEラベル
-    \node[anchor=north west,scale=0.8] at (0.05,\beY-0.10) {BE};
+    % --- パラメータ ---
+    \def\W{8}   % 全体幅
+    \def\pztH{1.2} % PZT層厚み（スケール用）
+    \def\beH{0.3}  % 下電極厚み
+    \def\teH{0.2}  % 上電極厚み
+    \def\auW{2.2}  % Au配線の幅
+    \def\auH{0.8}  % Au配線の厚み
 
-    % ===== 左側：PZT + Top Electrode(VBS) =====
-    % PZT本体
-    \draw[fill=gray!15,draw=black,line width=\edgw]
-      (0.80,\beY) rectangle (5.00,\beY+\pztH);
-    % PZT上下面の界面を強調（太線を上書き）
-    \draw[line width=\iflw] (0.80,\beY) -- (5.00,\beY);
-    \draw[line width=\iflw] (0.80,\beY+\pztH) -- (5.00,\beY+\pztH);
-    % Top Electrode（左側のみ）
-    \draw[fill=gray!65,draw=black,line width=\edgw]
-      (0.80,\beY+\pztH) rectangle (3.80,\beY+\pztH+\teH);
-    % TE端の側壁（PZT露出：電界集中部）
-    \draw[line width=\iflw] (3.80,\beY+\pztH) -- (3.80,\beY); % 垂直界面を太線
-    % VBS取り出し（上向きリード＋ラベル）
-    \draw[line width=0.7pt] (2.10,\beY+\pztH+\teH) -- (2.10,\beY+\pztH+\teH+0.60);
-    \fill (2.10,\beY+\pztH+\teH+0.60) circle (0.04);
-    \node[anchor=south,scale=0.8] at (2.10,\beY+\pztH+\teH+0.62) {VBS};
-    % TEラベル
-    \node[anchor=west,scale=0.8] at (3.85,\beY+\pztH+\teH-0.03) {TE};
-    % PZTラベル
-    \node[anchor=west,scale=0.8] at (5.05,\beY+0.55*\pztH) {PZT};
+    % --- Bottom Electrode (BE) ---
+    \fill[gray!55] (0,0) rectangle (\W,\beH);
+    \node[anchor=east,font=\scriptsize] at (-0.1,0.15) {BE};
 
-    % 厚さ注記（1.2 µm）— 側壁横に寸法線
-    \draw[->,line width=0.5pt] (3.45,\beY+\pztH) -- (3.45,\beY+0.02);
-    \draw[->,line width=0.5pt] (3.45,\beY+0.00) -- (3.45,\beY+\pztH-0.02);
-    \node[anchor=east,scale=0.8] at (3.40,\beY+0.5*\pztH) {1.2\,\(\mu\)m};
+    % --- PZT層 ---
+    \fill[gray!15] (0,\beH) rectangle (\W,\beH+\pztH);
+    \node[anchor=east,font=\scriptsize] at (-0.1,\beH+0.6) {PZT};
 
-    % ===== 右側：COM（Au配線パッド＋支柱）=====
-    % 支柱（BEから立ち上がり）
-    \draw[fill=gray!35,draw=black,line width=\edgw]
-      (6.00,\beY) rectangle (6.60,\beY+\pztH);
-    \draw[fill=gray!35,draw=black,line width=\edgw]
-      (7.60,\beY) rectangle (8.20,\beY+\pztH);
-    % Au配線パッド（支柱上に載る）
-    \draw[fill=gray!25,draw=black,line width=\edgw]
-      (5.40,\beY+\pztH) rectangle (8.80,\beY+\pztH+0.70);
-    % パッド下面の界面を強調（太線）
-    \draw[line width=\iflw] (5.40,\beY+\pztH) -- (8.80,\beY+\pztH);
-    % COM取り出し＆ラベル
-    \draw[line width=0.7pt] (7.10,\beY+\pztH+0.70) -- (7.10,\beY+\pztH+1.20);
-    \node[anchor=south,scale=0.8] at (7.10,\beY+\pztH+1.22) {COM};
-    % 「Au配線」ラベル
-    \node[anchor=south east,scale=0.8] at (8.78,\beY+\pztH+0.70) {Au配線};
+    % --- Top Electrode (TE, 左側のみ) ---
+    \fill[gray!75] (0,\beH+\pztH) rectangle (3,\beH+\pztH+\teH);
+    \node[anchor=east,font=\scriptsize] at (-0.1,\beH+\pztH+0.1) {TE};
+
+    % --- Au配線（右側） ---
+    \fill[gray!35] (4,\beH+\pztH) rectangle (4+\auW,\beH+\pztH+\auH);
+    \node[anchor=west,font=\scriptsize] at (6.3,\beH+\pztH+0.4) {Au配線};
+
+    % --- COM電極 (上に伸ばす) ---
+    \draw[line width=0.5pt] (5,\beH+\pztH+\auH) -- ++(0,0.8);
+    \node[anchor=west,font=\scriptsize] at (5.1,\beH+\pztH+\auH+0.6) {COM};
+
+    % --- VBS電極 (左TEから上に伸ばす) ---
+    \draw[line width=0.5pt] (1.5,\beH+\pztH+\teH) -- ++(0,0.8);
+    \node[anchor=west,font=\scriptsize] at (1.6,\beH+\pztH+\teH+0.6) {VBS};
+
+    % --- 寸法線（PZT厚み 1.2µm） ---
+    \draw[<->,line width=0.4pt] (-0.6,\beH) -- (-0.6,\beH+\pztH);
+    \node[anchor=east,font=\scriptsize] at (-0.7,\beH+0.6) {1.2 µm};
+
   \end{tikzpicture}%
 }
 
@@ -292,7 +273,7 @@ VBS上電極が最も接近するチップ端部に集中して観測された�
 
 \begin{figure}[t]
   \centering
-  \figEdgeBurnoutInline
+  \figEdgeBurnoutSketch
   \caption{端部焼損の模式図}
   \label{fig:edge}
 \end{figure}
