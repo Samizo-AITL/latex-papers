@@ -52,41 +52,34 @@
   \end{tikzpicture}%
 }
 
-% ===== Fig.2：6層中1層にボイド（矩形） =====
-\makeatletter
-\@ifundefined{figPZTLayersVoidInline}{%
-  \newcommand{\figPZTLayersVoidInline}{%
-    \begin{tikzpicture}[x=0.9cm,y=0.9cm]
-      \def\W{6.0}\def\H{0.45}\def\G{0.10}
-      % 層（0〜5の6層のみ）
-      \foreach \i in {0,...,5}{%
-        \pgfmathsetmacro{\yy}{\i*(\H+\G)}%
-        \draw[fill=gray!15,draw=black,line width=0.4pt] (0,\yy) rectangle (\W,\yy+\H);
-      }
-      % 第4層のボイド（破線枠）
-      \pgfmathsetmacro{\yv}{3*(\H+\G)}% 0始まり→3が第4層
-      \draw[line width=0.8pt,gray!50,dashed] (2.1,\yv+0.08) rectangle (3.0,\yv+\H-0.08);
-      % 上下の基準線（電極イメージ）
-      \draw[line width=0.6pt,gray!70] (0,-0.30) -- (\W,-0.30);
-      \draw[line width=0.6pt,gray!70] (0,6*(\H+\G)+0.10) -- (\W,6*(\H+\G)+0.10);
-    \end{tikzpicture}%
-  }%
-}{%
-  \renewcommand{\figPZTLayersVoidInline}{%
-    \begin{tikzpicture}[x=0.9cm,y=0.9cm]
-      \def\W{6.0}\def\H{0.45}\def\G{0.10}
-      \foreach \i in {0,...,5}{%
-        \pgfmathsetmacro{\yy}{\i*(\H+\G)}%
-        \draw[fill=gray!15,draw=black,line width=0.4pt] (0,\yy) rectangle (\W,\yy+\H);
-      }
-      \pgfmathsetmacro{\yv}{3*(\H+\G)}%
-      \draw[line width=0.8pt,gray!50,dashed] (2.1,\yv+0.08) rectangle (3.0,\yv+\H-0.08);
-      \draw[line width=0.6pt,gray!70] (0,-0.30) -- (\W,-0.30);
-      \draw[line width=0.6pt,gray!70] (0,6*(\H+\G)+0.10) -- (\W,6*(\H+\G)+0.10);
-    \end{tikzpicture}%
-  }%
+% ====== Fig.2: 6層のPZT断面（1層にボイドをハイライト）======
+\newcommand{\figPZTLayersVoidInline}{%
+  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+    % ---- パラメータ（必要ならここを微調整）----
+    \def\W{6.0}   % 横幅
+    \def\H{0.45}  % 各層の厚み
+    \def\G{0.10}  % 層間ギャップ（描画上の見やすさ用）
+    \def\N{6}     % 層数（固定：6）
+    \def\voidLayer{4} % ボイドを示す層番号（1..6）。例：第4層
+
+    % ---- 6層の描画（必ず6回）----
+    \foreach \i in {0,...,5}{% 0～5 で計6層
+      \pgfmathsetmacro{\yy}{\i*(\H+\G)}%
+      \draw[fill=gray!15,draw=black,line width=0.4pt]
+        (0,\yy) rectangle (\W,\yy+\H);
+    }
+
+    % ---- ボイドを示す破線枠（\voidLayer だけに描く）----
+    \pgfmathsetmacro{\idx}{\voidLayer-1}%
+    \pgfmathsetmacro{\yv}{\idx*(\H+\G)}%
+    \draw[line width=0.8pt,gray!50,dashed]
+      (2.1,\yv+0.08) rectangle (3.0,\yv+\H-0.08);
+
+    % ---- 上下の基準線（電極イメージ）----
+    \draw[line width=0.6pt,gray!70] (0,-0.30) -- (\W,-0.30);
+    \draw[line width=0.6pt,gray!70] (0,\N*(\H+\G)+0.10) -- (\W,\N*(\H+\G)+0.10);
+  \end{tikzpicture}%
 }
-\makeatother
 
 % 端部焼損の模式（モノクロ）
 \newcommand{\figEdgeBurnoutInline}{%
