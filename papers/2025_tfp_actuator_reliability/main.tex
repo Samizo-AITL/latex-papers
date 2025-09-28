@@ -57,28 +57,23 @@
 }
 
 % ====== Fig.2: 6層のPZT断面（中央層にボイド）======
-\newcommand{\figPZTLayersVoidInline}{%
+\renewcommand{\figPZTLayersVoidInline}{%
   \begin{tikzpicture}[x=0.9cm,y=0.9cm]
-    % ---- パラメータ ----
-    \def\W{6.0}   % 横幅
-    \def\H{0.45}  % 各層の厚み
-    \def\G{0.10}  % 層間ギャップ
-    \def\N{6}     % 層数（6に固定）
-    \def\voidLayer{3} % 中央の層にボイドを描画（第3層）
-
-    % ---- 6層の描画 ----
-    \foreach \i in {0,...,5}{% 0～5 で計6層
-      \pgfmathsetmacro{\yy}{\i*(\H+\G)}%
-      \draw[line width=0.6pt]
-        (0,\yy) -- (\W,\yy+\H) -- cycle;
-      \draw[draw=black,line width=0.4pt]
-        (0,\yy) rectangle (\W,\yy+\H);
+    % 6本の水平ライン
+    \def\W{6.4}\def\Pitch{0.55}
+    \foreach \k in {0,...,5}{
+      \draw[line width=0.8pt,gray!40] (0,\k*\Pitch) -- (\W,\k*\Pitch);
     }
-
-    % ---- ボイド矩形（中央層に塗りつぶし）----
-    \pgfmathsetmacro{\idx}{\voidLayer-1}%
-    \pgfmathsetmacro{\yv}{\idx*(\H+\G)}%
-    \fill[gray!50] (2.3,\yv+0.05) rectangle (3.2,\yv+\H-0.05);
+    % 中央付近のボイド矩形（ハッチは手描き線で再現：追加lib不要）
+    \def\xL{2.10}\def\xR{2.80}
+    \def\yC{2.5*\Pitch}\def\hH{0.18}
+    \draw[fill=gray!35,draw=gray!70,line width=0.6pt]
+      (\xL,\yC-\hH) rectangle (\xR,\yC+\hH);
+    % 斜めハッチ
+    \foreach \t in {-0.20,-0.10,0,0.10,0.20}{
+      \draw[gray!60,line width=0.6pt]
+        ({\xL+0.02},{\yC-\hH+0.04+\t}) -- ({\xR-0.02},{\yC+\hH-0.04+\t});
+    }
   \end{tikzpicture}%
 }
 
