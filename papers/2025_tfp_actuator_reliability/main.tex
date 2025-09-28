@@ -79,50 +79,77 @@
   \end{tikzpicture}%
 }
 
-% ====== Fig.3: スリット構造（左=駆動部，右=COMがBEへ接続）======
+% ====== Fig.3 ======
+% 端部焼損の模式（スリット＋CAVを含む断面）
 \renewcommand{\figEdgeBurnoutInline}{%
-  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
-    % 寸法パラメータ（必要なら微調整）
-    \def\W{10}
-    \def\beH{0.25}      % BE厚み
-    \def\pztH{1.20}     % PZT厚み
-    \def\teH{0.25}      % 上電極厚み
-    \def\slitX{4.0}     % スリット位置（左駆動/右配線の境目）
-    \def\auW{3.0}       % COM配線幅
-    \def\auH{0.50}      % COM配線厚み（描画上）
-    \def\viaX{5.5}      % COM→BEの縦コンタクトX位置
-    \def\viaW{0.35}     % 縦コンタクト幅
+\begin{tikzpicture}[x=0.9cm,y=0.9cm]
+  % ===== パラメータ =====
+  \def\W{10.5}
+  \def\siT{-0.60}   % Si 下端
+  \def\zrT{-0.10}   % ZrO2 厚み（Si上面=-0.60..0、ZrO2=-0.10..0）
+  \def\beH{0.18}    % BE 厚み
+  \def\pztH{1.20}   % PZT 厚み（左＝駆動部）
+  \def\teH{0.15}    % TE 厚み（VBS 側）
+  \def\xslit{3.70}  % スリット位置（PZT終端＝側壁露出）
+  \def\xwall{2.60}  % CAV 垂直壁（←ここで止まり、端部は抜かない）
+  \def\xpadsA{4.40} % BE ビア柱1
+  \def\xpadsB{6.20} % BE ビア柱2
+  \def\viaW{0.55}   % ビア柱幅
+  \def\auTop{1.80}  % Au 配線上面
 
-    % --- Bottom Electrode (BE) 全体 ---
-    \fill[gray!55] (0,0) rectangle (\W,\beH);
+  % ===== 基板 (Si) と ZrO2 =====
+  % Si（上面=0、下面=\siT）— CAV をくり抜く
+  \fill[gray!20] (0,\siT) rectangle (\W,0);
+  % CAV：左側を開口、ただし xwall より右は残す（＝端部はクランプ）
+  \fill[white] (0,\siT) -- (0, -0.30) -- (\xwall,-0.30) -- (\xwall,0) -- (0,0) -- cycle;
+  \draw[gray!60,line width=0.4pt] (0,-0.30) -- (\xwall,-0.30); % CAV の底面を示す
+  % ZrO2 （Si 上に薄層）
+  \fill[gray!35] (0,\zrT) rectangle (\W,0);
 
-    % --- 左側：PZT駆動部（BE上にPZT→TE） ---
-    \fill[gray!15] (0,\beH) rectangle (\slitX,\beH+\pztH);             % PZT
-    \fill[gray!80] (0,\beH+\pztH) rectangle (\slitX,\beH+\pztH+\teH);  % 上電極(TE/VBS)
+  % ===== 下電極 BE =====
+  \fill[gray!55] (0,0) rectangle (\W,\beH);
 
-    % --- 中央スリット（PZT/TEが無い縦の溝） ---
-    \fill[white] (\slitX,0) rectangle (\slitX+0.02,\beH+\pztH+\teH+\auH); % ほんの細い空隙表示
-    \draw[line width=0.8pt,black] (\slitX,0) -- (\slitX,\beH+\pztH+\teH+\auH); % スリット境界線（片側だけ太め）
+  % ===== PZT（左：駆動部のみ） =====
+  % 駆動部（左ブロック）— スリットで終端
+  \fill[gray!15] (0,\beH) rectangle (\xslit,\beH+\pztH);
 
-    % --- 右側：COM（Au配線）---
-    % 上面に走るCOMトレース（PZTが無い右側上面）
-    \fill[gray!30] (\slitX+2,\beH+\pztH) rectangle (\slitX+2+\auW,\beH+\pztH+\auH);
+  % ===== 上電極 TE（VBS）— 左ブロック上にのみ =====
+  \fill[gray!70] (0,\beH+\pztH) rectangle (\xslit,\beH+\pztH+\teH);
+  % VBS 端子（簡素ラベル）
+  \draw[black,line width=0.5pt] (\xslit-2.8,\beH+\pztH+\teH) -- ++(0,0.60)
+                                node[above,scale=0.85]{\scriptsize VBS};
 
-    % COM→BE への縦コンタクト（スケッチの“落とし”）
-    \fill[gray!30] (\viaX-\viaW/2,\beH) rectangle (\viaX+\viaW/2,\beH+\pztH+\auH);
+  % ===== スリット側壁（電界集中部位）=====
+  \draw[black,line width=1.2pt] (\xslit,\beH) -- (\xslit,\beH+\pztH); % 露出側壁＝太線
+  % 提案：AlOx (ALD) 被覆（破線で囲う）
+  \draw[gray!70,dashed,line width=0.7pt]
+       (\xslit-0.18,\beH) -- (\xslit-0.18,\beH+\pztH);
+  \draw[gray!70,dashed,line width=0.7pt]
+       (\xslit+0.18,\beH) -- (\xslit+0.18,\beH+\pztH);
 
-    % 輪郭線（必要最小限、斜め線なし）
-    \draw[line width=0.6pt,black] (0,0) -- (\W,0);                                % BE下面
-    \draw[line width=0.6pt,black] (0,\beH) -- (\slitX,\beH);                       % 駆動部BE上面
-    \draw[line width=0.6pt,black] (0,\beH+\pztH) -- (\slitX,\beH+\pztH);           % PZT上面
-    \draw[line width=0.6pt,black] (0,\beH+\pztH+\teH) -- (\slitX,\beH+\pztH+\teH); % TE上面
-    \draw[line width=0.6pt,black] (\slitX+2,\beH+\pztH+\auH) -- (\slitX+2+\auW,\beH+\pztH+\auH); % COM上端
+  % ===== 右側：COM(Au) 配線と BE へのコンタクト =====
+  % BE へのビア柱（絶縁上に立つピラー）
+  \fill[gray!55] (\xpadsA,0) rectangle (\xpadsA+\viaW,\beH+0.85);
+  \fill[gray!55] (\xpadsB,0) rectangle (\xpadsB+\viaW,\beH+0.65);
+  % Au 配線（COM）
+  \fill[gray!30] (\xpadsA-0.25,\beH+0.85) rectangle (\xpadsB+\viaW+0.25,\auTop);
+  % COM 端子（簡素ラベル）
+  \draw[black,line width=0.5pt]
+       ({(\xpadsA+\xpadsB)/2},\auTop) -- ++(0,0.70) node[above,scale=0.85]{\scriptsize COM};
 
-    % 最小ラベル（必要なら）
-    \node[anchor=north west,scale=0.75] at (0.1,\beH+\pztH+\teH) {駆動部（PZT）};
-    \node[anchor=south,scale=0.75] at (\slitX+2+\auW/2,\beH+\pztH+\auH) {COM（Au）};
-    \node[anchor=west,scale=0.7] at (\viaX+\viaW/2+0.1,\beH+\0.15) {BEに接続};
-  \end{tikzpicture}%
+  % ===== レイヤ名の控えめラベル（IEEE 風に淡色）=====
+  \node[anchor=west,gray!60,scale=0.85] at (0.1,-0.47) {\scriptsize Si};
+  \node[anchor=west,gray!60,scale=0.85] at (0.1,-0.05) {\scriptsize ZrO$_2$};
+  \node[anchor=west,gray!60,scale=0.85] at (0.1,0.06) {\scriptsize BE};
+  \node[anchor=west,gray!60,scale=0.85] at (0.1,\beH+0.12) {\scriptsize PZT};
+  \node[anchor=west,gray!60,scale=0.85] at (0.1,\beH+\pztH+0.05) {\scriptsize TE};
+
+  % CAV の注記（薄め）
+  \node[anchor=west,gray!60,scale=0.85] at (0.15,-0.33) {\scriptsize CAV（インク流路）};
+
+  % ===== 仕上げ枠（最小限）=====
+  \draw[black,line width=0.4pt] (0,\siT) rectangle (\W,\auTop+0.15);
+\end{tikzpicture}%
 }
 
 % =====================================================
@@ -274,6 +301,10 @@ VBS上電極が最も接近するチップ端部に集中して観測された�
 さらにEDSでは、焼損部に酸化物由来の成分とともに金属蒸発痕が確認され、
 局所的な絶縁破壊に起因する高温イベントであることが裏付けられた。
 
+このPZT露出部は、アクチュエータ端部におけるキャビティ開口と
+配線接続（COM電極をBE下電極へコンタクトさせる構造）のために生じるものであり、
+設計上不可避である。
+
 \begin{figure}[t]
   \centering
   \figEdgeBurnoutSketch
@@ -318,6 +349,13 @@ EDS解析で焼損部に金属蒸発痕や酸化生成物が観測されたこ�
 代替的に、駆動電圧マージンの見直し（例：+\SI{25}{V}/--\SI{5}{V}）
 やレイアウト設計の変更による端部形状の最適化も有効と考えられる。
 これらは即時適用可能な改善案として検討の余地がある。
+
+なお、PZT側壁の露出は偶発的欠陥ではなく、キャビティ形成および
+COM電極の接続構造に起因する必然的形態である。
+すなわち、駆動部の変位領域を確保するためにPZT層をスリット状に分割し、
+一方で電極接続のため端部を残す設計上の要請が、局所的な絶縁距離の低下を招いている。
+したがって、本不良は構造的必然性に起因する本質課題であり、抜本的な信頼性改善には
+追加の絶縁対策が不可欠である。
 
 \subsection{総合的考察}
 以上より、クラックはプロセス環境起因の表面物性変化による欠陥であり、
