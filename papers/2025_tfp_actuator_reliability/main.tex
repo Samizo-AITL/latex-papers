@@ -47,21 +47,33 @@
   \end{tikzpicture}%
 }
 
-% 6層中1層にボイド（矩形）を含む断面（モノクロ）
-\newcommand{\figPZTLayersVoidInline}{%
+% --- Fig.2: 層境界は水平ラインのみ／中間層に矩形ボイド＋斜線ハッチ ---
+\renewcommand{\figPZTLayersVoidInline}{%
   \begin{tikzpicture}[x=0.9cm,y=0.9cm]
-    \def\W{6.0}\def\H{0.45}\def\G{0.10}
-    % 層
-    \foreach \i in {0,...,5}{%
-      \draw[fill=gray!15,draw=black,line width=0.4pt]
-        (0,{ \i*(\H+\G) }) rectangle (\W,{ \i*(\H+\G) + \H });
+    % パラメータ（必要なら微調整）
+    \def\W{7.0}   % 横幅（列内に収まるよう小さめ）
+    \def\H{0.22}  % 層の厚み（ライン間隔）
+    \def\G{0.22}  % 層間ギャップ（見やすさ用）
+    \def\NL{6}    % 層数（6層想定）
+
+    % 層境界ライン（上下面の2本を1層と見なす）
+    \foreach \i in {0,...,5}{% 0..(NL-1)
+      \pgfmathsetmacro{\y}{\i*(\H+\G)}
+      \draw[line width=0.8pt,cap=round] (0,\y) -- (\W,\y);       % 下側境界
+      \draw[line width=0.8pt,cap=round] (0,\y+\H) -- (\W,\y+\H); % 上側境界
     }
-    % 第4層のボイド（破線でハイライト）
-    \draw[line width=0.8pt,gray!50,dashed]
-      (2.1,{ 3*(\H+\G) + 0.08 }) rectangle (3.0,{ 3*(\H+\G) + \H - 0.08 });
-    % 上下の基準線（電極イメージ）
-    \draw[line width=0.6pt,gray!70] (0,-0.30) -- (\W,-0.30);
-    \draw[line width=0.6pt,gray!70] (0,{ 6*(\H+\G) + 0.10 }) -- (\W,{ 6*(\H+\G) + 0.10 });
+
+    % 中間層（第4層=インデックス3）に矩形ボイド
+    \pgfmathsetmacro{\yv}{3*(\H+\G)}     % ボイドの縦位置（第4層）
+    \def\vx{2.2} \def\vw{1.1}            % ボイドのx位置と幅（調整可）
+    \draw[fill=gray!25,draw=black,line width=0.8pt]
+      (\vx,\yv) rectangle (\vx+\vw,\yv+\H);
+
+    % 斜線ハッチ（見栄え用）
+    \foreach \x in {0,0.08,...,1.12}{
+      \draw[gray!60,line width=0.6pt]
+        (\vx+\x,\yv) -- ++(0.22, \H);
+    }
   \end{tikzpicture}%
 }
 
