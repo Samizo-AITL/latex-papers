@@ -11,23 +11,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Build with LuaLaTeX
+        id: latex
         uses: xu-cheng/latex-action@v3
-        continue-on-error: true             # ← 失敗しても次へ
         with:
           working_directory: papers/2025_tfp_actuator_reliability
           root_file: main.tex
           latexmk_use_lualatex: true
 
-      - name: Print main.log tail (for quick debug)
+      # 生成物の在処を可視化（デバッグ用）
+      - name: Show build outputs
         if: always()
         run: |
-          if [ -f papers/2025_tfp_actuator_reliability/main.log ]; then
-            tail -n 200 papers/2025_tfp_actuator_reliability/main.log
-          fi
+          echo "== CWD ==" && pwd
+          echo "== tree papers/2025_tfp_actuator_reliability =="
+          ls -la papers/2025_tfp_actuator_reliability || true
 
       - name: Upload PDF
         if: always()
