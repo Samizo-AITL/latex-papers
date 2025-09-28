@@ -6,16 +6,18 @@
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
 % 和文フォントはTeX Live同梱（再配布安全）
-\setmainjfont{HaranoAjiMincho}
-\setsansjfont{HaranoAjiGothic}
+\setmainjfont{HaranoAjiMincho} % 明朝体
+\setsansjfont{HaranoAjiGothic} % ゴシック体
 
 % ---------------- Latin fonts (Times系に寄せる) ----------------
 \usepackage{fontspec}
-\setmainfont{TeX Gyre Termes} % Times相当。数式は既定(CM)のまま
+\setmainfont{TeX Gyre Termes} % Times相当
+\setsansfont{TeX Gyre Heros}  % Helvetica相当（IEEE図表に合う）
+\setmonofont{TeX Gyre Cursor} % 等幅
 
 % ---------------- General packages (IEEE互換の範囲) ----------------
 \usepackage{siunitx}
-\sisetup{mode=match,propagate-math-font=true}
+\sisetup{detect-all,mode=match,propagate-math-font=true}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{booktabs}
@@ -26,7 +28,10 @@
 % ---------------- TikZ（図は本文内に埋め込み）----------------
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc}
-\tikzset{>=Stealth, every picture/.style={line cap=round,line join=round}}
+\tikzset{
+  >=Stealth,
+  every picture/.style={line cap=round,line join=round},
+}
 \pgfmathsetseed{20250928} % 再現性のため乱数シード固定
 
 % =====================================================
@@ -48,7 +53,7 @@
 }
 
 % --- Fig.2: 層境界は水平ラインのみ／中間層に矩形ボイド＋斜線ハッチ ---
-\renewcommand{\figPZTLayersVoidInline}{%
+\newcommand{\figPZTLayersVoidInline}{%
   \begin{tikzpicture}[x=0.9cm,y=0.9cm]
     % パラメータ（必要なら微調整）
     \def\W{7.0}   % 横幅（列内に収まるよう小さめ）
