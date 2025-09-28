@@ -33,57 +33,92 @@
 \usetikzlibrary{arrows.meta,calc}
 \pgfmathsetseed{20250928} % 再現性のため乱数シード
 
-% ---- 内蔵図: ドーナツ状分布 ----
+% -------------------------------
+% 図: ドーナツ状（同心円）分布
+% -------------------------------
 \newcommand{\figVoidDonutInline}{%
   \begin{tikzpicture}[scale=0.06]
-    \draw[line width=2pt, gray] (0,0) circle (100);
+    % ウエハ外周
+    \draw[line width=2pt,gray] (0,0) circle (100);
+    % 乱数シード（毎回同じ見た目にしたい場合は固定値）
+    \pgfmathsetseed{20250928}
+    % ドーナツ半径中心=50、±5の帯域に粒子を散布
     \foreach \i in {1,...,320}{
-      \pgfmathsetmacro{\ang}{rnd*360}
-      \pgfmathsetmacro{\rad}{50 + 5*(rnd-0.5)}
+      \pgfmathparse{360*rand} \let\ang\pgfmathresult
+      \pgfmathparse{50 + 10*(rand-0.5)} \let\rad\pgfmathresult
       \fill[red] (\ang:\rad) circle (0.9);
     }
   \end{tikzpicture}%
 }
 
-% ---- 内蔵図: 6層中1層ボイド断面 ----
+% -----------------------------------------
+% 図: 6層PZTのうち1層にボイド（断面模式図）
+% 座標は “数値のみ” を掛け算して使う（単位は図スケール）
+% -----------------------------------------
 \newcommand{\figPZTLayersVoidInline}{%
-  \begin{tikzpicture}[x=1cm,y=1cm]
-    \def\W{6.0}\def\H{0.45}\def\G{0.10}
-    \foreach \i in {0,...,5}{
-      \pgfmathsetmacro{\y}{\i*(\H+\G)}
-      \draw[fill=gray!20] (0,\y) rectangle (\W,\y+\H);
+  \begin{tikzpicture}[x=1mm,y=1mm]
+    % 図スケール（見やすさ用。実寸ではない）
+    \def\W{80}   % 横幅
+    \def\H{4}    % 各層の高さ
+    \def\S{6}    % 層ピッチ（H+G相当, 例: 4 + 2）
+
+    % 6層のPZT
+    \foreach \k in {0,...,5}{
+      \draw[fill=blue!8, draw=black, line width=0.3pt]
+        (0,{\k*\S}) rectangle (\W,{\k*\S+\H});
     }
-    % 4層目ボイド（矩形）
-    \pgfmathsetmacro{\yv}{3*(\H+\G)}
-    \draw[very thick,red] (2.2,\yv+0.10) rectangle (3.0,\yv+\H-0.10);
-    % 上下に細線（電極/基板のイメージ）
-    \draw[line width=1pt] (0,-0.30) -- (\W,-0.30);
-    \draw[line width=1pt] (0,6*(\H+\G)+0.10) -- (\W,6*(\H+\G)+0.10);
+
+    % 第4層（index 3）内のボイド（矩形で示す）
+    \def\VL{22} \def\VR{34} \def\Vb{3*\S+0.8} \def\Vt{3*\S+3.2}
+    \draw[fill=red!40, draw=red!70] (\VL,\Vb) rectangle (\VR,\Vt);
+
+    % 上下の参照線（基板/上部電極イメージ）
+    \draw[line width=1pt] (0,-3) -- (\W,-3);
+    \draw[line width=1pt] (0,{6*\S+3}) -- (\W,{6*\S+3});
+
+    % 凡例
+    \draw[fill=blue!8,draw=black] (\W-28,{6*\S-12}) rectangle (\W-20,{6*\S-8});
+    \node[anchor=west,scale=0.8] at (\W-19,{6*\S-10}) {PZT layer};
+    \draw[fill=red!40,draw=red!70] (\W-28,{6*\S-6}) rectangle (\W-20,{6*\S-2});
+    \node[anchor=west,scale=0.8] at (\W-19,{6*\S-4}) {Void (defect)};
   \end{tikzpicture}%
 }
 
-% ---- 内蔵図: 端部焼損模式（カラー）----
+% -----------------------------------------
+% 図: セグメント端部焼損の模式図（カラー）
+% -----------------------------------------
 \newcommand{\figEdgeBurnoutInline}{%
-  \begin{tikzpicture}[x=1cm,y=1cm]
-    \def\W{10}\def\pztH{1.2}\def\beH{0.2}\def\teH{0.20}
-    % Bottom Electrode
-    \fill[gray!50] (0,0) rectangle (\W,\beH);
+  \begin{tikzpicture}[x=1mm,y=1mm]
+    \def\W{100}   % 横幅
+    \def\BE{2}    % 下部電極厚み(図スケール)
+    \def\PZT{12}  % PZT膜厚(図スケール)
+    \def\TE{2}    % 上部電極厚み
+
+    % Bottom Electrode (BE)
+    \fill[gray!60] (0,0) rectangle (\W,\BE);
+
     % PZT
-    \fill[blue!15] (0,\beH) rectangle (\W,\beH+\pztH);
+    \fill[blue!15] (0,\BE) rectangle (\W,{\BE+\PZT});
+
     % Top Electrode (VBS)
-    \fill[black] (0,\beH+\pztH) rectangle (4,\beH+\pztH+\teH);
-    % Au Pad (COM)
-    \fill[yellow!70!orange] (6,\beH+\pztH) rectangle (\W,\beH+\pztH+0.6);
-    % Exposed sidewall
-    \draw[line width=1.8pt,red] (4,\beH) -- (4,\beH+\pztH);
-    % Proposed AlOx
-    \draw[line width=1.2pt,blue,dashed] (3.8,\beH) -- (3.8,\beH+\pztH);
-    \draw[line width=1.2pt,blue,dashed] (4.2,\beH) -- (4.2,\beH+\pztH);
-    % Voltage labels（英数字のみ）
-    \draw[->] (2, \beH+\pztH+\teH+0.2) -- (2,\beH+\pztH+\teH);
-    \node[anchor=south] at (2, \beH+\pztH+\teH+0.2) {\scriptsize VBS = -10 V};
-    \draw[->] (8, \beH+\pztH+0.7) -- (8,\beH+\pztH+0.6);
-    \node[anchor=south] at (8, \beH+\pztH+0.7) {\scriptsize COM = +30 V};
+    \fill[black] (0,{\BE+\PZT}) rectangle (40,{\BE+\PZT+\TE});
+
+    % Au Pad / COM引き出し
+    \fill[yellow!70!orange] (60,{\BE+\PZT}) rectangle (\W,{\BE+\PZT+6});
+
+    % 露出側壁（電界集中箇所）
+    \draw[line width=1.8pt,red] (40,\BE) -- (40,{\BE+\PZT});
+
+    % 提案: AlOx保護膜（ALD）
+    \draw[line width=1.2pt,blue,dashed] (38,\BE) -- (38,{\BE+\PZT});
+    \draw[line width=1.2pt,blue,dashed] (42,\BE) -- (42,{\BE+\PZT});
+
+    % 電位ラベル（ASCIIのみ）
+    \draw[->] (20,{\BE+\PZT+\TE+3}) -- (20,{\BE+\PZT+\TE});
+    \node[anchor=south,scale=0.8] at (20,{\BE+\PZT+\TE+3}) {VBS = -10 V};
+
+    \draw[->] (80,{\BE+\PZT+8}) -- (80,{\BE+\PZT+6});
+    \node[anchor=south,scale=0.8] at (80,{\BE+\PZT+8}) {COM = +30 V};
   \end{tikzpicture}%
 }
 
