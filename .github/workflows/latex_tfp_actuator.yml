@@ -3,48 +3,31 @@ name: Build LaTeX PDF (TFP Actuator)
 on:
   push:
     paths:
-      - 'papers/2025_tfp_actuator_reliability/**'
+      - 'latex-papers/papers/2025_tfp_actuator_reliability/**'
       - '.github/workflows/latex_tfp_actuator.yml'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install TeX Live collections (JP + LuaLaTeX + extras)
-        run: |
-          sudo apt-get update
-          # tlmgr はすでに入っている想定。mirror 同期ズレ対策で update
-          sudo tlmgr update --self
-          sudo tlmgr update --all || true
-          # 日本語と LuaLaTeX、本体推奨＋拡張（subcaption等）
-          sudo tlmgr install collection-langjapanese collection-luatex \
-                               collection-latexrecommended collection-latexextra \
-                               latexmk
-
-      - name: Build with latexmk (LuaLaTeX)
-        working-directory: papers/2025_tfp_actuator_reliability
-        # 失敗しても後続の LOG アップロードを実行するため `|| true`
-        run: |
-          latexmk -lualatex -interaction=nonstopmode -halt-on-error main.tex || true
-          # 目次等の再構成用にもう1回（失敗しても継続）
-          latexmk -lualatex -interaction=nonstopmode -halt-on-error main.tex || true
-          # デバッグ用にログ末尾を表示
-          test -f main.log && tail -n 100 main.log || true
+      - name: Build with LuaLaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: papers/2025_tfp_actuator_reliability
+          root_file: main.tex
+          latexmk_use_lualatex: true
 
       - name: Upload PDF
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: tfp_actuator_pdf
           path: papers/2025_tfp_actuator_reliability/main.pdf
 
       - name: Upload LOG
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: tfp_actuator_log
