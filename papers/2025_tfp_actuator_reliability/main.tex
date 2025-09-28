@@ -56,32 +56,28 @@
   \end{tikzpicture}%
 }
 
-% ====== Fig.2: 6層・水平・ボイドは上下界面に接する・界面線太め ======
-\renewcommand{\figPZTLayersVoidInline}{%
-  \begin{tikzpicture}[x=1.0cm,y=1.0cm] % 少し見やすく
+% ===== Fig.2（6層・水平・ボイドは上下界面に接触・界面線太め・斜線なし）=====
+\newcommand{\figPZTLayersVoidInline}{%
+  \begin{tikzpicture}[x=1.0cm,y=1.0cm]
     % パラメータ
     \def\W{6.0}   % 横幅
-    \def\H{0.45}  % 各層の厚み
-    \def\G{0.10}  % 層間の間隔（空白）
-    \def\N{6}     % 層数（固定：6）
-    \def\voidLayer{4} % ボイドを入れる層（1..6）
+    \def\H{0.45}  % 各層厚
+    \def\G{0.10}  % 層間ギャップ（見やすさ用）
+    \def\N{6}     % 層数（固定）
+    \def\voidLayer{4} % ボイド層（1..6）
 
-    % 6層（完全に水平／界面線は太め）
+    % 6層（完全水平／界面線を太く）
     \foreach \i in {0,...,5}{%
       \pgfmathsetmacro{\yy}{\i*(\H+\G)}%
-      \draw[fill=gray!15, draw=black, line width=1.0pt]
+      \draw[fill=gray!15, draw=black, line width=1.2pt]
         (0,\yy) rectangle (\W,\yy+\H);
     }
 
-    % ボイド（上下界面にぴったり接する長方形、斜線なし）
+    % ボイド（上下界面にぴったり接する長方形・斜線なし）
     \pgfmathsetmacro{\idx}{\voidLayer-1}%
     \pgfmathsetmacro{\yv}{\idx*(\H+\G)}%
-    \draw[fill=gray!55, draw=black, line width=0.6pt]
+    \draw[fill=gray!55, draw=black, line width=0.8pt]
       (2.10,\yv) rectangle (3.00,\yv+\H);
-
-    % 上下の基準線（電極イメージ、太め）
-    \draw[line width=1.0pt,gray!70] (0,-0.30) -- (\W,-0.30);
-    \draw[line width=1.0pt,gray!70] (0,\N*(\H+\G)+0.10) -- (\W,\N*(\H+\G)+0.10);
   \end{tikzpicture}%
 }
 
