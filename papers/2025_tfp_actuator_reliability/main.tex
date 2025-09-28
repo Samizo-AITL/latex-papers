@@ -94,46 +94,45 @@
       \def\pztH{1.20}  % PZT厚
       \def\teH{0.20}   % 上部電極(TE)厚
       \def\xPZT{4.0}   % 駆動部PZT右端(側壁)
-      \def\xGapR{6.0}  % Auパッド開始x（左端）
-      \def\xViaL{7.6}  % コン タクト開口 左端
-      \def\xViaR{8.2}  % コン タクト開口 右端
+      \def\xGapR{6.0}  % 右側スタック開始（スリット左端）
+      \def\xViaL{7.6}  % BEコンタクト開口 左端
+      \def\xViaR{8.2}  % BEコンタクト開口 右端
 
       % ========= 下地〜層 =========
-      % 下部電極 BE（全面）
+      % BE（全面）
       \fill[gray!55] (0,0) rectangle (\W,\beH);
 
-      % 左：駆動部の PZT / TE
-      \fill[gray!15] (0,\beH) rectangle (\xPZT,\beH+\pztH);                 % PZT
-      \fill[gray!80] (0,\beH+\pztH) rectangle (\xPZT,\beH+\pztH+\teH);      % TE (VBS)
+      % 左：駆動部の PZT と TE（VBS）
+      \fill[gray!15] (0,\beH) rectangle (\xPZT,\beH+\pztH);                  % PZT
+      \fill[gray!80] (0,\beH+\pztH) rectangle (\xPZT,\beH+\pztH+\teH);        % TE
 
-      % 右：Au配線下にも BE/PZT/TE スタック（TEだけ抜かない）
-      % PZT（コンタクト開口で分割）
-      \fill[gray!15] (\xGapR,\beH) rectangle (\xViaL,\beH+\pztH);
-      \fill[gray!15] (\xViaR,\beH) rectangle (\W,\beH+\pztH);
-      % TE（同様に分割して Au の下にも敷設）
-      \fill[gray!80] (\xGapR,\beH+\pztH) rectangle (\xViaL,\beH+\pztH+\teH);
-      \fill[gray!80] (\xViaR,\beH+\pztH) rectangle (\W,\beH+\pztH+\teH);
+      % 右：Au配線の下にも BE/PZT/TE を敷設（柱開口のみ除去）
+      %   PZT
+      \fill[gray!15] (\xGapR,\beH) rectangle (\W,\beH+\pztH);
+      %   TE（全面に敷き、後で柱開口だけ白で抜く）
+      \fill[gray!80] (\xGapR,\beH+\pztH) rectangle (\W,\beH+\pztH+\teH);
+      %   柱開口（PZT+TE を抜いて BE 露出）
+      \fill[white]   (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH+\teH);
 
-      % Au パッド（COM）— 最前面
-      \fill[gray!30] (\xGapR,\beH+\pztH) rectangle (\W,\beH+\pztH+0.60);
+      % Au パッド（COM）— TE の上に載る（←ここが修正点）
+      \fill[gray!30] (\xGapR,\beH+\pztH+\teH) rectangle (\W,\beH+\pztH+\teH+0.60);
 
-      % Au のコンタクト柱（1本）：BEへ接続する開口
-      \fill[gray!30] (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH);
+      % Au のコンタクト柱（1本）：Au 底面から BE まで貫通
+      \fill[gray!30] (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH+\teH);
 
       % ========= 強調表示 =========
-      % PZT側壁（電界集中箇所）
+      % 露出PZT側壁（電界集中箇所）
       \draw[line width=1.0pt] (\xPZT,\beH) -- (\xPZT,\beH+\pztH);
-      % 側壁保護(提案)を破線で示す（任意）
+      % 側壁保護(提案)を破線で示す
       \draw[gray!70,dashed,line width=0.7pt] (\xPZT-0.2,\beH) -- (\xPZT-0.2,\beH+\pztH);
       \draw[gray!70,dashed,line width=0.7pt] (\xPZT+0.2,\beH) -- (\xPZT+0.2,\beH+\pztH);
 
       % ========= ラベル =========
-      % 端子
       \draw[->] (0.3,\beH+\pztH+\teH+0.4) -- (0.8,\beH+\pztH+\teH+0.05);
       \node[anchor=south] at (0.3,\beH+\pztH+\teH+0.4) {\scriptsize VBS};
-      \draw[->] (7.2,\beH+\pztH+0.9) -- (7.2,\beH+\pztH+0.62);
-      \node[anchor=south] at (7.2,\beH+\pztH+0.9) {\scriptsize COM};
-      % 層名
+      \draw[->] (7.2,\beH+\pztH+\teH+0.9) -- (7.2,\beH+\pztH+\teH+0.62);
+      \node[anchor=south] at (7.2,\beH+\pztH+\teH+0.9) {\scriptsize COM};
+
       \node[anchor=east] at (0,\beH/2) {\scriptsize BE};
       \node[anchor=east] at (0,\beH+\pztH/2) {\scriptsize PZT};
       \node[anchor=east] at (0,\beH+\pztH+\teH/2) {\scriptsize TE};
@@ -152,12 +151,11 @@
       \fill[gray!55] (0,0) rectangle (\W,\beH);
       \fill[gray!15] (0,\beH) rectangle (\xPZT,\beH+\pztH);
       \fill[gray!80] (0,\beH+\pztH) rectangle (\xPZT,\beH+\pztH+\teH);
-      \fill[gray!15] (\xGapR,\beH) rectangle (\xViaL,\beH+\pztH);
-      \fill[gray!15] (\xViaR,\beH) rectangle (\W,\beH+\pztH);
-      \fill[gray!80] (\xGapR,\beH+\pztH) rectangle (\xViaL,\beH+\pztH+\teH);
-      \fill[gray!80] (\xViaR,\beH+\pztH) rectangle (\W,\beH+\pztH+\teH);
-      \fill[gray!30] (\xGapR,\beH+\pztH) rectangle (\W,\beH+\pztH+0.60);
-      \fill[gray!30] (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH);
+      \fill[gray!15] (\xGapR,\beH) rectangle (\W,\beH+\pztH);
+      \fill[gray!80] (\xGapR,\beH+\pztH) rectangle (\W,\beH+\pztH+\teH);
+      \fill[white]   (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH+\teH);
+      \fill[gray!30] (\xGapR,\beH+\pztH+\teH) rectangle (\W,\beH+\pztH+\teH+0.60);
+      \fill[gray!30] (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH+\teH);
 
       \draw[line width=1.0pt] (\xPZT,\beH) -- (\xPZT,\beH+\pztH);
       \draw[gray!70,dashed,line width=0.7pt] (\xPZT-0.2,\beH) -- (\xPZT-0.2,\beH+\pztH);
@@ -165,8 +163,9 @@
 
       \draw[->] (0.3,\beH+\pztH+\teH+0.4) -- (0.8,\beH+\pztH+\teH+0.05);
       \node[anchor=south] at (0.3,\beH+\pztH+\teH+0.4) {\scriptsize VBS};
-      \draw[->] (7.2,\beH+\pztH+0.9) -- (7.2,\beH+\pztH+0.62);
-      \node[anchor=south] at (7.2,\beH+\pztH+0.9) {\scriptsize COM};
+      \draw[->] (7.2,\beH+\pztH+\teH+0.9) -- (7.2,\beH+\pztH+\teH+0.62);
+      \node[anchor=south] at (7.2,\beH+\pztH+\teH+0.9) {\scriptsize COM};
+
       \node[anchor=east] at (0,\beH/2) {\scriptsize BE};
       \node[anchor=east] at (0,\beH+\pztH/2) {\scriptsize PZT};
       \node[anchor=east] at (0,\beH+\pztH+\teH/2) {\scriptsize TE};
