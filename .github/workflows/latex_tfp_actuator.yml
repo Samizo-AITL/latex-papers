@@ -3,7 +3,7 @@ name: Build LaTeX PDF (TFP Actuator)
 on:
   push:
     paths:
-      - 'latex-papers/papers/2025_tfp_actuator_reliability/**'
+      - 'papers/2025_tfp_actuator_reliability/**'
       - '.github/workflows/latex_tfp_actuator.yml'
   workflow_dispatch:
 
@@ -17,7 +17,7 @@ jobs:
       - name: Build with LuaLaTeX
         uses: xu-cheng/latex-action@v3
         with:
-          working_directory: latex-papers/papers/2025_tfp_actuator_reliability
+          working_directory: papers/2025_tfp_actuator_reliability
           root_file: main.tex
           latexmk_use_lualatex: true
           pre_compile: |
@@ -28,10 +28,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tfp_actuator_pdf
-          path: latex-papers/papers/2025_tfp_actuator_reliability/main.pdf
+          path: papers/2025_tfp_actuator_reliability/main.pdf
 
       - name: Upload LOG
         uses: actions/upload-artifact@v4
         with:
           name: tfp_actuator_log
-          path: latex-papers/papers/2025_tfp_actuator_reliability/main.log
+          path: papers/2025_tfp_actuator_reliability/main.log
