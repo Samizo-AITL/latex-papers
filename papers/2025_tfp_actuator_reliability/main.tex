@@ -284,22 +284,25 @@ PZT薄膜は Pb(Zr,Ti)O$_3$ 組成を有し、1層あたり \SI{200}{nm} の膜�
 
 \begin{table}[htbp]
   \centering
-  \caption{μTFPアクチュエータチップの層構成（下層→上層）}
+  \caption{%
+    $\mu$TFPアクチュエータチップの層構成（下層→上層）\\
+    Layer structure of $\mu$TFP actuator chip (bottom → top)
+  }
   \label{tab:layer-structure}
   \begin{tabular}{lll}
     \hline
-    \textbf{層構成} & \textbf{材料} & \textbf{厚み / 機能・備考} \\
+    \textbf{層構成 / Layer} & \textbf{材料 / Material} & \textbf{厚み・備考 / Thickness \& Function} \\
     \hline
-    Si基板 & Si(111) & 5000 nm / キャリア基板，キャビティ形成用 \\
-    絶縁層 & ZrO\textsubscript{2} & 400 nm / 高耐圧・高誘電率絶縁膜 \\
-    接着層 & Ti & 4 nm / bonding層，下電極密着性向上 \\
-    下電極 & Pt & 80 nm / (111)配向，PZT配向誘導 \\
-    酸化防止層 & Ir & 10 nm / Pt酸化防止，結晶成長安定化 \\
-    seed層 & Ti & 4 nm / 成長初期の配向制御 \\
-    PZT初期層 & Pb(Zr,Ti)O\textsubscript{3} & 200 nm / 第1層成膜 \\
-    中間層 & Ti & 4 nm / mid層，組成傾斜改善・応力緩和 \\
-    PZT積層 & Pb(Zr,Ti)O\textsubscript{3} & 200 nm × 5 = 1000 nm / 累積5層成膜 \\
-    上電極 & Ir/Ti & 10/10 nm / 多層構成，応力緩和・反応抑制 \\
+    Si基板 / Substrate & Si(111) & 5000 nm / キャリア基板，キャビティ形成用 / Carrier wafer, cavity formation \\
+    絶縁層 / Insulating layer & ZrO\textsubscript{2} & 400 nm / 高耐圧・高誘電率絶縁膜 / High-$k$ dielectric \\
+    接着層 / Bonding layer & Ti & 4 nm / 下電極密着性向上 / Adhesion to BE \\
+    下電極 / Bottom electrode & Pt & 80 nm / (111)配向，PZT配向誘導 / (111) oriented, seed for PZT \\
+    酸化防止層 / Oxidation barrier & Ir & 10 nm / Pt酸化防止，結晶安定化 / Prevents Pt oxidation \\
+    seed層 / Seed layer & Ti & 4 nm / 配向制御 / Initial growth control \\
+    PZT初期層 / Initial PZT layer & Pb(Zr,Ti)O\textsubscript{3} & 200 nm / 第1層成膜 / First deposition \\
+    中間層 / Mid layer & Ti & 4 nm / 組成傾斜改善，応力緩和 / Composition grading, stress relaxation \\
+    PZT積層 / PZT stack & Pb(Zr,Ti)O\textsubscript{3} & 200 nm × 5 = 1000 nm / 5層積層 / Five-layer deposition \\
+    上電極 / Top electrode & Ir/Ti & 10/10 nm / 応力緩和・反応抑制 / Stress relief, reaction suppression \\
     \hline
   \end{tabular}
 \end{table}
@@ -340,14 +343,20 @@ RTA後の外気由来成分が起因している可能性を裏付けた。
 \begin{figure}[t]
   \centering
   \figVoidDonutInline % or \figVoidDonutInline[0.050]
-  \caption{ウエハ上のドーナツ状ボイド分布}
+  \caption{%
+    ウエハ上のドーナツ状ボイド分布 / 
+    Donut-shaped void distribution on wafer
+  }
   \label{fig:donut}
 \end{figure}
 
 \begin{figure}[t]
   \centering
   \figPZTLayersVoidInline
-  \caption{PZT 6層のうち特定層のボイド（黒グレー枠）}
+  \caption{%
+    PZT 6層のうち特定層のボイド（グレー枠） / 
+    Void observed in a specific layer of 6-layer PZT stack (gray box)
+  }
   \label{fig:layer-void}
 \end{figure}
 
