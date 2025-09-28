@@ -20,17 +20,9 @@ jobs:
           working_directory: latex-papers/papers/2025_tfp_actuator_reliability
           root_file: main.tex
           latexmk_use_lualatex: true
-          # 必須パッケージをまとめて導入（日本語＋TikZ＋周辺）
           pre_compile: |
             tlmgr update --self
-            # 日本語フルセット（HaranoAji含む）
-            tlmgr install collection-langjapanese
-            # LuaLaTeX周り（latexmkも明示）
-            tlmgr install collection-luatex latexmk
-            # 図表・ユーティリティ
-            tlmgr install pgf xcolor siunitx booktabs hyperref caption subcaption geometry float standalone
-            # 念のため（不足時の保険）
-            tlmgr install luatexja luatexja-preset
+            tlmgr install luatexja
 
       - name: Upload PDF
         uses: actions/upload-artifact@v4
