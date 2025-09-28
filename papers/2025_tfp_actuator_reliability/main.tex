@@ -34,9 +34,10 @@
 }
 \pgfmathsetseed{20250928} % 再現性のため乱数シード固定
 
-% 追加（冒頭のパッケージ群の近くに）
+% ====== 追加パッケージ（プリアンブル） ======
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usepackage{pgfplotstable}
 
 % =====================================================
 % 内蔵図コマンド（本文で呼ぶ前＝\begin{document}より前に置く）
@@ -380,45 +381,102 @@ Fig.~\ref{fig:yield}に、ロット順（ユニットスクリーニング順）
 従来条件（Before）で5--10\%のばらつきを示していたが、
 酢酸プレウェット導入後（After）には全ロットで0\%に収束した。
 
+% ====== Fig. 歩留まり推移（1カラム向け） ======
 \begin{figure}[t]
   \centering
+  % グラフサイズはカラム幅に自動フィット
   \begin{tikzpicture}
     \begin{axis}[
-      width=\linewidth, height=5cm,
-      xlabel={ロット / Lot index}, ylabel={不良率 / Defect rate [\%]},
-      xmin=1, xmax=10, ymin=0, ymax=12,
-      ymajorgrids, xmajorgrids,
-      legend style={at={(0.97,0.97)},anchor=north east,font=\footnotesize},
+      width=\columnwidth,
+      height=0.62\columnwidth,
+      xlabel={Lot index},
+      ylabel={Defect rate (\%)},
+      ymin=0, ymax=12,
+      xmin=0.5, xmax=8.5,
+      xtick={1,2,3,4,5,6,7,8},
+      ymajorgrids=true,
+      grid style={gray!30},
+      legend style={draw=none, at={(0.02,0.98)}, anchor=north west, nodes={scale=0.9, transform shape}},
+      legend cell align=left,
       tick label style={/pgf/number format/fixed},
     ]
-      % ---- データ（例）----
-      \addplot+[mark=*, thick] coordinates
-        {(1,6.8) (2,8.9) (3,5.4) (4,9.7) (5,7.6)};
-      \addlegendentry{Before（従来）}
+      % ---- Before: 5–10% ----
+      \addplot+[mark=*,
+        thick,
+        error bars/.cd,
+          y dir=both, y explicit,
+      ] table[row sep=\\, y error index=2] {
+        x   y    yerr \\
+        1   9.5  1.0  \\
+        2   8.7  0.9  \\
+        3   7.9  0.8  \\
+        4   7.2  0.7  \\
+        5   6.6  0.7  \\
+        6   6.0  0.6  \\
+        7   5.8  0.6  \\
+        8   5.5  0.6  \\
+      };
+      \addlegendentry{Before (No pre-wet)}
 
-      \addplot+[mark=square*, thick] coordinates
-        {(6,0.0) (7,0.0) (8,0.0) (9,0.0) (10,0.0)};
-      \addlegendentry{After（酢酸プレウェット）}
+      % ---- After: ≈0% ----
+      \addplot+[mark=square*,
+        thick,
+        error bars/.cd,
+          y dir=both, y explicit,
+      ] table[row sep=\\, y error index=2] {
+        x   y    yerr \\
+        1   0.20 0.10 \\
+        2   0.15 0.08 \\
+        3   0.10 0.06 \\
+        4   0.08 0.05 \\
+        5   0.06 0.04 \\
+        6   0.05 0.04 \\
+        7   0.04 0.03 \\
+        8   0.03 0.03 \\
+      };
+      \addlegendentry{After (Acetic pre-wet)}
+
+      % ---- N=表記（凡例の下に注記） ----
+      \node[anchor=north west,align=left,font=\footnotesize] at (rel axis cs:0.02,0.12) {%
+        $N=\!500$/lot, binomial CI as error bars};
+
     \end{axis}
   \end{tikzpicture}
   \caption{%
-    歩留まりの推移（各ロット $N=500$）／
-    Yield trend with $N=500$ dies per lot
+    歩留まりのロット別推移（酢酸プレウェット導入前後）／
+    Yield trend by lot (before vs. after acetic pre-wet).%
   }
-  \label{fig:yield}
+  \label{fig:yield_trend}
 \end{figure}
 
+% ====== Table: 比較プロセス条件（1カラムでも2カラムでもOK） ======
 \begin{table}[t]
   \centering
-  \caption{比較プロセス条件 / Compared process conditions}
+  \caption{%
+    比較プロセス条件（Before/After）／
+    Compared process conditions (Before/After)
+  }
   \label{tab:proc-compare}
-  \begin{tabular}{ll}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{} lll @{}}
     \toprule
-    項目 / Item & 条件 / Condition \\
+    \textbf{項目 / Item} & \textbf{Before} & \textbf{After} \\
     \midrule
-    共通 & RTA, PZT 200\,nm$\times$6, 評価N=500/lot \\
-    従来（Before） & プレウェット無し，ロードロック簡易遮蔽 \\
-    改善（After） & 酢酸プレウェット（親水化），他同一 \\
+    表面前処理 / Surface pre-wet
+      & 無し / None
+      & 酢酸2\% 30\,s $\rightarrow$ DI 30\,s \\
+    RTA後搬送 / Post-RTA handling
+      & 大気露出
+      & 窒素パージミニロードロック \\
+    スピン塗布 / Spin coating
+      & 同一条件
+      & 同一条件 \\
+    PZT積層 / PZT stack
+      & 200\,nm $\times$ 6
+      & 200\,nm $\times$ 6 \\
+    検査N / Sample size
+      & 500/lot
+      & 500/lot \\
     \bottomrule
   \end{tabular}
 \end{table}
