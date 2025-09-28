@@ -79,40 +79,40 @@
   \end{tikzpicture}%
 }
 
-% ====== Fig.3: 端部焼損の模式図（スケッチ準拠、最小版）======
+% ====== Fig.3: 端部焼損の模式図（スケッチ準拠） ======
 \newcommand{\figEdgeBurnoutInline}{%
   \begin{tikzpicture}[x=1.2cm,y=1.0cm]
-    % ----- パラメータ -----
-    \def\W{8}       % 全体幅
-    \def\pztH{0.8}  % PZT厚み
-    \def\beH{0.2}   % 下電極厚み
-    \def\teH{0.15}  % 上電極厚み
-    \def\slitX{3.5} % スリット位置
+    % パラメータ
+    \def\W{8}
+    \def\pztH{0.8}
+    \def\beH{0.2}
+    \def\teH{0.15}
+    \def\slitX{3.5}
 
-    % ----- 下電極 BE -----
+    % 下電極 BE
     \fill[gray!60] (0,0) rectangle (\W,\beH);
     \node[anchor=east,scale=0.8] at (0,\beH/2) {BE};
 
-    % ----- PZT層（左:駆動部、右:スリットで分割） -----
+    % PZT層（スリットで分割）
     \fill[gray!15] (0,\beH) rectangle (\slitX,\beH+\pztH);
     \fill[gray!15] (\slitX+0.5,\beH) rectangle (\W,\beH+\pztH);
     \draw[line width=0.8pt] (\slitX,\beH) -- (\slitX,\beH+\pztH);
 
-    % ----- 上電極 TE（左側のみ） -----
+    % 上電極 TE（左側のみ）
     \fill[gray!80] (0,\beH+\pztH) rectangle (2,\beH+\pztH+\teH);
     \node[anchor=east,scale=0.8] at (0,\beH+\pztH+\teH/2) {TE};
     \node[anchor=north east,scale=0.8] at (0,\beH+\pztH+\teH) {VBS};
 
-    % ----- Au配線（右側、COMへ接続） -----
+    % Au配線 COM
     \fill[gray!30] (5,\beH+\pztH) rectangle (7,\beH+\pztH+0.5);
-    \draw (6,\beH+\pztH+0.5) -- (6,\beH+\pztH+1.0); % COMへの線
+    \draw (6,\beH+\pztH+0.5) -- (6,\beH+\pztH+1.0);
     \node[anchor=south,scale=0.8] at (6,\beH+\pztH+1.0) {COM};
     \node[anchor=west,scale=0.8] at (7,\beH+\pztH+0.25) {Au};
 
-    % ----- BEとのコンタクトを示す縦線 -----
+    % BEコンタクト
     \draw[line width=0.8pt] (6,\beH) -- (6,\beH+\pztH);
 
-    % ----- 焼損位置をマーキング -----
+    % 焼損位置マーク
     \draw[->,red,thick] (\slitX-0.3,\beH+0.4) -- ++(-0.8,0.4)
       node[above left,scale=0.7] {焼損部};
   \end{tikzpicture}%
