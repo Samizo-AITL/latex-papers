@@ -270,6 +270,25 @@ PZT薄膜は Pb(Zr,Ti)O$_3$ 組成を有し、1層あたり \SI{200}{nm} の膜�
 駆動層を形成した。上部電極には Ir/Ti (\SI{10}{nm}/\SI{10}{nm}) を採用し、
 電気化学的安定性と応力緩和の両立を図っている。
 
+\begin{table}[htbp]
+  \centering
+  \caption{μTFPアクチュエータチップの層構成（下層→上層）}
+  \label{tab:layer-structure}
+  \begin{tabular}{lll}
+    \hline
+    \textbf{層構成} & \textbf{材料} & \textbf{厚み / 機能・備考} \\
+    \hline
+    Si基板 & Si(111) & 5000 nm / キャリア基板，キャビティ形成用 \\
+    絶縁層 & ZrO\textsubscript{2} & 400 nm / 高耐圧・高誘電率絶縁膜 \\
+    下電極 & Pt & 80 nm / (111) 配向，PZT配向誘導膜 \\
+    seed層 & Ir & 10 nm / Pt層の結晶成長安定化 \\
+    Ti緩衝層 & Ti & 4 nm / 初期焼成後に挿入，応力緩和・界面制御 \\
+    PZT層 & Pb(Zr,Ti)O\textsubscript{3} & 1200 nm / 200 nm × 6層，$d_{33}$駆動に最適化 \\
+    上電極 & Ir/Ti & 10/10 nm / 応力緩和・反応抑制，多層構成 \\
+    \hline
+  \end{tabular}
+\end{table}
+
 \subsection{ドライバICとの統合}
 アクチュエータは、COF (Chip on Film) 実装されたドライバICと一体で動作する。
 ドライバICは CMOS \SI{0.35}{\micro\metre} プロセスにより製造され、
