@@ -52,16 +52,16 @@
   \end{tikzpicture}%
 }
 
-% 6層中1層にボイド（矩形）を含む断面
+% 6層中1層にボイド（矩形）を含む断面（モノクロ）
 \newcommand{\figPZTLayersVoidInline}{%
   \begin{tikzpicture}[x=0.9cm,y=0.9cm]
     \def\W{6.0}\def\H{0.45}\def\G{0.10}
     % 層 (0〜5の6層のみ)
-    \foreach \i in {0,...,5}{% ← ★ここが重要
+    \foreach \i in {0,...,5}{%
       \pgfmathsetmacro{\yy}{\i*(\H+\G)}%
       \draw[fill=gray!15,draw=black,line width=0.4pt] (0,\yy) rectangle (\W,\yy+\H);
     }
-    % 第4層のボイド
+    % 第4層のボイド（破線枠）
     \pgfmathsetmacro{\yv}{3*(\H+\G)}%
     \draw[line width=0.8pt,gray!50,dashed] (2.1,\yv+0.08) rectangle (3.0,\yv+\H-0.08);
     % 上下の基準線（電極イメージ）
