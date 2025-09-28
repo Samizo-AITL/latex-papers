@@ -56,20 +56,19 @@
   \end{tikzpicture}%
 }
 
-% ====== Fig.2: 6層のPZT断面（1層にボイドをハイライト）======
+% ====== Fig.2: 6層のPZT断面（左右端を消す）======
 \newcommand{\figPZTLayersVoidInline}{%
   \begin{tikzpicture}[x=0.9cm,y=0.9cm]
     % ---- パラメータ ----
     \def\W{6.0}   % 横幅
     \def\H{0.45}  % 各層の厚み
-    \def\N{6}     % 層数（6固定）
-    \def\voidLayer{4} % ボイドを示す層番号（1..6）
+    \def\N{6}     % 層数
+    \def\voidLayer{4} % ボイド層（1..6）
 
-    % ---- 6層の描画 ----
-    \foreach \i in {0,...,5}{%
+    % ---- 6本の水平線のみ ----
+    \foreach \i in {0,...,6}{% 0～6 で7本の線 → 6層
       \pgfmathsetmacro{\yy}{\i*\H}%
-      \draw[fill=gray!15,draw=black,line width=1pt]
-        (0,\yy) rectangle (\W,\yy+\H);
+      \draw[line width=1pt] (0,\yy) -- (\W,\yy);
     }
 
     % ---- ボイド矩形（上下界面に接する）----
@@ -233,7 +232,7 @@ RTA後の外気由来成分が起因している可能性を裏付けた。
 \begin{figure}[t]
   \centering
   \figPZTLayersVoidInline
-  \caption{PZT 6層のうち特定層のボイド（破線枠）}
+  \caption{PZT 6層のうち特定層のボイド（黒グレー枠）}
   \label{fig:layer-void}
 \end{figure}
 
