@@ -1,18 +1,24 @@
 % main.tex — 日本語本文（LuaLaTeX + luatexja 推奨）
 % ビルド例: lualatex main.tex ; lualatex main.tex
-\documentclass[11pt,a4paper]{ltjsarticle} % 日本語安定のため LuaLaTeX + luatexja
+\documentclass[11pt,a4paper]{ltjsarticle} % LuaLaTeX + luatexjaクラス
+
+% 版面
 \usepackage{geometry}
 \geometry{margin=22mm}
+
+% 数値・単位
 \usepackage{siunitx}
+\sisetup{detect-all=true}
+
+% 図表・色
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{xcolor}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage{hyperref}
-\usepackage{tikz}
-\usepackage{standalone} % \input で .tikz を直接取り込む
-\usepackage{upquote}
 
+% ハイパーリンク
+\usepackage{hyperref}
 \hypersetup{
   colorlinks=true,
   linkcolor=blue,
@@ -22,13 +28,90 @@
   pdftitle={PZT薄膜アクチュエータにおける振動板クラックと端部焼損の原因解析・対策提案}
 }
 
+% 図の描画（TikZ）
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc}
+
+% 外部TikZの取り込み（無くてもビルドできるよう保険）
+\usepackage{standalone}
+\usepackage{upquote}
+
+%======== 図プレースホルダ（外部figsが無い場合でもビルド可能にする） ========%
+% \IfFileExists は LaTeX 標準
+\newcommand{\figVoidDonut}{%
+  \IfFileExists{figs/fig1_void_donut.tikz}{%
+    \input{figs/fig1_void_donut.tikz}%
+  }{%
+    % 代替の簡易ドーナツ図
+    \begin{tikzpicture}[scale=0.06]
+      \draw[line width=2pt, gray] (0,0) circle (100);
+      \foreach \i in {1,...,320}{
+        \pgfmathsetmacro{\ang}{rnd*360}
+        \pgfmathsetmacro{\rad}{50 + 5*(rnd-0.5)}
+        \fill[red] (\ang:\rad) circle (0.9);
+      }
+    \end{tikzpicture}%
+  }%
+}
+
+\newcommand{\figPZTLayersVoid}{%
+  \IfFileExists{figs/fig2_pzt_layers_void.tikz}{%
+    \input{figs/fig2_pzt_layers_void.tikz}%
+  }{%
+    % 代替の6層＋1層ボイド断面
+    \begin{tikzpicture}[x=1cm,y=1cm]
+      \def\W{6.0}\def\H{0.45}\def\G{0.10}
+      \foreach \i in {0,...,5}{
+        \pgfmathsetmacro{\y}{\i*(\H+\G)}
+        \draw[fill=gray!20] (0,\y) rectangle (\W,\y+\H);
+      }
+      % 4層目に矩形ボイド
+      \pgfmathsetmacro{\yv}{3*(\H+\G)}
+      \draw[very thick,red] (2.2,\yv+0.10) rectangle (3.0,\yv+\H-0.10);
+      % 上下に細線（電極/基板イメージ）
+      \draw[line width=1pt] (0,-0.30) -- (\W,-0.30);
+      \draw[line width=1pt] (0,6*(\H+\G)+0.10) -- (\W,6*(\H+\G)+0.10);
+    \end{tikzpicture}%
+  }%
+}
+
+\newcommand{\figEdgeBurnout}{%
+  \IfFileExists{figs/fig3_edge_burnout_color.tikz}{%
+    \input{figs/fig3_edge_burnout_color.tikz}%
+  }{%
+    % 代替の端部焼損模式図（カラー）
+    \begin{tikzpicture}[x=1cm,y=1cm]
+      \def\W{10}\def\pztH{1.2}\def\beH{0.2}\def\teH{0.20}
+      % Bottom Electrode
+      \fill[gray!50] (0,0) rectangle (\W,\beH);
+      % PZT
+      \fill[blue!15] (0,\beH) rectangle (\W,\beH+\pztH);
+      % Top Electrode (VBS)
+      \fill[black] (0,\beH+\pztH) rectangle (4,\beH+\pztH+\teH);
+      % Au Pad (COM)
+      \fill[yellow!70!orange] (6,\beH+\pztH) rectangle (\W,\beH+\pztH+0.6);
+      % Exposed sidewall
+      \draw[line width=1.8pt,red] (4,\beH) -- (4,\beH+\pztH);
+      % Proposed AlOx
+      \draw[line width=1.2pt,blue,dashed] (3.8,\beH) -- (3.8,\beH+\pztH);
+      \draw[line width=1.2pt,blue,dashed] (4.2,\beH) -- (4.2,\beH+\pztH);
+      % Voltage labels（英数字のみでフォント依存回避）
+      \draw[->] (2, \beH+\pztH+\teH+0.2) -- (2,\beH+\pztH+\teH);
+      \node[anchor=south] at (2, \beH+\pztH+\teH+0.2) {\scriptsize VBS = -10 V};
+      \draw[->] (8, \beH+\pztH+0.7) -- (8,\beH+\pztH+0.6);
+      \node[anchor=south] at (8, \beH+\pztH+0.7) {\scriptsize COM = +30 V};
+    \end{tikzpicture}%
+  }%
+}
+
+%======== タイトル情報 ========%
 \title{PZT薄膜アクチュエータにおける振動板クラックと端部焼損の原因解析・対策提案}
 \author{三溝 真一（Shinichi Samizo）\\
 Independent Semiconductor Researcher\\
 Former Engineer at Seiko Epson Corporation\\
 \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
 GitHub: \url{https://github.com/Samizo-AITL}}
-\date{} % 提出日を書く場合はここに
+\date{} % 必要なら提出日
 
 \begin{document}
 \maketitle
@@ -65,7 +148,7 @@ GitHub: \url{https://github.com/Samizo-AITL}}
     接着層 & Ti & 10\,nm \\
     下電極 & Pt(111) & 80\,nm \\
     seed層 & Ir & 10\,nm \\
-    \textbf{PZT層} & Pb(Zr,Ti)O$_3$ & \textbf{200\,nm $\times$ 6 = 1.2\,$\mu$m} \\
+    \textbf{PZT層} & Pb(Zr,Ti)O$_3$ & \textbf{200\,nm $\times$ 6 = 1.2\,\si{\micro\meter}} \\
     中間層（第1層後） & Ti & 4\,nm \\
     上電極 & Ir/Ti & 10/10\,nm \\\bottomrule
   \end{tabular}
@@ -73,7 +156,7 @@ GitHub: \url{https://github.com/Samizo-AITL}}
 
 \subsection{成膜と熱処理}
 PZTはゾルゲル法により、\emph{スピン塗布 $\rightarrow$ プリベーク（150--200$^\circ$C）$\rightarrow$ RTA結晶化（737$^\circ$C）}を1層毎に6回繰返し、
-総厚1.2\,$\mu$mを形成する。第1層焼成後にTi 4\,nmを挿入し、組成傾斜・界面応力を緩和する。
+総厚\SI{1.2}{\micro\meter}を形成する。第1層焼成後にTi \SI{4}{\nano\meter}を挿入し、組成傾斜・界面応力を緩和する。
 
 \subsection{評価系とスクリーニング}
 結晶配向はXRD（$\theta$–2$\theta$）でPZT(100)を確認、膜厚/組成はXRFでインライン計測、P-E特性は$\pm$40\,V/66\,Hzで評価。
@@ -86,14 +169,14 @@ PZTはゾルゲル法により、\emph{スピン塗布 $\rightarrow$ プリベ�
 
 \begin{figure}[h]
   \centering
-  \input{figs/fig1_void_donut.tikz}
+  \figVoidDonut
   \caption{ウエハ上のドーナツ状ボイド分布（反射条件最適化による検出例）}
   \label{fig:donut}
 \end{figure}
 
 \begin{figure}[h]
   \centering
-  \input{figs/fig2_pzt_layers_void.tikz}
+  \figPZTLayersVoid
   \caption{PZT 6層のうち1層にボイドを含む断面模式図}
   \label{fig:layer-void}
 \end{figure}
@@ -104,7 +187,7 @@ PZTはゾルゲル法により、\emph{スピン塗布 $\rightarrow$ プリベ�
 
 \begin{figure}[h]
   \centering
-  \input{figs/fig3_edge_burnout_color.tikz}
+  \figEdgeBurnout
   \caption{端部焼損の模式図（電界集中部とAlO$_x$対策案）}
   \label{fig:edge}
 \end{figure}
@@ -126,8 +209,8 @@ PZTはゾルゲル法により、\emph{スピン塗布 $\rightarrow$ プリベ�
 本知見は、薄膜PZT $d_{33}$アクチュエータの高密度・高電圧駆動時における量産信頼性設計の指針となる。
 
 \section*{著者略歴}
-\textbf{三溝 真一（Shinichi Samizo）} 信州大学大学院 電子情報工学専攻 修士。
-セイコーエプソンにて半導体ロジック／メモリ／高耐圧インテグレーション開発、薄膜PZT MEMSアクチュエータおよびPrecisionCoreプリントヘッド技術に従事。
+\textbf{三溝 真一（Shinichi Samizo）} 長野県・信州大学大学院 電子情報工学専攻 修士。
+セイコーエプソンにて半導体メモリ／ミックスドシグナル開発、薄膜PZT MEMSアクチュエータおよびPrecisionCoreプリントヘッド技術に従事。
 現在は独立系半導体リサーチャとして、プロセス／デバイス教育、メモリアーキテクチャ、AI統合制御に注力。
 \textbf{Contact:} \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}。
 
