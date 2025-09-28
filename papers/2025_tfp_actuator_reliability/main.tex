@@ -79,66 +79,109 @@
   \end{tikzpicture}%
 }
 
-% ==== Fig.3 端部焼損（左は現状維持／Auコンタクト1本／Au下もBE-PZT-TE）====
+% ==== Fig.3 端部焼損 図コマンド定義（未定義なら新規定義）====
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc}
+\tikzset{>=Stealth, every picture/.style={line cap=round,line join=round}}
+
 \makeatletter
-\@ifundefined{figEdgeBurnoutInline}{}{\renewcommand{\figEdgeBurnoutInline}{}}
-\newcommand{\figEdgeBurnoutInline}{%
-  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
-    % -------- パラメータ --------
-    \def\W{10}       % 全幅
-    \def\beH{0.20}   % BE厚
-    \def\pztH{1.20}  % PZT厚
-    \def\teH{0.20}   % TE厚
-    \def\xPZT{4.00}  % 左PZTの右端（=側壁）
-    \def\gap{0.20}   % 側壁のスリット幅（左は触らない）
-    \def\xR{6.20}    % Auパッド左端
-    \def\xPadR{9.20} % Auパッド右端
-    \def\xViaL{7.60} % Auコンタクト（1本）の左端
-    \def\xViaR{8.10} %                右端
+\@ifundefined{figEdgeBurnoutInline}{%
+  \newcommand{\figEdgeBurnoutInline}{%
+    \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+      % ========= パラメータ =========
+      \def\W{10}       % 全体幅
+      \def\beH{0.20}   % 下部電極(BE)厚
+      \def\pztH{1.20}  % PZT厚
+      \def\teH{0.20}   % 上部電極(TE)厚
+      \def\xPZT{4.0}   % 駆動部PZT右端(側壁)
+      \def\xGapR{6.0}  % スリット右端
+      \def\xViaL{7.6}  % Auコンタクト左端
+      \def\xViaR{8.2}  % Auコンタクト右端
 
-    % -------- 層構造 --------
-    % BE（連続）
-    \fill[gray!55] (0,0) rectangle (\W,\beH);
+      % ========= 下地〜層 =========
+      % 下部電極 BE（全面）
+      \fill[gray!55] (0,0) rectangle (\W,\beH);
 
-    % 左PZT（駆動部：現状維持）
-    \fill[gray!15] (0,\beH) rectangle (\xPZT,\beH+\pztH);
-    % 左TE（VBS）
-    \fill[gray!80] (0,\beH+\pztH) rectangle (\xPZT,\beH+\pztH+\teH);
+      % PZT（左の駆動部）
+      \fill[gray!15] (0,\beH) rectangle (\xPZT,\beH+\pztH);
 
-    % 右側にも BE/PZT/TE を敷く（側壁直後に細スリット gap を残す）
-    \fill[gray!15] (\xPZT+\gap,\beH) rectangle (\W,\beH+\pztH);
-    \fill[gray!80] (\xPZT+\gap,\beH+\pztH) rectangle (\W,\beH+\pztH+\teH);
+      % TE（VBS，上の電極） 左の駆動部
+      \fill[gray!80] (0,\beH+\pztH) rectangle (\xPZT,\beH+\pztH+\teH);
 
-    % Auパッド（COM）
-    \fill[gray!30] (\xR,\beH+\pztH) rectangle (\xPadR,\beH+\pztH+0.60);
+      % ---- 右側：Auパッド下にもBE/PZT/TEスタックを敷設 ----
+      %   PZT（コンタクト開口部を避けて2分割で描く）
+      \fill[gray!15] (\xGapR,\beH) rectangle (\xViaL,\beH+\pztH);
+      \fill[gray!15] (\xViaR,\beH) rectangle (\W,\beH+\pztH);
+      %   TE（同様に開口部を避ける）
+      \fill[gray!80] (\xGapR,\beH+\pztH) rectangle (\xViaL,\beH+\pztH+\teH);
+      \fill[gray!80] (\xViaR,\beH+\pztH) rectangle (\W,\beH+\pztH+\teH);
 
-    % Auコンタクト（1本） BEまで到達
-    \fill[gray!30] (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH);
+      % Au パッド（COM）
+      \fill[gray!30] (\xGapR,\beH+\pztH) rectangle (\W,\beH+\pztH+0.60);
 
-    % -------- 強調・注記 --------
-    % 露出PZT側壁（左は触らない）
-    \draw[line width=1.0pt] (\xPZT,\beH) -- (\xPZT,\beH+\pztH);
-    % （任意）保護膜の提案を破線で示す
-    \draw[gray!70,dashed,line width=0.7pt] (\xPZT-0.2,\beH) -- (\xPZT-0.2,\beH+\pztH);
-    \draw[gray!70,dashed,line width=0.7pt] (\xPZT+0.2,\beH) -- (\xPZT+0.2,\beH+\pztH);
+      % Au のコンタクト柱（1本）：BEへ接続
+      \fill[gray!30] (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH);
 
-    % ラベル
-    \node[anchor=east] at (0,\beH/2) {\scriptsize BE};
-    \node[anchor=east] at (0,\beH+\pztH/2) {\scriptsize PZT};
-    \node[anchor=east] at (0,\beH+\pztH+\teH/2) {\scriptsize TE};
-    \draw[->] (0.3,\beH+\pztH+\teH+0.4) -- (0.8,\beH+\pztH+\teH+0.05);
-    \node[anchor=south] at (0.3,\beH+\pztH+\teH+0.4) {\scriptsize VBS};
-    \draw[->] ( (\xR+\xPadR)/2 ,\beH+\pztH+0.9) -- ( (\xR+\xPadR)/2 ,\beH+\pztH+0.62);
-    \node[anchor=south] at ( (\xR+\xPadR)/2 ,\beH+\pztH+0.9) {\scriptsize COM};
+      % ========= 強調表示 =========
+      % 露出PZT側壁（電界集中箇所）
+      \draw[line width=1.0pt] (\xPZT,\beH) -- (\xPZT,\beH+\pztH);
+      % 任意: 側壁保護(提案)を破線で示す
+      \draw[gray!70,dashed,line width=0.7pt] (\xPZT-0.2,\beH) -- (\xPZT-0.2,\beH+\pztH);
+      \draw[gray!70,dashed,line width=0.7pt] (\xPZT+0.2,\beH) -- (\xPZT+0.2,\beH+\pztH);
 
-    % 焼損注記（側壁）
-    \draw[->,thick] (\xPZT+0.7,\beH+0.6) -- (\xPZT+0.05,\beH+0.6);
-    \node[anchor=west] at (\xPZT+0.75,\beH+0.6) {\scriptsize 焼損発生点（PZT側壁露出）};
-  \end{tikzpicture}%
+      % ========= ラベル =========
+      % VBS（TEに接続）
+      \draw[->] (0.3,\beH+\pztH+\teH+0.4) -- (0.8,\beH+\pztH+\teH+0.05);
+      \node[anchor=south] at (0.3,\beH+\pztH+\teH+0.4) {\scriptsize VBS};
+      % COM（Auパッド）
+      \draw[->] (7.2,\beH+\pztH+0.9) -- (7.2,\beH+\pztH+0.62);
+      \node[anchor=south] at (7.2,\beH+\pztH+0.9) {\scriptsize COM};
+      % 層名
+      \node[anchor=east] at (0,\beH/2) {\scriptsize BE};
+      \node[anchor=east] at (0,\beH+\pztH/2) {\scriptsize PZT};
+      \node[anchor=east] at (0,\beH+\pztH+\teH/2) {\scriptsize TE};
+
+      % 焼損箇所の注記
+      \draw[->,thick] (\xPZT+0.4,\beH+0.6) -- (\xPZT+0.05,\beH+0.6);
+      \node[anchor=west] at (\xPZT+0.45,\beH+0.6) {\scriptsize 焼損発生点（PZT側壁露出）};
+    \end{tikzpicture}%
+  }%
+}{%
+  % 既定義なら差し替え
+  \renewcommand{\figEdgeBurnoutInline}{%
+    \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+      \def\W{10}\def\beH{0.20}\def\pztH{1.20}\def\teH{0.20}
+      \def\xPZT{4.0}\def\xGapR{6.0}\def\xViaL{7.6}\def\xViaR{8.2}
+      \fill[gray!55] (0,0) rectangle (\W,\beH);
+      \fill[gray!15] (0,\beH) rectangle (\xPZT,\beH+\pztH);
+      \fill[gray!80] (0,\beH+\pztH) rectangle (\xPZT,\beH+\pztH+\teH);
+      \fill[gray!15] (\xGapR,\beH) rectangle (\xViaL,\beH+\pztH);
+      \fill[gray!15] (\xViaR,\beH) rectangle (\W,\beH+\pztH);
+      \fill[gray!80] (\xGapR,\beH+\pztH) rectangle (\xViaL,\beH+\pztH+\teH);
+      \fill[gray!80] (\xViaR,\beH+\pztH) rectangle (\W,\beH+\pztH+\teH);
+      \fill[gray!30] (\xGapR,\beH+\pztH) rectangle (\W,\beH+\pztH+0.60);
+      \fill[gray!30] (\xViaL,\beH) rectangle (\xViaR,\beH+\pztH);
+
+      \draw[line width=1.0pt] (\xPZT,\beH) -- (\xPZT,\beH+\pztH);
+      \draw[gray!70,dashed,line width=0.7pt] (\xPZT-0.2,\beH) -- (\xPZT-0.2,\beH+\pztH);
+      \draw[gray!70,dashed,line width=0.7pt] (\xPZT+0.2,\beH) -- (\xPZT+0.2,\beH+\pztH);
+
+      \draw[->] (0.3,\beH+\pztH+\teH+0.4) -- (0.8,\beH+\pztH+\teH+0.05);
+      \node[anchor=south] at (0.3,\beH+\pztH+\teH+0.4) {\scriptsize VBS};
+      \draw[->] (7.2,\beH+\pztH+0.9) -- (7.2,\beH+\pztH+0.62);
+      \node[anchor=south] at (7.2,\beH+\pztH+0.9) {\scriptsize COM};
+      \node[anchor=east] at (0,\beH/2) {\scriptsize BE};
+      \node[anchor=east] at (0,\beH+\pztH/2) {\scriptsize PZT};
+      \node[anchor=east] at (0,\beH+\pztH+\teH/2) {\scriptsize TE};
+
+      \draw[->,thick] (\xPZT+0.4,\beH+0.6) -- (\xPZT+0.05,\beH+0.6);
+      \node[anchor=west] at (\xPZT+0.45,\beH+0.6) {\scriptsize 焼損発生点（PZT側壁露出）};
+    \end{tikzpicture}%
+  }%
 }
 \makeatother
 
-% 互換エイリアス
+% 本文側の別名互換
 \providecommand{\figEdgeBurnoutSketch}{\figEdgeBurnoutInline}
 
 % =====================================================
