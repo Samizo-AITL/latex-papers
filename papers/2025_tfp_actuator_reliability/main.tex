@@ -79,23 +79,65 @@
   \end{tikzpicture}%
 }
 
-% ---- Fig.3: 端部焼損の模式図（モノクロ）----
-\newcommand{\figEdgeBurnoutInline}[1][0.90]{%
-  \begin{tikzpicture}[x=#1cm,y=#1cm]
-    \def\W{10}\def\pztH{1.2}\def\beH{0.20}\def\teH{0.20}
-    % Bottom Electrode (BE)
-    \fill[gray!55] (0,0) rectangle (\W,\beH);
-    % PZT layer
-    \fill[gray!15] (0,\beH) rectangle (\W,\beH+\pztH);
-    % Top Electrode = VBS
-    \fill[gray!80] (0,\beH+\pztH) rectangle (4,\beH+\pztH+\teH);
-    % Au pad = COM
-    \fill[gray!30] (6,\beH+\pztH) rectangle (\W,\beH+\pztH+0.60);
-    % Exposed sidewall（電界集中）
-    \draw[line width=1pt,black] (4,\beH) -- (4,\beH+\pztH);
-    % 提案 AlOx（ALD）— 破線で囲う
-    \draw[line width=0.7pt,gray!70,dashed] (3.8,\beH) -- (3.8,\beH+\pztH);
-    \draw[line width=0.7pt,gray!70,dashed] (4.2,\beH) -- (4.2,\beH+\pztH);
+% --- Fig.3: 端部焼損の模式図（スケッチ準拠）---
+\renewcommand{\figEdgeBurnoutInline}{%
+  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+    % 基本パラメータ
+    \def\W{10.0}
+    \def\pztH{1.20}   % PZT厚さ（相対表示；1.2 µmイメージ）
+    \def\teH{0.20}    % Top Electrode厚み
+    \def\beY{0.00}    % BE基準高さ
+    % 線幅（界面は太め）
+    \def\iflw{0.9pt}  % 界面線
+    \def\edgw{0.8pt}  % 輪郭線
+
+    % ===== Bottom Electrode (BE) 基準線（太線）=====
+    \draw[line width=\iflw] (0,\beY) -- (\W,\beY);
+    % BEラベル
+    \node[anchor=north west,scale=0.8] at (0.05,\beY-0.10) {BE};
+
+    % ===== 左側：PZT + Top Electrode(VBS) =====
+    % PZT本体
+    \draw[fill=gray!15,draw=black,line width=\edgw]
+      (0.80,\beY) rectangle (5.00,\beY+\pztH);
+    % PZT上下面の界面を強調（太線を上書き）
+    \draw[line width=\iflw] (0.80,\beY) -- (5.00,\beY);
+    \draw[line width=\iflw] (0.80,\beY+\pztH) -- (5.00,\beY+\pztH);
+    % Top Electrode（左側のみ）
+    \draw[fill=gray!65,draw=black,line width=\edgw]
+      (0.80,\beY+\pztH) rectangle (3.80,\beY+\pztH+\teH);
+    % TE端の側壁（PZT露出：電界集中部）
+    \draw[line width=\iflw] (3.80,\beY+\pztH) -- (3.80,\beY); % 垂直界面を太線
+    % VBS取り出し（上向きリード＋ラベル）
+    \draw[line width=0.7pt] (2.10,\beY+\pztH+\teH) -- (2.10,\beY+\pztH+\teH+0.60);
+    \fill (2.10,\beY+\pztH+\teH+0.60) circle (0.04);
+    \node[anchor=south,scale=0.8] at (2.10,\beY+\pztH+\teH+0.62) {VBS};
+    % TEラベル
+    \node[anchor=west,scale=0.8] at (3.85,\beY+\pztH+\teH-0.03) {TE};
+    % PZTラベル
+    \node[anchor=west,scale=0.8] at (5.05,\beY+0.55*\pztH) {PZT};
+
+    % 厚さ注記（1.2 µm）— 側壁横に寸法線
+    \draw[->,line width=0.5pt] (3.45,\beY+\pztH) -- (3.45,\beY+0.02);
+    \draw[->,line width=0.5pt] (3.45,\beY+0.00) -- (3.45,\beY+\pztH-0.02);
+    \node[anchor=east,scale=0.8] at (3.40,\beY+0.5*\pztH) {1.2\,\(\mu\)m};
+
+    % ===== 右側：COM（Au配線パッド＋支柱）=====
+    % 支柱（BEから立ち上がり）
+    \draw[fill=gray!35,draw=black,line width=\edgw]
+      (6.00,\beY) rectangle (6.60,\beY+\pztH);
+    \draw[fill=gray!35,draw=black,line width=\edgw]
+      (7.60,\beY) rectangle (8.20,\beY+\pztH);
+    % Au配線パッド（支柱上に載る）
+    \draw[fill=gray!25,draw=black,line width=\edgw]
+      (5.40,\beY+\pztH) rectangle (8.80,\beY+\pztH+0.70);
+    % パッド下面の界面を強調（太線）
+    \draw[line width=\iflw] (5.40,\beY+\pztH) -- (8.80,\beY+\pztH);
+    % COM取り出し＆ラベル
+    \draw[line width=0.7pt] (7.10,\beY+\pztH+0.70) -- (7.10,\beY+\pztH+1.20);
+    \node[anchor=south,scale=0.8] at (7.10,\beY+\pztH+1.22) {COM};
+    % 「Au配線」ラベル
+    \node[anchor=south east,scale=0.8] at (8.78,\beY+\pztH+0.70) {Au配線};
   \end{tikzpicture}%
 }
 
