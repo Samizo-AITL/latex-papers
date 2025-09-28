@@ -79,46 +79,55 @@
   \end{tikzpicture}%
 }
 
-% ===== Fig.3: 端部焼損模式図（スケッチ準拠） =====
-\newcommand{\figEdgeBurnoutSketch}{%
-  \begin{tikzpicture}[x=0.8cm,y=0.8cm]
+% ── Fig.3: 端部焼損の模式図（スケッチ準拠）──
+\renewcommand{\figEdgeBurnoutInline}{%
+  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+    % 基本寸法
+    \def\W{10}       % 全体横幅
+    \def\be{0.22}    % BE厚
+    \def\pzt{1.20}   % PZT厚
+    \def\te{0.18}    % 上電極(TE)厚
+    \def\xsl{4.20}   % PZTスリット左壁のx
+    \def\gap{0.25}   % スリット幅
 
-    % --- パラメータ ---
-    \def\W{8}   % 全体幅
-    \def\pztH{1.2} % PZT層厚み（スケール用）
-    \def\beH{0.3}  % 下電極厚み
-    \def\teH{0.2}  % 上電極厚み
-    \def\auW{2.2}  % Au配線の幅
-    \def\auH{0.8}  % Au配線の厚み
+    % BE（下部電極）
+    \fill[gray!55] (0,0) rectangle (\W,\be);
 
-    % --- Bottom Electrode (BE) ---
-    \fill[gray!55] (0,0) rectangle (\W,\beH);
-    \node[anchor=east,font=\scriptsize] at (-0.1,0.15) {BE};
+    % PZT層（スリットで左右に分割）
+    \fill[gray!15] (0,\be) rectangle (\xsl,\be+\pzt);            % 左：駆動部
+    \fill[gray!15] (\xsl+\gap,\be) rectangle (\W,\be+\pzt);      % 右：配線側
 
-    % --- PZT層 ---
-    \fill[gray!15] (0,\beH) rectangle (\W,\beH+\pztH);
-    \node[anchor=east,font=\scriptsize] at (-0.1,\beH+0.6) {PZT};
+    % スリット側壁（電界集中部）
+    \draw[line width=1.0pt] (\xsl,\be) -- (\xsl,\be+\pzt);
+    \draw[line width=1.0pt] (\xsl+\gap,\be) -- (\xsl+\gap,\be+\pzt);
 
-    % --- Top Electrode (TE, 左側のみ) ---
-    \fill[gray!75] (0,\beH+\pztH) rectangle (3,\beH+\pztH+\teH);
-    \node[anchor=east,font=\scriptsize] at (-0.1,\beH+\pztH+0.1) {TE};
+    % 上電極 TE（左・駆動部のみ）
+    \fill[gray!80] (0.40,\be+\pzt) rectangle (3.60,\be+\pzt+\te);
 
-    % --- Au配線（右側） ---
-    \fill[gray!35] (4,\beH+\pztH) rectangle (4+\auW,\beH+\pztH+\auH);
-    \node[anchor=west,font=\scriptsize] at (6.3,\beH+\pztH+0.4) {Au配線};
+    % 右側：BEへ落とすコンタクト柱（2本例）
+    \fill[gray!70] (5.20,\be) rectangle (5.80,\be+\pzt);
+    \fill[gray!70] (7.20,\be) rectangle (7.80,\be+\pzt);
 
-    % --- COM電極 (上に伸ばす) ---
-    \draw[line width=0.5pt] (5,\beH+\pztH+\auH) -- ++(0,0.8);
-    \node[anchor=west,font=\scriptsize] at (5.1,\beH+\pztH+\auH+0.6) {COM};
+    % Au配線パッド（COM）＝柱をブリッジ
+    \fill[gray!30] (4.80,\be+\pzt) rectangle (8.20,\be+\pzt+0.60);
 
-    % --- VBS電極 (左TEから上に伸ばす) ---
-    \draw[line width=0.5pt] (1.5,\beH+\pztH+\teH) -- ++(0,0.8);
-    \node[anchor=west,font=\scriptsize] at (1.6,\beH+\pztH+\teH+0.6) {VBS};
+    % ラベル（控えめ）
+    \node[anchor=east] at (0.32,0.08)             {\small BE};
+    \node[anchor=east] at (0.32,\be+0.60)         {\small PZT};
+    \node[anchor=east] at (0.32,\be+\pzt+0.02)    {\small TE};
+    \node[anchor=east] at (0.32,\be+\pzt+\te/2)   {\small VBS};
+    \draw (8.00,\be+\pzt+0.60) -- (8.00,\be+\pzt+1.00);
+    \node[anchor=west] at (8.05,\be+\pzt+0.80)    {\small COM};
 
-    % --- 寸法線（PZT厚み 1.2µm） ---
-    \draw[<->,line width=0.4pt] (-0.6,\beH) -- (-0.6,\beH+\pztH);
-    \node[anchor=east,font=\scriptsize] at (-0.7,\beH+0.6) {1.2 µm};
+    % 焼損箇所の指示（スリット左壁）
+    \draw[->,line width=0.6pt]
+      (\xsl+0.20,\be+0.18) .. controls (\xsl+0.32,\be+0.70) ..
+      (\xsl+0.02,\be+0.95);
+    \node[anchor=west] at (\xsl+0.24,\be+0.14) {\scriptsize 焼損};
 
+    % 参考：AlOx保護提案（破線で側壁に薄く表示）
+    \draw[gray!70,dashed,line width=0.6pt] (\xsl-0.15,\be) -- (\xsl-0.15,\be+\pzt);
+    \draw[gray!70,dashed,line width=0.6pt] (\xsl+\gap+0.15,\be) -- (\xsl+\gap+0.15,\be+\pzt);
   \end{tikzpicture}%
 }
 
