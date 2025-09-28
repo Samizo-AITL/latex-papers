@@ -56,20 +56,26 @@
   \end{tikzpicture}%
 }
 
-% ====== Fig.2: 6層のPZT断面（中央層にボイド）======
-\renewcommand{\figPZTLayersVoidInline}{%
-  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
-    % 6本の水平ライン
-    \def\W{6.4}\def\Pitch{0.55}
+% ====== Fig.2：6層・水平ライン＋中央のハッチ矩形（スケッチ準拠） ======
+\newcommand{\figPZTLayersVoidInline}{%
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    % パラメータ（必要なら数値だけ触ってください）
+    \def\W{6.4}      % 横幅
+    \def\Pitch{0.55} % 層ピッチ（行間）
+    \def\LW{0.8pt}   % ラインの太さ
+
+    % 6本の水平ライン（完全水平）
     \foreach \k in {0,...,5}{
-      \draw[line width=0.8pt,gray!40] (0,\k*\Pitch) -- (\W,\k*\Pitch);
+      \draw[line width=\LW,gray!40] (0,\k*\Pitch) -- (\W,\k*\Pitch);
     }
-    % 中央付近のボイド矩形（ハッチは手描き線で再現：追加lib不要）
-    \def\xL{2.10}\def\xR{2.80}
-    \def\yC{2.5*\Pitch}\def\hH{0.18}
+
+    % 中央層の矩形ボイド（スケッチ位置）
+    \def\xL{2.10}\def\xR{2.80}               % 左右位置
+    \def\yC{2.5*\Pitch}\def\hH{0.18}         % 中央高さ・半高さ
     \draw[fill=gray!35,draw=gray!70,line width=0.6pt]
       (\xL,\yC-\hH) rectangle (\xR,\yC+\hH);
-    % 斜めハッチ
+
+    % 斜めハッチ（手描き風の数本だけ）
     \foreach \t in {-0.20,-0.10,0,0.10,0.20}{
       \draw[gray!60,line width=0.6pt]
         ({\xL+0.02},{\yC-\hH+0.04+\t}) -- ({\xR-0.02},{\yC+\hH-0.04+\t});
