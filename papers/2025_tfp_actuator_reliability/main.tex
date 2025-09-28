@@ -79,52 +79,49 @@
   \end{tikzpicture}%
 }
 
-% ====== Fig.3: 端部焼損の模式図（スケッチ準拠） ======
+% ====== Fig.3: スリット構造（左=駆動部，右=COMがBEへ接続）======
 \renewcommand{\figEdgeBurnoutInline}{%
-  \begin{tikzpicture}[x=1.1cm,y=1.0cm]
-    % 寸法
-    \def\W{8.2}     % 全幅
-    \def\beH{0.25}  % BE厚さ（見せ方）
-    \def\pztH{1.10} % PZT高さ
-    \def\teH{0.15}  % TE高さ
-    \def\slitX{3.30}% スリットX
-    % ---------- BE（下部電極） ----------
-    \fill[gray!60] (0,0) rectangle (\W,\beH);
-    \draw[line width=1.0pt] (0,\beH) -- (\W,\beH); % BE上面を太線
+  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+    % 寸法パラメータ（必要なら微調整）
+    \def\W{10}
+    \def\beH{0.25}      % BE厚み
+    \def\pztH{1.20}     % PZT厚み
+    \def\teH{0.25}      % 上電極厚み
+    \def\slitX{4.0}     % スリット位置（左駆動/右配線の境目）
+    \def\auW{3.0}       % COM配線幅
+    \def\auH{0.50}      % COM配線厚み（描画上）
+    \def\viaX{5.5}      % COM→BEの縦コンタクトX位置
+    \def\viaW{0.35}     % 縦コンタクト幅
 
-    % ---------- PZT（スリットで左右分割） ----------
-    % 左ブロック（駆動部）
-    \fill[gray!15] (0,\beH) rectangle (\slitX,\beH+\pztH);
-    % 右ブロック（COM配線側）
-    \fill[gray!15] (\slitX+0.45,\beH) rectangle (\W,\beH+\pztH);
-    % 界面・スリットの線を強調
-    \draw[line width=1.0pt] (0,\beH+\pztH) -- (\W,\beH+\pztH); % PZT上面
-    \draw[line width=1.0pt] (\slitX,\beH) -- (\slitX,\beH+\pztH); % スリット側壁
+    % --- Bottom Electrode (BE) 全体 ---
+    \fill[gray!55] (0,0) rectangle (\W,\beH);
 
-    % ---------- TE（上電極：左側のみ） ----------
-    \fill[gray!80] (0,\beH+\pztH) rectangle (2.2,\beH+\pztH+\teH);
-    \draw[line width=0.8pt] (0,\beH+\pztH+\teH) -- (2.2,\beH+\pztH+\teH);
-    % VBS端子（簡素なピン）
-    \draw (0.2,\beH+\pztH+\teH) -- ++(0,0.55);
-    \node[scale=0.75,anchor=south] at (0.2,\beH+\pztH+\teH+0.55) {VBS};
+    % --- 左側：PZT駆動部（BE上にPZT→TE） ---
+    \fill[gray!15] (0,\beH) rectangle (\slitX,\beH+\pztH);             % PZT
+    \fill[gray!80] (0,\beH+\pztH) rectangle (\slitX,\beH+\pztH+\teH);  % 上電極(TE/VBS)
 
-    % ---------- Au配線（COM）とBEコンタクト ----------
-    % 二本のポスト（BEに接する）
-    \fill[gray!30] (4.6,\beH) rectangle (5.0,\beH+\pztH+0.35);
-    \fill[gray!30] (6.2,\beH) rectangle (6.6,\beH+\pztH+0.35);
-    % 上部バーで接続
-    \fill[gray!30] (4.6,\beH+\pztH+0.35) rectangle (6.6,\beH+\pztH+0.60);
-    % COMピン
-    \draw (5.6,\beH+\pztH+0.60) -- ++(0,0.70);
-    \node[scale=0.75,anchor=south] at (5.6,\beH+\pztH+1.30) {COM};
-    % 右側PZT上面の細いAuランディング（視覚補助）
-    \draw[gray!50,line width=0.6pt] (\slitX+0.45,\beH+\pztH) -- (7.6,\beH+\pztH);
+    % --- 中央スリット（PZT/TEが無い縦の溝） ---
+    \fill[white] (\slitX,0) rectangle (\slitX+0.02,\beH+\pztH+\teH+\auH); % ほんの細い空隙表示
+    \draw[line width=0.8pt,black] (\slitX,0) -- (\slitX,\beH+\pztH+\teH+\auH); % スリット境界線（片側だけ太め）
 
-    % ---------- 焼損位置（スリット根元） ----------
-    \draw[->,line width=0.8pt] (\slitX-0.35,\beH+0.40) -- ++(-0.60,0.35);
-    \node[scale=0.75,anchor=south east] at (\slitX-0.35,\beH+0.40) {焼損};
+    % --- 右側：COM（Au配線）---
+    % 上面に走るCOMトレース（PZTが無い右側上面）
+    \fill[gray!30] (\slitX+2,\beH+\pztH) rectangle (\slitX+2+\auW,\beH+\pztH+\auH);
 
-    % 余白の枠は描かない（IEEE図っぽく簡素）
+    % COM→BE への縦コンタクト（スケッチの“落とし”）
+    \fill[gray!30] (\viaX-\viaW/2,\beH) rectangle (\viaX+\viaW/2,\beH+\pztH+\auH);
+
+    % 輪郭線（必要最小限、斜め線なし）
+    \draw[line width=0.6pt,black] (0,0) -- (\W,0);                                % BE下面
+    \draw[line width=0.6pt,black] (0,\beH) -- (\slitX,\beH);                       % 駆動部BE上面
+    \draw[line width=0.6pt,black] (0,\beH+\pztH) -- (\slitX,\beH+\pztH);           % PZT上面
+    \draw[line width=0.6pt,black] (0,\beH+\pztH+\teH) -- (\slitX,\beH+\pztH+\teH); % TE上面
+    \draw[line width=0.6pt,black] (\slitX+2,\beH+\pztH+\auH) -- (\slitX+2+\auW,\beH+\pztH+\auH); % COM上端
+
+    % 最小ラベル（必要なら）
+    \node[anchor=north west,scale=0.75] at (0.1,\beH+\pztH+\teH) {駆動部（PZT）};
+    \node[anchor=south,scale=0.75] at (\slitX+2+\auW/2,\beH+\pztH+\auH) {COM（Au）};
+    \node[anchor=west,scale=0.7] at (\viaX+\viaW/2+0.1,\beH+\0.15) {BEに接続};
   \end{tikzpicture}%
 }
 
