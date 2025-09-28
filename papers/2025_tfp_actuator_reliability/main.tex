@@ -56,32 +56,29 @@
   \end{tikzpicture}%
 }
 
-% ---- Fig.2: 6層PZT断面（1層だけボイド枠でハイライト）----
-\newcommand{\figPZTLayersVoidInline}[1][0.90]{%
-  \begin{tikzpicture}[x=#1cm,y=#1cm]
-    % パラメータ（この図のローカル変数）
+% ====== Fig.2: 6層のPZT断面（中央層にボイド）======
+\newcommand{\figPZTLayersVoidInline}{%
+  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+    % ---- パラメータ ----
     \def\W{6.0}   % 横幅
-    \def\H{0.45}  % 各層厚
-    \def\G{0.10}  % 層間ギャップ（見やすさ用）
-    \def\voidLayer{4} % ボイドを示す層（1..6）
+    \def\H{0.45}  % 各層の厚み
+    \def\G{0.10}  % 層間ギャップ
+    \def\N{6}     % 層数（6に固定）
+    \def\voidLayer{3} % 中央の層にボイドを描画（第3層）
 
-    % 6層のみ（0..5 で6回）※絶対に増えない
-    \foreach \i in {0,...,5}{%
+    % ---- 6層の描画 ----
+    \foreach \i in {0,...,5}{% 0～5 で計6層
       \pgfmathsetmacro{\yy}{\i*(\H+\G)}%
-      \draw[fill=gray!15,draw=black,line width=0.4pt]
+      \draw[line width=0.6pt]
+        (0,\yy) -- (\W,\yy+\H) -- cycle;
+      \draw[draw=black,line width=0.4pt]
         (0,\yy) rectangle (\W,\yy+\H);
     }
 
-    % ボイド枠（破線）— 指定層のみ
+    % ---- ボイド矩形（中央層に塗りつぶし）----
     \pgfmathsetmacro{\idx}{\voidLayer-1}%
     \pgfmathsetmacro{\yv}{\idx*(\H+\G)}%
-    \draw[line width=0.8pt,gray!50,dashed]
-      (2.1,\yv+0.08) rectangle (3.0,\yv+\H-0.08);
-
-    % 上下の基準線（電極イメージ）
-    \draw[line width=0.6pt,gray!70] (0,-0.30) -- (\W,-0.30);
-    \pgfmathsetmacro{\totalH}{6*(\H+\G)}%
-    \draw[line width=0.6pt,gray!70] (0,\totalH+0.10) -- (\W,\totalH+0.10);
+    \fill[gray!50] (2.3,\yv+0.05) rectangle (3.2,\yv+\H-0.05);
   \end{tikzpicture}%
 }
 
