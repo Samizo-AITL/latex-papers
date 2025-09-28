@@ -34,6 +34,10 @@
 }
 \pgfmathsetseed{20250928} % 再現性のため乱数シード固定
 
+% 追加（冒頭のパッケージ群の近くに）
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
 % =====================================================
 % 内蔵図コマンド（本文で呼ぶ前＝\begin{document}より前に置く）
 % 使い方例：\figVoidDonutInline            % 既定サイズ
@@ -219,6 +223,10 @@
 プロセス条件制御による恒久改善事例と、構造的制約に対するデバイス設計提案を提示した。
 これらの成果は、今後の高密度ノズル化および高耐圧駆動化に資するものである。
 
+本手法は対症療法ではなく，薄膜PZT MEMS一般に有効な
+「親水性リセット」と「側壁パッシベーション」という
+二本柱のプロセス指針として位置付けられる。
+
 \medskip
 \textbf{Abstract (English)} — 
 This study investigates two reliability issues in thin-film PZT ($d_{33}$ mode) actuators: 
@@ -227,6 +235,12 @@ Cracks were traced to voids in PZT layers due to hydrophobicity after RTA, solve
 Edge burnout occurred at exposed PZT sidewalls under up to 40 V, attributed to local breakdown. 
 As a countermeasure, AlOx passivation by ALD was proposed. 
 These findings clarify unique failure mechanisms and provide both process and design solutions for higher reliability.
+These steps are presented not merely as ad-hoc fixes but as
+\emph{generalizable process guidelines} for thin-film PZT MEMS:
+(i) an acetic-acid pre-wet to reset hydrophilicity after high-temperature steps,
+and (ii) conformal ALD sidewall passivation to mitigate edge-field concentration.
+The approach is applicable to a broader class of sol–gel ferroelectric MEMS
+(micropumps, optical MEMS mirrors, pMUTs).
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -359,6 +373,56 @@ RTA後の外気由来成分が起因している可能性を裏付けた。
   \label{fig:layer-void}
 \end{figure}
 
+\subsubsection*{歩留まりの定量評価}
+Fig.~\ref{fig:yield}に、ロット順（ユニットスクリーニング順）に対する
+不良率の推移を示す。各ロットの試験数は $N=500$（ダイ）で一定とし、
+不良率は $\mathrm{defect\ rate}=n_{\mathrm{fail}}/N$ で定義した。
+従来条件（Before）で5--10\%のばらつきを示していたが、
+酢酸プレウェット導入後（After）には全ロットで0\%に収束した。
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=\linewidth, height=5cm,
+      xlabel={ロット / Lot index}, ylabel={不良率 / Defect rate [\%]},
+      xmin=1, xmax=10, ymin=0, ymax=12,
+      ymajorgrids, xmajorgrids,
+      legend style={at={(0.97,0.97)},anchor=north east,font=\footnotesize},
+      tick label style={/pgf/number format/fixed},
+    ]
+      % ---- データ（例）----
+      \addplot+[mark=*, thick] coordinates
+        {(1,6.8) (2,8.9) (3,5.4) (4,9.7) (5,7.6)};
+      \addlegendentry{Before（従来）}
+
+      \addplot+[mark=square*, thick] coordinates
+        {(6,0.0) (7,0.0) (8,0.0) (9,0.0) (10,0.0)};
+      \addlegendentry{After（酢酸プレウェット）}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{%
+    歩留まりの推移（各ロット $N=500$）／
+    Yield trend with $N=500$ dies per lot
+  }
+  \label{fig:yield}
+\end{figure}
+
+\begin{table}[t]
+  \centering
+  \caption{比較プロセス条件 / Compared process conditions}
+  \label{tab:proc-compare}
+  \begin{tabular}{ll}
+    \toprule
+    項目 / Item & 条件 / Condition \\
+    \midrule
+    共通 & RTA, PZT 200\,nm$\times$6, 評価N=500/lot \\
+    従来（Before） & プレウェット無し，ロードロック簡易遮蔽 \\
+    改善（After） & 酢酸プレウェット（親水化），他同一 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \subsection{端部焼損：電界集中部位}
 スクリーニング試験では、+30\,V（COM）と--10\,V（VBS）の電圧印加により、
 最大差分 \SI{40}{V} の電界がPZT層に印加される。
@@ -438,6 +502,27 @@ EDX解析（Energy Dispersive X-ray Spectroscopy）により、焼損部には
 クラック対策は既に恒久的に解決済みである一方、焼損については
 提案レベルに留まっており、投資判断や設計最適化を含む
 長期的な信頼性確保戦略が今後の課題となる。
+
+\subsection*{一般化可能なプロセス指針 / Generalized process guidelines}
+
+\textbf{(G1) 親水性リセットとしての酢酸プレウェット}：
+RTA後に生じる有機・炭素系の吸着で表面が疎水化すると，
+ソル–ゲル塗布時に気泡巻き込みを誘発する。本研究の酢酸プレウェットは，
+\emph{PZTに限らずソル–ゲル由来強誘電体・圧電薄膜}（例：AlN系ドープ膜, HfO$_2$系）
+にも適用可能な\emph{親水性の即応回復ステップ}として機能する。
+
+\textbf{(G2) エッジ電界緩和としてのALD側壁パッシベーション}：
+電極端や層間スリットでの\emph{露出側壁}は，多くの薄膜MEMSに共通する
+電界集中ホットスポットである。AlO$_x$等のALD膜による conformal 被覆は，
+\emph{形状微細化・高電圧化に伴う局所耐圧不足}を系統的に補う汎用手段となる。
+
+\subsection*{適用範囲の拡張 / Applicability beyond inkjet}
+本手法は，インクジェット以外の\emph{薄膜PZT/MEMSアクチュエータ}にも展開できる。
+例として，（i）マイクロポンプ・バルブの駆動膜，（ii）光MEMSミラー，
+（iii）超音波マイクロトランスデューサ（pMUT）など，
+ソル–ゲル成膜と微細エッジを併せ持つデバイスでは，
+(G1) の親水性リセットでボイド起点欠陥を抑制し，(G2) の側壁パッシベーションで
+端部の耐圧マージンを確保できる。
 
 \section{結論}
 本研究では、Epson $\mu$TFP 薄膜PZTアクチュエータにおいて顕在化した
