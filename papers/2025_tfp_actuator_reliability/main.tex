@@ -383,69 +383,86 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
 なお，本スクリーニング段階での不良はクラック・焼損を区別できないため，
 両者を合算して統計化している。
 
-% ====== Fig.3: ユニットスクリーニング不良率ヒストグラム ======
+% ====== Fig.3: ユニットスクリーニング不良率ヒストグラム（1カラム） ======
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}
     \begin{axis}[
       width=\columnwidth,
-      height=0.65\columnwidth,
+      height=0.66\columnwidth,
       ybar,
-      bar width=7pt,
+      bar width=6pt,
       ymin=0, ymax=12,
       ytick={0,2,4,6,8,10,12},
       ylabel={ロット数 / Number of lots},
       xlabel={ユニットスクリーニング不良率 (\%) / Unit-screening defect rate (\%)},
+      % --- 共通ビン（1%幅）。目盛は2%刻み表示 ---
       xtick={0,2,4,6,8,10},
-      tick style={inside},          % 目盛は内側
+      xmin=-0.5, xmax=10.5,
+      tick style={inside},            % 目盛を内側
       xmajorgrids=true,
       ymajorgrids=true,
       grid style={gray!30},
       legend style={
         draw=none,
-        at={(0.5,-0.35)},  % ↓ 図の下中央
-        anchor=north,
-        legend columns=1,   % 縦1列
-        nodes={scale=0.8, transform shape}
+        at={(0.98,0.98)}, anchor=north east,
+        nodes={scale=0.82, transform shape, align=left}
       },
     ]
-      % ---- Before (No pre-wet) ----
-      \addplot+[fill=blue!40] coordinates {
+
+      % ---- Before (No pre-wet) :: 12 lots, 1%ビン中心にカウントを配置 ----
+      % 例：6–10%帯に集中（クラック起因）
+      \addplot+[ybar, bar shift=-3pt, fill=blue!40] coordinates {
         (6,2) (7,2) (8,3) (9,2) (10,3)
       };
-      \addlegendentry{Before (No pre-wet), $N_{\mathrm{lots}}=12$}
+      \addlegendentry{\shortstack[l]{Before（前処理なし）\\Before (no pre-wet), $N_\mathrm{lots}=12$}}
 
-      % ---- After (Acetic pre-wet) ----
-      \addplot+[fill=red!40] coordinates {
-        (0,11) (2,1)
+      % ---- After (Acetic pre-wet) :: 12 lots, 焼損を含むため≈2%が残存 ----
+      % 例：0–3%帯に分布（クラック激減、焼損残り）
+      \addplot+[ybar, bar shift=+3pt, fill=red!40] coordinates {
+        (0,2) (1,3) (2,5) (3,2)
       };
-      \addlegendentry{After (Acetic pre-wet), $N_{\mathrm{lots}}=12$}
+      \addlegendentry{\shortstack[l]{After（酢酸プレウェット）\\After (acetic pre-wet), $N_\mathrm{lots}=12$}}
+
     \end{axis}
   \end{tikzpicture}
   \caption{%
-    ユニットスクリーニング不良率のヒストグラム（Before/After，共通ビン）／
-    Histogram of unit-screening defect rates (Before/After, common bins).
-    Rates include both crack and burnout (indistinguishable at screening).}
+    ユニットスクリーニング不良率のヒストグラム（Before/After，共通ビン）\\
+    Histogram of unit-screening defect rates (Before/After; common bins).\\
+    ※ スクリーニング時点ではクラック／焼損の判別不可（分解観察で識別）。%
+  }
   \label{fig:yield_hist}
 \end{figure}
 
-% ====== Table.2: 比較プロセス条件 ======
+% ====== Table 2: 比較プロセス条件（1カラム） ======
 \begin{table}[t]
   \centering
   \caption{%
-    比較プロセス条件（Before/After）／
+    比較プロセス条件（Before/After）\\
     Compared process conditions (Before/After)}
   \label{tab:proc-compare}
-  \setlength{\tabcolsep}{2.5pt} % 列間を少し詰める
-  \begin{tabular}{@{} p{0.34\columnwidth} p{0.30\columnwidth} p{0.30\columnwidth} @{}}
+  \setlength{\tabcolsep}{3.5pt}
+  \renewcommand{\arraystretch}{1.05}
+  \footnotesize
+  \begin{tabular}{@{} lll @{}}
     \toprule
     \textbf{項目 / Item} & \textbf{Before} & \textbf{After} \\
     \midrule
-    表面前処理 / Surface pre-wet & 無し / None & 酢酸2\% 30\,s \\
-    RTA後搬送 / Post-RTA handling & 大気露出 / Air exposure & 窒素パージミニロードロック / N$_2$ mini-loadlock \\
-    スピン塗布 / Spin coating & 同一条件 / Same & 同一条件 / Same \\
-    PZT積層 / PZT stack & 200\,nm $\times$ 6 & 200\,nm $\times$ 6 \\
-    検査N / Sample size & 500/lot & 500/lot \\
+    表面前処理 / Surface pre-wet
+      & 無し / None
+      & 酢酸2\% 30\,s \\
+    RTA後搬送 / Post-RTA handling
+      & 大気露出 / Air exposure
+      & 窒素パージミニロードロック / N\textsubscript{2}-purged mini-LL \\
+    スピン塗布 / Spin coating
+      & 同一条件 / Same
+      & 同一条件 / Same \\
+    PZT積層 / PZT stack
+      & 200\,nm $\times$ 6
+      & 200\,nm $\times$ 6 \\
+    検査N / Sample size
+      & 500/lot
+      & 500/lot \\
     \bottomrule
   \end{tabular}
 \end{table}
