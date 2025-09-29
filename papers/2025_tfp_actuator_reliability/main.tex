@@ -383,7 +383,7 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
 なお，本スクリーニング段階での不良はクラック・焼損を区別できないため，
 両者を合算して統計化している。
 
-% ====== Fig.3: ユニットスクリーニング不良率ヒストグラム（2カラム） ======
+% Fig.3: Unit-screening defect-rate histogram (two-column)
 \begin{figure*}[t]
   \centering
   \begin{tikzpicture}
@@ -394,40 +394,27 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
       bar width=7pt,
       ymin=0, ymax=12,
       ytick={0,2,4,6,8,10,12},
-      ylabel={ロット数 / Number of lots},
-      xlabel={ユニットスクリーニング不良率 (\%) / Unit-screening defect rate (\%)},
+      ylabel={Number of lots},
+      xlabel={Unit-screening defect rate (\%)},
       xtick={0,2,4,6,8,10},
       xmin=-0.5, xmax=10.5,
-      tick align=inside,            % ← ココを修正
+      tick align=inside,      % ← これに変更
       xmajorgrids=true,
       ymajorgrids=true,
       grid style={gray!30},
       legend style={
         draw=none,
         at={(0.02,0.98)}, anchor=north west,
-        nodes={scale=0.85, transform shape, align=left}
+        nodes={scale=0.85, transform shape}
       },
     ]
-
-      % ---- Before ----
-      \addplot+[ybar, bar shift=-3pt, fill=blue!40] coordinates {
-        (6,2) (7,2) (8,3) (9,2) (10,3)
-      };
-      \addlegendentry{Before（前処理なし） / Before (no pre-wet), $N_\mathrm{lots}=12$}
-
-      % ---- After ----
-      \addplot+[ybar, bar shift=+3pt, fill=red!40] coordinates {
-        (0,2) (1,3) (2,5) (3,2)
-      };
-      \addlegendentry{After（酢酸プレウェット） / After (acetic pre-wet), $N_\mathrm{lots}=12$}
-
+      \addplot+[ybar, bar shift=-3pt, fill=blue!40] coordinates {(6,2) (7,2) (8,3) (9,2) (10,3)};
+      \addlegendentry{Before (no pre-wet), N=12}
+      \addplot+[ybar, bar shift=+3pt, fill=red!40]  coordinates {(0,2) (1,3) (2,5) (3,2)};
+      \addlegendentry{After (acetic pre-wet), N=12}
     \end{axis}
   \end{tikzpicture}
-  \caption{%
-    ユニットスクリーニング不良率のヒストグラム（Before/After，共通ビン）／
-    Histogram of unit-screening defect rates (Before/After; common bins).\\
-    ※ スクリーニング時点ではクラック／焼損の判別不可（分解観察で識別）。%
-  }
+  \caption{Histogram of unit-screening defect rates (Before/After; common bins).}
   \label{fig:yield_hist}
 \end{figure*}
 
