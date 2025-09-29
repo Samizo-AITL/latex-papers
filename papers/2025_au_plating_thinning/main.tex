@@ -18,12 +18,20 @@
 % 図フォルダを固定（figures/ の下を優先的に探す）
 \graphicspath{{figures/}}
 
-% 図が無いときでもビルドが止まらないプレースホルダ
+% 図が無いときでもビルドが止まらないプレースホルダ（_などの特殊文字にも対応）
+\makeatletter
 \newcommand{\figorplaceholder}[2][]{%
-  \IfFileExists{#2}{\includegraphics[#1]{#2}}{%
-    \fbox{\parbox[c][.45\textwidth][c]{.45\textwidth}{\centering Missing:\\\texttt{#2}}}%
+  \IfFileExists{#2}{%
+    \includegraphics[#1]{#2}%
+  }{%
+    \fbox{%
+      \parbox[c][.45\textwidth][c]{.45\textwidth}{%
+        \centering Missing:\\{\ttfamily\detokenize{#2}}%
+      }%
+    }%
   }%
 }
+\makeatother
 
 % ===== タイトル・著者 =====
 \title{COFにおけるAuメッキ薄化によるコスト合理化と信頼性評価}
@@ -40,9 +48,9 @@ GitHub: \url{https://github.com/Samizo-AITL}}
 \begin{abstract}
 本論文は、ビジネスインクジェット（BIJ）プリントヘッドに用いられる
 COF基板におけるAuメッキ厚の合理化について報告する。
-Au厚仕様を $0.425 \pm 0.125\,\mu$m と定め、
+Au厚仕様を $0.425 \pm 0.125\,\mu\mathrm{m}$ と定め、
 NPC接合信頼性試験、エレクトロマイグレーション評価、加速環境試験を通じて
-下限 $0.30\,\mu$m に十分なマージンを確認した。
+下限 $0.30\,\mu\mathrm{m}$ に十分なマージンを確認した。
 その結果、品質と信頼性を維持しつつ大幅なコスト削減が可能であることを示した。
 \end{abstract}
 
@@ -50,10 +58,10 @@ NPC接合信頼性試験、エレクトロマイグレーション評価、加�
 \begin{abstract}
 This paper reports the rationalization of Au plating thickness
 in Chip-on-Film (COF) for Business Inkjet (BIJ) printheads.
-A new specification of $0.425 \pm 0.125\,\mu$m was validated
+A new specification of $0.425 \pm 0.125\,\mu\mathrm{m}$ was validated
 through NPC bonding reliability, electromigration, and accelerated
 environmental tests, confirming sufficient margin at the lower limit
-of $0.30\,\mu$m. The results demonstrate that significant cost reduction
+of $0.30\,\mu\mathrm{m}$. The results demonstrate that significant cost reduction
 can be achieved while maintaining product quality and reliability.
 \end{abstract}
 
@@ -67,15 +75,15 @@ can be achieved while maintaining product quality and reliability.
 中でもCOF配線上のAuメッキは材料費比率が大きく、合理化効果が最も高い。
 しかし信頼性に直結するため、失敗の許されないテーマである。
 
-本研究では、Auメッキ厚を従来の中心値0.50\,µmから
-$0.425 \pm 0.125$\,µmへと見直し、信頼性を維持したまま
+本研究では、Auメッキ厚を従来の中心値 $0.50\,\mu\mathrm{m}$ から
+$0.425 \pm 0.125\,\mu\mathrm{m}$ へと見直し、信頼性を維持したまま
 コスト低減を図った。
 
 \section{COF製造フローとAuメッキ}
 COFは銅箔基材（CLL）をベースにパターニングされ、
 外注工程でAuメッキが施される。
-新仕様では下限0.30\,µmを堅持しつつ工程能力
-（$\sigma=0.025$\,µm, Cpk$\geq$1.67）を満たす。
+新仕様では下限 $0.30\,\mu\mathrm{m}$ を堅持しつつ工程能力
+（$\sigma=0.025\,\mu\mathrm{m}$, Cpk$\geq$1.67）を満たす。
 
 \section{NPC接合と実装信頼性}
 uTFPアクチュエータはCOF上にNPC接合で実装される。
@@ -85,15 +93,15 @@ uTFPアクチュエータはCOF上にNPC接合で実装される。
 折り曲げ応力下での耐久性などを含む。
 
 \section{リスク検証}
-$0.30/0.25/0.20$\,µm のAuメッキ厚サンプルを作製し、
-85℃/85\%RH、熱衝撃、硫化雰囲気試験を実施した。
-結果、0.30および0.25\,µmは合格、
-0.20\,µmではCOF単体でCu拡散が観察され不採用とした。
+$0.30/0.25/0.20\,\mu\mathrm{m}$ のAuメッキ厚サンプルを作製し、
+$85^\circ\mathrm{C}/85\%$RH、熱衝撃、硫化雰囲気試験を実施した。
+結果、$0.30$ および $0.25\,\mu\mathrm{m}$ は合格、
+$0.20\,\mu\mathrm{m}$ ではCOF単体でCu拡散が観察され不採用とした。
 
 \section{マイグレーション評価}
-エレクトロマイグレーション評価を125--175℃、電流密度
-$10^5$--$10^6$\,A/cm$^2$で実施し、Black式で寿命外挿した。
-使用条件（85℃, $10^3$\,A/cm$^2$）に対して10倍以上の寿命余裕を確認した。
+エレクトロマイグレーション評価を $125$--$175^\circ\mathrm{C}$、電流密度
+$10^5$--$10^6\,\mathrm{A/cm^2}$ で実施し、Black式で寿命外挿した。
+使用条件（$85^\circ\mathrm{C}$, $10^3\,\mathrm{A/cm^2}$）に対して10倍以上の寿命余裕を確認した。
 
 \section{合理化効果と結論}
 本合理化により、チップ当たり約¥4、BIJ4ヘッドで約¥16の
