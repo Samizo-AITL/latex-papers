@@ -316,11 +316,14 @@ Cu基材が露出して硫化銅が形成される事例が見られた。
 Cu拡散や界面劣化の兆候が観察され，信頼性に十分なマージンがないと判断し「不採用」とした。
 
 \section{マイグレーション評価（Electromigration Evaluation）}
+
 \subsection{試験ビークルと配線条件（Test Vehicle \& Line Geometry）}
-評価はCOF上Au表面（Au over Cu/adhesion stack）配線の直線セグメントで実施した。
-最小線幅$\SI{20}{\micro\meter}$，厚みは電解Cu（\SI{12}{\micro\meter}）上にNi薄層（\SI{0.5}{\micro\meter}）+Auメッキ（本検討の対象：$\SI{0.20}$--$\SI{0.30}{\micro\meter}$）を順次形成した（Fig.~\ref{fig:em-stack}）。
-応力集中の影響を避けるため、計測区間両端に\SI{2}{\milli\meter}のバスバー（bus bar）を設けた。
-最短有効長$L_{\min}=\SI{150}{\micro\meter}$に対し、使用時の電流密度$j_{\mathrm{use}}\le\SI{1e3}{\ampere\per\centi\meter\squared}$より$jL=\SI{0.15}{\ampere\per\centi\meter}$を満たし、Blech効果（Blech effect）による不滅長（immortality）領域に入ることを設計上意図した\cite{Blech}。
+評価はCOF上Au表面（Au over Cu/adhesion stack）の直線配線セグメントで実施した。
+最小線幅は$\SI{20}{\micro\meter}$、厚みは電解Cu（\SI{12}{\micro\meter}）上にNi薄層（\SI{0.5}{\micro\meter}）と
+Auメッキ（本検討対象：\SIrange{0.20}{0.30}{\micro\meter}）を順次形成した（Fig.~\ref{fig:em-stack}）。
+応力集中の影響を避けるため、計測区間両端に\SI{2}{\milli\meter}のバスバー（bus bar）を設置した。
+最短有効長$L_{\min}=\SI{150}{\micro\meter}$に対し、使用時の電流密度$j_{\mathrm{use}}\le \SI{1e3}{\ampere\per\centi\meter\squared}$を考慮すると、
+$jL=\SI{0.15}{\ampere\per\centi\meter}$となり、Blech効果による「不滅長（immortality）」領域を意図的に満たしている\cite{Blech}。
 
 \begin{figure}[htbp]
   \centering
@@ -331,31 +334,36 @@ Cu拡散や界面劣化の兆候が観察され，信頼性に十分なマージ
 
 \subsection{通電・計測手法（Stress Methodology \& Instrumentation）}
 \begin{itemize}
-  \item \textbf{通電（Current stressing）}：定電流源（constant-current）で$j=\{ \SI{1e5},\SI{3e5},\SI{1e6} \}\,\si{\ampere\per\centi\meter\squared}$の3水準、温度$T=\{ \SI{125},\SI{150},\SI{175}\}\,^\circ\mathrm{C}$の3水準で$3\times 3$直交計画。各セル$n\!=\!10$本、計90本。
-  \item \textbf{抵抗トラッキング（4-wire Kelvin）}：初期抵抗$R_0$を測定し、通電中は\SI{1}{s}周期で$\Delta R/R_0$を記録。 
-  \item \textbf{故障判定（Failure criteria）}：主判定＝$\Delta R/R_0\ge 10\%$、副判定＝開放（open）相当$\ge 100\%$。いずれか早い方を$T_f$とした。
-  \item \textbf{打ち切り（Censoring）}：試験上限\SI{1000}{h}に到達した個体は右打ち切り（right-censored）として取り扱い。
-  \item \textbf{自己発熱補正（Joule heating correction）}：温調治具直近のRTDで$T$を監視し、$j=\SI{1e6}{\ampere\per\centi\meter\squared}$条件でも$\Delta T\le \SI{5}{K}$であることを確認、必要に応じArrhenius温度を補正。
+  \item \textbf{通電条件}：定電流源を用い、電流密度$j=\{ \SI{1e5}, \SI{3e5}, \SI{1e6}\}\,\si{\ampere\per\centi\meter\squared}$と
+        温度$T=\{ \SI{125}, \SI{150}, \SI{175}\}\,^\circ\mathrm{C}$の直交計画（$3\times 3$）。各セル$n=10$本、計90本を実施。
+  \item \textbf{抵抗トラッキング}：4端子法により初期抵抗$R_0$を測定し、試験中は\SI{1}{s}周期で相対変化$\Delta R/R_0$を記録。
+  \item \textbf{故障判定}：主判定＝$\Delta R/R_0 \ge 10\%$、副判定＝開放（$\ge 100\%$）。早い方を故障時間$T_f$とした。
+  \item \textbf{打ち切り処理}：試験上限\SI{1000}{h}で未故障のサンプルは右打ち切り（censored）扱い。
+  \item \textbf{自己発熱補正}：温調治具に組込んだRTDで温度上昇を監視し、最大条件$j=\SI{1e6}{\ampere\per\centi\meter\squared}$でも$\Delta T \le \SI{5}{K}$であることを確認。
 \end{itemize}
 
 \subsection{モデル化とパラメータ推定（Modeling \& Parameter Estimation）}
 Black式\cite{Black}に基づき平均故障時間（MTTF）を
 \begin{equation}
-  \mathrm{MTTF}=A\, j^{-n}\exp\!\left(\frac{E_a}{kT}\right)
+  \mathrm{MTTF} = A \, j^{-n}\exp\!\left(\frac{E_a}{kT}\right)
   \label{eq:black}
 \end{equation}
-と置き、$\ln \mathrm{MTTF}$の線形回帰（重み付き最小二乗）で電流指数$n$と活性化エネルギー$E_a$を同時推定した。さらにWeibull分布形状パラメータ$\beta$を最尤推定し、パラメトリック・ブートストラップ（$N=10{,}000$）で信頼区間を評価した。
+と仮定し、$\ln \mathrm{MTTF}$の線形回帰で電流指数$n$と活性化エネルギー$E_a$を同時推定した。
+さらにWeibull分布の形状パラメータ$\beta$を最尤推定し、パラメトリック・ブートストラップ（$N=10{,}000$）により信頼区間を評価した。
 
-推定結果の代表値（本スタックに対するフィット）は
+代表的な推定値は以下の通り：
 \[
-  E_a=\SI{0.85 \pm 0.06}{eV},\quad n=1.10 \pm 0.10,\quad \beta=1.7 \pm 0.2\;(95\%\ \mathrm{CI})
+  E_a = \SI{0.85 \pm 0.06}{eV}, \quad
+  n = 1.10 \pm 0.10, \quad
+  \beta = 1.7 \pm 0.2 \ (95\% \ \mathrm{CI})
 \]
-であり、貴金属表面配線として妥当な範囲にある。Fig.~\ref{fig:em-arr}にArrheniusプロット、Fig.~\ref{fig:em-j}に電流指数フィットを示す。
+
+これらは貴金属配線として妥当な範囲であり、Arrheniusプロットと電流指数フィットをFig.~\ref{fig:em-arr}, Fig.~\ref{fig:em-j}に示す。
 
 \begin{figure}[htbp]
   \centering
   \figorplaceholder[width=\linewidth]{fig_em_arrhenius.png}
-  \caption{Arrheniusプロット（各$j$での$\ln(\mathrm{MTTF})$ vs $1/T$）}
+  \caption{Arrheniusプロット（各$j$における$\ln(\mathrm{MTTF})$ vs $1/T$）}
   \label{fig:em-arr}
 \end{figure}
 
@@ -369,19 +377,20 @@ Black式\cite{Black}に基づき平均故障時間（MTTF）を
 \subsection{加速係数と使用条件外挿（Acceleration Factor \& Field Extrapolation）}
 式(\ref{eq:black})より、任意のストレス条件$(j_s,T_s)$と使用条件$(j_u,T_u)$間の加速係数（AF）は
 \begin{equation}
-  \mathrm{AF}=\left(\frac{j_u}{j_s}\right)^{-n}
-  \exp\!\left[\frac{E_a}{k}\!\left(\frac{1}{T_u}-\frac{1}{T_s}\right)\right]
+  \mathrm{AF} = \left(\frac{j_u}{j_s}\right)^{-n}
+  \exp\!\left[\frac{E_a}{k}\left(\frac{1}{T_u}-\frac{1}{T_s}\right)\right]
   \label{eq:af}
 \end{equation}
-で与えられる。$E_a=\SI{0.85}{eV},\,n=1.10$とすると、例えば
-$(j_s,T_s)=(\SI{1e6}{\ampere\per\centi\meter\squared},\SI{175}{^\circ C})$から
-$(j_u,T_u)=(\SI{1e3}{\ampere\per\centi\meter\squared},\SI{85}{^\circ C})$への外挿は
+で表される。$E_a=\SI{0.85}{eV},\ n=1.10$を代入すると、例えば
+$(j_s,T_s)=(\SI{1e6}{A/cm^2},\SI{175}{^\circ C})$から
+$(j_u,T_u)=(\SI{1e3}{A/cm^2},\SI{85}{^\circ C})$への外挿は
 $\mathrm{AF}\approx 5.0\times 10^5$となる。
-同様に穏和な条件$(\SI{1e5},\SI{125}{^\circ C})$からでも$\mathrm{AF}\approx 2.5\times 10^3$を得る。
-保守的に$E_a,n$の下限側を用いても、\textbf{使用条件に対して少なくとも10倍以上の寿命余裕}が統計的下限で確保される。
+また、より緩和な条件$(\SI{1e5}{A/cm^2},\SI{125}{^\circ C})$からでも
+$\mathrm{AF}\approx 2.5\times 10^3$を得た。
+いずれの場合も統計的下限を考慮しても\textbf{使用条件に対して10倍以上の寿命余裕}を確認できる。
 
 \subsection{結果のサマリ（Results Summary）}
-代表セルのMTTFと外挿結果を表\ref{tab:em-result}に示す。MTTFは打ち切り補正を含むWeibull位置推定（$\eta$）の中央値を記載した。
+代表セルのMTTFと外挿結果を表\ref{tab:em-result}に示す。MTTFは打ち切り補正込みのWeibull位置パラメータ中央値である。
 
 \begin{table}[htbp]
   \centering
@@ -400,19 +409,19 @@ $\mathrm{AF}\approx 5.0\times 10^5$となる。
     \bottomrule
   \end{tabular}
   \vspace{2pt}
-
-  \footnotesize
-  数値は本データセットの代表例（median）であり、区間推定は本文参照。
+  \footnotesize{数値は代表例（median）。区間推定は本文参照。}
 \end{table}
 
 \subsection{破壊様相とBlech評価（Failure Morphology \& Blech Check）}
-FIB-SEM断面観察では、高$j$・高$T$条件でAu/Ni界面近傍に空孔堆積（voiding）とCu側へカソード方向の質量移動（mass transport）を確認した。一方、使用条件相当$j_{\mathrm{use}}$では\SI{1000}{h}打ち切り個体での抵抗ドリフトは$\le\! \SI{1}{\%}$であり、短尺セグメントの$jL$がBlech臨界値を十分下回る設計が有効に機能していると解釈できる\cite{Blech, Korhonen}。
+FIB-SEM断面観察では、高$j$・高$T$条件でAu/Ni界面に空孔堆積（voiding）とカソード方向の質量移動を確認した。
+一方、使用条件に近い$j_{\mathrm{use}}$では、\SI{1000}{h}打ち切りサンプルでも抵抗変動は$\le \SI{1}{\%}$であり、
+短尺セグメント設計により$jL$がBlech臨界値を十分下回ることが実証された\cite{Blech, Korhonen}。
 
 \subsection{まとめ（Takeaways）}
 \begin{itemize}
-  \item 推定パラメータ $E_a\!\approx\!\SI{0.85}{eV}$，$n\!\approx\!1.1$ は貴金属表面配線の既報と整合。
-  \item Black式とArrhenius整合性が高く、使用条件への外挿で\textbf{10倍超の寿命マージン}を安定に確保。
-  \item Blech効果を満たす$jL$設計と薄化AuでもNi拡散バリアの健全性により、\textbf{Au \SI{0.30}{\micro\meter}}下限で実用信頼性を満たす。
+  \item 推定パラメータ $E_a\!\approx\!\SI{0.85}{eV}$，$n\!\approx\!1.1$ は既報値と整合し妥当。
+  \item Black式とArrhenius解析の整合性が高く、使用条件への外挿で\textbf{10倍超の寿命マージン}を安定に確認。
+  \item Blech効果を満たす$jL$設計とNi拡散バリアの健全性により、\textbf{Au \SI{0.30}{\micro\meter}}を下限とする合理的仕様を導出。
 \end{itemize}
 
 \section{合理化効果と結論（Effect and Conclusion）}
