@@ -17,19 +17,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install LaTeX (with Japanese support)
+      - name: Install LaTeX (with Japanese + LuaTeX)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             texlive-latex-base texlive-latex-recommended texlive-latex-extra \
             texlive-science texlive-fonts-recommended \
-            texlive-lang-japanese latexmk
+            texlive-lang-japanese texlive-luatex latexmk \
+            fonts-noto-cjk
 
       - name: Build PDF with LuaLaTeX
         working-directory: papers/2025_au_plating_thinning
         run: |
           set -eux
-          # LuaLaTeX で日本語処理
           latexmk -lualatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex | tee build.log
 
       - name: Upload logs (always)
