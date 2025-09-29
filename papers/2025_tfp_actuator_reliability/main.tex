@@ -383,55 +383,51 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
 なお，本スクリーニング段階での不良はクラック・焼損を区別できないため，
 両者を合算して統計化している。
 
-% ====== Fig. ユニットスクリーニング不良率ヒストグラム ======
+% ====== Fig.3: ユニットスクリーニング不良率ヒストグラム ======
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}
     \begin{axis}[
       width=\columnwidth,
-      height=0.62\columnwidth,
+      height=0.65\columnwidth,
       ybar,
-      bar width=8pt,
-      xlabel={ユニットスクリーニング不良率 / Unit-screening defect rate (\%)},
-      ylabel={ロット数 / Number of lots},
+      bar width=7pt,
       ymin=0, ymax=12,
       ytick={0,2,4,6,8,10,12},
-      xmin=0, xmax=12,
-      xtick={0,2,4,6,8,10,12},
+      ylabel={ロット数 / Number of lots},
+      xlabel={ユニットスクリーニング不良率 (\%) / Unit-screening defect rate (\%)},
+      xtick={0,2,4,6,8,10},
       xmajorgrids=true,
       ymajorgrids=true,
-      tick style={semithick},
-      tick align=inside,
-      legend style={at={(0.5,0.98)}, anchor=north, legend columns=-1, draw=none},
+      grid style={gray!30},
+      legend style={draw=none, at={(0.98,0.98)}, anchor=north east, nodes={scale=0.8, transform shape}},
     ]
-      % ---- Before (No pre-wet, Nlots=12) ----
-      \addplot+[fill=blue!30,draw=blue!60] coordinates {
-        (7,2) (8,3) (9,3) (10,2) (11,2)  % 7–12%分布（クラック＋焼損）
+      % ---- Before (No pre-wet) ----
+      \addplot+[fill=blue!40] coordinates {
+        (6,2) (7,2) (8,3) (9,2) (10,3)
       };
+      \addlegendentry{Before (No pre-wet), $N_{\mathrm{lots}}=12$}
 
-      % ---- After (Acetic pre-wet, Nlots=12) ----
-      \addplot+[fill=red!30,draw=red!60] coordinates {
-        (2,10) (3,2)  % 焼損2%付近に集中
+      % ---- After (Acetic pre-wet) ----
+      \addplot+[fill=red!40] coordinates {
+        (0,11) (2,1)
       };
-
-      \legend{Before (No pre-wet, $N_{\text{lots}}=12$), After (Acetic pre-wet, $N_{\text{lots}}=12$)}
+      \addlegendentry{After (Acetic pre-wet), $N_{\mathrm{lots}}=12$}
     \end{axis}
   \end{tikzpicture}
   \caption{%
-    ユニットスクリーニング不良率のヒストグラム（Before/After，共通）／
+    ユニットスクリーニング不良率のヒストグラム（Before/After，共通ビン）／
     Histogram of unit-screening defect rates (Before/After, common bins). 
-    Rates include both crack and burnout (indistinguishable at screening).%
-  }
-  \label{fig:hist_defect}
+    Rates include both crack and burnout (indistinguishable at screening).}
+  \label{fig:yield_hist}
 \end{figure}
 
-% ====== Table: 比較プロセス条件（1カラムでも2カラムでもOK） ======
+% ====== Table.2: 比較プロセス条件 ======
 \begin{table}[t]
   \centering
   \caption{%
     比較プロセス条件（Before/After）／
-    Compared process conditions (Before/After)
-  }
+    Compared process conditions (Before/After)}
   \label{tab:proc-compare}
   \setlength{\tabcolsep}{4pt}
   \begin{tabular}{@{} lll @{}}
@@ -440,7 +436,7 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
     \midrule
     表面前処理 / Surface pre-wet
       & 無し / None
-      & 酢酸2\% 30\,s $\rightarrow$ DI 30\,s \\
+      & 酢酸2\% 30\,s \\
     RTA後搬送 / Post-RTA handling
       & 大気露出
       & 窒素パージミニロードロック \\
