@@ -1,0 +1,59 @@
+name: Build LaTeX - Au Plating Paper (v4)
+
+on:
+  push:
+    paths:
+      - 'papers/2025_au_plating_thinning/**'
+      - '.github/workflows/latex_au_plating.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install LaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-science texlive-fonts-recommended latexmk
+
+      - name: Build PDF with latexmk
+        working-directory: papers/2025_au_plating_thinning
+        run: |
+          set -eux
+          # コンソール出力も保存
+          latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error main.tex | tee build.log
+          # 参考: bibtexが必要なら latexmk が自動実行します
+
+      # 成否に関わらずログ類を保存
+      - name: Upload logs (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: au_plating_logs_${{ github.run_number }}
+          path: |
+            papers/2025_au_plating_thinning/*.log
+            papers/2025_au_plating_thinning/*.aux
+            papers/2025_au_plating_thinning/*.bbl
+            papers/2025_au_plating_thinning/*.blg
+            papers/2025_au_plating_thinning/*.out
+            papers/2025_au_plating_thinning/build.log
+          if-no-files-found: warn
+          retention-days: 14
+
+      # PDFは成功時に保存（存在しなくても失敗しないよう保険つき）
+      - name: Upload PDF
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: au_plating_pdf_${{ github.run_number }}
+          path: papers/2025_au_plating_thinning/main.pdf
+          if-no-files-found: error
+          retention-days: 30
