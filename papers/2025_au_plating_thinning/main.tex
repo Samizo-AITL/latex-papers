@@ -3,7 +3,8 @@
 % ===== 日本語対応（LuaLaTeX必須） =====
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
-\setmainjfont{IPAMincho} % 環境によっては Noto Serif CJK JP などに変更
+% Actions に入れている fonts-noto-cjk を使う
+\setmainjfont{Noto Serif CJK JP}
 
 % ===== パッケージ =====
 \usepackage{graphicx}
@@ -13,6 +14,16 @@
 \usepackage{url}
 \usepackage{caption}
 \captionsetup{labelsep=period}
+
+% 図フォルダを固定（figures/ の下を優先的に探す）
+\graphicspath{{figures/}}
+
+% 図が無いときでもビルドが止まらないプレースホルダ
+\newcommand{\figorplaceholder}[2][]{%
+  \IfFileExists{#2}{\includegraphics[#1]{#2}}{%
+    \fbox{\parbox[c][.45\textwidth][c]{.45\textwidth}{\centering Missing:\\\texttt{#2}}}%
+  }%
+}
 
 % ===== タイトル・著者 =====
 \title{COFにおけるAuメッキ薄化によるコスト合理化と信頼性評価}
@@ -94,7 +105,8 @@ $10^5$--$10^6$\,A/cm$^2$で実施し、Black式で寿命外挿した。
 % ===== 図表例 =====
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.45\textwidth]{figures/fig1_au_thickness.png}
+  % figures/ は \graphicspath で解決されます
+  \figorplaceholder[width=0.45\textwidth]{fig1_au_thickness.png}
   \caption{Au厚仕様ロジック（Specification logic of Au thickness）}
   \label{fig:au}
 \end{figure}
