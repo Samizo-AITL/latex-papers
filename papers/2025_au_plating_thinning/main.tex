@@ -735,7 +735,7 @@ COF側Au薄化（下限 $\SI{0.30}{\micro\meter}$）と両立し、量産規格�
 \begin{figure}[htbp]
   \centering
   % ===== TikZ schematic (Before / After) =====
-  % Preamble requires: \usepackage{tikz}
+  % 依存: \usepackage{tikz}, \usetikzlibrary{arrows.meta,patterns}
   \tikzset{
     metal/.style={draw, fill=black!10},
     pzt/.style={draw, fill=blue!6},
@@ -746,6 +746,7 @@ COF側Au薄化（下限 $\SI{0.30}{\micro\meter}$）と両立し、量産規格�
   \begin{tikzpicture}[x=1mm,y=1mm]
     % --- Panel sizes
     \def\W{70} \def\H{28}
+
     % LEFT: Before (no slit)
     \begin{scope}
       % Substrate (PZT)
@@ -767,9 +768,12 @@ COF側Au薄化（下限 $\SI{0.30}{\micro\meter}$）と両立し、量産規格�
       % Possible migration path (dashed)
       \draw[dashed,red!70] (32.5,18) .. controls (35,16) .. (37.5,18);
       \node[lbl,red!70] at (35,12.5) {migration / short risk};
-      % Legend box
-      \draw (2,3) node[lbl,anchor=west] {$\square$ Au/NiCr} ;
-      \draw (18,3) node[lbl,anchor=west] {$\blacksquare$ PZT (schematic)} ;
+
+      % Legend (no \square)
+      \fill[metal] (2,2) rectangle +(2,2);      % small swatch
+      \node[lbl,anchor=west] at (4.5,3) {Au/NiCr};
+      \fill[pzt]   (18,2) rectangle +(2,2);     % small swatch
+      \node[lbl,anchor=west] at (20.5,3) {PZT (schematic)};
     \end{scope}
 
     % Divider
@@ -786,14 +790,18 @@ COF側Au薄化（下限 $\SI{0.30}{\micro\meter}$）と両立し、量産規格�
       \draw[metal] (38,18) rectangle (62,22);  % Right electrode
       \node[lbl] at (20,15.5) {Au/NiCr};
       \node[lbl] at (50,15.5) {Au/NiCr};
-      % Longer effective path with slit in substrate
-      \draw[slit] (34,0) rectangle (36,18);  % Vertical slit cutting up from substrate
+
+      % Isolation slit in substrate
+      \draw[slit] (34,0) rectangle (36,18);
       \node[lbl,rotate=90] at (35,9) {絶縁スリット / slit};
+
       % Gap arrow (same physical gap) but broken leakage path
       \draw[<->,line width=0.4pt] (32,20) -- (38,20);
       \node[lbl] at (35,22.5) {幾何学ギャップは同等};
+
       % Suppressed migration (no dashed arc)
       \node[lbl,green!50!black] at (35,12.5) {漏れ経路分断 / path broken};
+
       % Field arrows reduced
       \draw[arrow,green!50!black] (33.0,18) -- +(0,-6);
       \draw[arrow,green!50!black] (37.0,18) -- +(0,-6);
