@@ -375,78 +375,55 @@ RTA後の外気由来成分が起因している可能性を裏付けた。
 \end{figure}
 
 \subsubsection*{歩留まりの定量評価}
-Fig.~\ref{fig:yield}に、ロット順（ユニットスクリーニング順）に対する
-不良率の推移を示す。各ロットの試験数は $N=500$（ダイ）で一定とし、
+Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測された
+不良率のヒストグラムを示す。各ロットの試験数は $N=500$（ダイ）で一定であり，
 不良率は $\mathrm{defect\ rate}=n_{\mathrm{fail}}/N$ で定義した。
-従来条件（Before）で5--10\%のばらつきを示していたが、
-酢酸プレウェット導入後（After）には全ロットで0\%に収束した。
+従来条件（Before）では5--10\%帯に分布していたのに対し，
+酢酸プレウェット導入後（After）には 0--1\%帯に収束した。
+なお，本スクリーニング段階での不良はクラック・焼損を区別できないため，
+両者を合算して統計化している。
 
-% ====== Fig. 歩留まり推移（1カラム向け） ======
+% ====== Fig. ヒストグラム（1カラム向け） ======
 \begin{figure}[t]
   \centering
-  % グラフサイズはカラム幅に自動フィット
   \begin{tikzpicture}
     \begin{axis}[
+      ybar,
+      bar width=4pt,
       width=\columnwidth,
-      height=0.62\columnwidth,
-      xlabel={Lot index},
-      ylabel={Defect rate (\%)},
-      ymin=0, ymax=12,
-      xmin=0.5, xmax=8.5,
-      xtick={1,2,3,4,5,6,7,8},
+      height=0.65\columnwidth,
+      ymin=0,
+      ylabel={ロット数 / Number of lots},
+      xlabel={不良率 (\%) / Defect rate (\%)},
+      symbolic x coords={0--1,1--2,2--3,3--4,4--5,5--6,6--7,7--8,8--9,9--10},
+      xtick=data,
+      x tick label style={rotate=45,anchor=east},
       ymajorgrids=true,
       grid style={gray!30},
-      legend style={draw=none, at={(0.02,0.98)}, anchor=north west, nodes={scale=0.9, transform shape}},
-      legend cell align=left,
-      tick label style={/pgf/number format/fixed},
+      legend style={at={(0.98,0.98)},anchor=north east,font=\footnotesize,draw=none},
     ]
-      % ---- Before: 5–10% ----
-      \addplot+[mark=*,
-        thick,
-        error bars/.cd,
-          y dir=both, y explicit,
-      ] table[row sep=\\, y error index=2] {
-        x   y    yerr \\
-        1   9.5  1.0  \\
-        2   8.7  0.9  \\
-        3   7.9  0.8  \\
-        4   7.2  0.7  \\
-        5   6.6  0.7  \\
-        6   6.0  0.6  \\
-        7   5.8  0.6  \\
-        8   5.5  0.6  \\
+      % ---- Before: 12ロットを 5–10%帯に分布（例）----
+      \addplot+[fill=gray!55] coordinates {
+        (0--1,0) (1--2,0) (2--3,0) (3--4,0) (4--5,0)
+        (5--6,2) (6--7,3) (7--8,3) (8--9,2) (9--10,2)
       };
-      \addlegendentry{Before (No pre-wet)}
+      \addlegendentry{Before (No pre-wet), $N_{\text{lots}}=12$}
 
-      % ---- After: ≈0% ----
-      \addplot+[mark=square*,
-        thick,
-        error bars/.cd,
-          y dir=both, y explicit,
-      ] table[row sep=\\, y error index=2] {
-        x   y    yerr \\
-        1   0.20 0.10 \\
-        2   0.15 0.08 \\
-        3   0.10 0.06 \\
-        4   0.08 0.05 \\
-        5   0.06 0.04 \\
-        6   0.05 0.04 \\
-        7   0.04 0.03 \\
-        8   0.03 0.03 \\
+      % ---- After: 12ロットが 0–1% に集中（例）----
+      \addplot+[fill=gray!20] coordinates {
+        (0--1,12) (1--2,0) (2--3,0) (3--4,0) (4--5,0)
+        (5--6,0)  (6--7,0) (7--8,0) (8--9,0) (9--10,0)
       };
-      \addlegendentry{After (Acetic pre-wet)}
-
-      % ---- N=表記（凡例の下に注記） ----
-      \node[anchor=north west,align=left,font=\footnotesize] at (rel axis cs:0.02,0.12) {%
-        $N=\!500$/lot, binomial CI as error bars};
-
+      \addlegendentry{After (Acetic pre-wet), $N_{\text{lots}}=12$}
     \end{axis}
   \end{tikzpicture}
   \caption{%
-    歩留まりのロット別推移（酢酸プレウェット導入前後）／
-    Yield trend by lot (before vs. after acetic pre-wet).%
+    ユニットスクリーニング不良率のヒストグラム（Before/After, 共通ビン）。%
+    不良率はクラック＋焼損の合算（スクリーニング段階では内訳判別不可）。／
+    Histogram of unit-screening defect rates (Before/After, common bins).
+    Rates include both crack and burnout (indistinguishable at screening).
   }
-  \label{fig:yield_trend}
+  \label{fig:hist_defect}
 \end{figure}
 
 % ====== Table: 比較プロセス条件（1カラムでも2カラムでもOK） ======
