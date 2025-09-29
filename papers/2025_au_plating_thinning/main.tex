@@ -3,7 +3,12 @@
 % ===== 日本語対応（LuaLaTeX必須） =====
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
-\setmainjfont{Noto Serif CJK JP}
+\setmainjfont{Noto Serif CJK JP}[
+  UprightFont = *,
+  BoldFont    = * Bold,
+  ItalicFont  = Noto Sans CJK JP,
+  BoldItalicFont = Noto Sans CJK JP Bold
+]
 
 % ===== パッケージ =====
 \usepackage{graphicx}
@@ -12,6 +17,9 @@
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{cite}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{balance}
 
 % ===== 図フォルダ =====
 \graphicspath{{figures/}}
@@ -23,8 +31,8 @@
     \includegraphics[#1]{#2}%
   }{%
     \fbox{%
-      \parbox[c][.45\textwidth][c]{.45\textwidth}{%
-        \centering Missing:\\{\ttfamily\detokenize{#2}}%
+      \parbox[c][.45\columnwidth][c]{.45\columnwidth}{%
+        \centering 図ファイル欠落\\Missing:\\{\ttfamily\detokenize{#2}}%
       }%
     }%
   }%
@@ -32,7 +40,8 @@
 \makeatother
 
 % ===== タイトル・著者 =====
-\title{COFにおけるAuメッキ薄化によるコスト合理化と信頼性評価}
+\title{COFにおけるAuメッキ薄化によるコスト合理化と信頼性評価\\
+\large Cost Rationalization and Reliability Assessment of Au Plating Thinning on COF}
 
 \author{%
   \IEEEauthorblockN{三溝 真一（Shinichi Samizo)}\\
@@ -44,82 +53,142 @@
 \begin{document}
 \maketitle
 
-% ===== Abstract (和英併記) =====
+% ===== Abstracts =====
 \begin{abstract}
+\textbf{和文要旨}：\\
 本論文は、ビジネスインクジェット（BIJ）プリントヘッドに用いられる
 COF基板におけるAuメッキ厚の合理化について報告する。
 Au厚仕様を $0.425 \pm 0.125\,\mu$m と定め、
 NPC接合信頼性試験、エレクトロマイグレーション評価、加速環境試験を通じて
 下限 $0.30\,\mu$m に十分なマージンを確認した。
 その結果、品質と信頼性を維持しつつ大幅なコスト削減が可能であることを示した。
+\end{abstract}
 
-\medskip
+\begin{abstract}
+\textbf{Abstract}:\\
 This paper reports the rationalization of Au plating thickness
 in Chip-on-Film (COF) for Business Inkjet (BIJ) printheads.
 A new specification of $0.425 \pm 0.125\,\mu$m was validated
-through NPC bonding reliability, electromigration, and accelerated
-environmental tests, confirming sufficient margin at the lower limit
-of $0.30\,\mu$m. The results demonstrate that significant cost reduction
-can be achieved while maintaining product quality and reliability.
+through Non-conductive Paste (NPC) bonding reliability, electromigration,
+and accelerated environmental tests, confirming sufficient margin at the lower limit of $0.30\,\mu$m.
+The results demonstrate that significant cost reduction can be achieved
+while maintaining product quality and reliability.
 \end{abstract}
 
-\begin{IEEEkeywords}
-Auメッキ薄化 (Au plating thinning)，COF，NPC接合 (NPC bonding)，
-ビジネスインクジェットヘッド (BIJ head)，
-エレクトロマイグレーション (Electromigration)，
-コスト合理化 (Cost reduction)
-\end{IEEEkeywords}
+% ===== Keywords =====
+\textbf{キーワード（Keywords）}: 
+Auメッキ薄化（Au plating thinning），
+COF，
+NPC接合（NPC bonding），
+ビジネスインクジェットヘッド（Business Inkjet head），
+エレクトロマイグレーション（Electromigration），
+コスト合理化（Cost reduction）
 
 % ===== 本文 =====
-\section{背景}
+\section{背景（Background）}
 ビジネスインクジェット（BIJ）ヘッドのコスト削減は急務である。
 中でもCOF配線上のAuメッキは材料費比率が大きく、合理化効果が最も高い。
 しかし信頼性に直結するため、失敗の許されないテーマである。
 
-\section{COF製造フローとAuメッキ}
+\section{COF製造フローとAuメッキ（COF Flow and Au Plating）}
 COFは銅箔基材（CLL）をベースにパターニングされ、
 外注工程でAuメッキが施される。
 新仕様では下限0.30\,µmを堅持しつつ工程能力
 （$\sigma=0.025$\,µm, Cpk$\geq$1.67）を満たす。
 
-\section{NPC接合と実装信頼性}
+\section{NPC接合と実装信頼性（NPC Bonding and Reliability）}
 uTFPアクチュエータはCOF上にNPC接合で実装される。
 導電粒子を含まない樹脂によりAu/AuあるいはAu/Cu界面が金属接合され、
 低応力かつ安定した接続が得られる。
 評価項目には接続抵抗安定性、剥離モード解析、折り曲げ応力下での耐久性などを含む。
 
-\section{リスク検証}
+\section{試験計画（Test Matrix）}
+表\ref{tab:test-matrix}にAu厚と各加速試験の組合せを示す（和英併記）。
+\begin{table}[htbp]
+  \centering
+  \caption{評価試験マトリクス／Test Matrix}
+  \label{tab:test-matrix}
+  \sisetup{table-number-alignment = center, table-text-alignment = center}
+  \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    \textbf{Au厚} & \textbf{85/85} & \textbf{熱衝撃} & \textbf{硫化} & \textbf{EM}\\
+    \textbf{Au thickness} & \textbf{85/85} & \textbf{TCT} & \textbf{Sulfur} & \textbf{EM}\\
+    \midrule
+    \SI{0.30}{\micro\meter} & ○ & ○ & ○ & ○ \\
+    \SI{0.25}{\micro\meter} & ○ & ○ & ○ & ○ \\
+    \SI{0.20}{\micro\meter} & △ & ○ & × & ○ \\
+    \bottomrule
+  \end{tabular}
+  
+  \vspace{2pt}
+  \footnotesize{注（Note）：85/85＝85\si{\celsius}/85\%RH，TCT＝Thermal Cycling Test，EM＝Electromigration.}
+\end{table}
+
+\section{リスク検証（Risk Verification）}
 $0.30/0.25/0.20$\,µm のAuメッキ厚サンプルを作製し、
 85℃/85\%RH、熱衝撃、硫化雰囲気試験を実施した。
 結果、0.30および0.25\,µmは合格、
 0.20\,µmではCOF単体でCu拡散が観察され不採用とした。
 
-\section{マイグレーション評価}
+\section{マイグレーション評価（Electromigration Evaluation）}
 エレクトロマイグレーション評価を125--175℃、電流密度
-$10^5$--$10^6$\,A/cm$^2$で実施し、Black式で寿命外挿した。
+$10^5$--$10^6$\,A/cm$^2$で実施し、Black式\cite{Black}で寿命外挿した。
+図\ref{fig:em}に温度・電流密度から見積もった
+相対寿命（Arrhenius/Black整合）の例を示す。
 使用条件（85℃, $10^3$\,A/cm$^2$）に対して10倍以上の寿命余裕を確認した。
 
-\section{合理化効果と結論}
+\begin{figure}[htbp]
+  \centering
+  \figorplaceholder[width=\linewidth]{fig2_em_lifetime.png}
+  \caption{EM寿命外挿（Black式）／Electromigration lifetime extrapolation by Black's equation}
+  \label{fig:em}
+\end{figure}
+
+\section{合理化効果と結論（Effect and Conclusion）}
 本合理化により、チップ当たり約¥4、BIJ4ヘッドで約¥16の
 材料費削減効果を得た。年間数百万〜数千万台規模で
 十億円級の効果を見込める。
 徹底した検証により、信頼性を維持したまま
 最も効果的なコスト合理化を実現できた。
 
-% ===== 図表例 =====
+% ===== 追加図：仕様ロジック =====
 \begin{figure}[htbp]
   \centering
-  \figorplaceholder[width=0.45\textwidth]{fig1_au_thickness.png}
+  \figorplaceholder[width=0.9\linewidth]{fig1_au_thickness.png}
   \caption{Au厚仕様ロジック（Specification logic of Au thickness）}
   \label{fig:au}
 \end{figure}
 
 % ===== 参考文献 =====
+\balance
 \bibliographystyle{IEEEtran}
-\begin{thebibliography}{1}
+\begin{thebibliography}{9}
+
 \bibitem{Black}
 J.~R. Black, ``Electromigration --- A brief survey and some recent results,''
 \emph{IEEE Trans. Electron Devices}, vol.~16, no.~4, pp.~338--347, 1969.
+
+\bibitem{Blech}
+I.~A. Blech, ``Electromigration in thin aluminum films on titanium nitride,''
+\emph{J. Appl. Phys.}, vol.~47, no.~4, pp.~1203--1208, 1976.
+
+\bibitem{Korhonen}
+M.~A. Korhonen, P.~Borgesen, K.~N. Tu, and C.~Y. Li,
+``Stress evolution due to electromigration in confined metal lines,''
+\emph{J. Appl. Phys.}, vol.~73, no.~8, pp.~3790--3799, 1993.
+
+\bibitem{Sze}
+S.~M. Sze and K.~K. Ng, \emph{Physics of Semiconductor Devices}, 3rd ed.
+Hoboken, NJ, USA: Wiley, 2007.
+
+\bibitem{JIEP}
+エレクトロニクス実装学会 編, 
+``実装技術ハンドブック 第3版,'' 日刊工業新聞社, 2021.
+
+\bibitem{JEITA}
+JEITA 半導体実装標準委員会, 
+``はんだ付け・接合信頼性評価ガイド,'' JEITA, 2019.
+
 \end{thebibliography}
 
 % ===== 著者略歴 =====
