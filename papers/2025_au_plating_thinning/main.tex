@@ -16,6 +16,21 @@
 % ===== 図フォルダ =====
 \graphicspath{{figures/}}
 
+% ===== 図が無いときのプレースホルダ =====
+\makeatletter
+\newcommand{\figorplaceholder}[2][]{%
+  \IfFileExists{figures/#2}{%
+    \includegraphics[#1]{#2}%
+  }{%
+    \fbox{%
+      \parbox[c][.45\textwidth][c]{.45\textwidth}{%
+        \centering Missing:\\{\ttfamily\detokenize{#2}}%
+      }%
+    }%
+  }%
+}
+\makeatother
+
 % ===== タイトル・著者 =====
 \title{COFにおけるAuメッキ薄化によるコスト合理化と信頼性評価}
 
@@ -48,7 +63,6 @@ of $0.30\,\mu$m. The results demonstrate that significant cost reduction
 can be achieved while maintaining product quality and reliability.
 \end{abstract}
 
-% ===== Keywords =====
 \begin{IEEEkeywords}
 Auメッキ薄化 (Au plating thinning)，COF，NPC接合 (NPC bonding)，
 ビジネスインクジェットヘッド (BIJ head)，
@@ -95,7 +109,7 @@ $10^5$--$10^6$\,A/cm$^2$で実施し、Black式で寿命外挿した。
 % ===== 図表例 =====
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.45\textwidth]{fig1_au_thickness.png}
+  \figorplaceholder[width=0.45\textwidth]{fig1_au_thickness.png}
   \caption{Au厚仕様ロジック（Specification logic of Au thickness）}
   \label{fig:au}
 \end{figure}
