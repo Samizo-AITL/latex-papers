@@ -376,22 +376,24 @@ FIB-SEMで高$jT$条件にてAu/Ni界面近傍にボイド堆積を確認。
 また本検討は、COFのみならず他部材のコスト合理化検討へ波及効果を与え、
 設計～量産における標準的な合理化アプローチとして定着する可能性がある。
 
-% 本文
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[node distance=1.5cm, auto, >=Latex]
-    \node[draw,rounded corners,align=center] (start) {従来仕様\\Au 0.5µm};
-    \node[draw,rounded corners,below of=start] (spec) {新仕様策定\\0.425\(\pm\)0.125\,\(\mu\)m};
-    \node[draw,rounded corners,below of=spec] (eval) {信頼性試験\\NPC, EM, 環境};
-    \node[draw,rounded corners,below of=eval] (ok) {下限0.30µmにマージン確認};
-    \node[draw,rounded corners,below of=ok] (cost) {コスト削減効果確認\\¥4/チップ};
-    \node[draw,rounded corners,below of=cost] (impact) {事業効果：年間十億円規模};
+  \begin{tikzpicture}[node distance=1.5cm, >=Latex]
+    % 共通スタイル
+    \tikzset{flow/.style={draw, rounded corners, align=center}}
+
+    \node[flow] (start)  {従来仕様\\Au \SI{0.5}{\micro\metre}};
+    \node[flow, below=of start] (spec) {新仕様策定\\\SI{0.425 \pm 0.125}{\micro\metre}};
+    \node[flow, below=of spec]  (eval) {信頼性試験\\NPC, EM, 環境};
+    \node[flow, below=of eval]  (ok)   {下限 \SI{0.30}{\micro\metre} にマージン確認};
+    \node[flow, below=of ok]    (cost) {コスト削減効果確認\\\textyen{}4/チップ};
+    \node[flow, below=of cost]  (impact) {事業効果：年間十億円規模};
 
     \draw[->] (start) -- (spec);
-    \draw[->] (spec) -- (eval);
-    \draw[->] (eval) -- (ok);
-    \draw[->] (ok) -- (cost);
-    \draw[->] (cost) -- (impact);
+    \draw[->] (spec)  -- (eval);
+    \draw[->] (eval)  -- (ok);
+    \draw[->] (ok)    -- (cost);
+    \draw[->] (cost)  -- (impact);
   \end{tikzpicture}
   \caption{Au厚仕様ロジック（Specification logic of Au thickness）}
   \label{fig:au}
