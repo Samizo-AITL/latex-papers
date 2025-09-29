@@ -21,6 +21,9 @@
 \usepackage{multirow}
 \usepackage{balance}
 
+\usepackage{tikz}
+\usetikzlibrary{patterns,arrows.meta}
+
 % ===== 図フォルダ =====
 \graphicspath{{figures/}}
 
@@ -327,7 +330,31 @@ $jL=\SI{0.15}{\ampere\per\centi\meter}$となり、Blech効果による「不滅
 
 \begin{figure}[htbp]
   \centering
-  \figorplaceholder[width=0.92\linewidth]{fig_em_stack_cross_section.png}
+  \begin{tikzpicture}[scale=1]
+
+    % 基材 Cu
+    \fill[pattern=north east lines,pattern color=orange!70] (0,0) rectangle (6,1.2);
+    \draw (0,0) rectangle (6,1.2);
+    \node at (6.4,0.6) {Cu基材 (Cu, 12µm)};
+
+    % Niバリア
+    \fill[gray!60] (0,1.2) rectangle (6,1.3);
+    \draw (0,1.2) rectangle (6,1.3);
+    \node at (6.9,1.25) {Niバリア (Ni, 0.5µm)};
+
+    % Auメッキ
+    \fill[yellow!80!orange] (0,1.3) rectangle (6,1.6);
+    \draw (0,1.3) rectangle (6,1.6);
+    \node at (6.9,1.45) {Auメッキ (Au, 0.20--0.30µm)};
+
+    % 寸法線
+    \draw[|-|,thick] (-0.3,0) -- (-0.3,1.2) node[midway,left] {12 µm};
+    \draw[|-|,thick] (-0.6,1.2) -- (-0.6,1.3) node[midway,left] {0.5 µm};
+    \draw[|-|,thick] (-0.9,1.3) -- (-0.9,1.6) node[midway,left] {0.20--0.30 µm};
+
+    % ラベル
+    \node[above,font=\small] at (3,1.6) {Au/Ni/Cu stack cross-section};
+  \end{tikzpicture}
   \caption{評価スタック断面（Cross-section of Au/Ni/Cu stack on COF）}
   \label{fig:em-stack}
 \end{figure}
