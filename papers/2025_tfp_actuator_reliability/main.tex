@@ -388,42 +388,39 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      ybar,
-      bar width=4pt,
       width=\columnwidth,
-      height=0.65\columnwidth,
-      ymin=0, ymax=12,
+      height=0.62\columnwidth,
+      ybar,
+      bar width=8pt,
+      xlabel={ユニットスクリーニング不良率 / Unit-screening defect rate (\%)},
       ylabel={ロット数 / Number of lots},
-      xlabel={ユニットスクリーニング不良率 (\%) / Defect rate (\%)},
-      symbolic x coords={0--1,1--2,2--3,3--4,4--5,5--6,6--7,7--8,8--9,9--10},
-      xtick=data,
-      x tick label style={rotate=45,anchor=east},
+      ymin=0, ymax=12,
+      ytick={0,2,4,6,8,10,12},
+      xmin=0, xmax=12,
+      xtick={0,2,4,6,8,10,12},
+      xmajorgrids=true,
       ymajorgrids=true,
-      grid style={gray!30},
-      tick style={inner sep=0, major tick length=2pt},
+      tick style={semithick},
       tick align=inside,
-      legend style={at={(0.98,0.98)},anchor=north east,font=\footnotesize,draw=none},
+      legend style={at={(0.5,0.98)}, anchor=north, legend columns=-1, draw=none},
     ]
-      % ---- Before ----
-      \addplot+[fill=blue!15,draw=blue!60] coordinates {
-        (0--1,0) (1--2,0) (2--3,0) (3--4,0) (4--5,0)
-        (5--6,2) (6--7,3) (7--8,3) (8--9,2) (9--10,2)
+      % ---- Before (No pre-wet, Nlots=12) ----
+      \addplot+[fill=blue!30,draw=blue!60] coordinates {
+        (7,2) (8,3) (9,3) (10,2) (11,2)  % 7–12%分布（クラック＋焼損）
       };
-      \addlegendentry{Before (No pre-wet), $N_{\text{lots}}=12$}
 
-      % ---- After ----
-      \addplot+[fill=red!15,draw=red!60] coordinates {
-        (0--1,12) (1--2,0) (2--3,0) (3--4,0) (4--5,0)
-        (5--6,0)  (6--7,0) (7--8,0) (8--9,0) (9--10,0)
+      % ---- After (Acetic pre-wet, Nlots=12) ----
+      \addplot+[fill=red!30,draw=red!60] coordinates {
+        (2,10) (3,2)  % 焼損2%付近に集中
       };
-      \addlegendentry{After (Acetic pre-wet), $N_{\text{lots}}=12$}
+
+      \legend{Before (No pre-wet, $N_{\text{lots}}=12$), After (Acetic pre-wet, $N_{\text{lots}}=12$)}
     \end{axis}
   \end{tikzpicture}
   \caption{%
-    ユニットスクリーニング不良率のヒストグラム（Before/After, 共通ビン）。%
-    不良率はクラック＋焼損の合算（スクリーニング段階では内訳判別不可）。／
-    Histogram of unit-screening defect rates (Before/After, common bins).
-    Rates include both crack and burnout (indistinguishable at screening).
+    ユニットスクリーニング不良率のヒストグラム（Before/After，共通）／
+    Histogram of unit-screening defect rates (Before/After, common bins). 
+    Rates include both crack and burnout (indistinguishable at screening).%
   }
   \label{fig:hist_defect}
 \end{figure}
