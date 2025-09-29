@@ -388,24 +388,23 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=\columnwidth,
-      height=0.65\columnwidth,
+      width=0.9\columnwidth,   % ← 少し縮小して確実に収める
+      height=0.6\columnwidth,
       ybar,
-      bar width=5pt,
+      bar width=6pt,
       ymin=0, ymax=12,
       ytick={0,2,4,6,8,10,12},
       ylabel={ロット数 / Number of lots},
       xlabel={ユニットスクリーニング不良率 (\%) / Unit-screening defect rate (\%)},
       xtick={0,2,4,6,8,10},
-      tick style={inside},  % 目盛を内側
+      tick style={inside},
       grid style={gray!30},
       legend style={draw=none, font=\scriptsize, at={(0.5,-0.25)}, anchor=north, legend columns=-1},
     ]
-      % ---- Before (No pre-wet) ----
+      % Before
       \addplot+[fill=blue!40] coordinates {(6,2) (7,2) (8,3) (9,2) (10,3)};
       \addlegendentry{Before (No pre-wet), $N_{\mathrm{lots}}=12$}
-
-      % ---- After (Acetic pre-wet) ----
+      % After
       \addplot+[fill=red!40] coordinates {(0,11) (2,1)};
       \addlegendentry{After (Acetic pre-wet), $N_{\mathrm{lots}}=12$}
     \end{axis}
@@ -424,7 +423,7 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
     比較プロセス条件（Before/After）／
     Compared process conditions (Before/After)}
   \label{tab:proc-compare}
-  \setlength{\tabcolsep}{3pt}
+  \setlength{\tabcolsep}{2pt}
   \begin{tabular}{@{} lll @{}}
     \toprule
     \textbf{項目 / Item} & \textbf{Before} & \textbf{After} \\
@@ -434,7 +433,7 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
       & 酢酸2\% 30\,s \\
     RTA後搬送 / Post-RTA handling
       & 大気露出
-      & 窒素パージ\\
+      & 窒素パージ \\
     スピン塗布 / Spin coating
       & 同一条件
       & 同一条件 \\
