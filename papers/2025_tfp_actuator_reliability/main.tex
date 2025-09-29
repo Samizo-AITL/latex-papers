@@ -434,6 +434,54 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
   \label{fig:yield_hist}
 \end{figure}
 
+% ====== Fig.3: ユニットスクリーニング不良率ヒストグラム（1カラム） ======
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=\columnwidth,
+      height=0.66\columnwidth,
+      ybar,
+      bar width=6pt,
+      ymin=0, ymax=12,
+      ytick={0,2,4,6,8,10,12},
+      ylabel={ロット数 / Number of lots},
+      xlabel={ユニットスクリーニング不良率 (\%) / Unit-screening defect rate (\%)},
+      xtick={0,2,4,6,8,10},
+      xmin=-0.5, xmax=10.5,
+      tick align=inside,            % ★ 修正: 目盛りを内側に
+      xmajorgrids=true,
+      ymajorgrids=true,
+      grid style={gray!30},
+      legend style={
+        draw=none,
+        at={(0.98,0.98)}, anchor=north east,
+        nodes={scale=0.82, transform shape, align=left}
+      },
+    ]
+
+      % ---- Before (No pre-wet): 12 lots, 1%ビン中心でカウント配置 ----
+      \addplot+[ybar, bar shift=-3pt, fill=blue!40] coordinates {
+        (6,2) (7,2) (8,3) (9,2) (10,3)
+      };
+      \addlegendentry{\shortstack[l]{Before（前処理なし）\\Before (no pre-wet), $N_\mathrm{lots}=12$}}
+
+      % ---- After (Acetic pre-wet): 12 lots, 焼損を含むため2%前後が残存 ----
+      \addplot+[ybar, bar shift=+3pt, fill=red!40] coordinates {
+        (0,2) (1,3) (2,5) (3,2)
+      };
+      \addlegendentry{\shortstack[l]{After（酢酸プレウェット）\\After (acetic pre-wet), $N_\mathrm{lots}=12$}}
+
+    \end{axis}
+  \end{tikzpicture}
+  \caption{%
+    ユニットスクリーニング不良率のヒストグラム（Before/After，共通ビン）\\
+    Histogram of unit-screening defect rates (Before/After; common bins).\\
+    ※ スクリーニング時点ではクラック／焼損の判別不可（分解観察で識別）。%
+  }
+  \label{fig:yield_hist} % ★ ラベル名
+\end{figure}
+
 % ====== Table 2: 比較プロセス条件（1カラム） ======
 \begin{table}[t]
   \centering
