@@ -17,13 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install LaTeX (with Japanese + LuaTeX)
+      - name: Install LaTeX (with Japanese + LuaLaTeX + IEEEtran)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             texlive-latex-base texlive-latex-recommended texlive-latex-extra \
             texlive-science texlive-fonts-recommended \
-            texlive-lang-japanese texlive-luatex latexmk \
+            texlive-lang-japanese texlive-luatex texlive-publishers latexmk \
             fonts-noto-cjk
 
       - name: Build PDF with LuaLaTeX
