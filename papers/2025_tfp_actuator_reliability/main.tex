@@ -383,7 +383,7 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
 なお，本スクリーニング段階での不良はクラック・焼損を区別できないため，
 両者を合算して統計化している。
 
-% ====== Fig. ヒストグラム（1カラム向け） ======
+% ====== Fig. ユニットスクリーニング不良率ヒストグラム ======
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}
@@ -392,25 +392,27 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
       bar width=4pt,
       width=\columnwidth,
       height=0.65\columnwidth,
-      ymin=0,
+      ymin=0, ymax=12,
       ylabel={ロット数 / Number of lots},
-      xlabel={不良率 (\%) / Defect rate (\%)},
+      xlabel={ユニットスクリーニング不良率 (\%) / Defect rate (\%)},
       symbolic x coords={0--1,1--2,2--3,3--4,4--5,5--6,6--7,7--8,8--9,9--10},
       xtick=data,
       x tick label style={rotate=45,anchor=east},
       ymajorgrids=true,
       grid style={gray!30},
+      tick style={inner sep=0, major tick length=2pt},
+      tick align=inside,
       legend style={at={(0.98,0.98)},anchor=north east,font=\footnotesize,draw=none},
     ]
-      % ---- Before: 12ロットを 5–10%帯に分布（例）----
-      \addplot+[fill=gray!55] coordinates {
+      % ---- Before ----
+      \addplot+[fill=blue!15,draw=blue!60] coordinates {
         (0--1,0) (1--2,0) (2--3,0) (3--4,0) (4--5,0)
         (5--6,2) (6--7,3) (7--8,3) (8--9,2) (9--10,2)
       };
       \addlegendentry{Before (No pre-wet), $N_{\text{lots}}=12$}
 
-      % ---- After: 12ロットが 0–1% に集中（例）----
-      \addplot+[fill=gray!20] coordinates {
+      % ---- After ----
+      \addplot+[fill=red!15,draw=red!60] coordinates {
         (0--1,12) (1--2,0) (2--3,0) (3--4,0) (4--5,0)
         (5--6,0)  (6--7,0) (7--8,0) (8--9,0) (9--10,0)
       };
