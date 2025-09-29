@@ -383,73 +383,61 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
 なお，本スクリーニング段階での不良はクラック・焼損を区別できないため，
 両者を合算して統計化している。
 
-% ====== Fig.3: ユニットスクリーニング不良率ヒストグラム ======
+% ====== Fig.3: ユニットスクリーニング不良率ヒストグラム（1カラム確実に収める） ======
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=\columnwidth,
-      height=0.65\columnwidth,
+      width=0.95\columnwidth,      % ← 少しだけ縮小
+      height=0.60\columnwidth,
       ybar,
-      bar width=7pt,
+      bar width=6pt,               % ← 細め
       ymin=0, ymax=12,
       ytick={0,2,4,6,8,10,12},
       ylabel={ロット数 / Number of lots},
       xlabel={ユニットスクリーニング不良率 (\%) / Unit-screening defect rate (\%)},
       xtick={0,2,4,6,8,10},
-      tick style={inside},          % ← 目盛を内側に
+      tick style={inside},         % 目盛りを内側に
       xmajorgrids=true,
       ymajorgrids=true,
       grid style={gray!30},
-      legend style={draw=none, at={(0.98,0.98)}, anchor=north east, nodes={scale=0.75, transform shape}},
+      legend style={draw=none, at={(0.98,0.98)}, anchor=north east,
+                    nodes={scale=0.72, transform shape}}  % ← 凡例を小さく右上に内蔵
     ]
       % ---- Before (No pre-wet) ----
-      \addplot+[fill=blue!40] coordinates {
-        (6,2) (7,2) (8,3) (9,2) (10,3)
-      };
+      \addplot+[fill=blue!40] coordinates {(6,2) (7,2) (8,3) (9,2) (10,3)};
       \addlegendentry{Before (No pre-wet), $N_{\mathrm{lots}}=12$}
 
       % ---- After (Acetic pre-wet) ----
-      \addplot+[fill=red!40] coordinates {
-        (0,11) (2,1)
-      };
+      \addplot+[fill=red!40] coordinates {(0,11) (2,1)};
       \addlegendentry{After (Acetic pre-wet), $N_{\mathrm{lots}}=12$}
     \end{axis}
   \end{tikzpicture}
   \caption{%
     ユニットスクリーニング不良率のヒストグラム（Before/After，共通ビン）／
-    Histogram of unit-screening defect rates (Before/After, common bins). 
+    Histogram of unit-screening defect rates (Before/After, common bins).
     Rates include both crack and burnout (indistinguishable at screening).}
   \label{fig:yield_hist}
 \end{figure}
 
-% ====== Table.2: 比較プロセス条件 ======
+% ====== Table 2: 比較プロセス条件（1カラム確実に収める） ======
 \begin{table}[t]
   \centering
   \caption{%
     比較プロセス条件（Before/After）／
     Compared process conditions (Before/After)}
   \label{tab:proc-compare}
-  \setlength{\tabcolsep}{4pt}
-  \begin{tabular}{@{} lll @{}}
+  \setlength{\tabcolsep}{3pt}        % ← 列間を詰める
+  \footnotesize                      % ← 文字を少し小さく
+  \begin{tabular}{@{} p{.40\columnwidth} p{.26\columnwidth} p{.26\columnwidth} @{}}
     \toprule
     \textbf{項目 / Item} & \textbf{Before} & \textbf{After} \\
     \midrule
-    表面前処理 / Surface pre-wet
-      & 無し / None
-      & 酢酸2\% 30\,s \\
-    RTA後搬送 / Post-RTA handling
-      & 大気露出
-      & 窒素パージミニロードロック \\
-    スピン塗布 / Spin coating
-      & 同一条件
-      & 同一条件 \\
-    PZT積層 / PZT stack
-      & 200\,nm $\times$ 6
-      & 200\,nm $\times$ 6 \\
-    検査N / Sample size
-      & 500/lot
-      & 500/lot \\
+    表面前処理 / Surface pre-wet & 無し / None & 酢酸2\% 30\,s \\
+    RTA後搬送 / Post-RTA handling & 大気露出 & 窒素パージミニロードロック \\
+    スピン塗布 / Spin coating & 同一条件 & 同一条件 \\
+    PZT積層 / PZT stack & 200\,nm $\times$ 6 & 200\,nm $\times$ 6 \\
+    検査N / Sample size & 500/lot & 500/lot \\
     \bottomrule
   \end{tabular}
 \end{table}
