@@ -1,0 +1,114 @@
+\documentclass[a4paper,12pt]{jsarticle}
+
+% ===== パッケージ =====
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{caption}
+\captionsetup{labelsep=period}
+
+% ===== タイトル・著者 =====
+\title{COFにおけるAuメッキ薄化によるコスト合理化と信頼性評価}
+\author{三溝 真一（Shinichi Samizo）\\
+独立系半導体研究者（元セイコーエプソン）\\
+Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\
+GitHub: \url{https://github.com/Samizo-AITL}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% ===== 和文要旨 =====
+\begin{abstract}
+本論文は、ビジネスインクジェット（BIJ）プリントヘッドに用いられる
+COF基板におけるAuメッキ厚の合理化について報告する。
+Au厚仕様を $0.425 \pm 0.125\,\mu$m と定め、
+NPC接合信頼性試験、エレクトロマイグレーション評価、加速環境試験を通じて
+下限 $0.30\,\mu$m に十分なマージンを確認した。
+その結果、品質と信頼性を維持しつつ大幅なコスト削減が可能であることを示した。
+\end{abstract}
+
+% ===== 英文要旨 =====
+\begin{abstract}
+This paper reports the rationalization of Au plating thickness
+in Chip-on-Film (COF) for Business Inkjet (BIJ) printheads.
+A new specification of $0.425 \pm 0.125\,\mu$m was validated
+through NPC bonding reliability, electromigration, and accelerated
+environmental tests, confirming sufficient margin at the lower limit
+of $0.30\,\mu$m. The results demonstrate that significant cost reduction
+can be achieved while maintaining product quality and reliability.
+\end{abstract}
+
+% ===== キーワード =====
+\textbf{キーワード（Keywords）}: Auメッキ薄化 (Au plating thinning)，COF，NPC接合 (NPC bonding)，
+ビジネスインクジェットヘッド (BIJ head)，エレクトロマイグレーション (Electromigration)，コスト合理化 (Cost reduction)
+
+% ===== 本文 =====
+\section{背景}
+ビジネスインクジェット（BIJ）ヘッドのコスト削減は急務である。
+中でもCOF配線上のAuメッキは材料費比率が大きく、合理化効果が最も高い。
+しかし信頼性に直結するため、失敗の許されないテーマである。
+
+本研究では、Auメッキ厚を従来の中心値0.50\,µmから
+$0.425 \pm 0.125$\,µmへと見直し、信頼性を維持したまま
+コスト低減を図った。
+
+\section{COF製造フローとAuメッキ}
+COFは銅箔基材（CLL）をベースにパターニングされ、
+外注工程でAuメッキが施される。
+新仕様では下限0.30\,µmを堅持しつつ工程能力
+（$\sigma=0.025$\,µm, Cpk$\geq$1.67）を満たす。
+
+\section{NPC接合と実装信頼性}
+uTFPアクチュエータはCOF上にNPC接合で実装される。
+導電粒子を含まない樹脂によりAu/AuあるいはAu/Cu
+界面が金属接合され、低応力かつ安定した接続が得られる。
+評価項目には接続抵抗安定性、剥離モード解析、
+折り曲げ応力下での耐久性などを含む。
+
+\section{リスク検証}
+$0.30/0.25/0.20$\,µm のAuメッキ厚サンプルを作製し、
+85℃/85\%RH、熱衝撃、硫化雰囲気試験を実施した。
+結果、0.30および0.25\,µmは合格、
+0.20\,µmではCOF単体でCu拡散が観察され不採用とした。
+
+\section{マイグレーション評価}
+エレクトロマイグレーション評価を125--175℃、電流密度
+$10^5$--$10^6$\,A/cm$^2$で実施し、Black式で寿命外挿した。
+使用条件（85℃, $10^3$\,A/cm$^2$）に対して10倍以上の寿命余裕を確認した。
+
+\section{合理化効果と結論}
+本合理化により、チップ当たり約¥4、BIJ4ヘッドで約¥16の
+材料費削減効果を得た。年間数百万〜数千万台規模で
+十億円級の効果を見込める。
+徹底した検証により、信頼性を維持したまま
+最も効果的なコスト合理化を実現できた。
+
+% ===== 図表例 =====
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/fig1_au_thickness.png}
+  \caption{Au厚仕様ロジック（Specification logic of Au thickness）}
+  \label{fig:au}
+\end{figure}
+
+% ===== 参考文献 =====
+\begin{thebibliography}{9}
+\bibitem{Black}
+J. R. Black, ``Electromigration --- A brief survey and some recent results,''
+\emph{IEEE Trans. Electron Devices}, vol.~16, no.~4, pp.~338--347, 1969.
+\end{thebibliography}
+
+% ===== 著者略歴 =====
+\section*{著者略歴（Author Biography）}
+\textbf{三溝 真一（Shinichi Samizo）} 信州大学大学院 工学系研究科
+電気電子工学専攻にて修士号を取得。セイコーエプソン株式会社にて
+半導体ロジック／メモリ／高耐圧インテグレーション、インクジェット
+薄膜ピエゾアクチュエータおよびPrecisionCoreプリントヘッドの製品化に従事。
+現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、
+AIシステム統合に取り組んでいる。\\
+連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}
+
+\end{document}
