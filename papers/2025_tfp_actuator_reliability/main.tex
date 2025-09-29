@@ -383,67 +383,62 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
 なお，本スクリーニング段階での不良はクラック・焼損を区別できないため，
 両者を合算して統計化している。
 
-% ====== Fig.3: ユニットスクリーニング不良率ヒストグラム（1カラム） ======
-\begin{figure}[t]
+% ====== Fig.3: ユニットスクリーニング不良率ヒストグラム（2カラム） ======
+\begin{figure*}[t]
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=\columnwidth,
-      height=0.66\columnwidth,
+      width=\textwidth,
+      height=0.45\textwidth,
       ybar,
-      bar width=6pt,
+      bar width=7pt,
       ymin=0, ymax=12,
       ytick={0,2,4,6,8,10,12},
       ylabel={ロット数 / Number of lots},
       xlabel={ユニットスクリーニング不良率 (\%) / Unit-screening defect rate (\%)},
-      % --- 共通ビン（1%幅）。目盛は2%刻み表示 ---
       xtick={0,2,4,6,8,10},
       xmin=-0.5, xmax=10.5,
-      tick align=inside,              % 目盛を内側
+      tick style={inside},
       xmajorgrids=true,
       ymajorgrids=true,
       grid style={gray!30},
       legend style={
         draw=none,
-        at={(0.98,0.98)}, anchor=north east,
-        nodes={scale=0.82, transform shape, align=left}
+        at={(0.02,0.98)}, anchor=north west,
+        nodes={scale=0.85, transform shape, align=left}
       },
     ]
 
-      % ---- Before (No pre-wet) :: 12 lots, 1%ビン中心にカウントを配置 ----
-      % 例：6–10%帯に集中（クラック起因）
+      % ---- Before ----
       \addplot+[ybar, bar shift=-3pt, fill=blue!40] coordinates {
         (6,2) (7,2) (8,3) (9,2) (10,3)
       };
-      \addlegendentry{\shortstack[l]{Before（前処理なし）\\Before (no pre-wet), $N_\mathrm{lots}=12$}}
+      \addlegendentry{Before（前処理なし） / Before (no pre-wet), $N_\mathrm{lots}=12$}
 
-      % ---- After (Acetic pre-wet) :: 12 lots, 焼損を含むため≈2%が残存 ----
-      % 例：0–3%帯に分布（クラック激減、焼損残り）
+      % ---- After ----
       \addplot+[ybar, bar shift=+3pt, fill=red!40] coordinates {
         (0,2) (1,3) (2,5) (3,2)
       };
-      \addlegendentry{\shortstack[l]{After（酢酸プレウェット）\\After (acetic pre-wet), $N_\mathrm{lots}=12$}}
+      \addlegendentry{After（酢酸プレウェット） / After (acetic pre-wet), $N_\mathrm{lots}=12$}
 
     \end{axis}
   \end{tikzpicture}
   \caption{%
-    ユニットスクリーニング不良率のヒストグラム（Before/After，共通ビン）\\
+    ユニットスクリーニング不良率のヒストグラム（Before/After，共通ビン）／
     Histogram of unit-screening defect rates (Before/After; common bins).\\
     ※ スクリーニング時点ではクラック／焼損の判別不可（分解観察で識別）。%
   }
   \label{fig:yield_hist}
-\end{figure}
+\end{figure*}
 
-% ====== Table 2: 比較プロセス条件（1カラム） ======
-\begin{table}[t]
+% ====== Table.2: 比較プロセス条件（2カラム幅） ======
+\begin{table*}[t]
   \centering
   \caption{%
-    比較プロセス条件（Before/After）\\
+    比較プロセス条件（Before/After）／
     Compared process conditions (Before/After)}
   \label{tab:proc-compare}
-  \setlength{\tabcolsep}{3.5pt}
-  \renewcommand{\arraystretch}{1.05}
-  \footnotesize
+  \setlength{\tabcolsep}{6pt}
   \begin{tabular}{@{} lll @{}}
     \toprule
     \textbf{項目 / Item} & \textbf{Before} & \textbf{After} \\
@@ -453,10 +448,10 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
       & 酢酸2\% 30\,s \\
     RTA後搬送 / Post-RTA handling
       & 大気露出 / Air exposure
-      & 窒素パージミニロードロック / N\textsubscript{2}-purged mini-LL \\
+      & 窒素パージミニロードロック / N$_2$ purge mini-loadlock \\
     スピン塗布 / Spin coating
-      & 同一条件 / Same
-      & 同一条件 / Same \\
+      & 同一条件 / Same condition
+      & 同一条件 / Same condition \\
     PZT積層 / PZT stack
       & 200\,nm $\times$ 6
       & 200\,nm $\times$ 6 \\
@@ -465,7 +460,7 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
       & 500/lot \\
     \bottomrule
   \end{tabular}
-\end{table}
+\end{table*}
 
 \subsection{端部焼損：電界集中部位}
 スクリーニング試験では、+30\,V（COM）と--10\,V（VBS）の電圧印加により、
