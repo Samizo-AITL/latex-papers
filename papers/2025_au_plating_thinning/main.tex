@@ -53,20 +53,17 @@
 \begin{document}
 \maketitle
 
-% ===== Abstracts =====
+% ===== Abstract (和英併記) =====
 \begin{abstract}
-\textbf{和文要旨}：\\
-本論文は、ビジネスインクジェット（BIJ）プリントヘッドに用いられる
+\textbf{和文要旨}：ビジネスインクジェット（BIJ）プリントヘッドに用いられる
 COF基板におけるAuメッキ厚の合理化について報告する。
 Au厚仕様を $0.425 \pm 0.125\,\mu$m と定め、
 NPC接合信頼性試験、エレクトロマイグレーション評価、加速環境試験を通じて
 下限 $0.30\,\mu$m に十分なマージンを確認した。
 その結果、品質と信頼性を維持しつつ大幅なコスト削減が可能であることを示した。
-\end{abstract}
 
-\begin{abstract}
-\textbf{Abstract}:\\
-This paper reports the rationalization of Au plating thickness
+\medskip
+\textbf{Abstract}: This paper reports the rationalization of Au plating thickness
 in Chip-on-Film (COF) for Business Inkjet (BIJ) printheads.
 A new specification of $0.425 \pm 0.125\,\mu$m was validated
 through Non-conductive Paste (NPC) bonding reliability, electromigration,
@@ -76,13 +73,14 @@ while maintaining product quality and reliability.
 \end{abstract}
 
 % ===== Keywords =====
-\textbf{キーワード（Keywords）}: 
-Auメッキ薄化（Au plating thinning），
+\begin{IEEEkeywords}
+Auメッキ薄化 (Au plating thinning)，
 COF，
-NPC接合（NPC bonding），
-ビジネスインクジェットヘッド（Business Inkjet head），
-エレクトロマイグレーション（Electromigration），
-コスト合理化（Cost reduction）
+NPC接合 (NPC bonding)，
+ビジネスインクジェットヘッド (Business Inkjet head)，
+エレクトロマイグレーション (Electromigration)，
+コスト合理化 (Cost reduction)
+\end{IEEEkeywords}
 
 % ===== 本文 =====
 \section{背景（Background）}
@@ -103,7 +101,7 @@ uTFPアクチュエータはCOF上にNPC接合で実装される。
 評価項目には接続抵抗安定性、剥離モード解析、折り曲げ応力下での耐久性などを含む。
 
 \section{試験計画（Test Matrix）}
-表\ref{tab:test-matrix}にAu厚と各加速試験の組合せを示す（和英併記）。
+表\ref{tab:test-matrix}にAu厚と各加速試験の組合せを示す。
 \begin{table}[htbp]
   \centering
   \caption{評価試験マトリクス／Test Matrix}
@@ -111,21 +109,20 @@ uTFPアクチュエータはCOF上にNPC接合で実装される。
   \sisetup{table-number-alignment = center, table-text-alignment = center}
   \begin{tabular}{@{}lcccc@{}}
     \toprule
-    \textbf{Au厚} & \textbf{85/85} & \textbf{熱衝撃} & \textbf{硫化} & \textbf{EM}\\
-    \textbf{Au thickness} & \textbf{85/85} & \textbf{TCT} & \textbf{Sulfur} & \textbf{EM}\\
+    \textbf{Au厚} & 85/85 & 熱衝撃 & 硫化 & EM \\
+    \textbf{Au thickness} & 85/85 & TCT & Sulfur & EM \\
     \midrule
     \SI{0.30}{\micro\meter} & ○ & ○ & ○ & ○ \\
     \SI{0.25}{\micro\meter} & ○ & ○ & ○ & ○ \\
     \SI{0.20}{\micro\meter} & △ & ○ & × & ○ \\
     \bottomrule
   \end{tabular}
-  
   \vspace{2pt}
   \footnotesize{注（Note）：85/85＝85\si{\celsius}/85\%RH，TCT＝Thermal Cycling Test，EM＝Electromigration.}
 \end{table}
 
 \section{リスク検証（Risk Verification）}
-$0.30/0.25/0.20$\,µm のAuメッキ厚サンプルを作製し、
+表\ref{tab:test-matrix}に基づき、$0.30/0.25/0.20$\,µm のAuメッキ厚サンプルを作製し、
 85℃/85\%RH、熱衝撃、硫化雰囲気試験を実施した。
 結果、0.30および0.25\,µmは合格、
 0.20\,µmではCOF単体でCu拡散が観察され不採用とした。
@@ -151,7 +148,6 @@ $10^5$--$10^6$\,A/cm$^2$で実施し、Black式\cite{Black}で寿命外挿した
 徹底した検証により、信頼性を維持したまま
 最も効果的なコスト合理化を実現できた。
 
-% ===== 追加図：仕様ロジック =====
 \begin{figure}[htbp]
   \centering
   \figorplaceholder[width=0.9\linewidth]{fig1_au_thickness.png}
@@ -163,7 +159,6 @@ $10^5$--$10^6$\,A/cm$^2$で実施し、Black式\cite{Black}で寿命外挿した
 \balance
 \bibliographystyle{IEEEtran}
 \begin{thebibliography}{9}
-
 \bibitem{Black}
 J.~R. Black, ``Electromigration --- A brief survey and some recent results,''
 \emph{IEEE Trans. Electron Devices}, vol.~16, no.~4, pp.~338--347, 1969.
@@ -188,7 +183,6 @@ Hoboken, NJ, USA: Wiley, 2007.
 \bibitem{JEITA}
 JEITA 半導体実装標準委員会, 
 ``はんだ付け・接合信頼性評価ガイド,'' JEITA, 2019.
-
 \end{thebibliography}
 
 % ===== 著者略歴 =====
