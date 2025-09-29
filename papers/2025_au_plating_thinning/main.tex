@@ -1,9 +1,8 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[conference]{IEEEtran}
 
 % ===== 日本語対応（LuaLaTeX必須） =====
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
-% Actions に入れている fonts-noto-cjk を使う
 \setmainjfont{Noto Serif CJK JP}
 
 % ===== パッケージ =====
@@ -12,62 +11,50 @@
 \usepackage{siunitx}
 \usepackage{hyperref}
 \usepackage{url}
-\usepackage{caption}
-\captionsetup{labelsep=period}
+\usepackage{cite}
 
-% 図フォルダを固定（figures/ の下を優先的に探す）
+% ===== 図フォルダ =====
 \graphicspath{{figures/}}
-
-% 図が無いときでもビルドが止まらないプレースホルダ（_などの特殊文字にも対応）
-\makeatletter
-\newcommand{\figorplaceholder}[2][]{%
-  \IfFileExists{#2}{%
-    \includegraphics[#1]{#2}%
-  }{%
-    \fbox{%
-      \parbox[c][.45\textwidth][c]{.45\textwidth}{%
-        \centering Missing:\\{\ttfamily\detokenize{#2}}%
-      }%
-    }%
-  }%
-}
-\makeatother
 
 % ===== タイトル・著者 =====
 \title{COFにおけるAuメッキ薄化によるコスト合理化と信頼性評価}
-\author{三溝 真一（Shinichi Samizo）\\
-独立系半導体研究者（元セイコーエプソン）\\
-Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\
-GitHub: \url{https://github.com/Samizo-AITL}}
-\date{\today}
+
+\author{%
+  \IEEEauthorblockN{三溝 真一（Shinichi Samizo)}\\
+  \IEEEauthorblockA{独立系半導体研究者（元セイコーエプソン）\\
+  Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\
+  GitHub: \url{https://github.com/Samizo-AITL}}%
+}
 
 \begin{document}
 \maketitle
 
-% ===== 和文要旨 =====
+% ===== Abstract (和英併記) =====
 \begin{abstract}
 本論文は、ビジネスインクジェット（BIJ）プリントヘッドに用いられる
 COF基板におけるAuメッキ厚の合理化について報告する。
-Au厚仕様を $0.425 \pm 0.125\,\mu\mathrm{m}$ と定め、
+Au厚仕様を $0.425 \pm 0.125\,\mu$m と定め、
 NPC接合信頼性試験、エレクトロマイグレーション評価、加速環境試験を通じて
-下限 $0.30\,\mu\mathrm{m}$ に十分なマージンを確認した。
+下限 $0.30\,\mu$m に十分なマージンを確認した。
 その結果、品質と信頼性を維持しつつ大幅なコスト削減が可能であることを示した。
-\end{abstract}
 
-% ===== 英文要旨 =====
-\begin{abstract}
+\medskip
 This paper reports the rationalization of Au plating thickness
 in Chip-on-Film (COF) for Business Inkjet (BIJ) printheads.
-A new specification of $0.425 \pm 0.125\,\mu\mathrm{m}$ was validated
+A new specification of $0.425 \pm 0.125\,\mu$m was validated
 through NPC bonding reliability, electromigration, and accelerated
 environmental tests, confirming sufficient margin at the lower limit
-of $0.30\,\mu\mathrm{m}$. The results demonstrate that significant cost reduction
+of $0.30\,\mu$m. The results demonstrate that significant cost reduction
 can be achieved while maintaining product quality and reliability.
 \end{abstract}
 
-% ===== キーワード =====
-\textbf{キーワード（Keywords）}: Auメッキ薄化 (Au plating thinning)，COF，NPC接合 (NPC bonding)，
-ビジネスインクジェットヘッド (BIJ head)，エレクトロマイグレーション (Electromigration)，コスト合理化 (Cost reduction)
+% ===== Keywords =====
+\begin{IEEEkeywords}
+Auメッキ薄化 (Au plating thinning)，COF，NPC接合 (NPC bonding)，
+ビジネスインクジェットヘッド (BIJ head)，
+エレクトロマイグレーション (Electromigration)，
+コスト合理化 (Cost reduction)
+\end{IEEEkeywords}
 
 % ===== 本文 =====
 \section{背景}
@@ -75,33 +62,28 @@ can be achieved while maintaining product quality and reliability.
 中でもCOF配線上のAuメッキは材料費比率が大きく、合理化効果が最も高い。
 しかし信頼性に直結するため、失敗の許されないテーマである。
 
-本研究では、Auメッキ厚を従来の中心値 $0.50\,\mu\mathrm{m}$ から
-$0.425 \pm 0.125\,\mu\mathrm{m}$ へと見直し、信頼性を維持したまま
-コスト低減を図った。
-
 \section{COF製造フローとAuメッキ}
 COFは銅箔基材（CLL）をベースにパターニングされ、
 外注工程でAuメッキが施される。
-新仕様では下限 $0.30\,\mu\mathrm{m}$ を堅持しつつ工程能力
-（$\sigma=0.025\,\mu\mathrm{m}$, Cpk$\geq$1.67）を満たす。
+新仕様では下限0.30\,µmを堅持しつつ工程能力
+（$\sigma=0.025$\,µm, Cpk$\geq$1.67）を満たす。
 
 \section{NPC接合と実装信頼性}
 uTFPアクチュエータはCOF上にNPC接合で実装される。
-導電粒子を含まない樹脂によりAu/AuあるいはAu/Cu
-界面が金属接合され、低応力かつ安定した接続が得られる。
-評価項目には接続抵抗安定性、剥離モード解析、
-折り曲げ応力下での耐久性などを含む。
+導電粒子を含まない樹脂によりAu/AuあるいはAu/Cu界面が金属接合され、
+低応力かつ安定した接続が得られる。
+評価項目には接続抵抗安定性、剥離モード解析、折り曲げ応力下での耐久性などを含む。
 
 \section{リスク検証}
-$0.30/0.25/0.20\,\mu\mathrm{m}$ のAuメッキ厚サンプルを作製し、
-$85^\circ\mathrm{C}/85\%$RH、熱衝撃、硫化雰囲気試験を実施した。
-結果、$0.30$ および $0.25\,\mu\mathrm{m}$ は合格、
-$0.20\,\mu\mathrm{m}$ ではCOF単体でCu拡散が観察され不採用とした。
+$0.30/0.25/0.20$\,µm のAuメッキ厚サンプルを作製し、
+85℃/85\%RH、熱衝撃、硫化雰囲気試験を実施した。
+結果、0.30および0.25\,µmは合格、
+0.20\,µmではCOF単体でCu拡散が観察され不採用とした。
 
 \section{マイグレーション評価}
-エレクトロマイグレーション評価を $125$--$175^\circ\mathrm{C}$、電流密度
-$10^5$--$10^6\,\mathrm{A/cm^2}$ で実施し、Black式で寿命外挿した。
-使用条件（$85^\circ\mathrm{C}$, $10^3\,\mathrm{A/cm^2}$）に対して10倍以上の寿命余裕を確認した。
+エレクトロマイグレーション評価を125--175℃、電流密度
+$10^5$--$10^6$\,A/cm$^2$で実施し、Black式で寿命外挿した。
+使用条件（85℃, $10^3$\,A/cm$^2$）に対して10倍以上の寿命余裕を確認した。
 
 \section{合理化効果と結論}
 本合理化により、チップ当たり約¥4、BIJ4ヘッドで約¥16の
@@ -111,18 +93,18 @@ $10^5$--$10^6\,\mathrm{A/cm^2}$ で実施し、Black式で寿命外挿した。
 最も効果的なコスト合理化を実現できた。
 
 % ===== 図表例 =====
-\begin{figure}[h]
+\begin{figure}[htbp]
   \centering
-  % figures/ は \graphicspath で解決されます
-  \figorplaceholder[width=0.45\textwidth]{fig1_au_thickness.png}
+  \includegraphics[width=0.45\textwidth]{fig1_au_thickness.png}
   \caption{Au厚仕様ロジック（Specification logic of Au thickness）}
   \label{fig:au}
 \end{figure}
 
 % ===== 参考文献 =====
-\begin{thebibliography}{9}
+\bibliographystyle{IEEEtran}
+\begin{thebibliography}{1}
 \bibitem{Black}
-J. R. Black, ``Electromigration --- A brief survey and some recent results,''
+J.~R. Black, ``Electromigration --- A brief survey and some recent results,''
 \emph{IEEE Trans. Electron Devices}, vol.~16, no.~4, pp.~338--347, 1969.
 \end{thebibliography}
 
