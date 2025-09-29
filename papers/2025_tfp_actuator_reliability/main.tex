@@ -388,25 +388,32 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=0.9\columnwidth,   % ← 少し縮小して確実に収める
-      height=0.6\columnwidth,
+      width=\columnwidth,
+      height=0.65\columnwidth,
       ybar,
-      bar width=6pt,
+      bar width=7pt,
       ymin=0, ymax=12,
       ytick={0,2,4,6,8,10,12},
       ylabel={ロット数 / Number of lots},
       xlabel={ユニットスクリーニング不良率 (\%) / Unit-screening defect rate (\%)},
       xtick={0,2,4,6,8,10},
       tick style={inside},
+      xmajorgrids=true,
+      ymajorgrids=true,
       grid style={gray!30},
-      legend style={draw=none, font=\scriptsize, at={(0.5,-0.25)}, anchor=north, legend columns=-1},
+      legend style={draw=none, at={(0.5,-0.25)}, anchor=north, legend columns=-1},
     ]
-      % Before
-      \addplot+[fill=blue!40] coordinates {(6,2) (7,2) (8,3) (9,2) (10,3)};
-      \addlegendentry{Before (No pre-wet), $N_{\mathrm{lots}}=12$}
-      % After
-      \addplot+[fill=red!40] coordinates {(0,11) (2,1)};
-      \addlegendentry{After (Acetic pre-wet), $N_{\mathrm{lots}}=12$}
+      % ---- Before (No pre-wet) ----
+      \addplot+[fill=blue!40] coordinates {
+        (6,2) (7,2) (8,3) (9,2) (10,3)
+      };
+      \addlegendentry{Before（前処理なし）\\Before (No pre-wet)}
+
+      % ---- After (Acetic pre-wet) ----
+      \addplot+[fill=red!40] coordinates {
+        (0,11) (2,1)
+      };
+      \addlegendentry{After（酢酸プレウェット）\\After (Acetic pre-wet)}
     \end{axis}
   \end{tikzpicture}
   \caption{%
@@ -423,26 +430,26 @@ Fig.~\ref{fig:hist_defect}に、ユニットスクリーニングで観測され
     比較プロセス条件（Before/After）／
     Compared process conditions (Before/After)}
   \label{tab:proc-compare}
-  \setlength{\tabcolsep}{2pt}
-  \begin{tabular}{@{} lll @{}}
+  \setlength{\tabcolsep}{3pt} % ← 列幅調整
+  \begin{tabular}{@{} p{0.33\columnwidth} p{0.27\columnwidth} p{0.27\columnwidth} @{}}
     \toprule
     \textbf{項目 / Item} & \textbf{Before} & \textbf{After} \\
     \midrule
-    表面前処理 / Surface pre-wet
-      & 無し / None
-      & 酢酸2\% 30\,s \\
-    RTA後搬送 / Post-RTA handling
-      & 大気露出
-      & 窒素パージ \\
-    スピン塗布 / Spin coating
-      & 同一条件
-      & 同一条件 \\
-    PZT積層 / PZT stack
-      & 200\,nm $\times$ 6
-      & 200\,nm $\times$ 6 \\
-    検査N / Sample size
-      & 500/lot
-      & 500/lot \\
+    表面前処理 / Surface pre-wet &
+      無し / None &
+      酢酸2\% 30\,s \\
+    RTA後搬送 / Post-RTA handling &
+      大気露出 / Air exposure &
+      窒素パージMLL / N$_2$ mini-loadlock \\
+    スピン塗布 / Spin coating &
+      同一条件 / Same &
+      同一条件 / Same \\
+    PZT積層 / PZT stack &
+      200\,nm × 6 &
+      200\,nm × 6 \\
+    検査N / Sample size &
+      500/lot &
+      500/lot \\
     \bottomrule
   \end{tabular}
 \end{table}
