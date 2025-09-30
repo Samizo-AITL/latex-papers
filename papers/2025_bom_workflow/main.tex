@@ -112,18 +112,14 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
   title/.style={draw=none, align=left}
 ]
 
-%--------------------------------
-% 設計フロー（上段）
-%--------------------------------
+% 設計（上段）
 \node (A) [design] {設計図面検討会\\\emph{Design Drawing Review}};
 \node (B) [design, right=of A] {設計図面\\\emph{Design Drawing}};
 \node (C) [design, right=of B] {設計通知\\\emph{Design Notice}};
 \draw[flow] (A) -- (B);
 \draw[flow] (B) -- (C);
 
-%--------------------------------
-% 技術フロー（中段）
-%--------------------------------
+% 技術（中段）
 \node (D) [tech, below=of C] {技術図面検討会\\\emph{Technical Drawing Review}};
 \node (E) [tech, right=of D] {技術図面（加工図・組図）\\\emph{Technical Drawings}};
 \node (F) [tech, right=of E] {技術通知\\\emph{Technical Notice}};
@@ -135,44 +131,38 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \draw[flow] (F) -- (G);
 \draw[flow] (G) -- (H);
 
-% 評価・積み上げ分岐（負距離→xshift/yshiftで堅牢化）
-\node (H1) [tech, below left=6mm and 2mm of H, xshift=-2mm] {環境データ積み上げ判定\\(EChemSkip)\\\emph{Environmental Compliance}};
-\node (H2) [tech, below right=6mm and 2mm of H, xshift= -2mm] {コスト積み上げ\\\emph{Cost Roll-up}};
+% 評価・積み上げ分岐
+% （負の距離は避け、xshift で微調整）
+\node (H1) [tech, below left=6mm and 2mm of H, xshift=2mm] {環境データ積み上げ判定\\(EChemSkip)\\\emph{Environmental Compliance}};
+\node (H2) [tech, below right=6mm and 2mm of H, xshift=-2mm] {コスト積み上げ\\\emph{Cost Roll-up}};
 \draw[flow] (H) |- (H1);
 \draw[flow] (H) |- (H2);
 
 \node (I) [tech, below=15mm of H] {構成部品表通知\\\emph{BOM Notice}};
 \draw[flow] (H1) -- (I);
 \draw[flow] (H2) -- (I);
-
 \node (J) [tech, right=of I] {関係部署配布（BOM）\\\emph{Distribution (BOM)}};
 \draw[flow] (I) -- (J);
 
-%--------------------------------
-% 調達フロー（下段）
-%--------------------------------
+% 調達（下段）
 \node (K) [proc, below=of J] {調達BOM反映\\\emph{Procurement BOM Integration}};
 \node (L) [proc, right=of K] {量産部品発注\\\emph{Mass Production Ordering}};
 \draw[flow] (J) -- (K);
 \draw[flow] (K) -- (L);
 
-%--------------------------------
-% 属性群（外部入力・点線）
-%--------------------------------
+% 属性（点線）
 \node (S1) [attr, left=20mm of H] {属性（設計時必須）\\
 {\scriptsize 図面番号/Rev \\ RoHS/REACH, LCA, SDS \\ コスト（基礎）}\\
 \emph{Design-time Attributes}};
-\draw[ext] (S1.east) -- (H.west);
+\draw[ext] (S1) -- (H);
 
 \node (S2) [attr, right=14mm of K] {属性（輸出時追加）\\
 {\scriptsize 輸出管理（ECCN）\\ 該非判定 \\ HSコード \\ 用途説明書}\\
 \emph{Export-time Attributes}};
 \draw[ext] (S2.west) -- (K.east);
 
-%--------------------------------
-% 評価・計測情報（外部入力・点線）
-%--------------------------------
-\node (P1) [eval, above left=5mm and 2mm of B, xshift=-2mm] {試作評価\\{\scriptsize 寸法測定・性能検証}\\\emph{Prototype Evaluation}};
+% 評価（点線）
+\node (P1) [eval, above left=5mm and 2mm of B, xshift=2mm] {試作評価\\{\scriptsize 寸法測定・性能検証}\\\emph{Prototype Evaluation}};
 \draw[ext] (P1) -- (B);
 
 \node (P2) [eval, above=of E] {量産評価\\{\scriptsize 工程能力 Cp/Cpk・品質検証}\\\emph{Mass Production Evaluation}};
@@ -181,15 +171,16 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \node (P3) [eval, above right=3mm and 4mm of E, xshift=-4mm] {計測器情報\\{\scriptsize 三次元測定機・マイクロメータ・真円度計 等}\\\emph{Measurement Instruments}};
 \draw[ext] (P3) -- (E);
 
-%--------------------------------
-% セクション囲み（任意の飾り）
-%--------------------------------
+% セクション見出し
 \node[title] at ($(A)!0.5!(C)+(0,10mm)$) {\bfseries 設計 / Design};
 \node[title] at ($(D)!0.5!(H)+(0,10mm)$) {\bfseries 技術 / Technical};
 \node[title] at ($(K)!0.5!(L)+(-2mm,10mm)$) {\bfseries 調達 / Procurement};
 
+% ←安全弁：未終了パスがあってもここで確実に閉じる
+\path (current bounding box.center);
+
 \end{tikzpicture}%
-}%
+} % ←この直前行までに必ず「;」が来るようにしてある
 \caption{実務ワークフロー（設計→技術→調達）と属性・評価入力の関係}
 \label{fig:workflow_tikz}
 \end{figure*}
