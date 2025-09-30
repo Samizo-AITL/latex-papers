@@ -68,7 +68,7 @@ Auメッキ薄化（Au plating thinning），
 COF，
 NPC接合（NPC bonding），
 ビジネスインクジェットヘッド（Business Inkjet head），
-エレクトロマイグレーション（Electromigration），
+イオンマイグレーション（Ion migration），
 コスト合理化（Cost reduction）
 \end{IEEEkeywords}
 
@@ -86,7 +86,7 @@ Au厚はNPC接合の初期接合性・長期信頼性を支える重要要素で
 中心値を \SI{0.425}{\micro\meter}，公差幅 $\pm$\SI{0.125}{\micro\meter} とするのが妥当であることが確認された。
 
 本稿では，この新仕様に基づき，
-NPC接合信頼性・エレクトロマイグレーション・環境耐久性を評価し，
+NPC接合信頼性・イオンマイグレーション・環境耐久性を評価し，
 品質と信頼性を損なわずにコスト削減を実現するための
 設計・実験・検証のプロセスを報告する。
 
@@ -110,7 +110,7 @@ Au層はNPC接合時の濡れ性や表面状態の再現性に直結する重要
 量産実績に基づき \SI{0.30}{\micro\meter} が信頼性上の下限として機能していることが確認されている。
 そこで工程能力 Cpk$\geq$1.67 を満たす範囲を逆算し，
 新仕様を \SI{0.425}{\micro\meter}$\pm$\SI{0.125}{\micro\meter} と定めた。
-この仕様に基づき NPC接合信頼性，エレクトロマイグレーション（EM），
+この仕様に基づき NPC接合信頼性，イオンマイグレーション，
 環境加速試験の3系統で評価を実施し，Au薄化によるリスクの有無を検証した。
 さらにコスト感応度解析により 1チップ当たり約\SI{4}{JPY}の低減効果を見積もり，
 量産数量に外挿することで年間十億円規模の事業効果を見込めることを示した。
@@ -125,7 +125,7 @@ Au層はNPC接合時の濡れ性や表面状態の再現性に直結する重要
     \node[box] (start) {現行仕様\\Au \SI{0.5}{\micro\meter}$\pm$0.20};
     \node[box, below=of start] (limit) {量産実績で\\下限\SI{0.30}{\micro\meter}維持};
     \node[box, below=of limit] (spec) {工程能力 Cpk$\geq$1.67\\$\Rightarrow$ 新仕様\\\(\SI{0.425}{\micro\meter}\pm\SI{0.125}{\micro\meter}\)};
-    \node[box, below=of spec] (eval) {評価試験\\NPC, EM, 環境加速};
+    \node[box, below=of spec] (eval) {評価試験\\NPC, Ion migration, 環境加速};
     \node[box, below=of eval] (cost) {コスト感応度解析\\約\SI{4}{JPY}/チップ};
     \node[box, below=of cost] (impact) {事業効果：\\年間十億円規模};
 
@@ -145,8 +145,8 @@ Au層はNPC接合時の濡れ性や表面状態の再現性に直結する重要
 \begin{enumerate}
   \item COF外部端子におけるAuメッキ薄化を対象とし，量産実績を踏まえた合理的な新仕様
         （0.425$\pm$0.125\,µm）の設定プロセスを提示した。
-  \item 下限0.30\,µmを維持したうえで，NPC接合信頼性，エレクトロマイグレーション，
-        環境加速試験により実用条件で十分な信頼性マージンを確認した。
+  \item 下限0.30\,µmを維持したうえで，NPC接合信頼性，イオンマイグレーション，
+        環境加速試験により実使用条件で十分な信頼性マージンを確認した。
   \item コスト感応度解析を行い，チップ当たり数円，製品全体で年間十億円規模の
         削減効果を定量的に示し，設計と事業価値を結び付けた。
 \end{enumerate}
