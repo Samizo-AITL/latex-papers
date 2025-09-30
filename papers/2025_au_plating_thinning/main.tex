@@ -312,42 +312,89 @@ NPC接合，環境試験，イオンマイグレーション評価を通じて
 コスト競争力の確立に大きく寄与した取り組みである。
 
 %================ Appendix: アクチュエータ側配線の改修 =================
-\subsection{追加改修：アクチュエータ配線のAuマイグレーション対策}
-本評価を進める過程で，アクチュエータ上のAu配線間において，
+\appendices
+\section{アクチュエータ配線のAuマイグレーション対策（Countermeasure for Au Migration on Actuator Wiring）}
+
+本評価を進める過程で，アクチュエータ上のAu配線間において
 Auマイグレーションに起因する端子間ショートが確認された。  
-原因は，PZT/TE上に形成された隣接Au配線間の電界集中と湿潤環境下での
-表面イオン移動であると推定される。
+原因は，PZT/TE上に形成された隣接Au配線間での電界集中と，
+湿潤環境下における表面イオン移動と推定される。
 
-この対策として，PZT層上の配線間にスリットを導入し，
-端子間の実効距離を延長することで，
-Auマイグレーションの進展を抑制する構造へ改修した
-（Fig.~\ref{fig:act-mig}）。  
+この対策として，PZT層にスリットを導入し，配線間距離を延長することで
+Auマイグレーションを抑制する構造へ改修した（Fig.~\ref{fig:act-mig-cross}）。
 
-\begin{figure}[htbp]
+% ===== Fig: Cross-section (COF ↔ Actuator) =====
+\begin{figure}[t]
   \centering
+  \resizebox{\columnwidth}{!}{%
   \begin{tikzpicture}[x=1mm,y=1mm,>=Latex]
-    % 基板ブロック
-    \draw[fill=gray!10,rounded corners=1pt] (0,0) rectangle (70,30);
-    \node[font=\scriptsize] at (35,28){PZT/TE基板};
+    % ----- drawing helpers (exaggerated scale) -----
+    % thickness (exaggerated for visibility)
+    \def\hCu{3.5}      % ~8 µm (exaggerated)
+    \def\hAuCOF{1.8}   % ~0.425 µm (exaggerated)
+    \def\hAuAct{2.8}   % ~1.3 µm (exaggerated)
+    \def\hTE{0.5}      % 20 nm (exaggerated)
+    \def\hPZT{10}      % 1.2 µm (exaggerated)
+    \def\hBE{0.8}      % 100 nm (exaggerated)
+    \def\W{70}         % total width
+    \def\padW{14}      % pad width (each)
+    \def\gap{10}       % slit width in PZT/TE (vertical trench)
+    \def\xL{15}        % left pad x-start
+    \def\xR{ \xL + \padW + \gap } % right pad x-start
 
-    % 端子配線
-    \draw[line width=0.6pt] (10,5) -- (10,25);
-    \draw[line width=0.6pt] (20,5) -- (20,25);
-    \draw[line width=0.6pt] (50,5) -- (50,25);
-    \draw[line width=0.6pt] (60,5) -- (60,25);
+    % ----- substrate baseline (for reference) -----
+    \draw[white] (0,0) -- (\W,0);
 
-    % スリット
-    \fill[white] (19,10) rectangle (21,20);
-    \fill[white] (49,10) rectangle (51,20);
-    \node[font=\scriptsize,rotate=90] at (20,15){スリット};
-    \node[font=\scriptsize,rotate=90] at (50,15){スリット};
-  \end{tikzpicture}
-  \caption{PZT/TE上のAu配線間にスリットを導入した改修例}
-  \label{fig:act-mig}
+    % ----- Bottom Electrode (BE) -----
+    \fill[gray!50] (0,0) rectangle (\W,\hBE);
+    \node[font=\scriptsize,anchor=south west] at (1,\hBE) {BE \,(100\,nm)};
+
+    % ----- PZT bulk with slit -----
+    \fill[gray!15] (0,\hBE) rectangle (\W,\hBE+\hPZT);
+    % vertical slit (etched trench) down to BE
+    \fill[white] (\xL+\padW,\hBE) rectangle (\xL+\padW+\gap,\hBE+\hPZT);
+    \draw[thick] (\xL+\padW,\hBE) -- (\xL+\padW,\hBE+\hPZT);
+    \draw[thick] (\xL+\padW+\gap,\hBE) -- (\xL+\padW+\gap,\hBE+\hPZT);
+    \node[font=\scriptsize,rotate=90] at (\xL+\padW+0.5*\gap,\hBE+0.55*\hPZT) {PZTスリット};
+    \node[font=\scriptsize,anchor=south west] at (1,\hBE+\hPZT) {PZT \,(1.2\,\si{\micro\metre})};
+
+    % ----- Top Electrode (TE), interrupted at slit -----
+    \fill[black!30] (0,\hBE+\hPZT) rectangle (\W,\hBE+\hPZT+\hTE);
+    \fill[white] (\xL+\padW,\hBE+\hPZT) rectangle (\xL+\padW+\gap,\hBE+\hPZT+\hTE);
+    \node[font=\scriptsize,anchor=south west] at (1,\hBE+\hPZT+\hTE) {TE \,(20\,nm)};
+
+    % ----- Actuator Au pads on TE -----
+    \fill[yellow!65!orange] (\xL,\hBE+\hPZT+\hTE) rectangle (\xL+\padW,\hBE+\hPZT+\hTE+\hAuAct);
+    \fill[yellow!65!orange] (\xR,\hBE+\hPZT+\hTE) rectangle (\xR+\padW,\hBE+\hPZT+\hTE+\hAuAct);
+    \draw (\xL,\hBE+\hPZT+\hTE) rectangle (\xL+\padW,\hBE+\hPZT+\hTE+\hAuAct);
+    \draw (\xR,\hBE+\hPZT+\hTE) rectangle (\xR+\padW,\hBE+\hPZT+\hTE+\hAuAct);
+    \node[font=\scriptsize] at (\xL+0.5*\padW,\hBE+\hPZT+\hTE+0.5*\hAuAct) {Au 1.3\,\si{\micro\metre}};
+    \node[font=\scriptsize] at (\xR+0.5*\padW,\hBE+\hPZT+\hTE+0.5*\hAuAct) {Au 1.3\,\si{\micro\metre}};
+
+    % ----- COF terminal (Cu + Au cap) overlapping pads -----
+    % Cu (thick)
+    \fill[brown!45!black] (\xL-1,\hBE+\hPZT+\hTE+\hAuAct) rectangle (\xL+\padW+1,\hBE+\hPZT+\hTE+\hAuAct+\hCu);
+    \fill[brown!45!black] (\xR-1,\hBE+\hPZT+\hTE+\hAuAct) rectangle (\xR+\padW+1,\hBE+\hPZT+\hTE+\hAuAct+\hCu);
+    % Au cap on Cu
+    \fill[yellow!80!black] (\xL-1,\hBE+\hPZT+\hTE+\hAuAct+\hCu) rectangle (\xL+\padW+1,\hBE+\hPZT+\hTE+\hAuAct+\hCu+\hAuCOF);
+    \fill[yellow!80!black] (\xR-1,\hBE+\hPZT+\hTE+\hAuAct+\hCu) rectangle (\xR+\padW+1,\hBE+\hPZT+\hTE+\hAuAct+\hCu+\hAuCOF);
+    \draw (\xL-1,\hBE+\hPZT+\hTE+\hAuAct) rectangle (\xL+\padW+1,\hBE+\hPZT+\hTE+\hAuAct+\hCu+\hAuCOF);
+    \draw (\xR-1,\hBE+\hPZT+\hTE+\hAuAct) rectangle (\xR+\padW+1,\hBE+\hPZT+\hTE+\hAuAct+\hCu+\hAuCOF);
+    \node[font=\scriptsize,anchor=west] at (\xR+\padW+2,\hBE+\hPZT+\hTE+\hAuAct+0.5*\hCu) {COF Cu \,(8\,\si{\micro\metre})};
+    \node[font=\scriptsize,anchor=west] at (\xR+\padW+2,\hBE+\hPZT+\hTE+\hAuAct+\hCu+0.5*\hAuCOF) {COF Au \,(0.425\,\si{\micro\metre})};
+
+    % ----- Au–Au joint note -----
+    \draw[<->,thin] (\xL+\padW+1.5,\hBE+\hPZT+\hTE+\hAuAct+0.2) -- ++(0, \hCu+\hAuCOF-0.4);
+    \node[font=\scriptsize,anchor=west] at (\xL+\padW+2,\hBE+\hPZT+\hTE+\hAuAct+0.5*\hCu) {Au–Au接合（NPC充填）};
+
+    % ----- labels left side -----
+    \node[font=\scriptsize,anchor=east] at ( \xL-2,\hBE+0.5*\hPZT ) {PZT};
+    \node[font=\scriptsize,anchor=east] at ( \xL-2,0.5*\hBE ) {BE};
+  \end{tikzpicture}%
+  }
+  \caption{COF端子（Au 0.425\,µm / Cu 8\,µm）とアクチュエータ側（Au 1.3\,µm／TE 20\,nm／PZT 1.2\,µm／BE 100\,nm）の断面概念図。厚み比は視認性のため誇張。中央はPZTスリット改修。}
+  \label{fig:cof-act-cross}
 \end{figure}
-
-この改修により，端子間のマイグレーション試験において
-ショート発生は抑制され，実使用条件下での信頼性が確保できることを確認した。
 
 %================ 謝辞 =================
 \section*{謝辞（Acknowledgment）}
