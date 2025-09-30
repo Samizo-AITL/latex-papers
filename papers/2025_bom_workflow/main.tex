@@ -1,14 +1,21 @@
-% !TeX program = pdflatex
+% !TeX program = lualatex
 \documentclass[conference]{IEEEtran}
 
-% --- Packages ---
+% --- 日本語 & フォント（LuaLaTeX） ---
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\setmainfont{TeX Gyre Termes}     % 英文 Times 系
+\setsansfont{TeX Gyre Heros}
+\setmonofont{TeX Gyre Cursor}
+\setmainjfont{IPAexMincho}        % 和文（TeX Live 標準）
+\usepackage{newtxmath}            % 数式を Times 系に
+
+% --- 他パッケージ ---
 \usepackage{cite}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{xcolor}
-\usepackage{newtxtext,newtxmath} % Times系（見栄え＆警告低減）
-\usepackage{CJKutf8}              % 日本語対応（pdflatex用）
 
 % --- Title & Author ---
 \title{%
@@ -24,8 +31,6 @@
 }
 
 \begin{document}
-\begin{CJK}{UTF8}{min} % ← ここから日本語安全圏
-
 \maketitle
 
 \begin{abstract}
@@ -102,10 +107,6 @@ BOMを統合情報基盤と再定義し、設計から輸出管理に至るプ�
 
 % -------------------------------
 \section*{著者略歴 / Author Biography}
-\noindent\textbf{三溝 真一}（Shinichi Samizo）は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得した。  
-その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、そして、インクジェット薄膜ピエゾアクチュエータ及び PrecisionCore プリントヘッドの製品化に従事した。  
-現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、AIシステム統合などに取り組んでいる。  
-連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}．
+\noindent\textbf{三溝 真一}（Shinichi Samizo）は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得した。その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、そして、インクジェット薄膜ピエゾアクチュエータ及び PrecisionCore プリントヘッドの製品化に従事した。現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、AIシステム統合などに取り組んでいる。連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}．
 
-\end{CJK} % ← ここまで日本語安全圏
 \end{document}
