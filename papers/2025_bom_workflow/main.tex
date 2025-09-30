@@ -139,7 +139,7 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \draw[flow] (G) -- (H);
 
 % 評価・積み上げ分岐
-% ※ 負の距離を使わない。必要な微調整は xshift で。
+% （負の距離は xshift/yshift に置き換え）
 \node (H1) [tech, below left=6mm and 2mm of H, xshift=-2mm] {環境データ積み上げ判定\\(EChemSkip)\\\emph{Environmental Compliance}};
 \node (H2) [tech, below right=6mm and 2mm of H, xshift=2mm] {コスト積み上げ\\\emph{Cost Roll-up}};
 \draw[flow] (H) |- (H1);
@@ -182,7 +182,7 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \node (P2) [eval, above=of E] {量産評価\\{\scriptsize 工程能力 Cp/Cpk・品質検証}\\\emph{Mass Production Evaluation}};
 \draw[ext] (P2) -- (E);
 
-\node (P3) [eval, above right=3mm and 4mm of E] {計測器情報\\{\scriptsize 三次元測定機・マイクロメータ・真円度計 等}\\\emph{Measurement Instruments}};
+\node (P3) [eval, above right=3mm and 4mm of E, yshift=-4mm] {計測器情報\\{\scriptsize 三次元測定機・マイクロメータ・真円度計 等}\\\emph{Measurement Instruments}};
 \draw[ext] (P3) -- (E);
 
 %--------------------------------
