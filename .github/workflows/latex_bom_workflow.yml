@@ -1,0 +1,95 @@
+name: latex_bom_workflow
+
+on:
+  push:
+    paths:
+      - "papers/2025_bom_workflow/**"
+      - ".github/workflows/latex_bom_workflow.yml"
+  workflow_dispatch:
+
+# 同時実行を抑制（同一ブランチの古いビルドをキャンセル）
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [pdflatex, lualatex]  # 必要な方だけに減らしてOK
+
+    env:
+      WORKDIR: papers/2025_bom_workflow
+      ROOT_TEX: main.tex
+      ARTIFACT_PREFIX: 2025_bom_workflow
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show TeX Live version
+        run: |
+          tlmgr --version || true
+          latex --version || true
+          pdflatex --version || true
+          lualatex --version || true
+
+      - name: Compile (matrix engine = ${{ matrix.engine }})
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: ${{ env.ROOT_TEX }}
+          working_directory: ${{ env.WORKDIR }}
+          # エンジン切替
+          latexmk_use_lualatex: ${{ matrix.engine == 'lualatex' }}
+          # ログを詳しく
+          args: -interaction=nonstopmode -file-line-error
+          # キャッシュ（高速化）
+          cache: true
+          extra_fonts: |
+            # ここに必要なら追加フォントを配置
+          # エラー時に終了（ログ収集のため、この後で必ずアーティファクト化）
+          continue_on_error: false
+
+      # 生成物確認（デバッグ用）
+      - name: List build outputs
+        if: always()
+        run: |
+          ls -la $WORKDIR || true
+
+      # PDFをアーティファクトとして保存
+      - name: Upload PDF artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_PREFIX }}-pdf-${{ matrix.engine }}-run${{ github.run_number }}
+          path: ${{ env.WORKDIR }}/main.pdf
+          if-no-files-found: warn
+          retention-days: 30
+
+      # LaTeXのログ/補助ファイルをひとまとめにして保存
+      - name: Package logs and aux files
+        if: always()
+        run: |
+          mkdir -p $WORKDIR/_logs
+          # よく使うログ/補助拡張子を収集（必要に応じて追加）
+          exts="log aux fdb_latexmk fls toc out bbl blg synctex.gz lof lot lol run.xml"
+          for e in $exts; do
+            [ -f "$WORKDIR/main.$e" ] && cp "$WORKDIR/main.$e" "$WORKDIR/_logs/" || true
+          done
+          # ディレクトリをzip化（WindowsでのDL互換も良好）
+          cd $WORKDIR
+          zip -r _logs_${{ matrix.engine }}.zip _logs || true
+          cd -
+
+      - name: Upload logs artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_PREFIX }}-logs-${{ matrix.engine }}-run${{ github.run_number }}
+          path: |
+            ${{ env.WORKDIR }}/_logs_${{ matrix.engine }}.zip
+            ${{ env.WORKDIR }}/_logs/**
+          if-no-files-found: warn
+          retention-days: 30
