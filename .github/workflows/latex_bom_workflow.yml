@@ -22,19 +22,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Compile LaTeX (pdflatex)
+      - name: Compile LaTeX (LuaLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: ${{ env.ROOT_TEX }}
           working_directory: ${{ env.WORKDIR }}
-          latexmk_use_lualatex: false  # ← LuaLaTeXにするなら true に変更
+          latexmk_use_lualatex: true        # ← LuaLaTeXで直接PDF生成
           args: -interaction=nonstopmode -file-line-error
           cache: true
           continue_on_error: false
 
       - name: List outputs
         if: always()
-        run: ls -la $WORKDIR || true
+        run: ls -la "$WORKDIR" || true
 
       - name: Upload PDF
         if: always()
@@ -48,14 +48,12 @@ jobs:
       - name: Collect logs
         if: always()
         run: |
-          mkdir -p $WORKDIR/_logs
+          mkdir -p "$WORKDIR/_logs"
           exts="log aux fdb_latexmk fls toc out bbl blg synctex.gz lof lot lol run.xml"
           for e in $exts; do
             [ -f "$WORKDIR/main.$e" ] && cp "$WORKDIR/main.$e" "$WORKDIR/_logs/" || true
           done
-          cd $WORKDIR
-          zip -r _logs.zip _logs || true
-          cd -
+          (cd "$WORKDIR" && zip -r _logs.zip _logs || true)
 
       - name: Upload logs
         if: always()
