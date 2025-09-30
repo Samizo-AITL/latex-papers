@@ -139,8 +139,9 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \draw[flow] (G) -- (H);
 
 % 評価・積み上げ分岐
-\node (H1) [tech, below left=6mm and -2mm of H] {環境データ積み上げ判定\\(EChemSkip)\\\emph{Environmental Compliance}};
-\node (H2) [tech, below right=6mm and -2mm of H] {コスト積み上げ\\\emph{Cost Roll-up}};
+% ※ 負の距離を使わない。必要な微調整は xshift で。
+\node (H1) [tech, below left=6mm and 2mm of H, xshift=-2mm] {環境データ積み上げ判定\\(EChemSkip)\\\emph{Environmental Compliance}};
+\node (H2) [tech, below right=6mm and 2mm of H, xshift=2mm] {コスト積み上げ\\\emph{Cost Roll-up}};
 \draw[flow] (H) |- (H1);
 \draw[flow] (H) |- (H2);
 
@@ -175,13 +176,13 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 %--------------------------------
 % 評価・計測情報（外部入力・点線）
 %--------------------------------
-\node (P1) [eval, above left=5mm and -2mm of B] {試作評価\\{\scriptsize 寸法測定・性能検証}\\\emph{Prototype Evaluation}};
+\node (P1) [eval, above left=5mm and 2mm of B, xshift=-2mm] {試作評価\\{\scriptsize 寸法測定・性能検証}\\\emph{Prototype Evaluation}};
 \draw[ext] (P1) -- (B);
 
 \node (P2) [eval, above=of E] {量産評価\\{\scriptsize 工程能力 Cp/Cpk・品質検証}\\\emph{Mass Production Evaluation}};
 \draw[ext] (P2) -- (E);
 
-\node (P3) [eval, above right=3mm and -4mm of E] {計測器情報\\{\scriptsize 三次元測定機・マイクロメータ・真円度計 等}\\\emph{Measurement Instruments}};
+\node (P3) [eval, above right=3mm and 4mm of E] {計測器情報\\{\scriptsize 三次元測定機・マイクロメータ・真円度計 等}\\\emph{Measurement Instruments}};
 \draw[ext] (P3) -- (E);
 
 %--------------------------------
