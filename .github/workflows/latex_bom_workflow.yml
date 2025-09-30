@@ -1,4 +1,4 @@
-name: latex_bom_workflow 
+name: latex_bom_workflow
 
 on:
   push:
@@ -26,29 +26,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install TeX Live full
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-full fonts-ipafont fonts-hanazono
+
       - name: Compile LaTeX (LuaLaTeX via latexmk)
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: ${{ env.WORKDIR }}
           root_file: ${{ env.ROOT_TEX }}
-          latexmk_use_lualatex: true              # LuaLaTeXで直接PDF
+          latexmk_use_lualatex: true
           args: -interaction=nonstopmode -file-line-error
-          # shell-escapeが必要になったら↓をtrueに
-          # latexmk_shell_escape: true
-          cache: true
+          cache: false
           continue_on_error: false
 
       - name: List outputs
         if: always()
-        run: |
-          echo "== ls -la ${WORKDIR} =="
-          ls -la "${WORKDIR}" || true
+        run: ls -la "${WORKDIR}" || true
 
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_PREFIX }}-pdf-run${{ github.run_number }}-${{ github.sha.substr(0,7) }}
+          name: ${{ env.ARTIFACT_PREFIX }}-pdf-run${{ github.run_number }}
           path: ${{ env.WORKDIR }}/main.pdf
           if-no-files-found: error
           retention-days: 30
@@ -56,22 +57,18 @@ jobs:
       - name: Collect logs
         if: always()
         run: |
-          set -eu
           mkdir -p "${WORKDIR}/_logs"
           exts="log aux fdb_latexmk fls toc out bbl blg synctex.gz lof lot lol run.xml"
           for e in $exts; do
-            f="${WORKDIR}/main.$e"
-            if [ -f "$f" ]; then cp "$f" "${WORKDIR}/_logs/"; fi
+            [ -f "${WORKDIR}/main.$e" ] && cp "${WORKDIR}/main.$e" "${WORKDIR}/_logs/" || true
           done
-          # latexmkの補助ファイルも拾う
-          find "${WORKDIR}" -maxdepth 1 -type f \( -name "*.bcf" -o -name "*.xml" -o -name "*.brf" \) -exec cp {} "${WORKDIR}/_logs/" \; || true
-          ( cd "${WORKDIR}" && zip -r _logs.zip _logs >/dev/null 2>&1 || true )
+          (cd "${WORKDIR}" && zip -r _logs.zip _logs || true)
 
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_PREFIX }}-logs-run${{ github.run_number }}-${{ github.sha.substr(0,7) }}
+          name: ${{ env.ARTIFACT_PREFIX }}-logs-run${{ github.run_number }}
           path: |
             ${{ env.WORKDIR }}/_logs.zip
             ${{ env.WORKDIR }}/_logs/**
