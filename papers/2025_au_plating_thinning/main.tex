@@ -183,7 +183,7 @@ Cu拡散や酸化による劣化兆候は認められなかった。
   \centering
   \caption{評価試験マトリクス（Evaluation test matrix）}
   \label{tab:test-matrix}
-  \sisetup{table-number-alignment = center, table-text-alignment = center}
+  \resizebox{\columnwidth}{!}{%
   \begin{tabular}{@{}lcccc@{}}
     \toprule
     \textbf{Au厚} &
@@ -194,14 +194,15 @@ Cu拡散や酸化による劣化兆候は認められなかった。
     \textbf{Thickness} &
     (4端子/EDS) &
     (接合抵抗) &
-    (Ion migration) &
+    (Ion mig.) &
     (3M/12M) \\
     \midrule
     0.30 µm & ○ & ○ & ○ & ○ \\
     0.25 µm & ○ & ○ & ○ & ○ \\
     0.20 µm & × & ○ & ○ & △ \\
     \bottomrule
-  \end{tabular}
+  \end{tabular}%
+  }
   \vspace{2pt}
   \footnotesize{○＝合格，△＝部分不具合，×＝不合格}
 \end{table}
@@ -272,93 +273,43 @@ Au層が拡散バリアとして不十分であることが示唆された。
 %================ Part 5: 合理化効果と結論 =================
 \section{合理化効果と結論（Effect and Conclusion）}
 
-\subsection{コストモデル}
-Au厚削減によるコスト低減を以下で近似する：
-\begin{equation}
-  \Delta C_{\mathrm{chip}}
-  = k_{\mathrm{tot}} \cdot \Delta t \cdot A_{\mathrm{Au,eff}}
-\end{equation}
-ここで $\Delta t$ は厚み差，$A_{\mathrm{Au,eff}}$ は有効Au面積，
-$k_{\mathrm{tot}}$ は単位係数（¥/µm$\cdot$cm$^2$）である。
+\subsection{合理化効果の定量化}
+Au厚の薄化により，従来仕様
+（0.50 µm $\pm$ 0.20 µm）から新仕様
+（0.425 µm $\pm$ 0.125 µm）へ移行した。  
+これにより，下限0.30 µm を維持したまま工程能力 Cpk$\geq$1.67 を確保できることを確認した。  
 
-本件では $\Delta t=0.075\,\mu$m，$A_{\mathrm{Au,eff}}\approx1.0$ cm$^2$ とし，
-チップ当たり約¥4の削減が見積もられた。
+新仕様に基づきCOFチップ当たりのAu使用量を削減した結果，
+1チップあたり約¥4，BIJ4ヘッド（4チップ構成）では約¥16の
+コスト低減効果が得られる。  
+製品ラインナップ全体（BIJ1/BIJ2/BIJ4）へ展開すれば，
+年間生産台数数百万～数千万台規模で，
+数十億円規模のコスト削減インパクトが見込まれる。
 
-\subsection{感度解析}
-\begin{table}[htbp]
-  \centering
-  \caption{コスト感度（¥/チップ）}
-  \label{tab:cost-sense}
-  \sisetup{table-number-alignment=center}
-  \begin{tabular}{@{}lccc@{}}
-    \toprule
-    $A_{\mathrm{Au,eff}}$ [cm$^2$] & $\Delta t=0.055$ & $0.075$ & $0.095$ \\
-    \midrule
-    0.8 & ¥2.3 & ¥3.2 & ¥4.0 \\
-    1.0 & ¥2.9 & ¥4.0 & ¥5.0 \\
-    1.2 & ¥3.5 & ¥4.8 & ¥6.0 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-      width=\columnwidth,
-      height=5.5cm,
-      xlabel={$\Delta t$ [µm]},
-      ylabel={$A_{\mathrm{Au,eff}}$ [cm$^2$]},
-      grid=both,
-      tick label style={font=\scriptsize},
-      label style={font=\scriptsize}
-    ]
-      \addplot3[surf,domain=0.05:0.10,y domain=0.8:1.2,samples=11] {53*x*y};
-    \end{axis}
-  \end{tikzpicture}
-  \caption{コスト感度解析（$\Delta t$, $A_{\mathrm{Au,eff}}$ 掃引）}
-  \label{fig:cost-sense}
-\end{figure}
-
-\subsection{量産インパクト}
-1ヘッドあたりのCOFチップ数は，  
+\subsection{信頼性の維持}
+合理化後のAu厚について以下を確認した：
 \begin{itemize}
-  \item BIJ1ヘッド：1チップ構成  
-  \item BIJ2ヘッド：2チップ構成  
-  \item BIJ4ヘッド：4チップ構成  
+  \item NPC接合：抵抗変動は従来比で有意差なし，平均差$<$1 m$\Omega$。
+  \item 環境試験：85℃/85\%RH，熱衝撃，折曲げいずれも劣化兆候なし。
+  \item イオンマイグレーション：ヘッド組込み試験で2000 hまで抵抗値・電特異常なし。  
+        COF単体では0.20 µmでCu析出を確認したが，
+        新仕様の0.425 µm±0.125 µmでは問題なし。
 \end{itemize}
-であり，合理化効果はそれぞれ約¥4，¥8，¥16/ヘッドに相当する。  
-
-年間生産台数 $N_{\mathrm{head}}$ は数百万〜数千万台規模と推定される。  
-当時，インクジェット技術が家庭用からビジネス領域へ本格的に展開し始めた時期であり，  
-本合理化は材料費だけでなく事業収益性全体に大きなインパクトを与えたと考えられる。
-
-\subsection{品質・信頼性KPI}
-\begin{itemize}
-  \item NPC接続抵抗：平均差 $<1$ m$\Omega$。
-  \item 熱衝撃後の層間剥離：増加兆候なし。
-  \item イオンマイグレーション寿命：使用条件で 10$\times$以上の余裕を確認。
-\end{itemize}
+以上より，Au厚削減後も従来同等の信頼性が維持されることを実証した。
 
 \subsection{結論}
-本研究により，Au厚仕様を
-0.50 µm $\rightarrow$ 0.425±0.125 µmへ合理化し，
-下限0.30 µmと工程能力 Cpk$\geq$1.67を確保した。  
-その結果，チップ当たり約¥4，ヘッド当たり約¥16の
-コスト削減を実現し，品質・信頼性も維持されることを確認した。  
+本研究により，COF外部端子のAu厚仕様を
+0.50 µm → 0.425±0.125 µmへ合理化し，
+量産実績のある下限0.30 µmを維持したうえで，
+工程能力 Cpk$\geq$1.67 を確保できることを示した。  
 
-本合理化は，インクジェットのビジネス分野進出期において，  
-コスト競争力の確立に直接寄与した意義の大きな取り組みであった。
+その結果，チップ当たり約¥4，
+ヘッド当たり最大¥16のコスト削減を達成するとともに，
+NPC接合，環境試験，イオンマイグレーション評価を通じて
+従来同等の信頼性が担保されることを確認した。  
 
-\subsection{結論}
-本研究により，従来仕様（0.50 µm）を
-合理化して 0.425±0.125 µm とする新仕様を確立し，
-量産実績に基づく下限 0.30 µm を維持しつつ，
-工程能力 Cpk$\geq$1.67 を満たすことを確認した。  
-その結果，チップ当たり約¥4，ヘッド当たり最大¥16の
-コスト削減効果を得つつ，
-NPC接合，環境試験，マイグレーション評価を通じて
-信頼性が従来と同等に維持されることを示した。
+本合理化は，ビジネスインクジェットが家庭用から業務用途へ拡大する時期において，
+コスト競争力の確立に大きく寄与した取り組みである。
 
 %================ Appendix: アクチュエータ側配線の改修 =================
 \subsection{追加改修：アクチュエータ配線のAuマイグレーション対策}
