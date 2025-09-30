@@ -260,14 +260,23 @@ Roll-up の流れを Fig.~\ref{fig:rollup} に示す。
   \item \textbf{製品レベル判定}：環境適合（RoHS/REACH）、コスト集計、輸出可否（ECCN/HS/用途）を同時に評価
 \end{enumerate}
 
-\begin{figure}[t]
-  \centering
-  \fbox{\begin{minipage}{0.9\linewidth}
-  部品属性 $\rightarrow$ サブAssy集約 $\rightarrow$ 製品BOM $\rightarrow$ 環境・コスト・輸出判定
-  \end{minipage}}
-  \caption{Roll-up Management の基本フロー}
-  \label{fig:rollup}
-\end{figure}
+\begin{table}[t]
+\centering
+\caption{Roll-up Management の基本フロー}
+\label{tab:rollup}
+\renewcommand{\arraystretch}{1.2}
+\footnotesize
+\begin{tabular}{@{}cl@{}}
+\toprule
+\textbf{段階} & \textbf{内容} \\
+\midrule
+① & 部品属性（Part Attributes）を定義 \\
+② & サブAssyに集約（Sub-Assembly Roll-up） \\
+③ & 製品BOMに統合（Product BOM Integration） \\
+④ & 製品レベルで判定（環境・コスト・輸出可否） \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{評価対象}
 Roll-up により以下の観点で製品全体を評価できる。
