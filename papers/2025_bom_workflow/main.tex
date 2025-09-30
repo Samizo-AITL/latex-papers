@@ -104,6 +104,7 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
   box/.style={draw, rounded corners=2pt, align=center, inner sep=2.5pt, minimum height=6.8mm, minimum width=26mm, very thick},
   flow/.style={-Latex, line width=0.8pt},
   ext/.style={-Latex, dashed, line width=0.7pt},
+  % カラースタイル（Mermaid相当の配色）
   design/.style={box, fill={rgb,255:red,209; green,233; blue,255}, draw={rgb,255:red,3; green,102; blue,214}},
   tech/.style={box, fill={rgb,255:red,255; green,243; blue,205}, draw={rgb,255:red,255; green,153; blue,0}},
   proc/.style={box, fill={rgb,255:red,230; green,255; blue,237}, draw={rgb,255:red,40; green,167; blue,69}},
@@ -112,28 +113,34 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
   title/.style={draw=none, align=left}
 ]
 
-% 上段（設計）
+%--------------------------------
+% 設計フロー（上段）
+%--------------------------------
 \node (A) [design] {設計図面検討会\\\emph{Design Drawing Review}};
 \node (B) [design, right=of A] {設計図面\\\emph{Design Drawing}};
 \node (C) [design, right=of B] {設計通知\\\emph{Design Notice}};
+
 \draw[flow] (A) -- (B);
 \draw[flow] (B) -- (C);
 
-% 中段（技術）
+%--------------------------------
+% 技術フロー（中段）
+%--------------------------------
 \node (D) [tech, below=of C] {技術図面検討会\\\emph{Technical Drawing Review}};
 \node (E) [tech, right=of D] {技術図面（加工図・組図）\\\emph{Technical Drawings}};
 \node (F) [tech, right=of E] {技術通知\\\emph{Technical Notice}};
 \node (G) [tech, right=of F] {関係部署配布\\\emph{Distribution to Depts.}};
 \node (H) [tech, right=of G] {構成部品表接続\\\emph{BOM Linkage}};
+
 \draw[flow] (C) -- (D);
 \draw[flow] (D) -- (E);
 \draw[flow] (E) -- (F);
 \draw[flow] (F) -- (G);
 \draw[flow] (G) -- (H);
 
-% 分岐（xshiftで左右に少し振る）
-\node (H1) [tech, below=6mm of H, xshift=-2mm] {環境データ積み上げ判定\\(EChemSkip)\\\emph{Environmental Compliance}};
-\node (H2) [tech, below=6mm of H, xshift= 2mm] {コスト積み上げ\\\emph{Cost Roll-up}};
+% 評価・積み上げ分岐（xshiftで左右に振る）
+\node (H1) [tech, below=6mm of H, xshift=-14mm] {環境データ積み上げ判定\\(EChemSkip)\\\emph{Environmental Compliance}};
+\node (H2) [tech, below=6mm of H, xshift= 14mm] {コスト積み上げ\\\emph{Cost Roll-up}};
 \draw[flow] (H) |- (H1);
 \draw[flow] (H) |- (H2);
 
@@ -144,37 +151,45 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \node (J) [tech, right=of I] {関係部署配布（BOM）\\\emph{Distribution (BOM)}};
 \draw[flow] (I) -- (J);
 
-% 下段（調達）
+%--------------------------------
+% 調達フロー（下段）
+%--------------------------------
 \node (K) [proc, below=of J] {調達BOM反映\\\emph{Procurement BOM Integration}};
 \node (L) [proc, right=of K] {量産部品発注\\\emph{Mass Production Ordering}};
 \draw[flow] (J) -- (K);
 \draw[flow] (K) -- (L);
 
-% 属性（点線）
+%--------------------------------
+% 属性群（外部入力・点線）
+%--------------------------------
 \node (S1) [attr, left=20mm of H] {属性（設計時必須）\\
 {\scriptsize 図面番号/Rev \\ RoHS/REACH, LCA, SDS \\ コスト（基礎）}\\
 \emph{Design-time Attributes}};
-\draw[ext] (S1) -- (H);
+\draw[ext] (S1.east) -- (H.west);
 
 \node (S2) [attr, right=14mm of K] {属性（輸出時追加）\\
 {\scriptsize 輸出管理（ECCN）\\ 該非判定 \\ HSコード \\ 用途説明書}\\
 \emph{Export-time Attributes}};
 \draw[ext] (S2.west) -- (K.east);
 
-% 評価（点線）
+%--------------------------------
+% 評価・計測情報（外部入力・点線）
+%--------------------------------
 \node (P1) [eval, above=5mm of B, xshift=-2mm] {試作評価\\{\scriptsize 寸法測定・性能検証}\\\emph{Prototype Evaluation}};
-\draw[ext] (P1) -- (B);
+\draw[ext] (P1.south) -- (B.north);
 
-\node (P2) [eval, above=of E] {量産評価\\{\scriptsize 工程能力 Cp/Cpk・品質検証}\\\emph{Mass Production Evaluation}};
-\draw[ext] (P2) -- (E);
+\node (P2) [eval, above=10mm of E] {量産評価\\{\scriptsize 工程能力 Cp/Cpk・品質検証}\\\emph{Mass Production Evaluation}};
+\draw[ext] (P2.south) -- (E.north);
 
-\node (P3) [eval, above=3mm of E, xshift=4mm] {計測器情報\\{\scriptsize 三次元測定機・マイクロメータ・真円度計 等}\\\emph{Measurement Instruments}};
-\draw[ext] (P3) -- (E);
+\node (P3) [eval, above=10mm of E, xshift=34mm] {計測器情報\\{\scriptsize 三次元測定機・マイクロメータ・真円度計 等}\\\emph{Measurement Instruments}};
+\draw[ext] (P3.south west) -- (E.north);
 
-% タイトル
+%--------------------------------
+% セクション囲み（任意の飾り）
+%--------------------------------
 \node[title] at ($(A)!0.5!(C)+(0,10mm)$) {\bfseries 設計 / Design};
 \node[title] at ($(D)!0.5!(H)+(0,10mm)$) {\bfseries 技術 / Technical};
-\node[title] at ($(K)!0.5!(L)+(-2mm,10mm)$) {\bfseries 調達 / Procurement};
+\node[title] at ($(K)!0.5!(L)+(0,10mm)$) {\bfseries 調達 / Procurement};
 
 \end{tikzpicture}%
 }
