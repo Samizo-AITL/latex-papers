@@ -134,7 +134,7 @@ Fig.\ref{fig:au-logic}に，本検討で用いた仕様決定のフローを示�
     \draw[->] (eval) -- (cost);
     \draw[->] (cost) -- (impact);
   \end{tikzpicture}
-  \caption{Au厚仕様決定ロジック（1カラム適合）}
+  \caption{Au厚仕様決定ロジック}
   \label{fig:au-logic}
 \end{figure}
 
@@ -186,12 +186,20 @@ Cu拡散や酸化による劣化兆候は認められなかった。
   \sisetup{table-number-alignment = center, table-text-alignment = center}
   \begin{tabular}{@{}lcccc@{}}
     \toprule
-    \textbf{Au厚} & \textbf{85/85} & \textbf{TCT} & \textbf{EM} & \textbf{折曲げ} \\
-    \textbf{Thickness} & (85℃/85\%RH) & (Thermal) & (Electro) & (Bending) \\
+    \textbf{Au厚} &
+    \textbf{Cu拡散} &
+    \textbf{NPC接合} &
+    \textbf{ヘッド通電} &
+    \textbf{長期保管} \\
+    \textbf{Thickness} &
+    (4端子/EDS) &
+    (接合抵抗) &
+    (Ion migration) &
+    (3M/12M) \\
     \midrule
     0.30 µm & ○ & ○ & ○ & ○ \\
     0.25 µm & ○ & ○ & ○ & ○ \\
-    0.20 µm & △ & ○ & ○ & △ \\
+    0.20 µm & × & ○ & ○ & △ \\
     \bottomrule
   \end{tabular}
   \vspace{2pt}
