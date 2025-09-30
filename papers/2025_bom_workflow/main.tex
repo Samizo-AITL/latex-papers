@@ -4,18 +4,22 @@
 % --- 日本語 & フォント（LuaLaTeX） ---
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
-\setmainfont{TeX Gyre Termes}     % 英文 Times 系
+
+\setmainfont{TeX Gyre Termes}   % 英文 Times 系
 \setsansfont{TeX Gyre Heros}
 \setmonofont{TeX Gyre Cursor}
-\setmainjfont{IPAexMincho}        % 和文（TeX Live 標準）
-\usepackage{newtxmath}            % 数式を Times 系に
+\setmainjfont{IPAexMincho}      % 和文（TeX Live 標準）
+% \setmainjfont{HaranoAjiMincho} % ←太字警告を減らしたいならこちらも可
+
+\usepackage{newtxmath}          % 数式を Times 系に（AMS 記号も含む）
 
 % --- 他パッケージ ---
-\usepackage{cite}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath}            % ← amssymb は読み込まない
+% \usepackage{bm}               % 太字ベクトル等が必要なら任意で
 \usepackage{graphicx}
-\usepackage{hyperref}
 \usepackage{xcolor}
+\usepackage{cite}
+\usepackage{hyperref}           % できるだけ最後に
 
 % --- Title & Author ---
 \title{%
