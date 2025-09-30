@@ -14,8 +14,12 @@
 \usepackage{cite}
 \usepackage{balance}
 \usepackage{booktabs}
+
+% TikZ / pgfplots
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
+\usepackage{pgfplots}              % ← 追加（axis undefinedの解決）
+\pgfplotsset{compat=1.18}
 
 % ===== タイトル・著者 =====
 \title{COFにおけるAuメッキ薄化によるコスト合理化と信頼性評価\\
@@ -208,7 +212,7 @@ NPC接合（NPC bonding），
       xlabel={$1/T$ (1/K)},
       ylabel={$\ln(\mathrm{MTTF})$},
       grid=both,
-      ticklabel style={font=\scriptsize},
+      tick label style={font=\scriptsize},
       label style={font=\scriptsize}
     ]
       \addplot[mark=o,blue,thick] coordinates {
@@ -236,7 +240,7 @@ NPC接合（NPC bonding），
       xlabel={$\ln j$},
       ylabel={$\ln(\mathrm{MTTF})$},
       grid=both,
-      ticklabel style={font=\scriptsize},
+      tick label style={font=\scriptsize},
       label style={font=\scriptsize}
     ]
       \addplot[only marks,mark=*,blue] coordinates {
@@ -300,7 +304,7 @@ $k_{\mathrm{tot}}$ は単位係数（¥/µm$\cdot$cm$^2$）である。
       xlabel={$\Delta t$ [µm]},
       ylabel={$A_{\mathrm{Au,eff}}$ [cm$^2$]},
       grid=both,
-      ticklabel style={font=\scriptsize},
+      tick label style={font=\scriptsize},
       label style={font=\scriptsize}
     ]
       \addplot3[surf,domain=0.05:0.10,y domain=0.8:1.2,samples=11] {53*x*y};
@@ -375,7 +379,7 @@ Niバリア等の新規層は用いない前提で，既存プロセス窓内の
     % アクチュエータブロック
     \draw[fill=gray!10,rounded corners=1pt] (6,2) rectangle (66,14);
     \node[font=\scriptsize] at (36,8) {Actuator Block};
-    % ディメンジョン（1カラム対応で簡潔表示）
+    % ディメンジョン
     \draw[<->] (6,1) -- node[below,font=\scriptsize]{配線有効長 $\leq 60$\,mm(eq.)} (66,1);
     \draw[<->] (1,2) -- node[left,rotate=90,font=\scriptsize]{配線帯域 12--14\,mm} (1,14);
   \end{tikzpicture}
@@ -494,4 +498,4 @@ JEDEC Solid State Technology Association,
 製品化に従事。現在は独立系半導体研究者として、プロセス／デバイス教育、
 メモリアーキテクチャ、AIシステム統合に取り組んでいる。\\
 連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}
-
+\end{document}
