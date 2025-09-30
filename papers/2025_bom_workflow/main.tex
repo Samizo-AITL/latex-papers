@@ -5,21 +5,43 @@
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
 
-\setmainfont{TeX Gyre Termes}   % 英文 Times 系
-\setsansfont{TeX Gyre Heros}
-\setmonofont{TeX Gyre Cursor}
-\setmainjfont{IPAexMincho}      % 和文（TeX Live 標準）
-% \setmainjfont{HaranoAjiMincho} % ←太字警告を減らしたいならこちらも可
+% IEEEtran が NFSS 名 ptm/phv/pcr を期待するため、欧文フォントに割当てる
+\setmainfont{TeX Gyre Termes}[
+  Ligatures=TeX,
+  NFSSFamily=ptm
+]
+\setsansfont{TeX Gyre Heros}[
+  Ligatures=TeX,
+  NFSSFamily=phv
+]
+\setmonofont{TeX Gyre Cursor}[
+  NFSSFamily=pcr,
+  WordSpace={1,0,0}, HyphenChar=None, PunctuationSpace=WordSpace
+]
 
-\usepackage{newtxmath}          % 数式を Times 系に（AMS 記号も含む）
+% 和文：太字を持つ HaranoAji を既定に（警告低減）
+\setmainjfont{HaranoAjiMincho}[
+  Script=CJK,
+  YokoFeatures={JFM=ujis}, TateFeatures={JFM=ujisv}
+]
+
+% IPAex を使いたい場合はこちらに差し替え（太字/斜体は擬似で補う）
+% \setmainjfont{IPAexMincho}[
+%   Script=CJK,
+%   YokoFeatures={JFM=ujis}, TateFeatures={JFM=ujisv},
+%   AutoFakeBold=2.0, AutoFakeSlant=0.15
+% ]
+
+% --- 数式は Times 系（IEEEtran との相性◎） ---
+\usepackage{newtxmath}
 
 % --- 他パッケージ ---
-\usepackage{amsmath}            % ← amssymb は読み込まない
+\usepackage{amsmath}            % amssymb は newtxmath に内包されるので基本不要
 % \usepackage{bm}               % 太字ベクトル等が必要なら任意で
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{cite}
-\usepackage{hyperref}           % できるだけ最後に
+\usepackage[hidelinks]{hyperref} % できるだけ最後に
 
 % --- Title & Author ---
 \title{%
@@ -107,7 +129,7 @@ BOMを統合情報基盤と再定義し、設計から輸出管理に至るプ�
 
 % -------------------------------
 \bibliographystyle{IEEEtran}
-\bibliography{refs}
+\bibliography{refs}  % ← refs.bib を用意しない場合はこの2行を外す
 
 % -------------------------------
 \section*{著者略歴 / Author Biography}
