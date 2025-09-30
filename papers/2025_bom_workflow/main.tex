@@ -104,7 +104,6 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
   box/.style={draw, rounded corners=2pt, align=center, inner sep=2.5pt, minimum height=6.8mm, minimum width=26mm, very thick},
   flow/.style={-Latex, line width=0.8pt},
   ext/.style={-Latex, dashed, line width=0.7pt},
-  % カラースタイル（Mermaid相当の配色）
   design/.style={box, fill={rgb,255:red,209; green,233; blue,255}, draw={rgb,255:red,3; green,102; blue,214}},
   tech/.style={box, fill={rgb,255:red,255; green,243; blue,205}, draw={rgb,255:red,255; green,153; blue,0}},
   proc/.style={box, fill={rgb,255:red,230; green,255; blue,237}, draw={rgb,255:red,40; green,167; blue,69}},
@@ -119,7 +118,6 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \node (A) [design] {設計図面検討会\\\emph{Design Drawing Review}};
 \node (B) [design, right=of A] {設計図面\\\emph{Design Drawing}};
 \node (C) [design, right=of B] {設計通知\\\emph{Design Notice}};
-
 \draw[flow] (A) -- (B);
 \draw[flow] (B) -- (C);
 
@@ -131,17 +129,15 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \node (F) [tech, right=of E] {技術通知\\\emph{Technical Notice}};
 \node (G) [tech, right=of F] {関係部署配布\\\emph{Distribution to Depts.}};
 \node (H) [tech, right=of G] {構成部品表接続\\\emph{BOM Linkage}};
-
 \draw[flow] (C) -- (D);
 \draw[flow] (D) -- (E);
 \draw[flow] (E) -- (F);
 \draw[flow] (F) -- (G);
 \draw[flow] (G) -- (H);
 
-% 評価・積み上げ分岐
-% （負の距離は xshift/yshift に置き換え）
+% 評価・積み上げ分岐（負距離→xshift/yshiftで堅牢化）
 \node (H1) [tech, below left=6mm and 2mm of H, xshift=-2mm] {環境データ積み上げ判定\\(EChemSkip)\\\emph{Environmental Compliance}};
-\node (H2) [tech, below right=6mm and 2mm of H, xshift=2mm] {コスト積み上げ\\\emph{Cost Roll-up}};
+\node (H2) [tech, below right=6mm and 2mm of H, xshift= -2mm] {コスト積み上げ\\\emph{Cost Roll-up}};
 \draw[flow] (H) |- (H1);
 \draw[flow] (H) |- (H2);
 
@@ -166,7 +162,7 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \node (S1) [attr, left=20mm of H] {属性（設計時必須）\\
 {\scriptsize 図面番号/Rev \\ RoHS/REACH, LCA, SDS \\ コスト（基礎）}\\
 \emph{Design-time Attributes}};
-\draw[ext] (S1) -- (H);
+\draw[ext] (S1.east) -- (H.west);
 
 \node (S2) [attr, right=14mm of K] {属性（輸出時追加）\\
 {\scriptsize 輸出管理（ECCN）\\ 該非判定 \\ HSコード \\ 用途説明書}\\
@@ -182,7 +178,7 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \node (P2) [eval, above=of E] {量産評価\\{\scriptsize 工程能力 Cp/Cpk・品質検証}\\\emph{Mass Production Evaluation}};
 \draw[ext] (P2) -- (E);
 
-\node (P3) [eval, above right=3mm and 4mm of E, yshift=-4mm] {計測器情報\\{\scriptsize 三次元測定機・マイクロメータ・真円度計 等}\\\emph{Measurement Instruments}};
+\node (P3) [eval, above right=3mm and 4mm of E, xshift=-4mm] {計測器情報\\{\scriptsize 三次元測定機・マイクロメータ・真円度計 等}\\\emph{Measurement Instruments}};
 \draw[ext] (P3) -- (E);
 
 %--------------------------------
@@ -193,7 +189,7 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \node[title] at ($(K)!0.5!(L)+(-2mm,10mm)$) {\bfseries 調達 / Procurement};
 
 \end{tikzpicture}%
-}
+}%
 \caption{実務ワークフロー（設計→技術→調達）と属性・評価入力の関係}
 \label{fig:workflow_tikz}
 \end{figure*}
