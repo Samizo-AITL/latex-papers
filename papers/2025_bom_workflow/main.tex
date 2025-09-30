@@ -69,7 +69,8 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 
 % -------------------------------
 \section{General Workflow}
-本研究で対象とする一般的な設計から量産部品発注に至る業務フローを Fig.~\ref{fig:workflow} に示す。本フローは、製造業における典型的な「設計～調達～発注」プロセスを抽象化したものであり、以下のステップから構成される。
+本研究で対象とする一般的な設計から量産部品発注に至る業務フローを Table~\ref{tab:workflow_table} に示す。
+本フローは、製造業における典型的な「設計～調達～発注」プロセスを抽象化したものであり、以下のステップから構成される。
 
 \begin{enumerate}
   \item \textbf{設計図面検討 (Design Review)}  
@@ -252,7 +253,7 @@ BOM における部品管理は、単なる構成情報だけでなく、多様�
 部品単位で管理された属性情報は、そのままでは製品全体の適合性やコストを評価できない。そこで必要となるのが \textbf{積み上げ管理（Roll-up Management）} である。本手法では、部品属性をサブアセンブリ（Sub-Assembly）単位に集約し、さらに製品 BOM 全体へと統合することで、製品レベルでの包括的な評価を可能とする。
 
 \subsection{積み上げフロー}
-Roll-up の流れを Fig.~\ref{fig:rollup} に示す。
+Roll-up の流れを Table~\ref{tab:rollup} に示す。
 \begin{enumerate}
   \item \textbf{部品属性 (Part Attributes)}：各部品に付与された環境データ、コスト、輸出関連属性を定義
   \item \textbf{サブアセンブリ集約 (Sub-Assembly Roll-up)}：基板 Assy、筐体 Assy など中間単位で集約
