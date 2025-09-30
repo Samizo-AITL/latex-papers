@@ -1,0 +1,109 @@
+% !TeX program = pdflatex
+\documentclass[conference]{IEEEtran}
+
+% --- Packages ---
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{CJKutf8} % 日本語対応（pdfLaTeX用）
+
+% --- Title & Author ---
+\title{%
+設計から量産部品発注に至る一般的実務フローとBOM運用ルールの体系化 \\
+\large Systematization of Workflow from Design to Mass Production Ordering and Rules for BOM Operation
+}
+
+\author{%
+  \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
+  \IEEEauthorblockA{独立系半導体研究者（元セイコーエプソン） / Independent Semiconductor Researcher (ex-Seiko Epson)\\%
+  Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+  GitHub: \url{https://github.com/Samizo-AITL}}%
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+本研究は、製造業における「設計図面検討～量産部品発注」に至る一般的な実務プロセスを教育目的で抽象化し、部品表（BOM）を中核に据えた \textbf{部品コード体系（6桁＋枝番）・属性統合・積み上げ管理} の一体フレームを提示する。環境（RoHS/REACH）、コスト、輸出管理（ECCN/HS/用途説明）をBOMで同時に扱う点に新規性がある。
+\end{abstract}
+
+\begin{IEEEkeywords}
+BOM, Part Numbering, Roll-up Management, Export Control, RoHS, REACH, ECCN, HS Code, PLM, ERP
+\end{IEEEkeywords}
+
+% -------------------------------
+\section{Introduction}
+設計・調達・品質保証・輸出管理が分断されがちな現場において、暗黙知となりやすいコード運用と属性連携を形式知化する。本稿の目的は以下である。
+\begin{enumerate}
+  \item 一般的な設計～調達～発注フローの体系化
+  \item BOM中心のデータ連携ルールの提示
+  \item 教育・実務の両立性の検証
+\end{enumerate}
+
+% -------------------------------
+\section{General Workflow}
+設計図面検討 $\rightarrow$ 技術図面展開 $\rightarrow$ 部署配布 $\rightarrow$ BOM接続 $\rightarrow$ 調達・発注。  
+環境・コスト・輸出属性を並列に付与・更新することで、監査対応力と教育効果を高める。
+
+% -------------------------------
+\section{BOM Generation and Structured Data}
+BOMは単なる部品リストではなく、設計～調達～輸出をつなぐ共通言語である。  
+親子関係・数量・参照図面ID・属性（環境/コスト/輸出）を最小単位で保持し、部品更新時に積み上げ判定を再実行する。
+
+% -------------------------------
+\section{Part Numbering System}
+6桁コードを機能識別子、枝番を条件差管理とする。例：\texttt{ABCDEF-XX}。  
+桁別カテゴリ：1=機械部品、2=電子部品、6=材料（SDS必須）、9=治具。  
+機能が変わる場合は新しい6桁コードを発行する。
+
+% -------------------------------
+\section{Attributes and Export Control}
+図面・環境・コスト・輸出・消防法を属性として統合。  
+特に材料コード（先頭6）は危険物・環境・輸出の要配慮領域。  
+SDS更新時は必ずBOMを再評価する。
+
+% -------------------------------
+\section{Roll-up Management}
+部品属性 $\rightarrow$ サブAssy $\rightarrow$ 製品BOMへ集約。  
+製品レベルで環境適合（RoHS/REACH）、コスト合計、輸出可否（ECCN/HS/用途）を同時判定する。
+
+% -------------------------------
+\section{Rules for BOM Operation}
+設計変更時のルール：
+\begin{itemize}
+  \item 機能変化なし：枝番更新（軽微変更）
+  \item 機能変化あり：新6桁コード＋新図面
+  \item 材料コード：SDS・消防法判定必須、更新時はロールアップ再評価
+\end{itemize}
+
+% -------------------------------
+\section{Discussion}
+教育的効果：新人・学生の俯瞰理解を支援。  
+実務的効果：監査対応力・リスク低減。  
+課題：ERP/PLM実装差、規制改訂への追随コスト。
+
+% -------------------------------
+\section{Conclusion}
+BOMを統合情報基盤と再定義し、設計から輸出管理に至るプロセスを統合的に扱う教育・実務両立フレームを提示した。  
+今後はAIによる属性自動付与や国際標準との接続を進める。
+
+% -------------------------------
+\section*{Acknowledgment}
+本稿は公開可能な一般論に限定し、特定企業の機密情報は一切含まない。
+
+% -------------------------------
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+% -------------------------------
+\section*{著者略歴 / Author Biography}
+\begin{CJK}{UTF8}{min}
+\noindent\textbf{三溝 真一}（Shinichi Samizo）は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得した。  
+その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、そして、インクジェット薄膜ピエゾアクチュエータ及び PrecisionCore プリントヘッドの製品化に従事した。  
+現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、AIシステム統合などに取り組んでいる。  
+連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}．
+\end{CJK}
+
+\end{document}
