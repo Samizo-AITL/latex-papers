@@ -115,29 +115,31 @@ Au層はNPC接合時の濡れ性や表面状態の再現性に直結する重要
 さらにコスト感応度解析により 1チップ当たり約\SI{4}{JPY}の低減効果を見積もり，
 量産数量に外挿することで年間十億円規模の事業効果を見込めることを示した。
 
-\begin{figure}[t]
+% --- 図1：Au厚 仕様決定ロジック（コンパクト版） ---
+\begin{figure}[!t]
   \centering
-  \resizebox{\columnwidth}{!}{%
-  \begin{tikzpicture}[node distance=6mm and 8mm, >=Latex]
-    \tikzset{
-      box/.style={draw, rounded corners, align=center, inner sep=3pt}
-    }
-    \node[box] (start) {現行仕様\\Au \SI{0.5}{\micro\meter}$\pm$0.20};
-    \node[box, below=of start] (limit) {量産実績で\\下限\SI{0.30}{\micro\meter}維持};
-    \node[box, below=of limit] (spec) {工程能力 Cpk$\geq$1.67\\$\Rightarrow$ 新仕様\\\(\SI{0.425}{\micro\meter}\pm\SI{0.125}{\micro\meter}\)};
-    \node[box, below=of spec] (eval) {評価試験\\NPC, Ion migration, 環境加速};
-    \node[box, below=of eval] (cost) {コスト感応度解析\\約\SI{4}{JPY}/チップ};
-    \node[box, below=of cost] (impact) {事業効果：\\年間十億円規模};
+  \begin{tikzpicture}[
+    node distance=3mm and 6mm, >=Latex,
+    scale=0.88, every node/.style={transform shape},
+    box/.style={draw, rounded corners, align=center, inner sep=1pt, font=\scriptsize}
+  ]
+    \node[box] (start) {現行：Au 0.5\,\si{\micro\metre} $\pm$0.20};
+    \node[box, below=of start] (limit) {量産実績：下限 0.30\,\si{\micro\metre} 維持};
+    \node[box, below=of limit] (spec) {Cpk$\geq$1.67 $\Rightarrow$ 新仕様\\ 0.425\,\si{\micro\metre} $\pm$0.125};
+    \node[box, below=of spec] (eval) {評価：NPC，イオンマイグレーション，環境};
+    \node[box, below=of eval] (cost) {コスト感応度：\(\sim\)\SI{4}{JPY}/チップ};
+    \node[box, below=of cost] (impact) {事業効果：年間 十億円規模};
 
     \draw[->] (start) -- (limit);
     \draw[->] (limit) -- (spec);
     \draw[->] (spec) -- (eval);
     \draw[->] (eval) -- (cost);
     \draw[->] (cost) -- (impact);
-  \end{tikzpicture}%
-  }
-  \caption{Au厚仕様決定ロジック（1カラム適合）}
+  \end{tikzpicture}
+  \vspace{-0.5ex}
+  \caption{Au厚 仕様決定ロジック（1カラム圧縮版）}
   \label{fig:au-logic}
+  \vspace{-1.0ex}
 \end{figure}
 
 \section{本稿の貢献（Contributions）}
