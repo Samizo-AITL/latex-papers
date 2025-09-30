@@ -7,11 +7,12 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{xcolor}
-\usepackage{CJKutf8} % 日本語対応（pdfLaTeX用）
+\usepackage{newtxtext,newtxmath} % Times系（見栄え＆警告低減）
+\usepackage{CJKutf8}              % 日本語対応（pdflatex用）
 
 % --- Title & Author ---
 \title{%
-設計から量産部品発注に至る一般的実務フローとBOM運用ルールの体系化 \\
+設計から量産部品発注に至る一般的実務フローとBOM運用ルールの体系化\\
 \large Systematization of Workflow from Design to Mass Production Ordering and Rules for BOM Operation
 }
 
@@ -23,6 +24,8 @@
 }
 
 \begin{document}
+\begin{CJK}{UTF8}{min} % ← ここから日本語安全圏
+
 \maketitle
 
 \begin{abstract}
@@ -99,11 +102,10 @@ BOMを統合情報基盤と再定義し、設計から輸出管理に至るプ�
 
 % -------------------------------
 \section*{著者略歴 / Author Biography}
-\begin{CJK}{UTF8}{min}
 \noindent\textbf{三溝 真一}（Shinichi Samizo）は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得した。  
 その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、そして、インクジェット薄膜ピエゾアクチュエータ及び PrecisionCore プリントヘッドの製品化に従事した。  
 現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、AIシステム統合などに取り組んでいる。  
 連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}．
-\end{CJK}
 
+\end{CJK} % ← ここまで日本語安全圏
 \end{document}
