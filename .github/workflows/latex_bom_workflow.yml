@@ -22,24 +22,34 @@ jobs:
       WORKDIR: papers/2025_bom_workflow
       ROOT_TEX: main.tex
       ARTIFACT_PREFIX: 2025_bom_workflow
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install TeX Live full
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y texlive-full fonts-ipafont fonts-hanazono
-
-      - name: Compile LaTeX (LuaLaTeX via latexmk)
+      # xu-cheng/latex-action が TeX Live を自前セットアップ（tlmgr）します
+      - name: Compile LaTeX (LuaLaTeX + BibTeX via latexmk)
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: ${{ env.WORKDIR }}
           root_file: ${{ env.ROOT_TEX }}
           latexmk_use_lualatex: true
-          args: -interaction=nonstopmode -file-line-error
+          # ← BibTeX を必ず回す & エラーで止める
+          args: -bibtex -halt-on-error -interaction=nonstopmode -file-line-error
           cache: false
           continue_on_error: false
+          # 必要パッケージをインストール（軽量）
+          extra_packages: >
+            collection-luatex
+            collection-latexrecommended
+            collection-latexextra
+            collection-fontsrecommended
+            collection-langjapanese
+            newtx
+            haranoaji
+            tex-gyre
+            ieeeconf
+            ieeetran
 
       - name: List outputs
         if: always()
