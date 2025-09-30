@@ -7,6 +7,9 @@ on:
       - ".github/workflows/latex_bom_workflow.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -14,6 +17,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       WORKDIR: papers/2025_bom_workflow
       ROOT_TEX: main.tex
@@ -22,44 +26,52 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Compile LaTeX (LuaLaTeX)
+      - name: Compile LaTeX (LuaLaTeX via latexmk)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: ${{ env.ROOT_TEX }}
           working_directory: ${{ env.WORKDIR }}
-          latexmk_use_lualatex: true        # ← LuaLaTeXで直接PDF生成
+          root_file: ${{ env.ROOT_TEX }}
+          latexmk_use_lualatex: true              # LuaLaTeXで直接PDF
           args: -interaction=nonstopmode -file-line-error
+          # shell-escapeが必要になったら↓をtrueに
+          # latexmk_shell_escape: true
           cache: true
           continue_on_error: false
 
       - name: List outputs
         if: always()
-        run: ls -la "$WORKDIR" || true
+        run: |
+          echo "== ls -la ${WORKDIR} =="
+          ls -la "${WORKDIR}" || true
 
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_PREFIX }}-pdf-run${{ github.run_number }}
+          name: ${{ env.ARTIFACT_PREFIX }}-pdf-run${{ github.run_number }}-${{ github.sha.substr(0,7) }}
           path: ${{ env.WORKDIR }}/main.pdf
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30
 
       - name: Collect logs
         if: always()
         run: |
-          mkdir -p "$WORKDIR/_logs"
+          set -eu
+          mkdir -p "${WORKDIR}/_logs"
           exts="log aux fdb_latexmk fls toc out bbl blg synctex.gz lof lot lol run.xml"
           for e in $exts; do
-            [ -f "$WORKDIR/main.$e" ] && cp "$WORKDIR/main.$e" "$WORKDIR/_logs/" || true
+            f="${WORKDIR}/main.$e"
+            if [ -f "$f" ]; then cp "$f" "${WORKDIR}/_logs/"; fi
           done
-          (cd "$WORKDIR" && zip -r _logs.zip _logs || true)
+          # latexmkの補助ファイルも拾う
+          find "${WORKDIR}" -maxdepth 1 -type f \( -name "*.bcf" -o -name "*.xml" -o -name "*.brf" \) -exec cp {} "${WORKDIR}/_logs/" \; || true
+          ( cd "${WORKDIR}" && zip -r _logs.zip _logs >/dev/null 2>&1 || true )
 
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_PREFIX }}-logs-run${{ github.run_number }}
+          name: ${{ env.ARTIFACT_PREFIX }}-logs-run${{ github.run_number }}-${{ github.sha.substr(0,7) }}
           path: |
             ${{ env.WORKDIR }}/_logs.zip
             ${{ env.WORKDIR }}/_logs/**
