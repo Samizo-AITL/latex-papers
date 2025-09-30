@@ -74,69 +74,81 @@ NPC接合（NPC bonding），
 
 %================ Part 2: 背景・対象構造・仕様ロジック ================
 \section{背景（Problem Background）}
-ビジネスインクジェット（BIJ）ヘッドのCOF実装では，Auメッキ（以下，Au厚）が
-ワイヤボンドおよびNPC接合の初期接合性・長期信頼性に寄与する一方，
+ビジネスインクジェット（BIJ）ヘッドの合理化テーマの一つとして，
+COF実装におけるAuメッキ（以下，Au厚）の薄化が挙げられる。
+Au厚はNPC接合の初期接合性・長期信頼性を支える重要要素である一方，
 原材料コストの主要因でもある。
-従来は安全側に厚めの \SI{0.5}{\micro\meter} 設定が一般的であったが，
-歩留り・信頼性実績の蓄積と実プロセス能力の把握が進んだ結果，
-仕様最適化の余地があると判断した。
-本稿は，Au厚を薄化しても\emph{品質・信頼性を確保したまま}コストを下げられる
-設計・実験・評価の一連の手順をまとめたものである。
 
-\section{対象構造（COF Pad Stack Without Ni Barrier）}
-本検討のCOF外部端子は，\emph{Niバリア層を用いない}構造である。
-代表的な層構成の例を以下に示す（数値は代表値）：
+現行仕様は \SI{0.50}{\micro\meter} $\pm$ \SI{0.20}{\micro\meter} であり，
+量産実績として下限 \SI{0.30}{\micro\meter} でも信頼性が維持されてきた。
+この実績を前提に工程能力を解析したところ，
+下限を維持したまま工程能力 Cpk$\geq$1.67 を満たすためには，
+中心値を \SI{0.425}{\micro\meter}，公差幅 $\pm$\SI{0.125}{\micro\meter} とするのが妥当であることが確認された。
+
+本稿では，この新仕様に基づき，
+NPC接合信頼性・エレクトロマイグレーション・環境耐久性を評価し，
+品質と信頼性を損なわずにコスト削減を実現するための
+設計・実験・検証のプロセスを報告する。
+
+\section{対象構造（COF Pad Stack）}
+本検討のCOF外部端子は，Cu配線上にAuメッキを施したシンプルな構造である。
+代表的な層構成を以下に示す：
+
 \begin{itemize}
-  \item Cu配線：\SIrange{12}{18}{\micro\meter}
-  \item 下地：無電解/電解Cuダム（整形）
-  \item 仕上げ：Auメッキ（本検討の最適化対象）
+  \item Cu配線厚：約 \SI{8}{\micro\meter}
+  \item 表面仕上げ：Auメッキ（従来仕様：約 \SI{0.5}{\micro\meter}）
 \end{itemize}
-ここで，Auはワイヤボンド（Auワイヤ）およびNPC接合時の濡れ拡がり・表面状態の
-再現性確保に重要である。Niバリア非採用であっても，適切なAu厚とプロセス管理により
-拡散・界面反応の制御は可能であることを示す。
+
+すなわち，Au \SI{0.5}{\micro\meter} / Cu \SI{8}{\micro\meter} 構造を前提とし，
+Au厚を合理化対象として検討を行った。  
+Au層はNPC接合時の濡れ性や表面状態の再現性に直結する重要要素であり，
+工程能力を踏まえた厚み最適化が求められる。
 
 \section{Au厚 仕様ロジック（Specification Logic）}
-図\ref{fig:au-logic}に，本検討で用いた仕様決定の意思決定フローを示す。
-従来仕様（\SI{0.5}{\micro\meter}）から出発し，
-統計的ばらつきとプロセス能力を踏まえて新仕様
-\SI{0.425(125)}{\micro\meter}（中心値\SI{0.425}{\micro\meter}，許容幅\(\pm\)\SI{0.125}{\micro\meter}）
-を策定した。NPC接合信頼性，エレクトロマイグレーション（EM），環境加速の三系統で
-\SI{0.30}{\micro\meter} 下限側のマージンを検証し，コスト感応度を算定して
-1チップ当たり約\SI{4}{JPY}の低減効果を見積もった。これを量産数量に外挿し，
-年間で十億円規模の事業効果を得る見込みを示す。
+図\ref{fig:au-logic}に，本検討で用いた仕様決定のフローを示す。
+現行仕様は Au \SI{0.5}{\micro\meter}（許容幅 $\pm$0.20\,µm）であり，
+量産実績に基づき \SI{0.30}{\micro\meter} が信頼性上の下限として機能していることが確認されている。
+そこで工程能力 Cpk$\geq$1.67 を満たす範囲を逆算し，
+新仕様を \SI{0.425}{\micro\meter}$\pm$\SI{0.125}{\micro\meter} と定めた。
+この仕様に基づき NPC接合信頼性，エレクトロマイグレーション（EM），
+環境加速試験の3系統で評価を実施し，Au薄化によるリスクの有無を検証した。
+さらにコスト感応度解析により 1チップ当たり約\SI{4}{JPY}の低減効果を見積もり，
+量産数量に外挿することで年間十億円規模の事業効果を見込めることを示した。
 
 \begin{figure}[t]
   \centering
-  % 1カラム幅に強制フィット（IEEEtranのcolumn幅）
   \resizebox{\columnwidth}{!}{%
   \begin{tikzpicture}[node distance=6mm and 8mm, >=Latex]
     \tikzset{
       box/.style={draw, rounded corners, align=center, inner sep=3pt}
     }
-    \node[box] (start) {従来仕様\\Au \SI{0.5}{\micro\meter}};
-    \node[box, below=of start] (spec) {新仕様策定\\\(\SI{0.425}{\micro\meter}\pm\SI{0.125}{\micro\meter}\)};
-    \node[box, below=of spec] (eval) {信頼性試験\\NPC, EM, 環境加速};
-    \node[box, below=of eval] (ok) {下限\SI{0.30}{\micro\meter}の\\マージン確認};
-    \node[box, below=of ok] (cost) {コスト感応度確認\\約\SI{4}{JPY}/チップ};
+    \node[box] (start) {現行仕様\\Au \SI{0.5}{\micro\meter}$\pm$0.20};
+    \node[box, below=of start] (limit) {量産実績で\\下限\SI{0.30}{\micro\meter}維持};
+    \node[box, below=of limit] (spec) {工程能力 Cpk$\geq$1.67\\$\Rightarrow$ 新仕様\\\(\SI{0.425}{\micro\meter}\pm\SI{0.125}{\micro\meter}\)};
+    \node[box, below=of spec] (eval) {評価試験\\NPC, EM, 環境加速};
+    \node[box, below=of eval] (cost) {コスト感応度解析\\約\SI{4}{JPY}/チップ};
     \node[box, below=of cost] (impact) {事業効果：\\年間十億円規模};
 
-    \draw[->] (start) -- (spec);
+    \draw[->] (start) -- (limit);
+    \draw[->] (limit) -- (spec);
     \draw[->] (spec) -- (eval);
-    \draw[->] (eval) -- (ok);
-    \draw[->] (ok) -- (cost);
+    \draw[->] (eval) -- (cost);
     \draw[->] (cost) -- (impact);
   \end{tikzpicture}%
   }
-  \caption{Au厚 仕様決定ロジック（1カラム適合）}
+  \caption{Au厚仕様決定ロジック（1カラム適合）}
   \label{fig:au-logic}
 \end{figure}
 
 \section{本稿の貢献（Contributions）}
-本稿の要点は次の3点である。
+本稿の主な貢献は以下の3点である。
 \begin{enumerate}
-  \item Niバリア非採用のCOF端子に対し，Au薄化でも接合信頼性を満たす設計則を整理。
-  \item \SI{0.30}{\micro\meter} 下限に対する実証的マージン（NPC/EM/環境）を提示。
-  \item コスト感応度から量産効果を一貫評価し，意思決定につながる定量指標を提示。
+  \item COF外部端子におけるAuメッキ薄化を対象とし，量産実績を踏まえた合理的な新仕様
+        （0.425$\pm$0.125\,µm）の設定プロセスを提示した。
+  \item 下限0.30\,µmを維持したうえで，NPC接合信頼性，エレクトロマイグレーション，
+        環境加速試験により実用条件で十分な信頼性マージンを確認した。
+  \item コスト感応度解析を行い，チップ当たり数円，製品全体で年間十億円規模の
+        削減効果を定量的に示し，設計と事業価値を結び付けた。
 \end{enumerate}
 
 %================ Part 3: 試験計画とリスク検証 ================
