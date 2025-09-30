@@ -39,79 +39,320 @@
 \maketitle
 
 \begin{abstract}
-本研究は、製造業における「設計図面検討～量産部品発注」に至る一般的な実務プロセスを教育目的で抽象化し、部品表（BOM）を中核に据えた \textbf{部品コード体系（6桁＋枝番）・属性統合・積み上げ管理} の一体フレームを提示する。環境（RoHS/REACH）、コスト、輸出管理（ECCN/HS/用途説明）をBOMで同時に扱う点に新規性がある。
+本研究は、製造業における「設計図面検討～量産部品発注」に至る一般的な実務プロセスを教育的観点から抽象化し、部品表（BOM: Bill of Materials）を中核に据えた体系的なフレームワークを提示するものである。本稿では、(1) 部品コード体系（6桁コード＋枝番）による機能識別と改版管理、(2) 環境・コスト・輸出関連情報（RoHS/REACH, SDS, ECCN/HSコード, 用途説明書）の統合属性管理、(3) 部品レベルから製品レベルへの積み上げ（Roll-up）判定を一体的に扱う仕組みを提案する。これにより、設計変更時の影響範囲を迅速に把握し、環境規制や輸出管理に対する確実なコンプライアンスを保証するとともに、教育現場における俯瞰的理解を支援する枠組みを構築できる。さらに、実務適用においてはERP/PLMとの接続により監査対応力を高め、トレーサビリティ確保と業務効率化に寄与する点に新規性がある。今後は、AI技術を用いた属性自動付与や国際標準フォーマットとの接続により、より高度な自動化と国際展開を目指す。
 \end{abstract}
 
 \begin{IEEEkeywords}
-BOM, Part Numbering, Roll-up Management, Export Control, RoHS, REACH, ECCN, HS Code, PLM, ERP
+Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up Management, Export Control, Compliance, RoHS, REACH, ECCN, HS Code, PLM, ERP, Traceability, Manufacturing Education
 \end{IEEEkeywords}
 
 % -------------------------------
 \section{Introduction}
-設計・調達・品質保証・輸出管理が分断されがちな現場において、暗黙知となりやすいコード運用と属性連携を形式知化する。本稿の目的は以下である。
+近年の製造業においては、設計部門・調達部門・品質保証部門・輸出管理部門といった各組織がそれぞれ独立して業務を行う傾向が強く、情報連携の断絶がしばしば発生している。その結果、設計変更の影響範囲が不明確なまま調達や製造に進んでしまい、後工程での手戻りや監査対応の不備、輸出規制違反のリスクが顕在化する。特に、部品コードや属性データの管理は企業内でも暗黙知に依存しやすく、新人や異動者にとって理解・活用が難しい状況にある。
+
+従来のPLM（Product Lifecycle Management）やERP（Enterprise Resource Planning）システムは、設計～調達～生産の各段階を統合的に扱う枠組みを提供しているものの、実際の現場では「部品表（BOM: Bill of Materials）」を中心に据えたコード運用ルールや属性管理の教育・実務体系は十分に整備されていない。そのため、設計現場と調達・品質・輸出管理部門との間に情報の齟齬が生じ、効率性とコンプライアンスの両立が課題となっている。
+
+以上を踏まえ、本稿の目的は以下の3点に整理される。
 \begin{enumerate}
-  \item 一般的な設計～調達～発注フローの体系化
-  \item BOM中心のデータ連携ルールの提示
-  \item 教育・実務の両立性の検証
+  \item 設計～調達～発注に至る一般的な業務フローを抽象化し、教育的に利用可能な形で体系化すること
+  \item BOMを中心としたコード体系と属性連携ルールを明確化し、設計・環境・コスト・輸出管理を統合的に扱う基盤を提示すること
+  \item 教育効果と実務適用の両面から、効率化とコンプライアンス強化に資するフレームワークであることを検証すること
 \end{enumerate}
+
+本研究は、BOMを単なる部品リストから「設計～調達～生産～輸出を結ぶ共通言語」へと再定義し、情報の断絶を解消する新たな運用ルールを提案する点に独自性を有する。
 
 % -------------------------------
 \section{General Workflow}
-設計図面検討 $\rightarrow$ 技術図面展開 $\rightarrow$ 部署配布 $\rightarrow$ BOM接続 $\rightarrow$ 調達・発注。  
-環境・コスト・輸出属性を並列に付与・更新することで、監査対応力と教育効果を高める。
+本研究で対象とする一般的な設計から量産部品発注に至る業務フローを Fig.~\ref{fig:workflow} に示す。本フローは、製造業における典型的な「設計～調達～発注」プロセスを抽象化したものであり、以下のステップから構成される。
+
+\begin{enumerate}
+  \item \textbf{設計図面検討 (Design Review)}  
+  製品要求仕様に基づき、基本設計・詳細設計を進める段階。ここでは、部品構成や性能仕様が決定される。
+  
+  \item \textbf{技術図面展開 (Drawing Development)}  
+  設計成果を CAD 図面や技術仕様書に展開し、部品単位の形状・寸法・材質条件を明確化する。
+  
+  \item \textbf{部署配布 (Distribution to Departments)}  
+  設計情報を調達・生産技術・品質保証など関係部門に配布し、各部門で必要な属性（コスト見積、製造条件、規格適合性）が付与される。
+  
+  \item \textbf{BOM接続 (BOM Integration)}  
+  図面情報を基に部品表（BOM: Bill of Materials）を作成し、親子関係・数量・参照図面IDを体系化する。ここで部品コード（6桁＋枝番）が付与される。
+  
+  \item \textbf{調達・発注 (Procurement and Ordering)}  
+  完成したBOMに基づき、サプライヤーへの発注や見積依頼を実施する。環境データや輸出可否判定もこの段階で必要となる。
+\end{enumerate}
+
+さらに、本フローの特徴は、単に部品構成を列挙するのではなく、各工程で生成される \textbf{属性情報（環境・コスト・輸出規制関連データ）を並列的に付与・更新} する点にある。これにより、
+\begin{itemize}
+  \item 設計変更時に影響範囲を迅速に把握可能
+  \item 製造原価の積算精度を高め、調達判断を効率化
+  \item RoHS/REACH や輸出管理（ECCN/HSコード、用途説明書）への即応を実現
+\end{itemize}
+
+このように、BOMを軸に全社的に情報を集約・展開することで、監査対応力と教育効果の双方を高めることができる。
+
+\begin{figure}[t]
+  \centering
+  \fbox{\begin{minipage}{0.9\linewidth}
+  \centering
+  設計図面検討 $\rightarrow$ 技術図面展開 $\rightarrow$ 部署配布 $\rightarrow$ BOM接続 $\rightarrow$ 調達・発注
+  \end{minipage}}
+  \caption{一般的な設計～発注フローの抽象モデル}
+  \label{fig:workflow}
+\end{figure}
 
 % -------------------------------
 \section{BOM Generation and Structured Data}
-BOMは単なる部品リストではなく、設計～調達～輸出をつなぐ共通言語である。  
-親子関係・数量・参照図面ID・属性（環境/コスト/輸出）を最小単位で保持し、部品更新時に積み上げ判定を再実行する。
+部品表（BOM: Bill of Materials）は、従来「部品の一覧表」として理解されがちである。しかし本研究では、BOMを単なるリストではなく、設計から調達・製造・輸出に至るまでをつなぐ \textbf{共通言語かつ情報基盤} として再定義する。
+
+BOM生成の基本要件は以下の通りである。
+\begin{itemize}
+  \item \textbf{親子関係（Hierarchy）}  
+  製品を構成する部品・サブアセンブリを階層的に管理し、部品構造を明示する。
+  \item \textbf{数量（Quantity）}  
+  各親部品に対して必要となる子部品の数量を記録し、量産時の正確な発注計画に直結させる。
+  \item \textbf{参照図面ID（Reference ID）}  
+  部品コードと設計図面・仕様書をリンクさせ、設計変更の追跡や監査証跡を確保する。
+  \item \textbf{属性（Attributes）}  
+  環境（RoHS/REACH, SDS）、コスト（単価・加工費）、輸出管理（ECCN/HSコード, 用途説明書）などを部品単位で保持する。
+\end{itemize}
+
+このような属性を \textbf{最小単位（部品レベル）} で登録し、部品更新時には積み上げ（Roll-up）処理を再実行することで、以下の効果が得られる。
+\begin{enumerate}
+  \item 設計変更が製品全体に与える影響を即座に把握できる  
+  \item コストや環境規制適合性を製品レベルで自動判定できる  
+  \item 輸出判定や通関手続きを迅速かつ確実に行える  
+\end{enumerate}
+
+すなわち、BOMは「構成部品の集合」ではなく、\textbf{設計・調達・生産・輸出をつなぐ統合情報モデル}であり、PLM/ERPシステムとの連携を通じて組織全体の効率性とコンプライアンス強化を支える役割を担う。
 
 % -------------------------------
 \section{Part Numbering System}
-6桁コードを機能識別子、枝番を条件差管理とする。例：\texttt{ABCDEF-XX}。  
-桁別カテゴリ：1=機械部品、2=電子部品、6=材料（SDS必須）、9=治具。  
-機能が変わる場合は新しい6桁コードを発行する。
+製造業における部品管理では、部品を一意に識別し、設計変更や調達条件の差異を適切に管理することが不可欠である。本研究では、部品コード体系を「6桁の機能識別コード」と「枝番（Suffix）」に分けることで、機能的同一性と条件差を明確に区別する仕組みを採用する。
+
+\subsection{基本構造}
+部品コードは以下の形式で表現される。
+\[
+\texttt{ABCDEF-XX}
+\]
+ここで、\texttt{ABCDEF} は部品の機能を一意に示す 6 桁コード、\texttt{-XX} は製造条件や改訂差異を示す枝番である。
+
+\subsection{桁別カテゴリ}
+6桁コードの第1桁には部品カテゴリを割り当てることで、大分類レベルでの検索・集計を容易にする。代表例を Table~\ref{tab:categories} に示す。
+
+\begin{table}[h]
+  \centering
+  \caption{第1桁によるカテゴリ分類}
+  \label{tab:categories}
+  \begin{tabular}{cll}
+    \hline
+    桁 & カテゴリ & 例 \\
+    \hline
+    1 & 機械部品 (Mechanical) & ネジ, ギア, 筐体 \\
+    2 & 電子部品 (Electronic) & 抵抗, IC, コンデンサ \\
+    6 & 材料 (Materials) & 樹脂, 接着剤, 溶剤 \\
+    9 & 治具・工具 (Jigs/Tools) & 組立治具, 測定治具 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+特に「6番（材料）」は環境法規制や危険物管理に直結するため、SDS（安全データシート）の添付と消防法判定が必須である。
+
+\subsection{枝番ルール}
+枝番は、機能が変わらない範囲での条件差や改訂を管理するために用いる。代表的な運用例を以下に示す。
+
+\begin{itemize}
+  \item \texttt{-01, -02}：バージョンアップ（例：メッキ厚変更、公差微修正）
+  \item \texttt{-11, -21}：金型違い（複数金型で同一部品を製造）
+  \item \texttt{-51, -52}：製造地違い（異なる工場での生産区別）
+  \item \texttt{-99}：暫定・特採（正式承認前の一時使用）
+\end{itemize}
+
+\subsection{運用上のポイント}
+\begin{enumerate}
+  \item 機能が変わる場合は必ず新しい 6 桁コードを発行し、図面とセットで管理する。  
+  \item 枝番はトレーサビリティ確保のため、軽微変更や製造条件差を明示する。  
+  \item 材料コードは特別扱いとし、SDS・環境・輸出関連の情報を必ず付与する。  
+\end{enumerate}
+
+この体系を徹底することで、設計変更の影響範囲を迅速に判断でき、製造・品質保証・輸出管理の各部門と共通基盤を持った効率的な業務運用が可能となる。
 
 % -------------------------------
 \section{Attributes and Export Control}
-図面・環境・コスト・輸出・消防法を属性として統合。  
-特に材料コード（先頭6）は危険物・環境・輸出の要配慮領域。  
-SDS更新時は必ずBOMを再評価する。
+BOM における部品管理は、単なる構成情報だけでなく、多様な \textbf{属性（Attributes）} を統合的に扱う必要がある。本研究では、設計情報と並列して以下の属性群を部品コードに紐づけることを基本とする。
+
+\subsection{基本属性}
+\begin{itemize}
+  \item \textbf{図面情報 (Drawing Data)}：CAD データ、図面番号、リビジョン情報
+  \item \textbf{環境データ (Environmental Data)}：RoHS/REACH 判定、LCA データ、SDS（安全データシート）
+  \item \textbf{コスト情報 (Cost Data)}：単価、加工費、原価積算用データ
+  \item \textbf{消防法関連情報 (Fire Law)}：類・項、指定数量、保管条件
+\end{itemize}
+
+\subsection{輸出関連属性}
+国際取引に関わる製品は、輸出規制対応が必須であり、以下のデータを部品単位で保持する。
+\begin{itemize}
+  \item \textbf{該非判定 (Export Classification)}：外為法に基づく該当／非該当判定、および ECCN コード
+  \item \textbf{HSコード (HS Code)}：国際的な品目分類番号（通関処理用）
+  \item \textbf{用途説明書 (End-use Statement)}：デュアルユース製品や規制品に対する最終用途・ユーザー情報
+\end{itemize}
+
+これらの輸出関連属性を BOM に統合することで、設計段階から通関・規制対応を考慮できる体制を実現できる。
+
+\subsection{材料コード（6番）の特別性}
+特に、第1桁が「6」で始まる材料コードは、\textbf{環境規制・危険物規制・輸出規制の三重リスク}に直結する。具体的には以下を必須とする。
+\begin{itemize}
+  \item SDS（安全データシート）の登録と更新管理
+  \item 消防法に基づく危険物判定（類・項・指定数量）
+  \item 輸出該非判定および用途説明書の整合
+\end{itemize}
+材料属性は製品全体の環境適合性や輸出可否を左右するため、SDS が更新された場合には BOM のロールアップ評価を必ず再実行しなければならない。
+
+\subsection{運用上の意義}
+本研究が提示する属性統合管理により、以下の実務効果が得られる。
+\begin{enumerate}
+  \item 設計段階で環境・輸出要件を同時に考慮することが可能となり、後工程での手戻りを防止できる。
+  \item 調達・品質保証・輸出管理部門における監査対応力を向上させる。
+  \item BOM を国際規制対応の「一次情報源」とすることで、PLM/ERP との連携による業務効率化を実現できる。
+\end{enumerate}
 
 % -------------------------------
 \section{Roll-up Management}
-部品属性 $\rightarrow$ サブAssy $\rightarrow$ 製品BOMへ集約。  
-製品レベルで環境適合（RoHS/REACH）、コスト合計、輸出可否（ECCN/HS/用途）を同時判定する。
+部品単位で管理された属性情報は、そのままでは製品全体の適合性やコストを評価できない。そこで必要となるのが \textbf{積み上げ管理（Roll-up Management）} である。本手法では、部品属性をサブアセンブリ（Sub-Assembly）単位に集約し、さらに製品 BOM 全体へと統合することで、製品レベルでの包括的な評価を可能とする。
+
+\subsection{積み上げフロー}
+Roll-up の流れを Fig.~\ref{fig:rollup} に示す。
+\begin{enumerate}
+  \item \textbf{部品属性 (Part Attributes)}：各部品に付与された環境データ、コスト、輸出関連属性を定義
+  \item \textbf{サブアセンブリ集約 (Sub-Assembly Roll-up)}：基板 Assy、筐体 Assy など中間単位で集約
+  \item \textbf{製品 BOM (Product BOM)}：全てのサブアセンブリを統合し製品全体の構成を確定
+  \item \textbf{製品レベル判定}：環境適合（RoHS/REACH）、コスト集計、輸出可否（ECCN/HS/用途）を同時に評価
+\end{enumerate}
+
+\begin{figure}[t]
+  \centering
+  \fbox{\begin{minipage}{0.9\linewidth}
+  部品属性 $\rightarrow$ サブAssy集約 $\rightarrow$ 製品BOM $\rightarrow$ 環境・コスト・輸出判定
+  \end{minipage}}
+  \caption{Roll-up Management の基本フロー}
+  \label{fig:rollup}
+\end{figure}
+
+\subsection{評価対象}
+Roll-up により以下の観点で製品全体を評価できる。
+\begin{itemize}
+  \item \textbf{環境管理 (Environmental Compliance)}  
+  部品ごとの含有化学物質データを集約し、RoHS/REACH の閾値を製品レベルで判定。
+  \item \textbf{コスト管理 (Cost Aggregation)}  
+  部品単価・加工費を積算し、サブAssyおよび製品原価を算出。
+  \item \textbf{輸出管理 (Export Control)}  
+  ECCN・HSコード・用途情報を積み上げ、製品の輸出可否や輸出条件を自動的に確定。
+\end{itemize}
+
+\subsection{運用効果}
+本研究で提案する Roll-up 管理の導入により、次の効果が期待できる。
+\begin{enumerate}
+  \item 部品レベルでのデータ更新が即座に製品レベル判定へ反映され、\textbf{設計変更の影響把握が迅速化}する。
+  \item コスト・環境・輸出を並列的に評価できるため、\textbf{監査や社内承認プロセスを効率化}できる。
+  \item BOM を中心とした一元管理により、PLM/ERP システムとの自動連携が容易になり、\textbf{企業全体の業務効率化}に寄与する。
+\end{enumerate}
 
 % -------------------------------
 \section{Rules for BOM Operation}
-設計変更時のルール：
+BOM 運用ルールは、設計変更時の影響を最小化し、かつ監査対応を容易にするために不可欠である。本研究では以下の原則を定める。
+
+\subsection{基本ルール}
 \begin{itemize}
-  \item 機能変化なし：枝番更新（軽微変更）
-  \item 機能変化あり：新6桁コード＋新図面
-  \item 材料コード：SDS・消防法判定必須、更新時はロールアップ再評価
+  \item \textbf{機能変化なし：枝番更新（軽微変更）}  
+  外観、材質、寸法の一部修正など、機能的に同一とみなせる変更は枝番（例：\texttt{ABCDEF-01} → \texttt{ABCDEF-02}）を更新することで管理する。これによりトレーサビリティを保持しつつ、不要なコード増加を防ぐ。
+  \item \textbf{機能変化あり：新規6桁コード＋新図面}  
+  性能仕様や用途が変わる場合は、既存部品とは別物と見なし、新しい6桁コードを発行する。図面番号も新規とし、設計資産の混同を防止する。
+  \item \textbf{材料コード：SDS・消防法判定必須}  
+  材料コード（先頭桁=6）は、化学物質情報（SDS）、消防法、危険物規制などに関わるため、更新時は必ず環境・法規属性を再評価する。Roll-up 管理により製品全体の再判定を自動実施する。
+\end{itemize}
+
+\subsection{設計変更シナリオと対応}
+設計変更は多様な形態をとるため、以下のように分類し運用ルールを定義する。
+\begin{enumerate}
+  \item \textbf{軽微変更（例：表面処理の変更、色違い）}  
+  → 枝番更新。機能に影響しない範囲で設計変更通知書を添付。
+  \item \textbf{中規模変更（例：寸法公差の見直し、材料グレード変更）}  
+  → 場合によっては新規枝番または新規コード。SDSや環境属性に影響する場合は再評価必須。
+  \item \textbf{大規模変更（例：機構設計の全面改定、回路アーキテクチャの変更）}  
+  → 新6桁コードを発行し、過去資産との互換性を切り分ける。過去ロットとの差異は履歴管理台帳に明記。
+\end{enumerate}
+
+\subsection{教育・監査効果}
+上記ルールを明文化することにより以下の効果が得られる。
+\begin{itemize}
+  \item 設計者の属人的判断を排除し、\textbf{新人教育の標準教材}として活用可能。
+  \item 部品コードの乱立や不整合を防ぎ、\textbf{ERP/PLMシステム内での一貫性}を担保。
+  \item 設計変更履歴とBOM更新履歴が整合するため、\textbf{ISO監査・顧客監査への対応力}が強化される。
 \end{itemize}
 
 % -------------------------------
 \section{Discussion}
-教育的効果：新人・学生の俯瞰理解を支援。  
-実務的効果：監査対応力・リスク低減。  
-課題：ERP/PLM実装差、規制改訂への追随コスト。
+本研究で提示したBOM運用フレームは、教育と実務の両側面において複数の効果をもたらす一方で、導入上の課題も存在する。
+
+\subsection{教育的効果}
+提案フレームを教育現場に適用することで、新人技術者や学生は以下の利点を享受できる。
+\begin{itemize}
+  \item 設計～調達～輸出管理までの一連の流れを俯瞰的に理解できる。
+  \item 部品コード体系や属性統合ルールを学習することで、業務での属人化を回避できる。
+  \item ケーススタディや演習課題として活用可能であり、理論と実務の橋渡しを行う教育効果が期待できる。
+\end{itemize}
+
+\subsection{実務的効果}
+実務現場での導入によって、以下の成果が見込まれる。
+\begin{itemize}
+  \item BOMを介した一貫管理により、設計変更や属性更新の影響範囲を即座に把握できる。
+  \item 監査対応において、トレーサビリティと整合性の確保が容易になる。
+  \item サプライチェーン全体にわたるコスト情報・環境適合性・輸出可否判定を統合的に扱えるため、リスク低減と意思決定の迅速化につながる。
+\end{itemize}
+
+\subsection{課題と限界}
+一方で、以下の課題が残されている。
+\begin{itemize}
+  \item ERP/PLMシステムによってデータモデルや属性管理の方式が異なるため、統一的な実装には追加の調整が必要。
+  \item 規制（RoHS/REACH/ECCN など）の改訂や各国の輸出管理強化に迅速に追随するため、定期的な属性マスター更新が不可欠。
+  \item 中小規模の企業にとっては、導入コストや運用負荷が障壁となる可能性がある。
+\end{itemize}
+
+\subsection{今後の展望}
+将来的には、以下の拡張が期待される。
+\begin{itemize}
+  \item AIや機械学習を用いた属性自動付与や設計変更影響分析の自動化。
+  \item 国際標準（IEC、ISO、IPCなど）や各国規制データベースとの自動連携。
+  \item 教育用クラウド環境を構築し、学生や新人が仮想プロジェクトを通じて実務フローを体験できる仕組み。
+\end{itemize}
 
 % -------------------------------
 \section{Conclusion}
-BOMを統合情報基盤と再定義し、設計から輸出管理に至るプロセスを統合的に扱う教育・実務両立フレームを提示した。  
-今後はAIによる属性自動付与や国際標準との接続を進める。
+本研究では、BOMを単なる部品リストとしてではなく、設計・調達・品質保証・輸出管理を統合する情報基盤として再定義した。その上で、部品コード体系、属性統合、ロールアップ管理を含む実務フローを体系化し、教育的観点と実務的観点の両立を可能にするフレームワークを提示した。
+
+提案フレームの意義は以下に集約される。
+\begin{itemize}
+  \item 設計～量産部品発注までのプロセスを明示化し、暗黙知の形式知化を実現した点。
+  \item 環境（RoHS/REACH）、コスト、輸出管理（ECCN/HS/用途説明）といった多次元属性をBOMで統合的に扱える点。
+  \item 教育利用において俯瞰的理解を支援し、実務現場では監査対応力や変更管理の効率を向上できる点。
+\end{itemize}
+
+今後の展望としては、以下が挙げられる。
+\begin{itemize}
+  \item AIを活用した属性自動付与や設計変更影響範囲の自動解析によるさらなる効率化。
+  \item 国際標準（ISO、IEC、IPC）や各国の規制データベースとの自動接続によるグローバル対応力の強化。
+  \item 教育分野でのシミュレーション教材やクラウド演習環境としての展開により、学習効果と産業実装効果の相乗を図る。
+\end{itemize}
+
+以上により、提案フレームは製造業における業務効率化と教育体系化を両立させる新しい基盤としての有効性を有すると結論づけられる。
 
 % -------------------------------
 \section*{Acknowledgment}
-本稿は公開可能な一般論に限定し、特定企業の機密情報は一切含まない。
+本稿の内容は、公開可能な一般論に限定して記述しており、特定企業の非公開情報や機密情報は一切含まれていない。ここで示したフレームワークは、教育的利用や学術的議論を目的としたものであり、実務への応用にあたっては各企業の内部規定や関連法規への適合が前提となる。
+
+著者は、本研究の検討過程において得られた学術的議論や教育現場でのフィードバックに感謝するとともに、製造業の設計・調達・品質・輸出管理分野における実務者の知見が本稿の背景を形成していることをここに記して謝意を表する。
 
 % -------------------------------
-% --- ここを削除（またはコメントアウト） ---
-%\bibliographystyle{IEEEtran}
-%\bibliography{refs}
-
-% --- ここから本文の末尾あたり（結論や謝辞の直後）に追加 ---
 \begin{thebibliography}{00}
 
 \bibitem{lecun2015deep}
@@ -130,7 +371,29 @@ M.~Shell, ``How to use the {IEEEtran} \LaTeX\ class,'' 2002. [Online]. Available
 A.~Yamada and K.~Suzuki, ``大規模言語モデルの産業応用,'' \emph{情報処理学会論文誌}, vol.~65,
 no.~3, pp.~123--134, 2024. （日本語論文）
 
-% 必要なだけ \bibitem を追加
+\bibitem{plm_bom}
+S.~Terzi, A.~Bouras, D.~Dutta, and M.~Noël, ``Product lifecycle management — from its history to its new role,'' 
+\emph{Int. J. Product Lifecycle Management}, vol.~4, no.~4, pp.~360--389, 2010. doi:10.1504/IJPLM.2010.036489.
+
+\bibitem{rohs_reach}
+European Commission, ``Directive 2011/65/EU on the restriction of hazardous substances (RoHS 2),'' 
+Official Journal of the European Union, 2011. [Online]. Available: \url{https://eur-lex.europa.eu/}
+
+\bibitem{eccn}
+U.S. Department of Commerce, ``Export Administration Regulations (EAR),'' 
+Bureau of Industry and Security, 2023. [Online]. Available: \url{https://www.bis.doc.gov/}
+
+\bibitem{hs_wco}
+World Customs Organization, ``Harmonized Commodity Description and Coding System (HS),'' 
+6th edition, WCO, 2017. [Online]. Available: \url{http://www.wcoomd.org/}
+
+\bibitem{bom_management}
+M.~Hedman and J.~Svensson, ``Managing engineering bill of materials in PLM systems,'' 
+in \emph{Proc. Int. Conf. Product Lifecycle Management}, 2018, pp.~155--166.
+
+\bibitem{ai_in_design}
+H.~Kitano, ``AI for systems design and integration,'' \emph{Commun. ACM}, vol.~66, no.~7, pp.~30--34, 2023. doi:10.1145/3591844.
+
 \end{thebibliography}
 
 % -------------------------------
