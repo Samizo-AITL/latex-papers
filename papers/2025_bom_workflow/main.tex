@@ -138,8 +138,7 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 \draw[flow] (F) -- (G);
 \draw[flow] (G) -- (H);
 
-% 評価・積み上げ分岐
-% （※ and の負値指定をやめ、xshift で左にオフセット）
+% 評価・積み上げ分岐（負の and をやめ xshift で左右オフセット）
 \node (H1) [tech, below=6mm of H, xshift=-2mm] {環境データ積み上げ判定\\(EChemSkip)\\\emph{Environmental Compliance}};
 \node (H2) [tech, below=6mm of H, xshift= 2mm] {コスト積み上げ\\\emph{Cost Roll-up}};
 \draw[flow] (H) |- (H1);
