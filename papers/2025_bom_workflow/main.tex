@@ -24,6 +24,9 @@
 % preamble で追加
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc,fit,shapes.multipart}
+% 表の体裁向上（まだ入れてなければ）
+\usepackage{tabularx,booktabs,array}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X} % 左寄せで折り返す列
 
 % --- Title & Author ---
 \title{%
@@ -94,108 +97,40 @@ Bill of Materials (BOM), Part Numbering System, Attribute Integration, Roll-up M
 
 このように、BOMを軸に全社的に情報を集約・展開することで、監査対応力と教育効果の双方を高めることができる。
 
-\begin{figure*}[t]
+\begin{table*}[t]
 \centering
-\resizebox{\linewidth}{!}{%
-\begin{tikzpicture}[
-  font=\footnotesize,
-  node distance=10mm and 9mm,
-  >=Latex,
-  box/.style={draw, rounded corners=2pt, align=center, inner sep=2.5pt, minimum height=6.8mm, minimum width=26mm, very thick},
-  flow/.style={-Latex, line width=0.8pt},
-  ext/.style={-Latex, dashed, line width=0.7pt},
-  % カラースタイル（Mermaid相当の配色）
-  design/.style={box, fill={rgb,255:red,209; green,233; blue,255}, draw={rgb,255:red,3; green,102; blue,214}},
-  tech/.style={box, fill={rgb,255:red,255; green,243; blue,205}, draw={rgb,255:red,255; green,153; blue,0}},
-  proc/.style={box, fill={rgb,255:red,230; green,255; blue,237}, draw={rgb,255:red,40; green,167; blue,69}},
-  attr/.style={box, fill={rgb,255:red,240; green,240; blue,240}, draw=black, line width=0.6pt},
-  eval/.style={box, fill={rgb,255:red,245; green,230; blue,255}, draw={rgb,255:red,155; green,89; blue,182}, line width=0.6pt},
-  title/.style={draw=none, align=left}
-]
-
-%--------------------------------
-% 設計フロー（上段）
-%--------------------------------
-\node (A) [design] {設計図面検討会\\\emph{Design Drawing Review}};
-\node (B) [design, right=of A] {設計図面\\\emph{Design Drawing}};
-\node (C) [design, right=of B] {設計通知\\\emph{Design Notice}};
-
-\draw[flow] (A) -- (B);
-\draw[flow] (B) -- (C);
-
-%--------------------------------
-% 技術フロー（中段）
-%--------------------------------
-\node (D) [tech, below=of C] {技術図面検討会\\\emph{Technical Drawing Review}};
-\node (E) [tech, right=of D] {技術図面（加工図・組図）\\\emph{Technical Drawings}};
-\node (F) [tech, right=of E] {技術通知\\\emph{Technical Notice}};
-\node (G) [tech, right=of F] {関係部署配布\\\emph{Distribution to Depts.}};
-\node (H) [tech, right=of G] {構成部品表接続\\\emph{BOM Linkage}};
-
-\draw[flow] (C) -- (D);
-\draw[flow] (D) -- (E);
-\draw[flow] (E) -- (F);
-\draw[flow] (F) -- (G);
-\draw[flow] (G) -- (H);
-
-% 評価・積み上げ分岐（xshiftで左右に振る）
-\node (H1) [tech, below=6mm of H, xshift=-14mm] {環境データ積み上げ判定\\(EChemSkip)\\\emph{Environmental Compliance}};
-\node (H2) [tech, below=6mm of H, xshift= 14mm] {コスト積み上げ\\\emph{Cost Roll-up}};
-\draw[flow] (H) |- (H1);
-\draw[flow] (H) |- (H2);
-
-\node (I) [tech, below=15mm of H] {構成部品表通知\\\emph{BOM Notice}};
-\draw[flow] (H1) -- (I);
-\draw[flow] (H2) -- (I);
-
-\node (J) [tech, right=of I] {関係部署配布（BOM）\\\emph{Distribution (BOM)}};
-\draw[flow] (I) -- (J);
-
-%--------------------------------
-% 調達フロー（下段）
-%--------------------------------
-\node (K) [proc, below=of J] {調達BOM反映\\\emph{Procurement BOM Integration}};
-\node (L) [proc, right=of K] {量産部品発注\\\emph{Mass Production Ordering}};
-\draw[flow] (J) -- (K);
-\draw[flow] (K) -- (L);
-
-%--------------------------------
-% 属性群（外部入力・点線）
-%--------------------------------
-\node (S1) [attr, left=20mm of H] {属性（設計時必須）\\
-{\scriptsize 図面番号/Rev \\ RoHS/REACH, LCA, SDS \\ コスト（基礎）}\\
-\emph{Design-time Attributes}};
-\draw[ext] (S1.east) -- (H.west);
-
-\node (S2) [attr, right=14mm of K] {属性（輸出時追加）\\
-{\scriptsize 輸出管理（ECCN）\\ 該非判定 \\ HSコード \\ 用途説明書}\\
-\emph{Export-time Attributes}};
-\draw[ext] (S2.west) -- (K.east);
-
-%--------------------------------
-% 評価・計測情報（外部入力・点線）
-%--------------------------------
-\node (P1) [eval, above=5mm of B, xshift=-2mm] {試作評価\\{\scriptsize 寸法測定・性能検証}\\\emph{Prototype Evaluation}};
-\draw[ext] (P1.south) -- (B.north);
-
-\node (P2) [eval, above=10mm of E] {量産評価\\{\scriptsize 工程能力 Cp/Cpk・品質検証}\\\emph{Mass Production Evaluation}};
-\draw[ext] (P2.south) -- (E.north);
-
-\node (P3) [eval, above=10mm of E, xshift=34mm] {計測器情報\\{\scriptsize 三次元測定機・マイクロメータ・真円度計 等}\\\emph{Measurement Instruments}};
-\draw[ext] (P3.south west) -- (E.north);
-
-%--------------------------------
-% セクション囲み（任意の飾り）
-%--------------------------------
-\node[title] at ($(A)!0.5!(C)+(0,10mm)$) {\bfseries 設計 / Design};
-\node[title] at ($(D)!0.5!(H)+(0,10mm)$) {\bfseries 技術 / Technical};
-\node[title] at ($(K)!0.5!(L)+(0,10mm)$) {\bfseries 調達 / Procurement};
-
-\end{tikzpicture}%
-}
-\caption{実務ワークフロー（設計→技術→調達）と属性・評価入力の関係}
-\label{fig:workflow_tikz}
-\end{figure*}
+\caption{設計～技術～調達における実務フローと属性・評価の対応}
+\label{tab:workflow_table}
+\renewcommand{\arraystretch}{1.25}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{25mm} p{38mm} p{40mm} Y@{}}
+\toprule
+\textbf{区分} & \textbf{主な工程} & \textbf{生成物／通知} & \textbf{付与される属性・評価（例）} \\
+\midrule
+設計（Design） &
+設計図面検討会（Design Drawing Review） &
+設計図面（Design Drawing）、設計通知（Design Notice） &
+図面番号／Rev、RoHS／REACH 判定、LCA、SDS、コスト基礎、試作評価（寸法測定・性能検証） \\
+\midrule
+技術（Technical） &
+技術図面検討会、技術図面展開（加工図・組図） &
+技術図面、技術通知、関係部署配布 &
+量産評価（工程能力 Cp/Cpk・品質検証）、計測器情報（3次元測定機等）、
+環境データ積み上げ判定（EChemSkip）、コスト積み上げ \\
+\midrule
+BOM（構成） &
+構成部品表接続（BOM Linkage） &
+BOM 通知、関係部署配布（BOM） &
+部品コード（6桁＋枝番）、親子構成・数量、参照図面ID、
+属性統合（環境／コスト／輸出管理） \\
+\midrule
+調達（Procurement） &
+調達BOM反映、量産部品発注 &
+発注書、見積依頼、サプライヤ連絡 &
+輸出関連属性（ECCN、該非判定、HSコード、用途説明書）、コスト見積、LT・MOQ 等 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
 
 % -------------------------------
 \section{BOM Generation and Structured Data}
