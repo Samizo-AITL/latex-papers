@@ -2,14 +2,12 @@ name: latex_cd50_boa_v4
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - "latex-papers/papers/2025_cd50_boa/**"
-      - "latex-papers/.github/workflows/latex_cd50_boa_v4.yml"
+  push:  # 初回デバッグは全pushで起動させる（後でpathsに戻してOK）
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     env:
       PAPER_DIR: latex-papers/papers/2025_cd50_boa
       ROOT_TEX: main.tex
@@ -17,6 +15,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Show repo tree (top)
+        run: |
+          pwd
+          ls -al
+          echo "----- .github/workflows -----"
+          ls -al .github/workflows || true
+
+      - name: Check paper dir exists
+        run: |
+          if [ ! -d "${PAPER_DIR}" ]; then
+            echo "::error ::PAPER_DIR not found: ${PAPER_DIR}"
+            echo "Tip: パスが違う可能性があります。存在するフォルダ名を入れてください。"
+            exit 1
+          fi
+          ls -al "${PAPER_DIR}"
+
+      - name: Show TeX sources
+        working-directory: ${{ env.PAPER_DIR }}
+        run: |
+          ls -al
+          if [ ! -f "${ROOT_TEX}" ]; then
+            echo "::error ::ROOT_TEX not found: ${ROOT_TEX}"
+            exit 1
+          fi
+          sed -n '1,60p' "${ROOT_TEX}"
 
       - name: Setup TeX Live
         uses: teatimeguest/setup-texlive-action@v3
@@ -27,7 +51,6 @@ jobs:
             collection-luatex
             collection-langjapanese
             collection-fontsrecommended
-            luatexja
             url
             hyperref
             amsmath
@@ -38,7 +61,8 @@ jobs:
       - name: Build (latexmk lualatex)
         working-directory: ${{ env.PAPER_DIR }}
         run: |
-          latexmk -lualatex -shell-escape -interaction=nonstopmode -file-line-error -synctex=1 -halt-on-error "${{ env.ROOT_TEX }}" \
+          # LuaLaTeX で日本語（luatexja）を処理
+          latexmk -lualatex -shell-escape -interaction=nonstopmode -file-line-error -synctex=1 -halt-on-error "${ROOT_TEX}" \
           || echo "LaTeX build failed, see log"
 
       - name: Upload PDF
