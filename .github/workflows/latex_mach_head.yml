@@ -1,0 +1,49 @@
+# .github/workflows/latex_mach_head.yml
+name: latex_mach_head
+
+on:
+  push:
+    paths:
+      - "papers/2025_mach_head/**"
+      - ".github/workflows/latex_mach_head.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # LaTeX ビルド（luatexja を使う日本語PDF対応）
+      - name: Build PDF with lualatex (latexmk)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: papers/2025_mach_head
+          latexmk_use_lualatex: true
+          latexmk_shell_escape: true
+          # 必要パッケージを確実に入れる（日本語用）
+          pre_compile: |
+            tlmgr update --self --all || true
+            tlmgr install luatexja collection-langjapanese latexmk babel-japanese || true
+          # 非停止 & エラーログ行番号
+          args: -interaction=nonstopmode -file-line-error
+
+      # アーティファクト収集（PDF と .log）
+      - name: Collect artifacts
+        if: always()
+        run: |
+          mkdir -p artifacts
+          # 生成物を回収
+          cp papers/2025_mach_head/main.pdf artifacts/ 2>/dev/null || true
+          cp papers/2025_mach_head/main.log artifacts/ 2>/dev/null || true
+
+      - name: Upload artifacts (PDF & LOG)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mach_head_pdf_and_log
+          path: artifacts
+          if-no-files-found: warn
