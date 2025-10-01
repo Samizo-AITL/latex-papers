@@ -18,10 +18,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # フォルダと main.tex の存在を先に検証（ミスならすぐ赤字）
       - name: Sanity check (paths)
         run: |
           echo "Repo root:" && ls -al
-          echo "----"
           if [ ! -d "${PAPER_DIR}" ]; then
             echo "::error ::PAPER_DIR not found: ${PAPER_DIR}"
             exit 1
@@ -32,14 +32,28 @@ jobs:
           fi
           echo "Found ${PAPER_DIR}/${ROOT_TEX}"
 
-      - name: Build with LaTeX (LuaLaTeX)
-        uses: dante-ev/latex-action@latest
+      # もっとも安定の LaTeX Action（LuaLaTeX + 日本語パッケージ指定）
+      - name: Build PDF (LuaLaTeX)
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: ${{ env.ROOT_TEX }}
           working_directory: ${{ env.PAPER_DIR }}
-          compiler: lualatex
-          args: "-interaction=nonstopmode -file-line-error -shell-escape"
+          latexmk_use_lualatex: true
+          args: -interaction=nonstopmode -file-line-error -shell-escape
+          extra_packages: >-
+            collection-luatex
+            collection-langjapanese
+            collection-fontsrecommended
+            luatexja
+            latexmk
+            hyperref
+            url
+            amsmath
+            amssymb
+            graphics
+            xcolor
 
+      # 成否に関わらず成果物を回収（PDF/ログ）
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
@@ -47,6 +61,7 @@ jobs:
           name: cd50_boa_pdf
           path: ${{ env.PAPER_DIR }}/main.pdf
           if-no-files-found: warn
+          retention-days: 14
 
       - name: Upload logs
         if: always()
@@ -58,3 +73,4 @@ jobs:
             ${{ env.PAPER_DIR }}/main.fdb_latexmk
             ${{ env.PAPER_DIR }}/main.fls
           if-no-files-found: warn
+          retention-days: 14
