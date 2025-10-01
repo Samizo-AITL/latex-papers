@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     env:
       PAPER_DIR: latex-papers/papers/2025_cd50_boa
       ROOT_TEX: main.tex
@@ -18,42 +19,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # フォルダと main.tex の存在を先に検証（ミスならすぐ赤字）
+      # パス検証：間違っていたらここで即赤字終了
       - name: Sanity check (paths)
         run: |
           echo "Repo root:" && ls -al
-          if [ ! -d "${PAPER_DIR}" ]; then
-            echo "::error ::PAPER_DIR not found: ${PAPER_DIR}"
-            exit 1
-          fi
-          if [ ! -f "${PAPER_DIR}/${ROOT_TEX}" ]; then
-            echo "::error ::ROOT_TEX not found: ${PAPER_DIR}/${ROOT_TEX}"
-            exit 1
-          fi
+          test -d "${PAPER_DIR}" || (echo "::error ::PAPER_DIR not found: ${PAPER_DIR}" && exit 1)
+          test -f "${PAPER_DIR}/${ROOT_TEX}" || (echo "::error ::ROOT_TEX not found: ${PAPER_DIR}/${ROOT_TEX}" && exit 1)
           echo "Found ${PAPER_DIR}/${ROOT_TEX}"
 
-      # もっとも安定の LaTeX Action（LuaLaTeX + 日本語パッケージ指定）
-      - name: Build PDF (LuaLaTeX)
+      # texlive-full を使う画像（パッケージ不足を根こそぎ回避）
+      - name: Build PDF (LuaLaTeX, texlive-full image)
+        id: build
         uses: xu-cheng/latex-action@v3
         with:
           root_file: ${{ env.ROOT_TEX }}
           working_directory: ${{ env.PAPER_DIR }}
-          latexmk_use_lualatex: true
+          compiler: lualatex
+          # texlive-full の docker イメージを使用（日本語・フォント・周辺パッケージ一式入り）
+          docker_image: ghcr.io/xu-cheng/texlive-full:latest
           args: -interaction=nonstopmode -file-line-error -shell-escape
-          extra_packages: >-
-            collection-luatex
-            collection-langjapanese
-            collection-fontsrecommended
-            luatexja
-            latexmk
-            hyperref
-            url
-            amsmath
-            amssymb
-            graphics
-            xcolor
 
-      # 成否に関わらず成果物を回収（PDF/ログ）
+      # ログ先頭を要約に出す（失敗原因を画面で即把握）
+      - name: Dump last 80 lines of main.log
+        if: always()
+        run: |
+          if [ -f "${PAPER_DIR}/main.log" ]; then
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            tail -n 80 "${PAPER_DIR}/main.log" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "main.log not found in ${PAPER_DIR}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # 成否にかかわらず PDF とログを回収
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
