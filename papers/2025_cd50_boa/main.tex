@@ -1,0 +1,76 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{url}
+
+\begin{document}
+
+\title{CD50プロジェクトとBump on Active (BoA)技術の事例研究:\\
+エプソン半導体事業部の最後の攻防と敗北}
+
+\author{%
+  \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
+  \IEEEauthorblockA{独立系半導体研究者（元セイコーエプソン）\\%
+  Independent Semiconductor Researcher (ex-Seiko Epson)\\%
+  Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\%
+  GitHub: \url{https://github.com/Samizo-AITL}}%
+}
+
+\maketitle
+
+\begin{abstract}
+本論文は、2000年代前半におけるエプソン半導体事業部のCD50プロジェクトを事例として取り上げる。0.25 µm LOCOSプロセスによるaTFTドライバ量産成功後、Samsungの市場参入によりコスト競争が激化した。エプソンはコスト50\%削減を目指して0.18 µm STI HVデバイス導入を試みたが、STI端部シンニングによるゲートリーク問題で失敗した。本稿では、その後に採用されたLOCOS+STIハイブリッドプロセスと、量産化に成功したBump on Active (BoA) 技術の評価方法・課題・成果を詳細に述べる。結果的にBoAは技術的成功を収めたが、Samsungの低価格攻勢を覆せず、エプソンは半導体市場における主導的地位を失った。この事例は、日本半導体産業全体が経験した「技術成功と事業失敗」の乖離を示す歴史的ケースである。
+\end{abstract}
+
+\begin{IEEEkeywords}
+半導体産業史, LOCOS, STI, HV PMOS, Bump on Active, ETEST, エプソン, Samsung
+\end{IEEEkeywords}
+
+\section{背景}
+0.25 µm LOCOSプロセスによるaTFTドライバの量産化に成功したが、Samsungの参入により激しいコスト競争が始まった。エプソンは業界での主導的立場を維持するため、コスト半減を目指すCD50 (Cost Down 50\%) プロジェクトを開始した。
+
+\section{技術的チャレンジ}
+CD50では、0.18 µm STIによる30 V HVデバイス集積を試みた。しかしSTI端部のシンニングによるゲートリークが致命的であり、量産には不適格であった。その結果、LOCOS+STIハイブリッドプロセスに切替えられたが、工程数増大によりコスト削減効果は失われた。
+
+\section{BoA技術と評価方法}
+BoAは、従来パッド専用領域に配置していたバンプをアクティブ領域上に直接形成する技術であり、ダイサイズ縮小に大きく寄与した。専用の大規模TEGを構築し、以下の3水準で評価を実施した。
+\begin{enumerate}
+  \item 何も置かない素子
+  \item AL Pad上の素子
+  \item Bump Pad上の素子
+\end{enumerate}
+
+評価手順は、初期ETEST→バンプ荷重→ETEST再測定の流れで行い、短期・長期の荷重効果を調査した。
+
+\section{評価結果と課題}
+一時荷重試験では不具合は見られなかったが、長期荷重試験（COF実装模擬）ではHV PMOSにおいて特性変動が確認された。この変動は荷重によるキャリア移動度変化に起因すると考えられる。結果を設計マニュアルに反映し、マージン設計を可能とした点は当時として先進的であった。
+
+また、ETESTをBump Padで実施する際、プローバ針先とバンプ間に10〜20 Ωの接触抵抗が発生し、低抵抗素子測定でバラツキが増加した。これに対し針先研磨プログラムを導入し、測定の安定化を図った。
+
+\section{なぜHV PMOSが影響を受けやすいか}
+HV PMOSは厚酸化膜・長チャネル構造を有し、応力集中が発生しやすい。また、PMOSはnMOSに比べて応力に対して移動度変動が大きいため、荷重の持続による応力緩和や界面準位変化の影響を強く受ける。これによりHV PMOSの特性変動が顕著となった。
+
+\section{結果と影響}
+BoA技術は技術的には量産化に成功したが、Samsungの低価格に対抗できず、エプソンは
+\begin{itemize}
+  \item 0.35 µm モノクロドライバ
+  \item 0.25 µm カラードライバ
+\end{itemize}
+での優位性を失い、シェアを奪われた。さらに0.13 µm以降の微細化にも対応できず、事業としての継続は困難となった。
+
+\section{結論}
+CD50プロジェクトは、技術的にはBoA成功を収めたが、市場競争力を回復するには至らなかった。本事例は、日本半導体産業において「技術の成功と事業の失敗」が乖離する典型例であり、産業史的教訓を示している。
+
+\section*{謝辞}
+本研究の一部は、エプソン半導体事業部における技術開発活動の成果に基づいている。
+
+\section*{著者略歴}
+\textbf{三溝 真一 (Shinichi Samizo)} は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得した。  
+その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、さらにインクジェット薄膜ピエゾアクチュエータおよび PrecisionCore プリントヘッドの製品化に従事した。  
+現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、AIシステム統合などの研究に取り組んでいる。  
+連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}
+
+\end{document}
