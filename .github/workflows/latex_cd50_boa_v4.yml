@@ -6,14 +6,10 @@ on:
     paths:
       - "latex-papers/papers/2025_cd50_boa/**"
       - "latex-papers/.github/workflows/latex_cd50_boa_v4.yml"
-  pull_request:
-    paths:
-      - "latex-papers/papers/2025_cd50_boa/**"
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     env:
       PAPER_DIR: latex-papers/papers/2025_cd50_boa
       ROOT_TEX: main.tex
@@ -22,8 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # TeX Live（日本語＋LuaLaTeX）を最小で入れる
-      - name: Setup TeX Live (ja)
+      - name: Setup TeX Live
         uses: teatimeguest/setup-texlive-action@v3
         with:
           packages: >-
@@ -32,8 +27,7 @@ jobs:
             collection-luatex
             collection-langjapanese
             collection-fontsrecommended
-            # よく使うパッケージ
-            ieeeconf
+            luatexja
             url
             hyperref
             amsmath
@@ -41,32 +35,27 @@ jobs:
             graphics
             xcolor
 
-      - name: Build (latexmk + lualatex)
+      - name: Build (latexmk lualatex)
         working-directory: ${{ env.PAPER_DIR }}
         run: |
-          # 失敗しても後続でログを回収できるように true で落とさない
-          latexmk -lualatex -shell-escape -interaction=nonstopmode -file-line-error -synctex=1 -halt-on-error "${{ env.ROOT_TEX }}" || true
-          # 末尾だけの簡易ログも用意（閲覧しやすい）
-          tail -n 300 main.log > build_tail.log || true
+          latexmk -lualatex -shell-escape -interaction=nonstopmode -file-line-error -synctex=1 -halt-on-error "${{ env.ROOT_TEX }}" \
+          || echo "LaTeX build failed, see log"
 
-      - name: Upload PDF artifact
+      - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cd50_boa_pdf
           path: ${{ env.PAPER_DIR }}/main.pdf
           if-no-files-found: warn
-          retention-days: 14
 
-      - name: Upload build logs
+      - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cd50_boa_logs
           path: |
             ${{ env.PAPER_DIR }}/main.log
-            ${{ env.PAPER_DIR }}/build_tail.log
             ${{ env.PAPER_DIR }}/main.fdb_latexmk
             ${{ env.PAPER_DIR }}/main.fls
           if-no-files-found: warn
-          retention-days: 14
