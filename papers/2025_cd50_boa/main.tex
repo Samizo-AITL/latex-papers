@@ -14,6 +14,10 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes,fit}
 
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18} % バージョンに応じて調整
+
 \hypersetup{hidelinks}
 
 \begin{document}
@@ -235,22 +239,23 @@ BoAの導入にあたっては、アクティブ素子上への荷重ストレ�
     \begin{axis}[
       width=7cm, height=5cm,
       xlabel={測定回数},
-      ylabel={接触抵抗 [$\Omega$]},
+      ylabel={抵抗値 [Ω]},
       ymin=0, ymax=30,
-      grid=both
+      grid=both,
+      legend style={at={(0.5,-0.2)},anchor=north}
     ]
       \addplot+[mark=o] coordinates {
-        (1,18) (2,20) (3,15) (4,25) (5,19)
+        (1,18)(2,20)(3,15)(4,25)(5,19)
       };
       \addlegendentry{研磨前}
+
       \addplot+[mark=triangle*] coordinates {
-        (1,12) (2,11) (3,10) (4,12) (5,11)
+        (1,12)(2,11)(3,10)(4,12)(5,11)
       };
       \addlegendentry{研磨後}
     \end{axis}
   \end{tikzpicture}
-  \caption{Bump Pad測定における接触抵抗のばらつき：研磨により安定化}
-  \label{fig:contact_resistance}
+  \caption{プローバ針先研磨による接触抵抗安定化効果}
 \end{figure}
 
 \subsection{意義}
