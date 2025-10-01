@@ -166,27 +166,39 @@ BoAの導入にあたっては、アクティブ素子上への荷重ストレ�
 \end{enumerate}
 この構成により、バンプ形成そのものが素子特性に与える影響を直接抽出できる設計とした。
 
-\begin{figure}[t]
-  \centering
-  \begin{tikzpicture}[scale=0.8]
-    % 左側：従来
-    \node at (-2,1.2) {従来構造};
-    \draw[thick] (-3,0) rectangle (-1,1); % active領域
-    \node at (-2,0.5) {Active};
-    \draw[fill=gray!40] (-3,-0.4) rectangle (-1,0); % Pad領域
-    \node at (-2,-0.2) {Pad};
-    \draw[fill=black] (-2,-0.8) circle (0.2); % bump
-    \node at (-2,-1.2) {Bump};
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.8]
 
-    % 右側：BoA
-    \node at (2,1.2) {BoA構造};
-    \draw[thick] (1,0) rectangle (3,1); % active領域
-    \node at (2,0.5) {Active};
-    \draw[fill=black] (2,1.3) circle (0.2); % bump on active
-    \node at (2,1.7) {Bump};
-  \end{tikzpicture}
-  \caption{従来構造とBoA構造の比較：Pad領域削減によりダイ縮小を実現}
-  \label{fig:boa_concept}
+% --- 従来構造 ---
+\node at (0,4.5) {従来構造 (Peripheral Bump)};
+\draw (0,0) rectangle (4,4); % chip outline
+\node at (2,2) {Active Area}; % active area text
+
+% bumps along periphery
+\foreach \x in {0.5,1.5,2.5,3.5} {
+  \draw[fill=black] (\x,4.2) circle (0.12);
+  \draw[fill=black] (\x,-0.2) circle (0.12);
+}
+\foreach \y in {0.5,1.5,2.5,3.5} {
+  \draw[fill=black] (-0.2,\y) circle (0.12);
+  \draw[fill=black] (4.2,\y) circle (0.12);
+}
+
+% --- BoA構造 ---
+\node at (8,4.5) {BoA構造 (Bump on Active)};
+\draw (6,0) rectangle (10,4); % chip outline
+\node at (8,2) {Active Area}; % active area text
+
+% bumps inside active
+\foreach \x in {6.7,7.5,8.3,9.1} {
+  \foreach \y in {0.7,1.5,2.3,3.1} {
+    \draw[fill=black] (\x,\y) circle (0.12);
+  }
+}
+
+\end{tikzpicture}
+\caption{従来構造（外周バンプ配置）とBoA構造（アクティブ領域上バンプ配置）の比較。BoAにより外周パッドリングが不要となり、ダイサイズの縮小が可能となる。}
 \end{figure}
 
 \subsection{評価手順}
