@@ -166,36 +166,44 @@ BoAの導入にあたっては、アクティブ素子上への荷重ストレ�
 \end{enumerate}
 この構成により、バンプ形成そのものが素子特性に与える影響を直接抽出できる設計とした。
 
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
-\begin{tikzpicture}[scale=0.8]
-
-% --- 従来構造 ---
-\node at (0,4.5) {従来構造 (Peripheral Bump)};
-\draw (0,0) rectangle (4,4); % chip outline
-\node at (2,2) {Active Area}; % active area text
-
-% bumps along periphery
-\foreach \x in {0.5,1.5,2.5,3.5} {
-  \draw[fill=black] (\x,4.2) circle (0.12);
-  \draw[fill=black] (\x,-0.2) circle (0.12);
-}
-\foreach \y in {0.5,1.5,2.5,3.5} {
-  \draw[fill=black] (-0.2,\y) circle (0.12);
-  \draw[fill=black] (4.2,\y) circle (0.12);
-}
-
-% --- BoA構造 ---
-\node at (8,4.5) {BoA構造 (Bump on Active)};
-\draw (6,0) rectangle (10,4); % chip outline
-\node at (8,2) {Active Area}; % active area text
-
-% bumps inside active
-\foreach \x in {6.7,7.5,8.3,9.1} {
-  \foreach \y in {0.7,1.5,2.3,3.1} {
-    \draw[fill=black] (\x,\y) circle (0.12);
+\begin{tikzpicture}[scale=0.85, every node/.style={font=\footnotesize}]
+  %----- 従来（Peripheral Bump）: 上 -----
+  \node[align=center] at (3,5.3) {従来構造 (Peripheral Bump)};
+  % チップ外形
+  \draw (0,4.6) rectangle (6,5.2);
+  \node at (3,4.9) {Active Area};
+  % バンプ：短辺側（上辺）に並ぶ
+  \foreach \x in {0.6,1.4,2.2,3.0,3.8,4.6,5.4} {
+    \draw[fill=black] (\x,5.3) circle (0.07);
   }
-}
+  % 短辺寸法 before
+  \draw[<->] (-0.3,4.6)--(-0.3,5.2);
+  \node[rotate=90] at (-0.55,4.9) {$W_{\text{before}}$};
+
+  %----- BoA (Bump on Active): 下 -----
+  \node[align=center] at (3,3.7) {BoA構造 (Bump on Active)};
+  % チップ外形：短辺を縮小
+  \draw (0.4,3.0) rectangle (5.6,3.6);
+  \node at (3,3.3) {Active Area};
+  % バンプ：内部に2列配置
+  \foreach \x in {1.0,2.0,3.0,4.0,5.0} {
+    \foreach \y in {3.05,3.55} {
+      \draw[fill=black] (\x,\y) circle (0.07);
+    }
+  }
+  % 短辺寸法 after
+  \draw[<->] (6.0,3.0)--(6.0,3.6);
+  \node[rotate=90] at (6.25,3.3) {$W_{\text{after}}$};
+
+  % 縮小を矢印で明示
+  \draw[->,thick] (3,4.55) -- (3,3.65) node[midway,right] {短辺縮小};
+
+\end{tikzpicture}
+\caption{ドライバICの上面模式図。従来は短辺側にバンプを並べる必要があり、幅が大きくなる。BoAではアクティブ領域上に配置可能となり、外周パッドリングが不要となって短辺が縮小する。}
+\label{fig:boa_vertical}
+\end{figure}
 
 \end{tikzpicture}
 \caption{従来構造（外周バンプ配置）とBoA構造（アクティブ領域上バンプ配置）の比較。BoAにより外周パッドリングが不要となり、ダイサイズの縮小が可能となる。}
