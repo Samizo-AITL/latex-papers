@@ -166,54 +166,46 @@ BoAの導入にあたっては、アクティブ素子上への荷重ストレ�
 \end{enumerate}
 この構成により、バンプ形成そのものが素子特性に与える影響を直接抽出できる設計とした。
 
-% preamble で \usepackage{tikz} を読み込み済みであること
+% preamble に \usepackage{tikz} を読み込んでください
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[scale=0.85, every node/.style={font=\footnotesize}]
-  %==================== 上：従来 ====================
-  \node[align=center] at (3,5.85) {従来構造 (Peripheral Bump)};
-  % チップ外形（長辺Lは下の図と同じ）
-  \draw (0,5.0) rectangle (6,5.8);
-  \node at (3,5.4) {Active Area};
-  % バンプ：短辺側（上辺）に整列
+  %======== 上：従来（外周Pad上に片辺バンプ） ========
+  \node[align=center] at (3,5.85) {従来構造（片辺バンプ／外周Pad上）};
+  \draw (0,5.0) rectangle (6,5.8);              % チップ外形（長辺一定）
+  \node at (3,5.40) {Active Area};
+  % 片辺に並ぶバンプ（外側）
   \foreach \x in {0.6,1.4,2.2,3.0,3.8,4.6,5.4} {
     \draw[fill=black] (\x,5.95) circle (0.07);
   }
-  % 長辺L（一定）
-  \draw[<->] (0,4.85) -- (6,4.85);
-  \node at (3,4.70) {長辺 $L$（一定）};
+  % 長辺 L（一定）
+  \draw[<->] (0,4.85) -- (6,4.85); \node at (3,4.70) {長辺 $L$（一定）};
   % 短辺 W_before
   \draw[<->] (-0.30,5.0) -- (-0.30,5.8);
   \node[rotate=90] at (-0.55,5.40) {$W_{\text{before}}$};
 
-  %==================== 下：BoA =====================
-  \node[align=center] at (3,3.80) {BoA構造 (Bump on Active)};
-  % チップ外形（長辺Lは同一、短辺が小さい）
-  \draw (0,3.0) rectangle (6,3.6);
-  \node at (3,3.3) {Active Area};
-  % バンプ：内部に2列配置（例）
-  \foreach \x in {1.0,2.0,3.0,4.0,5.0} {
-    \foreach \y in {3.05,3.55} {
-      \draw[fill=black] (\x,\y) circle (0.07);
-    }
+  %======== 下：BoA（アクティブ上に片辺バンプ） ========
+  \node[align=center] at (3,3.80) {BoA構造（片辺バンプ／アクティブ上）};
+  \draw (0,3.0) rectangle (6,3.6);              % 長辺は同一、短辺が小さい
+  \node at (3,3.30) {Active Area};
+  % 片辺に並ぶバンプ（内側＝アクティブ上）
+  \foreach \x in {0.6,1.4,2.2,3.0,3.8,4.6,5.4} {
+    \draw[fill=black] (\x,3.65) circle (0.07);
   }
-  % 長辺L（一定）
-  \draw[<->] (0,2.85) -- (6,2.85);
-  \node at (3,2.70) {長辺 $L$（一定）};
+  % 長辺 L（一定）
+  \draw[<->] (0,2.85) -- (6,2.85); \node at (3,2.70) {長辺 $L$（一定）};
   % 短辺 W_after
   \draw[<->] (6.30,3.0) -- (6.30,3.6);
   \node[rotate=90] at (6.55,3.30) {$W_{\text{after}}$};
 
-  % 短辺縮小を強調
-  \draw[->,thick] (6.30,5.40) -- (6.30,3.30) node[midway,right]{短辺縮小};
+  % 短辺縮小の強調
+  \draw[->,thick] (6.30,5.40) -- (6.30,3.30) node[midway,right]{短辺のみ縮小};
 \end{tikzpicture}
-\caption{横長ドライバICの上面模式図。BoA適用により長辺 $L$ は変えず、短辺が $W_{\text{before}}\!\to\!W_{\text{after}}$ に縮小する。外周パッドリングが不要になり、バンプをアクティブ領域上へ再配置できるため。}
-\label{fig:boa_vertical}
-\end{figure}
-
-\end{tikzpicture}
-\caption{従来構造（外周バンプ配置）とBoA構造（アクティブ領域上バンプ配置）の比較。BoAにより外周パッドリングが不要となり、ダイサイズの縮小が可能となる。}
+\caption{横長ドライバICの上面模式図。従来・BoAともに\textbf{片辺バンプ}だが，
+BoA は外周 Pad を不要とし，バンプをアクティブ上へ寄せることで
+\textbf{長辺は一定のまま短辺が $W_{\text{before}}\!\to\!W_{\text{after}}$ に縮小}する。}
+\label{fig:boa_edge_bump}
 \end{figure}
 
 \subsection{評価手順}
