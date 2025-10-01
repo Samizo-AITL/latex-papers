@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "latex-papers/papers/2025_cd50_boa/**"
+      - "papers/2025_cd50_boa/**"
       - ".github/workflows/latex_cd50_boa_v4.yml"
 
 jobs:
@@ -12,14 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PAPER_DIR: latex-papers/papers/2025_cd50_boa
+      PAPER_DIR: papers/2025_cd50_boa
       ROOT_TEX: main.tex
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # パス検証：間違っていたらここで即赤字終了
       - name: Sanity check (paths)
         run: |
           echo "Repo root:" && ls -al
@@ -27,19 +26,15 @@ jobs:
           test -f "${PAPER_DIR}/${ROOT_TEX}" || (echo "::error ::ROOT_TEX not found: ${PAPER_DIR}/${ROOT_TEX}" && exit 1)
           echo "Found ${PAPER_DIR}/${ROOT_TEX}"
 
-      # texlive-full を使う画像（パッケージ不足を根こそぎ回避）
       - name: Build PDF (LuaLaTeX, texlive-full image)
-        id: build
         uses: xu-cheng/latex-action@v3
         with:
           root_file: ${{ env.ROOT_TEX }}
           working_directory: ${{ env.PAPER_DIR }}
           compiler: lualatex
-          # texlive-full の docker イメージを使用（日本語・フォント・周辺パッケージ一式入り）
           docker_image: ghcr.io/xu-cheng/texlive-full:latest
           args: -interaction=nonstopmode -file-line-error -shell-escape
 
-      # ログ先頭を要約に出す（失敗原因を画面で即把握）
       - name: Dump last 80 lines of main.log
         if: always()
         run: |
@@ -51,7 +46,6 @@ jobs:
             echo "main.log not found in ${PAPER_DIR}" >> $GITHUB_STEP_SUMMARY
           fi
 
-      # 成否にかかわらず PDF とログを回収
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
