@@ -11,6 +11,9 @@
 \setmainjfont{HaranoAjiMincho}
 \setsansjfont{HaranoAjiGothic}
 
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes,fit}
+
 \hypersetup{hidelinks}
 
 \begin{document}
@@ -76,6 +79,75 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
 しかし、プロセスフローは複雑化し、工程数が大幅に増加した。結果として、当初の目標であった「50\%のコスト削減」は達成できず、むしろ工程コストの上昇が懸念される状況となった。
 
 この経験は、単なる微細化の追随ではなく、技術的妥協点とコスト競争力の両立をいかに図るかという、日本の半導体産業全体に共通する難題を浮き彫りにした。
+
+\noindent\textbf{ハイブリッド統合の要点.}
+LOCOS+STIハイブリッドではプロセス順序が本質的に重要である。
+まず、熱履歴が大きい30\,V級HVデバイスをLOCOSプロセス（フィールド酸化、チャネルストップ、長チャネル形成 等）で先行形成し、
+その後に1.8\,V級ロジックのSTIプロセス（トレンチ形成・埋め込み酸化・CMP・浅拡散 等）を適用する。
+この順序により、HV素子に必要な厚酸化膜やオフセット構造を確保しつつ、ロジック部には微細STI素子を導入できる。
+一方で、LOCOSの高温熱履歴がロジック素子のしきい値やリークに影響を与えるリスクがあり、工程統合・歩留まりの面で追加の最適化が不可欠となった。
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[
+    node distance=6mm and 8mm,
+    box/.style={draw, rounded corners, align=left, inner sep=3pt, minimum width=0.88\linewidth},
+    arrow/.style={-{Stealth}, thick},
+    note/.style={font=\footnotesize, align=left}
+  ]
+
+  % Nodes
+  \node[box, fill=gray!10] (hv) {%
+    \textbf{HV Block (30\,V) — LOCOS first}\\
+    フィールド酸化／チャネルストップ／厚酸化膜\\
+    長チャネル・オフセット構造
+  };
+
+  \node[box, fill=gray!10, below=of hv] (therm) {%
+    \textbf{大熱履歴}\\
+    高温酸化・ドライブインによる熱予算消費
+  };
+
+  \node[box, fill=gray!10, below=of therm] (lv) {%
+    \textbf{LV Logic (1.8\,V) — STI later}\\
+    トレンチ形成→埋め込み酸化→CMP\\
+    浅拡散・微細配線
+  };
+
+  \node[box, fill=gray!10, below=of lv] (finish) {%
+    \textbf{後工程}\\
+    メタル配線／パッシベーション／BoAバンプ形成
+  };
+
+  % Arrows
+  \draw[arrow] (hv) -- (therm);
+  \draw[arrow] (therm) -- (lv);
+  \draw[arrow] (lv) -- (finish);
+
+  % Side notes
+  \node[note, right=8mm of therm] (risk) {%
+    \textit{注意:} LOCOSの熱履歴が\\
+    後続LV素子の$V_{\mathrm{th}}$・リークに影響\\
+    $\Rightarrow$ 統合最適化・設計マージンが必要
+  };
+  \draw[arrow] (therm.east) -- (risk.west);
+
+  \node[note, left=8mm of lv] (benefit) {%
+    面積削減（STI）\\
+    $\Rightarrow$ ダイ縮小・コスト低減
+  };
+  \draw[arrow] (benefit.east) -- (lv.west);
+
+  \node[note, right=8mm of finish] (boa) {%
+    BoAによりパッド領域縮小\\
+    $\Rightarrow$ コストダウンの主役
+  };
+  \draw[arrow] (finish.east) -- (boa.west);
+
+  \end{tikzpicture}
+  \caption{LOCOS+STIハイブリッドのプロセス順序：HV(LOCOS)先行 $\rightarrow$ LV(STI) 後続。熱履歴と面積削減のトレードオフを示す。}
+  \label{fig:hybrid_flow}
+\end{figure}
 
 \section{BoA技術と評価方法}
 CD50プロジェクトにおいて最も大きな成果の一つが、Bump on Active (BoA) 技術である。  
