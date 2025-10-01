@@ -20,12 +20,10 @@ jobs:
 
       - name: Sanity check (paths)
         run: |
-          echo "Repo root:"
-          ls -al
+          echo "Repo root:" && ls -al
           echo "----"
           if [ ! -d "${PAPER_DIR}" ]; then
             echo "::error ::PAPER_DIR not found: ${PAPER_DIR}"
-            echo "Fix: create that folder OR change PAPER_DIR to the actual path."
             exit 1
           fi
           if [ ! -f "${PAPER_DIR}/${ROOT_TEX}" ]; then
