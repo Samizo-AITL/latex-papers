@@ -276,26 +276,34 @@ DRAMセルの保持時間は以下で表される。
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-    width=0.9\linewidth,
-    height=6cm,
-    xlabel={プロセス世代},
-    ylabel={歩留まり（\%）},
-    ymin=0, ymax=100,
-    xtick={0.5,0.35,0.25,1},
-    xticklabels={0.5$\mu$m,0.35$\mu$m,0.25$\mu$m,VSRAM},
-    legend style={
-        at={(0.5,-0.25)}, % ← 凡例の位置（x=中央, y=グラフ下）
-        anchor=north,
-        legend columns=2
-    },
-    grid=major
+  width=\linewidth,
+  height=6cm,
+  ymin=0, ymax=100,
+  ylabel={歩留まり（\%）},
+  symbolic x coords={0.5\,\mu m,0.35\,\mu m,0.25\,\mu m,VSRAM},
+  xtick=data,
+  xticklabel style={align=center},
+  xlabel={プロセス世代},
+  grid=both,
+  % ← 凡例を“グラフの外側・下中央”に配置（枠線・背景ナシ）
+  legend style={
+    at={(0.5,-0.28)}, anchor=north,
+    draw=none, fill=none,
+    /tikz/every odd column/.style={column sep=8pt},
+    font=\footnotesize
+  },
+  legend columns=2,
+  % 下に凡例スペースを確保（軸の外側余白）
+  clip=false
 ]
-\addplot[mark=*] coordinates {(0.5,95) (0.35,20) (0.25,65) (1,35)};
-\addlegendentry{初期歩留まり};
+  % 初期・改善のプロット（モノクロ＋マーカー）
+  \addplot+[semithick,mark=*]
+    coordinates {(0.5\,\mu m,95) (0.35\,\mu m,20) (0.25\,\mu m,65) (VSRAM,30)};
+  \addlegendentry{初期歩留まり}
 
-\addplot[mark=square*] coordinates {(0.5,95) (0.35,65) (0.25,85) (1,75)};
-\addlegendentry{改善後};
-
+  \addplot+[semithick,mark=square*]
+    coordinates {(0.5\,\mu m,95) (0.35\,\mu m,86) (0.25\,\mu m,88) (VSRAM,80)};
+  \addlegendentry{改善後}
 \end{axis}
 \end{tikzpicture}
 \caption{酒田Fabにおける世代別歩留まり推移}
