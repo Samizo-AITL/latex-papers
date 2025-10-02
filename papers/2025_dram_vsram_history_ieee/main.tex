@@ -467,98 +467,105 @@ NANYAは当時，東芝と技術提携を行っており，
 接合面積の拡大に比例してリーク電流 $I_{\mathrm{junc}}$ が増加し，
 90\,$^\circ$C条件下ではその増加率が一層大きくなることが確認された。
 
-% ==== 断面図 ====
+% ==== Fig. Stack vs Trench (断面図＋上面図) ====
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[scale=1.0]
 
-% --- (a) Stack Capacitor ---
-\begin{scope}
+% ---------- (a) Stack Capacitor Cross-section ----------
+\begin{minipage}{0.46\linewidth}
+\centering
+\begin{tikzpicture}[scale=0.9]
   % substrate
-  \fill[gray!20] (-2,0) rectangle (2,-1);
-  \node[anchor=east] at (-2,0.15) {$p^-$ substrate};
+  \fill[gray!20] (-1.6,0) rectangle (1.6,-0.8);
+  \node[anchor=east] at (-1.6,0.15) {\small $p^-$ substrate};
 
   % n+ diffusion
   \fill[gray!50] (-0.6,0) rectangle (0.6,-0.6);
-  \node[anchor=west] at (0.7,-0.3) {$n^+$ diffusion};
+  \node[anchor=west] at (0.7,-0.3) {\small $n^+$ diffusion};
 
-  % storage node
-  \fill[black!30] (-0.2,0) rectangle (0.2,1.2);
-  \node[anchor=west] at (0.3,0.8) {Storage Node};
+  % storage node electrode
+  \fill[black!30] (-0.15,0) rectangle (0.15,1.2);
+  \node[anchor=west] at (0.25,0.9) {\small Storage Node};
 
   % pn junction (sides+bottom only)
-  \draw[red,very thick] (-0.6,0) -- (-0.6,-0.6) -- (0.6,-0.6) -- (0.6,0);
+  \draw[red,very thick] (-0.6,0) -- (-0.6,-0.6);
+  \draw[red,very thick] (0.6,0) -- (0.6,-0.6);
+  \draw[red,very thick] (-0.6,-0.6) -- (0.6,-0.6);
+  \node[red,anchor=north] at (0,-0.65) {\scriptsize pn 接合（側壁＋底面）};
 
   % title
-  \node at (0,-1.4) {\bfseries (a) Stack Capacitor (断面)};
-\end{scope}
-
-% --- (b) Trench Capacitor ---
-\begin{scope}[xshift=7cm]
+  \node at (0,1.45) {\bfseries (a) Stack Cross-section};
+\end{tikzpicture}
+\end{minipage}
+\hspace{0.05\linewidth}
+% ---------- (b) Trench Capacitor Cross-section ----------
+\begin{minipage}{0.46\linewidth}
+\centering
+\begin{tikzpicture}[scale=0.9]
   % substrate
-  \fill[gray!20] (-2,0) rectangle (2,-2.2);
-  \node[anchor=east] at (-2,0.15) {$p^-$ substrate};
+  \fill[gray!20] (-1.6,0) rectangle (1.6,-2.0);
+  \node[anchor=east] at (-1.6,0.15) {\small $p^-$ substrate};
 
-  % trench cavity outline
-  \draw[black,thick] (-0.6,0) -- (-0.6,-2) -- (0.6,-2) -- (0.6,0);
+  % trench outline
+  \draw[black,thick] (-0.5,0) -- (-0.5,-1.7) -- (0.5,-1.7) -- (0.5,0);
 
-  % electrode inside trench
-  \fill[black!30] (-0.5,-0.1) rectangle (0.5,-1.9);
-  \node[anchor=west] at (0.7,-1.0) {Trench Node};
+  % node electrode (inside trench)
+  \fill[black!30] (-0.35,-0.1) rectangle (0.35,-1.6);
 
   % buried strap diffusion
-  \fill[gray!50] (0.6,-0.6) rectangle (1.0,-0.2);
-  \node[anchor=west] at (1.1,-0.4) {buried strap $n^+$};
+  \fill[gray!50] (0.55,-0.5) rectangle (0.95,-0.9);
+  \node[anchor=west] at (1.0,-0.7) {\small buried strap $n^+$};
 
-  % pn junction around trench sidewalls + strap
-  \draw[red,very thick] (-0.6,0) -- (-0.6,-2) -- (0.6,-2) -- (0.6,0);
-  \draw[red,very thick] (0.6,-0.6) rectangle (1.0,-0.2);
+  % pn junction
+  \draw[red,very thick] (0.55,-0.5) rectangle (0.95,-0.9);
+  \node[red,anchor=west] at (1.0,-1.0) {\scriptsize pn 接合};
 
   % title
-  \node at (0,-2.6) {\bfseries (b) Trench Capacitor (断面)};
-\end{scope}
-
+  \node at (0,1.0) {\bfseries (b) Trench Cross-section};
 \end{tikzpicture}
-\caption{Stack と Trench の断面構造。
-Stackは小さな拡散層に限定された接合だが，Trenchは側壁・底面＋buried strap周辺に広い接合が形成される。}
-\label{fig:stack_trench_cross}
-\end{figure}
+\end{minipage}
 
+\vspace{1.2em}
 
-% ==== 上面図 ====
-\begin{figure}[t]
+% ---------- Top view comparison ----------
+\begin{minipage}{0.46\linewidth}
 \centering
-\begin{tikzpicture}[scale=1.0]
+\begin{tikzpicture}[scale=0.9]
+  % cell frame
+  \draw[dashed,gray] (0,0) rectangle (3,3);
 
-% --- Stack top view ---
-\begin{scope}
-  % diffusion
-  \fill[gray!30] (0,0) rectangle (2,2);
-  \node at (1,1) {$n^+$ diffusion};
-  % pn junction perimeter
-  \draw[red,very thick] (0,0) rectangle (2,2);
-  \node[red,below] at (1,0) {\scriptsize 周辺長短い};
-  \node at (1,2.3) {\bfseries (a) Stack Top view};
-\end{scope}
+  % n+ diffusion (one block)
+  \fill[gray!50] (1.1,1.1) rectangle (1.9,1.9);
+  \draw[red,very thick] (1.1,1.1) rectangle (1.9,1.9);
 
-% --- Trench top view ---
-\begin{scope}[xshift=6cm]
-  % substrate block
-  \fill[gray!30] (0,0) rectangle (2,2);
-  % trench pattern (multiple deep grooves)
-  \foreach \x in {0.4,1.0,1.6}{
-    \fill[white] (\x,0.3) rectangle +(0.25,1.4);
-    \draw[red,very thick] (\x,0.3) rectangle +(0.25,1.4);
-  }
-  \node[red,below] at (1,0) {\scriptsize 周辺長長い};
-  \node at (1,2.3) {\bfseries (b) Trench Top view};
-\end{scope}
-
+  \node at (1.5,3.3) {\bfseries (c) Stack Top view};
+  \node[red,below] at (1.5,1.05) {\scriptsize 周辺長 = 短い};
 \end{tikzpicture}
-\caption{上面図によるStackとTrenchの接合境界比較。
-Stackは矩形で単純な周辺長だが，Trenchは多数の側壁に沿ってpn接合が形成され，
-周辺長が増大する。}
-\label{fig:stack_trench_top}
+\end{minipage}
+\hspace{0.05\linewidth}
+\begin{minipage}{0.46\linewidth}
+\centering
+\begin{tikzpicture}[scale=0.9]
+  % cell frame
+  \draw[dashed,gray] (0,0) rectangle (3,3);
+
+  % multiple trenches inside same cell
+  \foreach \x in {0.6,1.4,2.2}{
+    \fill[gray!50] (\x,0.6) rectangle +(0.3,1.8);
+    \draw[red,very thick] (\x,0.6) rectangle +(0.3,1.8);
+  }
+
+  \node at (1.5,3.3) {\bfseries (d) Trench Top view};
+  \node[red,below] at (1.5,0.55) {\scriptsize 周辺長 = 長い};
+\end{tikzpicture}
+\end{minipage}
+
+\caption{Stack と Trench キャパシタの比較。
+(a)(b) は断面図、(c)(d) は同一世代・同一セル面積での上面レイアウト。
+Stack は単一拡散で周辺長が短いが，
+Trench は複数の細溝で容量を稼ぐため周辺長が長く，
+高温リークに不利。}
+\label{fig:stack_trench_full}
 \end{figure}
 
 \begin{figure}[t]
