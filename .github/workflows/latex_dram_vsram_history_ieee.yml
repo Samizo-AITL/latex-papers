@@ -20,14 +20,24 @@ jobs:
           root_file: main.tex
           latexmk_use_lualatex: true
 
+      # 失敗しても常にログ系をアップ
+      - name: Upload build logs (log/aux/bbl/blg)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dram_vsram_ieee_logs
+          path: |
+            papers/2025_dram_vsram_history_ieee/main.log
+            papers/2025_dram_vsram_history_ieee/main.aux
+            papers/2025_dram_vsram_history_ieee/main.bbl
+            papers/2025_dram_vsram_history_ieee/main.blg
+          if-no-files-found: warn
+
+      # PDFができたときだけ拾う
       - name: Upload PDF artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: dram_vsram_ieee_pdf
           path: papers/2025_dram_vsram_history_ieee/main.pdf
-
-      - name: Upload log artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dram_vsram_ieee_log
-          path: papers/2025_dram_vsram_history_ieee/main.log
+          if-no-files-found: warn
