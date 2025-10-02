@@ -468,65 +468,86 @@ Stack型キャパシタに比べてTrench型キャパシタでは
 ジャンクション面積の拡大に比例してリーク電流 $I_{\mathrm{junc}}$ が増加し，
 90\,$^\circ$C 条件下ではその増加率が一層大きくなることが確認された。
 
+% ==== Fig. Stack vs Trench (vertical, accurate junctions) ====
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[scale=1.05, every node/.style={font=\footnotesize}]
-% ===== (a) Stack Capacitor =====
-\node[font=\bfseries] at (0,3.2) {(a) Stack Capacitor};
+% ---------- (a) Stack Capacitor ----------
+\begin{minipage}{0.95\linewidth}
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % p- substrate (stack)
+  \fill[gray!20] (-2,0) rectangle (2,-0.8);
+  \node[anchor=east] at (-2,0.15) {\small $p^-$ substrate};
 
-% p-substrate
-\fill[gray!10] (-1.4,1.9) rectangle (1.4,1.2);
-\node at (0,2.15) {$p^-$ substrate};
+  % n+ diffusion in substrate (stack)
+  \fill[gray!55] (-0.45,-0.1) rectangle (0.45,-0.6);
+  \node[anchor=west] at (0.55,-0.35) {\small $n^+$ diffusion};
 
-% n+ diffusion (planar)
-\fill[gray!60] (-0.5,1.2) rectangle (0.5,1.0);
-\node at (0,0.8) {$n^+$ diffusion};
+  % storage node contact (plug)
+  \fill[black!30] (-0.12,0.0) rectangle (0.12,1.20);
+  \node[anchor=west] at (0.20,0.95) {\small Storage Node (electrode)};
 
-% storage-node contact + stack node
-\fill[black!35] (-0.1,1.2) rectangle (0.1,2.8);
-\node[anchor=west] at (0.15,2.2) {Storage Node};
+  % thin dielectric cap (schematic: thin line above diffusion)
+  \draw[black, line width=0.25pt] (-0.45,0) -- (0.45,0); % oxide schematic
 
-% junction (pn) = red perimeter at diffusion/ substrate interface
-\draw[red,very thick] (-0.5,1.0) -- (0.5,1.0);
-\draw[red,very thick] (-0.5,1.0) -- (-0.5,1.2);
-\draw[red,very thick] (0.5,1.0) -- (0.5,1.2);
-\node[red,below] at (0,0.95) {pn 接合（面積小）};
+  % pn junction (Stack) = boundary of n+ diffusion in p-substrate
+  \draw[red, very thick] (-0.45,-0.1) rectangle (0.45,-0.6);
+  \node[red, anchor=north] at (0,-0.65) {\scriptsize pn 接合（小）};
 
-% ===== (b) Trench Capacitor with Buried Strap =====
-\node[font=\bfseries] at (0,0.3) {(b) Trench Capacitor};
-
-% p-substrate
-\fill[gray!10] (-1.6,-0.2) rectangle (1.6,-1.0);
-\node at (0,0.05) {$p^-$ substrate};
-
-% deep trench (node poly inside)
-\draw[thick] (-0.35,-0.2) -- (-0.35,-1.6) -- (0.35,-1.6) -- (0.35,-0.2);
-\node at (0,-1.8) {Trench (node)};
-
-% buried strap connecting node to diffusion
-\fill[black!35] (0.35,-0.6) -- (0.7,-0.6) -- (0.7,-0.2) -- (0.35,-0.2) -- cycle;
-\node[anchor=west] at (0.72,-0.38) {Buried Strap};
-
-% n+ diffusion extended along strap region
-\fill[gray!60] (0.6,-1.0) rectangle (1.2,-0.2);
-\node[anchor=west] at (1.25,-0.6) {$n^+$ diffusion};
-
-% pn junction perimeter (larger due to lateral extension)
-\draw[red,very thick] (0.6,-0.2) -- (1.2,-0.2);   % top edge of diffusion
-\draw[red,very thick] (0.6,-1.0) -- (1.2,-1.0);   % bottom edge
-\draw[red,very thick] (0.6,-1.0) -- (0.6,-0.2);   % left edge
-\draw[red,very thick] (1.2,-1.0) -- (1.2,-0.2);   % right edge
-% optional: small red along strap-diffusion corner to stress perimeter increase
-\draw[red,very thick] (0.35,-0.2) -- (0.6,-0.2);
-
-\node[red,below right] at (1.2,-1.0) {pn 接合（面積・周長が大）};
+  % title (a)
+  \node[anchor=west] at (-2.0,1.45) {\bfseries (a) Stack Capacitor};
 \end{tikzpicture}
+\end{minipage}
 
-\caption{Retention に効くリークは \emph{pn 接合（n$^+$拡散とp$^-$基板）のリーク}。
-(a) Stack では平面拡散が小さく接合面積が小さい。
-(b) Trench ではノードを結ぶ \emph{buried strap} により拡散が側方へ広がり、
-接合面積・周長が増えてリーク経路が増大しやすい。誘電体側壁は pn 接合ではない。}
-\label{fig:stack_trench_junction_correct}
+\vspace{0.8em}
+
+% ---------- (b) Trench Capacitor ----------
+\begin{minipage}{0.95\linewidth}
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % p- substrate (trench)
+  \fill[gray!20] (-2,0) rectangle (2,-2.2);
+  \node[anchor=east] at (-2,0.15) {\small $p^-$ substrate};
+
+  % trench cavity and storage node electrode (poly/metal) inside trench
+  % trench opening
+  \draw[black,thick] (-0.45,0) -- (-0.45,-1.9) -- (0.45,-1.9) -- (0.45,0);
+  % node electrode (filled) separated by dielectric
+  \fill[black!30] (-0.35,-0.1) rectangle (0.35,-1.8);
+
+  % collar oxide (near top) -- schematic
+  \draw[black!60, line width=0.25pt] (-0.55,-0.15) -- (-0.55,-0.60);
+  \draw[black!60, line width=0.25pt] (0.55,-0.15) -- (0.55,-0.60);
+  \node[anchor=west] at (0.65,-0.35) {\scriptsize collar oxide (schematic)};
+
+  % buried strap (n+ diffusion) connecting node to surface diffusion
+  \fill[gray!55] (0.50,-0.55) rectangle (1.10,-0.05);
+  \node[anchor=west] at (1.18,-0.28) {\small buried strap $n^+$ diffusion};
+
+  % (option) surface diffusion landing (schematic)
+  \fill[gray!55] (0.90,0) rectangle (1.30,0.12);
+
+  % dielectric along trench sidewalls (schematic thin line)
+  \draw[black, line width=0.25pt] (-0.45,0) -- (-0.45,-1.9);
+  \draw[black, line width=0.25pt] (0.45,0) -- (0.45,-1.9);
+  \draw[black, line width=0.25pt] (-0.45,-1.9) -- (0.45,-1.9);
+
+  % pn junction (Trench) = boundary of buried strap n+ with p-substrate
+  \draw[red, very thick] (0.50,-0.55) rectangle (1.10,-0.05);
+  \node[red, anchor=west] at (1.18,-0.65) {\scriptsize pn 接合（面積・周長が大）};
+
+  % title (b)
+  \node[anchor=west] at (-2.0,0.8) {\bfseries (b) Trench Capacitor};
+\end{tikzpicture}
+\end{minipage}
+
+\caption{Stack と Trench のセル構造（概念断面，1カラム表示）。赤線は
+pn 接合（$n^+$ 拡散—$p^-$ 基板）の境界を示す。
+Stack では接合は平面拡散の底面＋側壁に限定され相対的に小さい。
+Trench ではノードを \emph{buried strap} で接続するため、strap 周りの
+3D 接合の周長・面積が大きくなり、ジャンクションリークが増えやすい。
+（トレンチ側壁・底面は誘電体で絶縁されており pn 接合ではない。）}
+\label{fig:stack_trench_correct}
 \end{figure}
 
 \begin{figure}[t]
