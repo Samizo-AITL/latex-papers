@@ -198,44 +198,30 @@ DRAMセルの保持時間は以下で表される。
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[x=1cm,y=1cm,scale=0.95,
-  every node/.style={font=\scriptsize}]
-  % === Si 表面と p- 基板 ===
-  \draw (-4,0) -- (4,0);
-  \fill[gray!10] (-4,-1.2) rectangle (4,0);
-  \node at (-3.2,-0.6) {$p^{-}$ substrate};
+\begin{tikzpicture}[scale=0.8]
 
-  % === WL（ゲート）＋チャネル位置 ===
-  \draw[line width=0.3pt] (-2.4,0) -- (-1.6,0);        % gate oxide (薄線)
-  \fill[gray!45] (-2.4,0) rectangle (-1.6,0.9);         % poly gate
-  \draw (-2.4,0) rectangle (-1.6,0.9);
-  \node[above] at (-2.0,0.9) {WL};
-  \draw[densely dotted] (-2.35,-0.05) -- (-1.65,-0.05); % channel
+% --- 基板 ---
+\fill[gray!20] (-1,0) rectangle (4,-1.2);
+\node at (-0.8,-0.6) {$p^-$ substrate};
 
-  % === n+ 拡散（SN 側） ===
-  \fill[gray!60] (-0.25,-0.6) rectangle (0.85,0);
-  \node at (0.30,-0.35) {$n^{+}$};
+% --- n+拡散層 ---
+\fill[gray!50] (1,-0.01) rectangle (3,-0.4);
+\node at (2,-0.6) {$n^+$ diffusion};
 
-  % === SN への単一コンタクト（1本）と SN プレート ===
-  \fill[white] (0.25,0) rectangle (0.40,1.45);          % single contact
-  \draw (0.25,0) rectangle (0.40,1.45);
-  \draw (-0.25,1.45) rectangle (0.85,2.2);              % SN 上部（簡易プレート）
-  \node at (0.30,1.85) {\textbf{SN}};
+% --- ストレージノードコンタクト ---
+\draw[fill=white] (2,-0.01) rectangle (2.4,1.2);
+\node at (2.7,0.6) {SN};
 
-  % === LOCOS（右フィールド酸化） ===
-  \begin{scope}
-    \fill[gray!25]
-      (1.2,0) .. controls (1.7,0.55) and (2.4,0.55) .. (2.9,0) -- cycle;
-    \draw (1.2,0) .. controls (1.7,0.55) and (2.4,0.55) .. (2.9,0);
-  \end{scope}
-  \node[right] at (2.95,0.25) {LOCOS};
+% --- 矢印：n+ から p- へのリーク ---
+\draw[->,thick,red] (2,-0.4) -- (2,-1.0)
+  node[midway,right] {$I_{\mathrm{leak}}$};
 
-  % === 補助注記 ===
-  \draw[decorate,decoration={brace,amplitude=4pt}] (-0.25,-0.75) -- (0.85,-0.75);
-  \node at (0.30,-1.0) {$n^{+}$ diffusion};
+% --- ラベル ---
+\draw[->] (2.2,1.2) -- (2.2,1.6) node[above] {to Storage Node};
+
 \end{tikzpicture}
-\caption{DRAM セル断面の概念図（WL 直下にチャネル，右側に $n^{+}$ 拡散と \emph{単一の} SN コンタクト，さらに右に LOCOS）。本断面は活性領域方向であり，BL は断面外（垂直方向）。}
-\label{fig:cell_cross_section}
+\caption{DRAM セル断面の概念図（SNコンタクト／$n^+$拡散層／$p^-$基板）。赤矢印は $n^+ \rightarrow p^-$ へのリーク電流 $I_{\mathrm{leak}}$ を示す。}
+\label{fig:dram_cross_section}
 \end{figure}
 
 \begin{figure}[t]
