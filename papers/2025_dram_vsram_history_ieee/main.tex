@@ -465,6 +465,74 @@ NANYAは当時，東芝と技術提携を行っており，
 ジャンクションリーク $I_{\mathrm{junc}}$ が増加し，
 90\,$^\circ$C 条件下では増加率がさらに大きくなることが確認された。
 
+% ==== 図：スタック vs トレンチの接合面積の可視化 ====
+\begin{figure}[t]
+\centering
+\begin{minipage}{0.48\linewidth}
+\centering
+\begin{tikzpicture}[scale=0.9]
+  % p-基板
+  \fill[gray!15] (-0.2,0) rectangle (3.2,-1.2);
+  \node[anchor=north west] at (-0.15,-0.02) {\scriptsize $p^-$ substrate};
+
+  % n+拡散（スタック）
+  \fill[gray!55] (0.4,-0.02) rectangle (2.8,-0.35);
+  \node[anchor=north] at (1.6,-0.40) {\scriptsize $n^+$ diffusion};
+
+  % スタックキャパ（上方向）
+  \draw[very thick] (1.2,-0.02) rectangle (2.0,0.9);
+  \node[anchor=south] at (1.6,0.95) {\scriptsize Stack Capacitor};
+
+  % pn接合面積（赤ハッチ：主に底面の接合のみ）
+  \fill[pattern=north east lines, pattern color=red]
+       (0.4,-0.02) rectangle (2.8,-0.10);
+  \draw[red,thick] (0.4,-0.02) rectangle (2.8,-0.10);
+
+  % 凡例矢印
+  \draw[->,red,thick] (0.45,-0.12) -- (-0.05,-0.55)
+    node[anchor=east,align=left] {\scriptsize 接合面積（小）};
+
+\end{tikzpicture}
+\caption*{\scriptsize (a) スタックセル：接合は主に「底面」}
+\end{minipage}\hfill
+\begin{minipage}{0.48\linewidth}
+\centering
+\begin{tikzpicture}[scale=0.9]
+  % p-基板
+  \fill[gray!15] (-0.2,0) rectangle (3.2,-1.6);
+  \node[anchor=north west] at (-0.15,-0.02) {\scriptsize $p^-$ substrate};
+
+  % トレンチ（深掘り）
+  \draw[very thick] (1.4,0) -- (1.4,-1.4) -- (1.9,-1.4) -- (1.9,0);
+
+  % n+ライナー（側壁・底面に沿う導電層を簡略表現）
+  \fill[gray!55] (1.35,-0.05) -- (1.35,-1.45) -- (1.95,-1.45) -- (1.95,-0.05) -- cycle;
+
+  % トレンチ内部のキャパシタ（概念）
+  \node at (1.65,-0.7) {\scriptsize Trench Capacitor};
+
+  % pn接合面積（赤ハッチ：側壁＋底面で大）
+  % 側壁
+  \fill[pattern=north east lines, pattern color=red] (1.35,-0.05) rectangle (1.45,-1.45);
+  \fill[pattern=north east lines, pattern color=red] (1.85,-0.05) rectangle (1.95,-1.45);
+  % 底面
+  \fill[pattern=north east lines, pattern color=red] (1.35,-1.35) rectangle (1.95,-1.45);
+  \draw[red,thick] (1.35,-0.05) rectangle (1.45,-1.45);
+  \draw[red,thick] (1.85,-0.05) rectangle (1.95,-1.45);
+  \draw[red,thick] (1.35,-1.45) -- (1.95,-1.45);
+
+  % 凡例矢印
+  \draw[->,red,thick] (1.95,-0.7) -- (2.9,-0.7)
+    node[anchor=west,align=left] {\scriptsize 接合面積（大）\\[-1pt]\scriptsize 側壁+底面};
+
+\end{tikzpicture}
+\caption*{\scriptsize (b) トレンチセル：側壁の寄与で接合面積が増大}
+\end{minipage}
+
+\caption{スタック vs トレンチのpn接合面積の比較（赤ハッチ部）。トレンチは側壁分だけ接合面積が増え、$I_{\mathrm{junc}}\propto A_{\mathrm{junc}}\cdot J_s(T,V_{bs})$ によりリーク増大へ結びつく。}
+\label{fig:stack_trench_junction_area}
+\end{figure}
+
 % --- トレンチキャパの面積依存 ---
 \begin{figure}[t]
 \centering
