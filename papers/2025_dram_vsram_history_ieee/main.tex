@@ -191,32 +191,61 @@ DRAMセルの保持時間は以下で表される。
 さらにフェイルマップ解析から，不良が同一座標で再現することが確認され，
 プロセス条件に起因する系統的要因であることが明らかになった。
 
+% プリアンブルに入っていること：
+% \usepackage{circuitikz}
+
 \begin{figure}[t]
 \centering
-\begin{circuitikz}
-  \draw (0,0) to[C,l=$C_{\mathrm{cell}}$] (0,2)
-        to[V,l=$V_{\mathrm{cell}}$] (2,2)
-        to[R,l=$1/I_{\mathrm{leak}}$] (2,0)
-        -- (0,0);
+\begin{circuitikz}[scale=0.9] % ← 1カラムに収める小さめスケール
+  %--- 基本ノード
+  \coordinate (SN) at (0,2.5);         % Storage Node
+  \coordinate (TOP) at (0,4.5);        % キャパシタ上板
+  \coordinate (SUB) at (0,0);          % サブストレート/グランド
+  \coordinate (BL)  at (3.6,2.5);      % ビットライン
+
+  %--- 1T1C：セルキャパシタとVcellプレート
+  \draw (SN) to[C,l_=$C_{\mathrm{cell}}$] (TOP)
+        (TOP) to[short,-o] ++(0.8,0) node[right]{$V_{\mathrm{cell}}$};
+
+  %--- ジャンクションリーク（SN→サブストレート）
+  \draw (SN) to[R,l=$R_{\mathrm{junc}}$] (SUB) node[ground]{};
+  % 矢印で電流注記
+  \draw[->] (0.6,1.4) -- ++(0.9,0) node[midway,below]{$I_{\mathrm{junc}}$};
+
+  %--- 酸化膜リーク（Ccell経路の微小リークを破線で）
+  \draw[dashed] ($(SN)+(0.55,0.9)$) to[R,l_=$R_{\mathrm{ox}}$] ++(0,1.1);
+  \draw[->] (1.3,3.2) -- ++(0.8,0) node[midway,above]{$I_{\mathrm{ox}}$};
+
+  %--- アクセストランジスタ（NMOS）とワードライン
+  \draw (SN) -- ++(0.7,0) node[nmos, anchor=S, scale=0.9] (Macc) {};
+  \draw (Macc.D) -- (BL);
+  \draw (Macc.G) -- ++(0,1.0) node[right]{$WL$};
+
+  %--- ビットライン表示
+  \draw (BL) node[right]{BL};
+  %--- ストレージノード注記
+  \draw (SN) node[left]{SN};
 \end{circuitikz}
-\caption{DRAMセル保持時間モデル $\tau=\dfrac{C_{\mathrm{cell}}V_{\mathrm{cell}}}{I_{\mathrm{leak}}}$}
-\label{fig:retention_model}
+
+\caption{1T1Cセルの等価回路とリーク経路。
+保持時間 $\tau=\dfrac{C_{\mathrm{cell}}V_{\mathrm{cell}}}{I_{\mathrm{leak}}}$，
+$\,I_{\mathrm{leak}}=I_{\mathrm{junc}}+I_{\mathrm{ox}}+\cdots$。}
+\label{fig:retention_model_detail}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[scale=0.5]
-  \foreach \x in {0,...,15}{
-    \foreach \y in {0,...,15}{
-      \fill[gray!20] (\x,\y) rectangle ++(1,1);
-    }
-  }
-  % ランダムな不良セルを赤印で
-  \foreach \pos in {(2,3),(5,10),(8,6),(12,12),(3,14),(14,7)}{
-    \fill[red] \pos rectangle ++(1,1);
+\begin{tikzpicture}[scale=0.25] % ← 1カラム幅に収める調整
+  % ウエハ外形（円）
+  \draw[thick] (0,0) circle (15);
+
+  % フェイルビットを赤点でランダムに配置
+  \foreach \pos in {(2,3),(5,10),(8,6),(12,12),(3,14),(14,7),
+                    (-5,-8),(-10,6),(7,-12),(-12,-10),(0,13),(-8,3)}{
+    \fill[red] \pos circle (0.5); % 半径0.5の赤点
   }
 \end{tikzpicture}
-\caption{Pause Refresh Fail のフェイルマップ例（ランダム点在型）}
+\caption{Pause Refresh Fail のフェイルビットマップ例（ウエハ外周円＋ランダム赤点）}
 \label{fig:failmap}
 \end{figure}
 
