@@ -33,24 +33,21 @@
 \begin{abstract}
 \textbf{（日本語）}\\
 本論文は，1997年から2001年にかけてセイコーエプソン酒田事業所が
-三菱電機からの技術移管を通じて \mbox{0.5\,$\mu$m} $\rightarrow$ \mbox{0.35\,$\mu$m} $\rightarrow$ \mbox{0.25\,$\mu$m} のDRAMプロセスを短期間で習得し，
-VSRAM（疑似SRAM）を経由して液晶ドライバー等のロジック／混載CMOSへ展開した
+三菱電機からの技術移管を通じて \mbox{0.5\,$\mu$m} $\rightarrow$ \mbox{0.35\,$\mu$m} $\rightarrow$ \mbox{0.25\,$\mu$m} の
+DRAMプロセスを短期間で習得し，得られたプロセス知見を
+先端ロジック，高耐圧混載CMOSへ展開して液晶ドライバー製品化に結びつけた
 技術的・戦略的過程を，筆者の実体験に基づき整理する。
-主要な不良モード（Pause/Disturb Refresh）の物理起源と対策，および
-量産歩留まりの推移を示し，得られたプロセス知見が高耐圧混載CMOSに
-どのように接続されたかを考察する。\\[1ex]
+主要な不良モード（Pause/Disturb Refresh）の物理起源と対策，
+および量産歩留まりの推移を示し，獲得した知見がその後の
+事業ドメインへどのように接続されたかを考察する。\\[1ex]
 
 \textbf{(English)}\\
-This paper reviews the period from 1997 to 2001, during which Seiko Epson's Sakata Fab
-rapidly assimilated DRAM process technologies transferred from Mitsubishi Electric,
-covering the 0.5\,$\mu$m $\rightarrow$ 0.35\,$\mu$m $\rightarrow$ 0.25\,$\mu$m generations.
-Through these transfers, the fab not only ramped DRAM but also leveraged VSRAM
-(pseudo-SRAM) as a bridge to apply the acquired knowledge to logic and mixed-voltage CMOS
-devices such as LCD drivers.
-Based on the author’s first-hand experience, this paper organizes the technical and
-strategic aspects of that transition, highlighting the physical origins and countermeasures
-of key failure modes (Pause/Disturb Refresh), the yield evolution, and how the acquired
-know-how directly contributed to subsequent high-voltage mixed CMOS development.
+This paper reviews 1997–2001, when Seiko Epson’s Sakata Fab
+assimilated DRAM processes (0.5\,$\mu$m → 0.35\,$\mu$m → 0.25\,$\mu$m) transferred from Mitsubishi Electric.
+The acquired know-how was extended beyond DRAM to advanced logic
+and high-voltage mixed CMOS, leading to LCD driver products.
+Key failure modes (Pause/Disturb Refresh), countermeasures, and yield evolution
+are summarized based on the author’s on-site experience.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -146,10 +143,14 @@ Intel Pentium~II の登場を契機として急成長局面にあった。
 
 \subsection{SCF方式と初期歩留まり}
 1998年，酒田Fabは次世代である0.25\,$\mu$m世代64M DRAMの立ち上げに挑んだ。
-本プロジェクトでは，従来の一括条件適用方式ではなく，
-\emph{Short Cycle Feedback (SCF)} 方式が採用された。
-これは短いサイクルで評価とフィードバックを繰り返し，
+本プロジェクトにおいても，三菱電機が既に確立していた
+\emph{Short Cycle Feedback (SCF)} 方式が継続採用された。
+SCFは0.5\,$\mu$m世代の立ち上げ時から用いられており，
+短いサイクルで評価とフィードバックを繰り返すことで，
 工程条件を迅速に最適化する手法である。
+
+この方式により，条件調整を効率化しつつ初期歩留まりを確保でき，
+本番ロットでは約65\%に到達した。
 
 手順は以下の通りであった。
 \begin{enumerate}
@@ -196,19 +197,27 @@ DRAMセルの保持時間は以下で表される。
 熱励起キャリア生成を介してリーク電流が増加すると推定された。
 
 \subsection{対策と効果}
-対策として以下が実施された。
-\begin{itemize}
-  \item アッシング条件を低パワー・短時間化
-  \item ゲートエッチ後にサクリフィシャル酸化膜を再成長
-  \item 低残渣レジストを導入し，アッシング時間を削減
-  \item 高温アニールを組み込み，欠陥準位を回復
-\end{itemize}
+根本対策は，レジスト剥離を \emph{O$_2$ アッシング} から
+\emph{硫酸剥離} へ全面的に切り替えることであった。
+これにより，感受性の高い工程後のプラズマ曝露を完全に排除し，
+界面欠陥準位の生成を根本的に防止した。
+（アッシング条件の低パワー化などは実施せず，工程フローそのものを変更した。）
 
-これらの対策の結果，
-Pause Refresh Fail は大幅に減少し，
-歩留まりは65\%から80\%台後半へ改善した。
-また90\,$^\circ$C条件での信頼性試験でも保持時間規格を満足し，
-量産移行可能なレベルに到達した。
+\begin{table}[t]
+  \centering
+  \caption{レジスト剥離フローの切替（Before/After）}
+  \begin{tabular}{ll}
+    \toprule
+    従来（Before） & O$_2$ アッシングによるドライ剥離 \\
+    対策後（After） & 硫酸剥離によるウエット剥離 \\
+    主効果 & プラズマ曝露ゼロ化，界面欠陥・ジャンクションリーク抑制 \\
+    歩留まり & 65\% $\rightarrow$ 80\%台後半（Pause改善が支配） \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+この切替により，Pause Refresh Fail は大幅に減少し，
+量産歩留まりは 65\% から 80\%台後半へと改善した。
 
 \subsection{小括}
 0.25\,$\mu$m DRAMの立ち上げにおいて，
@@ -270,6 +279,8 @@ Pause Refresh の主因は，セルジャンクションリークの増大であ
     \begin{itemize}
       \item ゲートCD（Critical Dimension）の中心値を厳密管理し，短チャネルばらつきを抑制。
       \item バックバイアス強化によりしきい値電圧を上昇させ，ワードラインによる誤反転を防止。
+      \item メモリセルのチャネルドーピング量を動作可能な範囲で増加させ，
+            V\textsubscript{th} を上げることでセル反転耐性を向上。
     \end{itemize}
 \end{itemize}
 
@@ -287,9 +298,13 @@ Pause Refresh の主因は，セルジャンクションリークの増大であ
 VSRAMの立ち上げでは，モバイル仕様に特有の低消費・高温要求が
 Pause/Disturb不良を顕在化させた。
 しかしHF洗浄制御やバックバイアス強化，ゲート寸法管理といった
-プロセス最適化により，歩留まりを大幅に改善することができた。
-この知見は，単なるDRAM流用にとどまらず，
-以後の高耐圧混載CMOS開発にも活かされる基盤となった。
+プロセス最適化により，歩留まりを 30\% から 80\%台へ大幅に改善することができた。
+
+VSRAMは酒田Fabにおける代表的なDRAM派生製品であったが，
+その技術が直接ロジック／高耐圧混載CMOSに展開されたわけではない。
+むしろ，この成功をもって「モバイルメモリへの挑戦」を一区切りとし，
+次の段階として台湾NANYAの 0.18\,$\mu$m トレンチDRAMプロセスを用いた
+VSRAM/PSRAM試作評価へと進むことになる。
 
 \section{第4章：0.18\,\texorpdfstring{$\mu$m}{μm} トレンチ系の評価と断念}
 
