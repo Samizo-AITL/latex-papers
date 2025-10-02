@@ -358,6 +358,64 @@ Pause Refresh の主因は，セルジャンクションリークの増大であ
 ワードライン電圧が隣接セルのしきい値を超えて誤反転を引き起こす現象であった。
 特に90\,$^\circ$C条件下ではリークが加速し，影響が顕著となった。
 
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\linewidth, height=6cm,
+  xlabel={温度 [$^\circ$C]}, ylabel={ジャンクションリーク $I_{\mathrm{junc}}$（相対）},
+  ymode=log, ymin=1e-2, ymax=1e2,
+  xmin=25, xmax=100, xtick={25,40,60,80,90,100},
+  grid=both,
+  legend style={at={(0.5,-0.22)},anchor=north,draw=none,fill=none},
+  clip=false
+]
+  % -1V（高リーク）
+  \addplot+[semithick,mark=*] coordinates {
+    (25,0.02) (40,0.06) (60,0.3) (80,1.6) (90,3.2) (100,6.0)
+  };
+  \addlegendentry{V\_bs=-1\,V}
+
+  % -3V（抑制）
+  \addplot+[semithick,mark=square*] coordinates {
+    (25,0.01) (40,0.03) (60,0.12) (80,0.45) (90,0.9) (100,1.8)
+  };
+  \addlegendentry{V\_bs=-3\,V}
+\end{axis}
+\end{tikzpicture}
+\caption{Pause Refresh：温度上昇で $I_{\mathrm{junc}}$ は指数的に増大。バックバイアス強化で抑制。}
+\label{fig:pause_temp_junc}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\linewidth, height=6cm,
+  xlabel={温度 [$^\circ$C]}, ylabel={トランジスタリーク $I_{\mathrm{off}}$（相対）},
+  ymode=log, ymin=1e-3, ymax=1e1,
+  xmin=25, xmax=100, xtick={25,40,60,80,90,100},
+  grid=both,
+  legend style={at={(0.5,-0.22)},anchor=north,draw=none,fill=none},
+  clip=false
+]
+  % CD=0.25um
+  \addplot+[semithick,mark=triangle*] coordinates {
+    (25,0.004) (40,0.01) (60,0.05) (80,0.22) (90,0.45) (100,0.9)
+  };
+  \addlegendentry{CD=0.25\,\,$\mu$m}
+
+  % CD=0.20um（短チャネルで悪化）
+  \addplot+[semithick,mark=*] coordinates {
+    (25,0.01) (40,0.03) (60,0.15) (80,0.7) (90,1.4) (100,2.8)
+  };
+  \addlegendentry{CD=0.20\,\,$\mu$m}
+\end{axis}
+\end{tikzpicture}
+\caption{Disturb Refresh：短チャネル効果で $I_{\mathrm{off}}$ が増大。温度上昇でも指数的に増える。}
+\label{fig:disturb_temp_sce}
+\end{figure}
+
 \subsection{対策と実装}
 不良低減のため，以下の具体的対策が導入された。
 \begin{itemize}
@@ -451,6 +509,36 @@ NANYAは当時，東芝と技術提携を行っており，
 強い競争優位を確立しており，
 戦略は\emph{高耐圧混載CMOS}をベースとした
 液晶ドライバー開発に集中する方向へと明確にシフトした。
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\linewidth, height=6cm,
+  xlabel={ジャンクション面積（相対）}, ylabel={ジャンクションリーク $I_{\mathrm{junc}}$（相対）},
+  xmin=0.5, xmax=2.5, ymin=0, ymax=3.5,
+  xtick={0.5,1.0,1.5,2.0,2.5},
+  ytick={0,0.5,1.0,1.5,2.0,2.5,3.0},
+  grid=both,
+  legend style={at={(0.5,-0.22)},anchor=north,draw=none,fill=none},
+  clip=false
+]
+  % 80C
+  \addplot+[semithick,mark=square*] coordinates {
+    (0.5,0.25) (1.0,0.5) (1.5,0.8) (2.0,1.1) (2.5,1.4)
+  };
+  \addlegendentry{80$^\circ$C}
+
+  % 90C（傾きが大）
+  \addplot+[semithick,mark=*] coordinates {
+    (0.5,0.5) (1.0,1.0) (1.5,1.6) (2.0,2.2) (2.5,2.9)
+  };
+  \addlegendentry{90$^\circ$C}
+\end{axis}
+\end{tikzpicture}
+\caption{トレンチキャパ：ジャンクション面積にほぼ比例して $I_{\mathrm{junc}}$ が増加。高温ほど増加率が大。}
+\label{fig:trench_area_leak}
+\end{figure}
 
 \subsection{小括}
 0.18\,$\mu$mトレンチDRAMプロセスの評価は，
