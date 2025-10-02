@@ -472,44 +472,41 @@ Stack型キャパシタに比べてTrench型キャパシタでは
 \centering
 \begin{tikzpicture}[scale=1.0]
 
-% --- Stack Capacitor ---
-\draw[thick] (0,0) rectangle (1,0.5); % diffusion
-\node at (0.5,-0.3) {n$^+$ diffusion};
+% --- (a) Stack Capacitor ---
+\node at (0,3.2) {\textbf{(a) Stack Capacitor}};
 
-\draw[thick] (0.4,0.5) -- (0.4,1.5) -- (0.6,1.5) -- (0.6,0.5); % storage node
-\node at (1.6,1.0) {Storage Node};
+% diffusion region
+\draw[thick] (-0.5,2.0) rectangle (0.5,2.3);
+\node at (0,1.8) {n$^+$ diffusion};
 
-\draw[thick] (0.4,0.5) -- (0.4,0.0);
-\draw[thick] (0.6,0.5) -- (0.6,0.0);
-\node at (0.5,0.8) {Contact};
+% storage node contact
+\draw[thick] (-0.1,2.3) -- (-0.1,3.0) -- (0.1,3.0) -- (0.1,2.3);
+\node at (1.2,2.6) {Storage Node};
 
-% --- 赤線 (junction area for Stack) ---
-\draw[red,very thick] (0,0) -- (1,0);
-\node[red,below] at (0.5,-0.6) {接合面積（小）};
+% 赤線 (junction area stack)
+\draw[red,very thick] (-0.5,2.0) -- (0.5,2.0);
+\node[red,below] at (0,1.9) {接合面積（小）};
 
-% Label
-\node at (0.5,2) {\textbf{(a) Stack Capacitor}};
+% --- (b) Trench Capacitor ---
+\node at (0,1.0) {\textbf{(b) Trench Capacitor}};
 
-% --- Trench Capacitor ---
-\begin{scope}[xshift=5cm]
-\draw[thick] (0,0) rectangle (1,-2); % trench
-\node at (0.5,0.3) {p$^-$ substrate};
-\node at (0.5,-2.3) {n$^+$ diffusion};
+% substrate
+\node at (0,0.7) {p$^-$ substrate};
 
-% --- 赤線 (junction area for Trench) ---
-\draw[red,very thick] (0,-0.05) -- (0,-2); % left wall
-\draw[red,very thick] (1,-0.05) -- (1,-2); % right wall
-\draw[red,very thick] (0,-2) -- (1,-2);   % bottom
-\node[red,right] at (1.1,-1.2) {接合面積（大）};
+% trench diffusion
+\draw[thick] (-0.5,0.5) rectangle (0.5,-1.5);
+\node at (0,-1.7) {n$^+$ diffusion};
 
-% Label
-\node at (0.5,0.8) {\textbf{(b) Trench Capacitor}};
-\end{scope}
+% 赤線 (junction area trench)
+\draw[red,very thick] (-0.5,0.5) -- (-0.5,-1.5); % left wall
+\draw[red,very thick] (0.5,0.5) -- (0.5,-1.5);   % right wall
+\draw[red,very thick] (-0.5,-1.5) -- (0.5,-1.5); % bottom
+\node[red,right] at (0.6,-0.5) {接合面積（大）};
 
 \end{tikzpicture}
-\caption{Stack型とTrench型キャパシタの構造比較。
-赤線はジャンクション接合面積を示す。Stackは小さいが，
-Trenchは側壁・底面が広いためリークが増加しやすい。}
+\caption{Stack型とTrench型キャパシタの構造比較。赤線はジャンクション接合面積を示す。
+Stackは拡散層上にストレージノードを積層するため接合面積が小さいが，
+Trenchは側壁・底面全体が接合面となるためリーク経路が大きい。}
 \label{fig:stack_trench_junction}
 \end{figure}
 
