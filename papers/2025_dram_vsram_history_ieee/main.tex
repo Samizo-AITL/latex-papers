@@ -460,54 +460,66 @@ NANYAは当時，東芝と技術提携を行っており，
 \end{itemize}
 
 これらの不良はセル構造に起因し，単純な工程条件調整では改善が困難であった。
-特に Fig.~\ref{fig:trench_area_leak} に示すように，
-トレンチキャパシタではジャンクション面積の拡大に比例して
-ジャンクションリーク $I_{\mathrm{junc}}$ が増加し，
-90\,$^\circ$C 条件下では増加率がさらに大きくなることが確認された。
+特に Fig.~\ref{fig:stack_trench_junction} に示すように，
+Stack型キャパシタに比べてTrench型キャパシタでは
+側壁や底面の広い接合領域が存在し，
+ジャンクションリーク経路が大幅に増える。
+さらに Fig.~\ref{fig:trench_area_leak} の実測結果からも，
+ジャンクション面積の拡大に比例してリーク電流 $I_{\mathrm{junc}}$ が増加し，
+90\,$^\circ$C 条件下ではその増加率が一層大きくなることが確認された。
 
 \begin{figure}[t]
 \centering
+\begin{tikzpicture}[scale=1.0]
 
-% --- (a) Stack Capacitor ---
-\begin{tikzpicture}[scale=0.9]
-  % 基板
-  \fill[gray!20] (0,0) rectangle (4,-0.6);
-  \node[anchor=north west] at (0,-0.05) {\footnotesize $p^-$ substrate};
-  % n+ diffusion
-  \fill[gray!50] (1.5,-0.01) rectangle (2.5,-0.3);
-  \node[anchor=north] at (2,-0.35) {\footnotesize $n^+$ diffusion};
-  % Stack capacitor
-  \draw[thick] (1.5,0) -- (1.5,0.8) -- (2.5,0.8) -- (2.5,0);
-  \node[anchor=south] at (2,0.85) {\footnotesize Stack Capacitor};
+% --- Stack Capacitor ---
+\draw[thick] (0,0) rectangle (1,0.5); % diffusion
+\node at (0.5,-0.3) {n$^+$ diffusion};
+
+\draw[thick] (0.4,0.5) -- (0.4,1.5) -- (0.6,1.5) -- (0.6,0.5); % storage node
+\node at (1.6,1.0) {Storage Node};
+
+\draw[thick] (0.4,0.5) -- (0.4,0.0);
+\draw[thick] (0.6,0.5) -- (0.6,0.0);
+\node at (0.5,0.8) {Contact};
+
+% --- 赤線 (junction area for Stack) ---
+\draw[red,very thick] (0,0) -- (1,0);
+\node[red,below] at (0.5,-0.6) {接合面積（小）};
+
+% Label
+\node at (0.5,2) {\textbf{(a) Stack Capacitor}};
+
+% --- Trench Capacitor ---
+\begin{scope}[xshift=5cm]
+\draw[thick] (0,0) rectangle (1,-2); % trench
+\node at (0.5,0.3) {p$^-$ substrate};
+\node at (0.5,-2.3) {n$^+$ diffusion};
+
+% --- 赤線 (junction area for Trench) ---
+\draw[red,very thick] (0,-0.05) -- (0,-2); % left wall
+\draw[red,very thick] (1,-0.05) -- (1,-2); % right wall
+\draw[red,very thick] (0,-2) -- (1,-2);   % bottom
+\node[red,right] at (1.1,-1.2) {接合面積（大）};
+
+% Label
+\node at (0.5,0.8) {\textbf{(b) Trench Capacitor}};
+\end{scope}
+
 \end{tikzpicture}
-
-\vspace{1em} % 図の間隔を確保
-
-% --- (b) Trench Capacitor ---
-\begin{tikzpicture}[scale=0.9]
-  % 基板
-  \fill[gray!20] (0,0) rectangle (4,-1.5);
-  \node[anchor=north west] at (0,-0.05) {\footnotesize $p^-$ substrate};
-  % Trench
-  \fill[gray!50] (1.9,0) rectangle (2.1,-1.2);
-  \node[anchor=south] at (2,0.05) {\footnotesize Trench Capacitor};
-  % 拡散層
-  \draw[red,very thick] (1.9,-1.2) -- (2.1,-1.2);
-  \node[anchor=north] at (2,-1.25) {\footnotesize $n^+$ diffusion};
-\end{tikzpicture}
-
-\caption{(a) スタックキャパシタ（接合面積は上面）と (b) トレンチキャパシタ（側壁で接合面積が大）。縦に並べて比較。}
-\label{fig:stack_trench}
+\caption{Stack型とTrench型キャパシタの構造比較。
+赤線はジャンクション接合面積を示す。Stackは小さいが，
+Trenchは側壁・底面が広いためリークが増加しやすい。}
+\label{fig:stack_trench_junction}
 \end{figure}
 
-% --- トレンチキャパの面積依存 ---
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
   width=\linewidth, height=6cm,
   xlabel={ジャンクション面積（相対）}, ylabel={ジャンクションリーク $I_{\mathrm{junc}}$（相対）},
-  xmin=0.5, xmax=2.5, ymin=0, ymax=3.5,
+  xmin=0.5, xmax=2.5, ymin=0, ymax=3,
   xtick={0.5,1.0,1.5,2.0,2.5},
   ytick={0,0.5,1.0,1.5,2.0,2.5,3.0},
   grid=both,
@@ -524,7 +536,8 @@ NANYAは当時，東芝と技術提携を行っており，
   \addlegendentry{90$^\circ$C}
 \end{axis}
 \end{tikzpicture}
-\caption{トレンチキャパ：ジャンクション面積に比例して $I_{\mathrm{junc}}$ が増加。高温条件では増加率が大きい。}
+\caption{トレンチキャパ：ジャンクション面積に比例して $I_{\mathrm{junc}}$ が増加。
+高温条件では増加率が大きい。}
 \label{fig:trench_area_leak}
 \end{figure}
 
