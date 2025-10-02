@@ -198,26 +198,23 @@ DRAMセルの保持時間は以下で表される。
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[scale=0.8]
+\begin{tikzpicture}[scale=1.0]
 
-% --- 基板 ---
-\fill[gray!20] (-1,0) rectangle (4,-1.2);
-\node at (-0.8,-0.6) {$p^-$ substrate};
+% --- 基板 (p-) ---
+\fill[gray!20] (-1,0) rectangle (4,-1.0);
+\node at (-0.8,-0.5) {\small $p^-$ substrate};
 
 % --- n+拡散層 ---
 \fill[gray!50] (1,-0.01) rectangle (3,-0.4);
-\node at (2,-0.6) {$n^+$ diffusion};
+\node at (2,-0.6) {\small $n^+$ diffusion};
 
 % --- ストレージノードコンタクト ---
-\draw[fill=white] (2,-0.01) rectangle (2.4,1.2);
+\draw[fill=white,thick] (2,-0.01) rectangle (2.4,1.2);
 \node at (2.7,0.6) {SN};
 
-% --- 矢印：n+ から p- へのリーク ---
-\draw[->,thick,red] (2,-0.4) -- (2,-1.0)
-  node[midway,right] {$I_{\mathrm{leak}}$};
-
-% --- ラベル ---
-\draw[->] (2.2,1.2) -- (2.2,1.6) node[above] {to Storage Node};
+% --- リーク電流の矢印 ---
+\draw[->,thick,red] (2.2,-0.4) -- (2.2,-1.0)
+  node[midway,right] {\small $I_{\mathrm{leak}}$};
 
 \end{tikzpicture}
 \caption{DRAM セル断面の概念図（SNコンタクト／$n^+$拡散層／$p^-$基板）。赤矢印は $n^+ \rightarrow p^-$ へのリーク電流 $I_{\mathrm{leak}}$ を示す。}
