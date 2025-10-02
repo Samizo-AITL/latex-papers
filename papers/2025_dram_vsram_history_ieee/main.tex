@@ -471,34 +471,30 @@ NANYAは当時，東芝と技術提携を行っており，
 \centering
 
 % ================== (a) Stack Cross-section ==================
-\begin{minipage}{0.48\linewidth}
-\centering
 \begin{tikzpicture}[x=1cm,y=1cm]
-  % p- substrate
+  % substrate
   \fill[gray!20] (-1.5,0) rectangle (1.5,-0.8);
   \node[anchor=east] at (-1.5,0.1) {\small $p^-$ substrate};
 
-  % n+ diffusion (aligned at surface)
+  % n+ diffusion
   \fill[gray!55] (-0.5,0) rectangle (0.5,-0.6);
   \node[anchor=west] at (0.6,-0.3) {\small $n^+$ diffusion};
 
-  % storage node electrode
+  % electrode
   \fill[black!30] (-0.15,0) rectangle (0.15,1.0);
   \node[anchor=west] at (0.3,0.7) {\small Storage Node};
 
-  % pn junction (sides + bottom only)
+  % pn junction
   \draw[red,very thick] (-0.5,0) -- (-0.5,-0.6);
   \draw[red,very thick] (0.5,0) -- (0.5,-0.6);
   \draw[red,very thick] (-0.5,-0.6) -- (0.5,-0.6);
 
-  % title
   \node[anchor=north] at (0,-1.2) {\bfseries (a) Stack Cross-section};
 \end{tikzpicture}
-\end{minipage}
-\hfill
+
+\vspace{1.5em}
+
 % ================== (b) Trench Cross-section ==================
-\begin{minipage}{0.48\linewidth}
-\centering
 \begin{tikzpicture}[x=1cm,y=1cm]
   % substrate
   \fill[gray!20] (-1.5,0) rectangle (1.5,-2.0);
@@ -513,49 +509,41 @@ NANYAは当時，東芝と技術提携を行っており，
   % buried strap diffusion
   \fill[gray!55] (0.55,-0.6) rectangle (0.95,-1.0);
 
-  % pn junction boundary
+  % pn junction
   \draw[red,very thick] (0.55,-0.6) rectangle (0.95,-1.0);
 
-  % title
   \node[anchor=north] at (0,-2.2) {\bfseries (b) Trench Cross-section};
 \end{tikzpicture}
-\end{minipage}
 
-\vspace{1.5em}
+\vspace{2em}
 
-% ================== (c) Stack Top view ==================
-\begin{minipage}{0.48\linewidth}
+% ================== Top views (c)(d) side by side ==================
+\begin{minipage}{0.45\linewidth}
 \centering
 \begin{tikzpicture}[scale=1.0]
-  % n+ diffusion
   \fill[gray!55] (-0.5,-0.5) rectangle (0.5,0.5);
-  % pn junction
   \draw[red,very thick] (-0.5,-0.5) rectangle (0.5,0.5);
-  % label
   \node[anchor=north] at (0,-0.8) {\bfseries (c) Stack Top view};
 \end{tikzpicture}
 \end{minipage}
 \hfill
-% ================== (d) Trench Top view ==================
-\begin{minipage}{0.48\linewidth}
+\begin{minipage}{0.45\linewidth}
 \centering
 \begin{tikzpicture}[scale=1.0]
-  % multiple trenches
   \foreach \x in {-1,0,1} {
     \fill[gray!55] (\x-0.3,-0.5) rectangle (\x+0.3,0.5);
     \draw[red,very thick] (\x-0.3,-0.5) rectangle (\x+0.3,0.5);
   }
-  % label
   \node[anchor=north] at (0,-0.8) {\bfseries (d) Trench Top view};
 \end{tikzpicture}
 \end{minipage}
 
-\caption{Stack と Trench キャパシタの比較図。
-(a)(b)：断面図。Stack では拡散が表面にあり、pn 接合は側壁と底面に限定される。
-Trench では埋め込みストラップ周囲に pn 接合が形成される。
-(c)(d)：上面図。Stack は単一矩形セルで周辺長が短いが、
-Trench は複数のトレンチ列により周辺長が大きくなる。}
-\label{fig:stack_trench_complete}
+\caption{Stack と Trench キャパシタの比較。
+(a)(b)：断面図（縦並び）。Stack では pn 接合は拡散層の側壁と底面のみ。
+Trench では buried strap 周囲に局所的に pn 接合が形成される。
+(c)(d)：上面図。Stack は単一矩形セルで周辺長が短い。
+Trench は複数のトレンチ列により周辺長が長くなる。}
+\label{fig:stack_trench_final}
 \end{figure}
 
 \begin{figure}[t]
