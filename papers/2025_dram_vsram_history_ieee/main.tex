@@ -440,114 +440,114 @@ NANYAは当時，東芝と技術提携を行っており，
 \emph{トレンチキャパシタ方式}をベースとしたプロセスを提供していた。
 
 この評価の目的は，0.25\,$\mu$m DRAM流用VSRAMの後継として，
-モバイル用途でさらに高密度・低消費を実現することにあった。
+モバイル用途でさらに高密度・低消費を実現することであった。
 
 \subsection{技術的特徴}
 \begin{itemize}
   \item \textbf{キャパシタ構造}：セルキャパシタはトレンチ型を採用。
         スタック型に比べ面積効率が高い一方，
-        ジャンクション面積が大きくリークが増大しやすい。
+        接合構造が複雑化しリークの寄与要因が増える。
   \item \textbf{動作仕様}：DRAM標準の80\,$^\circ$C動作保証は満たすが，
-        モバイル用途の90\,$^\circ$C保証には設計余裕が少なかった。
+        モバイル用途で必須の90\,$^\circ$C保証には設計余裕が少なかった。
 \end{itemize}
 
 \subsection{課題の顕在化}
-評価の結果，90\,$^\circ$C条件下では以下の問題が顕著に現れた。
+評価の結果，90\,$^\circ$C条件下では以下の不良が顕著に観測された。
 \begin{itemize}
-  \item \textbf{Pause Refresh Fail}：保持時間不足が多数発生。
-  \item \textbf{Disturb Refresh Fail}：高温時に誤反転が増加。
-  \item \textbf{高温リーク}：ジャンクション面積拡大に伴いリーク電流が顕著に増加。
+  \item \emph{Pause Refresh Fail}：保持時間不足が多数発生。
+  \item \emph{Disturb Refresh Fail}：高温条件で誤反転が増加。
+  \item \emph{高温リーク}：pn接合リークが顕著に増大。
 \end{itemize}
 
-これらの不良はセル構造に起因し，単純な工程条件調整では改善が困難であった。
-特に Fig.~\ref{fig:stack_trench_junction} に示すように，
-Stack型キャパシタに比べてTrench型キャパシタでは
-側壁や底面の広い接合領域が存在し，
-ジャンクションリーク経路が大幅に増える。
-さらに Fig.~\ref{fig:trench_area_leak} の実測結果からも，
-ジャンクション面積の拡大に比例してリーク電流 $I_{\mathrm{junc}}$ が増加し，
-90\,$^\circ$C 条件下ではその増加率が一層大きくなることが確認された。
+特に Fig.~\ref{fig:stack_trench_final} に示すように，
+スタック型キャパシタは $n^+$ 拡散の側壁・底面が主な接合領域である一方，
+トレンチ型では \emph{buried strap} 周囲に局所的なpn接合が形成され，
+界面欠陥や電界集中によってリーク経路が増加する。
+さらに Fig.~\ref{fig:trench_area_leak} の実測結果から，
+接合面積の拡大に比例してリーク電流 $I_{\mathrm{junc}}$ が増加し，
+90\,$^\circ$C条件下ではその増加率が一層大きくなることが確認された。
 
-% ==== Fig. Stack vs Trench (vertical, accurate junctions) ====
+% ==== Fig. Stack vs Trench (vertical; stack top aligned, red=pn only) ====
 \begin{figure}[t]
 \centering
+
 % ---------- (a) Stack Capacitor ----------
 \begin{minipage}{0.95\linewidth}
 \centering
 \begin{tikzpicture}[x=1cm,y=1cm]
-  % p- substrate (stack)
+  % p- substrate (surface at y=0)
   \fill[gray!20] (-2,0) rectangle (2,-0.8);
   \node[anchor=east] at (-2,0.15) {\small $p^-$ substrate};
 
-  % n+ diffusion in substrate (stack)
-  \fill[gray!55] (-0.45,-0.1) rectangle (0.45,-0.6);
-  \node[anchor=west] at (0.55,-0.35) {\small $n^+$ diffusion};
+  % n+ diffusion (top aligned to surface y=0)
+  \fill[gray!55] (-0.45,0) rectangle (0.45,-0.6);
+  \node[anchor=west] at (0.55,-0.30) {\small $n^+$ diffusion};
 
-  % storage node contact (plug)
-  \fill[black!30] (-0.12,0.0) rectangle (0.12,1.20);
+  % storage node contact/electrode (over the diffusion)
+  \fill[black!30] (-0.12,0.00) rectangle (0.12,1.20);
   \node[anchor=west] at (0.20,0.95) {\small Storage Node (electrode)};
 
-  % thin dielectric cap (schematic: thin line above diffusion)
-  \draw[black, line width=0.25pt] (-0.45,0) -- (0.45,0); % oxide schematic
+  % pn junction (sides+bottom only; no top edge)
+  \draw[red, very thick] (-0.45,0) -- (-0.45,-0.6);
+  \draw[red, very thick] (0.45,0) -- (0.45,-0.6);
+  \draw[red, very thick] (-0.45,-0.6) -- (0.45,-0.6);
+  \node[red, anchor=north] at (0,-0.65) {\scriptsize pn 接合（側壁＋底面）};
 
-  % pn junction (Stack) = boundary of n+ diffusion in p-substrate
-  \draw[red, very thick] (-0.45,-0.1) rectangle (0.45,-0.6);
-  \node[red, anchor=north] at (0,-0.65) {\scriptsize pn 接合（小）};
-
-  % title (a)
+  % title
   \node[anchor=west] at (-2.0,1.45) {\bfseries (a) Stack Capacitor};
 \end{tikzpicture}
 \end{minipage}
 
-\vspace{0.8em}
+\vspace{0.9em}
 
 % ---------- (b) Trench Capacitor ----------
 \begin{minipage}{0.95\linewidth}
 \centering
 \begin{tikzpicture}[x=1cm,y=1cm]
-  % p- substrate (trench)
+  % Parameters to tweak strap size quickly
+  \def\strapW{0.40}   % strap width (change here to visualize larger/smaller junction)
+  \def\strapH{0.45}   % strap height
+
+  % p- substrate
   \fill[gray!20] (-2,0) rectangle (2,-2.2);
   \node[anchor=east] at (-2,0.15) {\small $p^-$ substrate};
 
-  % trench cavity and storage node electrode (poly/metal) inside trench
-  % trench opening
+  % trench cavity outline
   \draw[black,thick] (-0.45,0) -- (-0.45,-1.9) -- (0.45,-1.9) -- (0.45,0);
-  % node electrode (filled) separated by dielectric
-  \fill[black!30] (-0.35,-0.1) rectangle (0.35,-1.8);
 
-  % collar oxide (near top) -- schematic
-  \draw[black!60, line width=0.25pt] (-0.55,-0.15) -- (-0.55,-0.60);
-  \draw[black!60, line width=0.25pt] (0.55,-0.15) -- (0.55,-0.60);
-  \node[anchor=west] at (0.65,-0.35) {\scriptsize collar oxide (schematic)};
-
-  % buried strap (n+ diffusion) connecting node to surface diffusion
-  \fill[gray!55] (0.50,-0.55) rectangle (1.10,-0.05);
-  \node[anchor=west] at (1.18,-0.28) {\small buried strap $n^+$ diffusion};
-
-  % (option) surface diffusion landing (schematic)
-  \fill[gray!55] (0.90,0) rectangle (1.30,0.12);
-
-  % dielectric along trench sidewalls (schematic thin line)
+  % node electrode inside trench (insulated by dielectric)
+  \fill[black!30] (-0.35,-0.08) rectangle (0.35,-1.80);
+  % dielectric (schematic thin line along walls)
   \draw[black, line width=0.25pt] (-0.45,0) -- (-0.45,-1.9);
   \draw[black, line width=0.25pt] (0.45,0) -- (0.45,-1.9);
   \draw[black, line width=0.25pt] (-0.45,-1.9) -- (0.45,-1.9);
 
-  % pn junction (Trench) = boundary of buried strap n+ with p-substrate
-  \draw[red, very thick] (0.50,-0.55) rectangle (1.10,-0.05);
-  \node[red, anchor=west] at (1.18,-0.65) {\scriptsize pn 接合（面積・周長が大）};
+  % buried strap n+ diffusion (small by default)
+  \path (0.55,-0.60) coordinate (SBL);
+  \fill[gray!55] (SBL) rectangle ($(SBL)+(\strapW,\strapH)$);
+  \node[anchor=west] at ($(SBL)+(\strapW+0.08,0.5*\strapH)$) {\small buried strap $n^+$ diffusion};
 
-  % title (b)
+  % pn junction = boundary of strap in p- substrate
+  \draw[red, very thick] (SBL) rectangle ($(SBL)+(\strapW,\strapH)$);
+  \node[red, anchor=west] at ($(SBL)+(\strapW+0.08,-0.02)$) {\scriptsize pn 接合（面積は設計依存）};
+
+  % (optional) surface diffusion landing (schematic)
+  \fill[gray!55] ($(SBL)+(0.10,\strapH)$) rectangle ($(SBL)+(\strapW-0.10,\strapH+0.12)$);
+
+  % title
   \node[anchor=west] at (-2.0,0.8) {\bfseries (b) Trench Capacitor};
 \end{tikzpicture}
 \end{minipage}
 
-\caption{Stack と Trench のセル構造（概念断面，1カラム表示）。赤線は
-pn 接合（$n^+$ 拡散—$p^-$ 基板）の境界を示す。
-Stack では接合は平面拡散の底面＋側壁に限定され相対的に小さい。
-Trench ではノードを \emph{buried strap} で接続するため、strap 周りの
-3D 接合の周長・面積が大きくなり、ジャンクションリークが増えやすい。
-（トレンチ側壁・底面は誘電体で絶縁されており pn 接合ではない。）}
-\label{fig:stack_trench_correct}
+\caption{Stack と Trench のセル概念断面。赤線は
+pn 接合（$n^+$ 拡散—$p^-$ 基板）の境界のみを示す。
+(a) Stack は拡散が表面に露出しており、pn 接合は側壁と底面に限定される。
+(b) Trench ではノード自体は誘電体で基板と絶縁され、pn 接合は
+\emph{buried strap} 周囲のみに形成される。ストラップ寸法により接合面積は
+小さく設計することも可能だが、実際の高温リークは面積だけでなく
+周長・界面欠陥・電界集中にも依存し、評価結果（Fig.~\ref{fig:trench_area_leak}）では
+Trench 側で増えやすい傾向が観測された。}
+\label{fig:stack_trench_final}
 \end{figure}
 
 \begin{figure}[t]
@@ -593,7 +593,7 @@ Trench ではノードを \emph{buried strap} で接続するため、strap 周�
 「汎用DRAM技術をそのままモバイル用途へ流用することの限界」を示した。
 VSRAMの取り組みはメモリ製品としては最終章となったが，
 その過程で得られたプロセス知見は
-液晶ドライバーの高耐圧・混載技術開発へと直結した。
+液晶ドライバーの高耐圧・混載技術開発へ直結した。
 この転換こそが，酒田Fabにおける戦略的な
 「メモリからディスプレイドライバーへの移行」を象徴するものであった。
 
