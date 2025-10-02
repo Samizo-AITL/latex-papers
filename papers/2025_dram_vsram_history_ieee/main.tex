@@ -134,7 +134,7 @@ DRAMを媒体として最新プロセスを自前化し，
 \end{itemize}
 
 これらの経験は「先端プロセス習得では一切の省略を許さない」という
-Fab全体への教訓となり，次世代0.25\,$\mu$mプロセス立ち上げの土台となった。
+Fab全体への教訓となり，次世代0.25\,$\mu$mプロセス立ち上げの土台となった.
 
 \section{第2章：0.25\,\texorpdfstring{$\mu$m}{μm} 世代64M DRAMの立ち上げ}
 
@@ -178,7 +178,41 @@ SCFは0.5\,$\mu$m世代から用いられていた，短いサイクルで
 プロセス条件起因の系統的不良であることが明らかになった。
 物理的起源を概念的に示したのが Fig.~\ref{fig:dram_cross_section} である。
 
-% --- 断面図とフェイルマップは Part1 ですでに出力済み ---
+% --- DRAM断面概念図 ---
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[scale=1.8]
+\fill[gray!15] (-1,0) rectangle (4,-1.0);
+\node[anchor=north west] at (-0.9,-0.05) {\footnotesize $p^-$ substrate};
+\fill[gray!50] (1,-0.01) rectangle (3,-0.35);
+\node[anchor=north] at (2,-0.38) {\footnotesize $n^+$ diffusion};
+\fill[black!40] (2,-0.01) rectangle (2.3,1.0);
+\node[anchor=south] at (2.15,1.05) {\footnotesize Storage Node Contact};
+\draw[->,very thick,red] (2.15,-0.35) -- (2.15,-0.9);
+\node[anchor=west,red] at (2.2,-0.6) {\footnotesize $I_{\mathrm{leak}}$};
+\end{tikzpicture}
+\caption{DRAM セル断面の概念図（SNコンタクト／$n^+$拡散層／$p^-$基板）。赤矢印は $n^+ \rightarrow p^-$ へのリーク電流 $I_{\mathrm{leak}}$。}
+\label{fig:dram_cross_section}
+\end{figure}
+
+% --- フェイルマップ ---
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[scale=0.22]
+  \def\R{15}
+  \draw[thick] (0,0) circle (\R);
+  \begin{scope}
+    \clip (0,0) circle (\R);
+    \foreach \i in {1,...,60}{
+      \pgfmathsetmacro{\xx}{(rnd*2-1)*\R}
+      \pgfmathsetmacro{\yy}{(rnd*2-1)*\R}
+      \fill[red] (\xx,\yy) circle (0.18);
+    }
+  \end{scope}
+\end{tikzpicture}
+\caption{Pause Refresh Fail のフェイルビットマップ例（ウエハ外周円＋ランダム赤点）}
+\label{fig:failmap}
+\end{figure}
 
 \subsection{プラズマダメージ仮説}
 ジャンクションリーク増大の要因として \emph{プラズマダメージ} が浮上した。
@@ -217,28 +251,20 @@ SCFは0.5\,$\mu$m世代から用いられていた，短いサイクルで
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=\linewidth,
-  height=6cm,
+  width=\linewidth, height=6cm,
   ymin=0, ymax=100,
   ylabel={歩留まり（\%）},
   symbolic x coords={0.5\,\mu m,0.35\,\mu m,0.25\,\mu m,VSRAM},
-  xtick=data,
-  xticklabel style={align=center},
+  xtick=data, xticklabel style={align=center},
   xlabel={プロセス世代},
   grid=both,
-  legend style={
-    at={(0.5,-0.28)}, anchor=north,
-    draw=none, fill=none,
-    /tikz/every odd column/.style={column sep=8pt},
-    font=\footnotesize
-  },
-  legend columns=2,
-  clip=false
+  legend style={at={(0.5,-0.28)}, anchor=north, draw=none, fill=none,
+                /tikz/every odd column/.style={column sep=8pt}, font=\footnotesize},
+  legend columns=2, clip=false
 ]
   \addplot+[semithick,mark=*]
     coordinates {(0.5\,\mu m,95) (0.35\,\mu m,20) (0.25\,\mu m,65) (VSRAM,30)};
   \addlegendentry{初期歩留まり}
-
   \addplot+[semithick,mark=square*]
     coordinates {(0.5\,\mu m,95) (0.35\,\mu m,86) (0.25\,\mu m,88) (VSRAM,80)};
   \addlegendentry{改善後}
@@ -321,7 +347,6 @@ Fig.~\ref{fig:disturb_temp_sce} に示すように，
     (25,0.02) (40,0.06) (60,0.3) (80,1.6) (90,3.2) (100,6.0)
   };
   \addlegendentry{V\_bs=-1\,V}
-
   \addplot+[semithick,mark=square*] coordinates {
     (25,0.01) (40,0.03) (60,0.12) (80,0.45) (90,0.9) (100,1.8)
   };
@@ -349,7 +374,6 @@ Fig.~\ref{fig:disturb_temp_sce} に示すように，
     (25,0.004) (40,0.01) (60,0.05) (80,0.22) (90,0.45) (100,0.9)
   };
   \addlegendentry{CD=0.25\,\,$\mu$m}
-
   \addplot+[semithick,mark=*] coordinates {
     (25,0.01) (40,0.03) (60,0.15) (80,0.7) (90,1.4) (100,2.8)
   };
@@ -459,7 +483,6 @@ NANYAは当時，東芝と技術提携を行っており，
     (0.5,0.25) (1.0,0.5) (1.5,0.8) (2.0,1.1) (2.5,1.4)
   };
   \addlegendentry{80$^\circ$C}
-
   \addplot+[semithick,mark=*] coordinates {
     (0.5,0.5) (1.0,1.0) (1.5,1.6) (2.0,2.2) (2.5,2.9)
   };
@@ -561,3 +584,5 @@ K.~Schuegraf et al., ``Impact of Plasma Damage on Junction Leakage and Gate Oxid
 現在は独立系半導体研究者として，
 プロセス／デバイス教育，メモリアーキテクチャ，AIシステム統合に取り組んでいる。  
 連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}
+
+\end{document}
