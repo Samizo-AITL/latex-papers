@@ -192,29 +192,25 @@ DRAMセルの保持時間は以下で表される。
 さらにフェイルマップ解析から，不良が同一座標で再現することが確認され，
 プロセス条件に起因する系統的要因であることが明らかになった。
 
-% preamble で:
-% \usepackage{tikz}
-% \usetikzlibrary{arrows.meta,decorations.pathreplacing,calc}
-
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[scale=2.0]
+\begin{tikzpicture}[scale=1.2]
 
 % --- 基板 (p-) ---
-\fill[gray!20] (-1,0) rectangle (4,-1.0);
-\node at (-0.8,-0.5) {\small $p^-$ substrate};
+\fill[gray!15] (-1,0) rectangle (4,-1.0);
+\node[anchor=north west] at (-0.9,-0.05) {\footnotesize $p^-$ substrate};
 
 % --- n+拡散層 ---
-\fill[gray!50] (1,-0.01) rectangle (3,-0.4);
-\node at (2,-0.6) {\small $n^+$ diffusion};
+\fill[gray!50] (1,-0.01) rectangle (3,-0.35);
+\node[anchor=north] at (2,-0.38) {\footnotesize $n^+$ diffusion};
 
 % --- ストレージノードコンタクト ---
-\draw[fill=white,thick] (2,-0.01) rectangle (2.4,1.2);
-\node at (2.7,0.6) {Storage Node Contact};
+\draw[fill=white,thick] (2,-0.01) rectangle (2.3,1.0);
+\node[anchor=south] at (2.15,1.05) {\footnotesize Storage Node Contact};
 
 % --- リーク電流の矢印 ---
-\draw[->,thick,red] (2.2,-0.2) -- (2.2,-1.0)
-  node[midway,right] {\small $I_{\mathrm{leak}}$};
+\draw[->,very thick,red] (2.15,-0.35) -- (2.15,-0.9);
+\node[anchor=west,red] at (2.2,-0.6) {\footnotesize $I_{\mathrm{leak}}$};
 
 \end{tikzpicture}
 \caption{DRAM セル断面の概念図（SNコンタクト／$n^+$拡散層／$p^-$基板）。赤矢印は $n^+ \rightarrow p^-$ へのリーク電流 $I_{\mathrm{leak}}$ を示す。}
