@@ -157,24 +157,22 @@ TiSi$_2$はサリサイド技術において広く用いられており、ポリ
 図\ref{fig:failmap}に示すように，フェイルビットはウエハ全体にランダムに散在しており，
 系統的なクラスタや設計パターンとの相関は認められなかった。
 
-\begin{figure}[H]
+\begin{figure}[!t]
 \centering
-\begin{tikzpicture}[scale=2]
+\resizebox{\columnwidth}{!}{%
+\begin{tikzpicture}
   % ウエハ円
-  \draw[thick] (0,0) circle (1);
-  
-  % フェイルビットをランダムに配置（例として20個）
-  \foreach \i in {1,...,20} {
-    \pgfmathsetmacro{\x}{rand*2-1} % -1～+1の乱数
-    \pgfmathsetmacro{\y}{rand*2-1}
-    % ウエハの円の内側だけ描画
-    \ifdim \x*\x cm + \y*\y cm < 1cm
-      \fill[red] (\x,\y) circle (0.02);
-    \fi
+  \draw[thick] (0,0) circle (3); % 半径3に拡大（縮尺は\resizeboxで調整される）
+
+  % ランダムにフェイル点を配置
+  \foreach \i in {1,...,150} {%
+    \pgfmathsetmacro{\ang}{rand*360}%
+    \pgfmathsetmacro{\rad}{3*sqrt(rand)}%
+    \fill (\rad*cos(\ang), \rad*sin(\ang)) circle (0.06);
   }
-\end{tikzpicture}
-\caption{ウエハ上のシングルビット不良分布例（フェイルビットマップ）。  
-ランダムに散在しており，系統的クラスタは見られない。}
+\end{tikzpicture}%
+}
+\caption{ウエハ上のシングルビット不良分布例（フェイルビットマップ）。ランダムに散在しており，系統的クラスタは見られない。}
 \label{fig:failmap}
 \end{figure}
 
