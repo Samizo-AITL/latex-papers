@@ -324,39 +324,34 @@ O$_2$プラズマは酸化膜界面に欠陥準位を生成し，
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=\linewidth, height=6cm,
+  width=\linewidth, height=5cm,
   ymin=0, ymax=100,
   ylabel={歩留まり(\%)},
-  symbolic x coords={0.5\,µm(16M),0.35\,µm(64M),0.25\,µm(64M),VSRAM},
+  symbolic x coords={x05_16M,x035_64M,x025_64M,VSRAM},
   xtick=data,
-  grid=both,
-  legend style={at={(0.5,-0.25)},anchor=north,draw=none,fill=none}
+  xticklabel style={align=center},
+  xticklabel={
+    \ifnum\coordindex=0 0.5\,\mu m\\(16M)\fi
+    \ifnum\coordindex=1 0.35\,\mu m\\(64M)\fi
+    \ifnum\coordindex=2 0.25\,\mu m\\(64M)\fi
+    \ifnum\coordindex=3 VSRAM\fi
+  },
+  grid=both
 ]
-  % 初期歩留まり
+  % 初期
   \addplot+[mark=*] coordinates {
-    (0.5\,µm,85)
-    (0.35\,µm,20)
-    (0.25\,µm,65)
-    (VSRAM,30)
+    (x05_16M,98) (x035_64M,20) (x025_64M,65) (VSRAM,35)
   };
-  \addlegendentry{初期歩留まり}
-  
-  % 改善後歩留まり
+  \addlegendentry{初期}
+  % 改善後
   \addplot+[mark=square*] coordinates {
-    (0.5\,µm(16M),95)
-    (0.35\,µm(64M),86)
-    (0.25\,µm(64M),88)
-    (VSRAM,82)
+    (x05_16M,98) (x035_64M,86) (x025_64M,88) (VSRAM,80)
   };
-  \addlegendentry{改善後歩留まり}
+  \addlegendentry{改善後}
 \end{axis}
 \end{tikzpicture}
-\caption{酒田Fabにおける世代別歩留まり推移。
-0.5µm世代は85\%から開始し安定して95\%へ，
-0.35µm世代は20\%から改善により86\%へ，
-0.25µm世代はSCF方式で65\%から88\%へ，
-VSRAMは30\%から82\%へ改善した。}
-\label{fig:yield_all}
+\caption{酒田Fab：世代別／製品別の歩留まり推移}
+\label{fig:yield25}
 \end{figure}
 
 \subsection{小括}
@@ -546,53 +541,56 @@ Stack型では接合が拡散層の側壁と底面に限定され，周辺長は
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[x=1cm,y=1cm]
+\begin{tikzpicture}[scale=0.7]
 
-% ==== (a) Stack Cross-section ====
-\begin{scope}[shift={(-5,0)}]
-  \fill[gray!20] (-1.5,0) rectangle (1.5,-0.8); % substrate
-  \fill[gray!55] (-0.5,0) rectangle (0.5,-0.6); % n+ diffusion
-  \fill[black!30] (-0.15,0) rectangle (0.15,1.0); % electrode
-  \draw[red,very thick] (-0.5,0) -- (-0.5,-0.6);
-  \draw[red,very thick] (0.5,0) -- (0.5,-0.6);
-  \draw[red,very thick] (-0.5,-0.6) -- (0.5,-0.6);
-  \node[anchor=north] at (0,-1.2) {\bfseries (a) Stack Cross-section};
+% ==== 左カラム (a)(b) 縦配置 ====
+\begin{scope}[shift={(-4,0)}]
+  % (a) Stack Cross-section
+  \fill[gray!20] (-1.2,0) rectangle (1.2,-0.6);
+  \fill[gray!55] (-0.4,0) rectangle (0.4,-0.5);
+  \fill[black!30] (-0.15,0) rectangle (0.15,0.8);
+  \draw[red,very thick] (-0.4,0) -- (-0.4,-0.5);
+  \draw[red,very thick] (0.4,0) -- (0.4,-0.5);
+  \draw[red,very thick] (-0.4,-0.5) -- (0.4,-0.5);
+  \node[anchor=north] at (0,-0.9) {\bfseries (a) Stack Cross-section};
+
+  % (b) Trench Cross-section
+  \begin{scope}[shift={(0,-3.5)}]
+    \fill[gray!20] (-1.2,0) rectangle (1.2,-1.6);
+    \draw[black,thick] (-0.4,0) -- (-0.4,-1.3) -- (0.4,-1.3) -- (0.4,0);
+    \fill[black!30] (-0.25,-0.1) rectangle (0.25,-1.2);
+    \fill[gray!55] (0.5,-0.5) rectangle (0.9,-0.9);
+    \draw[red,very thick] (0.5,-0.5) rectangle (0.9,-0.9);
+    \node[anchor=north] at (0,-1.6) {\bfseries (b) Trench Cross-section};
+  \end{scope}
 \end{scope}
 
-% ==== (b) Trench Cross-section ====
-\begin{scope}[shift={(5,0)}]
-  \fill[gray!20] (-1.5,0) rectangle (1.5,-2.0); % substrate
-  \draw[black,thick] (-0.5,0) -- (-0.5,-1.6) -- (0.5,-1.6) -- (0.5,0); % trench cavity
-  \fill[black!30] (-0.35,-0.1) rectangle (0.35,-1.5); % electrode
-  \fill[gray!55] (0.55,-0.6) rectangle (0.95,-1.0); % buried strap
-  \draw[red,very thick] (0.55,-0.6) rectangle (0.95,-1.0); % pn junction
-  \node[anchor=north] at (0,-2.2) {\bfseries (b) Trench Cross-section};
-\end{scope}
+% ==== 右カラム (c)(d) 横配置 ====
+\begin{scope}[shift={(4,-1.5)}]
+  % (c) Stack Top view
+  \begin{scope}[shift={(-2,0)}]
+    \fill[gray!20] (-1.2,-1.2) rectangle (1.2,1.2);
+    \fill[gray!55] (-0.7,-0.7) rectangle (0.7,0.7);
+    \fill[black!30] (-0.25,-0.25) rectangle (0.25,0.25);
+    \draw[red,very thick] (-0.7,-0.7) rectangle (0.7,0.7);
+    \node[anchor=north] at (0,-1.5) {\bfseries (c) Stack Top view};
+  \end{scope}
 
-% ==== (c) Stack Top view ====
-\begin{scope}[shift={(-5,-4)}]
-  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5); % substrate
-  \fill[gray!55] (-0.8,-0.8) rectangle (0.8,0.8); % n+ diffusion area
-  \fill[black!30] (-0.3,-0.3) rectangle (0.3,0.3); % electrode contact
-  \draw[red,very thick] (-0.8,-0.8) rectangle (0.8,0.8); % pn junction perimeter
-  \node[anchor=north] at (0,-1.9) {\bfseries (c) Stack Top view};
-\end{scope}
-
-% ==== (d) Trench Top view ====
-\begin{scope}[shift={(5,-4)}]
-  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5); % substrate
-  \draw[black,thick] (-0.8,-0.8) rectangle (0.8,0.8); % trench cavity outline
-  \fill[black!30] (-0.5,-0.5) rectangle (0.5,0.5); % trench electrode
-  \fill[gray!55] (0.9,-0.3) rectangle (1.3,0.3); % buried strap contact
-  \draw[red,very thick] (0.9,-0.3) rectangle (1.3,0.3); % pn junction at strap
-  \node[anchor=north] at (0,-1.9) {\bfseries (d) Trench Top view};
+  % (d) Trench Top view
+  \begin{scope}[shift={(2,0)}]
+    \fill[gray!20] (-1.2,-1.2) rectangle (1.2,1.2);
+    \draw[black,thick] (-0.7,-0.7) rectangle (0.7,0.7);
+    \fill[black!30] (-0.5,-0.5) rectangle (0.5,0.5);
+    \fill[gray!55] (0.8,-0.3) rectangle (1.1,0.3);
+    \draw[red,very thick] (0.8,-0.3) rectangle (1.1,0.3);
+    \node[anchor=north] at (0,-1.5) {\bfseries (d) Trench Top view};
+  \end{scope}
 \end{scope}
 
 \end{tikzpicture}
 
 \caption{Stack型とTrench型キャパシタ構造の断面図と上面図の比較。
-Stackは接合周辺長が限定的であるのに対し，
-Trenchはburied strap起点で周辺長が増大し，高温リークのリスクが高い。}
+左カラムは断面図 (a)(b)，右カラムは上面図 (c)(d)。}
 \label{fig:stack_trench}
 \end{figure}
 
