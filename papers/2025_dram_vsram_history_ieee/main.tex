@@ -539,83 +539,93 @@ Stack型では接合が拡散層の側壁と底面に限定され，周辺長は
 この構造差により，ジャンクションリークの起点が増加し，  
 高温条件でのリーク電流は指数的に増大した（Fig.~\ref{fig:trench_leak}）。  
 
+% ==== Fig. X : 0.18µm Stack vs. Trench (vertical; captions unified) ====
 \begin{figure}[t]
 \centering
-{\large\bfseries 0.18\,µm Generation — Cross-sections}\par\vspace{0.6em}
 
-% ---- (a) Stack Cross-section ----
+{\large \bfseries 0.18\,\textmu m Generation — Cross-sections}\par\vspace{0.6em}
+
+% ---------- (a) Stack Cross-section ----------
 \begin{tikzpicture}[x=1cm,y=1cm]
-  % substrate
-  \fill[gray!18] (-2,0) rectangle (2,-1.0);
-  \draw (-2,0) -- (2,0);
-  \node[anchor=east] at (-2,0.15) {\scriptsize $p^-$ substrate};
+  % p- substrate
+  \fill[gray!20] (-3.0,0) rectangle (3.0,-1.0);
+  \node[anchor=east] at (-3.0,0.12) {\small $p^-$ substrate};
 
-  % n+ diffusion
-  \fill[gray!55] (-0.6,0) rectangle (0.6,-0.25);
-  \node[anchor=west] at (0.7,-0.1) {\scriptsize $n^+$ diffusion};
+  % n+ diffusion (細く修正)
+  \fill[gray!55] (-1.1,0) rectangle (1.1,-0.65);
 
-  % electrode
-  \fill[gray!45] (-0.2,0) rectangle (0.2,1.0);
+  % storage node contact
+  \fill[black!30] (-0.25,0) rectangle (0.25,1.00);
 
-  % pn junction perimeter
-  \draw[red,very thick] (-0.6,0) -- (-0.6,-0.25) -- (0.6,-0.25) -- (0.6,0);
+  % junction highlight（周辺は短め）
+  \draw[red,very thick] (-1.1,0) -- (-1.1,-0.65) -- (1.1,-0.65) -- (1.1,0);
+
 \end{tikzpicture}
+\caption*{(a) Stack Cross-section}
 
-\caption*{(a) Stack Cross-section}   % ← 図の下にキャプションを固定配置
+\vspace{0.8em}
 
-\vspace{1.2em}
-
-% ---- (b) Trench Cross-section ----
+% ---------- (b) Trench Cross-section ----------
 \begin{tikzpicture}[x=1cm,y=1cm]
-  \fill[gray!18] (-2,0) rectangle (2,-2.0);
-  \draw (-2,0) -- (2,0);
-  \node[anchor=east] at (-2,0.15) {\scriptsize $p^-$ substrate};
+  % p- substrate
+  \fill[gray!20] (-3.0,0) rectangle (3.0,-2.0);
+  \node[anchor=east] at (-3.0,0.12) {\small $p^-$ substrate};
 
   % trench cavity
-  \draw[thick] (-0.8,0) -- (-0.8,-1.6) -- (0.8,-1.6) -- (0.8,0);
+  \draw[black,thick] (-0.9,0) -- (-0.9,-1.6) -- (0.9,-1.6) -- (0.9,0);
 
-  % trench electrode
-  \fill[gray!45] (-0.35,-0.1) rectangle (0.35,-1.5);
+  % trench electrode (inside)
+  \fill[black!30] (-0.60,-0.10) rectangle (0.60,-1.50);
 
-  % buried strap
-  \fill[gray!55] (0.95,-0.6) rectangle (1.15,-1.0);
-  \draw[red,very thick] (0.95,-0.6) rectangle (1.15,-1.0);
-  \node[anchor=west] at (1.25,-0.8) {\scriptsize buried strap};
+  % buried strap（右側例）
+  \fill[gray!55] (1.10,-0.70) rectangle (1.55,-1.10);
+
+  % pn junction highlight at strap
+  \draw[red,very thick] (1.10,-0.70) rectangle (1.55,-1.10);
 \end{tikzpicture}
-
 \caption*{(b) Trench Cross-section}
 
 \vspace{1.2em}
-{\large\bfseries 0.18\,µm Generation — Top views}\par\vspace{0.8em}
+{\large \bfseries 0.18\,\textmu m Generation — Top views}\par\vspace{0.6em}
 
-% ---- (c) Stack Top view ----
+% ---------- (c) Stack Top view ----------
 \begin{tikzpicture}[x=1cm,y=1cm]
-  \fill[gray!55] (-1,-1) rectangle (1,1);
-  \fill[gray!45] (-0.35,-0.35) rectangle (0.35,0.35);
-  \draw[red,very thick] (-1,-1) rectangle (1,1);
+  % substrate window
+  \fill[gray!20] (-2.0,-2.0) rectangle (2.0,2.0);
+  % n+ active（適正サイズに）
+  \fill[gray!55] (-1.1,-1.1) rectangle (1.1,1.1);
+  % storage node contact (center)
+  \fill[black!30] (-0.35,-0.35) rectangle (0.35,0.35);
+  % junction perimeter（赤で強調）
+  \draw[red,very thick] (-1.1,-1.1) rectangle (1.1,1.1);
 \end{tikzpicture}
-
 \caption*{(c) Stack Top view}
 
-\vspace{1.2em}
+\vspace{0.8em}
 
-% ---- (d) Trench Top view ----
+% ---------- (d) Trench Top view (複数 strap で総周辺長が増大) ----------
 \begin{tikzpicture}[x=1cm,y=1cm]
-  \draw[thick] (-1,-1) rectangle (1,1);
-  \fill[gray!45] (-0.6,-0.6) rectangle (0.6,0.6);
+  % substrate window
+  \fill[gray!20] (-2.0,-2.0) rectangle (2.0,2.0);
+  % trench opening & electrode
+  \draw[black,thick] (-1.2,-1.2) rectangle (1.2,1.2); % trench cavity outline
+  \fill[black!30] (-0.9,-0.9) rectangle (0.9,0.9);   % electrode inside
 
-  % multiple straps
-  \foreach \x/\y in {1.3/0, -1.3/0, 0/1.3, 0/-1.3}{
-    \fill[gray!55] (\x-0.2,\y-0.2) rectangle (\x+0.2,\y+0.2);
-    \draw[red,very thick] (\x-0.2,\y-0.2) rectangle (\x+0.2,\y+0.2);
+  % multiple buried straps around the trench
+  \foreach \x/\y in {-1.65/0, 1.65/0, 0/1.65, 0/-1.65}{
+    \fill[gray!55] (\x-0.35,\y-0.35) rectangle (\x+0.35,\y+0.35);
+    \draw[red,very thick] (\x-0.35,\y-0.35) rectangle (\x+0.35,\y+0.35);
   }
 \end{tikzpicture}
-
 \caption*{(d) Trench Top view（複数 strap により総周辺長が増大）}
 
-\caption{0.18µm世代における Stack / Trench キャパシタの概念比較。
-Stack は拡散接合の周辺長が限定的だが，Trench は複数の buried strap により総周辺長が増加し，高温リークリスクが高い。}
-\label{fig:018_stack_trench}
+\vspace{0.6em}
+\caption{0.18\,\textmu m 世代における Stack/Trench キャパシタの概念比較。
+Cross-section（a,b）では Stack は拡散接合の周辺長が限定的であるのに対し，
+Trench は \emph{buried strap} で局所接合が複数形成される。
+Top view（c,d）から，Trench は 1 セル当たりの \textbf{総周辺長} が増え，
+高温条件での接合リーク増大リスクが高いことが分かる。}
+\label{fig:stack_trench_018}
 \end{figure}
 
 \begin{figure}[t]
