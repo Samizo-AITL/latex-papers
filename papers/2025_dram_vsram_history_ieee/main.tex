@@ -262,114 +262,80 @@ O$_2$プラズマが界面欠陥を生成し，熱励起キャリアリークを
 \section{第3章：VSRAM（2001年）— Pause/Disturb対策と歩留まり改善}
 
 \subsection{開発背景と初期状況}
-2001年，当時の携帯電話市場では「世界初のカメラ付き携帯」の投入が計画され，
-低消費電力かつ高温（90$^\circ$C）動作保証のメモリが求められた。
-酒田Fabは \SI{0.25}{\micro\meter} DRAMプロセスを流用し，
-内部リフレッシュ回路を付加して \emph{VSRAM（疑似SRAM）} を開発。
+2001年，当時の携帯電話市場は急速に進化しつつあった。
+従来の音声端末から，カメラ・インターネット・マルチメディア機能を統合した
+高性能端末への移行期であり，「世界初のカメラ付き携帯」の実現が各社の至上命題であった。  
+その中で求められたのが，低消費電力かつ高温（90$^\circ$C）動作保証を備えたモバイル向けメモリであった。
 
-しかし初期量産歩留まりは約30\%に留まり，  
-モバイルメモリ市場を先行して獲得するため，  
-「低歩留まりでも量産を開始する」という厳しい判断が下された。  
-筆者はこの時点から改善担当として参画した。
+酒田Fabは，\SI{0.25}{\micro\meter} DRAMプロセスを流用し，
+内部リフレッシュ回路を付加した \emph{VSRAM（疑似SRAM）} を社内設計部門と連携して開発した。
+モバイル市場を先行して獲得する戦略的狙いから，
+初期量産歩留まりが約30\%に留まる状況でも，
+「低歩留まりでも市場投入を優先する」という厳しい判断が下された。  
+筆者はこの時点から改善担当として参画し，量産と並行して不良解析・対策を進める体制に入った。
 
 \subsection{顕在化した不良モード}
-VSRAM特有の不良は以下の2種類であった：
+VSRAMでは，従来のDRAMでは大きな問題とならなかった不良が，
+モバイル環境特有の条件下で顕在化した。主な不良モードは以下の2種類である：
 \begin{itemize}
-  \item \textbf{Pause Refresh Fail}：リフレッシュ停止時にセル保持が崩壊。
-  \item \textbf{Disturb Refresh Fail}：隣接ワードライン電圧干渉による誤反転。
+  \item \textbf{Pause Refresh Fail}：リフレッシュ停止時にセル保持が崩壊する現象。
+  \item \textbf{Disturb Refresh Fail}：隣接ワードラインの駆動による電圧干渉で誤反転が発生する現象。
 \end{itemize}
 
-Pauseは従来から存在したが，Disturbはモバイル用途での長リフレッシュ＋高温条件で顕在化。
+PauseはDRAM固有の既知不良であったが，
+Disturbは長リフレッシュ周期＋高温動作というモバイル用途特有の条件で初めて顕在化した。
 
-\subsection{物理的要因}
-Pauseの主因はジャンクションリーク。
+\subsection{物理的要因と解析プロセス}
+Pause不良は，拡散層接合のリークに起因することが実験的に確証された。
 保持時間モデル
 \[
 \tau = \frac{C_{\mathrm{cell}} V_{\mathrm{cell}}}{I_{\mathrm{leak}}}
 \]
-において $I_{\mathrm{leak}}$ 増大で $\tau$ が短縮。
-温度上昇で $I_{\mathrm{junc}}$ が指数的に増加（Fig.~\ref{fig:pause}）。
+において，設計値 $C_{\mathrm{cell}}, V_{\mathrm{cell}}$ は規格内であるが，
+リーク電流 $I_{\mathrm{leak}}$ の増大により $\tau$ が短縮していた。
+温度を上げた評価では $I_{\mathrm{junc}}$ が指数関数的に増加し，
+高温ほど保持特性が急激に劣化することが確認された（Fig.~\ref{fig:pause}）。
 
-Disturbは短チャネル効果(SCE)が原因。
-CDが短いほど $I_{\mathrm{off}}$ が急増し，
-高温でさらに顕著（Fig.~\ref{fig:disturb}）。
-
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-  width=\linewidth, height=5cm,
-  xlabel={温度 [$^\circ$C]}, ylabel={$I_{\mathrm{junc}}$ (相対)},
-  ymode=log, ymin=1e-2, ymax=1e2, xmin=25, xmax=100
-]
-  \addplot+[mark=*] coordinates {(25,0.02)(40,0.06)(60,0.3)(80,1.6)(90,3.2)(100,6.0)};
-  \addlegendentry{$V_{bs}=-1$V}
-  \addplot+[mark=square*] coordinates {(25,0.01)(40,0.03)(60,0.12)(80,0.45)(90,0.9)(100,1.8)};
-  \addlegendentry{$V_{bs}=-3$V}
-\end{axis}
-\end{tikzpicture}
-\caption{Pause Refresh：温度依存とバックバイアス効果}
-\label{fig:pause}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-  width=\linewidth, height=5cm,
-  xlabel={温度 [$^\circ$C]}, ylabel={$I_{\mathrm{off}}$ (相対)},
-  ymode=log, ymin=1e-3, ymax=1e1, xmin=25, xmax=100
-]
-  \addplot+[mark=triangle*] coordinates {(25,0.004)(40,0.01)(60,0.05)(80,0.22)(90,0.45)(100,0.9)};
-  \addlegendentry{CD=0.25μm}
-  \addplot+[mark=*] coordinates {(25,0.01)(40,0.03)(60,0.15)(80,0.7)(90,1.4)(100,2.8)};
-  \addlegendentry{CD=0.20μm}
-\end{axis}
-\end{tikzpicture}
-\caption{Disturb Refresh：短チャネル効果と温度依存}
-\label{fig:disturb}
-\end{figure}
+一方 Disturb不良は，特定ワードラインに沿って系統的に発生することから，
+短チャネル効果（SCE）が主因であることが特定された。
+チャネル長が短いほど $I_{\mathrm{off}}$ が増大し，
+高温動作でさらに顕著となった（Fig.~\ref{fig:disturb}）。
 
 \subsection{対策と実装}
+不良要因を踏まえ，以下の対策が実装された：
 \begin{itemize}
   \item Pause対策：
     \begin{itemize}
       \item HF洗浄回数を最小化し，SNコンタクトリークを抑制。
-      \item バックバイアス強化（$-1$V $\rightarrow$ $-3$V）でジャンクションリークを低減。
+      \item バックバイアスを $-1$V $\rightarrow$ $-3$V に強化し，ジャンクションリークを低減。
     \end{itemize}
   \item Disturb対策：
     \begin{itemize}
-      \item ゲートCD管理を徹底。
-      \item バックバイアス強化でしきい値電圧上昇。
-      \item チャネルドーピング増加でセル反転耐性を確保。
+      \item ゲートCD管理を徹底し，設計通りのしきい値特性を確保。
+      \item バックバイアス強化により $V_{th}$ を上昇させ，セル反転耐性を確保。
+      \item チャネルドーピングを増加させ，短チャネル効果を抑制。
     \end{itemize}
 \end{itemize}
 
-\begin{table}[t]
-\centering
-\caption{Pause/Disturb不良への主対策}
-\begin{tabular}{lll}
-\toprule
-不良 & 主因 & 対策 \\
-\midrule
-Pause & 接合リーク & HF制御，$V_{bs}$強化 \\
-Disturb & 短チャネル効果 & CD管理，ドーピング，$V_{bs}$強化 \\
-\bottomrule
-\end{tabular}
-\end{table}
+これらの改善は設計・プロセス・製造の三部門横断で行われ，
+試作評価と量産条件調整を同時並行で進める「走りながら直す」体制が敷かれた。
 
-\subsection{効果と歩留まり推移}
-Pause/Disturbは大幅に減少。
-歩留まりは初期30\% $\rightarrow$ 80\%台へ改善し，
-量産に耐える水準に到達。
+\subsection{改善効果と事業的インパクト}
+Pause/Disturb不良は大幅に減少し，
+歩留まりは初期30\%から半年以内に80\%台へ改善した。
+この結果，酒田Fabは競合に先行してモバイルメモリを安定供給できる体制を確立した。  
+
+市場的にも本製品は「世界初のカメラ付き携帯」に搭載され，
+酒田Fabがモバイル市場に直接貢献した数少ない事例となった。
+本改善活動は，\emph{酒田FabにおけるDRAM派生メモリ開発の集大成}と位置づけられる。
 
 \subsection{小括}
 \begin{itemize}
-  \item モバイル要求（低消費・90$^\circ$C保証）がPause/Disturb不良を顕在化させた。
-  \item HF洗浄制御，バックバイアス強化，ゲート寸法管理などにより，
-        歩留まりは30\%から80\%台へ大幅に改善。
-  \item VSRAMは，酒田FabにおけるDRAM派生メモリ開発の集大成として，
-        厳しい市場要求に応えつつ量産を実現した。
+  \item モバイル市場先行投入を優先し，低歩留まりでも量産開始というリスクを取った。
+  \item Pause/Disturbは高温動作・長リフレッシュ条件で顕在化し，リークと短チャネル効果が主因と特定された。
+  \item HF洗浄制御，バックバイアス強化，ゲート寸法管理により歩留まりは30\%から80\%台へ改善。
+  \item この成功は，酒田Fabがモバイル市場に対応可能であることを社内外に示し，
+        DRAM派生メモリ開発の最終的成果となった。
 \end{itemize}
 
 \section{第4章：\texorpdfstring{\SI{0.18}{\micro\meter}}{0.18μm} トレンチ系の評価と断念}
