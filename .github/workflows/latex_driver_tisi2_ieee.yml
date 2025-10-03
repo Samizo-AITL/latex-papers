@@ -25,10 +25,12 @@ jobs:
             tlmgr update --self --all
             tlmgr install \
               luatexja ipaex \
+              pgf \
               siunitx booktabs cite bm \
-              pgf caption subcaption \
-              multirow array float hyperref \
-              collection-latexrecommended collection-fontsrecommended collection-langjapanese
+              multirow float hyperref \
+              collection-latexrecommended \
+              collection-fontsrecommended \
+              collection-langjapanese
 
       - name: Upload PDF and LOG
         uses: actions/upload-artifact@v4
