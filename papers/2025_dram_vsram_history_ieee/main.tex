@@ -254,6 +254,31 @@ SCF方式とは，各要素技術に定められたマニュアル規格を短�
 \label{fig:failmap}
 \end{figure}
 
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % p- substrate
+  \fill[gray!20] (-2,0) rectangle (2,-1.2);
+  \node[anchor=east] at (-2,0.1) {\small $p^-$ substrate};
+
+  % n+ diffusion
+  \fill[gray!50] (-1,0) rectangle (1,-0.8);
+  \node[anchor=west] at (1.05,-0.4) {\small $n^+$ diffusion};
+
+  % storage node contact
+  \fill[black!30] (-0.3,0) rectangle (0.3,1.0);
+  \node[anchor=west] at (0.35,0.6) {\small Storage Node Contact};
+
+  % leakage arrow
+  \draw[->,very thick,red] (0,-0.4) -- (0,-1.0)
+    node[midway,right,red] {\small $I_{\mathrm{leak}}$};
+\end{tikzpicture}
+\caption{DRAMセル断面概念図。
+SNコンタクト／n$^+$拡散層／p$^-$基板構造。
+赤矢印は n$^+ \rightarrow p^-$ へのリーク電流 $I_{\mathrm{leak}}$ を示す。}
+\label{fig:cell_leak}
+\end{figure}
+
 \subsection{プラズマダメージ仮説}
 ジャンクションリーク増大の背景には，
 \textbf{プラズマダメージ} が強く疑われた。  
