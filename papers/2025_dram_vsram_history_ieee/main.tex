@@ -320,47 +320,46 @@ O$_2$プラズマは酸化膜界面に欠陥準位を生成し，
 歩留まりは安定して80\%台後半を示した
 (Fig.~\ref{fig:yield25})。  
 
+% ===== 世代別 歩留まり推移（0.5µm, 0.35µm, 0.25µm, VSRAM）=====
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=\linewidth, height=5cm,
+  width=\linewidth, height=6cm,
   ymin=0, ymax=100,
   ylabel={歩留まり(\%)},
-  symbolic x coords={0.5\,µm(16M),0.35\,µm(64M),0.25\,µm(64M),VSRAM},
+  % ← ここで内部キーはASCIIだけにする（エラー回避）
+  symbolic x coords={p05,p035,p025,vsram},
   xtick=data,
+  % 見た目のラベルはここで整形
+  xticklabels={
+    $0.5\,\mu\mathrm{m}\ (16\mathrm{M})$,
+    $0.35\,\mu\mathrm{m}\ (64\mathrm{M})$,
+    $0.25\,\mu\mathrm{m}\ (64\mathrm{M})$,
+    VSRAM
+  },
+  x tick label style={align=center},
   grid=both,
+  % ==== 凡例：横一列・グラフ下中央 ====
+  legend columns=2,
   legend style={
-    at={(0.5,-0.25)},
-    anchor=north,
-    legend columns=-1,
-    column sep=1em,
-    draw=none, fill=none
+    at={(0.5,-0.25)}, anchor=north,
+    draw=none, fill=none, font=\small
   },
   clip=false
 ]
   % 初期
-  \addplot+[mark=*] coordinates {
-    (0.5\,µm(16M),80)
-    (0.35\,µm(64M),20)
-    (0.25\,µm(64M),65)
-    (VSRAM,30)
-  };
+  \addplot+[semithick,mark=*]
+    coordinates {(p05,95) (p035,20) (p025,65) (vsram,30)};
   \addlegendentry{初期}
 
   % 改善後
-  \addplot+[mark=square*] coordinates {
-    (0.5\,µm(16M),85)
-    (0.35\,µm(64M),86)
-    (0.25\,µm(64M),88)
-    (VSRAM,82)
-  };
+  \addplot+[semithick,mark=square*]
+    coordinates {(p05,95) (p035,86) (p025,88) (vsram,80)};
   \addlegendentry{改善後}
-
 \end{axis}
 \end{tikzpicture}
-\caption{酒田Fabにおける世代別歩留まり推移。
-0.5µm、0.35µm、0.25µmおよびVSRAMでの初期値と改善後の比較。}
+\caption{酒田Fabにおける世代別歩留まり推移（初期／改善後）。}
 \label{fig:yield_all}
 \end{figure}
 
