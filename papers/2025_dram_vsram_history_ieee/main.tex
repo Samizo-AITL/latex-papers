@@ -14,16 +14,13 @@
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \usepackage{cite}
-
-% ========= 単位表記（siunitx） =========
 \usepackage{siunitx}
 \sisetup{
-  detect-all = true,      % フォントを本文に合わせる
+  detect-all = true,
   per-mode   = symbol,
   range-phrase = --,
   product-units = single
 }
-% siunitx は正式には \metre を使うため，米綴り \meter をエイリアス化
 \let\meter\metre
 
 % ========= 図・グラフ =========
@@ -33,8 +30,8 @@
 \pgfplotsset{compat=1.18}
 
 % ========= タイトル =========
-\title{DRAM技術導入とその戦略的位置づけ（1997--2001）\\
-\large 酒田FabにおけるDRAM/PSRAMとロジック展開の関連}
+\title{セイコーエプソン酒田Fab 8インチライン立ち上げ\\
+DRAM技術導入から量産化そしてその役割（1997--2001）}
 
 \author{%
   \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
@@ -49,75 +46,49 @@
 
 \begin{abstract}
 \textbf{（日本語）}\\
-本論文は，1997年から2001年にかけてセイコーエプソン酒田事業所が
-三菱電機からの技術移管を通じて \mbox{0.5\,$\mu$m} $\rightarrow$ \mbox{0.35\,$\mu$m} $\rightarrow$ \mbox{0.25\,$\mu$m} の
-DRAMプロセスを短期間で習得し，得られた知見を
-先端ロジックや高耐圧混載CMOSへ展開して液晶ドライバー製品化に結びつけた
-技術的・戦略的過程を，筆者の実体験に基づき整理する。
-主要な不良モード（Pause/Disturb Refresh）の物理起源と対策，
-量産歩留まりの推移を示し，獲得知見がその後の事業へ
-どのように接続されたかを考察する。\\[1ex]
+本稿は，1997--2001年にセイコーエプソン酒田事業所が
+三菱電機からの技術移管により
+\SI{0.5}{\micro\meter} $\rightarrow$ \SI{0.35}{\micro\meter} $\rightarrow$ \SI{0.25}{\micro\meter}
+のDRAMプロセスを短期間で立ち上げ，量産化した過程を整理する。
+主眼はDRAM導入・量産化であり，Pause/Disturb Refresh不良の解析と対策，歩留まり推移，
+および\emph{量産インフラとしての役割}を明確化する。
+その後，社内設計によるVSRAM開発やNANYA 0.18\,$\mu$m評価を経て，
+DRAMの役割を終えた後に，酒田Fabが社内外のロジック／高耐圧混載CMOS展開に
+寄与した戦略的意義を振り返る。\\[0.7ex]
 
 \textbf{(English)}\\
-This paper reviews 1997–2001, when Seiko Epson’s Sakata Fab
-assimilated DRAM processes (0.5\,$\mu$m → 0.35\,$\mu$m → 0.25\,$\mu$m) transferred from Mitsubishi Electric.
-The acquired know-how was extended beyond DRAM to advanced logic
-and high-voltage mixed CMOS, leading to LCD driver products.
-Key failure modes (Pause/Disturb Refresh), countermeasures, and yield evolution
-are summarized based on the author’s on-site experience.
+This paper documents the introduction and mass production of DRAM processes
+(\SI{0.5}{\micro\meter} $\rightarrow$ \SI{0.35}{\micro\meter} $\rightarrow$ \SI{0.25}{\micro\meter})
+transferred to Seiko Epson's Sakata Fab (1997--2001).
+We focus on DRAM-specific failure analyses (Pause/Disturb Refresh), countermeasures, and yield evolution,
+clarifying the DRAM line's role as manufacturing infrastructure.
+Later, VSRAM development and evaluation of a NANYA 0.18\,$\mu$m process marked the end of memory products,
+while the acquired process infrastructure supported Epson's strategies in logic, SoC, and high-voltage mixed-CMOS.
 \end{abstract}
 
 \begin{IEEEkeywords}
-DRAM, VSRAM/PSRAM, 0.25\,$\mu$m process, retention failure, disturb failure, Sakata Fab, technology transfer, high-voltage mixed CMOS, LCD driver
-
-\hspace{1em}（日本語）DRAM，VSRAM/PSRAM，0.25\,$\mu$mプロセス，リテンション不良，ディスターブ不良，酒田Fab，技術移管，高耐圧混載CMOS，液晶ドライバー
+DRAM, VSRAM/PSRAM, \SI{0.25}{\micro\meter} process, retention failure, disturb failure, Sakata Fab, technology transfer, SCF
 \end{IEEEkeywords}
 
-% ========== 本文開始 ==========
 \section{序論}
-1997年，当時の半導体産業は \textit{Windows~95} の普及や
-Intel~Pentium~II の登場を契機に拡大局面にあった。
-製造面では8インチウェーハと \SI{0.35}{\micro\meter} 世代の量産移行が進み，
-DRAMとロジックLSIで国際競争が激化していた。
+1997年，当時の半導体産業は \textit{Windows 95} の世界的普及や
+Intel Pentium II の登場を背景に急成長局面にあった。
+パソコンの性能向上と普及拡大が同時に進み，
+メモリ容量・処理性能に対する市場要求は急速に高まっていた。
 
-セイコーエプソンは山形県酒田市の8インチFab（酒田事業所）で，
+製造技術面では，8インチウェーハラインの整備と
+\SI{0.35}{\micro\meter} 世代プロセスへの移行が加速し，
+DRAMおよびロジックLSI分野における国際競争が激化していた。
+
+セイコーエプソンは山形県酒田市に新設した 8インチFabにおいて，
 三菱電機からの技術移管を通じて
 \SI{0.5}{\micro\meter} $\rightarrow$ \SI{0.35}{\micro\meter} $\rightarrow$ \SI{0.25}{\micro\meter}
-の三世代DRAMプロセスを短期間に習得した。  
-狙いはDRAM単独で競争優位を築くことではなく，
-DRAMを\emph{手段}として最新プロセスの自前化を図り，
-その成果を外販・内製の両面に横展開する点にあった。  
+の三世代DRAMプロセスを短期間で習得し量産化に至った。
 
-具体的には，
-\begin{itemize}
-  \item \textbf{外部向けファンドリビジネス}：Xilinx 等ファブレス顧客との協働による先端ロジック展開，
-  \item \textbf{社内展開}：自社SoCおよびマイコン製品への応用，
-  \item \textbf{高耐圧混載CMOS／液晶ドライバー}：ディスプレイ用デバイスでの競争優位確立
-\end{itemize}
-という三本柱への知見移転を目的としていた。
-
-本研究の貢献は以下に要約される。
-\begin{itemize}
-  \item \textbf{因果の定式化}：
-    保持時間 $\tau=C_{\mathrm{cell}}V_{\mathrm{cell}}/I_{\mathrm{leak}}$ に基づき，
-    Pause/Disturb 不良をプラズマ誘起欠陥と接合リークに帰着。
-  \item \textbf{工程対策の一般化}：
-    O$_2$アッシング停止 $\rightarrow$ 硫酸ウェット剥離，HF最小化，
-    $V_{bs}$強化，ゲートCD管理を核とした再現性の高い改善指針。
-  \item \textbf{移管運用指針}：
-    二次因子（洗浄順序・装置・ケミカル・搬送）まで\emph{鏡写し}を徹底する立上げ原則。
-  \item \textbf{事業接続性}：
-    DRAMで得た表面・接合・CD制御の知見を，
-    ファンドリロジック，社内SoC／マイコン，および高耐圧混載CMOS／LCDドライバーへ移転。
-\end{itemize}
-
-戦略的流れは以下の通りである：
-\begin{enumerate}
-  \item DRAM技術導入
-  \item Xilinx 等ファブレス顧客との協働による先端ロジック・ファンドリ展開
-  \item 社内SoC／マイコン製品展開
-  \item 高耐圧混載による液晶ドライバー市場シェア獲得
-\end{enumerate}
+本稿では，このDRAM技術導入と量産化の過程を主軸として，
+Pause/Disturb Refresh不良の解析と対策，歩留まり推移を整理する。
+さらに，酒田FabのDRAM量産ラインが，
+その後のロジック／高耐圧混載CMOS開発の\emph{インフラ}として果たした役割を振り返る。
 
 \section{第1章：\texorpdfstring{\SI{0.5}{\micro\meter}}{0.5μm} と \texorpdfstring{\SI{0.35}{\micro\meter}}{0.35μm} 世代の立ち上げ}
 
