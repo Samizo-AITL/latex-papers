@@ -221,6 +221,7 @@ SCF方式とは，各要素技術に定められたマニュアル規格を短�
 
 このようにPause時間を延長するほどランダムビット不良が増加する挙動から，
 主因として \textbf{n$^+$/p$^-$拡散層ジャンクションリーク} が疑われた。  
+その概念構造を Fig.~\ref{fig:cell_leak} に示す。  
 
 保持時間は次式で与えられる：
 \[
@@ -232,7 +233,7 @@ SCF方式とは，各要素技術に定められたマニュアル規格を短�
 キャパシタ構造や積層膜に起因する不良は否定された。  
 
 したがって，不良の本質的要因はリーク電流 $I_{\mathrm{leak}}$ に支配され，
-\textbf{拡散層ジャンクションリーク} に帰着することが明確となった。
+\textbf{拡散層ジャンクションリーク} に帰着することが明確となった（Fig.~\ref{fig:cell_leak}）。
 
 \begin{figure}[t]
 \centering
@@ -323,23 +324,39 @@ O$_2$プラズマは酸化膜界面に欠陥準位を生成し，
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=\linewidth, height=5cm,
+  width=\linewidth, height=6cm,
   ymin=0, ymax=100,
   ylabel={歩留まり(\%)},
-  symbolic x coords={0.35\,µm,0.25\,µm},
+  symbolic x coords={0.5\,µm(16M),0.35\,µm(64M),0.25\,µm(64M),VSRAM},
   xtick=data,
-  grid=both
+  grid=both,
+  legend style={at={(0.5,-0.25)},anchor=north,draw=none,fill=none}
 ]
-  \addplot+[mark=*] coordinates {(0.35\,µm,20) (0.25\,µm,65)};
-  \addlegendentry{初期}
-  \addplot+[mark=square*] coordinates {(0.35\,µm,86) (0.25\,µm,88)};
-  \addlegendentry{改善後}
+  % 初期歩留まり
+  \addplot+[mark=*] coordinates {
+    (0.5\,µm(16M),85)
+    (0.35\,µm(64M),20)
+    (0.25\,µm(64M),65)
+    (VSRAM,30)
+  };
+  \addlegendentry{初期歩留まり}
+  
+  % 改善後歩留まり
+  \addplot+[mark=square*] coordinates {
+    (0.5\,µm(16M),95)
+    (0.35\,µm(64M),86)
+    (0.25\,µm(64M),88)
+    (VSRAM,82)
+  };
+  \addlegendentry{改善後歩留まり}
 \end{axis}
 \end{tikzpicture}
 \caption{酒田Fabにおける世代別歩留まり推移。
-0.25µm世代では，硫酸ウェット導入により
-初期65\%から最終88\%まで改善。}
-\label{fig:yield25}
+0.5µm世代は85\%から開始し安定して95\%へ，
+0.35µm世代は20\%から改善により86\%へ，
+0.25µm世代はSCF方式で65\%から88\%へ，
+VSRAMは30\%から82\%へ改善した。}
+\label{fig:yield_all}
 \end{figure}
 
 \subsection{小括}
@@ -391,6 +408,68 @@ Pause不良は，拡散層接合のリークに起因することが実験的に
 短チャネル効果（SCE）が主因であることが特定された。
 チャネル長が短いほど $I_{\mathrm{off}}$ が増大し，
 高温動作でさらに顕著となった（Fig.~\ref{fig:disturb}）。
+
+% Fig. X  Pause Refresh：温度依存とバックバイアス効果
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\linewidth, height=6cm,
+  xlabel={温度 [$^\circ$C]}, ylabel={$I_{\mathrm{junc}}$（相対）},
+  ymode=log, ymin=1e-2, ymax=1e2,
+  xmin=25, xmax=100, xtick={25,40,60,80,90,100},
+  grid=both,
+  legend style={at={(0.5,-0.22)},anchor=north,draw=none,fill=none},
+  clip=false
+]
+  % Vbs = -1 V
+  \addplot+[semithick,mark=*] coordinates {
+    (25,0.02) (40,0.06) (60,0.30) (80,1.60) (90,3.20) (100,6.00)
+  };
+  \addlegendentry{$V_{bs}=-1$ V}
+
+  % Vbs = -3 V
+  \addplot+[semithick,mark=square*] coordinates {
+    (25,0.01) (40,0.03) (60,0.12) (80,0.45) (90,0.90) (100,1.80)
+  };
+  \addlegendentry{$V_{bs}=-3$ V}
+\end{axis}
+\end{tikzpicture}
+\caption{Pause Refresh：ジャンクションリーク $I_{\mathrm{junc}}$ の温度依存。
+バックバイアス強化でリークが抑制される。}
+\label{fig:pause_temp}
+\end{figure}
+
+% Fig. Y  Disturb Refresh：短チャネル効果と温度依存
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\linewidth, height=6cm,
+  xlabel={温度 [$^\circ$C]}, ylabel={$I_{\mathrm{off}}$（相対）},
+  ymode=log, ymin=1e-3, ymax=1e1,
+  xmin=25, xmax=100, xtick={25,40,60,80,90,100},
+  grid=both,
+  legend style={at={(0.5,-0.22)},anchor=north,draw=none,fill=none},
+  clip=false
+]
+  % CD = 0.25 µm
+  \addplot+[semithick,mark=triangle*] coordinates {
+    (25,0.004) (40,0.010) (60,0.050) (80,0.220) (90,0.450) (100,0.900)
+  };
+  \addlegendentry{CD = 0.25\,µm}
+
+  % CD = 0.20 µm
+  \addplot+[semithick,mark=*] coordinates {
+    (25,0.010) (40,0.030) (60,0.150) (80,0.700) (90,1.400) (100,2.800)
+  };
+  \addlegendentry{CD = 0.20\,µm}
+\end{axis}
+\end{tikzpicture}
+\caption{Disturb Refresh：トランジスタ $I_{\mathrm{off}}$ の温度依存。
+チャネル長が短いほど（CD小）リークが急増する。}
+\label{fig:disturb_temp}
+\end{figure}
 
 \subsection{対策と実装}
 不良要因を踏まえ，以下の対策が実装された：
@@ -467,50 +546,51 @@ Stack型では接合が拡散層の側壁と底面に限定され，周辺長は
 
 \begin{figure}[t]
 \centering
-% ==== Stack Cross-section ====
 \begin{tikzpicture}[x=1cm,y=1cm]
-  % substrate
-  \fill[gray!20] (-1.5,0) rectangle (1.5,-0.8);
-  \node[anchor=east] at (-1.5,0.1) {\small $p^-$ substrate};
 
-  % n+ diffusion
-  \fill[gray!55] (-0.5,0) rectangle (0.5,-0.6);
-
-  % electrode
-  \fill[black!30] (-0.15,0) rectangle (0.15,1.0);
-
-  % pn junction lines
+% ==== (a) Stack Cross-section ====
+\begin{scope}[shift={(-5,0)}]
+  \fill[gray!20] (-1.5,0) rectangle (1.5,-0.8); % substrate
+  \fill[gray!55] (-0.5,0) rectangle (0.5,-0.6); % n+ diffusion
+  \fill[black!30] (-0.15,0) rectangle (0.15,1.0); % electrode
   \draw[red,very thick] (-0.5,0) -- (-0.5,-0.6);
   \draw[red,very thick] (0.5,0) -- (0.5,-0.6);
   \draw[red,very thick] (-0.5,-0.6) -- (0.5,-0.6);
-
   \node[anchor=north] at (0,-1.2) {\bfseries (a) Stack Cross-section};
-\end{tikzpicture}
+\end{scope}
 
-\vspace{1.0em}
-
-% ==== Trench Cross-section ====
-\begin{tikzpicture}[x=1cm,y=1cm]
-  % substrate
-  \fill[gray!20] (-1.5,0) rectangle (1.5,-2.0);
-  \node[anchor=east] at (-1.5,0.1) {\small $p^-$ substrate};
-
-  % trench cavity
-  \draw[black,thick] (-0.5,0) -- (-0.5,-1.6) -- (0.5,-1.6) -- (0.5,0);
-
-  % electrode inside trench
-  \fill[black!30] (-0.35,-0.1) rectangle (0.35,-1.5);
-
-  % buried strap diffusion
-  \fill[gray!55] (0.55,-0.6) rectangle (0.95,-1.0);
-
-  % pn junction highlight
-  \draw[red,very thick] (0.55,-0.6) rectangle (0.95,-1.0);
-
+% ==== (b) Trench Cross-section ====
+\begin{scope}[shift={(5,0)}]
+  \fill[gray!20] (-1.5,0) rectangle (1.5,-2.0); % substrate
+  \draw[black,thick] (-0.5,0) -- (-0.5,-1.6) -- (0.5,-1.6) -- (0.5,0); % trench cavity
+  \fill[black!30] (-0.35,-0.1) rectangle (0.35,-1.5); % electrode
+  \fill[gray!55] (0.55,-0.6) rectangle (0.95,-1.0); % buried strap
+  \draw[red,very thick] (0.55,-0.6) rectangle (0.95,-1.0); % pn junction
   \node[anchor=north] at (0,-2.2) {\bfseries (b) Trench Cross-section};
+\end{scope}
+
+% ==== (c) Stack Top view ====
+\begin{scope}[shift={(-5,-4)}]
+  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5); % substrate
+  \fill[gray!55] (-0.8,-0.8) rectangle (0.8,0.8); % n+ diffusion area
+  \fill[black!30] (-0.3,-0.3) rectangle (0.3,0.3); % electrode contact
+  \draw[red,very thick] (-0.8,-0.8) rectangle (0.8,0.8); % pn junction perimeter
+  \node[anchor=north] at (0,-1.9) {\bfseries (c) Stack Top view};
+\end{scope}
+
+% ==== (d) Trench Top view ====
+\begin{scope}[shift={(5,-4)}]
+  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5); % substrate
+  \draw[black,thick] (-0.8,-0.8) rectangle (0.8,0.8); % trench cavity outline
+  \fill[black!30] (-0.5,-0.5) rectangle (0.5,0.5); % trench electrode
+  \fill[gray!55] (0.9,-0.3) rectangle (1.3,0.3); % buried strap contact
+  \draw[red,very thick] (0.9,-0.3) rectangle (1.3,0.3); % pn junction at strap
+  \node[anchor=north] at (0,-1.9) {\bfseries (d) Trench Top view};
+\end{scope}
+
 \end{tikzpicture}
 
-\caption{Stack型とTrench型キャパシタ構造比較。
+\caption{Stack型とTrench型キャパシタ構造の断面図と上面図の比較。
 Stackは接合周辺長が限定的であるのに対し，
 Trenchはburied strap起点で周辺長が増大し，高温リークのリスクが高い。}
 \label{fig:stack_trench}
