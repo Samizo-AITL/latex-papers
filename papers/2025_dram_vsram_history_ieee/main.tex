@@ -337,9 +337,10 @@ O$_2$プラズマは酸化膜界面に欠陥準位を生成し，
   },
   grid=both,
   legend style={
-    at={(0.5,-0.25)},
+    at={(0.5,-0.25)}, % グラフ下に移動
     anchor=north,
-    legend columns=-1,
+    legend columns=-1, % 横並び
+    /tikz/every even column/.append style={column sep=1em},
     draw=none, fill=none
   },
   clip=false
@@ -347,19 +348,19 @@ O$_2$プラズマは酸化膜界面に欠陥準位を生成し，
 
   % ==== 初期値 ====
   \addplot+[mark=*] coordinates {
-    (u05,70)   % 0.5µm(16M)
-    (u035,20)  % 0.35µm(64M)
-    (u025,65)  % 0.25µm(64M)
-    (VSRAM,30) % VSRAM
+    (u05,85)
+    (u035,0)
+    (u025,65)
+    (VSRAM,30)
   };
   \addlegendentry{初期}
 
   % ==== 改善後 ====
   \addplot+[mark=square*] coordinates {
-    (u05,85)   % 0.5µm(16M)
-    (u035,86)  % 0.35µm(64M)
-    (u025,88)  % 0.25µm(64M)
-    (VSRAM,82) % VSRAM
+    (u05,95)
+    (u035,86)
+    (u025,88)
+    (VSRAM,82)
   };
   \addlegendentry{改善後}
 
