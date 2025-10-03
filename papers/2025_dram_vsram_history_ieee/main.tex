@@ -328,32 +328,22 @@ O$_2$プラズマは酸化膜界面に欠陥準位を生成し，
   ymin=0, ymax=100,
   ylabel={歩留まり (\%)},
   xtick={1,2,3,4},
-  xticklabels={0.5µm(16M),0.35µm(64M),0.25µm(64M),VSRAM},
+  xticklabels={0.5um(16M),0.35um(64M),0.25um(64M),VSRAM},
   grid=both,
   legend style={
     at={(0.5,-0.25)},
     anchor=north,
-    legend columns=-1, % 横一列
-    draw=none,
-    fill=none
+    legend columns=-1,
+    draw=none, fill=none
   }
 ]
-
-% --- 初期値系列 ---
-\addplot+[mark=*] coordinates {
-  (1,95) (2,20) (3,65) (4,30)
-};
-\addlegendentry{初期}
-
-% --- 改善後系列 ---
-\addplot+[mark=square*] coordinates {
-  (1,95) (2,86) (3,88) (4,80)
-};
-\addlegendentry{改善後}
-
+  \addplot+[mark=*] coordinates {(1,95) (2,20) (3,65) (4,30)};
+  \addlegendentry{初期}
+  \addplot+[mark=square*] coordinates {(1,95) (2,86) (3,88) (4,80)};
+  \addlegendentry{改善後}
 \end{axis}
 \end{tikzpicture}
-\caption{酒田Fabにおける世代別歩留まり推移。0.5µm～VSRAM各世代の初期・改善後の比較。}
+\caption{酒田Fabにおける世代別歩留まり推移}
 \label{fig:yield_all}
 \end{figure}
 
@@ -407,17 +397,20 @@ Pause不良は，拡散層接合のリークに起因することが実験的に
 チャネル長が短いほど $I_{\mathrm{off}}$ が増大し，
 高温動作でさらに顕著となった（Fig.~\ref{fig:disturb}）。
 
-% Fig. X  Pause Refresh：温度依存とバックバイアス効果
+% Fig. X  Pause Refresh：温度依存とバックバイアス効果（凡例は下中央）
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
   width=\linewidth, height=6cm,
-  xlabel={温度 [$^\circ$C]}, ylabel={$I_{\mathrm{junc}}$（相対）},
+  xlabel={温度 [$^\circ$C]}, ylabel={$I_{\mathrm{junc}}$ (相対)},
   ymode=log, ymin=1e-2, ymax=1e2,
   xmin=25, xmax=100, xtick={25,40,60,80,90,100},
   grid=both,
-  legend style={at={(0.5,-0.22)},anchor=north,draw=none,fill=none},
+  legend style={
+    at={(0.5,-0.25)}, anchor=north,
+    legend columns=-1, draw=none, fill=none
+  },
   clip=false
 ]
   % Vbs = -1 V
@@ -433,39 +426,40 @@ Pause不良は，拡散層接合のリークに起因することが実験的に
   \addlegendentry{$V_{bs}=-3$ V}
 \end{axis}
 \end{tikzpicture}
-\caption{Pause Refresh：ジャンクションリーク $I_{\mathrm{junc}}$ の温度依存。
-バックバイアス強化でリークが抑制される。}
+\caption{Pause Refresh：ジャンクションリーク $I_{\mathrm{junc}}$ の温度依存。バックバイアス強化でリークが抑制される。}
 \label{fig:pause_temp}
 \end{figure}
 
-% Fig. Y  Disturb Refresh：短チャネル効果と温度依存
+% Fig. Y  Disturb Refresh：短チャネル効果と温度依存（凡例は下中央・"um"表記）
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
   width=\linewidth, height=6cm,
-  xlabel={温度 [$^\circ$C]}, ylabel={$I_{\mathrm{off}}$（相対）},
+  xlabel={温度 [$^\circ$C]}, ylabel={$I_{\mathrm{off}}$ (相対)},
   ymode=log, ymin=1e-3, ymax=1e1,
   xmin=25, xmax=100, xtick={25,40,60,80,90,100},
   grid=both,
-  legend style={at={(0.5,-0.22)},anchor=north,draw=none,fill=none},
+  legend style={
+    at={(0.5,-0.25)}, anchor=north,
+    legend columns=-1, draw=none, fill=none
+  },
   clip=false
 ]
-  % CD = 0.25 µm
+  % CD = 0.25 um
   \addplot+[semithick,mark=triangle*] coordinates {
     (25,0.004) (40,0.010) (60,0.050) (80,0.220) (90,0.450) (100,0.900)
   };
-  \addlegendentry{CD = 0.25\,µm}
+  \addlegendentry{CD = 0.25um}
 
-  % CD = 0.20 µm
+  % CD = 0.20 um
   \addplot+[semithick,mark=*] coordinates {
     (25,0.010) (40,0.030) (60,0.150) (80,0.700) (90,1.400) (100,2.800)
   };
-  \addlegendentry{CD = 0.20\,µm}
+  \addlegendentry{CD = 0.20um}
 \end{axis}
 \end{tikzpicture}
-\caption{Disturb Refresh：トランジスタ $I_{\mathrm{off}}$ の温度依存。
-チャネル長が短いほど（CD小）リークが急増する。}
+\caption{Disturb Refresh：トランジスタ $I_{\mathrm{off}}$ の温度依存。チャネル長が短いほど（CD小）リークが急増する。}
 \label{fig:disturb_temp}
 \end{figure}
 
