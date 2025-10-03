@@ -6,13 +6,32 @@
 \setmainjfont{IPAexMincho}
 \setsansjfont{IPAexGothic}
 
-% ===== 図表・数式・リンク =====
+% ===== 数式・記号 =====
 \usepackage{amsmath,amssymb}
-\usepackage{graphicx}
-\usepackage{booktabs}
+\usepackage{bm}            % ベクトル太字
+\usepackage{siunitx}       % 単位SI表記
+\sisetup{detect-all=true}
+
+% ===== 図表 =====
+\usepackage{graphicx}      % 画像取り込み
+\usepackage{booktabs}      % 表の罫線
+\usepackage{multirow}      % 複数行結合
+\usepackage{array}         % 表列幅指定
+\usepackage{caption}
+\usepackage{subcaption}    % 複数図の並列表記
+\usepackage{float}         % [H] オプション固定用
+
+% ===== 参考文献・引用 =====
 \usepackage{cite}
-\usepackage{siunitx}
+
+% ===== リンク =====
 \usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
 
 \title{aTFT用LCDドライバにおける0.25\,\textmu mプロセス選択と\\
 TiSi$_2$相転移不完全問題}
