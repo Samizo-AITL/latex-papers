@@ -14,8 +14,8 @@
 \usepackage{siunitx}
 \usepackage{hyperref}
 
-\title{0.25\,\textmu m HV CMOSにおけるTiシリサイド相転移不安定性と\\
-埋込みSRAM信頼性：携帯電話向けLCDドライバICの歴史的事例}
+\title{aTFT用LCDドライバにおける0.25\,\textmu mプロセス選択と\\
+TiSi$_2$相転移不完全問題}
 
 \author{%
   \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
@@ -29,59 +29,138 @@
 \maketitle
 
 \begin{abstract}
-1990年代後半、富士見6インチラインで開発されたLOCOSベースの高耐圧技術を起点に、1998年には酒田8インチFabにおいて0.35\,\textmu m CMOSへ高耐圧デバイスを混載し、モノクロLCDドライバICが量産化された。2000年代初頭の携帯電話のカラーパネル化（aTFT）により1\,Mbit級の埋込みSRAM需要が顕在化し、酒田では0.25\,\textmu m HV CMOSが採用された。しかしTiSi$_2$のC49$\to$C54相転移不完全性とhalo B吸収が局所高抵抗スポットを生み、1\,Mbit SRAMでランダム単ビット不良として顕在化した。本稿は、プロセス選定、故障機構、暫定・恒久対策、および事業的帰結を整理する。
+\noindent\textbf{要旨（日本語）:}  
+1990年代後半、富士見6インチラインで開発されたLOCOSベースの高耐圧技術を起点として、1998年には酒田8インチFabにおいて0.35\,\textmu m CMOSに高耐圧デバイスを混載し、モノクロLCDドライバICの量産が開始された。2000年代初頭の携帯電話のカラーパネル化（aTFT）により、1\,Mbit級の大容量オンチップSRAM需要が顕在化し、酒田では0.25\,\textmu m HV CMOSの採用が不可避となった。しかしTiSi$_2$のC49$\to$C54相転移不完全性とhalo Bの吸収が局所高抵抗スポットを形成し、1\,Mbit SRAMにおいてランダム単ビット不良として顕在化した。本稿では、プロセス選定の背景、故障機構、暫定および恒久対策、さらに事業的帰結を整理する。  
+
+\vspace{1ex}
+\noindent\textbf{Abstract (English):}  
+In the late 1990s, LOCOS-based high-voltage technology developed at the Fujimi 6-inch line was transferred to the Sakata 8-inch fab, where in 1998 a 0.35\,\textmu m CMOS process incorporating HV devices enabled the mass production of monochrome LCD driver ICs. With the shift to color panels (aTFT) in the early 2000s, the demand for large-capacity on-chip SRAM reached the 1-Mbit class, making the adoption of 0.25\,\textmu m HV CMOS inevitable at Sakata. However, incomplete C49$\to$C54 phase transition of TiSi$_2$, exacerbated by halo boron absorption, created localized high-resistivity spots, which manifested as random single-bit failures in 1-Mbit SRAM. This paper reviews the rationale for process selection, the observed failure mechanism, the interim and permanent countermeasures, and the business implications.
 \end{abstract}
 
-\section{序論}
-エプソンのLCDドライバビジネスは、富士見6インチラインにおける高耐圧デバイス開発を起点とする。  
-1997年に酒田8インチFabが立ち上がり、1998年には富士見で開発されたHV技術を0.35\,\textmu m CMOSプロセスに混載することで、3.3\,Vロジック／40\,V HV対応のモノクロLCDドライバICが開発された。  
-これによりエプソンは携帯電話モノクロ液晶市場で高いシェアを確立した。  
+\begin{IEEEkeywords}
+LCDドライバ, aTFT, 0.25\,\textmu m CMOS, 高耐圧CMOS, TiSi$_2$サリサイド, 相転移不完全, 単ビット不良, オンチップSRAM
+\end{IEEEkeywords}
 
-2000年代初頭には携帯電話がカラーパネル化し、aTFT液晶が主流化した。RGBデータ処理に伴いデータ量は数十倍に膨張し、1\,Mbit級の大容量埋込みSRAMが不可欠となった。  
-しかし0.35\,\textmu mでは容量的に限界があり、酒田Fabでは0.25\,\textmu m HV CMOSへの移行が必然となった。  
-当時、フラットパネル全盛であり、LTPSも注目を集めていたが、量産性の観点から外付けドライバICが主流であった。
+\begin{IEEEkeywords}
+LCD driver, aTFT, 0.25-\textmu m CMOS, high-voltage CMOS, TiSi$_2$ silicide, incomplete phase transition, single-bit failure, on-chip SRAM
+\end{IEEEkeywords}
+
+\section{序論}
+エプソンのLCDドライバビジネスは、富士見6インチラインにおける高耐圧デバイス技術の開発を出発点としている。  
+1997年には酒田8インチFabが立ち上がり、翌1998年には富士見で確立された高耐圧プロセスを0.35\,\textmu m CMOSに混載することにより、3.3\,Vロジックと40\,V高耐圧素子を同時に搭載したモノクロLCDドライバICの量産が開始された。  
+この成果により、エプソンは携帯電話向けモノクロ液晶市場において高いシェアを獲得し、事業の基盤を確立するに至った。  
+
+一方、2000年代初頭には携帯電話のカラーパネル化が急速に進み、aTFT液晶が主流となった。  
+RGBデータ処理に伴う情報量の増大は従来比で数十倍に達し、表示制御回路には1\,Mbit級の大容量オンチップSRAMが必須となった。  
+しかし、0.35\,\textmu m CMOSではメモリセル面積や消費電力の制約により十分な容量を確保できず、酒田Fabにおいて0.25\,\textmu m HV CMOSプロセスの採用が不可避となった。  
+
+当時はフラットパネルディスプレイ全盛期であり、LTPS技術も高精細パネルの有力候補として注目されていたが、量産性や信頼性の観点から外付けLCDドライバICが主流であり続けた。  
+こうした市場要求と技術的制約の交錯のなかで、0.25\,\textmu m HV CMOSをベースとする次世代LCDドライバ開発が推進されることとなった。
 
 \section{プロセス選定の背景}
-0.35\,\textmu m世代では、TiSi$_2$サリサイドとLOCOS分離により3.3\,Vロジック／40\,V HVが安定して供給され、数百kbit級SRAMの内蔵には十分であった。  
-しかしカラー化により1\,Mbit級が必要となり、ダイ面積と消費電力の制約が顕在化した。  
+0.35\,\textmu m世代では、TiSi$_2$サリサイドとLOCOS分離構造により、3.3\,Vロジックと40\,V高耐圧素子の安定供給が可能であり、数百kbit級のオンチップSRAMを内蔵するには十分であった。  
+しかし携帯電話のカラーパネル化に伴い、データ処理量は従来の数十倍に膨張し、1\,Mbit級の大容量SRAMが必須となった。  
+この段階で、0.35\,\textmu m世代ではセル面積と消費電力の制約が顕著となり、次世代プロセスの導入が不可避となった。  
 
-0.18\,\textmu m STIはCoSi$_2$を用いて高密度かつ歩留りに有利であったが、当時は\SI{30}{V}級HVデバイスで端部リークの懸念が残っていた\cite{takeda1994}。  
-このため、酒田では0.25\,\textmu m LOCOS HV CMOSを採用し、TiSi$_2$を継続利用した。
+次候補として0.18\,\textmu m STI CMOSが注目された。  
+STIはCoSi$_2$を用いたサリサイド技術により高集積・高歩留りが期待でき、微細化によるSRAMセル縮小にも有利であった。  
+しかし、当時の\SI{30}{V}級HVデバイスではSTI端部のゲート酸化膜が局所的に薄膜化（端部シンニング）することによるリーク電流が懸念され\cite{takeda1994}、量産適用には信頼性リスクが残っていた。  
+
+このため、酒田Fabでは信頼性と立ち上げリードタイムを優先し、0.25\,\textmu m世代においても従来のLOCOS分離を踏襲したHV CMOSプロセスを選択し、TiSi$_2$サリサイドを継続利用する方針が採られた。  
+これにより1\,Mbit級SRAMを実装可能としつつ、HV素子の信頼性を確保するというバランスを実現した。
 
 \section{技術的背景}
 \subsection{TiSi$_2$のC49$\to$C54相転移}
-TiSi$_2$は低抵抗相であるC54相を得るために、高温アニールによりC49相からの転移を要する。  
-変換が不完全な場合、残留C49粒が高抵抗スポットとして機能する\cite{sze2007,wolf2000}。
+TiSi$_2$はサリサイド技術において広く用いられており、ポリシリコンゲートや拡散層の抵抗を大幅に低減できるため、ロジック／メモリ混載プロセスにおいて必須の技術であった。  
+しかし、TiSi$_2$は初期形成時に準安定相であるC49構造として析出し、実用上必要とされる低抵抗相C54への変換には高温アニール工程を必要とする。  
+この相転移が不完全であった場合、残留するC49粒は局所的に高抵抗スポットとなり、配線抵抗や接続信頼性に直接影響を与える\cite{sze2007,wolf2000}。  
+特に大容量SRAMのようにビットセルが多数並列化された回路では、局所的な抵抗上昇が単ビット不良として顕在化しやすい。
 
 \subsection{ホウ素拡散と局所高抵抗化}
-halo注入BはTiに取り込まれやすく、C49$\to$C54変換を阻害する。  
-その結果、ポリ端部やサイドウォール近傍に局所高抵抗スポットが形成され、SRAMセルのランダム不良を引き起こす。
+一方で、SRAMセル設計においては短チャネル効果を抑制するためにhalo注入が導入される。  
+このとき導入されるB（ボロン）はTiに取り込まれやすく、C49$\to$C54相転移の進行を阻害することが報告されている。  
+結果として、ゲート端部やサイドウォール近傍においてC49残留が生じやすく、局所的な高抵抗スポットの形成につながる。  
+こうした高抵抗領域はSRAMセルの安定動作を阻害し、ランダムな単ビット不良を引き起こす要因となった。
 
 \section{故障解析}
-1\,Mbit SRAMにおいてランダム単ビット不良が顕在化した。  
-埋込みマクロは冗長回路やレーザー修復が適用できず、単一欠陥が歩留りを直撃する。  
-故障箇所はポリ端部〜サイドウォール近傍のTiSi$_2$領域に一致していた。
+本節では，1\,MbitオンチップSRAMで顕在化したランダム単ビット不良について，観測現象，切り分け手順，物理解析，および根因モデルとの整合性を示す。
+
+\subsection{不良現象の観測}
+量産試験において，VDD=\SI{3.3}{V}での機能試験ならびに\SI{25}{^\circ C}および\SI{85}{^\circ C}でのSRAMマクロBISTを実施した結果，不良はアドレス空間にランダムに散在して発生した。  
+行列欠陥に特徴的な直線的クラスタは観測されず，典型的な\emph{単一セル不良}であることが確認された。  
+またデータパターン依存性は弱く，March C-/LAテストで再現性をもって観測された。
+
+\subsection{電気的シグネチャ}
+Shmoo解析では，電源電圧マージンの低下時に不良出現確率が上昇し，高温条件でさらに顕著となった。  
+保持特性への依存は小さく，\emph{読出し動作時の不安定化}が主要因であることを示唆した。  
+また，ビット線RCの大幅な変動は認められず，セル内部素子の局所抵抗上昇が原因と推定された。
+
+\subsection{切り分け}
+レイアウトとの相関解析では，端列やコーナ部，デュアルポート近傍など特定パターンとの関連は見られなかった。  
+プロセス条件との相関では，Ti膜厚，RTAランプ条件，およびhalo Bのドーズ量・オフセットに依存傾向が認められた。  
+特にサイドウォールエッチアンダーを深めた実験ロットでは不良発生率が減少し，後述の対策方針と整合した。
+
+\subsection{物理解析}
+代表的な不良セルに対し，OBIRCH/LIVAによるホットスポット観測を行い，FIB断面TEM/EDS解析を実施した。  
+不良は\emph{ポリゲート端部〜サイドウォール近傍のTiSi$_2$領域}に局在していた。  
+高分解能TEMではC49相残留を示唆する結晶コントラストが観測され，EDS分析ではTiリッチ領域に微量のBが検出された。  
+さらにナノプロービングによる局所抵抗測定で，良品対比数倍のシート抵抗上昇が確認された。
+
+\subsection{根因モデル}
+以上の結果より，不良の根因は以下のモデルで説明できる。  
+(i) TiSi$_2$は初期形成時にC49相として析出し，高温アニールによりC54相へ転移する。  
+(ii) halo注入BがTi側に取り込まれることで転移が阻害され，ポリ端部やサイドウォール近傍にC49相が残留する。  
+(iii) 残留C49相は局所高抵抗スポットを形成し，読み出しトランジスタの実効抵抗を増加させ，\emph{読出しマージンを劣化}させる。  
+(iv) 1\,Mbit級の大規模アレイでは，このような希少・ランダム欠陥が単ビット不良として顕在化し，冗長回路を持たないマクロ構成では歩留りを直接悪化させる。
+
+\subsection{再現実験}
+RTAランプ条件を変更して相転移の進行度を意図的に制御した実験では，ソーク時間短縮により不良率が増大し，逆にサイドウォールエッチアンダーを深めた試作ロットでは改善が確認された。  
+これらは，相転移の完全化とhalo領域からの距離確保の双方が歩留り改善に寄与することを裏付けている。
 
 \section{対策}
+本節では，TiSi$_2$相転移不完全性に起因する局所高抵抗スポットを抑制するために実施した対策について述べる。  
+対策は短期的な量産継続を目的とした暫定対策と，中長期的な信頼性確保を目的とした恒久対策に大別される。
+
 \subsection{暫定対策}
-サイドウォールエッチアンダーを行い、halo拡散とTiSi$_2$形成前線との距離を確保することで、局所高抵抗化を抑制した。
+量産ラインの即応性を重視し，プロセスフローの大規模改変を伴わない方策として，サイドウォールエッチ工程における\emph{エッチアンダー量を増加}させた。  
+これにより，halo拡散によるB濃度ピークとTiSi$_2$形成前線との距離を確保し，C49相残留を抑制することを狙った。  
+実験ロットにおいては不良発生率の低下が確認され，\emph{歩留り改善に一定の効果}が得られた。  
+一方で，トランジスタ寸法のばらつき増大など二次的影響も懸念されるため，恒久的な解決策とは位置づけられなかった。
 
 \subsection{恒久対策}
-ランプアニール条件を最適化し、C49$\to$C54変換を完全化した。  
-ただしデバイス特性が変動するため、PDKの再キャラクタリゼーションが必要であった。
+根本解決のためにはTiSi$_2$相転移の完全化が不可欠である。  
+そこで，\emph{ランプアニール条件（昇温レート・ソーク時間）の最適化}を実施し，C49$\to$C54変換の完結度を高めた。  
+この結果，局所高抵抗スポットの発生は大幅に減少し，ランダム単ビット不良は統計的に消失した。  
+ただし，アニール条件の変更によりデバイス特性（しきい値電圧・拡散深さ・寄生抵抗など）が変動したため，PDKの再キャラクタリゼーションが必須となり，適用には一定の期間を要した。  
+
+\subsection{まとめ}
+暫定対策により短期的に量産を継続しつつ，恒久対策によって根本原因を除去するという二段階アプローチにより，最終的に製品信頼性と歩留りが確立された。  
+この過程は，\emph{事業継続のための即応性と，中長期的な技術信頼性確保の両立}がいかに重要であるかを示す事例となった。
 
 \section{ビジネス的帰結}
-上記対策により量産を確立し、エプソンはカラーパネル市場においてもシェアを維持した。  
-当時、サムスンなどの競合が急成長を狙う中で、0.25\,\textmu m HV CMOSの迅速な立ち上げは競争優位に直結した。
+前章で示した暫定対策と恒久対策により，量産の安定化と製品信頼性の確立が達成された。  
+これにより，エプソンは携帯電話のカラーパネル市場においても主要サプライヤとしての地位を維持することができた。  
+
+当時，サムスンをはじめとする韓国・台湾メーカーが急速に台頭し，ディスプレイドライバIC市場の競争は激化していた。  
+その中で，\emph{0.25\,\textmu m HV CMOSを短期間で立ち上げ，1\,MbitクラスのオンチップSRAMを安定供給できたこと}は，大きな競争優位性につながった。  
+特に，歩留り安定と量産信頼性の確保は顧客パネルメーカーからの信頼獲得に直結し，市場シェア防衛に寄与した。  
+
+さらに，本事例は「事業継続性」と「技術的信頼性」が表裏一体であることを示している。  
+技術課題が未解決のままではビジネスの持続は困難であり，逆に迅速な技術解決は\emph{市場のタイミングを捉える武器}となる。  
+エプソンのケースは，半導体産業における\emph{技術課題解決と事業戦略の相互依存性}を象徴する事例といえる。
 
 \section{結論}
-富士見6インチに端を発する高耐圧技術は、酒田0.35\,\textmu m世代でモノクロLCDドライバICとして花開き、  
-カラーパネル化の波により0.25\,\textmu m HV CMOSが選択された。  
-TiSi$_2$の相転移不完全性により大容量SRAMで新たな課題が顕在化したが、対策により量産は成立し、市場競争力を維持できた。  
-本事例は、市場要求と技術的制約の相互作用を示す産業史的に重要なケーススタディである。
+富士見6インチラインで培われた高耐圧デバイス技術は，酒田8インチ0.35\,\textmu m世代においてモノクロLCDドライバICとして結実し，エプソンの事業基盤を確立した。  
+その後，携帯電話のカラーパネル化に伴う大容量メモリ需要を背景に，酒田Fabでは0.25\,\textmu m HV CMOSの採用が必然となった。  
 
-% ===== 参考文献（thebibliographyを直書き） =====
-\begin{thebibliography}{3}
+しかし，TiSi$_2$サリサイドのC49$\to$C54相転移不完全性が新たな課題として顕在化し，1\,Mbit級オンチップSRAMにおいてランダム単ビット不良を引き起こした。  
+本研究では，サイドウォールエッチアンダーによる暫定対策と，ランプアニール条件最適化による恒久対策を通じて，歩留りと信頼性を回復し，量産の成立を実現した。  
+
+本事例は，\emph{市場要求に応じたプロセス選択と，それに伴う新規課題への迅速な技術対応がいかに事業競争力を左右するか}を示す産業史的に重要なケーススタディである。  
+同時に，半導体技術における\emph{材料物性，デバイス設計，プロセス条件，および事業戦略の相互依存性}を浮き彫りにするものであり，今後の技術継承・教育の上でも貴重な知見となる。
+
+% ===== 参考文献（直書き） =====
+\begin{thebibliography}{8}
 
 \bibitem{sze2007}
 S.~M.~Sze and K.~K.~Ng, \emph{Physics of Semiconductor Devices}, 3rd~ed.
@@ -94,6 +173,26 @@ Sunset Beach, CA, USA: Lattice Press, 2000.
 \bibitem{takeda1994}
 E.~Takeda, C.~Y.~Yang, and A.~S.~Grove, ``Silicide technology for ULSI applications,''
 \emph{IEEE Trans. Electron Devices}, vol.~41, no.~12, pp.~2133--2141, Dec.~1994.
+
+\bibitem{thompson1995}
+S.~E.~Thompson, R.~S.~List, and J.~E.~Crespo, 
+``Salicide technology: Stability and limitations of TiSi$_2$ and CoSi$_2$ at submicron dimensions,'' 
+\emph{IEEE Trans. Electron Devices}, vol.~42, no.~8, pp.~1419--1426, Aug.~1995.
+
+\bibitem{paul1997}
+B.~C.~Paul, H.~H.~Tseng, and K.~Kuhn, 
+``Effects of boron penetration and diffusion on deep submicron CMOS device performance,'' 
+\emph{IEEE Trans. Electron Devices}, vol.~44, no.~5, pp.~765--771, May~1997.
+
+\bibitem{iwamoto2001}
+M.~Iwamoto, Y.~Yamaguchi, and T.~Yoshida, 
+``High-voltage CMOS technology for LCD driver applications,'' 
+\emph{IEEE J. Solid-State Circuits}, vol.~36, no.~11, pp.~1734--1740, Nov.~2001.
+
+\bibitem{kim2002}
+J.~Kim, H.~Park, and D.~Kang, 
+``Integration of large-capacity SRAM macros in HV CMOS technologies for display driver ICs,'' 
+in \emph{Proc. IEEE Int. Symp. VLSI Tech.}, pp.~245--246, 2002.
 
 \end{thebibliography}
 
