@@ -149,37 +149,90 @@ Pause/Disturb Refresh不良の解析と対策，歩留まり推移を整理す�
 
 \section{第2章：\texorpdfstring{\SI{0.25}{\micro\meter}}{0.25µm} 世代64M DRAMの立ち上げ}
 
-\subsection{SCF方式と初期歩留まり}
-1998年，酒田Fabは \SI{0.25}{\micro\meter} 世代64M DRAMに挑戦した。
-ここでは三菱電機が確立していた \emph{Short Cycle Feedback (SCF)} 方式を導入。
-工程を短サイクルで止め，SEM観察・電気評価を繰り返しながら条件修正する方式である。  
-筆者はこの \SI{0.25}{\micro\meter} 世代立ち上げの最初から参画し，その後の量産化および量産対応までを担当した。
+\subsection{プロセス概要}
+\SI{0.25}{\micro\meter} 世代では，初めて KrF エキシマレーザステッパを本格導入し，
+従来の i線リソグラフィから一気に波長短縮が図られた。
+この「0.25µm世代＝KrF世代」への移行により，
+微細化と同時にリーク電流制御やキャパシタ高容量化の新技術が必須となった。
 
+プロセスの主要仕様を Table~\ref{tab:process25} に示す。
+
+\begin{table}[h]
+\centering
+\caption{\SI{0.25}{\micro\meter} 64M DRAM プロセス概要}
+\label{tab:process25}
+\begin{tabular}{|p{3.2cm}|p{4.8cm}|}
+\hline
+\textbf{項目 / Item} & \textbf{内容 / Description} \\
+\hline
+\textbf{電源電圧 / Supply Voltage} & 2.5V（メモリセル・周辺・I/O） \newline *2.5V for Memory Cell, Peripheral, and I/O* \\
+\hline
+\textbf{セルキャパシタ構造 / Cell Capacitor Structure} & スタック型キャパシタ \newline *Stacked capacitor structure* \\
+\hline
+\textbf{ウェル構成 / Well Structure} & メモリセルにトリプルウェル構造を採用 \newline *Triple-well adopted in memory cell region* \\
+\hline
+\textbf{ワードライン構造 / Word Line} & デバイデッドWL構造，WSA-ALA接続 \newline *Divided word-line structure with WSA-ALA connection* \\
+\hline
+\textbf{ビットライン形成 / Bit Line} & WSB-CVDにより，BLとBLコンタクトを同時形成 \newline *Bit line and bit line contact formed simultaneously by WSB-CVD* \\
+\hline
+\textbf{ストレージノード処理 / Storage Node Surface Treatment} & 粗面化処理により容量値1.5～1.8倍向上 \newline *Surface roughening improved capacitance by 1.5–1.8×* \\
+\hline
+\end{tabular}
+\end{table}
+
+\noindent
+このように，0.25µm世代は単なる寸法微細化に留まらず，
+\begin{itemize}
+  \item 低電圧化（2.5V駆動）
+  \item キャパシタ容量確保のための粗面化処理
+  \item トリプルウェル導入によるセル耐性向上
+  \item 新規材料（WSB-CVD）の採用によるビットライン形成
+\end{itemize}
+といった，多角的なプロセス革新が同時に進められた。
+
+\subsection{SCF方式と初期歩留まり}
+1998年，酒田Fabは \SI{0.25}{\micro\meter} 世代64M DRAMの立ち上げを開始した。
+ここで採用されたのが \emph{Short Cycle Feedback (SCF)} 方式である。
+SCF方式とは，各要素技術に定められたマニュアル規格を短期間で満足するよう，
+暫定処理条件を一次確定していく方式である。
+
+筆者はこの \SI{0.25}{\micro\meter} 世代立ち上げの最初から参画し，
+量産化および量産対応までを一貫して担当した。
+
+立ち上げフローは以下の通りであった：
 \begin{enumerate}
-  \item 熊本からの条件を流動票へ展開
-  \item 工程ごとに形式ロットを途中止めし形状観察
-  \item SEM・電気評価フィードバックで逐次修正
-  \item 本番ロットで信頼性確認
+  \item 熊本Fabから受領した処理条件を各要素技術へ展開
+  \item SCFにより，各要素技術ごとに暫定処理条件を一次確定
+  \item 電子流動票へ処理条件と品質規格を反映
+  \item 形状ロットを流動させ，各工程でSEM測長・断面観察を実施し，所望形状を確認
+  \item QAロットを投入し，歩留まりおよび信頼性試験で条件を検証
+  \item 信頼性確認後，量産条件を確定し，量産へ移行
 \end{enumerate}
 
-その結果，初期歩留まり65\%という高い値を達成。
-従来の新世代DRAM初期値（20--30\%）を大きく上回った。
+この結果，初期歩留まり65\%という極めて高い値を達成した。
+従来，新世代DRAMの初期歩留まりは20--30\%程度が一般的であり，
+酒田Fabは大幅に上回る成果を示した。
 
 \subsection{保持時間モデルと不良モード解析}
-不良は主に \emph{Pause Refresh Fail} に集中した。
+不良は主に \emph{Pause Refresh Fail} に集中した。  
 リフレッシュを停止しセル保持を確認する試験で，
 32ms $\rightarrow$ 64ms $\rightarrow$ 128ms と条件を厳しくすると，
-ランダムに単ビット不良が発生（Fig.~\ref{fig:failmap}）。
+ランダムに単ビット不良が発生した（Fig.~\ref{fig:failmap}）。  
+
+このようにPause時間を延長するほどランダムビット不良が増加する挙動から，
+主因として \textbf{n$^+$/p$^-$拡散層ジャンクションリーク} が疑われた。  
 
 保持時間は次式で与えられる：
 \[
 \tau = \frac{C_{\mathrm{cell}} V_{\mathrm{cell}}}{I_{\mathrm{leak}}}
 \]
-設計値 $C_{\mathrm{cell}}, V_{\mathrm{cell}}$ に問題はなく，
-リーク電流 $I_{\mathrm{leak}}$ が支配的要因であると判明した。
+ここで $C_{\mathrm{cell}}$ および $V_{\mathrm{cell}}$ は設計値どおり確保されており，
+容量値そのものは正常であった。  
+また，ストレージノードからセルプレートへのリークも認められず，
+キャパシタ構造や積層膜に起因する不良は否定された。  
 
-解析の結果，レイアウト起因は否定され，
-主因は \emph{拡散層ジャンクションリーク} であった。
+したがって，不良の本質的要因はリーク電流 $I_{\mathrm{leak}}$ に支配され，
+\textbf{拡散層ジャンクションリーク} に帰着することが明確となった。
 
 \begin{figure}[t]
 \centering
@@ -195,38 +248,51 @@ Pause/Disturb Refresh不良の解析と対策，歩留まり推移を整理す�
     }
   \end{scope}
 \end{tikzpicture}
-\caption{Pause Refresh Fail のフェイルマップ例}
+\caption{Pause Refresh Fail のフェイルマップ例。
+ロットを跨いでも同様のパターンが出現し，
+プロセス条件起因であることが示唆された。}
 \label{fig:failmap}
 \end{figure}
 
 \subsection{プラズマダメージ仮説}
-リーク増大の背景にはプラズマダメージが疑われた。
+ジャンクションリーク増大の背景には，
+\textbf{プラズマダメージ} が強く疑われた。  
+
+具体的には以下の工程が影響源と考えられた：
 \begin{itemize}
-  \item ゲートエッチ後の酸化膜露出時
-  \item LDD工程での繰返しアッシング
+  \item ゲートエッチ後の酸化膜露出状態でのO$_2$プラズマ処理
+  \item LDD形成工程での繰返しアッシング
 \end{itemize}
-O$_2$プラズマが界面欠陥を生成し，熱励起キャリアリークを助長すると推定された。
+
+O$_2$プラズマは酸化膜界面に欠陥準位を生成し，
+熱励起キャリアのリークパスを形成する可能性がある。  
+高温条件下でリーク電流が急増する挙動も観測されており，
+プラズマ起因欠陥が主要因であるとの仮説を強める結果とだった。
 
 \subsection{対策と効果}
-根本対策は「O$_2$アッシング剥離 $\rightarrow$ 硫酸ウェット剥離」への全面切替。
-プラズマ曝露をゼロ化することでリークを抑制できた。
+根本対策は，
+\textbf{「O$_2$アッシング剥離から硫酸ウェット剥離への全面切替」}であった。  
+これによりプラズマ曝露を完全に排除し，
+界面欠陥の生成を防ぐことに成功した。  
 
 \begin{table}[h]
   \centering
-  \caption{レジスト剥離フロー切替}
+  \caption{レジスト剥離フローの切替と効果}
   \label{tab:resist}
   \begin{tabular}{lll}
     \toprule
     & 従来 & 対策後 \\
     \midrule
     剥離方式 & O$_2$アッシング & 硫酸ウェット \\
-    主効果 & プラズマ曝露 & 界面欠陥防止 \\
-    歩留まり & 65\% & 80\%台後半 \\
+    主効果 & 繰返しプラズマ曝露 & 界面欠陥防止 \\
+    歩留まり & 約65\% & 80\%台後半へ改善 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-対策後，Pause不良は激減し，歩留まりは80\%台後半に安定（Fig.~\ref{fig:yield25}）。
+対策後，Pause不良は顕著に減少し，
+歩留まりは安定して80\%台後半を示した
+(Fig.~\ref{fig:yield25})。  
 
 \begin{figure}[t]
 \centering
@@ -245,19 +311,30 @@ O$_2$プラズマが界面欠陥を生成し，熱励起キャリアリークを
   \addlegendentry{改善後}
 \end{axis}
 \end{tikzpicture}
-\caption{酒田Fab：世代別歩留まり推移}
+\caption{酒田Fabにおける世代別歩留まり推移。
+0.25µm世代では，硫酸ウェット導入により
+初期65\%から最終88\%まで改善。}
 \label{fig:yield25}
 \end{figure}
 
 \subsection{小括}
 \begin{itemize}
-  \item SCF方式により65\%という高い初期歩留まりを達成。
-  \item 主因はジャンクションリーク，背景はプラズマダメージ。
+  \item SCF方式により，従来を大きく上回る65\%の高い初期歩留まりを実現。
+  \item 不良の主因はジャンクションリークであり，背後にはプラズマダメージが存在。
+  \item O$_2$アッシングを硫酸ウェット剥離に置換することで，歩留まりは80\%台後半へと改善。
+  \item 筆者は立ち上げ初期から参画し，プロセス解析・不良解析・量産対応を一貫して担当した。
+\end{itemize}
+
+\subsection{小括}
+\begin{itemize}
+  \item SCF方式により，65\%という高い初期歩留まりを達成。
+  \item 主因はジャンクションリークであり，背景にはプラズマダメージの可能性があった。
   \item 硫酸ウェット剥離への切替で歩留まりは80\%台後半に改善。
   \item 筆者は立ち上げ初期から参画し，その後の量産化・量産対応までを一貫して担当した。
 \end{itemize}
-この知見は「表面処理・プラズマ影響を軽視できない」という教訓を残し，
-酒田Fabの自前技術基盤となった。
+
+この事例は，\textbf{解析では直接可視化できない微小欠陥が，
+最終的な歩留まりに決定的な影響を与える}ことを示した。
 
 \section{第3章：VSRAM（2001年）— Pause/Disturb対策と歩留まり改善}
 
