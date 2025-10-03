@@ -21,21 +21,42 @@ jobs:
           root_file: main.tex
           latexmk_use_lualatex: true
           args: -gg -halt-on-error -file-line-error
+          # tlmgr でミラー不調などでも落ちないように || true を付ける
           pre_compile: |
-            tlmgr update --self --all
+            tlmgr update --self --all || true
             tlmgr install \
-              luatexja ipaex \
-              pgf \
+              luatexja ipaex pgf \
               siunitx booktabs cite bm \
               multirow float hyperref \
               collection-latexrecommended \
               collection-fontsrecommended \
-              collection-langjapanese
+              collection-langjapanese || true
 
+      # 失敗時でも main.log の中身をコンソールに出す
+      - name: Print main.log to console (if exists)
+        if: always()
+        run: |
+          set +e
+          LOG="papers/2025_driver_tisi2_ieee/main.log"
+          if [ -f "$LOG" ]; then
+            echo "===== BEGIN main.log ====="
+            sed -n '1,300p' "$LOG"
+            echo "===== END main.log ====="
+          else
+            echo "main.log not found."
+            ls -al papers/2025_driver_tisi2_ieee || true
+          fi
+
+      # 失敗しても成果物をアップロード
       - name: Upload PDF and LOG
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: driver-tisi2-ieee
           path: |
             papers/2025_driver_tisi2_ieee/main.pdf
             papers/2025_driver_tisi2_ieee/main.log
+            papers/2025_driver_tisi2_ieee/*.aux
+            papers/2025_driver_tisi2_ieee/*.fls
+            papers/2025_driver_tisi2_ieee/*.fdb_latexmk
+          if-no-files-found: ignore
