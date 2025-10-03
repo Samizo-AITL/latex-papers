@@ -1,0 +1,40 @@
+name: Build LCD Driver TiSi2 Paper (IEEE, JP)
+
+on:
+  push:
+    paths:
+      - 'papers/2025_driver_tisi2_ieee/**'
+      - '.github/workflows/latex_driver_tisi2_ieee.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up TeX Live
+        uses: teatimeguest/setup-texlive-action@v2
+        with:
+          packages: >-
+            scheme-medium
+            latexmk
+            luatexja
+            luatexja-fonts
+            collection-latexrecommended
+            collection-fontsrecommended
+            ipaex
+
+      - name: Compile (LuaLaTeX)
+        working-directory: papers/2025_driver_tisi2_ieee
+        run: |
+          latexmk -lualatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
+
+      - name: Upload PDF and LOG
+        uses: actions/upload-artifact@v4
+        with:
+          name: driver-tisi2-ieee
+          path: |
+            papers/2025_driver_tisi2_ieee/main.pdf
+            papers/2025_driver_tisi2_ieee/main.log
