@@ -324,51 +324,43 @@ O$_2$プラズマは酸化膜界面に欠陥準位を生成し，
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=\linewidth, height=6cm,
+  width=\linewidth, height=5cm,
   ymin=0, ymax=100,
   ylabel={歩留まり(\%)},
-  symbolic x coords={u05,u035,u025,VSRAM},
+  symbolic x coords={0.5\,µm(16M),0.35\,µm(64M),0.25\,µm(64M),VSRAM},
   xtick=data,
-  xticklabels={
-    {0.5\,\si{\micro\meter}\\(16M)},
-    {0.35\,\si{\micro\meter}\\(64M)},
-    {0.25\,\si{\micro\meter}\\(64M)},
-    {VSRAM}
-  },
   grid=both,
   legend style={
-    at={(0.5,-0.25)}, % グラフ下に移動
+    at={(0.5,-0.25)},
     anchor=north,
-    legend columns=-1, % 横並び
-    /tikz/every even column/.append style={column sep=1em},
+    legend columns=-1,
+    column sep=1em,
     draw=none, fill=none
   },
   clip=false
 ]
-
-  % ==== 初期値 ====
+  % 初期
   \addplot+[mark=*] coordinates {
-    (u05,85)
-    (u035,0)
-    (u025,65)
+    (0.5\,µm(16M),80)
+    (0.35\,µm(64M),20)
+    (0.25\,µm(64M),65)
     (VSRAM,30)
   };
   \addlegendentry{初期}
 
-  % ==== 改善後 ====
+  % 改善後
   \addplot+[mark=square*] coordinates {
-    (u05,95)
-    (u035,86)
-    (u025,88)
+    (0.5\,µm(16M),85)
+    (0.35\,µm(64M),86)
+    (0.25\,µm(64M),88)
     (VSRAM,82)
   };
   \addlegendentry{改善後}
 
 \end{axis}
 \end{tikzpicture}
-
 \caption{酒田Fabにおける世代別歩留まり推移。
-0.5\,\si{\micro\meter}からVSRAMまで，各世代で歩留まり改善の効果を確認できる。}
+0.5µm、0.35µm、0.25µmおよびVSRAMでの初期値と改善後の比較。}
 \label{fig:yield_all}
 \end{figure}
 
