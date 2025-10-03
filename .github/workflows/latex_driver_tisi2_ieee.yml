@@ -14,17 +14,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # LaTeX のセットアップとコンパイルをまとめて実行
       - name: Compile LaTeX (LuaLaTeX + JP)
         uses: xu-cheng/latex-action@v2
         with:
           working_directory: papers/2025_driver_tisi2_ieee
           root_file: main.tex
           latexmk_use_lualatex: true
-          # 日本語・表用の必要パッケージを事前導入
           pre_compile: |
             tlmgr update --self --all
-            tlmgr install luatexja luatexja-fonts collection-langjapanese ipaex \
+            tlmgr install luatexja collection-langjapanese ipaex \
                           siunitx booktabs cite
 
       - name: Upload PDF and LOG
