@@ -326,35 +326,34 @@ O$_2$プラズマは酸化膜界面に欠陥準位を生成し，
 \begin{axis}[
   width=\linewidth, height=6cm,
   ymin=0, ymax=100,
-  ylabel={歩留まり(\%)},
+  ylabel={歩留まり (\%)},
   xtick={1,2,3,4},
-  xticklabels={
-    $0.5\,\mu\mathrm{m}$ (16M),
-    $0.35\,\mu\mathrm{m}$ (64M),
-    $0.25\,\mu\mathrm{m}$ (64M),
-    VSRAM
-  },
-  x tick label style={align=center, text width=2.9cm},
+  xticklabels={0.5µm(16M),0.35µm(64M),0.25µm(64M),VSRAM},
   grid=both,
   legend style={
-    at={(0.5,-0.25)}, anchor=north,
-    draw=none, fill=none,
-    legend columns=2
-  },
-  clip=false
+    at={(0.5,-0.25)},
+    anchor=north,
+    legend columns=-1, % 横一列
+    draw=none,
+    fill=none
+  }
 ]
-  % 初期
-  \addplot+[semithick,mark=*]
-    coordinates {(1,95) (2,20) (3,65) (4,30)};
-  \addlegendentry{初期}
 
-  % 改善後
-  \addplot+[semithick,mark=square*]
-    coordinates {(1,95) (2,86) (3,88) (4,80)};
-  \addlegendentry{改善後}
+% --- 初期値系列 ---
+\addplot+[mark=*] coordinates {
+  (1,95) (2,20) (3,65) (4,30)
+};
+\addlegendentry{初期}
+
+% --- 改善後系列 ---
+\addplot+[mark=square*] coordinates {
+  (1,95) (2,86) (3,88) (4,80)
+};
+\addlegendentry{改善後}
+
 \end{axis}
 \end{tikzpicture}
-\caption{酒田Fabにおける世代別歩留まり推移（凡例はグラフ下中央）。}
+\caption{酒田Fabにおける世代別歩留まり推移。0.5µm～VSRAM各世代の初期・改善後の比較。}
 \label{fig:yield_all}
 \end{figure}
 
