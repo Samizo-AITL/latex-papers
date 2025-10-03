@@ -30,9 +30,8 @@
 \pgfplotsset{compat=1.18}
 
 % \usepackage{subcaption}  % ← 使わない
-\usepackage[caption=false,font=footnotesize]{subfig}
-
-\usepackage{float} 
+\usepackage{float}        % [H] を使う
+\usepackage{caption}      % キャプション間隔の調整
 
 % ========= タイトル =========
 \title{セイコーエプソン酒田Fab 8インチライン立ち上げ\\
@@ -541,75 +540,57 @@ Stack型では接合が拡散層の側壁と底面に限定され，周辺長は
 この構造差により，ジャンクションリークの起点が増加し，  
 高温条件でのリーク電流は指数的に増大した（Fig.~\ref{fig:trench_leak}）。  
 
-% 前文で:
-% \usepackage{float} % <== これを入れる
-
-% ==== 0.18µm Stack vs. Trench 図（本文中に固定配置）====
-\begin{figure}[H] % ← H で本文のその位置に固定
+% ==== 0.18 µm Stack vs. Trench（本文のその位置に固定して余白最小）====
+\begin{figure}[H]
+\captionsetup{skip=2pt}   % 図とキャプションの間を詰める
 \centering
 
-{\large \bfseries 0.18\,\textmu m Generation — Cross-sections}\par\vspace{0.6em}
+{\large \bfseries 0.18\,\textmu m Generation — Cross-sections}\par\vspace{0.4em}
 
-% ---------- (a) Stack Cross-section ----------
+% ------ (a) Stack Cross-section ------
 \begin{tikzpicture}[x=1cm,y=1cm]
-  % p- substrate
-  \fill[gray!20] (-3.0,0) rectangle (3.0,-1.0);
+  \fill[gray!20] (-3.0,0) rectangle (3.0,-1.0);                 % p- substrate
   \node[anchor=east] at (-3.0,0.12) {\small $p^-$ substrate};
-
-  % n+ diffusion（細め）
-  \fill[gray!55] (-1.1,0) rectangle (1.1,-0.65);
-
-  % storage node contact
-  \fill[black!30] (-0.25,0) rectangle (0.25,1.00);
-
-  % 接合周辺（赤）
-  \draw[red,very thick] (-1.1,0) -- (-1.1,-0.65) -- (1.1,-0.65) -- (1.1,0);
+  \fill[gray!55] (-1.00,0) rectangle (1.00,-0.65);               % n+ diffusion（細め）
+  \fill[black!30] (-0.25,0) rectangle (0.25,1.00);               % SN contact
+  \draw[red,very thick] (-1.00,0) -- (-1.00,-0.65) -- (1.00,-0.65) -- (1.00,0); % 接合周辺
 \end{tikzpicture}
-\caption*{(a) Stack Cross-section}
+\caption*{(a) Stack Cross-section}   % ← Fig. 番号は出ません
 
-\vspace{0.8em}
+\vspace{0.5em}
 
-% ---------- (b) Trench Cross-section（左右に strap） ----------
+% ------ (b) Trench Cross-section（左右に buried strap） ------
 \begin{tikzpicture}[x=1cm,y=1cm]
-  % p- substrate
   \fill[gray!20] (-3.0,0) rectangle (3.0,-2.0);
   \node[anchor=east] at (-3.0,0.12) {\small $p^-$ substrate};
-
-  % trench cavity と電極
-  \draw[black,thick] (-0.9,0) -- (-0.9,-1.6) -- (0.9,-1.6) -- (0.9,0);
-  \fill[black!30] (-0.60,-0.10) rectangle (0.60,-1.50);
-
-  % buried strap（左右）
-  \fill[gray!55] ( 1.10,-0.70) rectangle ( 1.55,-1.10);
-  \fill[gray!55] (-1.55,-0.70) rectangle (-1.10,-1.10);
-
-  % pn 接合ハイライト
-  \draw[red,very thick] ( 1.10,-0.70) rectangle ( 1.55,-1.10);
+  \draw[black,thick] (-0.9,0) -- (-0.9,-1.6) -- (0.9,-1.6) -- (0.9,0); % cavity
+  \fill[black!30] (-0.60,-0.10) rectangle (0.60,-1.50);                 % electrode
+  \fill[gray!55] ( 1.10,-0.70) rectangle ( 1.55,-1.10);                 % strap (R)
+  \fill[gray!55] (-1.55,-0.70) rectangle (-1.10,-1.10);                 % strap (L)
+  \draw[red,very thick] ( 1.10,-0.70) rectangle ( 1.55,-1.10);          % 接合強調
   \draw[red,very thick] (-1.55,-0.70) rectangle (-1.10,-1.10);
 \end{tikzpicture}
 \caption*{(b) Trench Cross-section}
 
-\vspace{1.2em}
-{\large \bfseries 0.18\,\textmu m Generation — Top views}\par\vspace{0.6em}
+\vspace{0.8em}
+{\large \bfseries 0.18\,\textmu m Generation — Top views}\par\vspace{0.4em}
 
-% ---------- (c) Stack Top view（アクティブ縮小） ----------
+% ------ (c) Stack Top view（アクティブさらに小さく） ------
 \begin{tikzpicture}[x=1cm,y=1cm]
-  \fill[gray!20] (-2.0,-2.0) rectangle (2.0,2.0);   % substrate window
-  \fill[gray!55] (-0.90,-0.90) rectangle (0.90,0.90); % ← 小さめの n+ active
-  \fill[black!30] (-0.35,-0.35) rectangle (0.35,0.35); % SN contact
-  \draw[red,very thick] (-0.90,-0.90) rectangle (0.90,0.90); % 周辺強調
+  \fill[gray!20] (-2.0,-2.0) rectangle (2.0,2.0);
+  \fill[gray!55] (-0.75,-0.75) rectangle (0.75,0.75);        % ← 0.90 → 0.75 に縮小
+  \fill[black!30] (-0.32,-0.32) rectangle (0.32,0.32);       % SN contact
+  \draw[red,very thick] (-0.75,-0.75) rectangle (0.75,0.75); % 周辺長の強調
 \end{tikzpicture}
 \caption*{(c) Stack Top view}
 
-\vspace{0.8em}
+\vspace{0.5em}
 
-% ---------- (d) Trench Top view（複数 strap で総周辺長増） ----------
+% ------ (d) Trench Top view（複数 strap で総周辺長が増大） ------
 \begin{tikzpicture}[x=1cm,y=1cm]
   \fill[gray!20] (-2.0,-2.0) rectangle (2.0,2.0);
-  \draw[black,thick] (-1.2,-1.2) rectangle (1.2,1.2); % cavity outline
-  \fill[black!30] (-0.9,-0.9) rectangle (0.9,0.9);   % electrode
-
-  % 複数 strap（四方向）
+  \draw[black,thick] (-1.2,-1.2) rectangle (1.2,1.2);
+  \fill[black!30] (-0.9,-0.9) rectangle (0.9,0.9);
   \foreach \x/\y in {-1.65/0, 1.65/0, 0/1.65, 0/-1.65}{
     \fill[gray!55] (\x-0.35,\y-0.35) rectangle (\x+0.35,\y+0.35);
     \draw[red,very thick] (\x-0.35,\y-0.35) rectangle (\x+0.35,\y+0.35);
@@ -617,10 +598,10 @@ Stack型では接合が拡散層の側壁と底面に限定され，周辺長は
 \end{tikzpicture}
 \caption*{(d) Trench Top view（複数 strap により総周辺長が増大）}
 
-\vspace{0.6em}
+\vspace{0.4em}
 \caption{0.18\,\textmu m 世代における Stack/Trench キャパシタの概念比較。
-Stack は接合周辺長が限定的，Trench は \emph{buried strap} による局所接合が複数でき，
-Top view から 1 セル当たりの総周辺長が大きくなることが分かる。}
+Stack は接合周辺長が限定的，Trench は \emph{buried strap} による局所接合が複数形成され，
+1セル当たりの総周辺長が大きくなる。}
 \label{fig:stack_trench_018}
 \end{figure}
 
