@@ -1,24 +1,28 @@
 \documentclass[conference]{IEEEtran}
 
-% ===== 日本語（LuaLaTeX想定） =====
+% ===== 日本語対応（LuaLaTeX） =====
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
 \setmainjfont{IPAexMincho}
 \setsansjfont{IPAexGothic}
 
-% ===== 図表・数式 =====
+% ===== 図表・数式・リンク =====
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{cite}
 \usepackage{siunitx}
+\usepackage{hyperref}
 
 \title{0.25\,\textmu m HV CMOSにおけるTiシリサイド相転移不安定性と\\
 埋込みSRAM信頼性：携帯電話向けLCDドライバICの歴史的事例}
 
-\author{\IEEEauthorblockN{三溝 真一}
-\IEEEauthorblockA{Independent Semiconductor Researcher / Project Design Hub, Samizo-AITL\\
-Email: shin3t72@gmail.com}
+\author{%
+  \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
+  \IEEEauthorblockA{独立系半導体研究者（元セイコーエプソン）\\%
+  Independent Semiconductor Researcher (ex-Seiko Epson)\\%
+  Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\\%
+  GitHub: \url{https://github.com/Samizo-AITL}}%
 }
 
 \begin{document}
@@ -29,26 +33,65 @@ Email: shin3t72@gmail.com}
 \end{abstract}
 
 \section{序論}
-（ここに背景を書く）
+エプソンのLCDドライバビジネスは、富士見6インチラインにおける高耐圧デバイス開発を起点とする。  
+1997年に酒田8インチFabが立ち上がり、1998年には富士見で開発されたHV技術を0.35\,\textmu m CMOSプロセスに混載することで、3.3\,Vロジック／40\,V HV対応のモノクロLCDドライバICが開発された。  
+これによりエプソンは携帯電話モノクロ液晶市場で高いシェアを確立した。  
+
+2000年代初頭には携帯電話がカラーパネル化し、aTFT液晶が主流化した。RGBデータ処理に伴いデータ量は数十倍に膨張し、1\,Mbit級の大容量埋込みSRAMが不可欠となった。  
+しかし0.35\,\textmu mでは容量的に限界があり、酒田Fabでは0.25\,\textmu m HV CMOSへの移行が必然となった。  
+当時、フラットパネル全盛であり、LTPSも注目を集めていたが、量産性の観点から外付けドライバICが主流であった。
 
 \section{プロセス選定の背景}
-（ここに0.35µm/0.25µm/0.18µmの比較を書く）
+0.35\,\textmu m世代では、TiSi$_2$サリサイドとLOCOS分離により3.3\,Vロジック／40\,V HVが安定して供給され、数百kbit級SRAMの内蔵には十分であった。  
+しかしカラー化により1\,Mbit級が必要となり、ダイ面積と消費電力の制約が顕在化した。  
+
+0.18\,\textmu m STIはCoSi$_2$を用いて高密度かつ歩留りに有利であったが、当時は\SI{30}{V}級HVデバイスで端部リークの懸念が残っていた\cite{takeda1994}。  
+このため、酒田では0.25\,\textmu m LOCOS HV CMOSを採用し、TiSi$_2$を継続利用した。
 
 \section{技術的背景}
-（TiSi$_2$相転移、B拡散など）
+\subsection{TiSi$_2$のC49$\to$C54相転移}
+TiSi$_2$は低抵抗相であるC54相を得るために、高温アニールによりC49相からの転移を要する。  
+変換が不完全な場合、残留C49粒が高抵抗スポットとして機能する\cite{sze2007,wolf2000}。
+
+\subsection{ホウ素拡散と局所高抵抗化}
+halo注入BはTiに取り込まれやすく、C49$\to$C54変換を阻害する。  
+その結果、ポリ端部やサイドウォール近傍に局所高抵抗スポットが形成され、SRAMセルのランダム不良を引き起こす。
 
 \section{故障解析}
-（1Mbit SRAMでの単ビット不良）
+1\,Mbit SRAMにおいてランダム単ビット不良が顕在化した。  
+埋込みマクロは冗長回路やレーザー修復が適用できず、単一欠陥が歩留りを直撃する。  
+故障箇所はポリ端部〜サイドウォール近傍のTiSi$_2$領域に一致していた。
 
 \section{対策}
-（暫定・恒久対策）
+\subsection{暫定対策}
+サイドウォールエッチアンダーを行い、halo拡散とTiSi$_2$形成前線との距離を確保することで、局所高抵抗化を抑制した。
+
+\subsection{恒久対策}
+ランプアニール条件を最適化し、C49$\to$C54変換を完全化した。  
+ただしデバイス特性が変動するため、PDKの再キャラクタリゼーションが必要であった。
 
 \section{ビジネス的帰結}
-（市場シェアとタイミング）
+上記対策により量産を確立し、エプソンはカラーパネル市場においてもシェアを維持した。  
+当時、サムスンなどの競合が急成長を狙う中で、0.25\,\textmu m HV CMOSの迅速な立ち上げは競争優位に直結した。
 
 \section{結論}
-（まとめ）
+富士見6インチに端を発する高耐圧技術は、酒田0.35\,\textmu m世代でモノクロLCDドライバICとして花開き、  
+カラーパネル化の波により0.25\,\textmu m HV CMOSが選択された。  
+TiSi$_2$の相転移不完全性により大容量SRAMで新たな課題が顕在化したが、対策により量産は成立し、市場競争力を維持できた。  
+本事例は、市場要求と技術的制約の相互作用を示す産業史的に重要なケーススタディである。
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
+
+\section*{著者略歴}
+\noindent\textbf{三溝 真一 (Shinichi Samizo)}  
+信州大学大学院 工学系研究科 電気電子工学専攻修士課程を修了後，  
+セイコーエプソン株式会社に勤務。  
+半導体ロジック／メモリ／高耐圧インテグレーション，  
+インクジェット薄膜ピエゾアクチュエータ，  
+および PrecisionCore プリントヘッドの製品化に従事した。  
+現在は独立系半導体研究者として，  
+プロセス／デバイス教育，メモリアーキテクチャ，AIシステム統合に取り組んでいる。  
+連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}
+
 \end{document}
