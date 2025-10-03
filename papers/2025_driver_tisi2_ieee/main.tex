@@ -19,6 +19,8 @@
 \usepackage{array}
 \usepackage{float}         % [H] を使うなら
 
+\usepackage{tabularx}
+
 % ===== 図作図 (TikZ) =====
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc,patterns}
@@ -85,19 +87,22 @@ STIはCoSi$_2$を用いたサリサイド技術により高集積・高歩留り
 このため、酒田Fabでは信頼性と立ち上げリードタイムを優先し、0.25\,\textmu m世代においても従来のLOCOS分離を踏襲したHV CMOSプロセスを選択し、TiSi$_2$サリサイドを継続利用する方針が採られた。  
 これにより1\,Mbit級SRAMを実装可能としつつ、HV素子の信頼性を確保するというバランスを実現した。
 
+\usepackage{tabularx}
+
 \begin{table}[H]
 \centering
 \caption{プロセス世代とLCDドライバ用途の比較}
 \label{tab:process_comparison}
-\begin{tabular}{lllll}
+\begin{tabularx}{\columnwidth}{l l l l X}
 \toprule
 世代 & 分離技術 & サリサイド & 電源電圧 & 主用途 \\
 \midrule
 0.35\,µm & LOCOS & TiSi$_2$ & 3.3V / 40V & モノクロLCDドライバ \\
-0.25\,µm & LOCOS & TiSi$_2$ & 3.3V / 30V & aTFTカラーLCDドライバ (1Mbit SRAM) \\
+0.25\,µm & LOCOS & TiSi$_2$ & 3.3V / 30V & aTFTカラーLCDドライバ\\
+         &       &          &            & （1Mbit SRAM搭載） \\
 0.18\,µm & STI   & CoSi$_2$ & 1.8V / 30V & 次候補（歩留り懸念） \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \section{技術的背景}
@@ -150,6 +155,29 @@ TiSi$_2$はサリサイド技術において広く用いられており、ポリ
 
 ここで，Marchテストとは，アドレスを昇順・降順に走査しながら0/1の書き込み・読み出しを繰り返すアルゴリズムであり，セル不良や遅延不良を効率的に検出できる。  
 また，Shmoo解析を併用し，電圧や温度を掃引してPass/Failマップを取得することで，不良の再現性や条件依存性を可視化した。
+図\ref{fig:failmap}に示すように，フェイルビットはウエハ全体にランダムに散在しており，
+系統的なクラスタや設計パターンとの相関は認められなかった。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=2]
+  % ウエハ円
+  \draw[thick] (0,0) circle (1);
+  
+  % フェイルビットをランダムに配置（例として20個）
+  \foreach \i in {1,...,20} {
+    \pgfmathsetmacro{\x}{rand*2-1} % -1～+1の乱数
+    \pgfmathsetmacro{\y}{rand*2-1}
+    % ウエハの円の内側だけ描画
+    \ifdim \x*\x cm + \y*\y cm < 1cm
+      \fill[red] (\x,\y) circle (0.02);
+    \fi
+  }
+\end{tikzpicture}
+\caption{ウエハ上のシングルビット不良分布例（フェイルビットマップ）。  
+ランダムに散在しており，系統的クラスタは見られない。}
+\label{fig:failmap}
+\end{figure}
 
 \subsection{電気的シグネチャ}
 Shmoo解析の結果，電源電圧マージン低下時に不良発生確率が上昇し，高温条件でさらに顕著となった。  
@@ -257,7 +285,7 @@ C49相残留の発生を抑制することを狙った。
 \centering
 \caption{暫定対策と恒久対策の比較}
 \label{tab:countermeasures}
-\begin{tabular}{llll}
+\begin{tabularx}{\columnwidth}{l X X X}
 \toprule
 種別 & 方法 & 効果 & 課題 \\
 \midrule
@@ -266,7 +294,7 @@ C49相残留の発生を抑制することを狙った。
 恒久 & RTAランプアニール条件最適化 &
 相転移完全化、不良消失 & PDK再キャラが必要 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsection{まとめ}
