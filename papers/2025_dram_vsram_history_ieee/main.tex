@@ -533,54 +533,65 @@ Stack型では接合が拡散層の側壁と底面に限定され，周辺長は
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[x=1cm,y=1cm]
 
-% ==== (a) Stack Cross-section ====
-\begin{scope}[shift={(-3,4)}]
-  \fill[gray!20] (-1.5,0) rectangle (1.5,-0.8); % substrate
-  \fill[gray!55] (-0.5,0) rectangle (0.5,-0.6); % n+ diffusion
-  \fill[black!30] (-0.15,0) rectangle (0.15,1.0); % electrode
-  \draw[red,very thick] (-0.5,0) -- (-0.5,-0.6);
-  \draw[red,very thick] (0.5,0) -- (0.5,-0.6);
-  \draw[red,very thick] (-0.5,-0.6) -- (0.5,-0.6);
-  \node[anchor=north] at (0,-1.2) {\bfseries (a) Stack Cross-section};
-\end{scope}
+% ---- Cross-section group title ----
+\textbf{Cross-section}\\[0.5em]
 
-% ==== (b) Trench Cross-section ====
-\begin{scope}[shift={(3,4)}]
-  \fill[gray!20] (-1.5,0) rectangle (1.5,-2.0); % substrate
-  \draw[black,thick] (-0.5,0) -- (-0.5,-1.6) -- (0.5,-1.6) -- (0.5,0); % trench cavity
-  \fill[black!30] (-0.35,-0.1) rectangle (0.35,-1.5); % electrode
-  \fill[gray!55] (0.55,-0.6) rectangle (0.95,-1.0); % buried strap
-  \draw[red,very thick] (0.55,-0.6) rectangle (0.95,-1.0); % pn junction
-  \node[anchor=north] at (0,-2.2) {\bfseries (b) Trench Cross-section};
-\end{scope}
-
-% ==== (c) Stack Top view ====
-\begin{scope}[shift={(-3,-2)}]
-  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5); % substrate
-  \fill[gray!55] (-0.8,-0.8) rectangle (0.8,0.8); % n+ diffusion area
-  % electrode only in the center (no faint square)
-  \fill[black!30] (-0.3,-0.3) rectangle (0.3,0.3); % electrode contact
-  \draw[red,very thick] (-0.8,-0.8) rectangle (0.8,0.8); % pn junction perimeter
-  \node[anchor=north] at (0,-1.9) {\bfseries (c) Stack Top view};
-\end{scope}
-
-% ==== (d) Trench Top view ====
-\begin{scope}[shift={(3,-2)}]
-  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5); % substrate
-  \draw[black,thick] (-0.8,-0.8) rectangle (0.8,0.8); % trench cavity outline
-  \fill[black!30] (-0.5,-0.5) rectangle (0.5,0.5); % trench electrode
-  \fill[gray!55] (0.9,-0.3) rectangle (1.3,0.3); % buried strap contact
-  \draw[red,very thick] (0.9,-0.3) rectangle (1.3,0.3); % pn junction at strap
-  \node[anchor=north] at (0,-1.9) {\bfseries (d) Trench Top view};
-\end{scope}
-
+\begin{minipage}{0.45\linewidth}
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,scale=0.8]
+  % substrate
+  \fill[gray!20] (-1.5,0) rectangle (1.5,-0.8);
+  \fill[gray!55] (-0.5,0) rectangle (0.5,-0.6);
+  \fill[black!30] (-0.15,0) rectangle (0.15,1.0);
+  \draw[red,very thick] (-0.5,0)--(-0.5,-0.6)--(0.5,-0.6)--(0.5,0);
 \end{tikzpicture}
+\subcaption{(a) Stack}
+\end{minipage}
 
-\caption{Stack型とTrench型キャパシタ構造の断面図（上段）と上面図（下段）の比較。
-Stackは接合周辺長が限定的であるのに対し，
-Trenchはburied strap起点で周辺長が増大し，高温リークのリスクが高い。}
+\vspace{1em}
+
+\begin{minipage}{0.45\linewidth}
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,scale=0.8]
+  \fill[gray!20] (-1.5,0) rectangle (1.5,-2.0);
+  \draw[black,thick] (-0.5,0) -- (-0.5,-1.6) -- (0.5,-1.6) -- (0.5,0);
+  \fill[black!30] (-0.35,-0.1) rectangle (0.35,-1.5);
+  \fill[gray!55] (0.55,-0.6) rectangle (0.95,-1.0);
+  \draw[red,very thick] (0.55,-0.6) rectangle (0.95,-1.0);
+\end{tikzpicture}
+\subcaption{(b) Trench}
+\end{minipage}
+
+\vspace{1.5em}
+
+% ---- Top view group title ----
+\textbf{Top view}\\[0.5em]
+
+\begin{minipage}{0.45\linewidth}
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,scale=0.8]
+  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5);
+  \fill[gray!55] (-0.8,-0.8) rectangle (0.8,0.8);
+  \fill[black!30] (-0.3,-0.3) rectangle (0.3,0.3);
+  \draw[red,very thick] (-0.8,-0.8) rectangle (0.8,0.8);
+\end{tikzpicture}
+\subcaption{(c) Stack}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\linewidth}
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,scale=0.8]
+  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5);
+  \draw[black,thick] (-0.8,-0.8) rectangle (0.8,0.8);
+  \fill[black!30] (-0.5,-0.5) rectangle (0.5,0.5);
+  \fill[gray!55] (0.9,-0.3) rectangle (1.3,0.3);
+  \draw[red,very thick] (0.9,-0.3) rectangle (1.3,0.3);
+\end{tikzpicture}
+\subcaption{(d) Trench}
+\end{minipage}
+
+\caption{Stack型とTrench型キャパシタ構造の断面図および上面図の比較。}
 \label{fig:stack_trench}
 \end{figure}
 
