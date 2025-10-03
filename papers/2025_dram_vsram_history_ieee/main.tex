@@ -539,83 +539,60 @@ Stack型では接合が拡散層の側壁と底面に限定され，周辺長は
 この構造差により，ジャンクションリークの起点が増加し，  
 高温条件でのリーク電流は指数的に増大した（Fig.~\ref{fig:trench_leak}）。  
 
-% ==== Fig. Stack vs. Trench：断面と上面（1カラム） ====
 \begin{figure}[t]
 \centering
 
-% -------- Group title: Cross-sections --------
-\textit{Cross-sections}\par\vspace{0.3em}
+% --- Cross-sections ---
+\textbf{Cross-sections}\\[3pt]
 
-% (a) Stack Cross-section  — 縦
-\subfloat[(a) Stack Cross-section]{%
+(a) Stack Cross-section\\
 \begin{tikzpicture}[x=1cm,y=1cm]
-  % p- substrate
-  \fill[gray!20] (-1.5,0) rectangle (1.5,-0.8);
-  % n+ diffusion
-  \fill[gray!55] (-0.5,0) rectangle (0.5,-0.6);
-  % storage node
-  \fill[black!30] (-0.15,0) rectangle (0.15,1.0);
-  % pn junction perimeter (red)
-  \draw[red,very thick] (-0.5,0) -- (-0.5,-0.6);
-  \draw[red,very thick] ( 0.5,0) -- ( 0.5,-0.6);
-  \draw[red,very thick] (-0.5,-0.6) -- (0.5,-0.6);
-\end{tikzpicture}
-\label{fig:stack_trench_a}}
-\par\vspace{0.6em}
+  % stack example
+  \fill[gray!20] (-1,-1) rectangle (1,1);
+  \fill[black!30] (-0.3,-1) rectangle (0.3,1);
+  \draw[red,very thick] (-0.3,0.5) rectangle (0.3,1);
+\end{tikzpicture}\\[8pt]
 
-% (b) Trench Cross-section — 縦
-\subfloat[(b) Trench Cross-section]{%
+(b) Trench Cross-section\\
 \begin{tikzpicture}[x=1cm,y=1cm]
-  % p- substrate
-  \fill[gray!20] (-1.5,0) rectangle (1.5,-2.0);
-  % trench cavity
-  \draw[black,thick] (-0.5,0) -- (-0.5,-1.6) -- (0.5,-1.6) -- (0.5,0);
-  % trench electrode
-  \fill[black!30] (-0.35,-0.1) rectangle (0.35,-1.5);
-  % buried strap diffusion
-  \fill[gray!55] (0.55,-0.6) rectangle (0.95,-1.0);
-  % pn junction highlight
-  \draw[red,very thick] (0.55,-0.6) rectangle (0.95,-1.0);
-\end{tikzpicture}
-\label{fig:stack_trench_b}}
-\par\vspace{0.9em}
+  % trench example
+  \fill[gray!20] (-1,-1) rectangle (1,1);
+  \draw[black,thick] (-0.7,-1) -- (-0.7,1) (0.7,-1) -- (0.7,1);
+  \fill[black!30] (-0.5,-1) rectangle (0.5,1);
+  \draw[red,very thick] (-0.5,0.6) rectangle (0.5,1);
+\end{tikzpicture}\\[8pt]
 
-% -------- Group title: Top views --------
-\textit{Top views}\par\vspace{0.3em}
+% --- Top views ---
+\textbf{Top views}\\[3pt]
 
-% (c) Stack Top view  — 左
-\subfloat[(c) Stack Top view]{%
+(c) Stack Top view\\
 \begin{tikzpicture}[x=1cm,y=1cm]
-  % p- substrate（残す）
-  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5);
-  % n+ diffusion area
-  \fill[gray!55] (-0.8,-0.8) rectangle (0.8,0.8);
-  % ※中央の薄い四角は入れない（指摘反映）
-  % pn junction perimeter
-  \draw[red,very thick] (-0.8,-0.8) rectangle (0.8,0.8);
-\end{tikzpicture}
-\label{fig:stack_trench_c}}
-\hfill
-% (d) Trench Top view  — 右（修正）
-\subfloat[(d) Trench Top view]{%
-\begin{tikzpicture}[x=1cm,y=1cm]
-  % p- substrate（残す）
-  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5);
-  % trench cavity（開口）
-  \draw[black,thick] (-0.8,-0.8) rectangle (0.8,0.8);
-  % trench electrode（内部電極）
+  \fill[gray!20] (-1,-1) rectangle (1,1);
   \fill[black!30] (-0.5,-0.5) rectangle (0.5,0.5);
-  % buried strap（壁に接した接続拡散。位置を修正）
-  \fill[gray!55] (0.80,-0.30) rectangle (1.20,0.30);
-  % pn junction highlight（strap 周囲を赤枠で強調）
-  \draw[red,very thick] (0.80,-0.30) rectangle (1.20,0.30);
-  % 視覚的な“接続”を示す短いブリッジ（任意）
-  \draw[black,thick] (0.80,-0.15) -- (0.80,0.15);
-\end{tikzpicture}
-\label{fig:stack_trench_d}}
+  \draw[red,very thick] (-0.5,-0.5) rectangle (0.5,0.5);
+\end{tikzpicture}\\[8pt]
 
-\caption{Stack と Trench キャパシタ構造の比較：断面（a,b）および上面（c,d）。  
-Stack は接合周辺長が限定的であるのに対し，Trench は \textit{buried strap} 起点で周辺長が増大し，高温リークのリスクが高い。}
+(d) Trench Top view（複数 strap）\\
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5);
+  \draw[black,thick] (-0.8,-0.8) rectangle (0.8,0.8);
+  \fill[black!30] (-0.5,-0.5) rectangle (0.5,0.5);
+
+  % 複数 strap
+  \fill[gray!55] (0.80,-0.25) rectangle (1.15,0.25);
+  \draw[red,very thick] (0.80,-0.25) rectangle (1.15,0.25);
+
+  \fill[gray!55] (-0.25,0.80) rectangle (0.25,1.15);
+  \draw[red,very thick] (-0.25,0.80) rectangle (0.25,1.15);
+
+  \fill[gray!55] (-0.25,-1.15) rectangle (0.25,-0.80);
+  \draw[red,very thick] (-0.25,-1.15) rectangle (0.25,-0.80);
+\end{tikzpicture}
+
+\caption{Stack と Trench キャパシタ構造の比較：
+断面 (a,b) および上面 (c,d)。Stack は接合周辺長が限定的だが，
+Trench は \textit{buried strap} が 1セル内に複数配置されるため
+接合の総周辺長が増大し，高温リークのリスクが高い。}
 \label{fig:stack_trench}
 \end{figure}
 
