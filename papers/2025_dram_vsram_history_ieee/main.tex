@@ -145,11 +145,11 @@ Pause/Disturb Refresh不良の解析と対策，歩留まり推移を整理す�
   \item 教訓：\textbf{プロセス移管は洗浄工程を含め「完全鏡写し」が必須}である。
 \end{itemize}
 
-\section{第2章：\texorpdfstring{\SI{0.25}{\micro\meter}}{0.25μm} 世代64M DRAMの立ち上げ}
+\section{第2章：\texorpdfstring{\SI{0.25}{\micro\meter}}{0.25µm} 世代64M DRAMの立ち上げ}
 
 \subsection{SCF方式と初期歩留まり}
 1998年，酒田Fabは \SI{0.25}{\micro\meter} 世代64M DRAMに挑戦した。
-ここでも三菱電機が確立していた \emph{Short Cycle Feedback (SCF)} 方式を導入。
+ここでは三菱電機が確立していた \emph{Short Cycle Feedback (SCF)} 方式を導入。
 工程を短サイクルで止め，SEM観察・電気評価を繰り返しながら条件修正する方式である。
 
 \begin{enumerate}
@@ -159,7 +159,7 @@ Pause/Disturb Refresh不良の解析と対策，歩留まり推移を整理す�
   \item 本番ロットで信頼性確認
 \end{enumerate}
 
-その結果，初期歩留まり65\%という極めて高い値を達成。
+その結果，初期歩留まり65\%という高い値を達成。
 従来の新世代DRAM初期値（20--30\%）を大きく上回った。
 
 \subsection{保持時間モデルと不良モード解析}
@@ -168,15 +168,15 @@ Pause/Disturb Refresh不良の解析と対策，歩留まり推移を整理す�
 32ms $\rightarrow$ 64ms $\rightarrow$ 128ms と条件を厳しくすると，
 ランダムに単ビット不良が発生（Fig.~\ref{fig:failmap}）。
 
-保持時間は
+保持時間は次式で与えられる：
 \[
 \tau = \frac{C_{\mathrm{cell}} V_{\mathrm{cell}}}{I_{\mathrm{leak}}}
 \]
-で与えられ，設計値 $C_{\mathrm{cell}}, V_{\mathrm{cell}}$ に問題はなく，
+設計値 $C_{\mathrm{cell}}, V_{\mathrm{cell}}$ に問題はなく，
 リーク電流 $I_{\mathrm{leak}}$ が支配的要因であると判明した。
 
-レイアウト欠陥は否定され，主因は \emph{拡散層ジャンクションリーク}。
-フェイルマップ再現性から，プロセス条件起因の系統的不良であることが確定した。
+解析の結果，レイアウト起因は否定され，
+主因は \emph{拡散層ジャンクションリーク} であった。
 
 \begin{figure}[t]
 \centering
@@ -197,16 +197,16 @@ Pause/Disturb Refresh不良の解析と対策，歩留まり推移を整理す�
 \end{figure}
 
 \subsection{プラズマダメージ仮説}
-ジャンクションリーク増大の背景にはプラズマダメージが疑われた。
+リーク増大の背景にはプラズマダメージが疑われた。
 \begin{itemize}
-  \item ゲートエッチ後酸化膜露出時
+  \item ゲートエッチ後の酸化膜露出時
   \item LDD工程での繰返しアッシング
 \end{itemize}
-O$_2$プラズマが界面欠陥を生成し，熱励起キャリアリークを助長すると推定。
+O$_2$プラズマが界面欠陥を生成し，熱励起キャリアリークを助長すると推定された。
 
 \subsection{対策と効果}
 根本対策は「O$_2$アッシング剥離 $\rightarrow$ 硫酸ウェット剥離」への全面切替。
-プラズマ曝露をゼロ化することでリークを抑制。
+プラズマ曝露をゼロ化することでリークを抑制できた。
 
 \begin{table}[h]
   \centering
@@ -232,13 +232,13 @@ O$_2$プラズマが界面欠陥を生成し，熱励起キャリアリークを
   width=\linewidth, height=5cm,
   ymin=0, ymax=100,
   ylabel={歩留まり(\%)},
-  symbolic x coords={0.35\,μm,0.25\,μm},
+  symbolic x coords={0.35\,µm,0.25\,µm},
   xtick=data,
   grid=both
 ]
-  \addplot+[mark=*] coordinates {(0.35\,μm,20) (0.25\,μm,65)};
+  \addplot+[mark=*] coordinates {(0.35\,µm,20) (0.25\,µm,65)};
   \addlegendentry{初期}
-  \addplot+[mark=square*] coordinates {(0.35\,μm,86) (0.25\,μm,88)};
+  \addplot+[mark=square*] coordinates {(0.35\,µm,86) (0.25\,µm,88)};
   \addlegendentry{改善後}
 \end{axis}
 \end{tikzpicture}
@@ -248,12 +248,12 @@ O$_2$プラズマが界面欠陥を生成し，熱励起キャリアリークを
 
 \subsection{小括}
 \begin{itemize}
-  \item SCF方式により迅速な条件整備と65\%初期歩留まりを達成。
-  \item 不良主因はジャンクションリーク，プラズマダメージが背景。
+  \item SCF方式により65\%という高い初期歩留まりを達成。
+  \item 主因はジャンクションリーク，背景はプラズマダメージ。
   \item 硫酸ウェット剥離への切替で歩留まりは80\%台後半に改善。
 \end{itemize}
-この知見は「表面処理・プラズマ影響を軽視不可」という教訓を残し，
-Fab自前化の礎となった。
+この知見は「表面処理・プラズマ影響を軽視できない」という教訓を残し，
+酒田Fabの自前技術基盤となった。
 
 \section{第3章：VSRAM（2001年）— Pause/Disturb対策と歩留まり改善}
 
