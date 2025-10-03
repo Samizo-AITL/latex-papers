@@ -415,32 +415,41 @@ Pause/Disturb不良は大幅に減少し，
         DRAM派生メモリ開発の最終的成果となった。
 \end{itemize}
 
-\section{第4章：\texorpdfstring{\SI{0.18}{\micro\meter}}{0.18μm} トレンチ系の評価と断念}
+\section{第4章：\texorpdfstring{\SI{0.18}{\micro\meter}}{0.18µm} トレンチ系の評価と断念}
 
 \subsection{評価対象と背景}
-VSRAM立ち上げ後，次世代候補として
-台湾NANYA社の \SI{0.18}{\micro\meter} DRAMプロセスを利用した
-VSRAM試作評価が検討された。
-NANYAは東芝と技術提携しており，
-\emph{トレンチキャパシタ方式}を基盤とするプロセスを供与していた。
+2001年のVSRAM量産立ち上げ後，酒田Fabでは次世代モバイルメモリの開発が検討された。  
+候補の一つが，台湾NANYA社の \SI{0.18}{\micro\meter} DRAMプロセスを利用したVSRAMである。  
+NANYAは東芝と技術提携を行っており，その技術は \emph{トレンチキャパシタ方式} を基盤としていた。  
 
-目的は，\SI{0.25}{\micro\meter} DRAM流用VSRAMの後継として，
-さらに高密度・低消費・高温動作保証を満たすモバイル向けメモリを実現することにあった。
+目的は，既存の \SI{0.25}{\micro\meter} DRAM流用VSRAMを凌駕し，  
+さらなる高密度化，低消費電力化，および高温（90$^\circ$C）動作保証を満たす次世代モバイル向けメモリを確立することであった。
 
 \subsection{技術的特徴}
+本評価プロセスには以下の特徴があった：
 \begin{itemize}
-  \item \textbf{キャパシタ構造}：スタック型に対し，面積効率の高いトレンチ型を採用。
-  \item \textbf{動作仕様}：標準DRAM同様に80$^\circ$C保証は可能だが，
-        モバイル用途必須の90$^\circ$C保証には余裕がなかった。
+  \item \textbf{キャパシタ構造}：従来のスタック型に比べ，面積効率の高いトレンチ型を採用。  
+        セル面積の縮小が可能であり，高密度化に優位。
+  \item \textbf{動作仕様}：標準DRAMと同様に80$^\circ$Cでの動作保証は可能であったが，  
+        モバイル用途に必須の90$^\circ$C保証には大きな課題を抱えていた。
 \end{itemize}
 
 \subsection{課題の顕在化}
-試作評価の結果，90$^\circ$C条件下で以下の不良が顕著となった：
+試作評価の結果，90$^\circ$C条件下で以下の不良が顕著に現れた：
 \begin{itemize}
-  \item Pause Refresh Fail：セル保持時間不足。
-  \item Disturb Refresh Fail：高温条件で誤反転が増加。
-  \item 高温リーク：pn接合リークが著しく増大。
+  \item \textbf{Pause Refresh Fail}：セル保持時間が不足し，動作マージンが消失。
+  \item \textbf{Disturb Refresh Fail}：高温条件下で隣接ワードライン干渉による誤反転が多発。
+  \item \textbf{高温リーク}：pn接合リークが顕著に増加し，セル保持特性を支配。
 \end{itemize}
+
+\subsection{構造的起因の解析}
+Fig.~\ref{fig:stack_trench} に示すように，  
+Stack型では接合が拡散層の側壁と底面に限定され，周辺長は比較的短い。  
+一方，Trench型ではセルごとに \emph{buried strap} 接続部を介して局所接合が形成され，  
+セル列の繰り返し構造により実質的な周辺長が大幅に増加する。  
+
+この構造差により，ジャンクションリークの起点が増加し，  
+高温条件でのリーク電流は指数的に増大した（Fig.~\ref{fig:trench_leak}）。  
 
 \begin{figure}[t]
 \centering
@@ -488,16 +497,10 @@ NANYAは東芝と技術提携しており，
 \end{tikzpicture}
 
 \caption{Stack型とTrench型キャパシタ構造比較。
-Stackは接合周辺長が限定的，Trenchはburied strap起点で周辺長が増大。}
+Stackは接合周辺長が限定的であるのに対し，
+Trenchはburied strap起点で周辺長が増大し，高温リークのリスクが高い。}
 \label{fig:stack_trench}
 \end{figure}
-
-\subsection{リーク増大の構造的起因}
-Fig.~\ref{fig:stack_trench} に示すように，
-Stack型では接合は拡散層の側壁と底面のみであり，周辺長は短い。
-一方，Trench型では \emph{buried strap} 周囲に局所接合が形成され，
-セル列構造により周辺長が大幅に増加する。
-この構造差が高温リークを顕著化させた。
 
 \begin{figure}[t]
 \centering
@@ -521,21 +524,23 @@ Stack型では接合は拡散層の側壁と底面のみであり，周辺長は
 \end{axis}
 \end{tikzpicture}
 \caption{トレンチ型セルにおけるジャンクションリークの面積依存性。
-高温条件では増加率がさらに大きい。}
+高温条件では増加率がさらに顕著である。}
 \label{fig:trench_leak}
 \end{figure}
 
 \subsection{評価結果と戦略判断}
-NANYA \SI{0.18}{\micro\meter} トレンチプロセスは，
-90$^\circ$C保証を満たせず，次世代VSRAMとして不適と判断。
-このため酒田FabでのDRAM派生製品開発は終息し，
-経営資源は液晶ドライバー向け高耐圧混載CMOSに集中した。
+総合評価の結果，NANYA \SI{0.18}{\micro\meter} トレンチプロセスは
+モバイル用途に必須の90$^\circ$C動作保証を満たすことができず，
+次世代VSRAMとしては不適であると判断された。  
+
+この判断により，酒田FabでのDRAM派生製品開発は終息へと向かい，  
+経営資源は液晶ドライバー向けの高耐圧混載CMOS開発に集中する方針が固まった。  
 
 \subsection{小括}
 \begin{itemize}
-  \item トレンチ方式は高密度化に有利だが，高温リーク増大でモバイル仕様に不適。
+  \item トレンチ方式は高密度化には有利だが，高温リーク増大でモバイル仕様に適さなかった。
   \item 90$^\circ$C保証を満たせず，次世代VSRAMは断念。
-  \item 以後は液晶ドライバーを中心とする高耐圧混載CMOSに軸足を移した。
+  \item 以後は液晶ドライバーを中心とする高耐圧混載CMOS開発へと戦略転換した。
 \end{itemize}
 
 \section{結論}
