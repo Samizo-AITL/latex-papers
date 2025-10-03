@@ -13,13 +13,12 @@
 \sisetup{detect-all=true}
 
 % ===== 図表 =====
+\usepackage{tabularx}      % ← ここに置く
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{array}
-\usepackage{float}         % [H] を使うなら
-
-\usepackage{tabularx}
+\usepackage{float}
 
 % ===== 図作図 (TikZ) =====
 \usepackage{tikz}
@@ -86,8 +85,6 @@ STIはCoSi$_2$を用いたサリサイド技術により高集積・高歩留り
 
 このため、酒田Fabでは信頼性と立ち上げリードタイムを優先し、0.25\,\textmu m世代においても従来のLOCOS分離を踏襲したHV CMOSプロセスを選択し、TiSi$_2$サリサイドを継続利用する方針が採られた。  
 これにより1\,Mbit級SRAMを実装可能としつつ、HV素子の信頼性を確保するというバランスを実現した。
-
-\usepackage{tabularx}
 
 \begin{table}[H]
 \centering
