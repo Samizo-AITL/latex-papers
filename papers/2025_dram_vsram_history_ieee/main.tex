@@ -29,6 +29,9 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
+% \usepackage{subcaption}  % ← 使わない
+\usepackage[caption=false,font=footnotesize]{subfig}
+
 % ========= タイトル =========
 \title{セイコーエプソン酒田Fab 8インチライン立ち上げ\\
 DRAM技術導入から量産化そしてその役割（1997--2001）}
@@ -539,64 +542,51 @@ Stack型では接合が拡散層の側壁と底面に限定され，周辺長は
 \begin{figure}[t]
 \centering
 
-% ---- Cross-section group title ----
-\textbf{Cross-section}\\[0.5em]
-
-\begin{minipage}{0.45\linewidth}
-\centering
-\begin{tikzpicture}[x=1cm,y=1cm,scale=0.8]
-  % substrate
+% --- a,b（縦並び） ---
+\subfloat[(a) Stack Cross-section]{%
+\begin{tikzpicture}[x=1cm,y=1cm]
   \fill[gray!20] (-1.5,0) rectangle (1.5,-0.8);
   \fill[gray!55] (-0.5,0) rectangle (0.5,-0.6);
   \fill[black!30] (-0.15,0) rectangle (0.15,1.0);
-  \draw[red,very thick] (-0.5,0)--(-0.5,-0.6)--(0.5,-0.6)--(0.5,0);
+  \draw[red,very thick] (-0.5,0) -- (-0.5,-0.6);
+  \draw[red,very thick] (0.5,0) -- (0.5,-0.6);
+  \draw[red,very thick] (-0.5,-0.6) -- (0.5,-0.6);
 \end{tikzpicture}
-\subcaption{(a) Stack}
-\end{minipage}
-
-\vspace{1em}
-
-\begin{minipage}{0.45\linewidth}
-\centering
-\begin{tikzpicture}[x=1cm,y=1cm,scale=0.8]
+\label{fig:stack_xsec_a}}
+\\[0.6em]
+\subfloat[(b) Trench Cross-section]{%
+\begin{tikzpicture}[x=1cm,y=1cm]
   \fill[gray!20] (-1.5,0) rectangle (1.5,-2.0);
   \draw[black,thick] (-0.5,0) -- (-0.5,-1.6) -- (0.5,-1.6) -- (0.5,0);
   \fill[black!30] (-0.35,-0.1) rectangle (0.35,-1.5);
   \fill[gray!55] (0.55,-0.6) rectangle (0.95,-1.0);
   \draw[red,very thick] (0.55,-0.6) rectangle (0.95,-1.0);
 \end{tikzpicture}
-\subcaption{(b) Trench}
-\end{minipage}
+\label{fig:trench_xsec_b}}
+\\[0.8em]
 
-\vspace{1.5em}
-
-% ---- Top view group title ----
-\textbf{Top view}\\[0.5em]
-
-\begin{minipage}{0.45\linewidth}
-\centering
-\begin{tikzpicture}[x=1cm,y=1cm,scale=0.8]
-  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5);
+% --- c,d（横並び、1カラムに収める） ---
+\subfloat[(c) Stack Top view]{%
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5); % p-sub: 残す
   \fill[gray!55] (-0.8,-0.8) rectangle (0.8,0.8);
-  \fill[black!30] (-0.3,-0.3) rectangle (0.3,0.3);
+  % 中央の薄い四角は削除（前回指摘反映）
+  % \fill[black!15] (-0.3,-0.3) rectangle (0.3,0.3);
   \draw[red,very thick] (-0.8,-0.8) rectangle (0.8,0.8);
 \end{tikzpicture}
-\subcaption{(c) Stack}
-\end{minipage}
+\label{fig:stack_top_c}}
 \hfill
-\begin{minipage}{0.45\linewidth}
-\centering
-\begin{tikzpicture}[x=1cm,y=1cm,scale=0.8]
-  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5);
+\subfloat[(d) Trench Top view]{%
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \fill[gray!20] (-1.5,-1.5) rectangle (1.5,1.5); % p-sub: 残す
   \draw[black,thick] (-0.8,-0.8) rectangle (0.8,0.8);
   \fill[black!30] (-0.5,-0.5) rectangle (0.5,0.5);
   \fill[gray!55] (0.9,-0.3) rectangle (1.3,0.3);
   \draw[red,very thick] (0.9,-0.3) rectangle (1.3,0.3);
 \end{tikzpicture}
-\subcaption{(d) Trench}
-\end{minipage}
+\label{fig:trench_top_d}}
 
-\caption{Stack型とTrench型キャパシタ構造の断面図および上面図の比較。}
+\caption{Stack型とTrench型キャパシタ構造：断面（a,b）と上面（c,d）の比較。}
 \label{fig:stack_trench}
 \end{figure}
 
