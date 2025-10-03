@@ -159,20 +159,20 @@ TiSi$_2$はサリサイド技術において広く用いられており、ポリ
 
 \begin{figure}[!t]
 \centering
-\resizebox{\columnwidth}{!}{%
+\resizebox{\columnwidth}{!}{% ← これで必ず1カラム幅に収める
 \begin{tikzpicture}
   % ウエハ円
-  \draw[thick] (0,0) circle (3); % 半径3に拡大（縮尺は\resizeboxで調整される）
+  \draw[thick] (0,0) circle (3);
 
-  % ランダムにフェイル点を配置
-  \foreach \i in {1,...,150} {%
+  % ランダムにフェイル点を配置（半径と角度はdeg/pt明記）
+  \foreach \i in {1,...,120} {%
     \pgfmathsetmacro{\ang}{rand*360}%
     \pgfmathsetmacro{\rad}{3*sqrt(rand)}%
-    \fill (\rad*cos(\ang), \rad*sin(\ang)) circle (0.06);
+    \fill (\rad*cos(\ang), \rad*sin(\ang)) circle[radius=0.06]; % ← 単位明示
   }
 \end{tikzpicture}%
 }
-\caption{ウエハ上のシングルビット不良分布例（フェイルビットマップ）。ランダムに散在しており，系統的クラスタは見られない。}
+\caption{ウエハ上のシングルビット不良分布例（フェイルビットマップ）。}
 \label{fig:failmap}
 \end{figure}
 
