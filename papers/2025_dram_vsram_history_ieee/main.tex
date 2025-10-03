@@ -320,7 +320,6 @@ O$_2$プラズマは酸化膜界面に欠陥準位を生成し，
 歩留まりは安定して80\%台後半を示した
 (Fig.~\ref{fig:yield25})。  
 
-% ===== 世代別 歩留まり推移（0.5µm, 0.35µm, 0.25µm, VSRAM）=====
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
@@ -328,38 +327,34 @@ O$_2$プラズマは酸化膜界面に欠陥準位を生成し，
   width=\linewidth, height=6cm,
   ymin=0, ymax=100,
   ylabel={歩留まり(\%)},
-  % ← ここで内部キーはASCIIだけにする（エラー回避）
-  symbolic x coords={p05,p035,p025,vsram},
-  xtick=data,
-  % 見た目のラベルはここで整形
+  xtick={1,2,3,4},
   xticklabels={
-    $0.5\,\mu\mathrm{m}\ (16\mathrm{M})$,
-    $0.35\,\mu\mathrm{m}\ (64\mathrm{M})$,
-    $0.25\,\mu\mathrm{m}\ (64\mathrm{M})$,
+    $0.5\,\mu\mathrm{m}$ (16M),
+    $0.35\,\mu\mathrm{m}$ (64M),
+    $0.25\,\mu\mathrm{m}$ (64M),
     VSRAM
   },
-  x tick label style={align=center},
+  x tick label style={align=center, text width=2.9cm},
   grid=both,
-  % ==== 凡例：横一列・グラフ下中央 ====
-  legend columns=2,
   legend style={
     at={(0.5,-0.25)}, anchor=north,
-    draw=none, fill=none, font=\small
+    draw=none, fill=none,
+    legend columns=2
   },
   clip=false
 ]
   % 初期
   \addplot+[semithick,mark=*]
-    coordinates {(p05,95) (p035,20) (p025,65) (vsram,30)};
+    coordinates {(1,95) (2,20) (3,65) (4,30)};
   \addlegendentry{初期}
 
   % 改善後
   \addplot+[semithick,mark=square*]
-    coordinates {(p05,95) (p035,86) (p025,88) (vsram,80)};
+    coordinates {(1,95) (2,86) (3,88) (4,80)};
   \addlegendentry{改善後}
 \end{axis}
 \end{tikzpicture}
-\caption{酒田Fabにおける世代別歩留まり推移（初期／改善後）。}
+\caption{酒田Fabにおける世代別歩留まり推移（凡例はグラフ下中央）。}
 \label{fig:yield_all}
 \end{figure}
 
