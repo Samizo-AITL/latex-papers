@@ -13,12 +13,12 @@
 \sisetup{detect-all=true}
 
 % ===== 図表 =====
-\usepackage{tabularx}      % ← ここに置く
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{multirow}
-\usepackage{array}
-\usepackage{float}
+\usepackage{tabularx}      % 可変幅の表カラム
+\usepackage{graphicx}      % 画像取り込み
+\usepackage{booktabs}      % 表の罫線
+\usepackage{multirow}      % 複数行結合
+\usepackage{array}         % 列幅指定
+\usepackage{float}         % [H] オプション固定用
 
 % ===== 図作図 (TikZ) =====
 \usepackage{tikz}
@@ -95,8 +95,7 @@ STIはCoSi$_2$を用いたサリサイド技術により高集積・高歩留り
 世代 & 分離技術 & サリサイド & 電源電圧 & 主用途 \\
 \midrule
 0.35\,µm & LOCOS & TiSi$_2$ & 3.3V / 40V & モノクロLCDドライバ \\
-0.25\,µm & LOCOS & TiSi$_2$ & 3.3V / 30V & aTFTカラーLCDドライバ\\
-         &       &          &            & （1Mbit SRAM搭載） \\
+0.25\,µm & LOCOS & TiSi$_2$ & 3.3V / 30V & aTFTカラーLCDドライバ\newline （1Mbit SRAM搭載） \\
 0.18\,µm & STI   & CoSi$_2$ & 1.8V / 30V & 次候補（歩留り懸念） \\
 \bottomrule
 \end{tabularx}
@@ -287,9 +286,12 @@ C49相残留の発生を抑制することを狙った。
 種別 & 方法 & 効果 & 課題 \\
 \midrule
 暫定 & サイドウォールエッチバックをアンダー側へ調整 &
-不良率低下 & 相転移不完全は未解決 \\
+不良率低下 &
+相転移不完全は未解決 \\
+
 恒久 & RTAランプアニール条件最適化 &
-相転移完全化、不良消失 & PDK再キャラが必要 \\
+相転移完全化\newline 不良消失 &
+PDK再キャラが必要 \\
 \bottomrule
 \end{tabularx}
 \end{table}
