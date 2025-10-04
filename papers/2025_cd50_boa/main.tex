@@ -87,60 +87,39 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[x=1.5cm,y=1.5cm, every node/.style={font=\scriptsize}]
-  % ==== 表示範囲：左=STI左辺(0), 右=Poly右端=3.2 ====
-  \begin{scope}
-    \clip (0,-1.10) rectangle (3.2,0.95);
+  % ==== 表示範囲 ====
+  \clip (0,-1.10) rectangle (3.2,0.95);
 
-    % n-well (30 V) —— 右端は Poly 右端に揃える
-    \fill[blue!10] (0,-1.00) rectangle (3.2,0);
-    \draw (0,-1.00) rectangle (3.2,0);
+  % n-well
+  \fill[blue!10,draw=none] (0,-1.00) rectangle (3.2,0);
 
-    % STI trench（左端=0, 右端=0.60）
-    \fill[gray!40] (0,0) -- (0,-0.90) -- (0.60,-0.90) -- (0.60,0) -- cycle;
-    \draw (0,0) -- (0,-0.90) -- (0.60,-0.90) -- (0.60,0);
+  % STI
+  \fill[gray!40,draw=none] (0,0) -- (0,-0.90) -- (0.60,-0.90) -- (0.60,0) -- cycle;
 
-    % 表面ライン（アクティブ開始 x=0.60）
-    \draw[thick] (0.60,0) -- (3.2,0);
+  % 薄ゲート膜
+  \fill[green!18,draw=none] (0.60,0) rectangle (1.10,0.04);
+  % 通常ゲート膜
+  \fill[green!35,draw=none] (1.10,0) rectangle (3.20,0.10);
 
-    % --- ゲート酸化膜（二段階表示） ---
-    % 薄いゲート膜（STI端部）: 0.60–1.10, 厚み 0.04
-    \fill[green!18] (0.60,0) rectangle (1.10,0.04);
-    % 通常ゲート膜: 1.10–3.20, 厚み 0.10
-    \fill[green!35] (1.10,0) rectangle (3.20,0.10);
+  % Poly（連続膜・段付き底面・枠線なし）
+  \fill[top color=gray!10,bottom color=gray!30,draw=none]
+    (0.00,0.00) -- (0.60,0.00) -- (1.10,0.04) -- (3.20,0.10)
+    -- (3.20,0.38) -- (0.00,0.38) -- cycle;
 
-    % --- Poly ゲート（連続膜：STI上も含めて一体で塗る／境界線なし） ---
-    \fill[top color=gray!10,bottom color=gray!30,draw=none]
-      (0.00,0.10) -- (3.20,0.10) -- (3.20,0.38) -- (0.00,0.38) -- cycle;
+  % 高電界集中域
+  \fill[red!15,draw=red!70,dashed] (0.60,0) -- (1.00,0) -- (1.00,-0.18) -- (0.70,-0.18) -- cycle;
 
-    % 高電界集中（STI端すぐ右）
-    \fill[red!15,draw=red!70,dashed] (0.60,0) -- (1.00,0) -- (1.00,-0.18) -- (0.70,-0.18) -- cycle;
+  % リーク矢印
+  \draw[->,very thick,red!80] (0.90,-0.22) to[out=90,in=-90] (0.90,0.08);
 
-    % リーク矢印（n-well → Poly、薄膜部を通過）
-    \draw[->,very thick,red!80] (0.90,-0.22) to[out=90,in=-90] (0.90,0.10);
-  \end{scope}
-
-  % ==== ラベル（重なり回避） ====
-  \node[anchor=north west] at (0.02,0.90) {STI 左辺};
-  \node[anchor=east] at (3.18,0.48) {Poly = 0 V};
-  \node[anchor=west] at (0.02,-0.95) {n-well = 30 V};
-
-  \draw[->,red!80] (2.58,0.72) -- (1.00,0.03);
-  \node[red!80,anchor=west] at (2.60,0.72) {端部シンニング（薄いゲート膜）};
-
-  \draw[->] (2.58,0.58) -- (2.20,0.09);
-  \node[anchor=west] at (2.60,0.58) {通常ゲート膜厚};
-
-  \draw[->,red!80] (2.58,-0.62) -- (0.88,-0.10);
-  \node[red!80,anchor=west] at (2.60,-0.62) {高電界集中};
-
-  \draw[->,red!80] (0.20,-0.55) -- (0.88,-0.02);
-  \node[red!80,anchor=west] at (0.02,-0.55) {リーク（n-well $\rightarrow$ Poly）};
-
-  % 右端 = Poly右端（＝n-well右端）の目安線（必要なら削除可）
-  \draw[densely dotted] (3.20,-1.10) -- (3.20,0.95);
+  % --- 最小限のラベル ---
+  \node[anchor=north west] at (0.02,0.88) {STI};
+  \node[anchor=east] at (3.18,0.42) {Poly};
+  \node[anchor=west] at (0.02,-0.95) {n-well};
+  \node[red!80,anchor=west] at (1.05,-0.15) {\small リーク};
 \end{tikzpicture}
-\caption{STI左辺からPoly右端までを拡大。PolyはSTI上～薄膜ゲート上～通常ゲート上を連続膜として成膜。ゲート膜は端部の薄膜区間と通常膜厚の二段階。}
-\label{fig:sti_edge_poly_continuous}
+\caption{STI端部におけるゲート酸化膜シンニングとリーク経路模式図。PolyはSTI上から通常酸化膜上まで連続膜。}
+\label{fig:sti_edge_minimal}
 \end{figure}
 
 \noindent\textbf{ハイブリッド統合の要点.}
