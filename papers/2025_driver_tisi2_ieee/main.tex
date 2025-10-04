@@ -194,99 +194,55 @@ Shmoo解析の結果，電源電圧マージン低下時に不良発生確率が
 % ===== Shmoo（VDD–温度） 3条件比較：Baseline / SWET Under / RTA =====
 \begin{figure}[!t]
 \centering
-\resizebox{\columnwidth}{!}{%
-\begin{tikzpicture}[x=1cm,y=1cm]
-  % 共通スタイル
-  \tikzstyle{axis}=[->,thick]
-  \tikzstyle{pass}=[fill=green!20,draw=green!40!black]
-  \tikzstyle{fail}=[fill=red!18,draw=red!40!black]
-  \tikzstyle{frame}=[very thick,rounded corners]
-  \def\W{5.5}  % 各パネルの横サイズ
-  \def\H{3.6}  % 各パネルの縦サイズ
-  \def\DX{6.2} % パネル間隔
+\begin{tabular}{c}
+  % --- Untreated ---
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.9\columnwidth, height=0.5\columnwidth,
+      xlabel={VDD [V]}, ylabel={Pass/Fail},
+      ymin=0, ymax=1.2, xmin=2.5, xmax=3.6,
+      ytick={0,1}, yticklabels={Fail,Pass},
+      title={Untreated}
+    ]
+      \addplot+[mark=*] coordinates {(2.7,0) (3.0,0) (3.3,0) (3.6,0)};
+    \end{axis}
+  \end{tikzpicture} \\[1ex]
 
-  % 軸ラベル描画ヘルパ（原点(\ox,\oy)にパネルを置く）
-  \newcommand{\drawaxes}[3]{%
-    \draw[axis] (#1,#2) -- ++(\W,0) node[below right] {VDD [V]};
-    \draw[axis] (#1,#2) -- ++(0,\H) node[above left] {温度 [\(^\circ\)C]};
-    % 目盛（ざっくり）
-    \foreach \x/\lab in {0.7/1.6, 2.9/2.6, 5.1/3.6} {
-      \draw (#1+\x,#2) -- ++(0,0.08) node[below,yshift=-1pt] {\lab};
-    }
-    \foreach \y/\lab in {0.7/25, 2.1/55, 3.3/85} {
-      \draw (#1,#2+\y) -- ++(0.08,0) node[left,xshift=-2pt] {\lab};
-    }
-    \draw[frame] (#1,#2) rectangle ++(\W,\H);
-    \node[font=\bfseries] at (#1+\W/2,#2+\H+0.35) {#3};
-    % 凡例
-    \fill[pass] (#1+0.2,#2+\H-0.55) rectangle ++(0.35,0.22);
-    \node[anchor=west] at (#1+0.6,#2+\H-0.44) {Pass};
-    \fill[fail] (#1+1.5,#2+\H-0.55) rectangle ++(0.35,0.22);
-    \node[anchor=west] at (#1+1.9,#2+\H-0.44) {Fail};
-  }
+  % --- Side Wall Etch Under ---
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.9\columnwidth, height=0.5\columnwidth,
+      xlabel={VDD [V]}, ylabel={Pass/Fail},
+      ymin=0, ymax=1.2, xmin=2.5, xmax=3.6,
+      ytick={0,1}, yticklabels={Fail,Pass},
+      title={Side Wall Etch Under}
+    ]
+      \addplot+[mark=*] coordinates {(2.7,0) (3.0,0) (3.3,1) (3.6,1)};
+    \end{axis}
+  \end{tikzpicture} \\[1ex]
 
-  %----------------- Baseline -----------------
-  \pgfmathsetmacro{\ox}{0}
-  \pgfmathsetmacro{\oy}{0}
-  \drawaxes{\ox}{\oy}{未対策}
-
-  % 失敗領域（低VDD×高温で広い）
-  % 斜線境界：おおよそ Vmin(T) = 2.9V @25℃ → 3.4V @85℃
-  \path[fail]
-    (\ox+0.0,\oy+\H) --
-    (\ox+0.0,\oy+0.0) --
-    (\ox+2.9,\oy+0.0) --
-    (\ox+3.4,\oy+\H) -- cycle;
-
-  % パス領域（枠内 − 失敗領域）
-  \path[pass] 
-    (\ox+2.9,\oy+0.0) --
-    (\ox+\W,\oy+0.0) --
-    (\ox+\W,\oy+\H) --
-    (\ox+3.4,\oy+\H) -- cycle;
-
-  %----------------- SWET Under -----------------
-  \pgfmathsetmacro{\ox}{\DX}
-  \pgfmathsetmacro{\oy}{0}
-  \drawaxes{\ox}{\oy}{SWET Under（B吸収抑制）}
-
-  % 失敗領域：B吸収は抑制→境界は少し右へ改善するが、C49残存で高温側はまだ厳しい
-  %   2.8V @25℃ → 3.2V @85℃
-  \path[fail]
-    (\ox+0.0,\oy+\H) --
-    (\ox+0.0,\oy+0.0) --
-    (\ox+2.8,\oy+0.0) --
-    (\ox+3.2,\oy+\H) -- cycle;
-
-  \path[pass]
-    (\ox+2.8,\oy+0.0) --
-    (\ox+\W,\oy+0.0) --
-    (\ox+\W,\oy+\H) --
-    (\ox+3.2,\oy+\H) -- cycle;
-
-  %----------------- RTA Optimized -----------------
-  \pgfmathsetmacro{\ox}{2*\DX}
-  \pgfmathsetmacro{\oy}{0}
-  \drawaxes{\ox}{\oy}{RTA最適化（C49→C54完結）}
-
-  % 失敗領域：大幅に縮小（実質ゼロに近い）
-  %   2.2V @25℃ → 2.4V @85℃
-  \path[fail,fill opacity=0.15]
-    (\ox+0.0,\oy+\H) --
-    (\ox+0.0,\oy+0.0) --
-    (\ox+2.2,\oy+0.0) --
-    (\ox+2.4,\oy+\H) -- cycle;
-
-  \path[pass]
-    (\ox+2.2,\oy+0.0) --
-    (\ox+\W,\oy+0.0) --
-    (\ox+\W,\oy+\H) --
-    (\ox+2.4,\oy+\H) -- cycle;
-
-\end{tikzpicture}%
-}
-\caption{Shmoo（VDD–温度）比較。未対策とSWET Underは85\(^\circ\)C・低VDD側でFail領域が残る一方，RTA最適化ではC49$\to$C54転移が完結し，安定動作領域が大幅に拡大。}
-\label{fig:shmoo_vdd_temp}
+  % --- RTA Optimized ---
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.9\columnwidth, height=0.5\columnwidth,
+      xlabel={VDD [V]}, ylabel={Pass/Fail},
+      ymin=0, ymax=1.2, xmin=2.5, xmax=3.6,
+      ytick={0,1}, yticklabels={Fail,Pass},
+      title={RTA Optimized}
+    ]
+      \addplot+[mark=*] coordinates {(2.7,1) (3.0,1) (3.3,1) (3.6,1)};
+    \end{axis}
+  \end{tikzpicture}
+\end{tabular}
+\caption{Shmoo plots of random single-bit failures.
+Untreated fails at both 25\,$^\circ$C and 85\,$^\circ$C.
+Side Wall Etch Under passes at 25\,$^\circ$C but fails at 85\,$^\circ$C
+(recovered at higher VDD).
+RTA Optimized process shows pass at both temperatures.
+（日英併記）未対策では25℃/85℃ともに不良。
+Side Wall Etch Underでは25℃で合格するが85℃で不良（電圧上昇で回復）。
+RTA最適化では85℃でも合格。}
+\label{fig:shmoo}
 \end{figure}
 
 \subsection{切り分け}
