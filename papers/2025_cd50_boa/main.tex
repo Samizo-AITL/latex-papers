@@ -101,7 +101,7 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
   % ゲート酸化膜（薄膜＋通常膜）
   \fill[green!20,draw=none] (0.6,0.0) rectangle (1.1,0.04); % シンニング部
   \fill[green!35,draw=none] (1.1,0.0) rectangle (3.2,0.10); % 通常膜厚
-  \node[black] at (1.6,0.12) {Gate Oxide};
+  \node[black] at (1.6,0.18) {Gate Oxide}; % ← 上方向に移動（0.12→0.18）
 
   % Polyゲート（3段階：STI上／薄膜上／通常酸化膜上）
   \fill[gray!25,draw=none] (0.0,0.0) rectangle (0.6,0.22);  % STI上
@@ -109,14 +109,14 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
   \fill[gray!25,draw=none] (1.1,0.10) rectangle (3.2,0.38); % 通常膜上
   \node at (1.6,0.24) {Poly};
 
-  % Leakage 矢印（右寄せ配置）
+  % Leakage 矢印（下方向に文字を移動）
   \draw[->,very thick,red!80] (0.9,-0.25) -- (0.9,0.1);
-  \node[red!80,anchor=west] at (1.05,0.0) {\small Leakage};
+  \node[red!80,anchor=west] at (1.05,-0.08) {\small Leakage}; % ← 下方向に移動（0.0→-0.08）
 
   \end{scope}
 \end{tikzpicture}
-\caption{STI端部におけるゲート酸化膜シンニングとリーク経路。PolyはSTI上／薄膜上／通常膜上で段差構造を形成。各ラベルは領域中央に配置。}
-\label{fig:sti_edge_leakage_gateoxide}
+\caption{STI端部におけるゲート酸化膜シンニングとリーク経路。PolyはSTI上／薄膜上／通常膜上で段差構造を形成し、各ラベルは中央に配置。}
+\label{fig:sti_edge_leakage_gateoxide_final}
 \end{figure}
 
 \noindent\textbf{ハイブリッド統合の要点.}
