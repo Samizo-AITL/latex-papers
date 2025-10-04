@@ -193,35 +193,33 @@ Shmoo解析の結果，電源電圧マージン低下時に不良発生確率が
 保持特性への依存は小さく，\emph{読出し動作時の不安定化}が主要因であることを示唆した。  
 また，ビット線RCの大幅な変動は認められず，セル内部素子の局所抵抗上昇が原因と推定された。
 
-% ===== Shmoo（VDD–温度） 3条件比較：Baseline / SWET Under / RTA =====
+% ===== Shmoo（VDD–温度） 3条件比較：Untreated / Side Wall Etch Under / RTA =====
 \begin{figure}[H]
 \centering
 
 % ===== Untreated =====
 \begin{tikzpicture}
   \begin{axis}[
-    width=\columnwidth,
-    height=0.45\columnwidth,
-    xlabel={VDD [V]},
-    ylabel={Fail Bit Count (capped at 100)},
-    ymin=0, ymax=100,
-    xmin=2.6, xmax=3.6,
-    xtick={2.6,2.8,3.0,3.2,3.4,3.6},
-    ytick={0,20,40,60,80,100},
-    grid=both,
-    title={Untreated},
+    width=\columnwidth, height=0.45\columnwidth,
+    xlabel={VDD [V]}, ylabel={Fail Bit Count (capped at 100)},
+    ymin=0, ymax=100, xmin=2.6, xmax=3.6,
+    xtick={2.6,2.8,3.0,3.2,3.4,3.6}, ytick={0,20,40,60,80,100},
+    grid=both, title={Untreated},
     legend style={at={(0.98,0.98)},anchor=north east,font=\scriptsize}
   ]
-  % Untreated at 25℃
-  \addplot[mark=o,blue,thick] coordinates {
-    (2.6,100) (2.8,100) (3.0,95) (3.2,100) (3.4,100) (3.6,100)
-  };
-  \addlegendentry{25℃}
-  % Untreated at 85℃
-  \addplot[mark=square*,red,thick,dashed] coordinates {
-    (2.6,100) (2.8,100) (3.0,100) (3.2,100) (3.4,100) (3.6,100)
-  };
-  \addlegendentry{85℃}
+  % Below-spec shade (<3.0V)
+  \addplot [draw=none, fill=gray!20, opacity=0.6]
+    coordinates {(2.6,0) (3.0,0) (3.0,100) (2.6,100)} -- cycle;
+  \node[gray!60] at (axis cs:2.8,92) {\scriptsize Below spec};
+
+  % 25°C
+  \addplot[mark=o,blue,thick] coordinates
+    {(2.6,100) (2.8,100) (3.0,95) (3.2,98) (3.4,100) (3.6,100)};
+  \addlegendentry{25\,°C}
+  % 85°C
+  \addplot[mark=square*,red,thick,dashed] coordinates
+    {(2.6,100) (2.8,100) (3.0,100) (3.2,100) (3.4,100) (3.6,100)};
+  \addlegendentry{85\,°C}
   \end{axis}
 \end{tikzpicture}
 
@@ -230,28 +228,26 @@ Shmoo解析の結果，電源電圧マージン低下時に不良発生確率が
 % ===== Side Wall Etch Under =====
 \begin{tikzpicture}
   \begin{axis}[
-    width=\columnwidth,
-    height=0.45\columnwidth,
-    xlabel={VDD [V]},
-    ylabel={Fail Bit Count (capped at 100)},
-    ymin=0, ymax=100,
-    xmin=2.6, xmax=3.6,
-    xtick={2.6,2.8,3.0,3.2,3.4,3.6},
-    ytick={0,20,40,60,80,100},
-    grid=both,
-    title={Side Wall Etch Under},
+    width=\columnwidth, height=0.45\columnwidth,
+    xlabel={VDD [V]}, ylabel={Fail Bit Count (capped at 100)},
+    ymin=0, ymax=100, xmin=2.6, xmax=3.6,
+    xtick={2.6,2.8,3.0,3.2,3.4,3.6}, ytick={0,20,40,60,80,100},
+    grid=both, title={Side Wall Etch Under},
     legend style={at={(0.98,0.98)},anchor=north east,font=\scriptsize}
   ]
-  % 25℃
-  \addplot[mark=triangle*,blue,thick] coordinates {
-    (2.6,40) (2.8,30) (3.0,20) (3.2,10) (3.4,5) (3.6,0)
-  };
-  \addlegendentry{25℃}
-  % 85℃
-  \addplot[mark=square*,red,thick,dashed] coordinates {
-    (2.6,100) (2.8,90) (3.0,70) (3.2,40) (3.4,10) (3.6,0)
-  };
-  \addlegendentry{85℃}
+  % Below-spec shade
+  \addplot [draw=none, fill=gray!20, opacity=0.6]
+    coordinates {(2.6,0) (3.0,0) (3.0,100) (2.6,100)} -- cycle;
+  \node[gray!60] at (axis cs:2.8,92) {\scriptsize Below spec};
+
+  % 25°C（改良傾向）
+  \addplot[mark=triangle*,blue,thick] coordinates
+    {(2.6,40) (2.8,32) (3.0,24) (3.2,15) (3.4,8) (3.6,4)};
+  \addlegendentry{25\,°C}
+  % 85°C（高温でFailだがVDD↑で回復）
+  \addplot[mark=square*,red,thick,dashed] coordinates
+    {(2.6,100) (2.8,90) (3.0,70) (3.2,45) (3.4,20) (3.6,5)};
+  \addlegendentry{85\,°C}
   \end{axis}
 \end{tikzpicture}
 
@@ -260,32 +256,32 @@ Shmoo解析の結果，電源電圧マージン低下時に不良発生確率が
 % ===== RTA Optimized =====
 \begin{tikzpicture}
   \begin{axis}[
-    width=\columnwidth,
-    height=0.45\columnwidth,
-    xlabel={VDD [V]},
-    ylabel={Fail Bit Count (capped at 100)},
-    ymin=0, ymax=100,
-    xmin=2.6, xmax=3.6,
-    xtick={2.6,2.8,3.0,3.2,3.4,3.6},
-    ytick={0,20,40,60,80,100},
-    grid=both,
-    title={RTA Optimized},
+    width=\columnwidth, height=0.45\columnwidth,
+    xlabel={VDD [V]}, ylabel={Fail Bit Count (capped at 100)},
+    ymin=0, ymax=100, xmin=2.6, xmax=3.6,
+    xtick={2.6,2.8,3.0,3.2,3.4,3.6}, ytick={0,20,40,60,80,100},
+    grid=both, title={RTA Optimized},
     legend style={at={(0.98,0.98)},anchor=north east,font=\scriptsize}
   ]
-  % 25℃
-  \addplot[mark=o,blue,thick] coordinates {
-    (2.6,0) (2.8,0) (3.0,0) (3.2,0) (3.4,0) (3.6,0)
-  };
-  \addlegendentry{25℃}
-  % 85℃
-  \addplot[mark=square*,red,thick,dashed] coordinates {
-    (2.6,0) (2.8,0) (3.0,0) (3.2,0) (3.4,0) (3.6,0)
-  };
-  \addlegendentry{85℃}
+  % Below-spec shade
+  \addplot [draw=none, fill=gray!20, opacity=0.6]
+    coordinates {(2.6,0) (3.0,0) (3.0,100) (2.6,100)} -- cycle;
+  \node[gray!60] at (axis cs:2.8,92) {\scriptsize Below spec};
+
+  % 25°C（2.6Vのみ少数Fail→以降0）
+  \addplot[mark=o,blue,thick] coordinates
+    {(2.6,6) (2.8,0) (3.0,0) (3.2,0) (3.4,0) (3.6,0)};
+  \addlegendentry{25\,°C}
+  % 85°C（2.6Vでやや悪い→以降0）
+  \addplot[mark=square*,red,thick,dashed] coordinates
+    {(2.6,10) (2.8,0) (3.0,0) (3.2,0) (3.4,0) (3.6,0)};
+  \addlegendentry{85\,°C}
   \end{axis}
 \end{tikzpicture}
 
-\caption{Shmoo plots of fail bit counts vs VDD at 25℃ and 85℃ under different process conditions. Counts are capped at 100.}
+\caption{Shmoo plots of fail bit counts vs.\ VDD at 25\,°C and 85\,°C for three process conditions.
+The region $V_\mathrm{DD}\!<\!3.0$\,V is \emph{below spec} (shaded) and swept only for robustness evaluation.
+Counts are capped at 100.}
 \label{fig:shmoo_failcount_temp}
 \end{figure}
 
