@@ -84,47 +84,70 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
 
 この経験は、単なる微細化の追随ではなく、技術的妥協点とコスト競争力の両立をいかに図るかという、日本の半導体産業全体に共通する難題を浮き彫りにした。
 
+% 断面図（左端=STI左辺、右端=Poly中心でクリップ）
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[x=1cm,y=1cm, every node/.style={font=\scriptsize}]
+  % ------- 描画範囲：左=STI左辺(0), 右=Poly中心(2.2) -------
+  \begin{scope}
+    \clip (0,-1.05) rectangle (2.2,0.85); % ★右端=Poly中心でトリミング
 
-  % --- n-well 基板 ---
-  \fill[blue!10] (0,-1.0) rectangle (7,0);
-  \draw (0,-1.0) rectangle (7,0);
-  \node[anchor=west] at (7.05,-0.55) {n-well (30 V)};
+    % n-well（30 V）
+    \fill[blue!10] (0,-1.0) rectangle (7,0);
+    \draw (0,-1.0) rectangle (7,0);
 
-  % --- STI トレンチ ---
-  \fill[gray!40] (0.6,0) -- (0.6,-0.8) -- (1.2,-0.8) -- (1.2,0) -- cycle;
-  \draw (0.6,0) -- (0.6,-0.8) -- (1.2,-0.8) -- (1.2,0);
-  \node at (0.9,-0.95) {STI};
+    % STI（左辺が図の左端）
+    \fill[gray!40] (0,0) -- (0,-0.9) -- (0.6,-0.9) -- (0.6,0) -- cycle;
+    \draw (0,0) -- (0,-0.9) -- (0.6,-0.9) -- (0.6,0);
 
-  % --- 表面 ---
-  \draw[thick] (1.2,0) -- (6.6,0);
+    % 表面ライン
+    \draw[thick] (0.6,0) -- (6.6,0);
 
-  % --- 厚いゲート酸化膜 ---
-  \fill[green!30] (2.0,0) rectangle (6.0,0.08);
-  \node[green!40!black,anchor=south] at (4.0,0.1) {厚ゲート酸化膜};
+    % 厚いゲート酸化膜（代表部）
+    \fill[green!30] (1.6,0) rectangle (6.0,0.10);
 
-  % --- 端部シンニング (STI近傍) ---
-  \fill[red!55] (1.2,0) -- (2.0,0) -- (2.0,0.08) -- (1.5,0.02) -- cycle;
-  \node[red!70!black,anchor=south west] at (1.25,0.08) {端部シンニング};
+    % 端部シンニング（強調：厚めに広く）
+    \fill[red!60] (0.6,0) -- (1.6,0) -- (1.6,0.10) -- (0.95,0.02) -- cycle;
 
-  % --- Polyゲート電極 ---
-  \fill[gray!20] (1.6,0.08) rectangle (6.4,0.35);
-  \draw (1.6,0.08) rectangle (6.4,0.35);
-  \node at (4.0,0.45) {Polyゲート (0 V)};
+    % Polyゲート（中心=2.2）
+    \fill[gray!20] (1.2,0.10) rectangle (3.2,0.38);
+    \draw (1.2,0.10) rectangle (3.2,0.38);
 
-  % --- 高電界集中領域 ---
-  \fill[red!15,draw=red!60,dashed] (1.2,0) -- (1.7,0) -- (1.7,-0.15) -- (1.3,-0.15) -- cycle;
-  \node[red!70!black,anchor=north west] at (1.75,-0.02) {高電界集中};
+    % 高電界集中領域（STI端部）
+    \fill[red!15,draw=red!70,dashed] (0.6,0) -- (1.1,0) -- (1.1,-0.18) -- (0.75,-0.18) -- cycle;
 
-  % --- リーク矢印 (n-well→Poly) ---
-  \draw[->,very thick,red!80] (1.5,-0.2) to[out=90,in=-90] (1.5,0.08);
-  \node[red!80,anchor=west] at (1.55,-0.05) {リーク};
+    % リーク矢印（n-well → Poly, 端部を通過）
+    \draw[->,very thick,red!80] (0.98,-0.22) to[out=90,in=-90] (0.98,0.10);
+
+  \end{scope}
+
+  % ------- ラベル（重なり回避のため枠外配置） -------
+  % STI ラベル（左上）
+  \node[anchor=north west] at (0.02,0.78) {STI（左辺）};
+
+  % 端部シンニングラベル（上側）
+  \draw[red!80,->] (1.30,0.72) -- (1.05,0.06);
+  \node[red!80,anchor=west] at (1.32,0.72) {端部シンニング};
+
+  % 高電界集中ラベル（下側）
+  \draw[red!80,->] (1.35,-0.65) -- (1.05,-0.12);
+  \node[red!80,anchor=west] at (1.37,-0.65) {高電界集中};
+
+  % リークラベル（左下）
+  \draw[red!80,->] (0.30,-0.55) -- (0.90,-0.05);
+  \node[red!80,anchor=west] at (0.05,-0.55) {リーク（n-well $\rightarrow$ Poly）};
+
+  % n-well / Poly 電位注記（重なり回避）
+  \node[anchor=west] at (0.05,-0.90) {n-well = 30 V};
+  \node[anchor=east] at (2.15,0.48) {Poly = 0 V};
+
+  % 右端が Poly 中心であることを示す（オプション：消しても可）
+  \draw[densely dotted] (2.2,-1.05) -- (2.2,0.85);
+  \node[anchor=west] at (2.22,0.62) {Poly中心};
 
 \end{tikzpicture}
-\caption{STI端部シンニングによるゲートリーク模式断面（n-well 30 V → Poly 0 V）}
-\label{fig:hvmos_sti_leak}
+\caption{STI左辺からPoly中心までを拡大表示した断面図。端部シンニング部を強調し、ラベルの重なりを解消。}
+\label{fig:sti_edge_zoom}
 \end{figure}
 
 \noindent\textbf{ハイブリッド統合の要点.}
