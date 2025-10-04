@@ -21,7 +21,6 @@ jobs:
           root_file: main.tex
           latexmk_use_lualatex: true
           args: -gg -halt-on-error -file-line-error
-          # tlmgr でミラー不調などでも落ちないように || true を付ける
           pre_compile: |
             tlmgr update --self --all || true
             tlmgr install \
@@ -32,22 +31,57 @@ jobs:
               collection-fontsrecommended \
               collection-langjapanese || true
 
-      # 失敗時でも main.log の中身をコンソールに出す
-      - name: Print main.log to console (if exists)
+      # main.log 先頭を出す（従来どおり）
+      - name: Print main.log (first 300 lines)
         if: always()
         run: |
-          set +e
           LOG="papers/2025_driver_tisi2_ieee/main.log"
           if [ -f "$LOG" ]; then
-            echo "===== BEGIN main.log ====="
+            echo "===== BEGIN main.log (head) ====="
             sed -n '1,300p' "$LOG"
             echo "===== END main.log ====="
           else
             echo "main.log not found."
-            ls -al papers/2025_driver_tisi2_ieee || true
           fi
 
-      # 失敗しても成果物をアップロード
+      # エラー要約（file:line -> message）
+      - name: Summarize LaTeX errors
+        if: failure() || always()
+        run: |
+          LOG="papers/2025_driver_tisi2_ieee/main.log"
+          if [ -f "$LOG" ]; then
+            echo "===== ERROR SUMMARY ====="
+            grep -Eo '(\./|[A-Za-z0-9_./-]+\.tex:[0-9]+:).*' "$LOG" | sed 's/^/  /' || true
+            echo "----- LaTeX error blocks (! ... l.N) -----"
+            awk '/^\! /{f=1} f{print} /^\s*l\.[0-9]+/{f=0}' "$LOG" || true
+            echo "===== END SUMMARY ====="
+          fi
+
+      # ソース抜粋（±3行、行番号つき）
+      - name: Show source excerpts around errors
+        if: failure() || always()
+        run: |
+          LOG="papers/2025_driver_tisi2_ieee/main.log"
+          ROOT="papers/2025_driver_tisi2_ieee"
+          if [ -f "$LOG" ]; then
+            awk 'match($0, /([^ :]+\.tex):([0-9]+):/, m){print m[1] ":" m[2]}' "$LOG" \
+              | sed 's,^\./,,' | sort -u > _errlist.txt
+            if [ -s _errlist.txt ]; then
+              while IFS=: read -r file line; do
+                path="$ROOT/$file"; [ -f "$path" ] || path="$file"
+                [ -f "$path" ] || continue
+                start=$((line-3)); [ $start -lt 1 ] && start=1
+                end=$((line+2))
+                echo "----- ${file}:${line} -----"
+                nl -ba -w3 -s' | ' "$path" | sed -n "${start},${end}p"
+              done < _errlist.txt
+            else
+              echo "No file:line hints found, showing last 120 lines of log:"
+              tail -n 120 "$LOG"
+            fi
+          fi
+
+      # 成果物アップロード（PDF・ログなど）
       - name: Upload PDF and LOG
         if: always()
         uses: actions/upload-artifact@v4
