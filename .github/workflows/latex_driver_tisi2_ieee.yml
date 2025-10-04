@@ -10,78 +10,133 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # latex-action は texlive を同梱したコンテナを使う。足りない pkg は tlmgr で入れる。
       - name: Compile LaTeX (LuaLaTeX + JP)
+        id: compile
         uses: xu-cheng/latex-action@v2
         with:
           working_directory: papers/2025_driver_tisi2_ieee
           root_file: main.tex
           latexmk_use_lualatex: true
-          args: -gg -halt-on-error -file-line-error
+          # -gg: 依存全再構築 / -halt-on-error: 最初のエラーで停止 / -file-line-error: file:line 形式
+          args: -gg -halt-on-error -file-line-error -synctex=1
           pre_compile: |
             tlmgr update --self --all || true
             tlmgr install \
-              luatexja ipaex pgf \
-              siunitx booktabs cite bm \
-              multirow float hyperref \
+              luatexja luatexja-fontspec ipaex \
+              pgf tikz siunitx booktabs cite bm \
+              multirow float hyperref makecell \
               collection-latexrecommended \
               collection-fontsrecommended \
               collection-langjapanese || true
 
-      # main.log 先頭を出す（従来どおり）
-      - name: Print main.log (first 300 lines)
+      # ---- ログの先頭（雰囲気把握用）----
+      - name: Print main.log (head 300)
         if: always()
+        shell: bash
         run: |
           LOG="papers/2025_driver_tisi2_ieee/main.log"
-          if [ -f "$LOG" ]; then
-            echo "===== BEGIN main.log (head) ====="
+          if [[ -f "$LOG" ]]; then
+            echo "===== BEGIN main.log (head 300) ====="
             sed -n '1,300p' "$LOG"
             echo "===== END main.log ====="
           else
             echo "main.log not found."
           fi
 
-      # エラー要約（file:line -> message）
-      - name: Summarize LaTeX errors
+      # ---- エラー要約（file:line: message と、!～l.N ブロック）----
+      - name: Summarize LaTeX errors to console
         if: failure() || always()
+        shell: bash
         run: |
           LOG="papers/2025_driver_tisi2_ieee/main.log"
-          if [ -f "$LOG" ]; then
-            echo "===== ERROR SUMMARY ====="
-            grep -Eo '(\./|[A-Za-z0-9_./-]+\.tex:[0-9]+:).*' "$LOG" | sed 's/^/  /' || true
+          if [[ -f "$LOG" ]]; then
+            echo "===== ERROR SUMMARY (grep file:line:) ====="
+            # 例: ./main.tex:38: LaTeX Error: Missing \begin{document}.
+            grep -Eo '([./A-Za-z0-9_%-]+\.tex:[0-9]+:).*' "$LOG" | sed 's/^/  /' || true
+            echo
             echo "----- LaTeX error blocks (! ... l.N) -----"
-            awk '/^\! /{f=1} f{print} /^\s*l\.[0-9]+/{f=0}' "$LOG" || true
+            awk '/^\! /{flag=1} flag{print} /^\s*l\.[0-9]+/{flag=0}' "$LOG" || true
             echo "===== END SUMMARY ====="
+          else
+            echo "main.log not found."
           fi
 
-      # ソース抜粋（±3行、行番号つき）
+      # ---- GitHub Step Summary（ブラウザのジョブ画面に見やすく出す）----
+      - name: Summarize LaTeX errors to Step Summary
+        if: failure() || always()
+        shell: bash
+        run: |
+          LOG="papers/2025_driver_tisi2_ieee/main.log"
+          {
+            echo "## LaTeX Error Summary"
+            if [[ -f "$LOG" ]]; then
+              echo ""
+              echo "### file:line hits"
+              echo '```'
+              grep -Eo '([./A-Za-z0-9_%-]+\.tex:[0-9]+:).*' "$LOG" || true
+              echo '```'
+              echo ""
+              echo "### First error block"
+              echo '```'
+              # 最初の ! で始まるエラーブロックだけ抜く
+              awk 'BEGIN{printed=0} /^\! /{if(!printed){p=1}} p{print} /^\s*l\.[0-9]+/{if(p&&!printed){printed=1;p=0}}' "$LOG" || true
+              echo '```'
+            else
+              echo "_main.log not found_"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ---- 該当ソースの抜粋（±3行、行番号付き）----
       - name: Show source excerpts around errors
         if: failure() || always()
+        shell: bash
         run: |
           LOG="papers/2025_driver_tisi2_ieee/main.log"
           ROOT="papers/2025_driver_tisi2_ieee"
-          if [ -f "$LOG" ]; then
+          if [[ -f "$LOG" ]]; then
+            # file:line をユニーク抽出
             awk 'match($0, /([^ :]+\.tex):([0-9]+):/, m){print m[1] ":" m[2]}' "$LOG" \
               | sed 's,^\./,,' | sort -u > _errlist.txt
-            if [ -s _errlist.txt ]; then
+            if [[ -s _errlist.txt ]]; then
+              echo "===== SOURCE EXCERPTS (±3 lines) ====="
               while IFS=: read -r file line; do
-                path="$ROOT/$file"; [ -f "$path" ] || path="$file"
-                [ -f "$path" ] || continue
-                start=$((line-3)); [ $start -lt 1 ] && start=1
+                # ワークスペース側の実体パスを解決
+                path="$ROOT/$file"
+                [[ -f "$path" ]] || path="$file"
+                [[ -f "$path" ]] || continue
+                start=$((line-3)); (( start<1 )) && start=1
                 end=$((line+2))
                 echo "----- ${file}:${line} -----"
                 nl -ba -w3 -s' | ' "$path" | sed -n "${start},${end}p"
+                echo
               done < _errlist.txt
             else
-              echo "No file:line hints found, showing last 120 lines of log:"
-              tail -n 120 "$LOG"
+              echo "No file:line hints found. Showing last 200 lines of log:"
+              tail -n 200 "$LOG"
             fi
+          else
+            echo "main.log not found."
           fi
 
-      # 成果物アップロード（PDF・ログなど）
+      # ---- 末尾も一応出す（最後のエラー近辺を拾いやすく）----
+      - name: Print main.log (tail 200)
+        if: always()
+        shell: bash
+        run: |
+          LOG="papers/2025_driver_tisi2_ieee/main.log"
+          if [[ -f "$LOG" ]]; then
+            echo "===== BEGIN main.log (tail 200) ====="
+            tail -n 200 "$LOG"
+            echo "===== END main.log ====="
+          fi
+
+      # ---- 成果物を常にアップロード（成功・失敗問わず）----
       - name: Upload PDF and LOG
         if: always()
         uses: actions/upload-artifact@v4
