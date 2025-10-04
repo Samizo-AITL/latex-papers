@@ -207,19 +207,14 @@ Shmoo解析の結果，電源電圧マージン低下時に不良発生確率が
     grid=both, title={Untreated},
     legend style={at={(0.98,0.98)},anchor=north east,font=\scriptsize}
   ]
-  % Below-spec shade (<3.0V)
-  \addplot [draw=none, fill=gray!20, opacity=0.6]
-    coordinates {(2.6,0) (3.0,0) (3.0,100) (2.6,100)} -- cycle;
-  \node[gray!60] at (axis cs:2.8,92) {\scriptsize Below spec};
-
-  % 25°C：3.0Vまではほぼ0、未満で急増
-  \addplot[mark=o,blue,thick] coordinates
-    {(2.6,95) (2.8,65) (3.0,2) (3.2,0) (3.4,0) (3.6,0)};
-  \addlegendentry{25\,°C}
-  % 85°C：25°Cより悪化、3.0Vでも少し出る
-  \addplot[mark=square*,red,thick,dashed] coordinates
-    {(2.6,100) (2.8,85) (3.0,15) (3.2,5) (3.4,2) (3.6,0)};
-  \addlegendentry{85\,°C}
+  % 25℃
+  \addplot[mark=o,blue,thick] coordinates {
+    (2.6,90) (2.8,60) (3.0,5) (3.2,3) (3.4,2) (3.6,2)
+  }; \addlegendentry{25℃}
+  % 85℃
+  \addplot[mark=square*,red,thick,dashed] coordinates {
+    (2.6,100) (2.8,95) (3.0,20) (3.2,10) (3.4,5) (3.6,3)
+  }; \addlegendentry{85℃}
   \end{axis}
 \end{tikzpicture}
 
@@ -235,18 +230,14 @@ Shmoo解析の結果，電源電圧マージン低下時に不良発生確率が
     grid=both, title={Side Wall Etch Under},
     legend style={at={(0.98,0.98)},anchor=north east,font=\scriptsize}
   ]
-  \addplot [draw=none, fill=gray!20, opacity=0.6]
-    coordinates {(2.6,0) (3.0,0) (3.0,100) (2.6,100)} -- cycle;
-  \node[gray!60] at (axis cs:2.8,92) {\scriptsize Below spec};
-
-  % 25°C：未対策より改善
-  \addplot[mark=triangle*,blue,thick] coordinates
-    {(2.6,70) (2.8,40) (3.0,10) (3.2,4) (3.4,0) (3.6,0)};
-  \addlegendentry{25\,°C}
-  % 85°C：高温で不良だがVDD↑で回復
-  \addplot[mark=square*,red,thick,dashed] coordinates
-    {(2.6,100) (2.8,85) (3.0,50) (3.2,25) (3.4,5) (3.6,0)};
-  \addlegendentry{85\,°C}
+  % 25℃
+  \addplot[mark=triangle*,blue,thick] coordinates {
+    (2.6,50) (2.8,25) (3.0,5) (3.2,2) (3.4,1) (3.6,0)
+  }; \addlegendentry{25℃}
+  % 85℃
+  \addplot[mark=square*,red,thick,dashed] coordinates {
+    (2.6,100) (2.8,70) (3.0,25) (3.2,8) (3.4,3) (3.6,1)
+  }; \addlegendentry{85℃}
   \end{axis}
 \end{tikzpicture}
 
@@ -262,24 +253,18 @@ Shmoo解析の結果，電源電圧マージン低下時に不良発生確率が
     grid=both, title={RTA Optimized},
     legend style={at={(0.98,0.98)},anchor=north east,font=\scriptsize}
   ]
-  \addplot [draw=none, fill=gray!20, opacity=0.6]
-    coordinates {(2.6,0) (3.0,0) (3.0,100) (2.6,100)} -- cycle;
-  \node[gray!60] at (axis cs:2.8,92) {\scriptsize Below spec};
-
-  % 25°C：2.6Vのみ少数、以降0
-  \addplot[mark=o,blue,thick] coordinates
-    {(2.6,8) (2.8,0) (3.0,0) (3.2,0) (3.4,0) (3.6,0)};
-  \addlegendentry{25\,°C}
-  % 85°C：2.6Vでやや悪化、以降0
-  \addplot[mark=square*,red,thick,dashed] coordinates
-    {(2.6,12) (2.8,0) (3.0,0) (3.2,0) (3.4,0) (3.6,0)};
-  \addlegendentry{85\,°C}
+  % 25℃
+  \addplot[mark=o,blue,thick] coordinates {
+    (2.6,15) (2.8,3) (3.0,0) (3.2,0) (3.4,0) (3.6,0)
+  }; \addlegendentry{25℃}
+  % 85℃
+  \addplot[mark=square*,red,thick,dashed] coordinates {
+    (2.6,30) (2.8,8) (3.0,0) (3.2,0) (3.4,0) (3.6,0)
+  }; \addlegendentry{85℃}
   \end{axis}
 \end{tikzpicture}
 
-\caption{Shmoo plots of fail bit counts vs.\ VDD at 25\,°C and 85\,°C for three process conditions (1\,Mbit macro).
-Region $V_\mathrm{DD}\!<\!3.0$\,V is \emph{below spec} (shaded) and swept only for robustness evaluation.
-Counts are capped at 100.}
+\caption{Fail bit counts vs.\ VDD at 25℃/85℃（1Mbitマクロ、各点カウント上限100）。※2.6\,Vは\textbf{規格外・設計マージンなし（全条件共通）}の確認点。}
 \label{fig:shmoo_failcount_temp}
 \end{figure}
 
