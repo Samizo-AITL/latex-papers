@@ -87,7 +87,7 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[x=1.5cm,y=1.5cm, every node/.style={font=\scriptsize}]
-  % --- スケーリング全体を1.5倍拡大 ---
+  % --- 全体1.5倍拡大 ---
   \begin{scope}[scale=1.5]
 
   % n-well 領域
@@ -101,6 +101,7 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
   % ゲート酸化膜（薄膜＋通常膜）
   \fill[green!20,draw=none] (0.6,0.0) rectangle (1.1,0.04); % シンニング部
   \fill[green!35,draw=none] (1.1,0.0) rectangle (3.2,0.10); % 通常膜厚
+  \node[black] at (1.6,0.12) {Gate Oxide};
 
   % Polyゲート（3段階：STI上／薄膜上／通常酸化膜上）
   \fill[gray!25,draw=none] (0.0,0.0) rectangle (0.6,0.22);  % STI上
@@ -114,8 +115,8 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
 
   \end{scope}
 \end{tikzpicture}
-\caption{STI端部におけるゲート酸化膜シンニングとリーク経路。PolyはSTI上／薄膜上／通常膜上で段差構造を形成し、各ラベルを領域中央に配置。}
-\label{fig:sti_edge_leakage_final}
+\caption{STI端部におけるゲート酸化膜シンニングとリーク経路。PolyはSTI上／薄膜上／通常膜上で段差構造を形成。各ラベルは領域中央に配置。}
+\label{fig:sti_edge_leakage_gateoxide}
 \end{figure}
 
 \noindent\textbf{ハイブリッド統合の要点.}
