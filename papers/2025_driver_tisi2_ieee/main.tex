@@ -31,11 +31,10 @@
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
 
-% タイトル（下線や数式はPDFしおり用の素直な文字列も併記）
+% タイトル例
 \title{aTFT用LCDドライバにおける0.25\,\textmu mプロセス選択と\\
 TiSi\texorpdfstring{$_2$}{2}相転移不完全問題}
-
-% 節見出しの例
+% 見出し例
 \subsection{TiSi\texorpdfstring{$_2$}{2}のC49\texorpdfstring{$\to$}{->}C54相転移}
 
 \author{%
@@ -161,29 +160,30 @@ TiSi$_2$はサリサイド技術において広く用いられており、ポリ
 図\ref{fig:failmap}に示すように，フェイルビットはウエハ全体にランダムに散在しており，
 系統的なクラスタや設計パターンとの相関は認められなかった。
 
-% ===== フェイルビットマップ（1カラム幅・安定版） =====
+% ===== フェイルビットマップ（1カラム幅・堅牢版） =====
 \begin{figure}[!t]
 \centering
 \resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}
-  % パラメータ
-  \def\WaferR{3cm}          % ウエハ半径（単位付き）
-  \def\DotR{0.4pt}          % 点の半径（単位必須）
+  % パラメータ（単位はここで定義）
+  \def\WaferR{3cm}    % ウエハ半径
+  \def\DotR{0.5pt}    % フェイル点半径（見やすく 0.5pt 推奨）
 
-  % ウエハ円
+  % ウエハ外形
   \draw[thick] (0,0) circle (\WaferR);
 
-  % 乱数シード（必要なければ削除）
+  % 再現性が必要ならシード固定（不要なら削除）
   \pgfmathsetseed{2025}
 
-  % 極座標で配置：(\ang:\rad) なら単位ミスや 0 ノード誤解釈を避けられる
+  % 極座標でランダム配置：角度=0..360°, 半径=WaferR*sqrt(rand)
   \foreach \i in {1,...,120} {%
     \pgfmathsetmacro{\ang}{rand*360}%
-    \pgfmathsetmacro{\radnum}{3*sqrt(rand)}% 0〜3（cm換算は座標で付与）
-    \fill ({\ang}:{\radnum}cm) circle[radius=\DotR];
+    \pgfmathsetmacro{\rho}{sqrt(rand)}% 0..1（均一分布→面積一様化のためsqrt）
+    \pgfmathsetlengthmacro{\rlen}{\rho*\WaferR}% ← 長さに変換（単位付き）
+    \fill ([shift={(\ang:\rlen)}]0,0) circle[radius=\DotR];
   }
 \end{tikzpicture}%
-} % \resizebox の閉じ
+} % \resizebox を閉じる
 \caption{ウエハ上のシングルビット不良分布例（フェイルビットマップ）。}
 \label{fig:failmap}
 \end{figure}
