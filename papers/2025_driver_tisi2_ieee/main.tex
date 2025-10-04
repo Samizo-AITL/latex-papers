@@ -194,57 +194,99 @@ Shmoo解析の結果，電源電圧マージン低下時に不良発生確率が
 また，ビット線RCの大幅な変動は認められず，セル内部素子の局所抵抗上昇が原因と推定された。
 
 % ===== Shmoo（VDD–温度） 3条件比較：Baseline / SWET Under / RTA =====
-\begin{figure}[!t]
+\begin{figure}[H]
 \centering
-\begin{tabular}{c}
-  % --- Untreated ---
-  \begin{tikzpicture}
-    \begin{axis}[
-      width=0.9\columnwidth, height=0.5\columnwidth,
-      xlabel={VDD [V]}, ylabel={Pass/Fail},
-      ymin=0, ymax=1.2, xmin=2.5, xmax=3.6,
-      ytick={0,1}, yticklabels={Fail,Pass},
-      title={Untreated}
-    ]
-      \addplot+[mark=*] coordinates {(2.7,0) (3.0,0) (3.3,0) (3.6,0)};
-    \end{axis}
-  \end{tikzpicture} \\[1ex]
 
-  % --- Side Wall Etch Under ---
-  \begin{tikzpicture}
-    \begin{axis}[
-      width=0.9\columnwidth, height=0.5\columnwidth,
-      xlabel={VDD [V]}, ylabel={Pass/Fail},
-      ymin=0, ymax=1.2, xmin=2.5, xmax=3.6,
-      ytick={0,1}, yticklabels={Fail,Pass},
-      title={Side Wall Etch Under}
-    ]
-      \addplot+[mark=*] coordinates {(2.7,0) (3.0,0) (3.3,1) (3.6,1)};
-    \end{axis}
-  \end{tikzpicture} \\[1ex]
+% ===== Untreated =====
+\begin{tikzpicture}
+  \begin{axis}[
+    width=\columnwidth,
+    height=0.45\columnwidth,
+    xlabel={VDD [V]},
+    ylabel={Fail Bit Count (capped at 100)},
+    ymin=0, ymax=100,
+    xmin=2.6, xmax=3.6,
+    xtick={2.6,2.8,3.0,3.2,3.4,3.6},
+    ytick={0,20,40,60,80,100},
+    grid=both,
+    title={Untreated},
+    legend style={at={(0.98,0.98)},anchor=north east,font=\scriptsize}
+  ]
+  % Untreated at 25℃
+  \addplot[mark=o,blue,thick] coordinates {
+    (2.6,100) (2.8,100) (3.0,95) (3.2,100) (3.4,100) (3.6,100)
+  };
+  \addlegendentry{25℃}
+  % Untreated at 85℃
+  \addplot[mark=square*,red,thick,dashed] coordinates {
+    (2.6,100) (2.8,100) (3.0,100) (3.2,100) (3.4,100) (3.6,100)
+  };
+  \addlegendentry{85℃}
+  \end{axis}
+\end{tikzpicture}
 
-  % --- RTA Optimized ---
-  \begin{tikzpicture}
-    \begin{axis}[
-      width=0.9\columnwidth, height=0.5\columnwidth,
-      xlabel={VDD [V]}, ylabel={Pass/Fail},
-      ymin=0, ymax=1.2, xmin=2.5, xmax=3.6,
-      ytick={0,1}, yticklabels={Fail,Pass},
-      title={RTA Optimized}
-    ]
-      \addplot+[mark=*] coordinates {(2.7,1) (3.0,1) (3.3,1) (3.6,1)};
-    \end{axis}
-  \end{tikzpicture}
-\end{tabular}
-\caption{Shmoo plots of random single-bit failures.
-Untreated fails at both 25\,$^\circ$C and 85\,$^\circ$C.
-Side Wall Etch Under passes at 25\,$^\circ$C but fails at 85\,$^\circ$C
-(recovered at higher VDD).
-RTA Optimized process shows pass at both temperatures.
-（日英併記）未対策では25℃/85℃ともに不良。
-Side Wall Etch Underでは25℃で合格するが85℃で不良（電圧上昇で回復）。
-RTA最適化では85℃でも合格。}
-\label{fig:shmoo}
+\vspace{1ex}
+
+% ===== Side Wall Etch Under =====
+\begin{tikzpicture}
+  \begin{axis}[
+    width=\columnwidth,
+    height=0.45\columnwidth,
+    xlabel={VDD [V]},
+    ylabel={Fail Bit Count (capped at 100)},
+    ymin=0, ymax=100,
+    xmin=2.6, xmax=3.6,
+    xtick={2.6,2.8,3.0,3.2,3.4,3.6},
+    ytick={0,20,40,60,80,100},
+    grid=both,
+    title={Side Wall Etch Under},
+    legend style={at={(0.98,0.98)},anchor=north east,font=\scriptsize}
+  ]
+  % 25℃
+  \addplot[mark=triangle*,blue,thick] coordinates {
+    (2.6,40) (2.8,30) (3.0,20) (3.2,10) (3.4,5) (3.6,0)
+  };
+  \addlegendentry{25℃}
+  % 85℃
+  \addplot[mark=square*,red,thick,dashed] coordinates {
+    (2.6,100) (2.8,90) (3.0,70) (3.2,40) (3.4,10) (3.6,0)
+  };
+  \addlegendentry{85℃}
+  \end{axis}
+\end{tikzpicture}
+
+\vspace{1ex}
+
+% ===== RTA Optimized =====
+\begin{tikzpicture}
+  \begin{axis}[
+    width=\columnwidth,
+    height=0.45\columnwidth,
+    xlabel={VDD [V]},
+    ylabel={Fail Bit Count (capped at 100)},
+    ymin=0, ymax=100,
+    xmin=2.6, xmax=3.6,
+    xtick={2.6,2.8,3.0,3.2,3.4,3.6},
+    ytick={0,20,40,60,80,100},
+    grid=both,
+    title={RTA Optimized},
+    legend style={at={(0.98,0.98)},anchor=north east,font=\scriptsize}
+  ]
+  % 25℃
+  \addplot[mark=o,blue,thick] coordinates {
+    (2.6,0) (2.8,0) (3.0,0) (3.2,0) (3.4,0) (3.6,0)
+  };
+  \addlegendentry{25℃}
+  % 85℃
+  \addplot[mark=square*,red,thick,dashed] coordinates {
+    (2.6,0) (2.8,0) (3.0,0) (3.2,0) (3.4,0) (3.6,0)
+  };
+  \addlegendentry{85℃}
+  \end{axis}
+\end{tikzpicture}
+
+\caption{Shmoo plots of fail bit counts vs VDD at 25℃ and 85℃ under different process conditions. Counts are capped at 100.}
+\label{fig:shmoo_failcount_temp}
 \end{figure}
 
 \subsection{切り分け}
