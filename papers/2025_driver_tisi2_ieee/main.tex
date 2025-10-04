@@ -157,27 +157,21 @@ TiSi$_2$はサリサイド技術において広く用いられており、ポリ
 図\ref{fig:failmap}に示すように，フェイルビットはウエハ全体にランダムに散在しており，
 系統的なクラスタや設計パターンとの相関は認められなかった。
 
-% ===== フェイルビットマップ（1カラム幅・エラー無し） =====
 \begin{figure}[!t]
 \centering
-\resizebox{\columnwidth}{!}{%
+\resizebox{\columnwidth}{!}{% ← 1カラム幅にスケーリング
 \begin{tikzpicture}
-  % パラメータ
-  \def\WaferR{3}            % 座標系の半径（cm単位で解釈される）
-  \def\DotR{0.4pt}          % フェイル点の半径（単位必須）
+  % ウエハ円（半径 3 cm）
+  \draw[thick] (0,0) circle (3cm);
 
-  % ウエハ円（半径3cm）
-  \draw[thick] (0,0) circle (\WaferR cm);
-
-  % ランダムにフェイル点を配置（角度:度, 半径:0〜\WaferR）
-  \pgfmathsetseed{2025}     % 繰り返しビルドで図形を固定したい場合
+  % ランダムにフェイル点を配置
   \foreach \i in {1,...,120} {%
     \pgfmathsetmacro{\ang}{rand*360}%
-    \pgfmathsetmacro{\rad}{\WaferR*sqrt(rand)}%
-    \fill (\rad*cos(\ang), \rad*sin(\ang)) circle[radius=\DotR];
+    \pgfmathsetmacro{\rad}{3*sqrt(rand)}%
+    \fill (\rad cm*cos(\ang), \rad cm*sin(\ang)) circle[radius=0.06cm];
   }
 \end{tikzpicture}%
-} % \resizebox の閉じ
+}
 \caption{ウエハ上のシングルビット不良分布例（フェイルビットマップ）。}
 \label{fig:failmap}
 \end{figure}
