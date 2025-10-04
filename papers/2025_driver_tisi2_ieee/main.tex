@@ -1,0 +1,171 @@
+% ===== main.tex (UTF-8 / BOMなし) =====
+\documentclass[conference]{IEEEtran}
+
+% --- 日本語（LuaLaTeX） ---
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\setmainjfont{IPAexMincho}
+\setsansjfont{IPAexGothic}
+
+% --- 数式・単位など ---
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{siunitx}
+% siunitx v3 では detect-all は非推奨 → mode=match などで代替
+\sisetup{
+  mode = match,
+  propagate-math-font = true,
+  reset-math-version = false,
+  reset-text-family = false,
+  reset-text-series = false,
+  reset-text-shape = false,
+  text-family-to-math = true,
+  text-series-to-math = true
+}
+
+% --- 図表 ---
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{float}
+
+% --- TikZ ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,patterns}
+
+% --- 参考文献（cite） ---
+\usepackage{cite}
+
+% --- ハイパーリンク（最後に読む） ---
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+% ===== タイトル・著者 =====
+\title{aTFT用LCDドライバにおける0.25\,\textmu mプロセス選択と\\
+TiSi\texorpdfstring{$_2$}{2}相転移不完全問題}
+
+\author{%
+  \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
+  \IEEEauthorblockA{独立系半導体研究者（元セイコーエプソン）\\
+  Independent Semiconductor Researcher (ex-Seiko Epson)\\
+  Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+  GitHub: \url{https://github.com/Samizo-AITL}}%
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent\textbf{要旨（日本語）:}  
+1990年代後半、富士見6インチラインで開発されたLOCOSベースの高耐圧技術を起点として、1998年には酒田8インチFabにおいて0.35\,\textmu m CMOSに高耐圧デバイスを混載し、モノクロLCDドライバICの量産が開始された。2000年代初頭の携帯電話のカラーパネル化（aTFT）により、1\,Mbit級の大容量オンチップSRAM需要が顕在化し、酒田では0.25\,\textmu m HV CMOSの採用が不可避となった。しかしTiSi$_2$のC49$\to$C54相転移不完全性とhalo Bの吸収が局所高抵抗スポットを形成し、1\,Mbit SRAMにおいてランダム単ビット不良として顕在化した。本稿では、プロセス選定の背景、故障機構、暫定および恒久対策、さらに事業的帰結を整理する。
+
+\vspace{0.5ex}
+\noindent\textbf{Abstract (English):}  
+In the late 1990s, LOCOS-based high-voltage technology developed at the Fujimi 6-inch line was transferred to the Sakata 8-inch fab, where in 1998 a 0.35\,\textmu m CMOS process incorporating HV devices enabled mass production of monochrome LCD driver ICs. With the shift to color panels (aTFT) in the early 2000s, demand for large on-chip SRAM reached the 1-Mbit class, making the adoption of a 0.25\,\textmu m HV CMOS process inevitable at Sakata. However, incomplete C49$\to$C54 phase transition of TiSi$_2$, exacerbated by halo boron absorption, created localized high-resistivity spots, which manifested as random single-bit failures in 1-Mbit SRAM. This paper reviews the process selection rationale, failure mechanism, interim and permanent countermeasures, and business implications.
+\end{abstract}
+
+\section{はじめに}
+本文ダミー。ここに導入を書きます。
+
+\section{プロセス比較}
+\begin{table}[H]
+\centering
+\caption{プロセス世代とLCDドライバ用途の比較}
+\label{tab:process_comparison}
+\begin{tabularx}{\columnwidth}{l l l l X}
+\toprule
+世代 & 分離技術 & サリサイド & 電源電圧 & 主用途 \\
+\midrule
+0.35\,\textmu m & LOCOS & TiSi$_2$ & 3.3V / 40V & モノクロLCDドライバ \\
+0.25\,\textmu m & LOCOS & TiSi$_2$ & 3.3V / 30V & aTFTカラーLCDドライバ\newline（1Mbit SRAM搭載） \\
+0.18\,\textmu m & STI   & CoSi$_2$ & 1.8V / 30V & 次候補（歩留り懸念） \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{対策比較}
+\begin{table}[H]
+\centering
+\caption{暫定対策と恒久対策の比較}
+\label{tab:countermeasures}
+\begin{tabularx}{\columnwidth}{l X X X}
+\toprule
+種別 & 方法 & 効果 & 課題 \\
+\midrule
+暫定 & サイドウォールエッチバックをアンダー側へ調整 &
+不良率低下 &
+相転移不完全は未解決 \\
+恒久 & RTAランプアニール条件最適化 &
+相転移完全化／不良消失 &
+PDK再キャラが必要 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{フェイルビットマップ（1カラム）}
+\begin{figure}[!t]
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tikzpicture}
+  % ウエハ円（半径3cm想定）
+  \draw[thick] (0,0) circle (3cm);
+
+  % 乱数シード固定（再現性）
+  \pgfmathsetseed{20250101}
+
+  % ウエハ内に一様密度となるよう半径はsqrt(rand)で重み付け
+  \foreach \i in {1,...,120} {%
+    \pgfmathsetmacro{\ang}{360*rand}%
+    \pgfmathsetmacro{\rad}{3*sqrt(rand)}% 3cm が外周
+    \path (\rad*cos(\ang),\rad*sin(\ang)) coordinate (p\i);
+    \fill (p\i) circle[radius=0.06cm];
+  }
+\end{tikzpicture}%
+}
+\caption{ウエハ上のシングルビット不良分布例（フェイルビットマップ）。}
+\label{fig:failmap}
+\end{figure}
+
+\section{結論}
+本文ダミー。
+
+% ===== 参考文献（直書き） =====
+\begin{thebibliography}{8}
+
+\bibitem{sze2007}
+S.~M.~Sze and K.~K.~Ng, \emph{Physics of Semiconductor Devices}, 3rd ed.
+Hoboken, NJ, USA: Wiley, 2007.
+
+\bibitem{wolf2000}
+S.~Wolf, \emph{Silicon Processing for the VLSI Era, Vol.~4: Deep-Submicron Process Technology}.
+Sunset Beach, CA, USA: Lattice Press, 2000.
+
+\bibitem{takeda1994}
+E.~Takeda, C.~Y.~Yang, and A.~S.~Grove, ``Silicide technology for ULSI applications,''
+\emph{IEEE Trans. Electron Devices}, vol.~41, no.~12, pp.~2133--2141, Dec.~1994.
+
+\bibitem{thompson1995}
+S.~E.~Thompson, R.~S.~List, and J.~E.~Crespo,
+``Salicide technology: Stability and limitations of TiSi$_2$ and CoSi$_2$ at submicron dimensions,''
+\emph{IEEE Trans. Electron Devices}, vol.~42, no.~8, pp.~1419--1426, Aug.~1995.
+
+\bibitem{paul1997}
+B.~C.~Paul, H.~H.~Tseng, and K.~Kuhn,
+``Effects of boron penetration and diffusion on deep submicron CMOS device performance,''
+\emph{IEEE Trans. Electron Devices}, vol.~44, no.~5, pp.~765--771, May~1997.
+
+\bibitem{iwamoto2001}
+M.~Iwamoto, Y.~Yamaguchi, and T.~Yoshida,
+``High-voltage CMOS technology for LCD driver applications,''
+\emph{IEEE J. Solid-State Circuits}, vol.~36, no.~11, pp.~1734--1740, Nov.~2001.
+
+\bibitem{kim2002}
+J.~Kim, H.~Park, and D.~Kang,
+``Integration of large-capacity SRAM macros in HV CMOS technologies for display driver ICs,''
+in \emph{Proc. IEEE Int. Symp. VLSI Tech.}, pp.~245--246, 2002.
+
+\end{thebibliography}
+
+\end{document}
