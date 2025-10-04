@@ -155,27 +155,28 @@ TiSi$_2$はサリサイド技術において広く用いられており、ポリ
 図\ref{fig:failmap}に示すように，フェイルビットはウエハ全体にランダムに散在しており，
 系統的なクラスタや設計パターンとの相関は認められなかった。
 
-% ===== フェイルビットマップ（1カラム幅・堅牢版） =====
+% ===== フェイルビットマップ（1カラム幅・決定論・安全版） =====
 \begin{figure}[!t]
 \centering
 \resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}
-  % ---- params (units only here)
-  \def\WaferR{3cm}   % wafer radius
-  \def\DotR{0.5pt}   % dot radius
+  % 単位は最後にだけ付ける（計算は無単位で）
+  \def\WaferR{3}   % ウエハ半径 [cm] の“数値”
+  \def\DotR{0.5pt} % 点半径
 
-  % wafer outline
-  \draw[thick] (0,0) circle (\WaferR);
+  % 外形
+  \draw[thick] (0,0) circle (\WaferR cm);
 
-  % reproducible randomness
-  \pgfmathsetseed{2025}
+  % 再現性のため乱数シード固定
+  \pgfmathsetseed{20250101}
 
-  % uniform-in-area placement
+  % “数値だけ”でsqrtを計算 → 最後に cm を付ける
   \foreach \i in {1,...,120} {%
-    \pgfmathsetmacro{\ang}{rand*360}%
-    \pgfmathsetmacro{\rho}{sqrt(rand)}% unitless (0..1)
-    \pgfmathsetlengthmacro{\rlen}{\rho*\WaferR}% length now
-    \fill ([shift={(\ang:\rlen)}]0,0) circle[radius=\DotR];
+    \pgfmathrandominteger{\A}{0}{999} % 0..999 の整数
+    \pgfmathrandominteger{\ang}{0}{359}
+    \pgfmathsetmacro{\rho}{sqrt(\A/1000)} % 0..1 の数値（面積一様化）
+
+    \fill ([shift={(\ang:\rho*\WaferR cm)}]0,0) circle[radius=\DotR];
   }
 \end{tikzpicture}%
 }
