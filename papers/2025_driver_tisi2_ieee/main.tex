@@ -159,7 +159,7 @@ TiSi$_2$はサリサイド技術において広く用いられており、ポリ
 
 \begin{figure}[!t]
 \centering
-\resizebox{\columnwidth}{!}{% ← 1カラム幅にスケーリング
+\resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}
   % ウエハ円（半径 3 cm）
   \draw[thick] (0,0) circle (3cm);
@@ -168,7 +168,8 @@ TiSi$_2$はサリサイド技術において広く用いられており、ポリ
   \foreach \i in {1,...,120} {%
     \pgfmathsetmacro{\ang}{rand*360}%
     \pgfmathsetmacro{\rad}{3*sqrt(rand)}%
-    \fill (\rad cm*cos(\ang), \rad cm*sin(\ang)) circle[radius=0.06cm];
+    % {} で明示的に囲む
+    \fill ({\rad*cos(\ang)}cm, {\rad*sin(\ang)}cm) circle[radius=0.06cm];
   }
 \end{tikzpicture}%
 }
