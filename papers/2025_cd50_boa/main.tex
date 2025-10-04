@@ -87,42 +87,34 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[x=1.5cm,y=1.5cm, every node/.style={font=\scriptsize}]
-  % 表示範囲：左=STI左辺(0), 右=Poly右端(3.2)
+  % View window: left=STI left edge (0), right=Poly right edge (3.2)
   \clip (0,-1.10) rectangle (3.2,0.95);
 
-  % --- n-well（基体） ---
+  % n-well (substrate)
   \fill[blue!10,draw=none] (0,-1.00) rectangle (3.20,0.00);
-  % 中央ラベル
   \node at (1.60,-0.50) {n-well};
 
-  % --- STI（0.00–0.60）---
+  % STI (0.00–0.60)
   \fill[gray!40,draw=none] (0.00,0.00) -- (0.00,-0.90) -- (0.60,-0.90) -- (0.60,0.00) -- cycle;
-  % 中央ラベル（矩形の中心）
   \node at (0.30,-0.45) {STI};
 
-  % --- ゲート酸化膜（二段階） ---
-  \fill[green!18,draw=none] (0.60,0.00) rectangle (1.10,0.04); % 薄膜（STI端部）
-  \fill[green!35,draw=none] (1.10,0.00) rectangle (3.20,0.10); % 通常膜
+  % Gate oxide (two steps)
+  \fill[green!18,draw=none] (0.60,0.00) rectangle (1.10,0.04);  % thinned
+  \fill[green!35,draw=none] (1.10,0.00) rectangle (3.20,0.10);  % normal
 
-  % --- Polyゲート（階段状：3領域で厚みを変える・枠線なし） ---
-  % STI上：底=0.00 → 上=0.22
-  \fill[gray!25,draw=none] (0.00,0.00) rectangle (0.60,0.22);
-  % シンニング上：底=0.04 → 上=0.28
-  \fill[gray!25,draw=none] (0.60,0.04) rectangle (1.10,0.28);
-  % 通常ゲート膜上：底=0.10 → 上=0.38
-  \fill[gray!25,draw=none] (1.10,0.10) rectangle (3.20,0.38);
-  % Poly 中央ラベル（全体の外接矩形中心）
+  % Poly gate (three regions => stepped thickness; no borders)
+  \fill[gray!25,draw=none] (0.00,0.00) rectangle (0.60,0.22);  % over STI
+  \fill[gray!25,draw=none] (0.60,0.04) rectangle (1.10,0.28);  % over thinned oxide
+  \fill[gray!25,draw=none] (1.10,0.10) rectangle (3.20,0.38);  % over normal oxide
   \node at (1.60,0.24) {Poly};
 
-  % --- 高電界集中（表示のみ） ---
-  \fill[red!15,draw=red!70,dashed] (0.60,0.00) -- (1.00,0.00) -- (1.00,-0.18) -- (0.70,-0.18) -- cycle;
-
-  % --- リーク矢印（n-well → Poly、薄膜部を通過） ---
+  % Leakage arrow (n-well -> Poly through thinned region)
   \draw[->,very thick,red!80] (0.90,-0.22) to[out=90,in=-90] (0.90,0.08);
-  \node[red!80] at (1.06,-0.10) {\small リーク};
+  % Move the text away from arrow to avoid overlap
+  \node[red!80,anchor=west] at (1.25,0.18) {\small Leakage};
 \end{tikzpicture}
-\caption{STI端部のゲート酸化膜シンニング。PolyはSTI上／薄膜上／通常膜上で段差厚。ラベルは各領域の中央に配置。}
-\label{fig:sti_edge_poly_steps_centered}
+\caption{STI端部のゲート酸化膜シンニング。PolyはSTI上／薄膜上／通常膜上で段差厚。枠線なし、ラベル最小。}
+\label{fig:sti_edge_poly_steps_centered_final}
 \end{figure}
 
 \noindent\textbf{ハイブリッド統合の要点.}
