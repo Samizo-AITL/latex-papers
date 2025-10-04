@@ -85,77 +85,57 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
 この経験は、単なる微細化の追随ではなく、技術的妥協点とコスト競争力の両立をいかに図るかという、日本の半導体産業全体に共通する難題を浮き彫りにした。
 
 \begin{figure}[t]
-  \centering
-  \begin{tikzpicture}[x=1cm,y=1cm, every node/.style={font=\scriptsize}]
-    % n-well region
-    \fill[blue!10] (-0.2,-1.2) rectangle (6.2,0);
-    \draw (-0.2,-1.2) rectangle (6.2,0);
-    \node[anchor=west] at (6.25,-0.6) {n-well (HV PMOS領域)};
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm, every node/.style={font=\scriptsize}]
+  % ---- n-well (HV PMOS region)
+  \fill[blue!10] (0,-1.0) rectangle (7,0); \draw (0,-1.0) rectangle (7,0);
+  \node[anchor=west] at (7.05,-0.55) {n-well（HV PMOS）};
 
-    % STI trench oxide
-    \fill[gray!35] (0,0) -- (0,-1.0) -- (0.6,-1.0) -- (0.6,0) -- cycle;
-    \draw (0,0) -- (0,-1.0) -- (0.6,-1.0) -- (0.6,0);
-    \node at (0.3,-1.15) {STI酸化膜};
+  % ---- STI oxide (left)
+  \fill[gray!40] (0.4,0) -- (0.4,-0.9) -- (1.0,-0.9) -- (1.0,0) -- cycle;
+  \draw (0.4,0) -- (0.4,-0.9) -- (1.0,-0.9) -- (1.0,0);
+  \node at (0.7,-0.98) {STI};
 
-    % Active silicon surface
-    \draw[thick] (0.6,0) -- (6.0,0);
+  % ---- active surface
+  \draw[thick] (1.0,0) -- (6.6,0);
 
-    % Thick gate oxide (HV)
-    \fill[green!30] (1.3,0) rectangle (3.7,0.08);
-    \node[green!40!black,anchor=south] at (2.5,0.1) {厚ゲート酸化膜};
+  % ---- thick gate oxide (HV)
+  \fill[green!35] (2.0,0) rectangle (5.0,0.08);
+  \node[green!40!black,anchor=south] at (3.5,0.09) {厚ゲート酸化膜};
 
-    % Edge thinning near STI
-    \fill[red!55] (0.6,0) -- (1.3,0) -- (1.3,0.08) -- (0.8,0.02) -- (0.6,0.0) -- cycle;
-    \node[red!70!black, anchor=south west] at (0.62,0.08) {端部シンニング};
+  % ---- thin oxide wedge at STI edge
+  \fill[red!55] (1.0,0) -- (2.0,0) -- (2.0,0.08) -- (1.35,0.02) -- (1.0,0) -- cycle;
+  \node[red!70!black,anchor=south west] at (1.05,0.08) {端部シンニング};
 
-    % Poly gate
-    \fill[gray!20] (1.0,0.08) rectangle (4.0,0.40);
-    \draw (1.0,0.08) rectangle (4.0,0.40);
-    \node at (2.5,0.48) {ポリシリコンゲート};
+  % ---- poly gate (simple block)
+  \fill[gray!20] (1.6,0.08) rectangle (5.4,0.35);
+  \draw (1.6,0.08) rectangle (5.4,0.35);
+  \node at (3.5,0.43) {Gate（ポリシリコン）};
 
-    % Spacers
-    \fill[gray!50] (1.0,0.08) rectangle (1.2,0.35);
-    \fill[gray!50] (3.8,0.08) rectangle (4.0,0.35);
-    \node at (0.9,0.25) {SiNスペーサ};
+  % ---- p+ S/D (simple)
+  \fill[pink!60] (1.1,-0.05) rectangle (2.0,-0.35);
+  \fill[pink!60] (5.0,-0.05) rectangle (6.2,-0.35);
+  \draw (1.1,-0.05) rectangle (2.0,-0.35);
+  \draw (5.0,-0.05) rectangle (6.2,-0.35);
+  \node at (1.55,-0.45) {p$^{+}$ Source};
+  \node at (5.6,-0.45) {p$^{+}$ Drain};
 
-    % LDD extensions
-    \fill[pink!40] (0.9,-0.02) rectangle (1.2,-0.25);
-    \fill[pink!40] (3.8,-0.02) rectangle (4.1,-0.25);
-    \node at (1.05,-0.35) {p$^{-}$ LDD};
-    \node at (3.95,-0.35) {p$^{-}$ LDD};
+  % ---- channel (just a label)
+  \node at (3.5,-0.20) {チャネル};
 
-    % Source / Drain (p+ implants)
-    \fill[pink!70] (0.6,-0.05) rectangle (0.9,-0.35);
-    \fill[pink!70] (4.1,-0.05) rectangle (4.6,-0.35);
-    \draw (0.6,-0.05) rectangle (0.9,-0.35);
-    \draw (4.1,-0.05) rectangle (4.6,-0.35);
-    \node at (0.75,-0.5) {p$^{+}$ S};
-    \node at (4.35,-0.5) {p$^{+}$ D};
+  % ---- high-field region (hatched)
+  \fill[red!15,draw=red!60,dashed] (1.0,0) -- (1.6,0) -- (1.6,-0.15) -- (1.1,-0.15) -- cycle;
+  \node[red!70!black,anchor=north west] at (1.62,-0.02) {高電界集中};
 
-    % Channel
-    \fill[white] (1.2,-0.02) rectangle (3.8,-0.18);
-    \draw (1.2,-0.02) rectangle (3.8,-0.18);
-    \node at (2.5,-0.32) {チャネル};
+  % ---- leakage path (bold red arrow)
+  \draw[->,very thick,red!80] (1.5,0.30) to[out=-90,in=90] (1.45,0.02);
+  \node[red!80,anchor=west] at (1.55,0.22) {ゲートリーク経路};
 
-    % High-field region near STI
-    \fill[red!15,draw=red!60,dashed] (0.6,0) -- (1.0,0) -- (1.0,-0.15) -- (0.7,-0.15) -- cycle;
-    \node[red!70!black, anchor=north west] at (1.02,-0.02) {高電界集中};
-
-    % Leakage arrow
-    \draw[->,very thick,red!80] (0.9,0.28) to[out=-90,in=90] (0.85,0.02);
-    \node[red!80,anchor=west] at (0.95,0.20) {ゲートリーク経路};
-
-    % Labels
-    \node[anchor=south] at (2.5,0.42) {Gate};
-    \node[anchor=north] at (0.75,-0.38) {Source};
-    \node[anchor=north] at (4.35,-0.38) {Drain};
-
-    % HV annotation
-    \draw[<->] (2.2,0.65) -- (2.8,0.65);
-    \node at (2.5,0.82) {30 V級 HV PMOS};
-  \end{tikzpicture}
-  \caption{HV PMOSにおけるSTI端部シンニングとゲートリーク模式断面}
-  \label{fig:hvpmos_sti}
+  % ---- HV note
+  \node at (3.5,0.75) {30 V級 HV PMOS（模式図）};
+\end{tikzpicture}
+\caption{HV PMOSにおけるSTI端部シンニングとゲートリーク（極力簡略化した模式断面）}
+\label{fig:sti_hvpmos_simple}
 \end{figure}
 
 \noindent\textbf{ハイブリッド統合の要点.}
