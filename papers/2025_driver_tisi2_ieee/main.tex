@@ -160,25 +160,25 @@ TiSi$_2$はサリサイド技術において広く用いられており、ポリ
 \centering
 \resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}
-  % パラメータ（単位はここで定義）
-  \def\WaferR{3cm}    % ウエハ半径
-  \def\DotR{0.5pt}    % フェイル点半径（見やすく 0.5pt 推奨）
+  % ---- params (units only here)
+  \def\WaferR{3cm}   % wafer radius
+  \def\DotR{0.5pt}   % dot radius
 
-  % ウエハ外形
+  % wafer outline
   \draw[thick] (0,0) circle (\WaferR);
 
-  % 再現性が必要ならシード固定（不要なら削除）
+  % reproducible randomness
   \pgfmathsetseed{2025}
 
-  % 極座標でランダム配置：角度=0..360°, 半径=WaferR*sqrt(rand)
+  % uniform-in-area placement
   \foreach \i in {1,...,120} {%
     \pgfmathsetmacro{\ang}{rand*360}%
-    \pgfmathsetmacro{\rho}{sqrt(rand)}% 0..1（均一分布→面積一様化のためsqrt）
-    \pgfmathsetlengthmacro{\rlen}{\rho*\WaferR}% ← 長さに変換（単位付き）
+    \pgfmathsetmacro{\rho}{sqrt(rand)}% unitless (0..1)
+    \pgfmathsetlengthmacro{\rlen}{\rho*\WaferR}% length now
     \fill ([shift={(\ang:\rlen)}]0,0) circle[radius=\DotR];
   }
 \end{tikzpicture}%
-} % \resizebox を閉じる
+}
 \caption{ウエハ上のシングルビット不良分布例（フェイルビットマップ）。}
 \label{fig:failmap}
 \end{figure}
