@@ -484,7 +484,7 @@ EDX 分析により金属蒸発痕が検出された。
 この部位は構造上不可避な露出箇所であり，
 空気絶縁のみでは耐圧が不足していることが判明した。
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
   \figEdgeBurnoutSketch
   \caption{%
@@ -494,7 +494,13 @@ EDX 分析により金属蒸発痕が検出された。
     and localized electric field concentration between COM and VBS electrodes.
   }
   \label{fig:edge-burnout}
-\end{figure}
+\end{figure*}
+
+\subsection{原因仮説}
+PZT 側壁の露出により局所電界が集中し，
+立上り過渡における瞬間電流 $I = C\,\mathrm{d}V/\mathrm{d}t$ によって
+ジュール加熱が重畳し，局所絶縁破壊を誘発すると考えられる。
+このときの実効電界は $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
 
 \subsection{原因仮説}
 PZT 側壁の露出により局所電界が集中し，
