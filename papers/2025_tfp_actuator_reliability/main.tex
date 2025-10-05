@@ -476,17 +476,31 @@ HfO$_2$系やAlN系薄膜など，他の誘電体薄膜プロセスにも適用�
 \label{sec:burnout}
 
 \subsection{現状把握}
-スクリーニング試験で+30\,V（COM）と--10\,V（VBS）の差分
-$\Delta V=40\,\mathrm{V}$を印加した際，
-チップ端部のPZT側壁露出部で焼損が集中して発生した。
-光学顕微鏡・SEMでは炭化痕が確認され，EDXで金属蒸発痕を検出。
-この部位は構造上不可避な露出箇所であり，空気絶縁では耐圧が不足している。
+スクリーニング試験で +30\,V（COM）と --10\,V（VBS）の差分
+$\Delta V = 40\,\mathrm{V}$ を印加した際，
+チップ端部の PZT 側壁露出部で焼損が集中して発生した。
+光学顕微鏡および SEM 観察では炭化痕が確認され，
+EDX 分析により金属蒸発痕が検出された。
+この部位は構造上不可避な露出箇所であり，
+空気絶縁のみでは耐圧が不足していることが判明した。
+
+\begin{figure}[t]
+  \centering
+  \figEdgeBurnoutSketch
+  \caption{%
+    端部焼損の模式断面図。COM下電極とVBS上電極の間で
+    PZT側壁が露出し，局所電界が集中して絶縁破壊が生じる。
+    Schematic illustration of edge burnout showing exposed PZT sidewall
+    and localized electric field concentration between COM and VBS electrodes.
+  }
+  \label{fig:edge-burnout}
+\end{figure}
 
 \subsection{原因仮説}
-PZT側壁の露出により局所電界が集中し，
-立上り過渡の瞬間電流 $I=C\,\mathrm{d}V/\mathrm{d}t$ によるジュール加熱が重畳。
-その結果，局所絶縁破壊が発生する。
-実効電界は $E\simeq3.3\,\mathrm{MV/cm}$ に達すると推定された。
+PZT 側壁の露出により局所電界が集中し，
+立上り過渡における瞬間電流 $I = C\,\mathrm{d}V/\mathrm{d}t$ によって
+ジュール加熱が重畳し，局所絶縁破壊を誘発すると考えられる。
+このときの実効電界は $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
 
 \subsection{対策立案}
 \begin{itemize}
