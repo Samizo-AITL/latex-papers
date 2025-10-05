@@ -79,6 +79,10 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
 しかし、実際の開発においては深刻な課題が露呈した。STI構造では、トレンチ端部における酸化膜のシンニング（薄化）が避けられず、その結果としてゲートリーク電流が顕著となった。  
 特に30 VクラスのHV PMOSにおいては、リークが臨界レベルに達し、量産適用が不可能であることが判明した。これにより、STI単独プロセスによるHVデバイスの成立性は断念せざるを得なかった。
 
+このリークメカニズムを模式的に示したのがFig.~\ref{fig:sti_edge_leakage_gateoxide_final}である。  
+図に示すように、STI端部ではトレンチ酸化膜の上端近傍でゲート酸化膜が局所的に薄くなる（シンニング）ため、n-well（30 V）からポリゲート（0 V）へのリーク経路が形成される。  
+この領域は電界集中が最も強く、酸化膜の絶縁破壊や時間依存リークの発生点となりやすい。
+
 解決策として、開発チームはLOCOSとSTIを組み合わせたハイブリッドプロセスを検討した。LOCOSの利点である高耐圧特性を保持しつつ、STIによる素子間隔縮小を導入することで歩留まり改善を狙ったのである。  
 しかし、プロセスフローは複雑化し、工程数が大幅に増加した。結果として、当初の目標であった「50\%のコスト削減」は達成できず、むしろ工程コストの上昇が懸念される状況となった。
 
@@ -87,35 +91,23 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25 µm L
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[x=1.5cm,y=1.5cm, every node/.style={font=\scriptsize}]
-  % --- 全体1.5倍拡大 ---
   \begin{scope}[scale=1.5]
-
-  % n-well 領域
   \fill[blue!10,draw=none] (0,-1.0) rectangle (3.2,0);
   \node at (1.6,-0.5) {n-well};
-
-  % STI 領域
   \fill[gray!50,draw=none] (0,-1.0) rectangle (0.6,0.0);
   \node at (0.3,-0.5) {STI};
-
-  % ゲート酸化膜（薄膜＋通常膜）
-  \fill[green!20,draw=none] (0.6,0.0) rectangle (1.1,0.04); % シンニング部
-  \fill[green!35,draw=none] (1.1,0.0) rectangle (3.2,0.10); % 通常膜厚
-  \node[black] at (1.6,0.06) {Gate Oxide}; % ← 下方向に移動（0.12→0.06）
-
-  % Polyゲート（3段階：STI上／薄膜上／通常酸化膜上）
-  \fill[gray!25,draw=none] (0.0,0.0) rectangle (0.6,0.22);  % STI上
-  \fill[gray!25,draw=none] (0.6,0.04) rectangle (1.1,0.28); % シンニング上
-  \fill[gray!25,draw=none] (1.1,0.10) rectangle (3.2,0.38); % 通常膜上
+  \fill[green!20,draw=none] (0.6,0.0) rectangle (1.1,0.04);
+  \fill[green!35,draw=none] (1.1,0.0) rectangle (3.2,0.10);
+  \node[black] at (1.6,0.06) {Gate Oxide};
+  \fill[gray!25,draw=none] (0.0,0.0) rectangle (0.6,0.22);
+  \fill[gray!25,draw=none] (0.6,0.04) rectangle (1.1,0.28);
+  \fill[gray!25,draw=none] (1.1,0.10) rectangle (3.2,0.38);
   \node at (1.6,0.24) {Poly};
-
-  % Leakage 矢印（下方向に文字を移動）
   \draw[->,very thick,red!80] (0.9,-0.25) -- (0.9,0.1);
-  \node[red!80,anchor=west] at (0.95,-0.12) {\small Leakage}; % ← 下方向に移動（0.0→-0.12）
-
+  \node[red!80,anchor=west] at (0.95,-0.12) {\small Leakage};
   \end{scope}
 \end{tikzpicture}
-\caption{STI端部におけるゲート酸化膜シンニングとリーク経路。PolyはSTI上／薄膜上／通常膜上で段差構造を形成し、各ラベルは中央に配置。}
+\caption{STI端部におけるゲート酸化膜シンニングとリーク経路}
 \label{fig:sti_edge_leakage_gateoxide_final}
 \end{figure}
 
