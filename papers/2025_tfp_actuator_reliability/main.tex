@@ -213,37 +213,42 @@
 % =====================================================
 % 要旨・キーワード（日英併記）
 % =====================================================
-
 \begin{abstract}
 \textbf{和文要旨} —
 本研究は，Epson $\mu$TFP（薄膜PZT，$d_{33}$駆動）アクチュエータの量産工程で顕在化した
 (1) 振動板クラックと (2) セグメント端部焼損の二課題を対象に，原因解析と対策評価を行った。
 クラックはウエハ同心円状に分布し，断面観察でPZT多層の特定層にボイドが局在することを確認した。
-これはRTA後の外気由来吸着に伴う表面疎水化を起点とし，ゾルゲル塗布時の気泡巻き込みに起因する。
-RTA直後の\emph{酢酸プレウェット（約2\%, 30\,s）}により親水性を回復し，気泡巻き込みを抑制することで，
-不良率を5–10\%から\(\le\!1\%\)へと低減し量産条件として確立した。
+これは外気由来成分の吸着により表面が疎水化し，
+ゾルゲル塗布時に気泡が巻き込まれて層内ボイドが形成されたことに起因する。
+ゾル溶媒と同じ\emph{酢酸（約2\%, 30\,s）によるプレウェット処理}を行い，
+表面を親水化して気泡巻き込みを抑制することで，
+不良率を5–10\%から\(\le\!1\%\)へと低減し，量産条件として確立した。
 一方，端部焼損はCOM下電極（Au配線）とVBS上電極が最接近するPZT側壁露出部に集中し，
-最大\SI{40}{V}の印加と台形波立上り過渡電流（$I=C\,\mathrm{d}V/\mathrm{d}t$）による電界集中を起点とする
-局所絶縁破壊が示唆された。恒久策として\emph{ALD–AlO$_x$}による側壁パッシベーションを提案する。
-以上より，薄膜PZTに固有の欠陥発生連鎖を明確化するとともに，
+最大\SI{40}{V}印加と台形波立上り過渡電流（$I=C\,\mathrm{d}V/\mathrm{d}t$）による
+電界集中を起点とする局所絶縁破壊が示唆された。
+恒久策として\emph{ALD–AlO$_x$}による側壁パッシベーションを提案した。
+以上により，薄膜PZTに固有の欠陥発生連鎖を明確化するとともに，
 （G1）親水性リセットと（G2）側壁パッシベーションの二本柱からなる
 一般化可能なプロセス指針を提示した。
 
 \medskip
 \textbf{Abstract (English)} —
-This study addresses two reliability issues observed in mass production of Epson $\mu$TFP
+This study investigates two reliability issues in mass production of Epson $\mu$TFP
 (thin-film PZT, $d_{33}$ mode) actuators: (1) diaphragm cracks and (2) edge burnout.
-Cracks showed a donut-shaped wafer distribution, and cross-sections revealed voids localized in
-specific PZT layers. The mechanism is traced to post-RTA surface hydrophobicity due to airborne
-adsorbates, which leads to bubble entrapment during sol-gel coating. An \emph{acetic-acid pre-wet}
-($\sim$2\%, 30\,s) immediately after RTA restored hydrophilicity and suppressed bubbles,
-reducing the defect rate from 5–10\% to \(\le\!1\%\) and qualifying as a production condition.
-Edge burnout localized at exposed PZT sidewalls where the COM bottom electrode (via Au routing)
-approaches the VBS top electrode; up to \SI{40}{V} bias combined with trapezoidal-wave transients
-($I=C\,\mathrm{d}V/\mathrm{d}t$) suggests local breakdown under field concentration.
-As a permanent countermeasure, \emph{ALD AlO$_x$} sidewall passivation is proposed.
-These results clarify thin-film-specific failure chains and establish two generalizable process
-guidelines for ferroelectric MEMS: (G1) hydrophilicity reset and (G2) sidewall passivation.
+Cracks showed a donut-shaped wafer distribution, and cross-sections revealed voids localized
+in specific PZT layers. The mechanism was traced to surface hydrophobicity caused by
+airborne adsorption, which led to bubble entrapment during sol–gel coating.
+A simple \emph{acetic-acid pre-wet} (≈2\%, 30\,s) using the same solvent as the PZT sol
+effectively removed surface contaminants and restored hydrophilicity,
+suppressing bubble entrapment and reducing the defect rate from 5–10\% to \(\le\!1\%\),
+thereby establishing a stable production condition.
+Edge burnout localized at exposed PZT sidewalls where the COM bottom electrode
+(via Au routing) approaches the VBS top electrode;
+up to \SI{40}{V} bias and trapezoidal-wave transients ($I=C\,\mathrm{d}V/\mathrm{d}t$)
+induced local breakdown through field concentration.
+As a permanent countermeasure, \emph{ALD AlO$_x$} sidewall passivation was proposed.
+These findings clarify thin-film-specific failure chains and establish two generalizable
+process guidelines for ferroelectric MEMS: (G1) hydrophilicity reset and (G2) sidewall passivation.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -252,40 +257,49 @@ guidelines for ferroelectric MEMS: (G1) hydrophilicity reset and (G2) sidewall p
 \end{IEEEkeywords}
 
 % =====================================================
-% I.序論
+% I. 序論
 % =====================================================
-
 \section{序論}
 インクジェットプリントヘッドは，解像度・速度・信頼性の高度化要求に応じて進化してきた。
 Epson体系では，1990年代の \emph{Mach} ヘッド（バルク積層PZT，$d_{31}$駆動）が
-銀塩写真の置換を牽引し，2007年に \emph{TFP}（Thin Film Piezo）ヘッドの量産化により
+銀塩写真の置換を牽引し，2007年に \emph{TFP}（Thin Film Piezo）ヘッドの量産化によって
 ピエゾの\emph{自前製造（内製化）}とMEMS一体加工への転換が始まった。
 その到達点として，2012年に \emph{PrecisionCore}（$\mu$TFP）ヘッドが製品化され，
 ビジネスインクジェット分野でレーザープリンタの置換を本格化させた。
 
-この技術的跳躍は，材料を「買って使う」方式から「作って最適化する」方式へのパラダイム転換に他ならない。
-しかし薄膜ピエゾの高電界・高密度駆動は，バルク素子では顕在化しなかった量産上の課題を露呈させた。
-すなわち，（i）RTA後の表面疎水化を起点とするスピン塗布時の気泡巻き込みに由来する
-\emph{振動板クラック}，および（ii）COM–VBS近接部のPZT側壁露出で電界が集中して発生する
-\emph{端部焼損}である。前者はプロセス環境・表面化学の管理課題，後者はデバイス幾何と
-過渡電流（$I=C\,\mathrm{d}V/\mathrm{d}t$）が重なる信頼性課題として現れた。
+この技術的跳躍は，材料を「買って使う」方式から「作って最適化する」方式への
+パラダイム転換に他ならない。
+しかし薄膜ピエゾの高電界・高密度駆動は，
+バルク素子では顕在化しなかった量産上の課題を露呈させた。
+すなわち，
+（i）外気付着成分による表面疎水化を起点としてゾル塗布時に気泡が巻き込まれる
+\emph{振動板クラック}，
+および
+（ii）COM–VBS近接部のPZT側壁露出で電界が集中して発生する
+\emph{端部焼損}である。
+前者はプロセス環境・表面化学の管理課題，
+後者はデバイス構造と過渡電流（$I=C\,\mathrm{d}V/\mathrm{d}t$）が
+重畳する信頼性課題として顕在化した。
 
-本論文の目的は，PrecisionCore $\mu$TFPヘッドの\emph{基盤技術確立}に至る過程で直面した
-上記二課題の原因を量産工程データと不良解析に基づいて同定し，
-（A）RTA直後の\emph{酢酸プレウェット}による親水性リセットと，
+本論文の目的は，
+PrecisionCore $\mu$TFPヘッドの\emph{基盤技術確立}に至る過程で直面した
+上記二課題の原因を量産データと不良解析に基づき同定し，
+（A）\emph{酢酸プレウェットによる表面親水化処理}と，
 （B）\emph{ALD–AlO$_x$ 側壁パッシベーション}によるエッジ電界緩和という
 二本柱の対策を提示・評価することである。
-（A）は歩留まり不良率を 5–10\% から \(\approx 0\%\) へ低減し量産条件として確立した実装策であり，
+（A）は歩留まり不良率を 5–10\% から \(\approx 1\%\) 以下へ低減し量産条件として確立した実装策であり，
 （B）は高耐圧化・長期信頼性向上に有効な恒久策として提案する。
 
 本稿の貢献は三点に要約される。
 (1) 薄膜PZT特有の欠陥発生連鎖（外気付着$\rightarrow$疎水化$\rightarrow$気泡捕捉$\rightarrow$層内ボイド$\rightarrow$クラック）
-と，端部焼損の電界・熱連成機構を\emph{工程と構造の両面}から統一的に整理した。
-(2) 工程介入（酢酸プレウェット）により\emph{量産即応性の高い恒久改善}を実証した。
-(3) 形状起因で不可避な側壁露出に対し，\emph{設計で避けられない領域をプロセスで守る}
-というMEMS一般に適用可能な指針（G1/G2）を与えた。
-以降，\S2で対象デバイスと工程を概説し，\S3で観測結果，\S4で原因と対策を考察，
-\S5で結論を述べる。
+と，端部焼損の電界・熱連成機構を\emph{工程と構造の両面}から体系的に整理した。
+(2) 酢酸プレウェットにより\emph{即応性・再現性の高い恒久改善}を実証した。
+(3) 設計上不可避な側壁露出に対し，
+\emph{構造で避けられない領域をプロセスで守る}という，
+MEMS一般に適用可能な信頼性設計指針（G1/G2）を提示した。
+以降，\S2でデバイス構成を述べ，
+\S3で薄膜PZTアクチュエータの課題を整理，
+\S4以降で個別解析と対策を詳述する。
 
 % =====================================================
 % II. デバイス・プロセス構成
@@ -306,7 +320,7 @@ PZTの組成傾斜を制御し，結晶成長の均一化を図った。
 PZT薄膜は Pb(Zr,Ti)O$_3$ 組成を有し，1層あたり \SI{200}{nm} の膜厚で
 スピンコート～RTA焼成を6回繰り返すことにより，合計 \SI{1.2}{\micro\metre} の
 駆動層を形成した。上部電極には Ir/Ti (\SI{10}{nm}/\SI{10}{nm}) を採用し，
-電気化学的安定性と応力緩和の両立を図っている。
+電気化学的安定性と応力緩和の両立を図っている。(Table.1)
 
 \begin{table*}[t]
   \centering
