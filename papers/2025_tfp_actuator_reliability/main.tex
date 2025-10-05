@@ -383,48 +383,29 @@ RTA後の外気由来成分が起因している可能性を裏付けた。
 \end{figure}
 
 \subsubsection*{歩留まりの定量評価}
-Fig.~\ref{fig:yield_hist}に、ユニットスクリーニングで観測された
-不良率のヒストグラムを示す。各ロットの試験数は $N=12$で一定であり，
-不良率は $\mathrm{defect\ rate}=n_{\mathrm{fail}}/N$ で定義した。
-従来条件（Before）では5--10\%帯に分布していたのに対し，
-酢酸プレウェット導入後（After）には 0--1\%帯に収束した。
-なお，本スクリーニング段階での不良はクラック・焼損を区別できないため，
-両者を合算して統計化している。
+ユニットスクリーニングにおける不良率 $P$ は，
+\[
+  P[\%] = \frac{P_n}{N} \times 100,
+\]
+で定義した。ここで $P_n$ は不良チップ数，$N$ は総試験チップ数
+（$12$ロット $\times$ $12$ウエハ $\times$ $109$チップ $=15{,}696$チップ）である。
 
-% Fig.3: Unit-screening defect-rate histogram (two-column)
-\begin{figure*}[t]
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-      width=\textwidth,
-      height=0.45\textwidth,
-      ybar,
-      bar width=7pt,
-      ymin=0, ymax=12,
-      ytick={0,2,4,6,8,10,12},
-      ylabel={Number of lots},
-      xlabel={Unit-screening defect rate (\%)},
-      xtick={0,2,4,6,8,10},
-      xmin=-0.5, xmax=10.5,
-      tick align=inside,      % ← これに変更
-      xmajorgrids=true,
-      ymajorgrids=true,
-      grid style={gray!30},
-      legend style={
-        draw=none,
-        at={(0.02,0.98)}, anchor=north west,
-        nodes={scale=0.85, transform shape}
-      },
-    ]
-      \addplot+[ybar, bar shift=-3pt, fill=blue!40] coordinates {(6,2) (7,2) (8,3) (9,2) (10,3)};
-      \addlegendentry{Before (no pre-wet), N=12}
-      \addplot+[ybar, bar shift=+3pt, fill=red!40]  coordinates {(0,2) (1,3) (2,5) (3,2)};
-      \addlegendentry{After (acetic pre-wet), N=12}
-    \end{axis}
-  \end{tikzpicture}
-  \caption{Histogram of unit-screening defect rates (Before/After; common bins).}
-  \label{fig:yield_hist}
-\end{figure*}
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+条件 & $N$（チップ） & $P_n$（不良チップ数） & $P$（不良率, \%） \\
+\hline
+従来条件（Before） & 15,696 & 1,099 & 7.0 \\
+酢酸プレウェット導入後（After） & 15,696 & 63 & 0.4 \\
+\hline
+\end{tabular}
+\end{center}
+
+上表に示すように，酢酸プレウェット導入により不良率は
+$7.0\%\rightarrow0.4\%$ へと低減し，絶対低減量 $\Delta P=6.6$\,%-pt，
+相対低減率 $94\%$ を達成した。
+本スクリーニング段階での不良は，振動板クラックと端部焼損を区別せず，
+総合的な電気検査不良として集計している。
 
 % ====== Table.2: 比較プロセス条件（2カラム幅） ======
 \begin{table*}[t]
