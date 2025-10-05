@@ -226,7 +226,6 @@ BoAではアクティブ領域上に形成できるため、短辺方向の寸�
 その結果、プローバ針先とバンプとの接触抵抗（10〜20~$\Omega$）が加算され、低抵抗素子測定において大きな測定ばらつきが生じた。  
 これに対して、プローバの針先研磨プログラムを導入し、数回測定ごとに針先をリフレッシュすることで、接触抵抗の影響を最小化し、測定の再現性を確保した。
 
-% pgfplots は本文先頭で \pgfplotsset{compat=1.18} 済みを想定
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}
@@ -237,14 +236,13 @@ BoAではアクティブ領域上に形成できるため、短辺方向の寸�
       ylabel={配線抵抗値 [\(\Omega\)]},
       grid=both,
       boxplot/draw direction=y,
-      legend style={at={(0.5,1.02)}, anchor=south}, % ← 凡例を上に
+      legend style={at={(0.5,1.02)},anchor=south},
       legend columns=2
     ]
 
-      % --- 研磨前（分布が広い） ---
-      \addplot+[
-        fill=blue!20
-      ] boxplot prepared={
+      % 研磨前（ばらつき大）
+      \addplot+[fill=blue!20]
+      boxplot prepared={
         median=20.0,
         upper quartile=23.5,
         lower quartile=17.5,
@@ -253,10 +251,9 @@ BoAではアクティブ領域上に形成できるため、短辺方向の寸�
       };
       \addlegendentry{研磨前}
 
-      % --- 研磨後（分布が締まる） ---
-      \addplot+[
-        fill=red!20
-      ] boxplot prepared={
+      % 研磨後（ばらつき小）
+      \addplot+[fill=red!20]
+      boxplot prepared={
         median=11.0,
         upper quartile=12.0,
         lower quartile=10.5,
@@ -267,8 +264,8 @@ BoAではアクティブ領域上に形成できるため、短辺方向の寸�
 
     \end{axis}
   \end{tikzpicture}
-  \caption{AL配線オープン／ショート TEG における 1 ウエハ面内（50 チップ）の配線抵抗分布。
-  研磨前は分布が広く外れ値も見られるのに対し，研磨後は分布がタイトに収束している。}
+  \caption{AL配線オープン／ショートTEG（1ウエハ50チップ）の配線抵抗分布。
+  研磨前は分布が広いのに対し，研磨後はタイトに収束。}
   \label{fig:boa_boxplot}
 \end{figure}
 
