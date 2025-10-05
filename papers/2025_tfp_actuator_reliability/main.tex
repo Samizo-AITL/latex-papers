@@ -390,11 +390,38 @@ COF側のAu/Cu端子とアクチュエータ側のNiCr/Auパッドは
 \label{sec:crack}
 
 \subsection{現状把握}
-ユニットスクリーニングにおいて，ウェハ半径中間域に同心リング状のクラックが観測された。
-断面TEMでは6層PZTのうち特定層に局所的な空隙（ボイド）が確認され，
-EDXで炭素由来成分が検出された。
-これはRTA後の外気吸着による表面疎水化が原因で，
-スピン塗布時の気泡巻き込みが発生したと推定される。
+ユニットスクリーニングで抽出した不良チップを解析したところ，
+ウェハ半径の中間域に\emph{同心リング状}に分布していることが確認された。
+断面TEMでは，6層PZTのうち\emph{特定の層}に局所的な空隙（ボイド）が形成されており，
+EDXでは\emph{炭素由来成分}が検出された。
+これらはRTA後の外気吸着により表面が疎水化し，
+スピン塗布時に気泡が巻き込まれたことに起因すると推定される。
+
+さらに，RTA装置のロードロック内に長時間滞留させたウエハを用い，
+PZT塗布・焼成後に反射条件を最適化した表面検査を行ったところ，
+PZT内部ボイドに起因すると考えられる\emph{同心円状の欠陥分布}が観測された。
+
+\begin{figure}[t]
+  \centering
+  \figVoidDonutInline
+  \caption{%
+    ウエハ上に観測されたドーナツ状の欠陥分布。
+    半径中間域に同心リング状のボイド集中帯が形成されている。
+    Donut-shaped void distribution on wafer.
+  }
+  \label{fig:donut}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \figPZTLayersVoidInline
+  \caption{%
+    PZT 6層のうち特定層に形成された局所ボイド（グレー部）。
+    この層内欠陥が膜厚方向に応力集中を誘発し，クラック進展の起点となる。
+    Void observed in a specific layer of 6-layer PZT stack (gray box).
+  }
+  \label{fig:layer-void}
+\end{figure}
 
 \subsection{原因仮説}
 RTA後の外気暴露により表面が疎水化し，
