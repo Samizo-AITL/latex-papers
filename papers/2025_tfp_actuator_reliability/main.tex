@@ -206,47 +206,40 @@
 % =====================================================
 
 \begin{abstract}
-\textbf{和文要旨} — 
-本研究では、Epson $\mu$TFP（薄膜PZT $d_{33}$駆動方式）アクチュエータにおいて量産工程で観測された
-(1) 振動板クラック不良および (2) セグメント端部焼損不良について、原因解析と対策検討を行った。
-振動板クラックについては、ユニットスクリーニング時にウエハ上で同心円状に発生し、
-断面解析によりPZT多層膜の一部にボイドが局在することを確認した。
-これらはRTA後の外気成分付着による表面疎水化が起点となり、ゾルゲルスピン塗布時の気泡巻き込みに起因することを明らかにした。
-対策として酢酸プレウェット処理を追加し、成膜表面を親水化することで気泡巻き込みを抑制し、
-不良率を従来の5--10\%からほぼ0\%まで低減、量産条件として確立した。
-
-一方、端部焼損については、COM下電極（Au配線経由）とVBS上電極が最接近するPZT側壁露出部で発生し、
-最大\SI{40}{V}の電位差に加え、台形波立上り時の瞬間電流による電界集中が局所絶縁破壊を誘発すると推定した。
-恒久的な改善策として、原子層堆積（ALD）によるAlOx薄膜での側壁保護を提案した。
-本対策は新規投資を要するため現状は提案段階に留まるが、高電圧駆動化に不可欠な信頼性強化指針となる。
-
-本研究により、薄膜PZTアクチュエータに固有の欠陥発生メカニズムを解明するとともに、
-プロセス条件制御による恒久改善事例と、構造的制約に対するデバイス設計提案を提示した。
-これらの成果は、今後の高密度ノズル化および高耐圧駆動化に資するものである。
-
-本手法は対症療法ではなく，薄膜PZT MEMS一般に有効な
-「親水性リセット」と「側壁パッシベーション」という
-二本柱のプロセス指針として位置付けられる。
+\textbf{和文要旨} —
+本研究は，Epson $\mu$TFP（薄膜PZT，$d_{33}$駆動）アクチュエータの量産工程で顕在化した
+(1) 振動板クラックと (2) セグメント端部焼損の二課題を対象に，原因解析と対策評価を行った。
+クラックはウエハ同心円状に分布し，断面観察でPZT多層の特定層にボイドが局在することを確認した。
+これはRTA後の外気由来吸着に伴う表面疎水化を起点とし，ゾルゲル塗布時の気泡巻き込みに起因する。
+RTA直後の\emph{酢酸プレウェット（約2\%, 30\,s）}により親水性を回復し，気泡巻き込みを抑制することで，
+不良率を5–10\%から\(\le\!1\%\)へと低減し量産条件として確立した。
+一方，端部焼損はCOM下電極（Au配線）とVBS上電極が最接近するPZT側壁露出部に集中し，
+最大\SI{40}{V}の印加と台形波立上り過渡電流（$I=C\,\mathrm{d}V/\mathrm{d}t$）による電界集中を起点とする
+局所絶縁破壊が示唆された。恒久策として\emph{ALD–AlO$_x$}による側壁パッシベーションを提案する。
+以上より，薄膜PZTに固有の欠陥発生連鎖を明確化するとともに，
+（G1）親水性リセットと（G2）側壁パッシベーションの二本柱からなる
+一般化可能なプロセス指針を提示した。
 
 \medskip
-\textbf{Abstract (English)} — 
-This study investigates two reliability issues in thin-film PZT ($d_{33}$ mode) actuators: 
-(1) diaphragm cracks and (2) edge burnout. 
-Cracks were traced to voids in PZT layers due to hydrophobicity after RTA, solved by an acetic-acid pre-wet step, reducing defect rate from 5–10\% to nearly zero. 
-Edge burnout occurred at exposed PZT sidewalls under up to 40 V, attributed to local breakdown. 
-As a countermeasure, AlOx passivation by ALD was proposed. 
-These findings clarify unique failure mechanisms and provide both process and design solutions for higher reliability.
-These steps are presented not merely as ad-hoc fixes but as
-\emph{generalizable process guidelines} for thin-film PZT MEMS:
-(i) an acetic-acid pre-wet to reset hydrophilicity after high-temperature steps,
-and (ii) conformal ALD sidewall passivation to mitigate edge-field concentration.
-The approach is applicable to a broader class of sol–gel ferroelectric MEMS
-(micropumps, optical MEMS mirrors, pMUTs).
+\textbf{Abstract (English)} —
+This study addresses two reliability issues observed in mass production of Epson $\mu$TFP
+(thin-film PZT, $d_{33}$ mode) actuators: (1) diaphragm cracks and (2) edge burnout.
+Cracks showed a donut-shaped wafer distribution, and cross-sections revealed voids localized in
+specific PZT layers. The mechanism is traced to post-RTA surface hydrophobicity due to airborne
+adsorbates, which leads to bubble entrapment during sol-gel coating. An \emph{acetic-acid pre-wet}
+($\sim$2\%, 30\,s) immediately after RTA restored hydrophilicity and suppressed bubbles,
+reducing the defect rate from 5–10\% to \(\le\!1\%\) and qualifying as a production condition.
+Edge burnout localized at exposed PZT sidewalls where the COM bottom electrode (via Au routing)
+approaches the VBS top electrode; up to \SI{40}{V} bias combined with trapezoidal-wave transients
+($I=C\,\mathrm{d}V/\mathrm{d}t$) suggests local breakdown under field concentration.
+As a permanent countermeasure, \emph{ALD AlO$_x$} sidewall passivation is proposed.
+These results clarify thin-film-specific failure chains and establish two generalizable process
+guidelines for ferroelectric MEMS: (G1) hydrophilicity reset and (G2) sidewall passivation.
 \end{abstract}
 
 \begin{IEEEkeywords}
-\textbf{和文キーワード} — インクジェット, MEMSアクチュエータ, PrecisionCore ($\mu$TFP), 薄膜PZT, $d_{33}$駆動, 信頼性, プロセス最適化, クラック抑制, 端部焼損, 絶縁破壊  
-\textbf{Keywords} — Inkjet printing, MEMS actuator, PrecisionCore ($\mu$TFP), Thin-film PZT, $d_{33}$ mode, Reliability, Process optimization, Crack suppression, Edge burnout, Insulation breakdown
+\textbf{和文キーワード} — インクジェット，MEMSアクチュエータ，PrecisionCore（$\mu$TFP），薄膜PZT，$d_{33}$駆動，信頼性，酢酸プレウェット，側壁パッシベーション，端部焼損，クラック \\
+\textbf{Keywords} — Inkjet printing, MEMS actuator, PrecisionCore ($\mu$TFP), Thin-film PZT, $d_{33}$ mode, Reliability, Acetic pre-wet, Sidewall passivation, Edge burnout, Cracks
 \end{IEEEkeywords}
 
 % =====================================================
@@ -254,30 +247,36 @@ The approach is applicable to a broader class of sol–gel ferroelectric MEMS
 % =====================================================
 
 \section{序論}
-インクジェットプリントヘッド技術は、印字解像度・速度・信頼性の要求を背景に進化してきた。
-第1世代のMachヘッドは、バルク積層PZTを用いた$d_{31}$駆動方式に基づき、
-180\,dpiクラスの解像度で実用化された。これらは大振幅駆動による安定吐出が可能であり、
-素子の耐久性や製造プロセスの成熟度に優れる一方、素子サイズが大きく、
-ノズルの高密度化や解像度の向上には制約があった。
+インクジェットプリントヘッドは，解像度・速度・信頼性の高度化要求に応じて進化してきた。
+Epson体系では，1990年代の \emph{Mach} ヘッド（バルク積層PZT，$d_{31}$駆動）が
+銀塩写真の置換を牽引し，2007年に \emph{TFP}（Thin Film Piezo）ヘッドの量産化により
+ピエゾの\emph{自前製造（内製化）}とMEMS一体加工への転換が始まった。
+その到達点として，2012年に \emph{PrecisionCore}（$\mu$TFP）ヘッドが製品化され，
+ビジネスインクジェット分野でレーザープリンタの置換を本格化させた。
 
-これに対し、第2世代のThin Film Piezo（TFP/$\mu$TFP）ヘッドは、
-Epson広丘事業所において開発された薄膜PZT $d_{33}$駆動方式を採用し、
-300\,dpiクラスの高解像度・高応答性を実現した。
-ゾルゲル法によるPZT薄膜積層とMEMS微細加工を組み合わせることで、
-ノズルの小型化と大規模並列駆動が可能となり、
-PrecisionCoreヘッドとして商用化されている。
+この技術的跳躍は，材料を「買って使う」方式から「作って最適化する」方式へのパラダイム転換に他ならない。
+しかし薄膜PZTの高電界・高密度駆動は，バルク素子では顕在化しなかった量産上の課題を露呈させた。
+すなわち，（i）RTA後の表面疎水化を起点とするスピン塗布時の気泡巻き込みに由来する
+\emph{振動板クラック}，および（ii）COM–VBS近接部のPZT側壁露出で電界が集中して発生する
+\emph{端部焼損}である。前者はプロセス環境・表面化学の管理課題，後者はデバイス幾何と
+過渡電流（$I=C\,\mathrm{d}V/\mathrm{d}t$）が重なる信頼性課題として現れた。
 
-しかし、薄膜PZTによる高電界駆動方式は、従来のバルク積層素子にはなかった課題を顕在化させた。
-具体的には、(1) PZT成膜過程での欠陥感受性の増大に伴う振動板クラック、
-および (2) 電極端部での絶縁耐圧不足に起因する局所的な焼損である。
-前者はゾルゲル塗布・焼成プロセス条件と装置環境に強く依存し、
-後者はデバイス構造上の制約と高電圧印加条件の両面に起因する。
+本論文の目的は，PrecisionCore $\mu$TFPヘッドの\emph{基盤技術確立}に至る過程で直面した
+上記二課題の原因を量産工程データと不良解析に基づいて同定し，
+（A）RTA直後の\emph{酢酸プレウェット}による親水性リセットと，
+（B）\emph{ALD–AlO$_x$ 側壁パッシベーション}によるエッジ電界緩和という
+二本柱の対策を提示・評価することである。
+（A）は歩留まり不良率を 5–10\% から \(\approx 0\%\) へ低減し量産条件として確立した実装策であり，
+（B）は高耐圧化・長期信頼性向上に有効な恒久策として提案する。
 
-これらの不良現象は、量産信頼性と製品寿命の確保に直結する重大課題であり、
-その解析と改善は実用化の鍵を握る。
-本研究では、量産工程において実際に観測されたクラックおよび端部焼損の事例を取り上げ、
-詳細な原因解析を行うとともに、恒久的改善策および設計的対策案を提示する。
-さらに、得られた知見を基に、薄膜PZTアクチュエータの高密度化・高耐圧化に向けた指針を示す。
+本稿の貢献は三点に要約される。
+(1) 薄膜PZT特有の欠陥発生連鎖（外気付着$\rightarrow$疎水化$\rightarrow$気泡捕捉$\rightarrow$層内ボイド$\rightarrow$クラック）
+と，端部焼損の電界・熱連成機構を\emph{工程と構造の両面}から統一的に整理した。
+(2) 工程介入（酢酸プレウェット）により\emph{量産即応性の高い恒久改善}を実証した。
+(3) 形状起因で不可避な側壁露出に対し，\emph{設計で避けられない領域をプロセスで守る}
+というMEMS一般に適用可能な指針（G1/G2）を与えた。
+以降，\S2で対象デバイスと工程を概説し，\S3で観測結果，\S4で原因と対策を考察，
+\S5で結論を述べる。
 
 \section{デバイス・プロセス構成}
 本研究対象のアクチュエータチップは、シリコン基板上にゾルゲル法により形成した
