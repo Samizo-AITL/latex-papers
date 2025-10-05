@@ -230,24 +230,24 @@ BoAではアクティブ領域上に形成できるため、短辺方向の寸�
 \centering
 \begin{tikzpicture}
   \begin{axis}[
-    width=10.5cm, height=7.5cm,  % ← 1.5倍
+    width=8.6cm, height=5.5cm,   % ← 1カラム幅に最適化
     ybar,
-    bar width=5pt,
+    bar width=3.5pt,
     xlabel={抵抗値 [Ω]},
     ylabel={測定チップ数},
     symbolic x coords={10,12,14,16,18,20,22,24,26},
     xtick=data,
-    ymin=0, ymax=12,                 % ← 上限12
+    ymin=0, ymax=12,
     ytick={0,2,4,6,8,10,12},
-    tick align=inside,               % ← 目盛 内側
+    tick align=inside,           % ← 目盛 内側
     tick style={thick},
     axis x line*=bottom,
     axis y line*=left,
-    enlarge x limits=0.08,
+    enlarge x limits=0.05,
     grid=both,
     legend style={
       at={(0.5,1.05)}, anchor=south, legend columns=-1,
-      draw=none, fill=none
+      draw=none, fill=none, font=\footnotesize
     }
   ]
     % 研磨前（ばらつき大）
