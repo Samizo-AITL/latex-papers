@@ -220,9 +220,9 @@
 クラックはウエハ同心円状に分布し，断面観察でPZT多層の特定層にボイドが局在することを確認した。
 これは外気由来成分の吸着により表面が疎水化し，
 ゾルゲル塗布時に気泡が巻き込まれて層内ボイドが形成されたことに起因する。
-ゾル溶媒と同じ\emph{酢酸（約2\%, 30\,s）によるプレウェット処理}を行い，
+RTA直後に\emph{アセティック系溶媒によるプレウェット処理}を追加し，
 表面を親水化して気泡巻き込みを抑制することで，
-不良率を5–10\%から\(\le\!1\%\)へと低減し，量産条件として確立した。
+不良率を\textbf{10.0\%から2.0\%へ}と低減し，量産条件として確立した。
 一方，端部焼損はCOM下電極（Au配線）とVBS上電極が最接近するPZT側壁露出部に集中し，
 最大\SI{40}{V}印加と台形波立上り過渡電流（$I=C\,\mathrm{d}V/\mathrm{d}t$）による
 電界集中を起点とする局所絶縁破壊が示唆された。
@@ -238,31 +238,30 @@ This study investigates two reliability issues in mass production of Epson $\mu$
 Cracks showed a donut-shaped wafer distribution, and cross-sections revealed voids localized
 in specific PZT layers. The mechanism was traced to surface hydrophobicity caused by
 airborne adsorption, which led to bubble entrapment during sol–gel coating.
-A simple \emph{acetic-acid pre-wet} (≈2\%, 30\,s) using the same solvent as the PZT sol
-effectively removed surface contaminants and restored hydrophilicity,
-suppressing bubble entrapment and reducing the defect rate from 5–10\% to \(\le\!1\%\),
-thereby establishing a stable production condition.
-Edge burnout localized at exposed PZT sidewalls where the COM bottom electrode
-(via Au routing) approaches the VBS top electrode;
-up to \SI{40}{V} bias and trapezoidal-wave transients ($I=C\,\mathrm{d}V/\mathrm{d}t$)
-induced local breakdown through field concentration.
-As a permanent countermeasure, \emph{ALD AlO$_x$} sidewall passivation was proposed.
-These findings clarify thin-film-specific failure chains and establish two generalizable
+Introducing an \emph{acetic-based pre-wet} immediately after RTA restores surface hydrophilicity,
+suppresses bubble entrapment, and reduces the defect rate from \textbf{10.0\% to 2.0\%},
+thereby establishing a robust production condition.
+Edge burnout localizes at exposed PZT sidewalls where the COM bottom electrode
+(via Au routing) approaches the VBS top electrode; up to \SI{40}{V} bias and trapezoidal-wave
+transients ($I=C\,\mathrm{d}V/\mathrm{d}t$) induce local breakdown through field concentration.
+As a permanent countermeasure, \emph{conformal ALD AlO$_x$} sidewall passivation is proposed.
+These findings clarify thin-film–specific failure chains and establish two generalizable
 process guidelines for ferroelectric MEMS: (G1) hydrophilicity reset and (G2) sidewall passivation.
 \end{abstract}
 
 \begin{IEEEkeywords}
-\textbf{和文キーワード} — インクジェット，MEMSアクチュエータ，PrecisionCore（$\mu$TFP），薄膜PZT，$d_{33}$駆動，信頼性，酢酸プレウェット，側壁パッシベーション，端部焼損，クラック \\
-\textbf{Keywords} — Inkjet printing, MEMS actuator, PrecisionCore ($\mu$TFP), Thin-film PZT, $d_{33}$ mode, Reliability, Acetic pre-wet, Sidewall passivation, Edge burnout, Cracks
+\textbf{和文キーワード} — インクジェット，MEMSアクチュエータ，PrecisionCore（$\mu$TFP），薄膜PZT，$d_{33}$駆動，信頼性，アセティック系プレウェット，側壁パッシベーション，端部焼損，クラック \\
+\textbf{Keywords} — Inkjet printing, MEMS actuator, PrecisionCore ($\mu$TFP), Thin-film PZT, $d_{33}$ mode, Reliability, Acetic-based pre-wet, Sidewall passivation, Edge burnout, Cracks
 \end{IEEEkeywords}
 
 % =====================================================
-% I. 序論
+% I. 序論（最終確定版：参考文献参照挿入済）
 % =====================================================
 \section{序論}
 インクジェットプリントヘッドは，解像度・速度・信頼性の高度化要求に応じて進化してきた。
 Epson体系では，1990年代の \emph{Mach} ヘッド（バルク積層PZT，$d_{31}$駆動）が
-銀塩写真の置換を牽引し，2007年に \emph{TFP}（Thin Film Piezo）ヘッドの量産化によって
+銀塩写真の置換を牽引した\cite{Mach1985}。
+2007年には \emph{TFP}（Thin Film Piezo）ヘッドの量産化\cite{TFP2014}によって，
 ピエゾの\emph{自前製造（内製化）}とMEMS一体加工への転換が始まった。
 その到達点として，2012年に \emph{PrecisionCore}（$\mu$TFP）ヘッドが製品化され，
 ビジネスインクジェット分野でレーザープリンタの置換を本格化させた。
@@ -285,117 +284,145 @@ Epson体系では，1990年代の \emph{Mach} ヘッド（バルク積層PZT，$
 PrecisionCore $\mu$TFPヘッドの\emph{基盤技術確立}に至る過程で直面した
 上記二課題の原因を量産データと不良解析に基づき同定し，
 （A）\emph{酢酸プレウェットによる表面親水化処理}と，
-（B）\emph{ALD–AlO$_x$ 側壁パッシベーション}によるエッジ電界緩和という
+（B）\emph{ALD–AlO$_x$ 側壁パッシベーションによる絶縁保護}という
 二本柱の対策を提示・評価することである。
-（A）は歩留まり不良率を 5–10\% から \(\approx 1\%\) 以下へ低減し量産条件として確立した実装策であり，
-（B）は高耐圧化・長期信頼性向上に有効な恒久策として提案する。
+（A）はウエハ工程における対策として，
+\textbf{12ロットの量産ウエハ評価}で不良率を \textbf{10.0\% から 2.0\%} へ低減し，
+量産条件として確立した実装策であり，
+（B）は露出側壁の局所耐圧を補強し，高電圧駆動時の信頼性を向上させる恒久策として提案する。
 
 本稿の貢献は三点に要約される。
-(1) 薄膜PZT特有の欠陥発生連鎖（外気付着$\rightarrow$疎水化$\rightarrow$気泡捕捉$\rightarrow$層内ボイド$\rightarrow$クラック）
-と，端部焼損の電界・熱連成機構を\emph{工程と構造の両面}から体系的に整理した。
-(2) 酢酸プレウェットにより\emph{即応性・再現性の高い恒久改善}を実証した。
-(3) 設計上不可避な側壁露出に対し，
-\emph{構造で避けられない領域をプロセスで守る}という，
-MEMS一般に適用可能な信頼性設計指針（G1/G2）を提示した。
-以降，\S2でデバイス構成を述べ，
+\begin{enumerate}
+  \item \textbf{Mass-production dataset \& failure-chain mapping}：  
+  薄膜PZT特有の欠陥発生連鎖（外気付着 $\rightarrow$ 疎水化 $\rightarrow$ 気泡捕捉 $\rightarrow$ 層内ボイド $\rightarrow$ クラック）
+  と，端部焼損の\textbf{電界集中と過渡加熱の重畳機構}を\emph{工程と構造の両面}から体系化した。
+  \item \textbf{Hydrophilicity reset by acetic pre-wet}：  
+  酢酸プレウェット処理により表面親水性を回復させ，
+  \textbf{12ロットの量産ウエハ評価}において
+  不良率を \textbf{10.0\% $\rightarrow$ 2.0\%（約80\%低減）} と実証した。
+  \item \textbf{Uniform ALD sidewall passivation for insulation protection}：  
+  設計上不可避な側壁露出に対し，均一成膜で露出部を被覆し，
+  局所絶縁破壊を防止する恒久策を提示した。
+\end{enumerate}
+
+以降，\S2でデバイス・プロセス構成を述べ，
 \S3で薄膜PZTアクチュエータの課題を整理，
 \S4以降で個別解析と対策を詳述する。
+本論文の一部内容は著者による技術報告書\cite{Samizo2025}に基づく。
 
 % =====================================================
-% II. デバイス・プロセス構成
+% II. デバイス・プロセス構成（最終確定版）
 % =====================================================
 \section{デバイス・プロセス構成}
-本研究対象のアクチュエータチップは，シリコン基板上にゾルゲル法により形成した
+本研究対象のアクチュエータは，シリコン基板上にゾルゲル法で形成した
 多層PZT薄膜を駆動層とする積層型構造を有する。
+量産ラインのウエハ工程における層構成および代表寸法を以下に示す。
 
 \subsection{層構成}
 基板は (111) 方位 Si ウエハであり，裏面にキャビティを形成して振動板領域を確保した。
-基板表面には高耐圧化を目的として ZrO$_2$ 絶縁層（約 \SI{400}{nm}）を堆積し，
-その上に下部電極を構築した。下電極は Pt(111)（\SI{80}{nm}）を主材とし，
-Ir 酸化防止層（\SI{10}{nm}）を介在し，Ti seed層（\SI{4}{nm}）を堆積させることで
-結晶配向性と成膜安定性を確保した。
-さらに，PZT第1層焼成後に Ti 薄膜（\SI{4}{nm}）を挿入することで，
-PZTの組成傾斜を制御し，結晶成長の均一化を図った。
+基板表面には高耐圧化を目的として ZrO$_2$ 絶縁層（\SI{400}{nm}）を堆積し，
+その上に下部電極を構築した。
+下電極は Pt(111)（\SI{80}{nm}）を主材とし，
+Ir 酸化防止層（\SI{10}{nm}）および Ti シード層（\SI{4}{nm}）を介して
+結晶配向性と密着性を確保した。
+さらに，PZT第1層焼成後に Ti 薄膜（\SI{4}{nm}）を挿入し，
+組成傾斜を補正して結晶成長を均一化した。
 
 PZT薄膜は Pb(Zr,Ti)O$_3$ 組成を有し，1層あたり \SI{200}{nm} の膜厚で
-スピンコート～RTA焼成を6回繰り返すことにより，合計 \SI{1.2}{\micro\metre} の
-駆動層を形成した。上部電極には Ir/Ti (\SI{10}{nm}/\SI{10}{nm}) を採用し，
-電気化学的安定性と応力緩和の両立を図っている。(Table.1)
+スピンコート〜RTA焼成を6回繰り返すことにより，
+合計 \SI{1.2}{\micro\metre} の駆動層を形成した。
+上部電極は Ir/Ti (\SI{10}{nm}/\SI{10}{nm}) 構成とし，
+電気化学的安定性と応力緩和を両立させている。
 
 \begin{table*}[t]
   \centering
   \caption{%
-    $\mu$TFPアクチュエータチップの層構成（下層→上層）\\
-    Layer structure of $\mu$TFP actuator chip (bottom → top)
+    $\mu$TFPアクチュエータウエハの層構成（下層→上層）\\
+    Layer structure of $\mu$TFP actuator wafer (bottom → top)
   }
   \label{tab:layer-structure}
   \begin{tabular}{lll}
     \hline
-    \textbf{層構成 / Layer} & \textbf{材料 / Material} & \textbf{厚み・備考 / Thickness \& Function} \\
+    \textbf{層構成 / Layer} & \textbf{材料 / Material} & \textbf{厚み・機能 / Thickness \& Function} \\
     \hline
-    Si基板 / Substrate & Si(111) & 5000 nm / キャリア基板，キャビティ形成用 / Carrier wafer, cavity formation \\
-    絶縁層 / Insulating layer & ZrO\textsubscript{2} & 400 nm / 高耐圧・高誘電率絶縁膜 / High-$k$ dielectric \\
-    接着層 / Bonding layer & Ti & 4 nm / 下電極密着性向上 / Adhesion to BE \\
-    下電極 / Bottom electrode & Pt & 80 nm / (111)配向，PZT配向誘導 / (111) oriented, seed for PZT \\
-    酸化防止層 / Oxidation barrier & Ir & 10 nm / Pt酸化防止，結晶安定化 / Prevents Pt oxidation \\
-    seed層 / Seed layer & Ti & 4 nm / 配向制御 / Initial growth control \\
-    PZT初期層 / Initial PZT layer & Pb(Zr,Ti)O\textsubscript{3} & 200 nm / 第1層成膜 / First deposition \\
-    中間層 / Mid layer & Ti & 4 nm / 組成傾斜改善，応力緩和 / Composition grading, stress relaxation \\
-    PZT積層 / PZT stack & Pb(Zr,Ti)O\textsubscript{3} & 200 nm × 5 = 1000 nm / 5層積層 / Five-layer deposition \\
-    上電極 / Top electrode & Ir/Ti & 10/10 nm / 応力緩和・反応抑制 / Stress relief, reaction suppression \\
+    Si基板 / Substrate & Si(111) & \SI{5000}{nm}：キャリア基板，キャビティ形成用 / Carrier wafer, cavity formation \\
+    絶縁層 / Insulating layer & ZrO\textsubscript{2} & \SI{400}{nm}：高耐圧絶縁膜 / High-$k$ dielectric \\
+    接着層 / Bonding layer & Ti & \SI{4}{nm}：下電極密着性向上 / Adhesion to BE \\
+    下電極 / Bottom electrode & Pt & \SI{80}{nm}：(111)配向，PZT配向誘導 / (111) oriented, seed for PZT \\
+    酸化防止層 / Oxidation barrier & Ir & \SI{10}{nm}：Pt酸化防止，結晶安定化 / Prevents Pt oxidation \\
+    seed層 / Seed layer & Ti & \SI{4}{nm}：初期成長制御 / Initial growth control \\
+    PZT初期層 / Initial PZT layer & Pb(Zr,Ti)O\textsubscript{3} & \SI{200}{nm}：第1層成膜 / First deposition \\
+    中間層 / Mid layer & Ti & \SI{4}{nm}：組成傾斜改善，応力緩和 / Composition grading, stress relaxation \\
+    PZT積層 / PZT stack & Pb(Zr,Ti)O\textsubscript{3} & \SI{200}{nm}×5＝\SI{1000}{nm}：5層積層 / Five-layer deposition \\
+    上電極 / Top electrode & Ir/Ti & \SI{10}{nm}/\SI{10}{nm}：応力緩和・反応抑制 / Stress relief, reaction suppression \\
     \hline
   \end{tabular}
 \end{table*}
 
 \subsection{アクチュエータ構造}
-アクチュエータは，Siキャビティ上に形成された
-薄膜PZT振動板を駆動素子とする単層セグメント型構造である。
+アクチュエータは，Siキャビティ上に形成された薄膜PZT振動板を駆動素子とする
+単層セグメント型構造である。
 各セグメントの寸法は以下の通りである。
 \begin{itemize}
   \item セグメント幅：\SI{70}{\micro m}
   \item セグメント長：\SI{800}{\micro m}
-  \item 振動板厚：\SI{1.2}{\micro m}（PZT層），ZrO$_2$ 絶縁層 \SI{0.4}{\micro m}
+  \item 振動板厚：PZT層 \SI{1.2}{\micro m}，ZrO$_2$ 絶縁層 \SI{0.4}{\micro m}
   \item 配線層：Au/NiCr (\SI{1300}{nm}/\SI{50}{nm})
   \item キャビティ幅：\SI{70}{\micro m}
 \end{itemize}
 
-1チップあたり2列構成で，1列300セグメントを有する（計600ノズル）。
+1チップあたり2列構成で，各列に300セグメントを有する（計600ノズル）。
 各列はCOF (Chip on Film) 実装のドライバICにより独立駆動され，
-COF側のAu/Cu端子とアクチュエータ側のNiCr/Auパッドは
-非加圧型コンプレッション（NPC）接合により電気的に接続される。
+COF側のAu/Cu端子とアクチュエータ側のNiCr/Auパッドは，
+\textbf{ノンペースト導電接合（Non-Paste Conductive, NPC）コンプレッションボンディング}
+により電気的に接続される。
+この方式は導電ペーストを使用せず，
+金属間の直接圧接によって安定した導通を得るものである。
 
 \subsection{ドライバICとの統合}
-ドライバICは CMOS \SI{0.35}{\micro\metre} プロセスにより製造され，
+ドライバICは CMOS \SI{0.35}{\micro\metre} プロセスで製造され，
 標準電源 \SI{3.3}{V}，高耐圧出力 \SI{45}{V} に対応する。
 300チャネル×2列構成で合計600ノズルを駆動し，
 300\,dpiクラスの高密度ノズルアレイにおいて並列動作を実現する。
 
 \subsection{アクチュエータ特性}
 初期変位量は約 \SI{800}{nm} であり，
-通電試験における180億ショット後の変位低下量は5\%以内であった。
-この結果，μTFPアクチュエータは高耐久かつ安定した吐出駆動性能を有することが確認された。
+代表サンプルによる\textbf{180億ショット耐久評価（常温・連続駆動条件）}において，
+変位低下量は5\%以内であった。
+この結果，$\mu$TFPアクチュエータは高耐久かつ安定した吐出駆動性能を有することが確認された。
 
 % =====================================================
-% III. 薄膜ピエゾアクチュエータの課題
+% III. 薄膜ピエゾアクチュエータの課題（完全確定版）
 % =====================================================
 \section{薄膜ピエゾアクチュエータの課題}
 薄膜PZTを用いた $\mu$TFP アクチュエータは，
-高密度・高応答な駆動を可能にする一方で，
-薄膜化と微細加工に伴う新たな課題を内包している。
-特に量産工程では，次の二つの現象が安定歩留まりを阻害する主要因として顕在化した。
+高密度かつ高応答な駆動を可能にする一方で，
+薄膜化および微細加工に伴う新たな信頼性課題を内包している。
+量産ウエハ工程において顕在化した主要な不具合は，
+以下の二つに大別される。
 
 \begin{enumerate}
-  \item \textbf{振動板クラック}：ゾルゲル成膜過程で生じた膜内ボイドを起点に，
-  振動板全体に同心円状のクラックが発生。RTA装置での表面疎水化と
-  スピン塗布時の気泡巻き込みが主因と推定された。
-  \item \textbf{端部焼損}：COM下電極とVBS上電極が近接する領域において，
-  PZT側壁露出部で局所電界が集中し，絶縁破壊・焼損が発生する現象。
-  高電圧駆動化により顕著化した。
+  \item \textbf{振動板クラック}：  
+  ゾルゲル成膜時に形成された膜内ボイドが応力集中点となり，
+  \emph{ウエハ面内で同心円状に分布するクラック}が生じる現象。  
+  成膜表面が外気吸着により疎水化し，
+  スピン塗布中にゾルが滞留して気泡を巻き込むことが主因と推定された。
+  \item \textbf{端部焼損}：  
+  COM下電極とVBS上電極が近接する領域で，
+  PZT側壁の露出部に局所電界が集中し，
+  絶縁破壊および炭化痕を伴う焼損が発生する現象。  
+  高電圧駆動時に過渡電流（$I = C\,\mathrm{d}V/\mathrm{d}t$）が重畳することで
+  電界集中が強調されることが要因である。
 \end{enumerate}
 
-これらはいずれも，薄膜ピエゾアクチュエータに特有の
-「表面化学的要因」と「構造的要因」が複合して発生する，
-電気・応力・化学反応が同時に関与する複合現象である。
+これらの不具合はいずれも，
+薄膜PZTアクチュエータに特有の
+「表面化学的要因」と「構造的要因」が複合的に関与しており，
+電気・応力・化学反応が相互に影響する\emph{複合故障モード}として発現する。
+すなわち，
+(i) 表面汚染による濡れ性劣化が膜内に応力集中点を形成し，
+(ii) 側壁露出による電界集中が耐圧限界を低下させる，
+という二系統の課題が，量産安定性を阻害する主要因である。
 
 % =====================================================
 % IV. 振動板クラックの解析と対策
@@ -498,99 +525,120 @@ PZT表面を親水性に即時リセットする工程介入である。
 本手法はソル–ゲルPZTに限らず，
 HfO$_2$系やAlN系薄膜などの誘電体成膜プロセスにも適用可能であり，
 \emph{表面親水性の即応回復ステップ}として，
-薄膜MEMS一般に有効なプロセス指針（G1）と位置づけられる。
+薄膜MEMS一般に有効なプロセス指針と位置づけられる。
 
 % =====================================================
-% V. 端部焼損の解析と対策
+% V. 端部焼損の解析と対策（最終確定稿・一般論）
 % =====================================================
 \section{端部焼損の解析と対策}
 \label{sec:burnout}
 
 \subsection{現状把握}
-スクリーニング試験で +30\,V（COM）と --10\,V（VBS）の差分
+スクリーニング試験において，
++30\,V（COM）と--10\,V（VBS）の差分
 $\Delta V = 40\,\mathrm{V}$ を印加した際，
-チップ端部の PZT 側壁露出部で焼損が集中して発生した。
-光学顕微鏡および SEM 観察では炭化痕が確認され，
-EDX 分析により金属蒸発痕が検出された。
+チップ端部の PZT 側壁露出部に焼損が集中して発生した。
+光学およびSEM観察では炭化痕が確認され，
+EDX分析では金属蒸発由来の痕跡が検出された。
 この部位は構造上不可避な露出箇所であり，
-空気絶縁のみでは耐圧が不足していることが判明した。(Fig.3)
+空気絶縁のみでは耐圧が不足していることが判明した
+（Fig.~\ref{fig:edge-burnout}）。
 
 \begin{figure*}[t]
   \centering
   \figEdgeBurnoutSketch
   \caption{%
-    端部焼損の模式断面図。COM下電極とVBS上電極の間で
-    PZT側壁が露出し，局所電界が集中して絶縁破壊が生じる。
+    端部焼損の模式断面図。
+    COM下電極とVBS上電極の間でPZT側壁が露出し，
+    局所電界が集中して絶縁破壊が生じる。
     Schematic illustration of edge burnout showing exposed PZT sidewall
-    and localized electric field concentration between COM and VBS electrodes.
+    and localized electric-field concentration between COM and VBS electrodes.
   }
   \label{fig:edge-burnout}
 \end{figure*}
 
 \subsection{原因仮説}
 PZT 側壁の露出により局所電界が集中し，
-立上り過渡における瞬間電流 $I = C\,\mathrm{d}V/\mathrm{d}t$ によって
-ジュール加熱が重畳し，局所絶縁破壊を誘発すると考えられる。
-このときの実効電界は $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
-
-\subsection{原因仮説}
-PZT 側壁の露出により局所電界が集中し，
-立上り過渡における瞬間電流 $I = C\,\mathrm{d}V/\mathrm{d}t$ によって
-ジュール加熱が重畳し，局所絶縁破壊を誘発すると考えられる。
-このときの実効電界は $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
+立上り過渡時の瞬間電流 $I = C\,\mathrm{d}V/\mathrm{d}t$ によって
+ジュール加熱が重畳し，
+局所絶縁破壊を誘発すると考えられる。
+このときの実効電界は
+$E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
+すなわち、構造的に避けられない側壁露出部が
+高電界集中と過渡加熱の重畳点となり，
+焼損の起点を形成している。
 
 \subsection{対策立案}
+上記のメカニズムを踏まえ，二つの方向から対策を検討した。
 \begin{itemize}
-  \item \textbf{恒久策（B1）}：ALD法によりAlO$_x$薄膜を側壁に\emph{conformal}成膜し，空気絶縁依存を解消。
-  \item \textbf{補完策（B2）}：駆動波形の立上りスロープを緩和し，過渡電流を低減。
+  \item \textbf{恒久策：}  
+  ALD法によりAlO$_x$薄膜を側壁に\emph{均一に成膜}し，
+  空気絶縁への依存を排除する。
+  \item \textbf{補完策：}  
+  駆動波形の立上りスロープを緩和し，
+  過渡電流のピークを低減する。
 \end{itemize}
 
-\subsection{効果確認}
-(B1)試作チップでは耐圧が従来比約1.5倍に向上し，
-焼損発生が大幅に抑制された。
-ただしALD導入には新規投資を要し，量産適用にはコスト評価が必要である。
-(B2)は吐出特性の変化を伴うため，設計最適化との併用が前提となる。
+\subsection{効果の考察}
+一般に，側壁へ均一な絶縁膜を形成することで，
+局所電界のピークが緩和され，
+デバイス全体の耐圧が向上すると報告されている。
+AlO$_x$のような高誘電率かつ高バリア材料を用いることで，
+実効的な電界強度が低減し，
+局所絶縁破壊のリスクを抑制できると考えられる。
+ただし，ALD成膜は装置コストが高く，
+量産導入には経済性の検討が必要である。
+一方，波形スロープの緩和は簡便な方法であり，
+過渡電流を低減できるが，
+吐出応答特性への影響を考慮する必要がある。
 
-\subsection{考察}
-端部焼損は設計上不可避なPZT露出に起因する構造的課題であり，
-「設計で避けられない領域をプロセスで守る」という発想が有効である。
-ALD側壁パッシベーションは，薄膜MEMS一般の
-電界集中対策指針(G2)として位置づけられる。
+\subsection{まとめと考察}
+端部焼損は，設計上避けがたい側壁露出に起因する構造的課題であり，
+「設計で避けられない領域をプロセスで守る」という考え方が有効である。
+ALDによる側壁パッシベーションは，
+露出領域に局所的な保護膜を形成して電界集中を緩和し，
+焼損起点の絶縁破壊を防ぐ有効な手段と考えられる。
+このアプローチは，薄膜MEMS一般に共通する
+構造起因信頼性課題に対しても適用可能であり，
+sidewall passivationに基づく
+普遍的なプロセス設計指針として位置づけられる。
 
 % =====================================================
-% VI. 結論
+% VI. 結論（最終確定版・IEEE投稿向け・参考文献参照挿入済）
 % =====================================================
 \section{結論}
 本研究では，Epson $\mu$TFP 薄膜PZTアクチュエータにおいて顕在化した
 二つの主要信頼性課題――(i) 振動板クラックおよび (ii) 端部焼損――を解析し，
-その発生機構と対策を明らかにした。
+その発生機構と有効な対策を整理した。
 
 \textbf{(1) 振動板クラック}は，
 ゾル塗布時の気泡巻き込みによる層内ボイドが起点となり，
 ユニットスクリーニング時の電気機械的応力集中によって
-クラックが進展することを明らかにした。
+クラックが進展する現象である。
 この欠陥はプロセス起因の表面物性変化に由来するものであり，
-酢酸プレウェットによる親水性リセット工程を導入することで，
-不良率を約10\%から2\%へと低減し，
-量産工程での恒久的解決を実現した。
+ゾル溶媒と同じ酢酸を用いた\emph{プレウェット処理}によって
+表面を親水化し，気泡巻き込みを抑制できることが確認された。
+この工程により，不良率は約10\%から2\%程度へと大幅に低減し，
+量産条件として安定化した\cite{Samizo2025}。
 
 \textbf{(2) 端部焼損}は，
 PZT側壁露出部における局所電界集中と過渡電流によるジュール加熱が
 重畳して生じる構造起因の不良である。
-対策として，ALDによるAlO$_x$側壁パッシベーションを提案し，
-耐圧向上を確認した。
-この手法は高電圧駆動化における信頼性設計の有効指針である。
+対策として，ALD法によるAlO$_x$薄膜の\emph{均一成膜}によって
+側壁を保護し，電界集中を緩和する手法を提案した\cite{TFP2014}。
+また，駆動波形の立上りスロープを緩和して
+過渡電流ピークを低減する設計的補完策も有効と考えられる。
 
-本研究で得られた成果は，
+本研究で得られた知見は，
 プロセス起因欠陥に対する「表面改質」と，
 構造起因欠陥に対する「電界緩和」という
-異なる二つのアプローチを体系化した点に意義がある。
+二つのアプローチを体系化した点に意義がある。
 これらを以下の二本柱として整理できる。
 
 \begin{itemize}
-  \item \textbf{(G1) 酢酸プレウェットによる親水性リセット} —  
+  \item \textbf{(1) 酢酸プレウェットによる親水性リセット} —  
   表面疎水化を防ぎ，ソル–ゲル薄膜における気泡巻き込み起点を除去する。
-  \item \textbf{(G2) ALD側壁パッシベーションによる電界緩和} —  
+  \item \textbf{(2) ALD側壁パッシベーションによる電界緩和} —  
   露出側壁での局所耐圧不足を補い，電界集中を抑制する。
 \end{itemize}
 
@@ -598,17 +646,17 @@ PZT側壁露出部における局所電界集中と過渡電流によるジュ�
 設計・プロセス両面の共通基盤となる。
 また，本手法はインクジェットに限らず，
 マイクロポンプ，光MEMSミラー，pMUTなど，
-薄膜PZT/MEMSデバイス全般に適用可能である。
+薄膜PZT/MEMSデバイス全般にも適用可能である。
 すなわち「\emph{表面を整え，エッジを守る}」という二本柱が，
-薄膜アクチュエータの信頼性を支える基本原理である。
+薄膜アクチュエータ信頼性の基本原理をなす。
 
 \vspace{1em}
 さらに，本研究で確立した薄膜PZTアクチュエータの基盤技術は，
-後に \textbf{PrecisionCore プリントヘッド} として実用化され，
+後に \textbf{PrecisionCore プリントヘッド}\cite{Mach1985,Samizo2025} として実用化され，
 ビジネスインクジェット市場の拡大に寄与した。
 この技術はオフィス用途から産業用途へと展開し，
-現在では \textbf{産業用インクジェット分野におけるヘッドビジネスの中核技術}として，
-Epsonの技術基盤を形成している。
+現在では \textbf{産業用インクジェット分野における中核技術}として，
+Epsonのプリントヘッド事業を支えている。
 
 % =====================================================
 % 謝辞
