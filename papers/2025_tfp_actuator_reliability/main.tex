@@ -64,13 +64,13 @@
 % ====== Fig.2: 6層PZT（上下=太実線／中間=細点線／ボイド=塗りのみ）======
 % 使い方: \figPZTLayersVoidInline         % 既定は第4層にボイド
 %         \figPZTLayersVoidInline[3]     % 第3層にボイド、など
-\renewcommand{\figPZTLayersVoidInline}[1][4]{%
+\newcommand{\figPZTLayersVoidInline}[1][4]{%
   \begin{tikzpicture}[x=0.9cm,y=0.9cm]
     % ---- パラメータ ----
     \def\W{6.0}   % 横幅
     \def\H{0.45}  % 各層の厚み
     \def\N{6}     % 層数
-    \def\voidLayer{#1} % ★ ここで必ず定義（既定=4）
+    \def\voidLayer{#1} % ★ ここで定義（既定=4）
 
     % ---- 7本の水平線（0〜6）----
     \foreach \i in {0,...,6}{%
