@@ -61,7 +61,7 @@
   \end{tikzpicture}%
 }
 
-% ====== Fig.2: 6層のPZT断面（上下実線／中間点線）======
+% ====== Fig.2: 6層のPZT断面（上下実線／中間点線／ボイド枠線なし）======
 \newcommand{\figPZTLayersVoidInline}{%
   \begin{tikzpicture}[x=0.9cm,y=0.9cm]
     % ---- パラメータ ----
@@ -84,6 +84,13 @@
         \fi
       \fi
     }
+
+    % ---- ボイド矩形（枠線なし）----
+    \pgfmathsetmacro{\idx}{\voidLayer-1}%
+    \pgfmathsetmacro{\yv}{\idx*\H}%
+    \fill[gray!50] (2.1,\yv) rectangle (3.0,\yv+\H);
+  \end{tikzpicture}%
+}
 
     % ---- ボイド矩形（上下界面に接する）----
     \pgfmathsetmacro{\idx}{\voidLayer-1}%
