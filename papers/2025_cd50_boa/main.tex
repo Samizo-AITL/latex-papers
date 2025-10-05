@@ -1,23 +1,25 @@
-\documentclass[conference]{IEEEtran} 
+\documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 
+% 数式と基本パッケージ
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{url}
-\usepackage{hyperref}
 
+% ==== 日本語フォント（LuaLaTeX用） ====
 \usepackage{luatexja}
 \usepackage[match]{luatexja-fontspec}
 \setmainjfont{HaranoAjiMincho}
 \setsansjfont{HaranoAjiGothic}
 
+% ==== TikZ & PGFPlots ====
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes,fit}
-
 \usepackage{pgfplots}
-\pgfplotsset{compat=1.18} % バージョンに応じて調整
+\pgfplotsset{compat=1.18} % 環境に応じて調整
 
-\hypersetup{hidelinks}
+% ==== 最後に hyperref ====
+\usepackage[hidelinks]{hyperref}
 
 \begin{document}
 
