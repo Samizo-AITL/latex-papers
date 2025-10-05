@@ -228,7 +228,7 @@ RTA直後に\emph{アセティック系溶媒によるプレウェット処理}�
 電界集中を起点とする局所絶縁破壊が示唆された。
 恒久策として\emph{ALD–AlO$_x$}による側壁パッシベーションを提案した。
 以上により，薄膜PZTに固有の欠陥発生連鎖を明確化するとともに，
-（G1）親水性リセットと（G2）側壁パッシベーションの二本柱からなる
+親水性リセットと側壁パッシベーションの二本柱からなる
 一般化可能なプロセス指針を提示した。
 
 \medskip
@@ -341,7 +341,10 @@ PZT薄膜は Pb(Zr,Ti)O$_3$ 組成を有し，1層あたり \SI{200}{nm} の膜�
     Layer structure of $\mu$TFP actuator wafer (bottom → top)
   }
   \label{tab:layer-structure}
-  \begin{tabular}{lll}
+  \vspace{4pt}
+  \setlength{\tabcolsep}{7pt}
+  \renewcommand{\arraystretch}{1.15}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l l @{}}
     \hline
     \textbf{層構成 / Layer} & \textbf{材料 / Material} & \textbf{厚み・機能 / Thickness \& Function} \\
     \hline
@@ -356,7 +359,8 @@ PZT薄膜は Pb(Zr,Ti)O$_3$ 組成を有し，1層あたり \SI{200}{nm} の膜�
     PZT積層 / PZT stack & Pb(Zr,Ti)O\textsubscript{3} & \SI{200}{nm}×5＝\SI{1000}{nm}：5層積層 / Five-layer deposition \\
     上電極 / Top electrode & Ir/Ti & \SI{10}{nm}/\SI{10}{nm}：応力緩和・反応抑制 / Stress relief, reaction suppression \\
     \hline
-  \end{tabular}
+  \end{tabular*}
+  \vspace{-4pt}
 \end{table*}
 
 \subsection{アクチュエータ構造}
@@ -499,15 +503,18 @@ $N = 12 \times 12 \times 109 = 15{,}696$ チップである。
   \centering
   \caption{クラック不良率の定量比較}
   \label{tab:crack-yield}
-  \setlength{\tabcolsep}{4pt}
-  \begin{tabular}{@{}lrrr@{}}
+  \vspace{3pt}
+  \setlength{\tabcolsep}{6pt} % カラム間の余白を調整
+  \renewcommand{\arraystretch}{1.15} % 行間を拡大して読みやすく
+  \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}} l r r r @{}}
     \toprule
-    条件 & $N$ [chip] & $P_n$ [chip] & $P$ [\%] \\
+    \textbf{条件} & \textbf{$N$ [chip]} & \textbf{$P_n$ [chip]} & \textbf{$P$ [\%]} \\
     \midrule
     対策前（Before） & 15{,}696 & 1{,}570 & 10.0 \\
     酢酸PW後（After） & 15{,}696 & 314 & 2.0 \\
     \bottomrule
-  \end{tabular}
+  \end{tabular*}
+  \vspace{-4pt}
 \end{table}
 
 不良率は約10\%から2\%へと低減し，
@@ -546,15 +553,18 @@ EDX分析では金属蒸発由来の痕跡が検出された。
 
 \begin{figure*}[t]
   \centering
+  \setlength{\unitlength}{1cm}
+  \vspace{4pt}
   \figEdgeBurnoutSketch
   \caption{%
     端部焼損の模式断面図。
     COM下電極とVBS上電極の間でPZT側壁が露出し，
-    局所電界が集中して絶縁破壊が生じる。
+    局所電界が集中して絶縁破壊が生じる。\\
     Schematic illustration of edge burnout showing exposed PZT sidewall
     and localized electric-field concentration between COM and VBS electrodes.
   }
   \label{fig:edge-burnout}
+  \vspace{-6pt}
 \end{figure*}
 
 \subsection{原因仮説}
