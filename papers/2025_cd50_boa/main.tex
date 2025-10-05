@@ -227,46 +227,35 @@ BoAではアクティブ領域上に形成できるため、短辺方向の寸�
 これに対して、プローバの針先研磨プログラムを導入し、数回測定ごとに針先をリフレッシュすることで、接触抵抗の影響を最小化し、測定の再現性を確保した。
 
 \begin{figure}[t]
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-      width=\columnwidth, height=5cm,
-      ymin=0, ymax=30,
-      xtick={1,2}, xticklabels={研磨前, 研磨後},
-      ylabel={配線抵抗値 [\(\Omega\)]},
-      grid=both,
-      boxplot/draw direction=y,
-      legend style={at={(0.5,1.02)},anchor=south},
-      legend columns=2
-    ]
-
-      % 研磨前（ばらつき大）
-      \addplot+[fill=blue!20]
-      boxplot prepared={
-        median=20.0,
-        upper quartile=23.5,
-        lower quartile=17.5,
-        upper whisker=27.5,
-        lower whisker=14.5
-      };
-      \addlegendentry{研磨前}
-
-      % 研磨後（ばらつき小）
-      \addplot+[fill=red!20]
-      boxplot prepared={
-        median=11.0,
-        upper quartile=12.0,
-        lower quartile=10.5,
-        upper whisker=13.0,
-        lower whisker=10.0
-      };
-      \addlegendentry{研磨後}
-
-    \end{axis}
-  \end{tikzpicture}
-  \caption{AL配線オープン／ショートTEG（1ウエハ50チップ）の配線抵抗分布。
-  研磨前は分布が広いのに対し，研磨後はタイトに収束。}
-  \label{fig:boa_boxplot}
+\centering
+\begin{tikzpicture}
+  \begin{axis}[
+    width=7cm,
+    height=5cm,
+    ybar,
+    bar width=4pt,
+    ylabel={測定チップ数},
+    xlabel={抵抗値 [Ω]},
+    symbolic x coords={10,12,14,16,18,20,22,24,26,28,30},
+    xtick=data,
+    ymin=0,
+    ymax=30,
+    legend style={at={(0.5,1.05)},anchor=south,legend columns=-1},
+    grid=both
+  ]
+    % 研磨前のデータ（ばらつき大）
+    \addplot+[fill=blue!40,draw=black] coordinates {
+      (10,1) (12,2) (14,3) (16,5) (18,7) (20,6) (22,3) (24,2) (26,1)
+    };
+    % 研磨後のデータ（ばらつき小）
+    \addplot+[fill=red!50,draw=black] coordinates {
+      (10,5) (12,8) (14,10) (16,5) (18,2) (20,0)
+    };
+    \legend{研磨前,研磨後}
+  \end{axis}
+\end{tikzpicture}
+\caption{AL配線オープン／ショートTEGにおける1ウェハ面内の配線抵抗測定ヒストグラム。
+研磨前は接触抵抗ばらつきが大きいが、研磨後は分布が狭く安定している。}
 \end{figure}
 
 \section{評価結果と課題}
