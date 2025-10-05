@@ -393,24 +393,13 @@ COF側のAu/Cu端子とアクチュエータ側のNiCr/Auパッドは
 ユニットスクリーニングで抽出した不良チップを解析したところ，
 ウェハ半径の中間域に\emph{同心リング状}に分布していることが確認された。
 断面TEMでは，6層PZTのうち\emph{特定の層}に局所的な空隙（ボイド）が形成されており，
-EDXでは\emph{炭素由来成分}が検出された。
+EDXでは\emph{炭素由来成分}が検出された。(Fig.1)
 処理履歴の追跡により，特定のRTA装置で処理されたウエハに限定して発生しており，
 その装置天井部には外気排気口が存在していた。
 
 さらに，同装置で長時間滞留させたウエハを用いてPZT塗布・焼成を行い，
 反射条件を最適化した表面検査を実施したところ，
-PZT内部ボイドに起因すると考えられる\emph{同心円状の欠陥分布}が再現された。
-
-\begin{figure}[t]
-  \centering
-  \figVoidDonutInline
-  \caption{%
-    ウエハ上に観測されたドーナツ状の欠陥分布。
-    半径中間域に同心リング状のボイド集中帯が形成されている。
-    Donut-shaped void distribution on wafer.
-  }
-  \label{fig:donut}
-\end{figure}
+PZT内部ボイドに起因すると考えられる\emph{同心円状の欠陥分布}が再現された。(Fig.2)
 
 \begin{figure}[t]
   \centering
@@ -421,6 +410,17 @@ PZT内部ボイドに起因すると考えられる\emph{同心円状の欠陥�
     Void observed in a specific layer of 6-layer PZT stack (gray box).
   }
   \label{fig:layer-void}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \figVoidDonutInline
+  \caption{%
+    ウエハ上に観測されたドーナツ状の欠陥分布。
+    半径中間域に同心リング状のボイド集中帯が形成されている。
+    Donut-shaped void distribution on wafer.
+  }
+  \label{fig:donut}
 \end{figure}
 
 \subsection{原因仮説}
@@ -443,12 +443,16 @@ RTA後の外気暴露によりPZT表面が疎水化し，
         PZT表面の親水性をリセット。
 \end{itemize}
 
-\subsection{効果確認（広丘流：$N$, $P_n$, $P$）}
+\subsection{効果確認}
 歩留まり評価は次式で算出した：
 \[
-  P[\%] = \frac{P_n}{N} \times 100, \quad
-  N = 12\times12\times109 = 15{,}696.
+  P[\%] = \frac{P_n}{N} \times 100.
 \]
+ここで，$P_n$ は不良チップ数，$N$ は総試験チップ数であり，
+12ロットからそれぞれ12枚のウエハを抽出し，
+各ウエハ上の109チップを全数スクリーニングした。
+したがって，総サンプル数は
+$N = 12 \times 12 \times 109 = 15{,}696$ チップである。
 
 \begin{table}[h]
   \centering
