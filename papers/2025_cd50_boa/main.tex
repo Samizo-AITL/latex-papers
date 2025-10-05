@@ -21,6 +21,8 @@
 % ==== 最後に hyperref ====
 \usepackage[hidelinks]{hyperref}
 
+\usepackage{tabularx} % preambleに追加
+
 \begin{document}
 
 \title{CD50プロジェクトとBump on Active (BoA)技術の事例研究:\\
@@ -113,49 +115,58 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25\,\mu 
 このハイブリッド統合においては、HV工程とLV工程で要求される熱条件が大きく異なる。
 LOCOSを先行して高温処理を完了させ、その後にSTIやRTAなど低熱処理プロセスを行うことで、
 熱履歴の干渉を最小化することができる。
-表~\ref{tab:thermal_comparison}に両者の主要熱工程を比較して示す。
+表~\ref{tab:thermal_process}に両者の主要熱工程を比較して示す。
+
+\usepackage{tabularx} % preambleに追加
 
 \begin{table}[t]
 \centering
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
 \caption{HV工程とLV工程における主要熱処理条件の比較}
-\label{tab:thermal_comparison}
-\begin{tabular}{|c|l|c|c|l|}
+\label{tab:thermal_process}
+\renewcommand{\arraystretch}{1.3} % 行間広め
+\setlength{\tabcolsep}{3pt}
+\normalsize % 本文と同じサイズ
+\begin{tabularx}{\linewidth}{|c|X|c|c|X|}
 \hline
-工程区分 & 主処理内容 & 温度 [$^\circ$C] & 処理時間 & 備考 \\ \hline
-\textbf{HV工程 (LOCOS系)} &
-フィールド酸化／チャネルストップ形成 &
+工程区分 & 主処理内容 & 温度[℃] & 時間[分] & 特徴・目的 \\
+\hline
+HV工程（LOCOS系） &
+フィールド酸化膜形成（LOCOS）／チャネルストップ拡散 &
 1050 &
-180 min &
-厚酸化膜成長、熱酸化支配。 \\ \hline
+180 &
+厚膜酸化による高耐圧化。熱履歴最大で、後続工程への影響大。\\
+\hline
  &
-ドレイン・ソース拡散ドライブイン &
-1000--1050 &
-90--120 min &
-高耐圧LDD構造確立。 \\ \hline
+ソース・ドレイン拡散ドライブイン &
+1000–1050 &
+30–60 &
+深拡散を伴い、電気特性を安定化。\\
+\hline
  &
 ゲート酸化膜形成（厚膜） &
 950 &
-40 min &
-30Vクラス用酸化膜。 \\ \hline
-\textbf{LV工程 (STI系)} &
-トレンチ酸化／埋め込み酸化（STI） &
-900--950 &
-30--60 min &
-低温酸化。平坦化後CMP。 \\ \hline
+30 &
+HVデバイス向け厚膜酸化。電界耐圧を確保。\\
+\hline
+LV工程（STI系） &
+トレンチ形成／埋め込み酸化／CMP平坦化 &
+900–950 &
+30–60 &
+低温プロセスで微細ロジック素子用。\\
+\hline
  &
 RTAアニール（浅拡散活性化） &
-1020--1030 &
-10 s × 2 &
-瞬時加熱。熱拡散を抑制。 \\ \hline
+1020–1030 &
+10 &
+短時間高温で活性化を行い、拡散抑制。\\
+\hline
  &
-メタル／パッシベーション後工程 &
-$\leq$ 400 &
+メタル配線／パッシベーション／BoAバンプ形成 &
+≤400 &
 --- &
-実装対応温度。 \\ \hline
-\end{tabular}
+最終工程。熱履歴を抑えて応力影響を最小化。\\
+\hline
+\end{tabularx}
 \end{table}
 
 上表から明らかなように、HV工程では1050$^\circ$C級の高温酸化・ドライブイン処理が複数存在し、
