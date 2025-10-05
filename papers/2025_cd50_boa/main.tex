@@ -110,69 +110,60 @@ CD50プロジェクトにおける最大の技術課題は、従来の0.25\,\mu 
 解決策として、開発チームはLOCOSとSTIを組み合わせたハイブリッドプロセスを検討した。LOCOSの利点である高耐圧特性を保持しつつ、STIによる素子間隔縮小を導入することで歩留まり改善を狙ったのである。  
 しかし、プロセスフローは複雑化し、工程数が大幅に増加した。結果として、当初の目標であった「50\%のコスト削減」は達成できず、むしろ工程コストの上昇が懸念される状況となった。
 
-このハイブリッド統合の工程順序と設計上の要点を整理したのがFig.~\ref{fig:hybrid_flow}である。  
-LOCOSを先行してHVブロックを形成し、その後にSTIプロセスでLVロジックを構築する。  
-熱履歴の影響・素子分離構造のトレードオフ・BoAの効果を併せて最適化する必要がある。
+このハイブリッド統合の工程順序と設計上の要点を整理したのが
+表~\ref{tab:hybrid_flow}である。
+LOCOSを先行してHVブロックを形成し、その後にSTIプロセスでLVロジックを構築する。
+この順序により、高温熱処理を必要とするHV工程の熱履歴が後続LV素子へ与える影響を回避できる。
+一方、STI導入による面積削減とBoAによるパッド領域縮小効果を組み合わせることで、
+総合的なコストダウンを実現することを狙った。
 
-\begin{figure*}[!t]
-  \centering
-  \resizebox{0.95\textwidth}{!}{%
-  \begin{tikzpicture}[
-    every node/.style={font=\footnotesize},
-    node distance=9mm and 12mm,
-    box/.style={draw, rounded corners, align=left, inner sep=4pt,
-                minimum height=8mm, text width=0.46\textwidth, fill=gray!10},
-    arrow/.style={-{Stealth}, thick},
-    note/.style={align=left, text width=0.40\textwidth}
-  ]
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.8pt}
+\renewcommand{\arraystretch}{1.12}
+\caption{LOCOS+STIハイブリッド統合工程と設計上の要点}
+\label{tab:hybrid_flow}
+\begin{tabular}{|c|l|l|l|}
+\hline
+区分 & 主工程・処理内容 & 主な条件・熱履歴 & 設計上の留意点 \\ \hline
+\textbf{HV Block} &
+フィールド酸化（LOCOS）／チャネルストップ形成／厚酸化膜成長 &
+1050$^\circ$C級, 数時間 &
+高耐圧特性を確保。微細化には不利。 \\ \hline
 
-  % 左列（工程フロー）
-  \node[box] (hv) {%
-    \textbf{HV Block (30\,V) — LOCOS first}\\
-    フィールド酸化／チャネルストップ／厚酸化膜\\
-    長チャネル・オフセット構造
-  };
+\textbf{熱履歴影響} &
+高温酸化・ドライブインによる熱予算消費 &
+総熱予算 $\approx 2.4\times10^5$ &
+後続LV素子の拡散／$V_{\mathrm{th}}$変動に影響。 \\ \hline
 
-  \node[box, below=of hv] (therm) {%
-    \textbf{大熱履歴}\\
-    高温酸化・ドライブインにより熱予算消費\\
-    \emph{後続LV素子への影響に注意}
-  };
+\textbf{LV Logic} &
+トレンチ形成→埋め込み酸化→CMP（STI） &
+950$^\circ$C, 数十分 &
+素子間隔縮小・平坦化。 \\ 
+& 浅拡散・微細配線形成 & RTA 1030$^\circ$C, 10 s×2 &
+高密度化・低耐圧素子。 \\ \hline
 
-  \node[box, below=of therm] (lv) {%
-    \textbf{LV Logic (1.8\,V) — STI later}\\
-    トレンチ形成→埋め込み酸化→CMP\\
-    浅拡散・微細配線
-  };
+\textbf{後工程} &
+メタル配線／パッシベーション／BoAバンプ形成 &
+$\leq$ 400$^\circ$C &
+機械的応力・実装信頼性に配慮。 \\ \hline
 
-  \node[box, below=of lv] (finish) {%
-    \textbf{後工程}\\
-    メタル配線／パッシベーション／\textbf{BoAバンプ形成}
-  };
+\textbf{設計上の要点} &
+LOCOS高温→STI低温の順で統合 &
+--- &
+$V_{\mathrm{th}}$安定化・リーク抑制。 \\ 
+& BoAによりパッド領域を削減 &
+--- &
+面積削減・コスト低減の主因。 \\ \hline
+\end{tabular}
+\end{table}
 
-  \draw[arrow] (hv) -- (therm);
-  \draw[arrow] (therm) -- (lv);
-  \draw[arrow] (lv) -- (finish);
-
-  % 右列（注記）
-  \node[note, right=14mm of therm] (risk) {%
-    \textit{統合上のリスク}: LOCOSの高温熱履歴が\\
-    1.8\,Vロジックの $V_{\mathrm{th}}$・リークに影響。\\
-    $\Rightarrow$ 統合最適化（条件分離, マージン設計）が必要
-  };
-  \draw[arrow] (therm.east) -- (risk.west);
-
-  \node[note, right=14mm of lv] (benefit) {%
-    \textit{STIの効果}: 面積削減 $\Rightarrow$ ダイ縮小・コスト低減。\\
-    \textit{BoAの効果}: パッド領域縮小がコストダウンの主役
-  };
-  \draw[arrow] (lv.east) -- (benefit.west);
-
-  \end{tikzpicture}
-  }% end resizebox
-  \caption{LOCOS+STIハイブリッドのプロセス順序：HV(LOCOS)先行 $\rightarrow$ LV(STI) 後続。熱履歴の影響と面積削減のトレードオフ、BoAの寄与を併記。}
-  \label{fig:hybrid_flow}
-\end{figure*}
+LOCOS工程を先行させることで高温酸化およびドライブイン処理を完了し，
+後続のSTI・RTA工程を低熱履歴条件で実施できる。
+もしSTIを先行させた場合，トレンチ酸化膜や浅拡散層が高温処理で再酸化・再拡散し，
+素子分離特性やロジック部のしきい値電圧に悪影響を及ぼすことが知られている。
+したがって，本プロセスでは「HV（高温）→LV（低温）」の順序を採ることが必然であった。
 
 \section{BoA技術と評価方法}
 CD50プロジェクトにおいて最も大きな成果の一つが、Bump on Active (BoA) 技術である。  
