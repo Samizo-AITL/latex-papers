@@ -343,6 +343,92 @@ PZT薄膜は Pb(Zr,Ti)O$_3$ 組成を有し、1層あたり \SI{200}{nm} の膜�
 (1) Ti 薄膜の適切な挿入による応力緩和、(2) RTA条件の最適化による高配向化、
 (3) 酢酸洗浄による親水性確保、といった工程改善により、量産適合性を確立している。
 
+\section{振動板クラックの解析と対策 / Analysis and Countermeasure of Diaphragm Crack}
+\label{sec:crack}
+
+\subsection{現状把握}
+ユニットスクリーニングにおいて、半径中間域に同心リング状のクラックが観測された。
+断面TEMでは6層PZTのうち特定層に局所的な空隙（ボイド）が確認され、
+炭素由来成分が検出された。これはRTA後の外気吸着による表面疎水化に起因し、
+スピン塗布時の気泡巻き込みが発生したと推定される。
+
+\subsection{原因仮説}
+RTA後の外気暴露 → 表面疎水化 → 気泡巻き込み → 層内ボイド形成 →
+焼成時に応力集中 → クラック進展。
+すなわち、外気由来汚染と親水性低下が起点である。
+
+\subsection{対策立案と実施}
+\begin{itemize}
+  \item 酢酸2\%による\emph{プレウェット処理(30\,s)}をRTA直後に追加。
+  \item N$_2$パージ付きミニロードロック搬送により外気暴露を防止。
+\end{itemize}
+
+\subsection{効果確認（広丘流：N, $P_n$, $P$）}
+\[
+  P[\%] = \frac{P_n}{N} \times 100, \quad N = 12\times12\times109 = 15{,}696.
+\]
+
+\begin{table}[h]
+  \centering
+  \caption{クラック不良率の定量比較}
+  \label{tab:crack-yield}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    条件 & $N$ [chip] & $P_n$ [chip] & $P$ [\%] \\
+    \midrule
+    従来（Before） & 15{,}696 & 1{,}099 & 7.0 \\
+    酢酸PW後（After） & 15{,}696 & 63 & 0.40 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+不良率は7.0\%から0.4\%に低減し、絶対低減6.6\,%-pt、
+相対改善94\%を達成した。配向率や電気特性に有意差はなく、
+量産工程への恒久導入が確立した。
+
+\subsection{考察}
+酢酸プレウェットは、RTA後に親水性をリセットする工程介入であり、
+気泡巻き込みを根本的に防止する有効手段である。
+本手法はソル–ゲルPZTに限らず、HfO$_2$系やAlN系薄膜への
+展開も可能であり、薄膜MEMS一般に有効なプロセス指針(G1)と位置づけられる。
+
+\section{端部焼損の解析と対策 / Analysis and Countermeasure of Edge Burnout}
+\label{sec:burnout}
+
+\subsection{現状把握}
+スクリーニング試験で+30\,V（COM）と--10\,V（VBS）の差分
+\(\Delta V=40\,\mathrm{V}\)印加時に、
+チップ端部のPZT側壁露出部で焼損が集中して発生した。
+光学顕微鏡およびSEMで炭化痕を確認し、EDXでは金属蒸発痕が検出された。
+この部位は構造上不可避な露出箇所であり、空気絶縁では耐圧が不足する。
+
+\subsection{原因仮説}
+PZT側壁の露出による局所電界集中に加え、
+立上り過渡の瞬間電流 \(I=C\,\mathrm{d}V/\mathrm{d}t\)
+によるジュール加熱が重畳し、
+\emph{局所絶縁破壊}を誘発する。
+実効電界は \(E\simeq3.3\,\mathrm{MV/cm}\) に達する。
+
+\subsection{対策立案}
+\begin{itemize}
+  \item \textbf{恒久策（B1）}: ALD法によりAlO$_x$薄膜を側壁に\emph{conformal}成膜し、空気絶縁依存を解消。
+  \item \textbf{補完策（B2）}: 駆動波形の立上りスロープを緩和し、過渡電流を低減。
+\end{itemize}
+
+\subsection{効果確認}
+(B1)試作チップにより耐圧が従来比約1.5倍に向上し、
+焼損発生が大幅に抑制された。
+ただしALD導入には新規投資を要し、量産適用には
+コスト評価が必要である。
+(B2)は吐出特性変化を伴うため、設計最適化との併用が前提となる。
+
+\subsection{考察}
+端部焼損は設計上不可避なPZT露出に起因する構造的課題であり、
+設計で避けられない領域を\emph{プロセスで守る}という考え方が有効である。
+ALD側壁パッシベーションは薄膜MEMS一般の
+電界集中対策指針(G2)として位置づけられる。
+
 \section{不良解析結果}
 
 \subsection{クラック：同心リング分布と層内ボイド}
