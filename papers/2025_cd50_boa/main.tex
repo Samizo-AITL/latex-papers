@@ -230,32 +230,40 @@ BoAではアクティブ領域上に形成できるため、短辺方向の寸�
 \centering
 \begin{tikzpicture}
   \begin{axis}[
-    width=7cm,
-    height=5cm,
+    width=10.5cm, height=7.5cm,  % ← 1.5倍
     ybar,
-    bar width=4pt,
-    ylabel={測定チップ数},
+    bar width=5pt,
     xlabel={抵抗値 [Ω]},
-    symbolic x coords={10,12,14,16,18,20,22,24,26,28,30},
+    ylabel={測定チップ数},
+    symbolic x coords={10,12,14,16,18,20,22,24,26},
     xtick=data,
-    ymin=0,
-    ymax=30,
-    legend style={at={(0.5,1.05)},anchor=south,legend columns=-1},
-    grid=both
+    ymin=0, ymax=12,                 % ← 上限12
+    ytick={0,2,4,6,8,10,12},
+    tick align=inside,               % ← 目盛 内側
+    tick style={thick},
+    axis x line*=bottom,
+    axis y line*=left,
+    enlarge x limits=0.08,
+    grid=both,
+    legend style={
+      at={(0.5,1.05)}, anchor=south, legend columns=-1,
+      draw=none, fill=none
+    }
   ]
-    % 研磨前のデータ（ばらつき大）
+    % 研磨前（ばらつき大）
     \addplot+[fill=blue!40,draw=black] coordinates {
       (10,1) (12,2) (14,3) (16,5) (18,7) (20,6) (22,3) (24,2) (26,1)
     };
-    % 研磨後のデータ（ばらつき小）
-    \addplot+[fill=red!50,draw=black] coordinates {
-      (10,5) (12,8) (14,10) (16,5) (18,2) (20,0)
+    % 研磨後（ばらつき小）
+    \addplot+[fill=red!60,draw=black] coordinates {
+      (10,5) (12,8) (14,10) (16,5) (18,2)
     };
-    \legend{研磨前,研磨後}
+    \legend{研磨前, 研磨後}
   \end{axis}
 \end{tikzpicture}
-\caption{AL配線オープン／ショートTEGにおける1ウェハ面内の配線抵抗測定ヒストグラム。
-研磨前は接触抵抗ばらつきが大きいが、研磨後は分布が狭く安定している。}
+
+\caption{AL配線オープン／ショートTEGにおける1ウェハ面内50チップの配線抵抗ヒストグラム。
+研磨前は接触抵抗ばらつきの影響で広がるが、研磨後は分布が狭く安定。}
 \end{figure}
 
 \section{評価結果と課題}
