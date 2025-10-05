@@ -61,19 +61,21 @@
   \end{tikzpicture}%
 }
 
-% ====== Fig.2: 6層のPZT断面（上下実線／中間点線／ボイド枠線なし）======
-\newcommand{\figPZTLayersVoidInline}{%
+% ====== Fig.2: 6層PZT（上下=太実線／中間=細点線／ボイド=塗りのみ）======
+% 使い方: \figPZTLayersVoidInline         % 既定は第4層にボイド
+%         \figPZTLayersVoidInline[3]     % 第3層にボイド、など
+\renewcommand{\figPZTLayersVoidInline}[1][4]{%
   \begin{tikzpicture}[x=0.9cm,y=0.9cm]
     % ---- パラメータ ----
     \def\W{6.0}   % 横幅
     \def\H{0.45}  % 各層の厚み
     \def\N{6}     % 層数
-    \def\voidLayer{4} % ボイド層（1..6）
+    \def\voidLayer{#1} % ★ ここで必ず定義（既定=4）
 
     % ---- 7本の水平線（0〜6）----
     \foreach \i in {0,...,6}{%
       \pgfmathsetmacro{\yy}{\i*\H}%
-      % 最下線 (i=0) と最上線 (i=6) は太実線、それ以外は細点線
+      % 最下 (i=0) と最上 (i=6) は太実線／中間は細い点線
       \ifnum\i=0
         \draw[line width=1pt] (0,\yy) -- (\W,\yy);
       \else
@@ -85,18 +87,9 @@
       \fi
     }
 
-    % ---- ボイド矩形（枠線なし）----
-    \pgfmathsetmacro{\idx}{\voidLayer-1}%
-    \pgfmathsetmacro{\yv}{\idx*\H}%
+    % ---- ボイド矩形（枠線なし＝塗りのみ）----
+    \pgfmathsetmacro{\yv}{(\voidLayer-1)*\H}%
     \fill[gray!50] (2.1,\yv) rectangle (3.0,\yv+\H);
-  \end{tikzpicture}%
-}
-
-    % ---- ボイド矩形（上下界面に接する）----
-    \pgfmathsetmacro{\idx}{\voidLayer-1}%
-    \pgfmathsetmacro{\yv}{\idx*\H}%
-    \fill[gray!50] (2.1,\yv) rectangle (3.0,\yv+\H);
-    \draw[line width=0.8pt,black] (2.1,\yv) rectangle (3.0,\yv+\H);
   \end{tikzpicture}%
 }
 
