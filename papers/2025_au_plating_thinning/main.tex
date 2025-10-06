@@ -341,92 +341,104 @@ Auマイグレーション起因の端子間ショートを確認した。
 対策として PZT 層にスリットを導入し，配線間の実効沿面距離を延長して
 Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
 
+% ===== 1カラム用：対策前（上）／対策後（下） =====
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[x=0.90mm,y=0.90mm,>=Latex,inner sep=1pt]
-    % 共通寸法（X は上下で共通に使用）
-    \def\xL{8}    % 左端
-    \def\xR{70}   % 右端
-    \def\xEL{20}  % 左電極 左X
-    \def\xER{32}  % 左電極 右X
-    \def\xFL{46}  % 右電極 左X
-    \def\xFR{58}  % 右電極 右X
-    \def\xLbl{74} % 右側ラベルX
-    % 高さ（層厚は同じ。上下で原点Yだけ変える）
-    \def\hBE{6} \def\hPZT{12} \def\hTE{2}
-    \def\hEL{13} \def\hCOFAu{2.7} \def\hCOFCu{6}
-    % タイトル下にCu上辺が来るよう、タイトルYとCu上辺Yの差を一定に
-    \def\gapTitleCu{4.5} % タイトル→Cu上辺の間隔
+  \resizebox{\columnwidth}{!}{%
+  \begin{tikzpicture}[x=0.90mm,y=0.90mm,>=Latex,inner sep=0.6pt]
+    %--------------------------------------------------
+    % 全体バウンディングボックス
+    \path[use as bounding box] (0,0) rectangle (78,140);
 
-    %---------------- 上段：対策前 ----------------
-    \def\y0{8}                 % 下地BEの下端Y（上段）
-    \def\yTitleA{53}           % タイトルY
-    \node[font=\small] at ({(\xL+\xR)/2}, \yTitleA) {対策前：TE 表面で Au マイグレーション発生リスク};
+    %================ パラメータ ========================
+    \def\YtTop{126.0}   % 上図タイトル
+    \def\YtBot{62.0}    % 下図タイトル
+    \def\gapTitleCu{3.0}% ← タイトルとCu上辺の間隔を3mmに拡大
+    \def\thBE{6}  \def\thPZT{12} \def\thTE{2}
+    \def\thAuA{13}\def\thAuC{2.7}\def\thCuC{6.0}
+    \def\Xl{8} \def\Xr{70}
+    \def\XaL{20} \def\XaR{32}
+    \def\XbL{46} \def\XbR{58}
 
-    % Cu 上辺Y（タイトル直下に来るように決定）
-    \pgfmathsetmacro{\yCuTopA}{\yTitleA-\gapTitleCu}
-    % COF（Cu/Au）
-    \fill[orange!35] (\xEL,\yCuTopA-\hCOFAu) rectangle (\xER,\yCuTopA);  % 左 Au
-    \fill[brown!30]  (\xEL,\yCuTopA-\hCOFAu-\hCOFCu) rectangle (\xER,\yCuTopA-\hCOFAu); % 左 Cu
-    \fill[orange!35] (\xFL,\yCuTopA-\hCOFAu) rectangle (\xFR,\yCuTopA);
-    \fill[brown!30]  (\xFL,\yCuTopA-\hCOFAu-\hCOFCu) rectangle (\xFR,\yCuTopA-\hCOFAu);
+    %================ ブロック描画関数 ====================
+    \newcommand{\Block}[2]{%
+      \pgfmathsetmacro{\Ytitle}{#1}
+      \pgfmathsetmacro{\YcuTop}{\Ytitle - \gapTitleCu}
+      \pgfmathsetmacro{\YauCtop}{\YcuTop}
+      \pgfmathsetmacro{\YauCbot}{\YauCtop - \thAuC}
+      \pgfmathsetmacro{\YcuCtop}{\YauCbot}
+      \pgfmathsetmacro{\YcuCbot}{\YcuCtop - \thCuC}
+      \pgfmathsetmacro{\YauAtop}{\YcuCbot}
+      \pgfmathsetmacro{\YauAbot}{\YauAtop - \thAuA}
+      \pgfmathsetmacro{\YTEtop}{\YauAbot}
+      \pgfmathsetmacro{\YTEbot}{\YTEtop - \thTE}
+      \pgfmathsetmacro{\YPZTop}{\YTEbot}
+      \pgfmathsetmacro{\YPZBot}{\YPZTop - \thPZT}
+      \pgfmathsetmacro{\YBEtop}{\YPZBot}
+      \pgfmathsetmacro{\YBEbot}{\YBEtop - \thBE}
 
-    % アクチュエータAu電極
-    \fill[gray!60] (\xEL,\y0+\hBE+\hPZT+\hTE) rectangle (\xER,\y0+\hBE+\hPZT+\hTE+\hEL);
-    \fill[gray!60] (\xFL,\y0+\hBE+\hPZT+\hTE) rectangle (\xFR,\y0+\hBE+\hPZT+\hTE+\hEL);
-    \node[font=\scriptsize] at ({(\xEL+\xER)/2}, \y0+\hBE+\hPZT+\hTE+\hEL-1.6) {Au 1.3 µm (Act)};
-    \node[font=\scriptsize] at ({(\xFL+\xFR)/2}, \y0+\hBE+\hPZT+\hTE+\hEL-1.6) {Au 1.3 µm (Act)};
+      %----- タイトル（中央） -----
+      \node[font=\small,anchor=south] at (0.5*(\Xl+\Xr),\Ytitle)
+        {\ifnum#2=0 対策前：TE表面でAuマイグレーション発生リスク
+         \else 対策後：PZT抜き＋TE分離による沿面電界緩和\fi};
 
-    % 下地層（BE/PZT/TE）
-    \fill[gray!30] (\xL,\y0) rectangle (\xR,\y0+\hBE);                          % BE
-    \fill[gray!15] (\xL,\y0+\hBE) rectangle (\xR,\y0+\hBE+\hPZT);                % PZT
-    \fill[gray!10] (\xL,\y0+\hBE+\hPZT) rectangle (\xR,\y0+\hBE+\hPZT+\hTE);     % TE
+      %----- COF端子（Au/Cu） -----
+      \fill[orange!35] (\XaL,\YauCtop) rectangle (\XaR,\YauCbot);
+      \fill[brown!30]  (\XaL,\YcuCtop) rectangle (\XaR,\YcuCbot);
+      \fill[orange!35] (\XbL,\YauCtop) rectangle (\XbR,\YauCbot);
+      \fill[brown!30]  (\XbL,\YcuCtop) rectangle (\XbR,\YcuCbot);
 
-    % 右側ラベル
-    \node[font=\scriptsize,anchor=west] at (\xLbl,\y0+1.9)   {BE 100 nm};
-    \node[font=\scriptsize,anchor=west] at (\xLbl,\y0+\hBE+6){PZT 1.2 µm};
-    \node[font=\scriptsize,anchor=west] at (\xLbl,\y0+\hBE+\hPZT+1.8){TE 20 nm};
+      %----- アクチュエータAu -----
+      \fill[gray!60] (\XaL,\YauAtop) rectangle (\XaR,\YauAbot);
+      \fill[gray!60] (\XbL,\YauAtop) rectangle (\XbR,\YauAbot);
 
-    % Au マイグレーション矢印（TE 上）
-    \draw[->] (\xER+2,\y0+\hBE+\hPZT+0.8) -- (\xFL-2,\y0+\hBE+\hPZT+0.8);
-    \node[font=\scriptsize] at ({(\xER+\xFL)/2}, \y0+\hBE+\hPZT+2.0) {Au migration on TE};
+      %----- TE 層 -----
+      \ifnum#2=0
+        \fill[gray!10] (\Xl,\YTEtop) rectangle (\Xr,\YTEbot); % 対策前：連続
+      \else
+        \fill[gray!10] (\Xl,\YTEtop) rectangle (0.5*(\XaR+\XbL),\YTEbot);
+        \fill[gray!10] (0.5*(\XaR+\XbL),\YTEtop) rectangle (\Xr,\YTEbot);
+        \draw[line width=0.4pt] (0.5*(\XaR+\XbL),\YTEtop) -- (0.5*(\XaR+\XbL),\YBEbot);
+      \fi
 
-    %---------------- 下段：対策後（PZT抜き） ----------------
-    \def\y1{62}                % 下地BEの下端Y（下段）
-    \def\yTitleB{100}
-    \node[font=\small] at ({(\xL+\xR)/2}, \yTitleB) {対策後：沿面改質・電界緩和によるマイグレーション抑制};
+      %----- PZT 層 -----
+      \ifnum#2=0
+        \fill[gray!15] (\Xl,\YPZTop) rectangle (\Xr,\YPZBot); % 連続
+      \else
+        \fill[gray!15] (\Xl,\YPZTop) rectangle (0.5*(\XaR+\XbL),\YPZBot);
+        \fill[gray!15] (0.5*(\XaR+\XbL),\YPZTop) rectangle (\Xr,\YPZBot);
+      \fi
 
-    % Cu 上辺Y（下段も同じ規則）
-    \pgfmathsetmacro{\yCuTopB}{\yTitleB-\gapTitleCu}
-    % COF（Cu/Au）
-    \fill[orange!35] (\xEL,\yCuTopB-\hCOFAu) rectangle (\xER,\yCuTopB);
-    \fill[brown!30]  (\xEL,\yCuTopB-\hCOFAu-\hCOFCu) rectangle (\xER,\yCuTopB-\hCOFAu);
-    \fill[orange!35] (\xFL,\yCuTopB-\hCOFAu) rectangle (\xFR,\yCuTopB);
-    \fill[brown!30]  (\xFL,\yCuTopB-\hCOFAu-\hCOFCu) rectangle (\xFR,\yCuTopB-\hCOFAu);
+      %----- BE 層 -----
+      \fill[gray!30] (\Xl,\YBEtop) rectangle (\Xr,\YBEbot);
 
-    % アクチュエータAu電極
-    \fill[gray!60] (\xEL,\y1+\hBE+\hPZT+\hTE) rectangle (\xER,\y1+\hBE+\hPZT+\hTE+\hEL);
-    \fill[gray!60] (\xFL,\y1+\hBE+\hPZT+\hTE) rectangle (\xFR,\y1+\hBE+\hPZT+\hTE+\hEL);
-    \node[font=\scriptsize] at ({(\xEL+\xER)/2}, \y1+\hBE+\hPZT+\hTE+\hEL-1.6) {Au 1.3 µm (Act)};
-    \node[font=\scriptsize] at ({(\xFL+\xFR)/2}, \y1+\hBE+\hPZT+\hTE+\hEL-1.6) {Au 1.3 µm (Act)};
+      %----- Au移動矢印（対策前のみ） -----
+      \ifnum#2=0
+        \draw[->] (\XaR+2,\YTEtop-0.2) -- (\XbL-2,\YTEtop-0.2);
+      \fi
 
-    % 下地層（BE／PZT“抜き”／TE）
-    \fill[gray!30] (\xL,\y1) rectangle (\xR,\y1+\hBE);                           % BE
-    \fill[gray!15] (\xL,\y1+\hBE) rectangle (\xR,\y1+\hBE+\hPZT);                 % PZT 全体
-    \fill[white]   ({(\xL+\xR)/2 -1},\y1+\hBE) rectangle ({(\xL+\xR)/2 +1},\y1+\hBE+\hPZT); % 中央スリット＝PZT抜き
-    \fill[gray!10] (\xL,\y1+\hBE+\hPZT) rectangle (\xR,\y1+\hBE+\hPZT+\hTE);      % TE
+      %----- 右側ラベル -----
+      \pgfmathsetmacro{\Xlab}{74}
+      \ifnum#2=0
+        \node[anchor=west,font=\scriptsize] at (\Xlab,\YBEbot+2.0) {BE 100 nm};
+        \node[anchor=west,font=\scriptsize] at (\Xlab,\YPZBot+2.0) {PZT 1.2 µm（連続）};
+        \node[anchor=west,font=\scriptsize] at (\Xlab,\YTEbot+2.0) {TE 20 nm（連続）};
+      \else
+        \node[anchor=west,font=\scriptsize] at (\Xlab,\YBEbot+2.0) {BE 100 nm};
+        \node[anchor=west,font=\scriptsize] at (\Xlab,\YPZBot+2.0) {PZT 1.2 µm（左右分離）};
+        \node[anchor=west,font=\scriptsize] at (\Xlab,\YTEbot+2.0) {TE 20 nm（左右分離）};
+      \fi
+      \node[anchor=west,font=\scriptsize] at (\Xlab,\YauAbot+1.5) {Au 1.3 µm（Act）};
+      \node[anchor=west,font=\scriptsize] at (\Xlab,\YcuCtop+0.8) {COF Au 0.425 µm / Cu 8 µm};
+    }
 
-    % 右側ラベル
-    \node[font=\scriptsize,anchor=west] at (\xLbl,\y1+1.9)   {BE 100 nm};
-    \node[font=\scriptsize,anchor=west] at (\xLbl,\y1+\hBE+6){PZT 1.2 µm（中央スリット）};
-    \node[font=\scriptsize,anchor=west] at (\xLbl,\y1+\hBE+\hPZT+1.8){TE 20 nm};
-  \end{tikzpicture}
-
-  \vspace{1mm}
-  \caption{COF端子（Au 0.425 µm／Cu 8 µm）とアクチュエータAu電極（1.3 µm）の界面模式図。
-  上：対策前はTE表面でAuマイグレーションが起点となる。
-  下：対策後はPZT中央スリットにより沿面距離が延長し、電界緩和で抑制。
-  下地：NiCr 50 nm／TE 20 nm／PZT 1.2 µm／BE 100 nm。}
+    %================ 実体呼び出し =====================
+    \Block{\YtTop}{0} % 上：対策前
+    \Block{\YtBot}{1} % 下：対策後
+  \end{tikzpicture}}
+  \caption{COF端子とアクチュエータ電極の界面模式図（上：対策前，下：対策後）。
+  各層名・膜厚は右側に集約。対策後はPZT抜き（中央スリット）とTE分離により沿面電界を緩和。}
+  \label{fig:act-mig-clean-1col}
 \end{figure}
 
 %================ 謝辞 =================
