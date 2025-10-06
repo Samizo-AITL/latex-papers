@@ -177,87 +177,79 @@ Man：教育・標準化／Machine：設備条件最適化／Material：ACF・�
 \end{tabularx}
 \end{table}
 
-% ====== 2カラムの決定版 図（スケッチ準拠） ======
+%==================== 改訂版：2カラム断面図（スケッチ厳守） ====================
 \begin{figure*}[t]
 \centering
 \resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[x=1mm,y=1mm,>=Latex,
-  blk/.style={draw, line width=0.35pt},
-  si/.style={blk, fill=black!5},
-  pzt/.style={blk, fill=black!12},
-  film/.style={blk, fill=black!2},
-  cavity/.style={blk, fill=white},
-  cof/.style={blk, fill=black!8},
-  icpkg/.style={blk, fill=black!20, rounded corners=0.8mm},
-  bondACF/.style={blk, fill=black!28},      % 出力：ACF
-  bondSolder/.style={blk, fill=black!45},   % 入力：はんだ
-  lab/.style={font=\scriptsize}
+\begin{tikzpicture}[
+  x=1mm,y=1mm,>=Latex,
+  lw/.style={line width=0.35pt},
+  solidbox/.style={draw, lw, fill=#1},
+  lab/.style={font=\scriptsize},
+  call/.style={lab, align=left, anchor=west},
+  tick/.style={lw}
 ]
 
-% ===== 下地：Siとキャビティ =====
-% Si台座（左右の“脚”を残して中央にキャビティ）
-\draw[si] (0,0) rectangle (160,10);                       % Si全体ベース
-\draw[cavity] (40,0.3) rectangle (120,10);                % キャビティ開口
-\node[lab] at (80,2.2) {キャビティ};
-\node[lab, anchor=west] at (121,2.2) {Si（基板）};
-
-% キャビティ上の保護/絶縁フィルム（PPT?）
-\draw[film] (0,10) rectangle (160,11);
-\node[lab, anchor=west] at (161,10.5) {保護フィルム（PPT?）};
-
-% ===== PZT（中央） =====
-\draw[pzt] (72,11) rectangle (88,65);
-\node[lab, anchor=west] at (89,40) {バルクPZT};
-
-% ===== COF（左側の縦配線）＋IC =====
-\draw[cof] (55,11) rectangle (60,65);                     % COF縦ストリップ
-\node[lab, rotate=90] at (57.5,40) {COF};
-% 上部ICパッケージ（COFに実装）
-\draw[icpkg] (50,54) rectangle (60,63);
-\node[lab, anchor=east] at (49.8,58.5) {IC};
-
-% ===== 出力側：COF→PZT の ACF接合（スケッチ赤部） =====
-\draw[bondACF] (60,33) rectangle (72,37);                 % ACFブリッジ
-% ラベルと矢印
-\draw[->,line width=0.35pt] (100,50) -- (72,35.5);
-\node[lab, align=left, anchor=west] at (101,50)
-{出力（COF$\rightarrow$PZT）\\ACF接合（導電粒子）};
-
-% ===== 入力側：COF→基板 の はんだ接合（下部） =====
-% COF下端からSiのパッドへ小さく接続
-\draw[bondSolder] (56,12.0) rectangle (59,13.6);
-\draw[blk] (57.5,11) -- (57.5,12.0);                      % COF下端と接続
-\node[lab, anchor=east] at (47.5,12.8) {入力（COF$\rightarrow$基板） はんだ接合（Sn系）};
-\draw[->,line width=0.35pt] (47.8,12.8) -- (56,12.8);
-
-% ===== 電圧/配線の注記 =====
-\draw[->,line width=0.35pt] (57.5,65) -- (57.5,71);
-\node[lab, anchor=south] at (57.5,71) {配線（信号 / $-10$V 等）};
-
-% ===== 溶剤蒸気 膨潤リスク（ACF付近） =====
-\draw[->,line width=0.35pt] (122,38) -- (72,36.5);
-\node[lab, align=left, anchor=west] at (123,38)
-{溶剤蒸気環境\\ACF樹脂の膨潤リスク};
-
-% ===== 凡例 =====
-\begin{scope}[shift={(0,77)}]
-  \node[lab, anchor=west] at (0,0) {凡例：};
-  \draw[cof] (12,-3) rectangle (20,3);   \node[lab, anchor=west] at (21,0) {COF};
-  \draw[pzt] (34,-3) rectangle (42,3);   \node[lab, anchor=west] at (43,0) {PZT};
-  \draw[si]  (56,-3) rectangle (64,3);   \node[lab, anchor=west] at (65,0) {Si};
-  \draw[film](78,-3) rectangle (86,3);   \node[lab, anchor=west] at (87,0) {保護フィルム};
-  \draw[bondACF] (104,-3) rectangle (112,3); \node[lab, anchor=west] at (113,0) {ACF接合（出力）};
-  \draw[bondSolder] (134,-3) rectangle (142,3); \node[lab, anchor=west] at (143,0) {はんだ接合（入力）};
+% ----------------- 凡例（上段に横並び） -----------------
+\begin{scope}[shift={(0,78)}]
+  \draw[solidbox=black!8]   (0,0) rectangle (10,4);  \node[lab,anchor=west]  at (12,2){COF};
+  \draw[solidbox=black!15] (32,0) rectangle (42,4); \node[lab,anchor=west]  at (44,2){PZT};
+  \draw[solidbox=black!5]  (64,0) rectangle (74,4); \node[lab,anchor=west]  at (76,2){Si};
+  \draw[solidbox=black!2]  (96,0) rectangle (106,4);\node[lab,anchor=west]  at (108,2){保護フィルム（PPT?）};
+  \draw[solidbox=black!28] (148,0) rectangle (158,4);\node[lab,anchor=west] at (160,2){ACF 接合（出力）};
+  \draw[solidbox=black!45] (200,0) rectangle (210,4);\node[lab,anchor=west] at (212,2){はんだ接合（入力）};
 \end{scope}
 
-% ===== 下部ラベル（I/O分離を強調） =====
-\node[lab, anchor=east] at (30,36) {I/O分離：出力＝ACF／入力＝はんだ};
+% ----------------- 下地：Si と キャビティ -----------------
+\draw[solidbox=black!5] (0,0) rectangle (200,12);           % Siベース
+\draw[lw, fill=white] (36,0.4) rectangle (164,12);          % キャビティ開口
+\node[lab] at (100,2.2){キャビティ};
+\node[lab,anchor=west] at (165,2.2){Si（基板）};
+
+% 保護フィルム（PPT?）
+\draw[solidbox=black!2] (0,12) rectangle (200,13.2);
+\node[lab,anchor=west] at (201,12.6){保護フィルム（PPT?）};
+
+% ----------------- バルクPZT（中央） -----------------
+\draw[solidbox=black!15] (116,13.2) rectangle (154,70);
+\node[lab,anchor=west] at (155,43){バルク PZT};
+
+% ----------------- 左：COF 縦配線 と IC -----------------
+\draw[solidbox=black!8] (74,13.2) rectangle (82,70);        % COFストリップ
+\node[lab,rotate=90] at (78,42){COF};
+
+% COF上のIC
+\draw[draw, lw, rounded corners=0.9mm, fill=black!25] (70,58) rectangle (82,66);
+\node[lab,anchor=east] at (69.5,62){IC};
+% IC配線（上向き）
+\draw[->,lw] (76,70) -- (76,75); \node[lab,anchor=south] at (76,75){配線（信号 / $-10$V 等）};
+
+% ----------------- 出力：COF→PZT（ACF） -----------------
+% ACFブリッジ（スケッチ赤部の高さ）
+\draw[solidbox=black!28] (82,36) rectangle (116,40);
+% ラベルと矢印
+\draw[->,lw] (156,56) -- (116,38);
+\node[call] at (157,56){出力（COF$\rightarrow$PZT）\\ACF 接合（導電粒子）};
+
+% ----------------- 入力：COF→基板（はんだ） -----------------
+\draw[solidbox=black!45] (75,14.0) rectangle (81,16.0);     % COF下端～Siパッドのはんだ
+\draw[lw] (78,13.2) -- (78,14.0);                            % COFと接続
+\draw[->,lw] (54,15.0) -- (75,15.0);
+\node[lab,anchor=east] at (53.5,15.0){入力（COF$\rightarrow$基板） はんだ接合（Sn 系）};
+
+% ----------------- 溶剤蒸気 膨潤リスク（ACF付近） -----------------
+\draw[->,lw] (160,42) -- (116,39.2);
+\node[call] at (161,42){溶剤蒸気環境\\ACF 樹脂の膨潤リスク};
+
+% ----------------- I/O分離の強調 -----------------
+\node[lab,anchor=west] at (5,32){I/O 分離：出力＝ACF ／ 入力＝はんだ};
 
 \end{tikzpicture}
 }% end resizebox
-\caption{Mach世代インクジェットヘッドの断面概念図（スケッチ準拠）。\;左のCOFから上部ICに接続し、\textbf{出力側（COF$\rightarrow$PZT）はACF}、\textbf{入力側（COF$\rightarrow$基板）ははんだ}で接合する二重方式。中央のバルクPZTはキャビティ上に配置され、保護フィルム（PPT?）を介してSi基板に載る。溶剤蒸気環境ではACF樹脂の膨潤リスクがあるため、開放環境の設計配慮が必要。}
-\label{fig:mach_dual_bond_xsec}
+\caption{Mach 世代インクジェットヘッドの断面概念図（スケッチ準拠）。左のCOFは上部ICに接続し、\textbf{出力側（COF$\rightarrow$PZT）はACF}、\textbf{入力側（COF$\rightarrow$基板）ははんだ}で接合する二重方式。中央のバルクPZTはキャビティ上に配置され、保護フィルム（PPT?）を介してSi基板上に載る。溶剤蒸気環境ではACF樹脂の膨潤リスクがある。}
+\label{fig:mach_dual_bond_xsec_final}
 \end{figure*}
+%===============================================================================
 
 \section{製造管理の難易度}
 本件は単一機種に閉じた問題ではなく、複数の溶剤インク対応ヘッド機種を同時に対象とする必要があった。さらに、COFはエプソン製・シャープ製・東芝製と複数の外部サプライヤから供給されており、それぞれの端子構造・表面処理条件・品質保証基準が微妙に異なっていた。したがって、単純な一律切替ではなく、サプライヤごとに接合条件の最適化が求められた。  
