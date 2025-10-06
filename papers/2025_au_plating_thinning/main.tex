@@ -340,14 +340,15 @@ Auマイグレーション起因の端子間ショートを確認した。
 Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
 
 % =====================================================
-% Appendix: Countermeasure Figure (縦並び版・PZTスリット削除)
+% Appendix: Auマイグレーション対策図（1カラム対応版）
 % =====================================================
-\begin{figure}[!t]
+\begin{figure}[t]
   \centering
-  \resizebox{\columnwidth}{!}{%
+  % 横幅をcolumnwidthに調整（オーバーラップ防止）
+  \resizebox{0.95\columnwidth}{!}{%
   \begin{tikzpicture}[x=1mm,y=1mm,>=Latex,inner sep=1pt]
-    % 図全体の外形を固定（はみ出し防止）
-    \path[use as bounding box] (0,0) rectangle (80,95);
+    % --- 図全体外形 ---
+    \path[use as bounding box] (0,0) rectangle (70,90);
 
     % ---------------- 上：対策前 ----------------
     \begin{scope}
@@ -375,7 +376,7 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
       \node[font=\scriptsize] at (44,34.7) {COF Au 0.425 µm};
       \node[font=\scriptsize] at (44,40.7) {Cu 8 µm};
 
-      % TE表面のAu移動（模式）
+      % TE表面のAu移動
       \draw[->] (26,19.8) -- (36,19.8);
       \node[font=\scriptsize] at (31,21.0) {Au migration on TE};
 
@@ -383,9 +384,9 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
       \node[font=\small] at (31,46.0) {対策前：TE表面でAuマイグレーション発生リスク};
     \end{scope}
 
-    % ---------------- 下：対策後（PZTスリット削除） ----------------
+    % ---------------- 下：対策後 ----------------
     \begin{scope}[yshift=-55mm]
-      % 下地層（PZT一体）
+      % 下地層
       \fill[gray!30] (0,0) rectangle (62,6);    % BE
       \fill[gray!15] (0,6) rectangle (62,18);   % PZT
       \fill[gray!10] (0,18) rectangle (62,20);  % TE
@@ -414,12 +415,14 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
     \end{scope}
 
   \end{tikzpicture}}
-  \vspace{2mm}
-  \caption{COF端子（Au 0.425 µm／Cu 8 µm）とアクチュエータAu電極（1.3 µm）の界面模式図。
+  \vspace{1mm}
+  \caption{%
+  COF端子（Au 0.425 µm／Cu 8 µm）とアクチュエータAu電極（1.3 µm）の界面模式図。
   上：対策前はTE表面でAuマイグレーションが起点となる。
-  下：対策後は沿面電界緩和・界面改質によってマイグレーション抑制効果を示す。
-  下地：NiCr 50 nm／TE 20 nm／PZT 1.2 µm／BE 100 nm。}
-  \label{fig:act-mig-clean-noslit}
+  下：対策後は沿面電界緩和・界面改質により抑制効果を示す。
+  下地：NiCr 50 nm／TE 20 nm／PZT 1.2 µm／BE 100 nm。%
+  }
+  \label{fig:act-mig-clean-1col}
 \end{figure}
 
 %================ 謝辞 =================
