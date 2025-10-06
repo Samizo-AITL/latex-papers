@@ -371,11 +371,12 @@ Auマイグレーション起因の端子間ショートを確認した。
 主因は PZT/TE 表面での電界集中と，湿潤環境下での表面イオン移動である。
 
 対策として PZT 層にスリットを導入し，配線間の実効沿面距離を延長して
-Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
+Auマイグレーションを抑制した（Fig.~\ref{fig:cof-before-after}）。
 
 %================ Figure: COF Au/Cu & Au migration before/after (TikZ) =========
 \begin{figure}[t]
   \centering
+  \resizebox{0.95\columnwidth}{!}{%
   \begin{tikzpicture}[x=1mm,y=1mm]
     % 色定義
     \definecolor{cofAu}{RGB}{244,170,88}   % COF: Au（橙）
@@ -385,10 +386,10 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
     \colorlet{pztLayer}{gray!15}
     \colorlet{beLayer}{gray!30}
 
-    % スケール：実厚比反映
+    % 実厚比（PZT 1.2µm ≒ Au 1.3µm がほぼ同じ高さに見えるよう調整）
     \def\scale{8.0} % 1 µm = 8 mm
-    \pgfmathsetmacro{\auT}{1.3*\scale}   % 10.4 mm
-    \pgfmathsetmacro{\pztT}{1.2*\scale}  % 9.6 mm
+    \pgfmathsetmacro{\auT}{1.3*\scale}
+    \pgfmathsetmacro{\pztT}{1.2*\scale}
 
     % 共通パラメータ
     \def\gap{0.6}     % タイトル直下の余白
@@ -404,11 +405,10 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
 
     %-------------------------------- 上段：対策前 ------------------------------
     \begin{scope}[shift={(0,47)}]
-      % タイトル
       \node[anchor=south west,font=\small] at (0,0)
         {対策前：TE 表面で Au マイグレーション発生リスク};
 
-      % y位置定義
+      % y位置
       \pgfmathsetmacro{\yTop}{-\gap}
       \pgfmathsetmacro{\yCOFbot}{\yTop-(\cofAuT+\cofCuT)}
       \pgfmathsetmacro{\yAUbot}{\yCOFbot-\auT}
@@ -419,19 +419,30 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
       % 下地層
       \fill[beLayer]  (0,\yBEbot) rectangle (\W,\yPZTbot);
       \fill[pztLayer] (0,\yPZTbot) rectangle (\W,\yTEbot);
-      \fill[teLayer]  (0,\yTEbot) rectangle (\W,\yAUbot);
+      \fill[teLayer]  (0,\yTEbot) rectangle (\W,\yAUbot); % TE 連続
 
-      % Au島
+      % Au島（2つ）
       \fill[auMetal] (\bx,\yAUbot) rectangle (\bx+\bw,\yCOFbot);
       \fill[auMetal] (\bx+\pitch,\yAUbot) rectangle (\bx+\pitch+\bw,\yCOFbot);
 
-      % COF（Au+Cu）
+      % COF（下：Au，上：Cu）
       \fill[cofAu] (\bx,\yCOFbot) rectangle (\bx+\bw,\yCOFbot+\cofAuT);
       \fill[cofAu] (\bx+\pitch,\yCOFbot) rectangle (\bx+\pitch+\bw,\yCOFbot+\cofAuT);
       \fill[cofCu] (\bx,\yCOFbot+\cofAuT) rectangle (\bx+\bw,\yTop);
       \fill[cofCu] (\bx+\pitch,\yCOFbot+\cofAuT) rectangle (\bx+\pitch+\bw,\yTop);
 
-      % ラベル（右側）
+      % --- 追加：Auマイグレーション（TE表面上の矢印） ---
+      % TEの上面より少し上の高さに、左島→右島へ矢印を描く
+      \pgfmathsetmacro{\ymig}{\yAUbot+0.25*\cofAuT}
+      \draw[very thick, -{Stealth[length=2.2mm]},
+            color=orange!80!black]
+        (\bx+\bw+0.8,\ymig) .. controls (\bx+\bw+5,\ymig+1.2)
+        and (\bx+\pitch-5,\ymig+1.2) .. (\bx+\pitch-0.8,\ymig);
+      \node[font=\scriptsize,anchor=south,
+            text=orange!80!black] at (0.5*(\bx+\bw+\bx+\pitch),\ymig+1.6)
+            {Auマイグレーション（TE表面）};
+
+      % ラベル
       \node[anchor=west,font=\scriptsize] at (\W+2,\yTop) {COF（Cu 8 µm／Au 0.425 µm）};
       \node[anchor=west,font=\scriptsize] at (\W+2,\yAUbot+0.4*\auT) {Au（アクチュエータ）1.3 µm};
       \node[anchor=west,font=\scriptsize] at (\W+2,\yTEbot+0.5*\teT) {TE 20 nm};
@@ -441,11 +452,10 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
 
     %-------------------------------- 下段：対策後 ------------------------------
     \begin{scope}[shift={(0,0)}]
-      % タイトル
       \node[anchor=south west,font=\small] at (0,0)
         {対策後：中央スリットで TE と PZT を切り、Au マイグレーションを抑制};
 
-      % y位置定義
+      % y位置
       \pgfmathsetmacro{\yTop}{-\gap}
       \pgfmathsetmacro{\yCOFbot}{\yTop-(\cofAuT+\cofCuT)}
       \pgfmathsetmacro{\yAUbot}{\yCOFbot-\auT}
@@ -457,16 +467,15 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
       \fill[beLayer] (0,\yBEbot) rectangle (\W,\yPZTbot);
       \fill[pztLayer] (0,\yPZTbot) rectangle (\W,\yTEbot);
       \fill[teLayer]  (0,\yTEbot) rectangle (\W,\yAUbot);
-      % 中央スリット
       \pgfmathsetmacro{\sxL}{0.5*\W-0.5*\slitW}
       \pgfmathsetmacro{\sxR}{0.5*\W+0.5*\slitW}
-      \fill[white] (\sxL,\yPZTbot) rectangle (\sxR,\yAUbot);
+      \fill[white] (\sxL,\yPZTbot) rectangle (\sxR,\yAUbot); % 中央スリット
 
-      % Au島
+      % Au島（2つ）
       \fill[auMetal] (\bx,\yAUbot) rectangle (\bx+\bw,\yCOFbot);
       \fill[auMetal] (\bx+\pitch,\yAUbot) rectangle (\bx+\pitch+\bw,\yCOFbot);
 
-      % COF（Au+Cu）
+      % COF（下：Au，上：Cu）
       \fill[cofAu] (\bx,\yCOFbot) rectangle (\bx+\bw,\yCOFbot+\cofAuT);
       \fill[cofAu] (\bx+\pitch,\yCOFbot) rectangle (\bx+\pitch+\bw,\yCOFbot+\cofAuT);
       \fill[cofCu] (\bx,\yCOFbot+\cofAuT) rectangle (\bx+\bw,\yTop);
@@ -479,11 +488,13 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
       \node[anchor=west,font=\scriptsize] at (\W+2,\yPZTbot+0.5*\pztT) {PZT 1.2 µm（中央スリット）};
       \node[anchor=west,font=\scriptsize] at (\W+2,\yBEbot+0.5*\beT) {BE 100 nm};
     \end{scope}
-  \end{tikzpicture}
+  \end{tikzpicture}%
+  }
 
   \vspace{-1mm}
   \caption{COF 構造を Au/Cu の 2 層として示した Au マイグレーション模式図。
-  上：対策前（TE 連続）、下：対策後（TE と PZT に中央スリット導入で拡散経路を遮断）。}
+  上：対策前（TE 連続・配線間にAuマイグレーションを矢印で表示）／
+  下：対策後（TE と PZT に中央スリット導入で拡散経路を遮断）。}
   \label{fig:cof-before-after}
 \end{figure}
 %===============================================================================
