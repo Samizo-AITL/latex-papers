@@ -347,13 +347,13 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
 
 \begin{figure}[t]
   \centering
-  % ★ ここが肝：列幅以下に固定し、TikZの外形を明示して行送りを確保
+  % 列幅に合わせてスケーリング（横幅は常に\columnwidth）
+  \resizebox{\columnwidth}{!}{%
   \begin{tikzpicture}[x=0.90mm,y=0.90mm,>=Latex,inner sep=1pt]
-    % 図全体の外形（バウンディングボックス）★これが行送りになる
-    \path[use as bounding box] (0,0) rectangle (78,92);
+    % 図全体の外形（行送り確保）※実描画はy≈104までなので少し余裕を持たせる
+    \path[use as bounding box] (0,0) rectangle (78,110);
 
     %================ 上：対策前 ==================
-    % 下地層
     \fill[gray!30] (8,  8) rectangle (70,14);   % BE
     \fill[gray!15] (8, 14) rectangle (70,26);   % PZT
     \fill[gray!10] (8, 26) rectangle (70,28);   % TE
@@ -361,13 +361,11 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
     \node[font=\scriptsize] at (39,20.0) {PZT (1.2 µm)};
     \node[font=\scriptsize] at (39,27.8) {TE (20 nm)};
 
-    % アクチュエータAu電極
     \fill[gray!60] (20,28) rectangle (32,41);
     \fill[gray!60] (46,28) rectangle (58,41);
     \node[font=\scriptsize] at (26,39.4) {Au 1.3 µm (Act)};
     \node[font=\scriptsize] at (52,39.4) {Au 1.3 µm (Act)};
 
-    % COF端子
     \fill[orange!35] (20,41) rectangle (32,43.7);  % Au
     \fill[brown!30]  (20,43.7) rectangle (32,49.7);% Cu
     \fill[orange!35] (46,41) rectangle (58,43.7);
@@ -377,15 +375,12 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
     \node[font=\scriptsize] at (52,42.8) {COF Au 0.425 µm};
     \node[font=\scriptsize] at (52,48.8) {Cu 8 µm};
 
-    % TE表面のAu移動（模式）
     \draw[->] (34,27.8) -- (44,27.8);
     \node[font=\scriptsize] at (39,29.0) {Au migration on TE};
 
-    % タイトル
     \node[font=\small] at (39,54.5) {対策前：TE表面でAuマイグレーション発生リスク};
 
     %================ 下：対策後 ==================
-    % 下地層
     \fill[gray!30] (8, 62) rectangle (70,68);   % BE
     \fill[gray!15] (8, 68) rectangle (70,80);   % PZT
     \fill[gray!10] (8, 80) rectangle (70,82);   % TE
@@ -393,31 +388,27 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
     \node[font=\scriptsize] at (39,74.0) {PZT (1.2 µm)};
     \node[font=\scriptsize] at (39,81.8) {TE (20 nm)};
 
-    % アクチュエータAu電極
     \fill[gray!60] (20,82) rectangle (32,95);
     \fill[gray!60] (46,82) rectangle (58,95);
     \node[font=\scriptsize] at (26,93.4) {Au 1.3 µm (Act)};
     \node[font=\scriptsize] at (52,93.4) {Au 1.3 µm (Act)};
 
-    % COF端子
     \fill[orange!35] (20,95) rectangle (32,97.7);
     \fill[brown!30]  (20,97.7) rectangle (32,103.7);
     \fill[orange!35] (46,95) rectangle (58,97.7);
     \fill[brown!30]  (46,97.7) rectangle (58,103.7);
-    %（上段のラベルで十分なので下段ラベルは省略可）
 
-    % タイトル
     \node[font=\small] at (39,58.5) {対策後：沿面改質・電界緩和によるマイグレーション抑制};
-  \end{tikzpicture}}
+  \end{tikzpicture}%  ← 余分な } を削除
+  }% ← resizebox を閉じる
   \caption{%
   COF端子（Au 0.425 µm／Cu 8 µm）とアクチュエータAu電極（1.3 µm）の界面模式図。
   上：対策前はTE表面でAuマイグレーションが起点となる。
-  下：対策後は沿面電界緩和・界面改質により抑制。%
+  下：対策後は沿面電界緩和・界面改質により抑制。
   下地：NiCr 50 nm／TE 20 nm／PZT 1.2 µm／BE 100 nm。}
   \label{fig:act-mig-clean-1col}
 \end{figure}
-% 必要ならこの直後に \FloatBarrier で本文との食い込みをブロック
-% \FloatBarrier
+% 必要なら \FloatBarrier
 
 %================ 謝辞 =================
 \section*{謝辞（Acknowledgment）}
