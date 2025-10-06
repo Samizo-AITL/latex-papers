@@ -353,27 +353,30 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
     \colorlet{pztLayer}{gray!15}
     \colorlet{beLayer}{gray!30}
 
-    % 共通パラメータ（図示用スケール）
+    % スケール：実厚比反映
+    \def\scale{8.0} % 1 µm = 8 mm
+    \pgfmathsetmacro{\auT}{1.3*\scale}   % 10.4 mm
+    \pgfmathsetmacro{\pztT}{1.2*\scale}  % 9.6 mm
+
+    % 共通パラメータ
     \def\gap{0.6}     % タイトル直下の余白
-    \def\cofAuT{1.0}  % COF: Au 厚（図示）
-    \def\cofCuT{4.0}  % COF: Cu 厚（図示）
-    \def\auT{3.0}     % アクチュエータ Au（図示）
-    \def\teT{2.0}     % TE（図示）
-    \def\pztT{10.0}   % PZT（図示）
-    \def\beT{2.0}     % BE（図示）
-    \def\W{62}        % 左図の横幅
-    \def\bx{10}       % 左側島の左端 x
-    \def\bw{14}       % Au 島の幅
+    \def\cofAuT{1.0}  % COF Au 図示厚
+    \def\cofCuT{4.0}  % COF Cu 図示厚
+    \def\teT{2.0}     % TE 図示厚
+    \def\beT{2.0}     % BE 図示厚
+    \def\W{62}        % 図幅
+    \def\bx{10}       % 左島のX
+    \def\bw{14}       % 島幅
     \def\pitch{28}    % 島ピッチ
-    \def\slitW{6}     % スリット幅（mmスケール）
+    \def\slitW{6}     % スリット幅
 
     %-------------------------------- 上段：対策前 ------------------------------
-    \begin{scope}[shift={(0,43)}]
+    \begin{scope}[shift={(0,47)}]
       % タイトル
       \node[anchor=south west,font=\small] at (0,0)
         {対策前：TE 表面で Au マイグレーション発生リスク};
 
-      % y 位置（上から下へ）
+      % y位置定義
       \pgfmathsetmacro{\yTop}{-\gap}
       \pgfmathsetmacro{\yCOFbot}{\yTop-(\cofAuT+\cofCuT)}
       \pgfmathsetmacro{\yAUbot}{\yCOFbot-\auT}
@@ -382,36 +385,35 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
       \pgfmathsetmacro{\yBEbot}{\yPZTbot-\beT}
 
       % 下地層
-      \fill[beLayer]  (0,\yBEbot)  rectangle (\W,\yPZTbot); % BE
-      \fill[pztLayer] (0,\yPZTbot) rectangle (\W,\yTEbot);  % PZT
-      \fill[teLayer]  (0,\yTEbot)  rectangle (\W,\yAUbot);  % TE（連続）
+      \fill[beLayer]  (0,\yBEbot) rectangle (\W,\yPZTbot);
+      \fill[pztLayer] (0,\yPZTbot) rectangle (\W,\yTEbot);
+      \fill[teLayer]  (0,\yTEbot) rectangle (\W,\yAUbot);
 
-      % アクチュエータ Au（2島）
+      % Au島
       \fill[auMetal] (\bx,\yAUbot) rectangle (\bx+\bw,\yCOFbot);
       \fill[auMetal] (\bx+\pitch,\yAUbot) rectangle (\bx+\pitch+\bw,\yCOFbot);
 
-      % COF（Au/Cu の2層）— 下側が Au, 上側が Cu
-      % Au（下）
+      % COF（Au+Cu）
       \fill[cofAu] (\bx,\yCOFbot) rectangle (\bx+\bw,\yCOFbot+\cofAuT);
       \fill[cofAu] (\bx+\pitch,\yCOFbot) rectangle (\bx+\pitch+\bw,\yCOFbot+\cofAuT);
-      % Cu（上）
       \fill[cofCu] (\bx,\yCOFbot+\cofAuT) rectangle (\bx+\bw,\yTop);
       \fill[cofCu] (\bx+\pitch,\yCOFbot+\cofAuT) rectangle (\bx+\pitch+\bw,\yTop);
 
-      % 右側ラベル
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yTop)      {COF（Cu 8\,µm／Au 0.425\,µm）};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yAUbot+0.35*\auT) {Au（アクチュエータ）1.3\,µm（PZT厚とほぼ同じ）};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yTEbot+0.5*\teT)  {TE 20\,nm};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yPZTbot+0.5*\pztT){PZT 1.2\,µm};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yBEbot+0.5*\beT)  {BE 100\,nm};
+      % ラベル（右側）
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yTop) {COF（Cu 8 µm／Au 0.425 µm）};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yAUbot+0.4*\auT) {Au（アクチュエータ）1.3 µm};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yTEbot+0.5*\teT) {TE 20 nm};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yPZTbot+0.5*\pztT) {PZT 1.2 µm};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yBEbot+0.5*\beT) {BE 100 nm};
     \end{scope}
 
     %-------------------------------- 下段：対策後 ------------------------------
     \begin{scope}[shift={(0,0)}]
+      % タイトル
       \node[anchor=south west,font=\small] at (0,0)
         {対策後：中央スリットで TE と PZT を切り、Au マイグレーションを抑制};
 
-      % y 位置
+      % y位置定義
       \pgfmathsetmacro{\yTop}{-\gap}
       \pgfmathsetmacro{\yCOFbot}{\yTop-(\cofAuT+\cofCuT)}
       \pgfmathsetmacro{\yAUbot}{\yCOFbot-\auT}
@@ -419,42 +421,37 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
       \pgfmathsetmacro{\yPZTbot}{\yTEbot-\pztT}
       \pgfmathsetmacro{\yBEbot}{\yPZTbot-\beT}
 
-      % 下地層（BE は連続）
-      \fill[beLayer]  (0,\yBEbot)  rectangle (\W,\yPZTbot); % BE
-
-      % PZT と TE を連続で塗り、その後中央スリットを白抜き
-      \fill[pztLayer] (0,\yPZTbot) rectangle (\W,\yTEbot);  % PZT
-      \fill[teLayer]  (0,\yTEbot)  rectangle (\W,\yAUbot);  % TE
-
-      % 中央スリット（TE と PZT を同時に切る）
+      % 下地層＋PZT/TEスリット
+      \fill[beLayer] (0,\yBEbot) rectangle (\W,\yPZTbot);
+      \fill[pztLayer] (0,\yPZTbot) rectangle (\W,\yTEbot);
+      \fill[teLayer]  (0,\yTEbot) rectangle (\W,\yAUbot);
+      % 中央スリット
       \pgfmathsetmacro{\sxL}{0.5*\W-0.5*\slitW}
       \pgfmathsetmacro{\sxR}{0.5*\W+0.5*\slitW}
       \fill[white] (\sxL,\yPZTbot) rectangle (\sxR,\yAUbot);
 
-      % アクチュエータ Au（2島）
+      % Au島
       \fill[auMetal] (\bx,\yAUbot) rectangle (\bx+\bw,\yCOFbot);
       \fill[auMetal] (\bx+\pitch,\yAUbot) rectangle (\bx+\pitch+\bw,\yCOFbot);
 
-      % COF（Au/Cu の2層）
-      % Au（下）
+      % COF（Au+Cu）
       \fill[cofAu] (\bx,\yCOFbot) rectangle (\bx+\bw,\yCOFbot+\cofAuT);
       \fill[cofAu] (\bx+\pitch,\yCOFbot) rectangle (\bx+\pitch+\bw,\yCOFbot+\cofAuT);
-      % Cu（上）
       \fill[cofCu] (\bx,\yCOFbot+\cofAuT) rectangle (\bx+\bw,\yTop);
       \fill[cofCu] (\bx+\pitch,\yCOFbot+\cofAuT) rectangle (\bx+\pitch+\bw,\yTop);
 
-      % 右側ラベル
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yTop)      {COF（Cu 8\,µm／Au 0.425\,µm）};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yAUbot+0.35*\auT) {Au（アクチュエータ）1.3\,µm};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yTEbot+0.5*\teT)  {TE 20\,nm（中央スリット）};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yPZTbot+0.5*\pztT){PZT 1.2\,µm（中央スリット）};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yBEbot+0.5*\beT)  {BE 100\,nm};
+      % ラベル
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yTop) {COF（Cu 8 µm／Au 0.425 µm）};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yAUbot+0.4*\auT) {Au（アクチュエータ）1.3 µm};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yTEbot+0.5*\teT) {TE 20 nm（中央スリット）};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yPZTbot+0.5*\pztT) {PZT 1.2 µm（中央スリット）};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yBEbot+0.5*\beT) {BE 100 nm};
     \end{scope}
   \end{tikzpicture}
 
   \vspace{-1mm}
-  \caption{COF 構造を Au/Cu の 2 層として表現した Au マイグレーション模式図。
-  上：対策前（TE 連続）、下：対策後（TE と PZT に中央スリットを設けて拡散経路を遮断）。}
+  \caption{COF 構造を Au/Cu の 2 層として示した Au マイグレーション模式図。
+  上：対策前（TE 連続）、下：対策後（TE と PZT に中央スリット導入で拡散経路を遮断）。}
   \label{fig:cof-before-after}
 \end{figure}
 %===============================================================================
