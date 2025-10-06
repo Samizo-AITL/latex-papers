@@ -604,7 +604,7 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
 \end{itemize}
 
 % =====================================================
-% 図3＋図4（縦並び統合版・重なり防止：全幅フロート）
+% 図3＋図4（縦並び統合版・間隔調整版）
 % =====================================================
 \makeatletter
 \@ifundefined{figTrapezoidScreening}{%
@@ -644,10 +644,10 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
       % -------- COM（赤：緩和スロープ比較）--------
       \draw[line width=1pt,red] (\tpre,\V0) -- (\tRiseEndSlow,\VH);
 
-      % -------- 「I = C dV/dt」：重ならないよう上側に退避＋白背景 --------
-      \node[fill=white, inner sep=1.2pt] at (\tpre+0.35,\VH+6) {$I = C\,\mathrm{d}V/\mathrm{d}t$};
+      % -------- I = C dV/dt（重ならないよう上に）--------
+      \node[fill=white, inner sep=1pt] at (\tpre+0.5,\VH+6.2) {$I = C\,\mathrm{d}V/\mathrm{d}t$};
 
-      % -------- 矢印（相対的な大小、位置オフセット）--------
+      % -------- 矢印（相対的な大小）--------
       \path let \p1=(\tpre,\V0), \p2=(\tRiseEndFast,\VH) in
         coordinate (MidFast) at ($(\p1)!0.45!(\p2)$);
       \path let \p3=(\tRiseEndSlow,\VH) in
@@ -655,14 +655,11 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
       \draw[-{Stealth[length=3mm]}] ($(MidFast)+(0,5.5)$) -- ($(MidFast)+(0,0.3)$);
       \draw[-{Stealth[length=2.4mm]},red] ($(MidSlow)+(0,4.0)$) -- ($(MidSlow)+(0,0.3)$);
 
-      % -------- ラベル（COM / VBS）— グラフに重ならない位置に矢印で指示 --------
-      % ★ COM：天井（30V）の黒いCOM波形そのものへ矢印が届くようにする
-      \node[anchor=south] at (\tHoldEnd-0.2,\VH+6.5) {\small COM};
-      \draw[-{Stealth[length=2mm]}] (\tHoldEnd-0.2,\VH+6.1) -- (\tHoldEnd-0.2,\VH); % ← 波形に着地
-
-      % VBS：右下余白→ -10Vラインへ
+      % -------- COM / VBS ラベル配置 --------
+      \node[anchor=west] at (\tMax-1.0,\VH+7.0) {\small COM};
+      \draw[-{Stealth[length=2mm]}] (\tMax-0.4,\VH+6.6) -- (\tMax-0.4,\VH+0.2);
       \node[anchor=west] at (\tMax-0.8,\VBS-6.5) {\small VBS};
-      \draw[-{Stealth[length=2mm]}] (\tMax-0.1,\VBS-6.1) -- (\tMax-0.1,\VBS+0.0);
+      \draw[-{Stealth[length=2mm]}] (\tMax-0.2,\VBS-6.1) -- (\tMax-0.2,\VBS+0.3);
     \end{tikzpicture}%
   }%
 }{}
@@ -673,10 +670,11 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
   % --- Fig.3：端部焼損の模式断面図 ---
   \resizebox{0.84\textwidth}{!}{\figEdgeBurnoutSketch}
 
-  \vspace{6pt}
+  % 図間のスペース（★★間隔を拡大★★）
+  \vspace{14pt}
 
-  % --- Fig.4：台形波形の概念図（★0.40に縮小） ---
-  \resizebox{0.40\textwidth}{!}{\figTrapezoidScreening}
+  % --- Fig.4：台形波形の概念図（60%縮小） ---
+  \resizebox{0.60\textwidth}{!}{\figTrapezoidScreening}
 
   \caption{%
     (上) 端部焼損の模式断面図：
