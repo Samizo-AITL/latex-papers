@@ -17,11 +17,13 @@
 
 % TikZ / pgfplots
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning}
+%\usetikzlibrary{arrows.meta,positioning}
 \usepackage{pgfplots}              % ← 追加（axis undefinedの解決）
 \pgfplotsset{compat=1.18}
 
 %\usepackage{placeins} % \FloatBarrier で流れ制御したい時
+
+\usetikzlibrary{arrows.meta,positioning,calc}
 
 % ===== タイトル・著者 =====
 \title{COFにおけるAuメッキ薄化によるコスト合理化と信頼性評価\\
@@ -379,29 +381,29 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:cof-before-after}）�
   \resizebox{0.95\columnwidth}{!}{%
   \begin{tikzpicture}[x=1mm,y=1mm]
     % 色定義
-    \definecolor{cofAu}{RGB}{244,170,88}   % COF: Au（橙）
-    \definecolor{cofCu}{RGB}{170,120,80}   % COF: Cu（茶系）
+    \definecolor{cofAu}{RGB}{244,170,88}
+    \definecolor{cofCu}{RGB}{170,120,80}
     \colorlet{auMetal}{gray!60}
     \colorlet{teLayer}{gray!10}
     \colorlet{pztLayer}{gray!15}
     \colorlet{beLayer}{gray!30}
 
-    % 実厚比（PZT 1.2µm ≒ Au 1.3µm がほぼ同じ高さに見えるよう調整）
-    \def\scale{8.0} % 1 µm = 8 mm
+    % 実厚比（PZT 1.2µm ≒ Au 1.3µm）
+    \def\scale{8.0}
     \pgfmathsetmacro{\auT}{1.3*\scale}
     \pgfmathsetmacro{\pztT}{1.2*\scale}
 
     % 共通パラメータ
-    \def\gap{0.6}     % タイトル直下の余白
-    \def\cofAuT{1.0}  % COF Au 図示厚
-    \def\cofCuT{4.0}  % COF Cu 図示厚
-    \def\teT{2.0}     % TE 図示厚
-    \def\beT{2.0}     % BE 図示厚
-    \def\W{62}        % 図幅
-    \def\bx{10}       % 左島のX
-    \def\bw{14}       % 島幅
-    \def\pitch{28}    % 島ピッチ
-    \def\slitW{6}     % スリット幅
+    \def\gap{0.6}
+    \def\cofAuT{1.0}
+    \def\cofCuT{4.0}
+    \def\teT{2.0}
+    \def\beT{2.0}
+    \def\W{62}
+    \def\bx{10}
+    \def\bw{14}
+    \def\pitch{28}
+    \def\slitW{6}
 
     %-------------------------------- 上段：対策前 ------------------------------
     \begin{scope}[shift={(0,47)}]
@@ -416,12 +418,12 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:cof-before-after}）�
       \pgfmathsetmacro{\yPZTbot}{\yTEbot-\pztT}
       \pgfmathsetmacro{\yBEbot}{\yPZTbot-\beT}
 
-      % 下地層
+      % 層
       \fill[beLayer]  (0,\yBEbot) rectangle (\W,\yPZTbot);
       \fill[pztLayer] (0,\yPZTbot) rectangle (\W,\yTEbot);
       \fill[teLayer]  (0,\yTEbot) rectangle (\W,\yAUbot); % TE 連続
 
-      % Au島（2つ）
+      % Au島
       \fill[auMetal] (\bx,\yAUbot) rectangle (\bx+\bw,\yCOFbot);
       \fill[auMetal] (\bx+\pitch,\yAUbot) rectangle (\bx+\pitch+\bw,\yCOFbot);
 
@@ -431,16 +433,15 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:cof-before-after}）�
       \fill[cofCu] (\bx,\yCOFbot+\cofAuT) rectangle (\bx+\bw,\yTop);
       \fill[cofCu] (\bx+\pitch,\yCOFbot+\cofAuT) rectangle (\bx+\pitch+\bw,\yTop);
 
-      % --- 追加：Auマイグレーション（TE表面上の矢印） ---
-      % TEの上面より少し上の高さに、左島→右島へ矢印を描く
+      % --- Auマイグレーション矢印（TE表面） ---
       \pgfmathsetmacro{\ymig}{\yAUbot+0.25*\cofAuT}
-      \draw[very thick, -{Stealth[length=2.2mm]},
-            color=orange!80!black]
+      \draw[very thick, -{Stealth[length=2.2mm]}, color=orange!80!black]
         (\bx+\bw+0.8,\ymig) .. controls (\bx+\bw+5,\ymig+1.2)
         and (\bx+\pitch-5,\ymig+1.2) .. (\bx+\pitch-0.8,\ymig);
-      \node[font=\scriptsize,anchor=south,
-            text=orange!80!black] at (0.5*(\bx+\bw+\bx+\pitch),\ymig+1.6)
-            {Auマイグレーション（TE表面）};
+      % ★ 事前に x 中点を計算してから使う（エラー回避）
+      \pgfmathsetmacro{\xmigmid}{0.5*(\bx+\bw+\bx+\pitch)}
+      \node[font=\scriptsize,anchor=south,text=orange!80!black]
+        at (\xmigmid,\ymig+1.6) {Auマイグレーション（TE表面）};
 
       % ラベル
       \node[anchor=west,font=\scriptsize] at (\W+2,\yTop) {COF（Cu 8 µm／Au 0.425 µm）};
@@ -463,15 +464,15 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:cof-before-after}）�
       \pgfmathsetmacro{\yPZTbot}{\yTEbot-\pztT}
       \pgfmathsetmacro{\yBEbot}{\yPZTbot-\beT}
 
-      % 下地層＋PZT/TEスリット
+      % 下地層＋中央スリット
       \fill[beLayer] (0,\yBEbot) rectangle (\W,\yPZTbot);
       \fill[pztLayer] (0,\yPZTbot) rectangle (\W,\yTEbot);
       \fill[teLayer]  (0,\yTEbot) rectangle (\W,\yAUbot);
       \pgfmathsetmacro{\sxL}{0.5*\W-0.5*\slitW}
       \pgfmathsetmacro{\sxR}{0.5*\W+0.5*\slitW}
-      \fill[white] (\sxL,\yPZTbot) rectangle (\sxR,\yAUbot); % 中央スリット
+      \fill[white] (\sxL,\yPZTbot) rectangle (\sxR,\yAUbot); % スリット
 
-      % Au島（2つ）
+      % Au島
       \fill[auMetal] (\bx,\yAUbot) rectangle (\bx+\bw,\yCOFbot);
       \fill[auMetal] (\bx+\pitch,\yAUbot) rectangle (\bx+\pitch+\bw,\yCOFbot);
 
@@ -490,10 +491,9 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:cof-before-after}）�
     \end{scope}
   \end{tikzpicture}%
   }
-
   \vspace{-1mm}
   \caption{COF 構造を Au/Cu の 2 層として示した Au マイグレーション模式図。
-  上：対策前（TE 連続・配線間にAuマイグレーションを矢印で表示）／
+  上：対策前（TE 連続・配線間Auマイグレーションを矢印で表示）／
   下：対策後（TE と PZT に中央スリット導入で拡散経路を遮断）。}
   \label{fig:cof-before-after}
 \end{figure}
