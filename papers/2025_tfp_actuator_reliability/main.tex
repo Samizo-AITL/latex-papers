@@ -572,7 +572,11 @@ $\Delta V = 40\,\mathrm{V}$ を印加した際，
 EDX分析では金属蒸発由来の痕跡が検出された。
 この部位は構造上不可避な露出箇所であり，
 空気絶縁のみでは耐圧が不足していることが判明した
-（Fig.~\ref{fig:edge-burnout}）。
+（Fig.~\ref{fig:edge-burnout}）。なお，本節で示す台形波形は
+ユニットスクリーニング専用であり，印字駆動波形とは異なる。
+したがってスクリーニング波形の立上り勾配を変更する場合は，
+印字の\emph{非劣化（同等性）}を確認する評価計画が前提となる
+（Fig.~\ref{fig:trapezoid-screening} 参照）。
 
 \begin{figure*}[t]
   \centering
@@ -597,7 +601,7 @@ PZT 側壁の露出により局所電界が集中し，
 局所絶縁破壊を誘発すると考えられる。
 このときの実効電界は
 $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
-すなわち、構造的に避けられない側壁露出部が
+すなわち，構造的に避けられない側壁露出部が
 高電界集中と過渡加熱の重畳点となり，
 焼損の起点を形成している。
 
@@ -640,48 +644,39 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
   \pgfmathsetmacro{\tMax}{\tFallEnd+\textra}
 
   % -------- 軸・基準線 --------
-  % 縦軸 V
   \draw[->] (0,\VBS-8) -- (0,\VH+6) node[above] {$V$};
-  % 水平基準線（VBS, 0V, 10V, 30V）
   \draw[densely dotted] (0,\VH) -- (\tMax,\VH) node[right] {$\;30\,\mathrm{V}$};
   \draw[densely dotted] (0,\V0) -- (\tMax,\V0) node[right] {$\;10\,\mathrm{V}$};
   \draw[densely dotted] (0,0)   -- (\tMax,0)   node[right] {$\;0$};
   \draw[densely dotted] (0,\VBS) -- (\tMax,\VBS) node[right] {$\;-10\,\mathrm{V}$};
 
-  % 横軸 t
   \draw[->] (0,\VBS-8) -- (\tMax+0.2,\VBS-8) node[right] {$t$};
 
   % -------- VBS 波形（一定: -10 V）--------
   \draw[semithick] (0,\VBS) -- (\tMax,\VBS) node[below right] {VBS};
 
   % -------- COM 急峻スロープ（黒）--------
-  % 区間：基準(10V) -> 急峻立上り -> 高位保持 -> 立下り -> 戻り(10V)
   \draw[semithick]
-    (\t0,\V0) -- (\tpre,\V0)                          % プリ区間
-    -- (\tRiseEndFast,\VH)                             % 急峻立上り
-    -- (\tHoldEnd,\VH)                                 % 保持
-    -- (\tFallEnd,\V0)                                 % 立下り
-    -- (\tMax,\V0);                                    % 終了水平
+    (\t0,\V0) -- (\tpre,\V0)
+    -- (\tRiseEndFast,\VH)
+    -- (\tHoldEnd,\VH)
+    -- (\tFallEnd,\V0)
+    -- (\tMax,\V0);
   \node[anchor=west] at (\tHoldEnd-0.15,\VH+2.5) {COM};
 
   % -------- COM 緩和スロープ（赤で上書き）--------
-  % 立上りだけ比較表示（同じ開始/終了電圧、時間だけ長い）
   \draw[line width=1pt,red]
     (\tpre,\V0) -- (\tRiseEndSlow,\VH);
 
   % -------- 注釈：I = C dV/dt とピーク電流の違い --------
-  % 急峻スロープの中点
   \path let \p1 = (\tpre,\V0), \p2 = (\tRiseEndFast,\VH) in
     coordinate (MidFast) at ($(\p1)!0.5!(\p2)$);
-  % 緩和スロープの中点
   \path let \p3 = (\tRiseEndSlow,\VH) in
     coordinate (MidSlow) at ($(\tpre,\V0)!0.5!(\p3)$);
 
-  % 電流矢印（相対的な大/小）
   \draw[-{Stealth[length=3mm]}] ($(MidFast)+(0,8)$) -- ($(MidFast)+(0,0)$);
   \draw[-{Stealth[length=2mm]},red] ($(MidSlow)+(0,5)$) -- ($(MidSlow)+(0,0)$);
 
-  % 式とテキスト
   \node[fill=white,inner sep=1.5pt] at ($(MidFast)+(0,10)$)
     {$I = C\,\mathrm{d}V/\mathrm{d}t$};
   \node[align=center,anchor=west] at ($(MidFast)+(0.25,5)$)
@@ -689,23 +684,23 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
   \node[align=center,anchor=west,red] at ($(MidSlow)+(0.25,5)$)
     {\small 緩和スロープ\\[-1pt]\small（小さい$\mathrm{d}V/\mathrm{d}t$ $\Rightarrow$ 小さい$I$）};
 
-  % 立上り比較の凡例
   \draw[semithick] (\tMax-2.9,\VH-22) -- ++(0.9,0) node[right,black]{\small 急峻立上り};
   \draw[red,line width=1pt] (\tMax-2.9,\VH-27) -- ++(0.9,0) node[right,red]{\small 勾配緩和};
 
-  % 30Vの到達を点線で示す（スケッチの破線ニュアンス）
   \draw[dashed] (\tpre,\VH) -- ++(0.3,0);
 \end{tikzpicture}%
 }
 %================ ここまで =====================================================
 
-% 使い方例：
-% \begin{figure}[t]
-%   \centering
-%   \figTrapezoidScreening
-%   \caption{台形波形の概念図：立上り勾配を緩和すると
-%   $I=C\,\mathrm{d}V/\mathrm{d}t$ が低下し、瞬間電流ピークが抑制される}
-% \end{figure}
+\begin{figure}[t]
+  \centering
+  \figTrapezoidScreening
+  \caption{ユニットスクリーニング用の台形波形の概念図。
+  立上り勾配を緩和すると $I=C\,\mathrm{d}V/\mathrm{d}t$ が低下し，
+  瞬間電流ピークが抑制される。印字波形とは異なるため，
+  変更時は印字非劣化の同等性評価が必須である。}
+  \label{fig:trapezoid-screening}
+\end{figure}
 
 \subsection{効果の考察}
 一般に，側壁へ均一な絶縁膜を形成することで，
@@ -714,11 +709,12 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
 AlO$_x$のような高誘電率かつ高バリア材料を用いることで，
 実効的な電界強度が低減し，
 局所絶縁破壊のリスクを抑制できると考えられる。
-ただし，ALD成膜は装置コストが高く，
-量産導入には経済性の検討が必要である。
-一方，波形スロープの緩和は簡便な方法であり，
-過渡電流を低減できるが，
-吐出応答特性への影響を考慮する必要がある。
+ただし，ALD成膜は装置コストが高く，量産導入には経済性の検討が必要である。
+一方，波形スロープの緩和は簡便で過渡電流を低減できるが，
+これは\emph{スクリーニング波形の変更であっても}印字波形の同等性確認
+（吐出量・速度・衛星滴率・着弾ばらつき等の非劣化判定）を伴う。
+よって，当面はプロセス側（側壁パッシベーション等）を先行し，
+波形緩和は必要最小の自由度（立上り dV/dt のみ）で限定的に検討する。
 
 \subsection{まとめと考察}
 端部焼損は，設計上避けがたい側壁露出に起因する構造的課題であり，
