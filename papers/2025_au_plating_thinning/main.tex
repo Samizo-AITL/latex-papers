@@ -341,103 +341,123 @@ Auマイグレーション起因の端子間ショートを確認した。
 対策として PZT 層にスリットを導入し，配線間の実効沿面距離を延長して
 Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
 
-%================ Figure: Au migration before/after (TikZ) ================
+%================ Figure: COF Au/Cu & Au migration before/after (TikZ) =========
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}[x=1mm,y=1mm]
-    % 共通色
-    \definecolor{coforange}{RGB}{244,170,88}
+    % 色定義
+    \definecolor{cofAu}{RGB}{244,170,88}   % COF: Au（橙）
+    \definecolor{cofCu}{RGB}{170,120,80}   % COF: Cu（茶系）
+    \colorlet{auMetal}{gray!60}
+    \colorlet{teLayer}{gray!10}
+    \colorlet{pztLayer}{gray!15}
+    \colorlet{beLayer}{gray!30}
 
-    %---------------- 上段：対策前 ----------------
-    \begin{scope}[shift={(0,40)}] % ← 上段ブロックの原点
-      % タイトル（このベースラインが y=0）
+    % 共通パラメータ（図示用スケール）
+    \def\gap{0.6}     % タイトル直下の余白
+    \def\cofAuT{1.0}  % COF: Au 厚（図示）
+    \def\cofCuT{4.0}  % COF: Cu 厚（図示）
+    \def\auT{3.0}     % アクチュエータ Au（図示）
+    \def\teT{2.0}     % TE（図示）
+    \def\pztT{10.0}   % PZT（図示）
+    \def\beT{2.0}     % BE（図示）
+    \def\W{62}        % 左図の横幅
+    \def\bx{10}       % 左側島の左端 x
+    \def\bw{14}       % Au 島の幅
+    \def\pitch{28}    % 島ピッチ
+    \def\slitW{6}     % スリット幅（mmスケール）
+
+    %-------------------------------- 上段：対策前 ------------------------------
+    \begin{scope}[shift={(0,43)}]
+      % タイトル
       \node[anchor=south west,font=\small] at (0,0)
         {対策前：TE 表面で Au マイグレーション発生リスク};
 
-      % 層の寸法（相対座標で管理）
-      \def\gap{0.2}     % タイトル直下の隙間
-      \def\cofT{1.0}    % COF 厚（図示用）
-      \def\auT{3.0}     % Au 厚（図示用）
-      \def\teT{2.0}     % TE 厚（図示用）
-      \def\pztT{10.0}   % PZT 厚（図示用）
-      \def\beT{2.0}     % BE 厚（図示用）
-      \def\W{62}        % 図幅
-
-      % y 位置（上から下へ積む）
+      % y 位置（上から下へ）
       \pgfmathsetmacro{\yTop}{-\gap}
-      \pgfmathsetmacro{\yCOFbot}{\yTop-\cofT}
+      \pgfmathsetmacro{\yCOFbot}{\yTop-(\cofAuT+\cofCuT)}
       \pgfmathsetmacro{\yAUbot}{\yCOFbot-\auT}
       \pgfmathsetmacro{\yTEbot}{\yAUbot-\teT}
       \pgfmathsetmacro{\yPZTbot}{\yTEbot-\pztT}
       \pgfmathsetmacro{\yBEbot}{\yPZTbot-\beT}
 
       % 下地層
-      \fill[gray!30] (0,\yBEbot) rectangle (\W,\yPZTbot); % BE
-      \fill[gray!15] (0,\yPZTbot) rectangle (\W,\yTEbot); % PZT
-      \fill[gray!10] (0,\yTEbot) rectangle (\W,\yAUbot); % TE
+      \fill[beLayer]  (0,\yBEbot)  rectangle (\W,\yPZTbot); % BE
+      \fill[pztLayer] (0,\yPZTbot) rectangle (\W,\yTEbot);  % PZT
+      \fill[teLayer]  (0,\yTEbot)  rectangle (\W,\yAUbot);  % TE（連続）
 
-      % Au 電極（2島）
-      \def\bx{10} \def\bw{14}
-      \fill[gray!60] (\bx,\yAUbot) rectangle (\bx+\bw,\yCOFbot);
-      \fill[gray!60] (\bx+28,\yAUbot) rectangle (\bx+28+\bw,\yCOFbot);
+      % アクチュエータ Au（2島）
+      \fill[auMetal] (\bx,\yAUbot) rectangle (\bx+\bw,\yCOFbot);
+      \fill[auMetal] (\bx+\pitch,\yAUbot) rectangle (\bx+\pitch+\bw,\yCOFbot);
 
-      % COF（オレンジ）
-      \fill[coforange] (\bx,\yCOFbot) rectangle (\bx+\bw,\yTop);
-      \fill[coforange] (\bx+28,\yCOFbot) rectangle (\bx+28+\bw,\yTop);
+      % COF（Au/Cu の2層）— 下側が Au, 上側が Cu
+      % Au（下）
+      \fill[cofAu] (\bx,\yCOFbot) rectangle (\bx+\bw,\yCOFbot+\cofAuT);
+      \fill[cofAu] (\bx+\pitch,\yCOFbot) rectangle (\bx+\pitch+\bw,\yCOFbot+\cofAuT);
+      % Cu（上）
+      \fill[cofCu] (\bx,\yCOFbot+\cofAuT) rectangle (\bx+\bw,\yTop);
+      \fill[cofCu] (\bx+\pitch,\yCOFbot+\cofAuT) rectangle (\bx+\pitch+\bw,\yTop);
 
-      % ラベル（右側）
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yTop) {COF（Au 0.425\,µm／TE 20\,nm）};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yAUbot+0.3*\auT) {Au 電極};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yTEbot+0.5*\teT) {TE 20\,nm};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yPZTbot+0.5*\pztT) {PZT 1.2\,µm（模式）};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yBEbot+0.5*\beT) {BE 100\,nm};
+      % 右側ラベル
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yTop)      {COF（Cu 8\,µm／Au 0.425\,µm）};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yAUbot+0.35*\auT) {Au（アクチュエータ）1.3\,µm（PZT厚とほぼ同じ）};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yTEbot+0.5*\teT)  {TE 20\,nm};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yPZTbot+0.5*\pztT){PZT 1.2\,µm};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yBEbot+0.5*\beT)  {BE 100\,nm};
     \end{scope}
 
-    %---------------- 下段：対策後 ----------------
+    %-------------------------------- 下段：対策後 ------------------------------
     \begin{scope}[shift={(0,0)}]
       \node[anchor=south west,font=\small] at (0,0)
-        {対策後：治具開口（中央スリット）で Au マイグレーションを抑制};
+        {対策後：中央スリットで TE と PZT を切り、Au マイグレーションを抑制};
 
-      % 同じ厚みパラメータを使用
-      \def\gap{0.2}\def\cofT{1.0}\def\auT{3.0}\def\teT{2.0}\def\pztT{10.0}\def\beT{2.0}\def\W{62}
+      % y 位置
       \pgfmathsetmacro{\yTop}{-\gap}
-      \pgfmathsetmacro{\yCOFbot}{\yTop-\cofT}
+      \pgfmathsetmacro{\yCOFbot}{\yTop-(\cofAuT+\cofCuT)}
       \pgfmathsetmacro{\yAUbot}{\yCOFbot-\auT}
       \pgfmathsetmacro{\yTEbot}{\yAUbot-\teT}
       \pgfmathsetmacro{\yPZTbot}{\yTEbot-\pztT}
       \pgfmathsetmacro{\yBEbot}{\yPZTbot-\beT}
 
-      % 下地層
-      \fill[gray!30] (0,\yBEbot) rectangle (\W,\yPZTbot); % BE
-      \fill[gray!15] (0,\yPZTbot) rectangle (\W,\yTEbot); % PZT
+      % 下地層（BE は連続）
+      \fill[beLayer]  (0,\yBEbot)  rectangle (\W,\yPZTbot); % BE
 
-      % TE（中央スリット開口）
-      \fill[gray!10] (0,\yTEbot) rectangle (\W,\yAUbot);
-      \fill[white]   (0.5*\W-3,\yTEbot) rectangle (0.5*\W+3,\yAUbot); % 中央 6mm スリット
+      % PZT と TE を連続で塗り、その後中央スリットを白抜き
+      \fill[pztLayer] (0,\yPZTbot) rectangle (\W,\yTEbot);  % PZT
+      \fill[teLayer]  (0,\yTEbot)  rectangle (\W,\yAUbot);  % TE
 
-      % Au 電極（2島）— スリット上ではTEが切れている
-      \def\bx{10} \def\bw{14}
-      \fill[gray!60] (\bx,\yAUbot) rectangle (\bx+\bw,\yCOFbot);
-      \fill[gray!60] (\bx+28,\yAUbot) rectangle (\bx+28+\bw,\yCOFbot);
+      % 中央スリット（TE と PZT を同時に切る）
+      \pgfmathsetmacro{\sxL}{0.5*\W-0.5*\slitW}
+      \pgfmathsetmacro{\sxR}{0.5*\W+0.5*\slitW}
+      \fill[white] (\sxL,\yPZTbot) rectangle (\sxR,\yAUbot);
 
-      % COF（オレンジ）
-      \fill[coforange] (\bx,\yCOFbot) rectangle (\bx+\bw,\yTop);
-      \fill[coforange] (\bx+28,\yCOFbot) rectangle (\bx+28+\bw,\yTop);
+      % アクチュエータ Au（2島）
+      \fill[auMetal] (\bx,\yAUbot) rectangle (\bx+\bw,\yCOFbot);
+      \fill[auMetal] (\bx+\pitch,\yAUbot) rectangle (\bx+\pitch+\bw,\yCOFbot);
 
-      % ラベル（右側）
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yTop) {COF（Au 0.425\,µm／TE 20\,nm）};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yAUbot+0.3*\auT) {Au 電極};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yTEbot+0.5*\teT) {TE 20\,nm（中央スリット）};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yPZTbot+0.5*\pztT) {PZT 1.2\,µm（模式）};
-      \node[anchor=west,font=\scriptsize] at (\W+2,\yBEbot+0.5*\beT) {BE 100\,nm};
+      % COF（Au/Cu の2層）
+      % Au（下）
+      \fill[cofAu] (\bx,\yCOFbot) rectangle (\bx+\bw,\yCOFbot+\cofAuT);
+      \fill[cofAu] (\bx+\pitch,\yCOFbot) rectangle (\bx+\pitch+\bw,\yCOFbot+\cofAuT);
+      % Cu（上）
+      \fill[cofCu] (\bx,\yCOFbot+\cofAuT) rectangle (\bx+\bw,\yTop);
+      \fill[cofCu] (\bx+\pitch,\yCOFbot+\cofAuT) rectangle (\bx+\pitch+\bw,\yTop);
+
+      % 右側ラベル
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yTop)      {COF（Cu 8\,µm／Au 0.425\,µm）};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yAUbot+0.35*\auT) {Au（アクチュエータ）1.3\,µm};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yTEbot+0.5*\teT)  {TE 20\,nm（中央スリット）};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yPZTbot+0.5*\pztT){PZT 1.2\,µm（中央スリット）};
+      \node[anchor=west,font=\scriptsize] at (\W+2,\yBEbot+0.5*\beT)  {BE 100\,nm};
     \end{scope}
   \end{tikzpicture}
 
   \vspace{-1mm}
-  \caption{COF 構造（上：対策前、下：対策後）。各タイトル直下 0.2\,mm から層が開始するよう配置。}
+  \caption{COF 構造を Au/Cu の 2 層として表現した Au マイグレーション模式図。
+  上：対策前（TE 連続）、下：対策後（TE と PZT に中央スリットを設けて拡散経路を遮断）。}
   \label{fig:cof-before-after}
 \end{figure}
-%==========================================================================
+%===============================================================================
 %================ 謝辞 =================
 \section*{謝辞（Acknowledgment）}
 本研究の遂行にあたり，量産ラインでの評価および測定にご協力いただいた
