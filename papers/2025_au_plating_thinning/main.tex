@@ -341,43 +341,23 @@ Auマイグレーション起因の端子間ショートを確認した。
 対策として PZT 層にスリットを導入し，配線間の実効沿面距離を延長して
 Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
 
-%====================== 図：対策前/対策後（修正版） ======================
+%====================== 図：対策前/対策後（修正版・\!除去） ======================
 \begin{figure}[t]
   \centering
-  % 単位スケールと共通パラメータ
   \begin{tikzpicture}[x=0.90mm, y=0.90mm, >=Latex, inner sep=1pt]
-    %------------------------------------------------------------
-    % 共通パラメータ（レイヤ厚の見かけ寸法）
-    % ※ 値はあなたが使っていた比率に合わせています
-    \def\BEth{6.0}       % BE 100 nm を 6.0
-    \def\PZTth{12.0}     % PZT 1.2 µm を 12.0
-    \def\TEth{2.0}       % TE 20 nm を 2.0
-    \def\Actth{13.0}     % Au(Act) 1.3 µm を 13.0
-    \def\COFAuth{2.7}    % COF Au 0.425 µm を 2.7
-    \def\COFCuth{6.0}    % COF Cu 8 µm を 6.0
-    \def\TitleGap{3.0}   % タイトルとCu上辺の間隔（=余白）
-
-    % 共通X座標
-    \def\Xl{8} \def\Xr{70}      % 図の左右
-    \def\ActL{20} \def\ActR{32} % 左アクチュエータ
-    \def\ActLtwo{46} \def\ActRtwo{58} % 右アクチュエータ
-    \def\RightLabelX{74}        % 右側ラベルのX
-
-    % スリット（対策後の中央ギャップ）X
+    \def\BEth{6.0} \def\PZTth{12.0} \def\TEth{2.0}
+    \def\Actth{13.0} \def\COFAuth{2.7} \def\COFCuth{6.0}
+    \def\TitleGap{3.0}
+    \def\Xl{8} \def\Xr{70}
+    \def\ActL{20} \def\ActR{32} \def\ActLtwo{46} \def\ActRtwo{58}
+    \def\RightLabelX{74}
     \def\GapL{34} \def\GapR{44}
+    \def\yTitleT{100.0} \def\yTitleB{52.0}
 
-    % タイトルY（上図/下図）— ここを動かせば全体が追従
-    \def\yTitleT{100.0} % 対策前タイトル
-    \def\yTitleB{52.0}  % 対策後タイトル
-
-    %====================== 上：対策前 ======================
-    % タイトル
-    \node[font=\small, anchor=south] (blkT-title) at ({0.5*(\Xl+\Xr)}, \yTitleT)
+    %==== 上：対策前 ====
+    \node[font=\small, anchor=south] at ({0.5*(\Xl+\Xr)}, \yTitleT)
       {対策前：TE表面でAuマイグレーション発生リスク};
-
-    % Cu上辺はタイトル直下に、ただし TitleGap だけ離す
     \pgfmathsetmacro{\yCuTopT}{\yTitleT - \TitleGap}
-    % 層の境界Yを上から順に決定
     \pgfmathsetmacro{\yCOFAuBotT}{\yCuTopT - \COFAuth}
     \pgfmathsetmacro{\yActTopT}{\yCOFAuBotT}
     \pgfmathsetmacro{\yTETopT}{\yActTopT - 0.0}
@@ -385,41 +365,33 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
     \pgfmathsetmacro{\yPZTBotT}{\yTEBotT - \PZTth}
     \pgfmathsetmacro{\yBEBotT}{\yPZTBotT - \BEth}
 
-    % 下地層（連続）
-    \fill[gray!30] (\Xl,\yBEBotT) rectangle (\Xr,{\yBEBotT+\BEth}); % BE
-    \fill[gray!15] (\Xl,{\yBEBotT+\BEth}) rectangle (\Xr,{\yPZTBotT+\PZTth}); % PZT
-    \fill[gray!10] (\Xl,{\yTEBotT}) rectangle (\Xr,{\yTEBotT+\TEth}); % TE（連続）
+    \fill[gray!30] (\Xl,\yBEBotT) rectangle (\Xr,{\yBEBotT+\BEth});
+    \fill[gray!15] (\Xl,{\yBEBotT+\BEth}) rectangle (\Xr,{\yPZTBotT+\PZTth});
+    \fill[gray!10] (\Xl,{\yTEBotT}) rectangle (\Xr,{\yTEBotT+\TEth});
 
-    % アクチュエータ Au 電極
     \fill[gray!60] (\ActL,{\yActTopT-\Actth}) rectangle (\ActR,\yActTopT);
     \fill[gray!60] (\ActLtwo,{\yActTopT-\Actth}) rectangle (\ActRtwo,\yActTopT);
 
-    % COF 端子（Au→Cu）
     \fill[orange!35] (\ActL,\yCOFAuBotT) rectangle (\ActR,\yCuTopT);
     \fill[brown!30]  (\ActL,\yCuTopT)    rectangle (\ActR,{\yCuTopT+\COFCuth});
     \fill[orange!35] (\ActLtwo,\yCOFAuBotT) rectangle (\ActRtwo,\yCuTopT);
     \fill[brown!30]  (\ActLtwo,\yCuTopT)    rectangle (\ActRtwo,{\yCuTopT+\COFCuth});
 
-    % TE表面のAu移動（模式矢印）
     \draw[->] ({\ActR+1.5},{\yTEBotT+\TEth}) -- ({\ActLtwo-1.5},{\yTEBotT+\TEth})
       node[midway, above, font=\scriptsize] {Au migration on TE};
 
-    % 右側ラベル（上図）
+    % 右側ラベル（\! を使わず -0.5* に）
     \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yBEBotT+0.5*\BEth}) {BE (100 nm)};
-    \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yTEBotT-\!0.5*\PZTth}) {PZT (1.2 µm)};
+    \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yTEBotT-0.5*\PZTth}) {PZT (1.2 µm)};
     \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yTEBotT+0.5*\TEth}) {TE (20 nm)};
     \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yActTopT-0.5*\Actth}) {Au 1.3 µm (Act)};
     \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yCOFAuBotT+0.5*\COFAuth}) {COF Au 0.425 µm};
     \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yCuTopT+0.5*\COFCuth}) {Cu 8 µm};
 
-    %====================== 下：対策後（PZT抜き＋TE分離） ======================
-    % タイトル
-    \node[font=\small, anchor=south] (blkB-title) at ({0.5*(\Xl+\Xr)}, \yTitleB)
+    %==== 下：対策後 ====
+    \node[font=\small, anchor=south] at ({0.5*(\Xl+\Xr)}, \yTitleB)
       {対策後：沿面改質・電界緩和によるマイグレーション抑制};
-
-    % Cu上辺はタイトル直下に、ただし TitleGap だけ離す
     \pgfmathsetmacro{\yCuTopB}{\yTitleB - \TitleGap}
-    % 層の境界Y（下図）
     \pgfmathsetmacro{\yCOFAuBotB}{\yCuTopB - \COFAuth}
     \pgfmathsetmacro{\yActTopB}{\yCOFAuBotB}
     \pgfmathsetmacro{\yTETopB}{\yActTopB - 0.0}
@@ -427,36 +399,29 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
     \pgfmathsetmacro{\yPZTBotB}{\yTEBotB - \PZTth}
     \pgfmathsetmacro{\yBEBotB}{\yPZTBotB - \BEth}
 
-    % 下地 BE（連続）
     \fill[gray!30] (\Xl,\yBEBotB) rectangle (\Xr,{\yBEBotB+\BEth});
+    \fill[gray!15] (\Xl,{\yBEBotB+\BEth}) rectangle (\GapL,{\yPZTBotB+\PZTth});
+    \fill[gray!15] (\GapR,{\yBEBotB+\BEth}) rectangle (\Xr,{\yPZTBotB+\PZTth});
+    \fill[gray!10] (\Xl,\yTEBotB) rectangle (\GapL,{\yTEBotB+\TEth});
+    \fill[gray!10] (\GapR,\yTEBotB) rectangle (\Xr,{\yTEBotB+\TEth});
 
-    % PZT 抜き（左右ブロック、中央スリット）
-    \fill[gray!15] (\Xl,{\yBEBotB+\BEth}) rectangle (\GapL,{\yPZTBotB+\PZTth}); % 左
-    \fill[gray!15] (\GapR,{\yBEBotB+\BEth}) rectangle (\Xr,{\yPZTBotB+\PZTth}); % 右
-    % TE も分離（左右ブロック、中央スリット）
-    \fill[gray!10] (\Xl,\yTEBotB) rectangle (\GapL,{\yTEBotB+\TEth}); % 左
-    \fill[gray!10] (\GapR,\yTEBotB) rectangle (\Xr,{\yTEBotB+\TEth}); % 右
-
-    % アクチュエータ Au 電極（左右）
     \fill[gray!60] (\ActL,{\yActTopB-\Actth}) rectangle (\ActR,\yActTopB);
     \fill[gray!60] (\ActLtwo,{\yActTopB-\Actth}) rectangle (\ActRtwo,\yActTopB);
 
-    % COF 端子（Au→Cu）
     \fill[orange!35] (\ActL,\yCOFAuBotB) rectangle (\ActR,\yCuTopB);
     \fill[brown!30]  (\ActL,\yCuTopB)    rectangle (\ActR,{\yCuTopB+\COFCuth});
     \fill[orange!35] (\ActLtwo,\yCOFAuBotB) rectangle (\ActRtwo,\yCuTopB);
     \fill[brown!30]  (\ActLtwo,\yCuTopB)    rectangle (\ActRtwo,{\yCuTopB+\COFCuth});
 
-    % 右側ラベル（下図）— 上図と同文言でOKなので重複表示は省略可
+    % 右側ラベル（\! なし）
     \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yBEBotB+0.5*\BEth}) {BE (100 nm)};
-    \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yTEBotB-\!0.5*\PZTth}) {PZT (1.2 µm) — 中央スリット};
+    \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yTEBotB-0.5*\PZTth}) {PZT (1.2 µm) — 中央スリット};
     \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yTEBotB+0.5*\TEth}) {TE (20 nm) — 分離};
     \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yActTopB-0.5*\Actth}) {Au 1.3 µm (Act)};
     \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yCOFAuBotB+0.5*\COFAuth}) {COF Au 0.425 µm};
     \node[anchor=west, font=\scriptsize] at (\RightLabelX,{\yCuTopB+0.5*\COFCuth}) {Cu 8 µm};
 
-    %====================== 仕上げ ======================
-    % バウンディングボックス（行送り確保）
+    % 行送り確保
     \path[use as bounding box] (\Xl-2,{\yBEBotB-4}) rectangle (\RightLabelX+18,{\yCuTopT+\COFCuth+10});
   \end{tikzpicture}
   \caption{%
