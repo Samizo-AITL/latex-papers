@@ -1,35 +1,49 @@
 \documentclass[conference]{IEEEtran}
-% ==== 追加推奨（LuaLaTeX + IEEEtran + TikZ を安定運用）====
-% 色・塗り分け（TikZのfill指定に必須）
-\usepackage{xcolor}
 
-% 日本語・英語のフォント設定（任意：体裁を整える）
+% ==== 追加推奨（LuaLaTeX + IEEEtran + TikZ を安定運用）====
+
+% --- 基本環境 ---
+\usepackage{luatexja}              % 日本語処理の基本
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+% --- 色とTikZ（塗り分けに必須）---
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes,fit}
+
+% --- フォント設定 ---
 \usepackage{luatexja-fontspec}
-\setmainfont{TeX Gyre Termes}     % IEEE向けTimes系
+\setmainfont{TeX Gyre Termes}      % IEEEtran向けTimes系
 \setsansfont{TeX Gyre Heros}
 \setmonofont{TeX Gyre Cursor}
-\setmainjfont{IPAexMincho}        % 好みで変更可
+\setmainjfont{IPAexMincho}         % 好みで変更可
 \setsansjfont{IPAexGothic}
-% 行分割や約物の調整（句読点ぶら下げ等）
 \ltjsetparameter{jacharrange={-2,-3}, autoxspacing=true, autospacing=true}
 
-% 参照や引用の整形（IEEE定番）
+% --- 引用・参照 ---
 \usepackage{cite}
 
-% 単位と数値（きれいに出したいとき）
+% --- 単位と数値整形 ---
 \usepackage{siunitx}
 \sisetup{detect-all}
 
-% URLの自動改行・リンク体裁
+% --- URL・ハイパーリンク ---
+\usepackage{url}
+\usepackage{hyperref}              % ★ hypersetup より前に必ず置く
 \def\UrlBreaks{\do\/\do-\do\_}
-\hypersetup{hidelinks}
+\hypersetup{hidelinks}             % ★ ここに置くのが正解
 
-% 表のX列の縦中央寄せ（TabularXの見栄え向上）
+% --- 表関連設定（tabularx 読み込み後に置く）---
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \renewcommand\tabularxcolumn[1]{m{#1}}
 
-% 最終ページの段落バランス（2段組の空白防止）
+% --- 段落バランス（2段組の最終ページ空白防止）---
 \usepackage{balance}
-% \balance  % 結論セクション直前あたりで有効化
+% \balance  % 結論直前で有効化
 
 \begin{document}
 
