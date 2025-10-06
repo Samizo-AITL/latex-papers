@@ -131,52 +131,80 @@ COF Sn端子–基板側はんだ–基板パッド &
 \end{tabularx}
 \end{table}
 
-% ==== Fig. 接合構造（2カラム対応）====
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\begin{tikzpicture}[x=1mm,y=1mm,>=Latex,font=\scriptsize]
+\begin{tikzpicture}[x=1mm, y=1mm, >=Latex, font=\scriptsize]
 
-% === 下層構造（Si・振動膜・キャビティ・SUS島） ===
-\filldraw[fill=gray!10, draw=black] (0,6) rectangle (80,11) node[anchor=west] at (80,8.5) {Si 基板};
-\filldraw[fill=gray!20, draw=black] (0,11) rectangle (80,12.6) node[anchor=west] at (80,12.0) {振動フィルム};
-\draw[dashed] (6,6.3) -- (74,6.3) node[anchor=west] at (80,6.3) {キャビティ};
+% === 基礎寸法 ===
+% 横幅全体約80 mm
+% スタック順：上→下（PCB→COF→ACF→PZT→SUS→膜）
 
-\filldraw[fill=gray!60, draw=black] (36,12.6) rectangle (44,14.2);
-\node[anchor=west] at (44.5,13.5) {SUS 島};
+% PCB層
+\filldraw[fill=gray!20, draw=black] (0,70) rectangle (80,73);
+\node[anchor=west] at (81,71.5){\textbf{PCB}（入力）};
 
-% === PZT（バルク、内部電極付き） ===
-\filldraw[fill=gray!5, draw=black] (38,14.2) rectangle (42,45) node[anchor=east] at (38,30) {バルクPZT};
-\foreach \y in {16,19,22,25,28,31,34,37,40,43}{\draw[gray!60] (38,\y) -- (42,\y);}
+% はんだ層
+\filldraw[fill=gray!50, draw=black] (38,68.8) rectangle (42,70);
+\node[anchor=east] at (37.5,69.3){はんだ接合};
 
-% === COF 縦配線・IC ===
-\filldraw[fill=gray!15, draw=black] (50,14.2) rectangle (54,56);
-\node[anchor=west] at (54.5,35){COF};
-\filldraw[fill=gray!30, draw=black] (49.5,40) rectangle (54.5,48);
-\node[anchor=west] at (55,44){IC};
+% COF本体
+\filldraw[fill=gray!10, draw=black] (30,55) rectangle (50,68.8);
+\node[anchor=west] at (51,62){\textbf{COF}};
+% COFの信号ライン：左GND, 中COM, 右GND
+\filldraw[fill=black!40, draw=black] (31,55) rectangle (32,68.8);
+\filldraw[fill=black!15, draw=black] (39,55) rectangle (41,68.8);
+\filldraw[fill=black!40, draw=black] (48,55) rectangle (49,68.8);
+\node[anchor=east] at (31,67){GND};
+\node at (40,67){COM};
+\node[anchor=west] at (49,67){GND};
 
-% === SUS放熱板（ICに沿って配置） ===
-\filldraw[fill=gray!55, draw=black] (54.8,18) rectangle (57.8,56);
-\node[anchor=west,align=left] at (58,38){SUS放熱板\\（IC放熱）};
+% ACF層
+\filldraw[pattern=north east lines, pattern color=gray!60, draw=black] (30,52.5) rectangle (50,55);
+\node[anchor=west] at (51,53.7){ACF導電粒子層};
 
-% === 出力端子（下側 ACF接合） ===
-\filldraw[fill=gray!35, draw=black] (42,30) rectangle (50,34);
-\draw[->] (60,32) -- (50,32);
-\node[anchor=west] at (60,32){出力端子：ACF 接合（COF→PZT）};
+% PZT本体
+\filldraw[fill=gray!5, draw=black] (33,30) rectangle (47,52.5);
+\node[anchor=east] at (32.8,42){\textbf{バルクPZT（d$_{31}$）}};
+% 内部交互電極
+\foreach \y in {31,33,35,37,39,41,43,45,47,49,51}{
+  \draw[gray!60] (33,\y)--(47,\y);
+}
+% 側面GND端子
+\filldraw[fill=black!40, draw=black] (33,38) rectangle (34,46);
+\filldraw[fill=black!40, draw=black] (46,38) rectangle (47,46);
+\node[anchor=east] at (32.8,45){GND};
+\node[anchor=west] at (47.2,45){GND};
+% 中央COM引出し（PZT上面へ）
+\filldraw[fill=black!15, draw=black] (39,49) rectangle (41,52.5);
+\node at (40,50.5){COM};
 
-% === 入力端子（上側 はんだ接合） ===
-\filldraw[fill=gray!25, draw=black] (48,56) rectangle (80,59) node[anchor=west] at (80,57.5) {PCB};
-\filldraw[fill=gray!50, draw=black] (52,55.2) rectangle (55.8,56);
-\draw[->] (57,55.6) -- (55.8,55.6);
-\node[anchor=west] at (57.2,55.6){入力端子：はんだ接合（COF→PCB）};
+% SUS島（機械支持）
+\filldraw[fill=gray!60, draw=black] (35,28) rectangle (45,30);
+\node[anchor=west] at (45.3,29){SUS島（機械支持・絶縁）};
 
-% === 補助ラベル ===
-\node[anchor=east] at (37.8,15.0){PZT下端子};
-\draw[->] (37.4,15.0)--(39,14.2);
+% 振動膜
+\filldraw[fill=gray!20, draw=black] (0,26) rectangle (80,28);
+\node[anchor=west] at (81,27){振動膜／キャビティ上面};
+
+% キャビティ領域
+\draw[dashed, gray] (0,23)--(80,23);
+\node[anchor=west] at (81,23){インクキャビティ};
+
+% SUS放熱板・IC配置
+\filldraw[fill=gray!35, draw=black] (52,55) rectangle (56,68);
+\node[anchor=west] at (56.5,62){IC};
+\filldraw[fill=gray!60, draw=black] (56,55) rectangle (59,68);
+\node[anchor=west,align=left] at (59.5,62){SUS\\放熱板};
+
+% 注釈矢印
+\draw[->, thick] (40,68.8)--(40,70) node[midway,right]{はんだ接合};
+\draw[->, thick] (40,55)--(40,52.5) node[midway,right]{ACF接合（COM/GND）};
+\draw[->, thick] (40,30)--(40,28) node[midway,right]{機械接合（絶縁）};
 
 \end{tikzpicture}
-\caption{Mach世代インクジェットヘッドの断面模式図（2カラム対応）。上側は入力端子としてCOFとPCBをはんだ接合し、下側は出力端子としてCOFとPZTをACF接合する。ICの背面にはSUS放熱板を配置し、PZT下端はSUS島を介してキャビティ上の振動膜に接合される。}
-\label{fig:bonding_twocolumn}
-\end{figure}
+\caption{Mach世代ヘッドのCOF–PZT–SUS構造（最終完全板）。COFの中央端子はCOM、両端端子はGNDであり、ACF導電粒子層を介してPZT内部の交互積層電極群へ接続される。PZT下端はSUS島と機械的に接合し、絶縁された状態で変位を振動膜に伝える。上面のCOFはPCBとSn系はんだで接続され、ICおよびSUS放熱板を搭載する。}
+\label{fig:mach_complete}
+\end{figure*}
 
 \section{切り替えの背景と状況}
 コンシューマ（水系インク）用ヘッドは先行してACF接合へ切り替え済みであり、量産に支障はなかった。一方で、溶剤インク対応ヘッドについてはACF樹脂の溶剤膨潤リスクが懸念され、評価や信頼性確認が遅れたため、切り替えが後回しとなっていた。  
