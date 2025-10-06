@@ -115,26 +115,43 @@ Fig.\ref{fig:au-logic}に，本検討で用いた仕様決定のフローを示�
 さらにコスト感応度解析により 1チップ当たり約\SI{4}{JPY}の低減効果を見積もり，
 量産数量に外挿することで年間十億円規模の事業効果を見込めることを示した。
 
+% ===== Au厚仕様決定ロジック（1カラム幅に最適化）=====
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[node distance=6mm and 8mm, >=Latex]
+  % 1カラム幅に自然にフィットするようスケール調整
+  \resizebox{0.95\columnwidth}{!}{%
+  \begin{tikzpicture}[node distance=8mm and 10mm, >=Latex]
     \tikzset{
-      box/.style={draw, rounded corners, align=center, inner sep=3pt, font=\scriptsize}
+      box/.style={
+        draw,
+        rounded corners,
+        align=center,
+        inner sep=4pt,
+        font=\scriptsize,
+        minimum width=26mm,
+        minimum height=7mm
+      }
     }
+
+    % ---- ノード定義 ----
     \node[box] (start) {現行仕様\\Au 0.5 µm ±0.20};
-    \node[box, below=of start] (limit) {量産実績\\下限0.30 µm};
-    \node[box, below=of limit] (spec) {工程能力 Cpk≥1.67\\新仕様 0.425 ±0.125 µm};
-    \node[box, below=of spec] (eval) {評価試験\\NPC, イオンマイグレーション, 環境加速};
-    \node[box, below=of eval] (cost) {コスト感応度解析\\約4円/チップ};
+    \node[box, below=of start] (limit) {量産実績\\下限 0.30 µm};
+    \node[box, below=of limit] (spec) {工程能力 Cpk ≥ 1.67\\新仕様 0.425 ±0.125 µm};
+    \node[box, below=of spec] (eval) {評価試験\\NPC・イオンマイグレーション・環境加速};
+    \node[box, below=of eval] (cost) {コスト感応度解析\\約 4 円／チップ};
     \node[box, below=of cost] (impact) {事業効果\\年間十億円規模};
 
-    \draw[->] (start) -- (limit);
-    \draw[->] (limit) -- (spec);
-    \draw[->] (spec) -- (eval);
-    \draw[->] (eval) -- (cost);
-    \draw[->] (cost) -- (impact);
-  \end{tikzpicture}
-  \caption{Au厚仕様決定ロジック}
+    % ---- 矢印 ----
+    \draw[->, thick] (start) -- (limit);
+    \draw[->, thick] (limit) -- (spec);
+    \draw[->, thick] (spec) -- (eval);
+    \draw[->, thick] (eval) -- (cost);
+    \draw[->, thick] (cost) -- (impact);
+  \end{tikzpicture}%
+  }
+  \caption{Au厚仕様決定ロジック。
+  現行仕様（0.5 µm ±0.20）から量産実績・工程能力・信頼性評価・コスト感応度を経て、
+  新仕様（0.425 ±0.125 µm）に到達する意思決定フローを示す。}
   \label{fig:au-logic}
 \end{figure}
 
