@@ -621,28 +621,49 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
       \pgfmathsetmacro{\tHoldEnd}{\tRiseEndFast+\thold}
       \pgfmathsetmacro{\tFallEnd}{\tHoldEnd+\tfall}
       \pgfmathsetmacro{\tMax}{\tFallEnd+\textra}
-      % -------- 軸と基準線 --------
-      \draw[->] (0,\VBS-8) -- (0,\VH+6) node[above] {$V$};
-      \draw[densely dotted] (0,\VH) -- (\tMax,\VH) node[right] {$\;30\,\mathrm{V}$};
-      \draw[densely dotted] (0,\V0) -- (\tMax,\V0) node[right] {$\;10\,\mathrm{V}$};
-      \draw[densely dotted] (0,0) -- (\tMax,0) node[right] {$\;0$};
-      \draw[densely dotted] (0,\VBS) -- (\tMax,\VBS) node[right] {$\;-10\,\mathrm{V}$};
-      \draw[->] (0,\VBS-8) -- (\tMax+0.2,\VBS-8) node[right] {$t$};
-      % -------- VBS一定 --------
-      \draw[semithick] (0,\VBS) -- (\tMax,\VBS) node[below right] {VBS};
-      % -------- COM（急峻）--------
-      \draw[semithick] (0,\V0) -- (\tpre,\V0) -- (\tRiseEndFast,\VH) --
-                       (\tHoldEnd,\VH) -- (\tFallEnd,\V0) -- (\tMax,\V0);
-      % -------- 緩和スロープ（赤）--------
+
+      % -------- 軸 --------
+      \draw[->] (0,\VBS-8) -- (0,\VH+8) node[above] {$V$};
+      \draw[->] (0,\VBS-8) -- (\tMax+0.4,\VBS-8) node[right] {$t$};
+
+      % -------- 基準線（30V・10Vは細い点線）--------
+      \draw[densely dotted, line width=0.4pt] (0,\VH) -- (\tMax,\VH) node[right] {$\;30\,\mathrm{V}$};
+      \draw[densely dotted, line width=0.4pt] (0,\V0) -- (\tMax,\V0) node[right] {$\;10\,\mathrm{V}$};
+      \draw[densely dotted, line width=0.5pt] (0,0) -- (\tMax,0) node[right] {$\;0$};
+      \draw[densely dotted, line width=0.5pt] (0,\VBS) -- (\tMax,\VBS) node[right] {$\;-10\,\mathrm{V}$};
+
+      % -------- VBS（一定）--------
+      \draw[semithick] (0,\VBS) -- (\tMax,\VBS);
+
+      % -------- COM（黒：急峻）--------
+      \draw[semithick]
+        (0,\V0) -- (\tpre,\V0)
+        -- (\tRiseEndFast,\VH)
+        -- (\tHoldEnd,\VH)
+        -- (\tFallEnd,\V0)
+        -- (\tMax,\V0);
+
+      % -------- COM（赤：緩和スロープ比較）--------
       \draw[line width=1pt,red] (\tpre,\V0) -- (\tRiseEndSlow,\VH);
-      % -------- 注釈 --------
+
+      % -------- 「I = C dV/dt」：重ならないよう上側に退避＋白背景 --------
+      \node[fill=white, inner sep=1.2pt] at (\tpre+0.35,\VH+6) {$I = C\,\mathrm{d}V/\mathrm{d}t$};
+
+      % -------- 矢印（相対的な大小、位置オフセット）--------
       \path let \p1=(\tpre,\V0), \p2=(\tRiseEndFast,\VH) in
-        coordinate (MidFast) at ($(\p1)!0.5!(\p2)$);
+        coordinate (MidFast) at ($(\p1)!0.45!(\p2)$);
       \path let \p3=(\tRiseEndSlow,\VH) in
-        coordinate (MidSlow) at ($(\tpre,\V0)!0.5!(\p3)$);
-      \draw[-{Stealth[length=3mm]}] ($(MidFast)+(0,8)$) -- ($(MidFast)+(0,0)$);
-      \draw[-{Stealth[length=2mm]},red] ($(MidSlow)+(0,5)$) -- ($(MidSlow)+(0,0)$);
-      \node[fill=white,inner sep=1pt] at ($(MidFast)+(0,10)$) {$I = C\,\mathrm{d}V/\mathrm{d}t$};
+        coordinate (MidSlow) at ($(\tpre,\V0)!0.55!(\p3)$);
+      \draw[-{Stealth[length=3mm]}] ($(MidFast)+(0,5.5)$) -- ($(MidFast)+(0,0.3)$);
+      \draw[-{Stealth[length=2.4mm]},red] ($(MidSlow)+(0,4.0)$) -- ($(MidSlow)+(0,0.3)$);
+
+      % -------- ラベル（COM / VBS）— グラフに重ならない位置に矢印で指示 --------
+      % COM：上側余白にテキスト、下向き矢印で天井レベルへ
+      \node[anchor=west] at (\tMax-1.2,\VH+7.2) {\small COM};
+      \draw[-{Stealth[length=2mm]}] (\tMax-0.5,\VH+6.8) -- (\tMax-0.5,\VH+0.2);
+      % VBS：右下余白にテキスト、上向き矢印で -10V ラインへ
+      \node[anchor=west] at (\tMax-0.8,\VBS-6.5) {\small VBS};
+      \draw[-{Stealth[length=2mm]}] (\tMax-0.1,\VBS-6.1) -- (\tMax-0.1,\VBS+0.2);
     \end{tikzpicture}%
   }%
 }{}
@@ -655,8 +676,8 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
 
   \vspace{6pt}
 
-  % --- Fig.4：台形波形の概念図 ---
-  \resizebox{0.84\textwidth}{!}{\figTrapezoidScreening}
+  % --- Fig.4：台形波形の概念図（★60%に縮小） ---
+  \resizebox{0.60\textwidth}{!}{\figTrapezoidScreening}
 
   \caption{%
     (上) 端部焼損の模式断面図：
