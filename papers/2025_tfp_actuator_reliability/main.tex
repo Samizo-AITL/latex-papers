@@ -605,8 +605,6 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
 
 % =====================================================
 % 図3＋図4（縦並び統合版・重なり防止：全幅フロート）
-%   - 参照は \ref{fig:edgeburnout-trapezoid} に統一
-%   - 未定義なら \figTrapezoidScreening をその場で定義（既定義なら無視）
 % =====================================================
 \makeatletter
 \@ifundefined{figTrapezoidScreening}{%
@@ -658,12 +656,13 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
       \draw[-{Stealth[length=2.4mm]},red] ($(MidSlow)+(0,4.0)$) -- ($(MidSlow)+(0,0.3)$);
 
       % -------- ラベル（COM / VBS）— グラフに重ならない位置に矢印で指示 --------
-      % COM：上側余白にテキスト、下向き矢印で天井レベルへ
-      \node[anchor=west] at (\tMax-1.2,\VH+7.2) {\small COM};
-      \draw[-{Stealth[length=2mm]}] (\tMax-0.5,\VH+6.8) -- (\tMax-0.5,\VH+0.2);
-      % VBS：右下余白にテキスト、上向き矢印で -10V ラインへ
+      % ★ COM：天井（30V）の黒いCOM波形そのものへ矢印が届くようにする
+      \node[anchor=south] at (\tHoldEnd-0.2,\VH+6.5) {\small COM};
+      \draw[-{Stealth[length=2mm]}] (\tHoldEnd-0.2,\VH+6.1) -- (\tHoldEnd-0.2,\VH); % ← 波形に着地
+
+      % VBS：右下余白→ -10Vラインへ
       \node[anchor=west] at (\tMax-0.8,\VBS-6.5) {\small VBS};
-      \draw[-{Stealth[length=2mm]}] (\tMax-0.1,\VBS-6.1) -- (\tMax-0.1,\VBS+0.2);
+      \draw[-{Stealth[length=2mm]}] (\tMax-0.1,\VBS-6.1) -- (\tMax-0.1,\VBS+0.0);
     \end{tikzpicture}%
   }%
 }{}
@@ -676,8 +675,8 @@ $E \simeq 3.3\,\mathrm{MV/cm}$ に達すると推定された。
 
   \vspace{6pt}
 
-  % --- Fig.4：台形波形の概念図（★60%に縮小） ---
-  \resizebox{0.60\textwidth}{!}{\figTrapezoidScreening}
+  % --- Fig.4：台形波形の概念図（★0.40に縮小） ---
+  \resizebox{0.40\textwidth}{!}{\figTrapezoidScreening}
 
   \caption{%
     (上) 端部焼損の模式断面図：
