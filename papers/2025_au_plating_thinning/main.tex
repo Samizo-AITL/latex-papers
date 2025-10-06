@@ -343,62 +343,98 @@ Auマイグレーションを抑制した（Fig.~\ref{fig:act-mig-clean}）。
 
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[x=0.9mm,y=0.9mm,>=Latex,inner sep=1pt]
-    %---------------- パラメータ ----------------
-    \def\gap{1.4} % タイトルとCu上辺のすき間(mm)
+  % 1カラムに完全収容（列幅でスケール）
+  \resizebox{\columnwidth}{!}{%
+  \begin{tikzpicture}[x=1mm,y=1mm,>=Latex,inner sep=1pt]
+    % ===== 図全体の外形（行送りの基準） =====
+    % 幅80mm・高さ98mm想定（余裕あり）
+    \path[use as bounding box] (0,0) rectangle (80,98);
 
-    % 行送り用の外枠（上側を少し拡張）
-    \path[use as bounding box] (0,0) rectangle (78,102);
+    %---------------- 共通パラメタ ----------------
+    % 右側ラベルのX位置（図とかぶらないよう外側へ）
+    \def\XR{75} % 右ラベルx（anchor=west）
 
-    %==================== 対策前 ====================
-    % レイヤ（同じ）
-    \fill[gray!30] (8,56) rectangle (70,62);   % BE
-    \fill[gray!15] (8,62) rectangle (70,74);   % PZT
-    \fill[gray!10] (8,74) rectangle (70,76);   % TE
-    \node[font=\scriptsize] at (39,58) {BE (100 nm)};
-    \node[font=\scriptsize] at (39,68) {PZT (1.2 µm)};
-    \node[font=\scriptsize] at (39,75.8) {TE (20 nm)};
+    % ===== 上段：対策前 =====
+    % タイトル（中央揃え）—— ここが基準
+    \node[font=\small, align=center] (ttlBefore) at (40,94) {対策前：TE表面でAuマイグレーション発生リスク};
 
-    % アクチュエータ & COF
-    \fill[gray!60] (20,76) rectangle (32,89);
-    \fill[gray!60] (46,76) rectangle (58,89);
-    \fill[orange!35] (20,89) rectangle (32,91.7);      % Au
-    \fill[brown!30]  (20,91.7) rectangle (32,97.7);    % Cu
-    \fill[orange!35] (46,89) rectangle (58,91.7);
-    \fill[brown!30]  (46,91.7) rectangle (58,97.7);
+    % Cu上辺をタイトル直下（約1mm下）に合わせる
+    \def\yCuTopA{93} % タイトル 94 → Cu上辺 93（=1mm下）
+    % スタック寸法（上から下へ）
+    \def\hCu{6.0} \def\hAu{2.7} \def\hAct{13.0} \def\hTE{2.0} \def\hPZT{12.0} \def\hBE{6.0}
 
-    % ←ここがポイント：Cu上辺(=97.7)に対して gap だけ上にタイトル
-    \node[font=\small,anchor=south] at (0,97.7+\gap) {対策前：TE 表面で Au マイグレーション発生リスク};
+    % 層Y座標（対策前：上→下に積む）
+    \pgfmathsetmacro{\yAuTopA}{\yCuTopA - \hAu}
+    \pgfmathsetmacro{\yActTopA}{\yAuTopA - \hAct}
+    \pgfmathsetmacro{\yTETopA}{\yActTopA - \hTE}
+    \pgfmathsetmacro{\yPZTTopA}{\yTETopA - \hPZT}
+    \pgfmathsetmacro{\yBETopA}{\yPZTTopA - \hBE}
 
-    % 注記は右側
-    \draw[->] (34,75.8) -- (44,75.8);
-    \node[font=\scriptsize,anchor=west] at (46,75.5) {Au migration on TE};
+    % 下地（BE/PZT/TE）
+    \fill[gray!30] (8,\yBETopA) rectangle (72,{\yBETopA+\hBE});     % BE
+    \fill[gray!15] (8,\yPZTTopA) rectangle (72,{\yPZTTopA+\hPZT});   % PZT
+    \fill[gray!10] (8,\yTETopA) rectangle (72,{\yTETopA+\hTE});      % TE
 
-    %==================== 対策後 ====================
-    % レイヤ
-    \fill[gray!30] (8,14) rectangle (70,20);   % BE
-    \fill[gray!15] (8,20) rectangle (70,32);   % PZT
-    \fill[gray!10] (8,32) rectangle (70,34);   % TE
-    \draw[line width=0.5pt,gray!60] (39,20) -- (39,34); % PZTスリット
-    \node[font=\scriptsize] at (39,16) {BE (100 nm)};
-    \node[font=\scriptsize] at (39,26) {PZT (1.2 µm)};
-    \node[font=\scriptsize] at (39,33.8) {TE (20 nm)};
-    \node[font=\scriptsize,rotate=90] at (41.5,27) {PZT slit};
+    % アクチュエータAu電極（2本）
+    \fill[gray!60] (20,\yActTopA) rectangle (32,{\yActTopA+\hAct});
+    \fill[gray!60] (48,\yActTopA) rectangle (60,{\yActTopA+\hAct});
 
-    % アクチュエータ & COF
-    \fill[gray!60] (20,34) rectangle (32,47);
-    \fill[gray!60] (46,34) rectangle (58,47);
-    \fill[orange!35] (20,47) rectangle (32,49.7);      % Au
-    \fill[brown!30]  (20,49.7) rectangle (32,55.7);    % Cu
-    \fill[orange!35] (46,47) rectangle (58,49.7);
-    \fill[brown!30]  (46,49.7) rectangle (58,55.7);
+    % COF端子（Au→Cu）
+    \fill[orange!35] (20,\yAuTopA) rectangle (32,{\yAuTopA+\hAu});     % Au on top of Act
+    \fill[brown!30]  (20,\yCuTopA) rectangle (32,{\yCuTopA+\hCu});     % Cu
+    \fill[orange!35] (48,\yAuTopA) rectangle (60,{\yAuTopA+\hAu});
+    \fill[brown!30]  (48,\yCuTopA) rectangle (60,{\yCuTopA+\hCu});
 
-    % ←ここがポイント：下図のCu上辺(=55.7)＋gap にタイトル
-    \node[font=\small,anchor=south] at (0,55.7+\gap) {対策後：PZT スリット導入による実効沿面距離延長};
+    % Au migration（右側に退避）
+    \draw[->] (60,{\yTETopA+0.1}) -- (66,{\yTETopA+0.1});
+    \node[font=\scriptsize, anchor=west] at (67,{\yTETopA+1.2}) {Au migration on TE};
 
-  \end{tikzpicture}
+    % 右側ラベル（層名・膜厚）— 図と重ならない右外
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yBETopA+1.5}) {BE 100\,nm};
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yPZTTopA+6})  {PZT 1.2\,\textmu m};
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yTETopA+1.2}) {TE 20\,nm};
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yActTopA+11.8}) {Au 1.3\,\textmu m (Act)};
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yCuTopA+3.2})  {Cu 8\,\textmu m};
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yAuTopA+1.0})  {COF Au 0.425\,\textmu m};
 
-  \caption{上：対策前は TE 表面で Au マイグレーションが起点となる。下：対策後は PZT スリット導入により実効沿面距離が延長され抑制。下地：NiCr 50 nm／TE 20 nm／PZT 1.2 µm／BE 100 nm。}
+    % ===== 下段：対策後（PZTは“抜かず”連続、スリット無し） =====
+    % タイトル
+    \node[font=\small, align=center] (ttlAfter) at (40,48) {対策後：沿面改質・電界緩和によるマイグレーション抑制};
+
+    % Cu上辺をタイトル直下（約1mm下）に合わせる
+    \def\yCuTopB{47}
+
+    % 同じ積層寸法を再利用
+    \pgfmathsetmacro{\yAuTopB}{\yCuTopB - \hAu}
+    \pgfmathsetmacro{\yActTopB}{\yAuTopB - \hAct}
+    \pgfmathsetmacro{\yTETopB}{\yActTopB - \hTE}
+    \pgfmathsetmacro{\yPZTTopB}{\yTETopB - \hPZT}
+    \pgfmathsetmacro{\yBETopB}{\yPZTTopB - \hBE}
+
+    % 下地（PZTは連続：スリット無し）
+    \fill[gray!30] (8,\yBETopB) rectangle (72,{\yBETopB+\hBE});     % BE
+    \fill[gray!15] (8,\yPZTTopB) rectangle (72,{\yPZTTopB+\hPZT});   % PZT (continuous)
+    \fill[gray!10] (8,\yTETopB) rectangle (72,{\yTETopB+\hTE});      % TE
+
+    % アクチュエータAu電極（2本）
+    \fill[gray!60] (20,\yActTopB) rectangle (32,{\yActTopB+\hAct});
+    \fill[gray!60] (48,\yActTopB) rectangle (60,{\yActTopB+\hAct});
+
+    % COF端子（Au→Cu）
+    \fill[orange!35] (20,\yAuTopB) rectangle (32,{\yAuTopB+\hAu});
+    \fill[brown!30]  (20,\yCuTopB) rectangle (32,{\yCuTopB+\hCu});
+    \fill[orange!35] (48,\yAuTopB) rectangle (60,{\yAuTopB+\hAu});
+    \fill[brown!30]  (48,\yCuTopB) rectangle (60,{\yCuTopB+\hCu});
+
+    % 右側ラベル
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yBETopB+1.5}) {BE 100\,nm};
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yPZTTopB+6})  {PZT 1.2\,\textmu m};
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yTETopB+1.2}) {TE 20\,nm};
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yActTopB+11.8}) {Au 1.3\,\textmu m (Act)};
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yCuTopB+3.2})  {Cu 8\,\textmu m};
+    \node[font=\scriptsize, anchor=west] at (\XR,{\yAuTopB+1.0})  {COF Au 0.425\,\textmu m};
+  \end{tikzpicture}}
+  \caption{COF端子（Au 0.425\,\textmu m／Cu 8\,\textmu m）とアクチュエータAu電極（1.3\,\textmu m）の界面模式図。上：対策前はTE表面でAuマイグレーションが起点となる。下：対策後は沿面電界緩和・界面改質により抑制。下地：NiCr 50\,nm／TE 20\,nm／PZT 1.2\,\textmu m／BE 100\,nm。}
   \label{fig:act-mig-clean-1col}
 \end{figure}
 
