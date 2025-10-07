@@ -98,63 +98,55 @@ Sn–BiメッキはCOF端子形成の根幹であり、代替材料が存在し�
 %========================================================
 \section{Machヘッド アクチュエータ部概要}
 
-Mach世代インクジェットヘッドは、エプソンが2000年代後半から2010年代にかけて量産展開した代表的なピエゾ駆動型アクチュエータ構造を有する。  
+Mach世代インクジェットヘッドは、エプソンが2000年代後半から2010年代にかけて量産展開された代表的なピエゾ駆動型アクチュエータ構造を有する。  
 本アクチュエータ部は、d$_{31}$モードで動作する積層型PZT素子を多数並列に配置し、その水平方向の変位をキャビティ膜に伝達してインクを加圧する。  
-Machの特徴は、外部駆動ICからの信号入力を受ける\textbf{受動型変換素子群}として設計されている点にあり、  
-制御回路を内包しない単純・堅牢な構成によって高い信頼性を実現している。
+Machの特徴は、外部駆動ICからの信号入力を受ける\textbf{受動型変換素子群}として設計されている点にあり、制御回路を内包しない単純・堅牢な構成によって高い信頼性を実現している。
 
 %--------------------------------------------------------
 \subsection{PZT素子およびCOF構造}
-PZT素子は、COM電極層とGND電極層が交互に積層されたモノリシック構造を持ち、  
-電界印加によりd$_{31}$モードで水平方向に歪み、その変位がキャビティ膜を駆動する。  
-上面にはCOF（Chip on Film）が実装され、外部ICとの電気接続を担う。  
-本プロジェクトでは、従来のSn–Bi/Snはんだ接合をACF/Sn接合へ移行することで、  
-Sn–Biプロセス断絶後も量産を維持する構成が採用された。
 
-%==================== Figure : Machヘッド アクチュエータ部 上面模式図（Sn–Bi/Sn→Sn） ====================
-\begin{figure}[t]
+PZT素子は、COM電極層とGND電極層が交互に積層されたモノリシック構造を有し、電界印加によりd$_{31}$モードで水平方向に歪み、その変位がキャビティ膜を駆動する。  
+素子上面にはCOF（Chip on Film）が実装され、外部ICとの電気接続を担う。  
+本プロジェクトでは、従来のSn–Bi/Snはんだ接合を廃止し、Sn仕上げ電極による直接接合構造へ移行した。  
+これにより、Sn–Biプロセス断絶後も同一寸法系を維持したまま量産を継続できる構成となった。
+
+\begin{table}[t]
 \centering
+\caption{Machヘッド アクチュエータ部の構造対応関係（上面構造）}
 \footnotesize
-\begin{tikzpicture}[x=1mm,y=1mm]
-\tikzset{
-  cof/.style={draw,fill=gray!20,line width=0.35pt},
-  pzt/.style={draw,fill=gray!10,line width=0.35pt},
-  label/.style={font=\scriptsize},
-  arr/.style={-Latex,line width=0.4pt}
-}
+\begin{tabularx}{\columnwidth}{l l X}
+\hline
+層または要素 & 主な構成材料・仕上げ & 機能・役割 \\
+\hline
+COF出力端子列 & Sn/Cu電極（Sn仕上げ） & 外部IC信号をPZT素子へ伝達 \\
+接合界面 & Sn–Bi/Sn $\rightarrow$ Sn & 電気的・機械的導通の確保 \\
+PZT櫛歯電極列 & Ni/Auまたは焼成Ag電極 & d$_{31}$変形を駆動する能動部 \\
+キャビティ膜（SUS島支持） & SUSまたはNi薄膜 & 圧力伝達膜・流路形成部 \\
+\hline
+\end{tabularx}
+\label{tab:mach_actuator_layers}
+\end{table}
 
-%--- タイトル・注記 ---
-\node[label] at (45,63){Machヘッド アクチュエータ部 上面図（COF–PZT対応構造）};
-\node[label] at (45,59){Sn--Bi/Sn $\rightarrow$ Sn};
+%--------------------------------------------------------
+\subsection{構造の設計思想}
 
-%--- COF 出力端子列 ---
-\foreach \x in {10,25,40,55,70,85}{
-  \fill[cof] (\x,48) rectangle (\x+5,60);
-}
-\node[label,anchor=west] at (93,54){COF 出力端子列};
+Machアクチュエータ部は、COF出力端子列とPZT櫛歯電極列を1対1に対応配置する単純構造である。  
+中間層としてのACF層は省略され、Sn仕上げの電極間で直接導通を確保する。  
+この構成により、以下の利点が得られる。
 
-%--- 接合部（単純接触） ---
-\foreach \x in {10,25,40,55,70,85}{
-  \draw[line width=0.3pt] (\x+2.5,48) -- (\x+2.5,45);
-}
+\begin{itemize}
+  \item Sn–Bi系材料供給停止に依存しない量産プロセスの確立  
+  \item ACF層を省くことで実装工程の短縮および信頼性の向上  
+  \item Sn電極同士の直接接触により接合抵抗を低減し、駆動電圧安定性を向上  
+  \item PZT櫛歯電極の幾何学配置を維持し、吐出均一性を確保  
+\end{itemize}
 
-%--- PZT 櫛歯電極列 ---
-\foreach \x in {12.5,27.5,42.5,57.5,72.5,87.5}{
-  \fill[pzt] (\x,30) rectangle (\x+5,42);
-}
-\node[label,anchor=west] at (93,36){PZT 櫛歯電極列};
+%--------------------------------------------------------
+\subsection{総括}
 
-%--- ラベル矢印 ---
-\draw[arr] (60,45.5) -- (60,41.5);
-\node[label,anchor=west] at (62,43.5){接合（Sn仕上げ）};
-
-\end{tikzpicture}
-
-\caption{Machヘッド・アクチュエータ部の上面模式図。%
-COF出力端子列とPZT櫛歯電極列が直接対応して配置される構造を示す。%
-Sn--Bi/Sn接合からSn仕上げへの移行後も同一配列を維持。}
-\label{fig:mach_actuator_top_simplified}
-\end{figure}
+Mach世代ヘッドのアクチュエータ部は、COF–PZT–キャビティの三層構成を維持しつつ、  
+Sn–Bi/Sn接合からSn直接接合への移行によって製造互換性と信頼性を両立した。  
+本構成は、PrecisionCoreシリーズでのMEMS一体化以前に確立された\textbf{分離実装アーキテクチャの完成形}として位置づけられる。
 
 %========================================================
 \section{接合方式移行}
@@ -410,18 +402,19 @@ R_a=\sqrt{4(\delta_{D1}-\delta_{D2})^2+(\delta_{P1}-\delta_{P2})^2+(\delta_{H1}-
 $\delta_D\!\approx\!18$, $\delta_P\!\approx\!7$, $\delta_H\!\approx\!6$，
 一方，溶剤系インクに含まれる主溶媒の例を表\ref{tab:HSP}に示す。
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \caption{主要溶剤のHansen溶解度パラメータ（参考値）}
 \label{tab:HSP}
-\begin{tabularx}{\columnwidth}{@{}l c c c l@{}}
+\footnotesize
+\begin{tabularx}{\columnwidth}{@{}l c c c X@{}}
 \toprule
 溶剤 & $\delta_D$ & $\delta_P$ & $\delta_H$ & 備考 \\
 \midrule
-$\gamma$-ブチロラクトン (GBL) & 19.0 & 16.6 & 7.4 & 強極性・膨潤強 \\
-ジエチレングリコールエチルエーテル (DEGEE) & 16.5 & 7.4 & 13.6 & H結合大 \\
-イソプロパノール (IPA) & 15.8 & 6.1 & 16.4 & 拡散促進性あり \\
-酢酸エチル & 15.8 & 5.3 & 7.2 & 中極性 \\
+$\gamma$-ブチロラクトン（GBL） & 19.0 & 16.6 & 7.4 & 強極性で膨潤性が高い。ACFやエポキシ樹脂を軟化させる。\\
+ジエチレングリコールエチルエーテル（DEGEE） & 16.5 & 7.4 & 13.6 & 水素結合性が大きく、混合溶剤中で拡散促進効果を示す。\\
+イソプロパノール（IPA） & 15.8 & 6.1 & 16.4 & 揮発性が高く、洗浄・拡散補助に使用される。\\
+酢酸エチル & 15.8 & 5.3 & 7.2 & 中極性で、樹脂との親和性は中程度。\\
 \bottomrule
 \end{tabularx}
 \end{table}
