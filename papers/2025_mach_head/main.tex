@@ -96,21 +96,6 @@ Sn–BiメッキはCOF端子形成の根幹であり、代替材料が存在し�
 結果として、Sn–Bi断絶への対応は「技術課題」であると同時に、「事業継続リスク」そのものであり、短期間での大規模な4M変更（Man, Machine, Material, Method）を余儀なくされる状況に至った。
 
 %========================================================
-\section{Machヘッド アクチュエータ部概要}
-
-Mach世代インクジェットヘッドは、エプソンが2000年代後半から2010年代にかけて量産展開した代表的なピエゾ駆動型アクチュエータ構造を有する。  
-本アクチュエータ部は、d$_{31}$モードで動作する積層型PZT素子を多数並列に配置し、その水平方向の変位をキャビティ膜に伝達してインクを加圧する。  
-Machの特徴は、外部駆動ICからの信号入力を受ける\textbf{受動型変換素子群}として設計されている点にあり、  
-制御回路を内包しない単純・堅牢な構成によって高い信頼性を実現している。
-
-%--------------------------------------------------------
-\subsection{PZT素子およびCOF構造}
-PZT素子は、COM電極層とGND電極層が交互に積層されたモノリシック構造を持ち、  
-電界印加によりd$_{31}$モードで水平方向に歪み、その変位がキャビティ膜を駆動する。  
-上面にはCOF（Chip on Film）が実装され、外部ICとの電気接続を担う。  
-本プロジェクトでは、従来のSn–Bi/Snはんだ接合をACF/Sn接合へ移行することで、  
-Sn–Biプロセス断絶後も量産を維持する構成が採用された。
-
 %========================================================
 \section{Machヘッド アクチュエータ部概要}
 
@@ -127,122 +112,45 @@ PZT素子は、COM電極層とGND電極層が交互に積層されたモノリ�
 本プロジェクトでは、従来のSn–Bi/Snはんだ接合をACF/Sn接合へ移行することで、  
 Sn–Biプロセス断絶後も量産を維持する構成が採用された。
 
-%==================== Figure: Mach actuator w/ electrical loops ====================
-\begin{figure*}[t]
+%==================== Figure : COF上にPZTを積層した断面模式図 ====================
+\begin{figure}[t]
 \centering
 \footnotesize
 \tikzset{
-  blk/.style={draw,fill=black!5,rounded corners=0.6pt,line width=0.35pt},
-  metal/.style={fill=black!20},
-  line/.style={line width=0.35pt},
-  label/.style={font=\scriptsize},
-  arr/.style={-Latex,line width=0.45pt},
-  call/.style={draw,rounded corners=1pt,fill=black!2,inner sep=2pt,line width=0.3pt}
+  cof/.style={draw,fill=black!10, line width=0.35pt},
+  pzt/.style={draw,fill=black!5, line width=0.35pt},
+  acf/.style={draw,fill=black!20, line width=0.35pt},
+  metal/.style={fill=black!50}
 }
 
-%---------------- (a) Top view : before (Sn–Bi/Sn) ----------------
-\begin{tikzpicture}[x=1mm,y=1mm]
-\node[label,anchor=west] at (-2,28){\textbf{(a) 上面図：実装前（Sn–Bi/Sn 接合）}};
-\draw[blk] (0,0) rectangle (68,24);
-\fill[metal] (0,1) rectangle (3,23);
-\fill[metal] (65,1) rectangle (68,23);
-\node[label] at (1.5,24.8){GND};
-\node[label] at (66.5,24.8){GND};
-\foreach \x in {6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63}{
-  \fill[black!30] (\x,4) rectangle (\x+2,20);
+%--- Sn–Bi/Sn → Sn の注記 ---
+\node at (45,62){Sn--Bi/Sn $\rightarrow$ Sn};
+
+%--- COF出力端子（金属バー）---
+\foreach \x in {20,35,50,65,80}{
+  \fill[metal] (\x-1.5,60) rectangle (\x+1.5,50);
 }
-\node[label] at (34,1.5){COF 櫛歯列（Sn–Bi/Sn 想定）};
-\begin{scope}[yshift=-28]
-  \draw[blk] (0,0) rectangle (68,18);
-  \foreach \x in {4,8,12,16,20,24,28,32,36,40,44,48,52,56,60,64}{
-    \fill[black!30] (\x,2) rectangle (\x+2,16);
-  }
-  \node[label] at (34,9){PZT（櫛歯電極列）};
-\end{scope}
-\draw[arr] (34,-2) -- (34,-8) node[midway,right]{Sn–Bi/Sn 接合};
-\end{tikzpicture}
-\hspace{6mm}
-%---------------- (b) Top view : after (ACF/Sn) ----------------
-\begin{tikzpicture}[x=1mm,y=1mm]
-\node[label,anchor=west] at (-2,28){\textbf{(b) 上面図：接合移行後（ACF/Sn 接合）}};
-\draw[blk] (0,0) rectangle (68,24);
-\fill[metal] (0,1) rectangle (3,23);
-\fill[metal] (65,1) rectangle (68,23);
-\node[label] at (1.5,24.8){GND};
-\node[label] at (66.5,24.8){GND};
-\foreach \x in {6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63}{
-  \fill[black!30] (\x,4) rectangle (\x+2,20);
+
+%--- COF層 ---
+\draw[cof] (10,50) rectangle (90,46);
+\node[anchor=west] at (92,48){COF};
+
+%--- ACF接合層 ---
+\draw[acf] (10,46) rectangle (90,43);
+\node[anchor=west] at (92,44.5){ACF接合部};
+
+%--- PZT櫛歯層 ---
+\foreach \x in {15,25,35,45,55,65,75,85}{
+  \draw[pzt,fill=black!8] (\x,43) -- (\x,35) -- (\x+5,35) -- (\x+5,43) -- cycle;
 }
-\node[label] at (34,1.5){COF 櫛歯列（ACF/Sn 想定）};
-\draw[arr] (34,-2) -- (34,-8) node[midway,right]{ACF/Sn 接合};
-\begin{scope}[yshift=-28]
-  \draw[blk] (0,0) rectangle (68,18);
-  \foreach \x in {6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63}{
-    \fill[black!15] (\x,2) rectangle (\x+2,16);
-  }
-  \node[label] at (34,9){PZT（積層体）};
-\end{scope}
-\end{tikzpicture}
+\draw[pzt] (10,35) rectangle (90,43);
+\node[anchor=west] at (92,39){PZT（ピエゾ）};
 
-\vspace{2mm}
+\caption{COF上に積層したPZTアクチュエータ部の断面模式図。  
+COF出力端子をSn–Bi/SnからSn仕上げに変更し，ACF接合でPZTを固定する構成。}
+\label{fig:mach_actuator_simple}
+\end{figure}
 
-%---------------- (c) Cross section : with electrical loop ----------------
-\begin{tikzpicture}[x=1mm,y=1mm]
-\node[label,anchor=west] at (-2,52){\textbf{(c) 断面図：COF–PZT–キャビティ合体（電気ループ付き）}};
-\fill[black!6] (-2,0) rectangle (100,6);
-\draw[line] (-2,6) -- (100,6);
-\node[label] at (88,2.5){\small キャビティ／SUS島台座};
-
-\fill[black!40] (42,6) rectangle (58,8);
-\node[label] at (72,7){SUS島（機械支持・絶縁）};
-
-\draw[blk] (45,8) rectangle (55,28);
-\foreach \y in {10,12.5,15,17.5,20,22.5,25}{
-  \draw[line] (46,\y) -- (54,\y);
-}
-\fill[black!50] (45,11) rectangle (46,25);
-\fill[black!50] (54,11) rectangle (55,25);
-\node[label] at (43.6,25){\small GND};
-\node[label] at (56.4,25){\small GND};
-\fill[black!20] (49.5,25.5) rectangle (50.5,28);
-\node[label] at (50,29){\small COM};
-
-\fill[black!20] (44,28) rectangle (56,29);
-\node[label] at (67,28.5){ACF 導電層（Z方向）};
-
-\draw[blk] (40,29) rectangle (60,46);
-\fill[black!50] (41,31) rectangle (42,44);
-\foreach \x in {44,46.5,49,51.5}{
-  \fill[black!30] (\x,31) rectangle (\x+1.2,44);
-}
-\fill[black!50] (58,31) rectangle (59,44);
-\node[label] at (41.5,46){\small GND};
-\node[label] at (58.5,46){\small GND};
-\node[label] at (50,30){\small COM列};
-
-\fill[black!15] (40,46) rectangle (60,47.2);
-\fill[black!50] (48.5,47.2) rectangle (51.5,48.2);
-\node[label] at (76,47.8){PCB（SACはんだ）};
-
-% 電気ループ矢印
-\draw[arr] (70,42) -- (60.5,42) node[pos=0.4,above]{IC出力};
-\draw[arr] (50,41) -- (50,29.3);
-\draw[arr] (50,28.7) -- (50,25.8);
-\draw[arr] (54.6,23) .. controls (62,23) and (62,38) .. (59.5,38);
-\draw[arr] (40.5,38) -- (30,38) node[left]{IC GND};
-
-\node[call] at (83,35){\begin{minipage}{40mm}\scriptsize
-\textbf{電気ループ}\\
-IC出力 → COF(COM) → ACF → PZT内部COM\\
-PZT GND → 側面メタライズ → COF(GND) → IC GND
-\end{minipage}};
-\end{tikzpicture}
-
-\caption{Machヘッド・アクチュエータ部：上面（実装前/後）と断面。  
-(a) 旧：Sn–Bi/Sn 接合、(b) 新：ACF/Sn 接合、(c) PCB–SAC–COF–ACF–PZT–SUS–キャビティの層構成と電気ループ。}
-\label{fig:mach_actuator_loops}
-\end{figure*}
-%==============================================================================
 %--------------------------------------------------------
 \subsection{電気的ループ構成}
 各PZT素子の電気ループは次のように形成される。  
