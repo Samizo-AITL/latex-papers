@@ -86,22 +86,79 @@ Mach世代インクジェットヘッドは、エプソンが2000年代後半か
 
 結果として、Sn-Bi断絶への対応は「技術課題」であると同時に、「事業継続リスク」そのものであり、短期間での大規模な4M変更（Man, Machine, Material, Method）を余儀なくされる状況に至った。
 
+%========================================================
 \section{Machヘッド構造概要}
 Mach世代インクジェットヘッドは、エプソンが2000年代後半から2010年代にかけて量産展開した代表的なピエゾ駆動ヘッドであり、d$_{31}$モードで動作する積層型PZT素子を多数並列に配置した構造を有する。  
-各PZT素子は水平方向に変位し、その変位を下方のキャビティ膜へ伝達することでインクを加圧する。Machの特徴は、外部駆動ICによって電圧印加を受ける**受動的変換素子群**として設計されている点にある。すなわち、制御回路やセンサを内包する能動アクチュエータ構造ではなく、外部駆動信号に応答する単純で堅牢な機能素子列として構成されている。
+各PZT素子は水平方向に変位し、その変位を下方のキャビティ膜へ伝達することでインクを加圧する。Machの特徴は、外部駆動ICによって電圧印加を受ける\textbf{受動的変換素子群}として設計されている点にある。  
+すなわち、制御回路やセンサを内包する能動アクチュエータ構造ではなく、外部駆動信号に応答する単純で堅牢な機能素子列として構成されている。
 
+%--------------------------------------------------------
 \subsection{PZT素子および内部構造}
 PZT素子は交互積層されたCOM電極層とGND電極層を持つモノリシック構造であり、電界印加によりd$_{31}$モードで水平方向に歪む。  
 両端の側面にはGND電極が共通化され、各COM電極は個別に駆動される。  
 素子列は櫛歯状に加工され、1インチあたり180本程度のピッチで配列される。  
 この構造により、電気的には「GND共通・COM独立」の単純なループを多数並列化した形式となる。
 
+\begin{figure}[t]
+\centering
+\resizebox{\columnwidth}{!}{
+\begin{tikzpicture}[x=1mm,y=1mm,font=\scriptsize,>=Latex]
+\fill[gray!08] (0,2) rectangle (36,40);
+\node[anchor=west] at (38,22){PZT素子（櫛歯列の1ユニット模式）};
+\foreach \y in {4,7,10,13,16,19,22,25,28,31,34,37}{
+  \draw[gray!60] (2,\y) -- (34,\y);
+}
+\fill[black!40] (0,14) rectangle (2,28);
+\fill[black!40] (34,14) rectangle (36,28);
+\node[anchor=east] at (0,28){GND};
+\node[anchor=west] at (36,28){GND};
+\fill[black!15] (17,28) rectangle (19,40);
+\node at (18,36){COM};
+\draw[->,thick] (18,1) -- (18,-4) node[below]{d$_{31}$変位（水平方向歪み）};
+\fill[gray!50] (12,0) rectangle (24,2);
+\node[anchor=north] at (18,0){取付面（機械接合・絶縁）};
+\end{tikzpicture}}
+\caption{櫛歯状の積層PZT素子模式図。内部はCOM／GND電極を交互積層し，両側がGND共通。COMは独立駆動され，水平方向にd$_{31}$モードで変位する。}
+\label{fig:pzt_part}
+\end{figure}
+
+%--------------------------------------------------------
 \subsection{COF配線と接続構造}
 COF（Chip on Film）は、PZT素子群の上面に実装され、外部ICからの信号伝達とPZT電極への接続を担う。  
 COF上には複数のCOMラインと両端のGNDラインが形成されており、下端ではACF（Anisotropic Conductive Film）を介してPZT電極群と接続される。  
 上端はSn系はんだにより基板（駆動IC実装側）と接続され、電気ループが閉じる。  
 この構成により、PZT素子群の駆動系はCOF層内で完結し、外装構造から電気的に分離されている。
 
+\begin{figure}[t]
+\centering
+\resizebox{\columnwidth}{!}{
+\begin{tikzpicture}[x=1mm,y=1mm,font=\scriptsize,>=Latex]
+\fill[gray!15] (0,0) rectangle (70,28);
+\node[anchor=west] at (72,14){COF（フィルム基材）};
+\fill[gray!35] (5,24) rectangle (65,26);
+\node[anchor=west] at (66,25){入力端子（PCBとはんだ接合）};
+\fill[gray!35] (5,2) rectangle (65,4);
+\node[anchor=west] at (66,3){出力端子（PZTとACF接合）};
+\fill[black!40] (8,4) rectangle (12,24);
+\fill[black!15] (20,4) rectangle (22,24);
+\fill[black!15] (26,4) rectangle (28,24);
+\fill[black!15] (32,4) rectangle (34,24);
+\fill[black!15] (38,4) rectangle (40,24);
+\fill[black!40] (58,4) rectangle (62,24);
+\node[anchor=north] at (10,4){GND};
+\node[anchor=north] at (21,4){COM};
+\node[anchor=north] at (27,4){COM};
+\node[anchor=north] at (33,4){COM};
+\node[anchor=north] at (39,4){COM};
+\node[anchor=north] at (60,4){GND};
+\draw[gray!60,thick] (42,10) rectangle (56,18);
+\node at (49,14){IC};
+\end{tikzpicture}}
+\caption{COF配線構造図。上端は基板と\textbf{はんだ接合}，下端はPZTと\textbf{ACF接合}。縦配線は両端GND，中央に複数のCOMラインを持つ。}
+\label{fig:cof_part}
+\end{figure}
+
+%--------------------------------------------------------
 \subsection{キャビティおよび機械構造}
 PZT素子群の下方には、シリコンエッチングにより形成されたキャビティ構造体（キャビアセンブリ）が配置されている。  
 キャビティ膜にはステンレス製の島（SUS島）が形成され、PZT素子の下端がこの島上に接合される。  
@@ -109,6 +166,43 @@ PZT変位はSUS島を介してキャビティ膜へ伝達され、インク室�
 SUS島およびキャビティ膜は機械的支持体として機能し、電気的には完全に絶縁されている。  
 したがって、PZTとCOFで構成される駆動回路系と、キャビティ膜で構成される流体変位系は明確に分離された構造を持つ。
 
+\begin{figure}[t]
+\centering
+\resizebox{\columnwidth}{!}{
+\begin{tikzpicture}[x=1mm,y=1mm,font=\scriptsize,>=Latex]
+\fill[gray!10] (0,2) rectangle (80,5);
+\fill[gray!20] (0,5) rectangle (80,6.2);
+\draw[dashed,gray] (4,2.5) -- (76,2.5) node[anchor=west] at (80,2.5){インクキャビティ};
+\fill[gray!55] (35,6.2) rectangle (45,7.8);
+\node[anchor=west] at (45.5,7.2){SUS島（機械支持・絶縁）};
+\fill[gray!08] (37,7.8) rectangle (43,32);
+\foreach \y in {9.5,12,14.5,17,19.5,22,24.5,27,29.5}{
+  \draw[gray!50] (37,\y)--(43,\y);
+}
+\fill[black!40] (37,15) rectangle (38,25);
+\fill[black!40] (42,15) rectangle (43,25);
+\fill[black!15] (39.5,28) rectangle (40.5,32);
+\node[anchor=east] at (37,25){GND}; 
+\node[anchor=west] at (43,25){GND};
+\node at (40,30.8){COM};
+\fill[black!30] (36,32) rectangle (44,33);
+\node[anchor=west] at (44.5,32.5){ACF接合（出力：COF→PZT）};
+\fill[gray!15] (34,33) rectangle (46,52);
+\fill[black!40] (35,35) rectangle (36,50);
+\fill[black!15] (39,35) rectangle (41,50);
+\fill[black!40] (44,35) rectangle (45,50);
+\node[anchor=east] at (35,50){GND}; 
+\node at (40,50){COM}; 
+\node[anchor=west] at (45,50){GND};
+\fill[gray!35] (30,52) rectangle (50,54);
+\fill[gray!60] (38.5,51.2) rectangle (41.5,52);
+\node[anchor=west] at (50.5,53){PCB（入力）／はんだ接合（COF→PCB）};
+\end{tikzpicture}}
+\caption{ピエゾアセンブリ（COF＋PZT）とキャビアセンブリ（Si＋膜＋SUS島）の断面構造。上側は入力：\textbf{COF–PCB はんだ接合}，下側は出力：\textbf{COF–PZT ACF接合}。機械系と電気系を分離した構造を持つ。}
+\label{fig:assembly_section}
+\end{figure}
+
+%--------------------------------------------------------
 \subsection{電気的ループ構成}
 各PZT素子の電気ループは以下のように形成される。  
 \begin{itemize}
@@ -139,6 +233,7 @@ SUS島／キャビティ膜 & 機械支持・圧力伝達 & 機械的に接続�
 
 このようにMachヘッドは、電気駆動系と流体変位系を完全に分離しつつ、COF–PZT–キャビティの三層構成により安定した吐出を実現している。  
 その設計思想は、後のPrecisionCoreでMEMS化・統合化される以前の、実装技術的アプローチの完成形と位置づけられる。
+%========================================================
 
 \section{接合方式移行}
 Sn-Bi断絶を受け、COF端子構造を全面的に見直し、出力端子（PZT側）と入力端子（基板側）で異なる接合方式を導入した。これは「一方式で全てを代替する」ことが困難であったため、用途と要求特性に応じて最適な方式を振り分けるという設計判断である。
