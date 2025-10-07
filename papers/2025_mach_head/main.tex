@@ -96,7 +96,6 @@ Sn–BiメッキはCOF端子形成の根幹であり、代替材料が存在し�
 結果として、Sn–Bi断絶への対応は「技術課題」であると同時に、「事業継続リスク」そのものであり、短期間での大規模な4M変更（Man, Machine, Material, Method）を余儀なくされる状況に至った。
 
 %========================================================
-%========================================================
 \section{Machヘッド アクチュエータ部概要}
 
 Mach世代インクジェットヘッドは、エプソンが2000年代後半から2010年代にかけて量産展開した代表的なピエゾ駆動型アクチュエータ構造を有する。  
@@ -116,55 +115,50 @@ Sn–Biプロセス断絶後も量産を維持する構成が採用された。
 \begin{figure}[t]
 \centering
 \footnotesize
+\begin{tikzpicture}[x=1mm,y=1mm]
 \tikzset{
   cof/.style={draw,fill=black!10, line width=0.35pt},
   pzt/.style={draw,fill=black!5, line width=0.35pt},
   acf/.style={draw,fill=black!20, line width=0.35pt},
-  metal/.style={fill=black!50}
+  metal/.style={fill=black!50},
+  label/.style={font=\scriptsize}
 }
 
 %--- Sn–Bi/Sn → Sn の注記 ---
-\node at (45,62){Sn--Bi/Sn $\rightarrow$ Sn};
+\node[label] at (45,62){Sn--Bi/Sn $\rightarrow$ Sn};
 
 %--- COF出力端子（金属バー）---
 \foreach \x in {20,35,50,65,80}{
-  \fill[metal] (\x-1.5,60) rectangle (\x+1.5,50);
+  \fill[metal] (\x-1.5,50) rectangle (\x+1.5,46);
 }
 
 %--- COF層 ---
-\draw[cof] (10,50) rectangle (90,46);
-\node[anchor=west] at (92,48){COF};
+\draw[cof] (10,46) rectangle (90,42);
+\node[label,anchor=west] at (92,44){COF};
 
 %--- ACF接合層 ---
-\draw[acf] (10,46) rectangle (90,43);
-\node[anchor=west] at (92,44.5){ACF接合部};
+\draw[acf] (10,42) rectangle (90,39);
+\node[label,anchor=west] at (92,40.5){ACF接合部};
 
 %--- PZT櫛歯層 ---
 \foreach \x in {15,25,35,45,55,65,75,85}{
-  \draw[pzt,fill=black!8] (\x,43) -- (\x,35) -- (\x+5,35) -- (\x+5,43) -- cycle;
+  \draw[pzt,fill=black!8] (\x,39) -- (\x,31) -- (\x+5,31) -- (\x+5,39) -- cycle;
 }
-\draw[pzt] (10,35) rectangle (90,43);
-\node[anchor=west] at (92,39){PZT（ピエゾ）};
+\draw[pzt] (10,31) rectangle (90,39);
+\node[label,anchor=west] at (92,35){PZT（積層ピエゾ）};
 
-\caption{COF上に積層したPZTアクチュエータ部の断面模式図。  
-COF出力端子をSn–Bi/SnからSn仕上げに変更し，ACF接合でPZTを固定する構成。}
+%--- キャビティ層 ---
+\draw[draw=black!50,fill=gray!05] (10,31) rectangle (90,27);
+\node[label,anchor=west] at (92,29){キャビティ膜（SUS島支持）};
+
+%--- 図タイトル ---
+\node[label] at (50,65){Machヘッド アクチュエータ部構造（COF–ACF–PZT–キャビティ）};
+\end{tikzpicture}
+
+\caption{COF上に積層したPZTアクチュエータ部の断面模式図。%
+COF出力端子をSn--Bi/SnからSn仕上げに変更し，ACF接合でPZTを固定する構成。}
 \label{fig:mach_actuator_simple}
 \end{figure}
-
-%--------------------------------------------------------
-\subsection{電気的ループ構成}
-各PZT素子の電気ループは次のように形成される。  
-\begin{itemize}
-  \item 外部IC出力 $\rightarrow$ COF上のCOMライン $\rightarrow$ ACF $\rightarrow$ PZT内部COM電極
-  \item PZT内部GND電極 $\rightarrow$ 側面メタライズ $\rightarrow$ COF両端GNDライン $\rightarrow$ IC基準GND
-\end{itemize}
-このループはCOFおよびPZT内部で完結しており、キャビティや筐体は関与しない。  
-電気的独立性を保つことで、信号クロストークの抑制と駆動安定性を確保している。
-
-%--------------------------------------------------------
-\subsection{構造と設計思想}
-Machアクチュエータ部は、電気駆動系と流体変位系を完全に分離しつつ、COF–PZT–キャビティの三層構成によって安定した吐出を実現している。  
-本構造は、後のPrecisionCoreヘッドでMEMS一体化へと進化する以前の、分離実装アーキテクチャの完成形に位置づけられる。
 
 %========================================================
 \section{接合方式移行}
