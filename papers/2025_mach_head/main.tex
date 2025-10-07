@@ -15,7 +15,7 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes,fit}
 
-% --- フォント設定 ---
+% --- フォント設定（LuaLaTeX） ---
 \usepackage{luatexja-fontspec}
 \setmainfont{TeX Gyre Termes}      % IEEEtran向けTimes系
 \setsansfont{TeX Gyre Heros}
@@ -24,14 +24,10 @@
 \setsansjfont{IPAexGothic}
 \ltjsetparameter{jacharrange={-2,-3}, autoxspacing=true, autospacing=true}
 
-% --- 引用・単位・リンク ---
-\usepackage{cite}
+% --- 引用・単位 ---
+\usepackage{cite}                   % ← hyperref より前
 \usepackage{siunitx}
 \sisetup{detect-all}
-\usepackage{url}
-\usepackage{hyperref}
-\def\UrlBreaks{\do\/\do-\do\_}
-\hypersetup{hidelinks}
 
 % --- 表まわり設定 ---
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
@@ -40,6 +36,17 @@
 % --- 段組バランス ---
 \usepackage{balance}
 % \balance  % 結論直前で使用
+
+% --- URL・ハイパーリンク（最後付近に配置） ---
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-\do\_}
+\usepackage{hyperref} % ← ほぼ最後に読み込む
+% LuaLaTeX和文ブックマーク安定化（psdextra推奨）
+\hypersetup{
+  hidelinks,
+  pdfencoding=auto,
+  psdextra
+}
 
 %========================================================
 \begin{document}
