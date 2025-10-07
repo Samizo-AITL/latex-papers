@@ -111,53 +111,53 @@ PZT素子は、COM電極層とGND電極層が交互に積層されたモノリ�
 本プロジェクトでは、従来のSn–Bi/Snはんだ接合をACF/Sn接合へ移行することで、  
 Sn–Biプロセス断絶後も量産を維持する構成が採用された。
 
-%==================== Figure : COF上にPZTを積層した断面模式図 ====================
+%==================== Figure : Machヘッド アクチュエータ部 上面模式図 ====================
 \begin{figure}[t]
 \centering
 \footnotesize
 \begin{tikzpicture}[x=1mm,y=1mm]
 \tikzset{
-  cof/.style={draw,fill=black!10, line width=0.35pt},
-  pzt/.style={draw,fill=black!5, line width=0.35pt},
-  acf/.style={draw,fill=black!20, line width=0.35pt},
-  metal/.style={fill=black!50},
-  label/.style={font=\scriptsize}
+  cof/.style={draw,fill=gray!15,line width=0.35pt},
+  pzt/.style={draw,fill=gray!8,line width=0.35pt},
+  acf/.style={draw=black!50,fill=gray!40,opacity=0.6,line width=0.3pt},
+  label/.style={font=\scriptsize},
+  arr/.style={-Latex,line width=0.4pt}
 }
 
-%--- Sn–Bi/Sn → Sn の注記 ---
-\node[label] at (45,62){Sn--Bi/Sn $\rightarrow$ Sn};
+%--- タイトル・注記 ---
+\node[label] at (45,64){Machヘッド アクチュエータ部 上面模式図（COF電極列とPZT櫛歯列）};
+\node[label] at (45,60){Sn--Bi/Sn $\rightarrow$ Sn（ACF接合への移行）};
 
-%--- COF出力端子（金属バー）---
-\foreach \x in {20,35,50,65,80}{
-  \fill[metal] (\x-1.5,50) rectangle (\x+1.5,46);
+%--- COFパターン（上層）---
+\foreach \x in {10,20,30,40,50,60,70,80}{
+  \fill[cof] (\x,50) rectangle (\x+5,62);
+}
+\node[label,anchor=west] at (86,56){COF 出力端子列};
+
+%--- PZTパターン（下層）---
+\foreach \x in {12.5,22.5,32.5,42.5,52.5,62.5,72.5,82.5}{
+  \fill[pzt] (\x,32) rectangle (\x+5,44);
+}
+\node[label,anchor=west] at (86,38){PZT 櫛歯電極列};
+
+%--- 接合部（ACF）を示すハッチング ---
+\foreach \x in {10,20,30,40,50,60,70,80}{
+  \fill[acf] (\x,44) rectangle (\x+5,50);
 }
 
-%--- COF層 ---
-\draw[cof] (10,46) rectangle (90,42);
-\node[label,anchor=west] at (92,44){COF};
-
-%--- ACF接合層 ---
-\draw[acf] (10,42) rectangle (90,39);
-\node[label,anchor=west] at (92,40.5){ACF接合部};
-
-%--- PZT櫛歯層 ---
-\foreach \x in {15,25,35,45,55,65,75,85}{
-  \draw[pzt,fill=black!8] (\x,39) -- (\x,31) -- (\x+5,31) -- (\x+5,39) -- cycle;
+%--- 矢印（接合関係）---
+\foreach \x in {12.5,22.5,32.5,42.5,52.5,62.5,72.5,82.5}{
+  \draw[arr] (\x+2.5,49.5) -- (\x+2.5,44.5);
 }
-\draw[pzt] (10,31) rectangle (90,39);
-\node[label,anchor=west] at (92,35){PZT（積層ピエゾ）};
 
-%--- キャビティ層 ---
-\draw[draw=black!50,fill=gray!05] (10,31) rectangle (90,27);
-\node[label,anchor=west] at (92,29){キャビティ膜（SUS島支持）};
-
-%--- 図タイトル ---
-\node[label] at (50,65){Machヘッド アクチュエータ部構造（COF–ACF–PZT–キャビティ）};
+%--- ラベル ---
+\node[label,anchor=west] at (86,47){ACF接合領域};
 \end{tikzpicture}
 
-\caption{COF上に積層したPZTアクチュエータ部の断面模式図。%
-COF出力端子をSn--Bi/SnからSn仕上げに変更し，ACF接合でPZTを固定する構成。}
-\label{fig:mach_actuator_simple}
+\caption{Machヘッド・アクチュエータ部 上面模式図。%
+COF出力端子列とPZT櫛歯電極列がACF層を介して接続される構成を示す。%
+Sn--Bi/Sn接合からSn仕上げ＋ACF接合へ移行。}
+\label{fig:mach_actuator_top}
 \end{figure}
 
 %========================================================
