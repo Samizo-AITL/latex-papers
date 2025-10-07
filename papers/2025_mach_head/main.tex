@@ -111,96 +111,141 @@ PZT素子は、COM電極層とGND電極層が交互に積層されたモノリ�
 本プロジェクトでは、従来のSn–Bi/Snはんだ接合をACF/Sn接合へ移行することで、  
 Sn–Biプロセス断絶後も量産を維持する構成が採用された。
 
-%=================== Mach ヘッド アクチュエータ部 3図（上面×2 + 断面） ===================
-% 必要: \usepackage{tikz}\usetikzlibrary{arrows.meta,positioning,fit}
-\begin{figure}[t]
+%==================== Figure: Mach actuator w/ electrical loops ====================
+\begin{figure*}[t]
 \centering
-\begin{tikzpicture}[x=1mm,y=1mm,>=Latex,font=\scriptsize]
+\footnotesize
+% 共通スタイル
 \tikzset{
-  panel/.style={draw,rounded corners=1,thick,inner sep=2,minimum width=70,minimum height=40},
-  film/.style={draw,rounded corners=1,fill=gray!10},
-  pad/.style={draw=gray!40,fill=gray!40},
-  bar/.style={draw=gray!25,fill=gray!25},
-  thinlayer/.style={draw,fill=gray!60},
-  label/.style={anchor=west}
+  blk/.style={draw,fill=black!5,rounded corners=0.6pt,line width=0.35pt},
+  metal/.style={fill=black!20},
+  line/.style={line width=0.35pt},
+  label/.style={font=\scriptsize},
+  arr/.style={-Latex,line width=0.45pt},
+  call/.style={draw,rounded corners=1pt,fill=black!2,inner sep=2pt,line width=0.3pt}
 }
 
-% ---------------- (a) Top view BEFORE (Sn-Bi/Sn) ----------------
-\node[panel] (A) at (0,28) {};
-\node[anchor=north west] at ([xshift=-33]A.north) {(a) 上面：実装前（Sn–Bi/Sn）};
-
-% COF pads row
-\draw[film] ([xshift=-28,yshift=-10]A.north) rectangle ++(56,-14);
-\node[label] at ([xshift=30,yshift=-16]A.north) {COF 端子列};
-\foreach \x in {-26,-23,-20,-17,-14,-11,-8,-5,-2,1,4,7,10,13,16,19,22,25}{
-  \draw[pad] ([xshift=\x,yshift=-10]A.north) rectangle ++(1.8,-14);
+%---------------- (a) Top view : before (Sn–Bi/Sn) ----------------
+\begin{tikzpicture}[x=1mm,y=1mm]
+\node[label,anchor=west] at (-2,28){\textbf{(a) 上面図：実装前（Sn–Bi/Sn 接合）}};
+% COFフィルム
+\draw[blk] (0,0) rectangle (68,24);
+% GNDバス左右
+\fill[metal] (0,1) rectangle (3,23);
+\fill[metal] (65,1) rectangle (68,23);
+\node[label] at (1.5,24.8){GND}; \node[label] at (66.5,24.8){GND};
+% COMフィン（縦列）
+\foreach \x in {6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63}{
+  \fill[black!30] (\x,4) rectangle (\x+2,20);
 }
-% PZT comb row (separate)
-\foreach \x in {-26,-23,-20,-17,-14,-11,-8,-5,-2,1,4,7,10,13,16,19,22,25}{
-  \draw[bar] ([xshift=\x,yshift=-34]A.north) rectangle ++(1.8,-8);
-}
-\node at ([yshift=-27]A.north) {PZT 櫛歯列（下面）};
-
-% bond arrow
-\draw[->,thick] ([yshift=-24]A.north) -- ++(0,-6) node[midway,right]{Sn–Bi/Sn 接合};
-
-% GND/COM hint
-\node[anchor=west] at ([xshift=-28,yshift=-8]A.north) {GND};
-\node at ([xshift=0,yshift=-8]A.north) {COM 群};
-\node[anchor=east] at ([xshift=28,yshift=-8]A.north) {GND};
-
-% ---------------- (b) Top view AFTER (ACF/Sn) ----------------
-\node[panel] (B) at (86,28) {};
-\node[anchor=north west] at ([xshift=54]B.north) {(b) 上面：実装後（ACF/Sn）};
-
-% COF pads now aligned over PZT; draw single stacked look
-\draw[film] ([xshift=58,yshift=-10]B.north) rectangle ++(56,-14);
-\node[label] at ([xshift=118,yshift=-16]B.north) {COF 端子列};
-% stacked pads (same x)
-\foreach \x in {60,63,66,69,72,75,78,81,84,87,90,93,96,99,102,105,108,111}{
-  \draw[pad] ([xshift=\x,yshift=-10]B.north) rectangle ++(1.8,-14);
-  \draw[bar] ([xshift=\x,yshift=-34]B.north) rectangle ++(1.8,-8);
-}
-% ACF bonding arrow
-\draw[->,thick] ([yshift=-24]B.north) -- ++(0,-6) node[midway,right]{ACF/Sn 接合};
-
-% ---------------- (c) Cross-section with PCB & cavity ----------------
-\node[panel,minimum width=142,minimum height=48] (C) at (43,-30) {};
-\node[anchor=north west] at ([xshift=-64]C.north) {(c) 断面：COF–ACF–PZT–SUS島（上にPCB）};
-
-% PCB + SAC
-\draw[film,fill=gray!15] ([xshift=-50,yshift=-8]C.north) rectangle ++(44,-5);
-\node[label] at ([xshift=-6,yshift=-10.5]C.north) {PCB};
-\draw[thinlayer] ([xshift=-50,yshift=-13]C.north) rectangle ++(44,-2); % SAC solder
-\node[anchor=west] at ([xshift=-6,yshift=-14.5]C.north) {SAC はんだ};
-
-% COF film
-\draw[film] ([xshift=-50,yshift=-25]C.north) rectangle ++(44,-6);
-\node[label] at ([xshift=-6,yshift=-28]C.north) {COF};
-
-% ACF thin layer
-\draw[thinlayer] ([xshift=-50,yshift=-31]C.north) rectangle ++(44,-2.3);
-\node[anchor=west] at ([xshift=-6,yshift=-32.3]C.north) {ACF（異方導電）};
-
-% PZT bulk
-\draw[film,fill=gray!12] ([xshift=-50,yshift=-49]C.north) rectangle ++(44,-14);
-\node[label] at ([xshift=-6,yshift=-56]C.north) {PZT（櫛歯）};
-
-% SUS island + cavity
-\draw[film,fill=gray!55] ([xshift=-40,yshift=-63]C.north) rectangle ++(24,-3) node[midway]{SUS 島};
-\draw[film,fill=gray!08] ([xshift=-52,yshift=-66]C.north) rectangle ++(48,-6);
-\node[anchor=west] at ([xshift=-2,yshift=-69]C.north) {キャビティ構造体};
-
-% Guide arrows
-\draw[->] ([xshift=-52,yshift=-31.5]C.north) -- ++(-6,0) node[left]{COF–PZT 接合};
-\draw[->] ([xshift=-52,yshift=-13.8]C.north) -- ++(-6,0) node[left]{COF–PCB 接合};
-
+\node[label] at (34,1.5){COF 櫛歯列（Sn–Bi/Sn 想定）};
+% 下段PZT（別体）
+\begin{scope}[yshift=-28]
+  \draw[blk] (0,0) rectangle (68,18);
+  \foreach \x in {4,8,12,16,20,24,28,32,36,40,44,48,52,56,60,64}{
+    \fill[black!30] (\x,2) rectangle (\x+2,16);
+  }
+  \node[label] at (34,9){PZT（櫛歯電極列）};
+\end{scope}
+% 接合遷移ラベル
+\draw[arr] (34,-2) -- (34,-8) node[midway,right]{Sn–Bi/Sn 接合};
 \end{tikzpicture}
-\caption{Mach ヘッド アクチュエータ部の3図。（a）実装前の上面（COF端子列とPZT櫛歯が分離、Sn–Bi/Snで接合）。（b）移行後の上面（ACF/Snで接合）。（c）断面（上からPCB–SAC–COF–ACF–PZT–SUS島–キャビティ）。GNDは両端、COMは中央群。}
-\label{fig:mach_actuator_3views}
-\end{figure}
-%================================================================================
-% ======================================================================
+\hspace{6mm}
+%---------------- (b) Top view : after (ACF/Sn) ----------------
+\begin{tikzpicture}[x=1mm,y=1mm]
+\node[label,anchor=west] at (-2,28){\textbf{(b) 上面図：接合移行後（ACF/Sn 接合）}};
+% COFフィルム（整列・一体視）
+\draw[blk] (0,0) rectangle (68,24);
+\fill[metal] (0,1) rectangle (3,23);
+\fill[metal] (65,1) rectangle (68,23);
+\node[label] at (1.5,24.8){GND}; \node[label] at (66.5,24.8){GND};
+\foreach \x in {6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63}{
+  \fill[black!30] (\x,4) rectangle (\x+2,20);
+}
+\node[label] at (34,1.5){COF 櫛歯列（ACF/Sn 想定）};
+% ACFでPZTと結合になったことを矢印で
+\draw[arr] (34,-2) -- (34,-8) node[midway,right]{ACF/Sn 接合};
+% 下段PZT（位置合わせ済みのイメージ）
+\begin{scope}[yshift=-28]
+  \draw[blk] (0,0) rectangle (68,18);
+  \foreach \x in {6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63}{
+    \fill[black!15] (\x,2) rectangle (\x+2,16);
+  }
+  \node[label] at (34,9){PZT（積層体）};
+\end{scope}
+\end{tikzpicture}
+
+\vspace{2mm}
+
+%---------------- (c) Cross section : with electrical loop ----------------
+\begin{tikzpicture}[x=1mm,y=1mm]
+\node[label,anchor=west] at (-2,52){\textbf{(c) 断面図：COF–PZT–キャビティ合体（電気ループ付き）}};
+% キャビティ(下)
+\fill[black!6] (-2,0) rectangle (100,6);
+\draw[line] (-2,6) -- (100,6);
+\node[label] at (88,2.5){\small キャビティ／SUS島台座};
+
+% SUS島
+\fill[black!40] (42,6) rectangle (58,8);
+\node[label] at (72,7){SUS島（機械支持・絶縁）};
+
+% PZT
+\draw[blk] (45,8) rectangle (55,28);
+% 内部電極（COM/GND）
+\foreach \y in {10,12.5,15,17.5,20,22.5,25}{
+  \draw[line] (46,\y) -- (54,\y);
+}
+% GND側面メタライズ
+\fill[black!50] (45,11) rectangle (46,25);
+\fill[black!50] (54,11) rectangle (55,25);
+\node[label] at (43.6,25){\small GND};
+\node[label] at (56.4,25){\small GND};
+% COMビア（代表）
+\fill[black!20] (49.5,25.5) rectangle (50.5,28);
+\node[label] at (50,29){\small COM}
+
+% ACF
+\fill[black!20] (44,28) rectangle (56,29);
+\node[label] at (67,28.5){ACF 導電層（Z方向）};
+
+% COF
+\draw[blk] (40,29) rectangle (60,46);
+% COF内部：縦配線（GND/COM）
+\fill[black!50] (41,31) rectangle (42,44); % 左GND
+\foreach \x in {44,46.5,49,51.5}{
+  \fill[black!30] (\x,31) rectangle (\x+1.2,44);  % COM列
+}
+\fill[black!50] (58,31) rectangle (59,44); % 右GND
+\node[label] at (41.5,46){\small GND};
+\node[label] at (58.5,46){\small GND};
+\node[label] at (50,30){\small COM列};
+
+% 上端：PCBはんだ
+\fill[black!15] (40,46) rectangle (60,47.2);
+\fill[black!50] (48.5,47.2) rectangle (51.5,48.2);
+\node[label] at (76,47.8){PCB（SACはんだ）};
+
+% ── 電気ループ矢印 ──
+% IC→COF COM
+\draw[arr] (70,42) -- (60.5,42) node[pos=0.4,above]{IC出力};
+% COF COM → ACF → PZT COM
+\draw[arr] (50,41) -- (50,29.3);
+\draw[arr] (50,28.7) -- (50,25.8);
+% PZT GND → 側面 → COF GND → IC GND
+\draw[arr] (54.6,23) .. controls (62,23) and (62,38) .. (59.5,38);
+\draw[arr] (40.5,38) -- (30,38) node[left]{IC GND};
+\node[call] at (83,35){\begin{minipage}{40mm}\scriptsize
+\textbf{電気ループ}\\
+IC出力 → COF(COM) → ACF → PZT内部COM\\
+PZT内部GND → 側面メタライズ → COF(GND) → IC GND
+\end{minipage}};
+\end{tikzpicture}
+
+\caption{Machヘッド・アクチュエータ部：上面（実装前/後）と断面。  
+(a) 旧：Sn–Bi/Sn 接合、(b) 新：ACF/Sn 接合、(c) PCB–SAC–COF–ACF–PZT–SUS–キャビティの層構成と電気ループ。}
+\label{fig:mach_actuator_loops}
+\end{figure*}
+%==============================================================================
 %--------------------------------------------------------
 \subsection{電気的ループ構成}
 各PZT素子の電気ループは次のように形成される。  
