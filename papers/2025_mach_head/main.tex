@@ -86,6 +86,39 @@ Mach世代インクジェットヘッドは、エプソンが2000年代後半か
 
 結果として、Sn-Bi断絶への対応は「技術課題」であると同時に、「事業継続リスク」そのものであり、短期間での大規模な4M変更（Man, Machine, Material, Method）を余儀なくされる状況に至った。
 
+\section{Machヘッド構造概要}
+Mach世代インクジェットヘッドは、バルク積層型のPZTアクチュエータと、信号伝達用COF（Chip on Film）、および駆動基板から構成される。全体は上下分離構造をとり、上側に駆動回路、下側に吐出キャビティ構造を備える。PZTアクチュエータはd$_{31}$モードで動作し、内部に交互積層されたCOM電極層とGND電極層によって、電界印加時に水平方向に歪む構造を持つ。  
+
+\subsection{PZTアクチュエータ部}
+バルクPZTは櫛歯状に加工され、約180本の駆動素子を並列に配置している。両端にはGND電極が形成され、各素子の内部には交互積層したCOM電極が存在する。GNDは左右端子で共通化され、COM電極は個別に駆動される。電圧印加により、各PZT素子が水平方向に歪み、下方のキャビティ振動膜に応力を伝達する。  
+
+\subsection{COF配線部}
+COFはPZT上面に実装され、上下両方向の接続を担う中間インタフェースである。構造上、上側の端子群は基板に向かって延び、はんだによりIC回路と接続される。一方、下側の端子群はACFを介してPZT電極群に直接接続される。COFの両端にはGNDライン、中央部には複数のCOMラインが形成され、各COMラインが対応するPZT素子を個別に駆動する。
+
+\subsection{信号ループ構成}
+PZT素子ごとの電気ループは次のように構成される。  
+IC出力 $\rightarrow$ COF上のCOMライン $\rightarrow$ ACF $\rightarrow$ PZT内部COM電極 $\rightarrow$ PZT内部GND電極 $\rightarrow$ COF両端GNDライン $\rightarrow$ IC基準GND。  
+SUS島およびキャビティ膜は機械的支持・応力伝達にのみ関与し、電気的には絶縁されている。したがって、電気ループはCOF–PZT間で閉じ、外装構造から完全に独立している。
+
+\begin{table}[t]
+\centering
+\footnotesize
+\caption{Machヘッドの主要構成と電気的・機械的役割}
+\label{tab:mach-structure}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\columnwidth}{@{}p{2.1cm} Y Y@{}}
+\toprule
+構成要素 & 主な機能 & 接続関係／役割 \\
+\midrule
+PZTアクチュエータ & 吐出圧力発生（d$_{31}$変形） & 内部COM/GND電極構造を持つ。両端GND共通、COM個別駆動。 \\
+COF（Chip on Film） & 信号伝達・中間接合体 & 上端＝基板へはんだ接続，下端＝PZTへACF接続。GND共通・COM個別配線。 \\
+ACF層 & 電気導通媒介（異方導電） & COF下端Sn端子とPZT電極を接続。Sn-Bi代替材。 \\
+駆動基板（IC含む） & 駆動信号生成・制御 & 各COMラインを個別制御し，GNDを共通基準とする。 \\
+SUS島／キャビティ膜 & 機械支持・変位伝達 & 電気的には絶縁。PZT変形をインク圧力に変換。 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
 \section{接合方式移行}
 Sn-Bi断絶を受け、COF端子構造を全面的に見直し、出力端子（PZT側）と入力端子（基板側）で異なる接合方式を導入した。これは「一方式で全てを代替する」ことが困難であったため、用途と要求特性に応じて最適な方式を振り分けるという設計判断である。
 
@@ -130,64 +163,6 @@ COF Sn端子–基板側はんだ–基板パッド &
 \bottomrule
 \end{tabularx}
 \end{table}
-
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}[x=1mm,y=1mm,>=Latex,font=\scriptsize]
-
-% --- 下層（Si/膜/キャビティ/SUS島＋絶縁接着） ---
-\filldraw[fill=gray!10,draw=black] (0,6) rectangle (84,11);         % Si
-\filldraw[fill=gray!20,draw=black] (0,11) rectangle (84,12.4);       % 振動膜
-\draw[dashed] (6,6.3)--(78,6.3) node[anchor=west] at (84,6.3){キャビティ};
-\filldraw[fill=gray!60,draw=black] (36,12.4) rectangle (48,14.0);    % SUS島（機械支持）
-\filldraw[fill=white,draw=black]   (36,14.0) rectangle (48,14.6);    % 絶縁接着層
-\node[anchor=west] at (48.5,13.7){SUS 島（機械支持）};
-\node[anchor=west] at (48.5,14.4){絶縁接着層};
-
-% --- PZT（中央・内部電極は水平層） ---
-\filldraw[fill=gray!5,draw=black] (38.5,14.6) rectangle (45.5,46);   % 本体
-\foreach \y in {16,19,22,25,28,31,34,37,40,43}{\draw[gray!60] (38.5,\y)--(45.5,\y);} % 交互層
-\node[anchor=east] at (38.3,30){バルク PZT（$d_{31}$）};
-
-% PZT両側GND端子（側面メタライズ）＋中央COM引出し
-\filldraw[fill=black!40,draw=black] (38.5,26) rectangle (39.3,34);   % 左GND
-\filldraw[fill=black!40,draw=black] (44.7,26) rectangle (45.5,34);   % 右GND
-\filldraw[fill=black!15,draw=black] (41.3,32) rectangle (42.7,46);   % COM引出し（上面へ）
-\node[anchor=east] at (38.3,35){GND};
-\node[anchor=west] at (45.7,35){GND};
-\node at (42.0,44.8){COM};
-
-% --- COF 縦配線（右）＋ IC ＋ SUS放熱板 ---
-\filldraw[fill=gray!15,draw=black] (58,14.6) rectangle (62,56); \node[anchor=west] at (62.5,36){COF};
-\filldraw[fill=gray!30,draw=black] (57.2,40) rectangle (62.8,48); \node[anchor=west] at (63,44){IC};
-\filldraw[fill=gray!55,draw=black] (62.9,18) rectangle (66.0,56); \node[anchor=west,align=left] at (66.3,39){SUS\\放熱板};
-
-% COFバス：両端GND／中央COM（下端にパッド）
-\filldraw[fill=black!40,draw=black] (58,52) rectangle (59,18);  % GND-L
-\filldraw[fill=black!15,draw=black] (59.4,52) rectangle (60.6,18); % COM
-\filldraw[fill=black!40,draw=black] (61,52) rectangle (62,18);  % GND-R
-\filldraw[fill=black!40,draw=black] (58,14.8) rectangle (59,16.2);  % pad GND-L
-\filldraw[fill=black!15,draw=black] (59.4,14.8) rectangle (60.6,16.2); % pad COM
-\filldraw[fill=black!40,draw=black] (61,14.8) rectangle (62,16.2);  % pad GND-R
-
-% --- ACF界面（COF↔PZT のみ導通） ---
-\filldraw[pattern=north east lines, pattern color=gray!60, draw=black] (45.5,30) rectangle (58,34);
-\node[anchor=west,align=left] at (68,32){ACF 密着接合\\（COM 中央／GND 両端）};
-\draw[->] (68,32) -- (58,32);
-
-% --- 入力：PCBとはんだ ---
-\filldraw[fill=gray!25,draw=black] (56,56) rectangle (84,59); \node[anchor=west] at (84,57.5){PCB（入力）};
-\filldraw[fill=gray!50,draw=black] (60.2,55.2) rectangle (63.0,56);
-\node[anchor=west] at (64.2,55.6){はんだ接合（COF→PCB）};
-\draw[->] (64.0,55.6) -- (63.0,55.6);
-
-% --- 明示テキスト（SUS島は電気無関係） ---
-\node[anchor=west,align=left] at (4,18){\footnotesize ※ SUS島は\textbf{機械支持のみ}。\\\footnotesize 電気的GNDには\textbf{接続しない}。\\\footnotesize GND/COMはCOF経由でPZT内部電極へ。};
-
-\end{tikzpicture}
-\caption{接合構造（2カラム）：GND/COMは\textbf{COF→ACF→PZT内部電極}のみでループを形成。SUS島は\textbf{機械支持・電気絶縁}であり、電気回路には関与しない。}
-\label{fig:bonding_no_sus_gnd}
-\end{figure}
 
 \section{切り替えの背景と状況}
 コンシューマ（水系インク）用ヘッドは先行してACF接合へ切り替え済みであり、量産に支障はなかった。一方で、溶剤インク対応ヘッドについてはACF樹脂の溶剤膨潤リスクが懸念され、評価や信頼性確認が遅れたため、切り替えが後回しとなっていた。  
