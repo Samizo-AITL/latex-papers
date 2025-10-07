@@ -111,96 +111,96 @@ PZT素子は、COM電極層とGND電極層が交互に積層されたモノリ�
 本プロジェクトでは、従来のSn–Bi/Snはんだ接合をACF/Sn接合へ移行することで、  
 Sn–Biプロセス断絶後も量産を維持する構成が採用された。
 
-\begin{figure*}[t]
+% ===== Fig. Machヘッド アクチュエータ部（上面＆断面）===================
+% 依存: \usepackage{tikz} \usetikzlibrary{arrows.meta,positioning,shapes,fit}
+\begin{figure}[t]
 \centering
-\resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[x=1mm,y=1mm,font=\scriptsize,>=Latex]
+\begin{tikzpicture}[x=1mm,y=1mm,>=Latex,font=\scriptsize]
 
-%----------------------------------------------------
-% (a) 上面図：実装前
-%----------------------------------------------------
-\node[anchor=west] at (0,70) {(a) 上面図：実装前（Sn–Bi/Sn接合）};
-\draw[rounded corners,gray!40] (0,0) rectangle (90,65);
-
-% PZT行列
-\foreach \x in {5,10,...,80}{
-  \fill[gray!20] (\x,5) rectangle (\x+2,20);
+% ---------- 共通スタイル ----------
+\tikzset{
+  part/.style={draw,rounded corners=1,fill=gray!10},
+  cofpad/.style={fill=gray!40,draw=gray!40},
+  pztbar/.style={fill=gray!25,draw=gray!25},
+  label/.style={anchor=west},
+  panel/.style={draw,rounded corners=1,inner sep=2,thick}
 }
-\node[anchor=west] at (3,22) {PZT（櫛歯状電極列）};
 
-% COF上部
-\fill[gray!10] (5,35) rectangle (85,50);
-\foreach \x in {7,12,...,82}{
-  \fill[gray!50] (\x,35) rectangle (\x+1.2,50);
-}
-\node[anchor=west] at (3,53) {COF端子列（Sn–Bi/Sn構造）};
+% ========== (a) 上面図：実装前（Sn–Bi/Sn） ==========
+\node[panel,minimum width=72,minimum height=46] (A) at (0,28) {};
+\node[anchor=north west] at ([xshift=-32]A.north) {(a) 上面図：実装前（Sn–Bi/Sn 接合）};
 
-% 接合線
-\draw[->,thick] (45,25) -- (45,35);
-\node[anchor=west] at (47,30) {Sn–Bi/Sn接合};
+% COF本体
+\draw[part] ([xshift=-30,yshift=-8]A.north) rectangle ++(60,-18);
+\node[label] at ([xshift=32,yshift=-16]A.north) {COF 端子列（Sn–Bi/Sn 想定）};
+% COFパッド（縦櫛）
+\foreach \x in {-26,-23,-20,-17,-14,-11,-8,-5,-2,1,4,7,10,13,16,19,22,25}
+  \draw[cofpad] ([xshift=\x,yshift=-8]A.north) rectangle ++(1.6,-18);
 
-%----------------------------------------------------
-% (b) 上面図：実装後（ACF/Sn移行）
-%----------------------------------------------------
-\begin{scope}[xshift=100mm]
-\node[anchor=west] at (0,70) {(b) 上面図：接合移行後（ACF/Sn構造）};
-\draw[rounded corners,gray!40] (0,0) rectangle (90,65);
+% PZT櫛歯
+\foreach \x in {-26,-23,-20,-17,-14,-11,-8,-5,-2,1,4,7,10,13,16,19,22,25}
+  \draw[pztbar] ([xshift=\x,yshift=-36]A.north) rectangle ++(1.6,-10);
 
-% PZT列
-\foreach \x in {5,10,...,80}{
-  \fill[gray!20] (\x,5) rectangle (\x+2,20);
-}
-\node[anchor=west] at (3,22) {PZT（積層体）};
+% 接合矢印
+\draw[->,thick] ([yshift=-28]A.north) -- ++(0,-6) node[midway,right]{Sn–Bi/Sn 接合};
 
-% COF
-\fill[gray!10] (5,35) rectangle (85,50);
-\foreach \x in {7,12,...,82}{
-  \fill[gray!50] (\x,35) rectangle (\x+1.2,50);
-}
-\node[anchor=west] at (3,53) {COF端子列（ACF/Sn構造）};
+% ========== (b) 上面図：移行後（ACF/Sn） ==========
+\node[panel,minimum width=72,minimum height=46] (B) at (86,28) {};
+\node[anchor=north west] at ([xshift=54]B.north) {(b) 上面図：接合移行後（ACF/Sn）};
 
-% 接合線
-\draw[->,thick] (45,25) -- (45,35);
-\node[anchor=west] at (47,30) {ACF/Sn接合};
-\end{scope}
+% COF本体
+\draw[part,fill=gray!12] ([xshift=56,yshift=-8]B.north) rectangle ++(60,-18);
+\node[label] at ([xshift=118,yshift=-16]B.north) {COF 端子列（ACF/Sn 構成）};
+% COFパッド
+\foreach \x in {60,63,66,69,72,75,78,81,84,87,90,93,96,99,102,105,108,111}
+  \draw[cofpad] ([xshift=\x,yshift=-8]B.north) rectangle ++(1.6,-18);
 
-%----------------------------------------------------
-% (c) 断面図：COF–PZT–キャビティ構成
-%----------------------------------------------------
-\begin{scope}[yshift=-85mm]
-\node[anchor=west] at (0,70) {(c) 断面図：COF–PZT–キャビティ構成};
-\draw[rounded corners,gray!40] (0,0) rectangle (180,65);
+% PZT櫛歯
+\foreach \x in {60,63,66,69,72,75,78,81,84,87,90,93,96,99,102,105,108,111}
+  \draw[pztbar] ([xshift=\x,yshift=-36]B.north) rectangle ++(1.6,-10);
 
-% COF層
-\fill[gray!15] (80,50) rectangle (100,60);
-\node[anchor=east] at (78,55) {COF};
+% 接合矢印
+\draw[->,thick] ([yshift=-28]B.north) -- ++(0,-6) node[midway,right]{ACF/Sn 接合};
 
-% ACF層
-\fill[black!15] (82,47) rectangle (98,50);
-\node[anchor=east] at (78,48.5) {ACF/Sn};
+% ========== (c) 横からの断面図：COF–PZT–キャビティ ==========
+\node[panel,minimum width=140,minimum height=48] (C) at (43,-28) {};
+\node[anchor=north west] at ([xshift=-64]C.north) {(c) 断面図：COF–PZT–キャビティ（三層）};
 
-% PZT層
-\fill[gray!30] (82,30) rectangle (98,47);
-\node[anchor=east] at (78,38) {PZT};
+% 層：COF
+\draw[part,fill=gray!15] ([xshift=-48,yshift=-10]C.north) rectangle ++(32,-8);
+\node[label] at ([xshift=-14,yshift=-14]C.north) {COF};
 
-% 接合線
-\draw[->,thick] (90,25) -- (90,30);
-\node[anchor=west] at (92,27) {接合};
+% 層：ACF/Sn（薄層）
+\draw[part,fill=gray!45] ([xshift=-48,yshift=-20]C.north) rectangle ++(32,-2.6);
+\node[anchor=west] at ([xshift=-14,yshift=-21.3]C.north) {ACF/Sn};
 
-% キャビティアセンブリ
-\fill[gray!08] (80,10) rectangle (100,25);
-\node[anchor=east] at (78,18) {キャビティアセンブリ（SUS島含む）};
+% 層：PZT（バルク）
+\draw[part,fill=gray!12] ([xshift=-48,yshift=-40]C.north) rectangle ++(32,-18);
+\node[label] at ([xshift=-14,yshift=-49]C.north) {PZT（櫛歯側下面）};
 
-% 底部補強
-\fill[gray!50] (80,8) rectangle (100,10);
+% 櫛歯端子（模式）
+\foreach \y in {-41.5,-44.5,-47.5,-50.5,-53.5}
+  \draw[pztbar] ([xshift=-48,yshift=\y]C.north) rectangle ++(32,-1.6);
 
-\end{scope}
+% 接合の向き（PZT→キャビティ）
+\draw[->,thick] ([xshift=-32,yshift=-58]C.north) -- ++(0,-6) node[midway,right]{接合};
 
-\end{tikzpicture}}
-\caption{Machヘッド アクチュエータ部の上面構造および断面模式図。上段：COF–PZT接合部のSn–Bi/SnからACF/Snへの移行。下段：COF–PZT–キャビティ三層構成。}
-\label{fig:mach_actuator}
-\end{figure*}
+% 下層：キャビティ（SUS島含む）
+\draw[part,fill=gray!08] ([xshift=-56,yshift=-70]C.north) rectangle ++(48,-6);
+\node[anchor=west] at ([xshift=-6,yshift=-73]C.north) {キャビティアセンブリ（SUS 島含む）};
 
+% 補助：GND/COM（上面図の意図だけ示すラベル）
+\node at ([xshift=-60,yshift=-6]A.north) {GND};
+\node at ([xshift=60,yshift=-6]A.north) {GND};
+\node at ([xshift=0,yshift=-6]A.north) {COM群};
+\node at ([xshift=0,yshift=-34]A.north) {PZT 櫛歯列（下面）};
+
+\end{tikzpicture}
+
+\caption{Machヘッド アクチュエータ部の構成図。（a）旧構成：COF–PZTをSn–Bi/Snで接合。（b）移行後：ACF/Sn接合へ置換。（c）断面図：上からCOF，ACF/Sn薄層，PZT（櫛歯），下にキャビティアセンブリ（SUS島含む）。}
+\label{fig:mach_actuator_overview}
+\end{figure}
+% ======================================================================
 %--------------------------------------------------------
 \subsection{電気的ループ構成}
 各PZT素子の電気ループは次のように形成される。  
