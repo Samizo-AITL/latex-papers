@@ -1,86 +1,45 @@
-name: latex_bom_workflow
+name: Build 2025 BioInkjet Electrostatic (LuaLaTeX)
 
 on:
   push:
     paths:
-      - "papers/2025_bom_workflow/**"
-      - ".github/workflows/latex_bom_workflow.yml"
+      - 'papers/2025_bioinkjet_electrostatic/**'
+      - '.github/workflows/latex_bioinkjet_electrostatic.yml'
   workflow_dispatch:
-
-permissions:
-  contents: read
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      WORKDIR: papers/2025_bom_workflow
-      ROOT_TEX: main.tex
-      ARTIFACT_PREFIX: 2025_bom_workflow
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # xu-cheng/latex-action が TeX Live を自前セットアップ（tlmgr）します
-      - name: Compile LaTeX (LuaLaTeX + BibTeX via latexmk)
-        uses: xu-cheng/latex-action@v3
-        with:
-          working_directory: ${{ env.WORKDIR }}
-          root_file: ${{ env.ROOT_TEX }}
-          latexmk_use_lualatex: true
-          # ← BibTeX を必ず回す & エラーで止める
-          args: -bibtex -halt-on-error -interaction=nonstopmode -file-line-error
-          cache: false
-          continue_on_error: false
-          # 必要パッケージをインストール（軽量）
-          extra_packages: >
-            collection-luatex
-            collection-latexrecommended
-            collection-latexextra
-            collection-fontsrecommended
-            collection-langjapanese
-            newtx
-            haranoaji
-            tex-gyre
-            ieeeconf
-            ieeetran
-
-      - name: List outputs
-        if: always()
-        run: ls -la "${WORKDIR}" || true
-
-      - name: Upload PDF
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.ARTIFACT_PREFIX }}-pdf-run${{ github.run_number }}
-          path: ${{ env.WORKDIR }}/main.pdf
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Collect logs
-        if: always()
+      # ---- TeX Live 環境セットアップ ----
+      - name: Install TeX Live & Noto CJK Fonts
         run: |
-          mkdir -p "${WORKDIR}/_logs"
-          exts="log aux fdb_latexmk fls toc out bbl blg synctex.gz lof lot lol run.xml"
-          for e in $exts; do
-            [ -f "${WORKDIR}/main.$e" ] && cp "${WORKDIR}/main.$e" "${WORKDIR}/_logs/" || true
-          done
-          (cd "${WORKDIR}" && zip -r _logs.zip _logs || true)
+          sudo apt-get update
+          sudo apt-get install -y texlive-full fonts-noto-cjk
 
-      - name: Upload logs
-        if: always()
+      # ---- コンパイル ----
+      - name: Compile with LuaLaTeX
+        working-directory: papers/2025_bioinkjet_electrostatic
+        run: |
+          lualatex -interaction=nonstopmode -file-line-error main.tex | tee build.log
+          bibtex main || true
+          lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
+          lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
+
+      # ---- 成果物のアップロード ----
+      - name: Upload PDF and logs
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_PREFIX }}-logs-run${{ github.run_number }}
+          name: 2025_bioinkjet_electrostatic_build
           path: |
-            ${{ env.WORKDIR }}/_logs.zip
-            ${{ env.WORKDIR }}/_logs/**
-          if-no-files-found: warn
-          retention-days: 30
+            papers/2025_bioinkjet_electrostatic/*.pdf
+            papers/2025_bioinkjet_electrostatic/*.log
+            papers/2025_bioinkjet_electrostatic/build.log
+            papers/2025_bioinkjet_electrostatic/*.bbl
+            papers/2025_bioinkjet_electrostatic/*.blg
+          if-no-files-found: error
+          retention-days: 14
