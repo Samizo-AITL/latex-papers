@@ -1,0 +1,49 @@
+name: Build 2025 BioInkjet Electrostatic (LuaLaTeX)
+
+on:
+  push:
+    paths:
+      - 'papers/2025_bioinkjet_electrostatic/**'
+      - '.github/workflows/latex_bioinkjet_electrostatic.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # TeX Live のセットアップ＋LuaLaTeXビルド（Noto CJK 導入）
+      - name: Compile with LuaLaTeX (latex-action)
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: papers/2025_bioinkjet_electrostatic
+          root_file: main.tex
+          latexmk_use_lualatex: true
+          # コンパイルログは main.log に出ます
+          latexmk_args: -interaction=nonstopmode -file-line-error -halt-on-error
+          extra_system_packages: fonts-noto-cjk
+
+      # 見やすいビルドログ名を追加（console風エイリアス）
+      - name: Prepare logs
+        run: |
+          cd papers/2025_bioinkjet_electrostatic
+          # main.log を別名で複製（閲覧しやすいように）
+          cp -f main.log build.log || true
+          # 参考：存在すれば BibTeX ログも一緒に
+          ls -1 *.blg *.bbl 2>/dev/null || true
+
+      - name: Upload PDF and logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: 2025_bioinkjet_electrostatic_build
+          path: |
+            papers/2025_bioinkjet_electrostatic/*.pdf
+            papers/2025_bioinkjet_electrostatic/*.log
+            papers/2025_bioinkjet_electrostatic/*.blg
+            papers/2025_bioinkjet_electrostatic/*.bbl
+            papers/2025_bioinkjet_electrostatic/build.log
+          if-no-files-found: error
+          retention-days: 14
