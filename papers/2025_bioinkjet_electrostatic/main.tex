@@ -93,35 +93,42 @@ Bio液体に対応した低電圧・高耐久なインクジェットヘッド�
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[x=1mm,y=1mm]
-  % --- レイヤー構造 ---
-  \fill[gray!20] (0,0) rectangle (55,2);          % 上部Ni電極
-  \fill[cyan!10] (0,-2) rectangle (55,-2.8);      % SiNキャビティ膜
-  \fill[gray!50] (0,-2.8) rectangle (55,-3.3);    % ALD絶縁層
-  \fill[gray!70] (0,-3.3) rectangle (55,-3.5);    % Poly-Si固定電極
-  \fill[gray!15] (0,-3.5) rectangle (55,-6);      % Si基板
+  % === スケール調整（縦方向拡大） ===
+  % 上部電極
+  \fill[gray!25] (0,0) rectangle (50,4);
+  \node[anchor=west,font=\scriptsize] at (52,2) {上部電極 Ni/Si};
 
-  % --- 電界方向 ---
-  \foreach \x in {5,15,25,35,45}{
-    \draw[->,blue,thick] (\x,-2.5) -- (\x,-3.1);
+  % キャビティ膜
+  \fill[gray!40] (0,-4) rectangle (50,-6);
+  \node[anchor=west,font=\scriptsize] at (52,-5) {キャビティ膜 SiN$_x$ (0.8 µm)};
+
+  % 絶縁層
+  \fill[cyan!10] (0,-6) rectangle (50,-6.6);
+  \node[anchor=west,font=\scriptsize] at (52,-6.3) {ALD-Al$_2$O$_3$ (60 nm)};
+
+  % 固定電極
+  \fill[gray!60] (0,-6.6) rectangle (50,-7.2);
+  \node[anchor=west,font=\scriptsize] at (52,-6.9) {固定電極 Poly-Si (0.2 µm)};
+
+  % Si基板
+  \fill[gray!15] (0,-7.2) rectangle (50,-12);
+  \node[anchor=west,font=\scriptsize] at (52,-9.5) {Si基板};
+
+  % ギャップ矢印
+  \draw[<->,thick] (5,-7.2) -- (5,-4);
+  \node[anchor=east,font=\scriptsize] at (4.5,-5.6) {ギャップ};
+
+  % 電界線（視覚的強調）
+  \foreach \x in {8,16,24,32,40,48} {
+    \draw[->,blue!60,thick] (\x,0) -- (\x,-4);
   }
-  \node[blue,font=\scriptsize] at (50,-2.6) {$\vec{E}$};
+  \node[anchor=south west,font=\scriptsize,blue!60] at (0.5,-1) {電界方向 $E$};
 
-  % --- 寸法注記 ---
-  \draw[<->] (58,-3.5) -- (58,-2.8);
-  \node[anchor=west,font=\scriptsize] at (59,-3.15) {ギャップ $\SI{1.0}{\micro\metre}$};
-  \draw[<->] (61,-2.8) -- (61,-2);
-  \node[anchor=west,font=\scriptsize] at (62,-2.4) {SiN$_x$ 膜厚 $\SI{0.8}{\micro\metre}$};
-  \draw[<->] (61,-3.3) -- (61,-2.8);
-  \node[anchor=west,font=\scriptsize] at (62,-3.05) {ALD-Al$_2$O$_3$ $\SI{60}{\nano\metre}$};
-
-  % --- ラベル ---
-  \node[anchor=west,font=\scriptsize] at (57,1.2) {上部電極 Ni/Si};
-  \node[anchor=west,font=\scriptsize] at (57,-2.3) {キャビティ膜 SiN$_x$};
-  \node[anchor=west,font=\scriptsize] at (57,-3.0) {絶縁層 ALD-Al$_2$O$_3$};
-  \node[anchor=west,font=\scriptsize] at (57,-3.4) {固定電極 Poly-Si};
-  \node[anchor=west,font=\scriptsize] at (57,-5.2) {Si基板};
+  % 枠線
+  \draw[thick] (0,0) rectangle (50,-12);
 \end{tikzpicture}
-\caption{提案する静電アクチュエータの断面構造モデル。}
+\caption{提案する静電アクチュエータの断面構造（縦方向拡大型）。%
+上部Ni/Si電極と固定Poly-Si電極間の静電引力によりキャビティ膜が変位する。}
 \label{fig:cross}
 \end{figure}
 
