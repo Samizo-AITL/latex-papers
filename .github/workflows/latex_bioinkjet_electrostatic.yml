@@ -15,26 +15,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # TeX Live のセットアップ＋LuaLaTeXビルド（Noto CJK 導入）
-      - name: Compile with LuaLaTeX (latex-action)
-        uses: xu-cheng/latex-action@v3
-        with:
-          working_directory: papers/2025_bioinkjet_electrostatic
-          root_file: main.tex
-          latexmk_use_lualatex: true
-          # コンパイルログは main.log に出ます
-          latexmk_args: -interaction=nonstopmode -file-line-error -halt-on-error
-          extra_system_packages: fonts-noto-cjk
-
-      # 見やすいビルドログ名を追加（console風エイリアス）
-      - name: Prepare logs
+      # Ubuntu に TeX Live と日本語フォントを入れる
+      - name: Install TeX Live & Noto CJK fonts
         run: |
-          cd papers/2025_bioinkjet_electrostatic
-          # main.log を別名で複製（閲覧しやすいように）
-          cp -f main.log build.log || true
-          # 参考：存在すれば BibTeX ログも一緒に
-          ls -1 *.blg *.bbl 2>/dev/null || true
+          sudo apt-get update
+          sudo apt-get install -y texlive-full fonts-noto-cjk
 
+      # LuaLaTeX でビルド（PDF と build.log を生成）
+      - name: Compile (LuaLaTeX)
+        working-directory: papers/2025_bioinkjet_electrostatic
+        run: |
+          lualatex -interaction=nonstopmode -file-line-error main.tex | tee build.log
+          bibtex main || true
+          lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
+          lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
+
+      # PDF とログを成果物に
       - name: Upload PDF and logs
         uses: actions/upload-artifact@v4
         with:
@@ -42,8 +38,8 @@ jobs:
           path: |
             papers/2025_bioinkjet_electrostatic/*.pdf
             papers/2025_bioinkjet_electrostatic/*.log
-            papers/2025_bioinkjet_electrostatic/*.blg
             papers/2025_bioinkjet_electrostatic/*.bbl
+            papers/2025_bioinkjet_electrostatic/*.blg
             papers/2025_bioinkjet_electrostatic/build.log
           if-no-files-found: error
           retention-days: 14
