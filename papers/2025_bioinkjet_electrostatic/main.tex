@@ -90,45 +90,59 @@ Bio液体に対応した低電圧・高耐久なインクジェットヘッド�
 本構造は、上部電極／可動膜／キャビティ／固定電極／Si基板から構成され、
 電圧印加によりキャビティ膜が下方向に変位し、圧力変化を生じる。
 
+% Fig.1（重なり解消・縦に拡大・内側ラベル）
 \begin{figure}[t]
 \centering
+\resizebox{\columnwidth}{!}{% ← 1カラム幅に収める
 \begin{tikzpicture}[x=1mm,y=1mm]
-  % === スケール調整（縦方向拡大） ===
+  % ラベル用スタイル（白背景で可読性↑）
+  \tikzset{labelbox/.style={fill=white,draw=black!40,rounded corners,
+                            inner sep=1.5pt,font=\scriptsize}}
+
+  % 枠（バウンディングボックスを明示）
+  \draw[white] (-2,8) rectangle (82,-38); % 余白ぶんも確保
+
+  % ==== レイヤ（縦方向を大きく）====
   % 上部電極
-  \fill[gray!25] (0,0) rectangle (50,4);
-  \node[anchor=west,font=\scriptsize] at (52,2) {上部電極 Ni/Si};
+  \fill[gray!25] (0,0) rectangle (80,-6);
+  \node[labelbox,anchor=west] at (52,-3) {上部電極 Ni/Si};
 
-  % キャビティ膜
-  \fill[gray!40] (0,-4) rectangle (50,-6);
-  \node[anchor=west,font=\scriptsize] at (52,-5) {キャビティ膜 SiN$_x$ (0.8 µm)};
+  % キャビティ膜（SiN_x）
+  \fill[gray!40] (0,-8) rectangle (80,-12);
+  \node[labelbox,anchor=west] at (52,-10) {キャビティ膜 SiN$_x$（0.8\,µm）};
 
-  % 絶縁層
-  \fill[cyan!10] (0,-6) rectangle (50,-6.6);
-  \node[anchor=west,font=\scriptsize] at (52,-6.3) {ALD-Al$_2$O$_3$ (60 nm)};
+  % ギャップ（見やすいように間を広く）
+  \draw[<->,thick] (6,-8) -- (6,-6);
+  \node[anchor=east,font=\scriptsize] at (5.2,-7) {ギャップ};
 
-  % 固定電極
-  \fill[gray!60] (0,-6.6) rectangle (50,-7.2);
-  \node[anchor=west,font=\scriptsize] at (52,-6.9) {固定電極 Poly-Si (0.2 µm)};
+  % 絶縁層 ALD
+  \fill[cyan!12] (0,-14) rectangle (80,-15.2);
+  \node[labelbox,anchor=west] at (52,-14.6) {ALD-Al$_2$O$_3$（60\,nm）};
 
-  % Si基板
-  \fill[gray!15] (0,-7.2) rectangle (50,-12);
-  \node[anchor=west,font=\scriptsize] at (52,-9.5) {Si基板};
+  % 固定電極 Poly-Si
+  \fill[gray!60] (0,-16.2) rectangle (80,-18.2);
+  \node[labelbox,anchor=west] at (52,-17.2) {固定電極 Poly-Si（0.2\,µm）};
 
-  % ギャップ矢印
-  \draw[<->,thick] (5,-7.2) -- (5,-4);
-  \node[anchor=east,font=\scriptsize] at (4.5,-5.6) {ギャップ};
+  % Si基板（十分に高さを取る）
+  \fill[gray!15] (0,-20) rectangle (80,-36);
+  \node[labelbox,anchor=west] at (52,-28) {Si 基板};
 
-  % 電界線（視覚的強調）
-  \foreach \x in {8,16,24,32,40,48} {
-    \draw[->,blue!60,thick] (\x,0) -- (\x,-4);
+  % 外枠（見栄え用）
+  \draw[thick] (0,0) rectangle (80,-36);
+
+  % 電界方向（矢印は層に被らない位置で）
+  \foreach \x in {8,20,32,44,56,68} {
+    \draw[->,blue!60,thick] (\x,-1.2) -- (\x,-7.8);
   }
-  \node[anchor=south west,font=\scriptsize,blue!60] at (0.5,-1) {電界方向 $E$};
+  \node[anchor=west,font=\scriptsize,blue!60] at (2,1.6) {電界方向 $E$};
 
-  % 枠線
-  \draw[thick] (0,0) rectangle (50,-12);
+  % 厚さガイド（例：メモ尺度。図内右上にまとめて配置）
+  \node[labelbox,anchor=east] at (78,2.8)
+   {厚さガイド：電極 6\,mm，膜 4\,mm，ALD 1.2\,mm，固定 2\,mm（図内スケール）};
 \end{tikzpicture}
-\caption{提案する静電アクチュエータの断面構造（縦方向拡大型）。%
-上部Ni/Si電極と固定Poly-Si電極間の静電引力によりキャビティ膜が変位する。}
+}% end resizebox
+\caption{静電アクチュエータの断面構造（縦方向拡大型，重なり解消版）。%
+上部 Ni/Si 電極と固定 Poly-Si 電極間の電界でキャビティ膜（SiN$_x$）が下向きに変位する。}
 \label{fig:cross}
 \end{figure}
 
