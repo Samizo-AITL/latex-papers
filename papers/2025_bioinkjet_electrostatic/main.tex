@@ -3,24 +3,38 @@
 % ===== 日本語対応（LuaLaTeX推奨） =====
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
-\setmainjfont{Noto Serif CJK JP}
+
+% TeX Live 標準の HaranoAji を優先（CIで追加パッケージ不要）
+\IfFontExistsTF{HaranoAjiMincho}{
+  \setmainjfont{HaranoAjiMincho}
+  \setsansjfont{HaranoAjiGothic}
+}{
+  % ローカルで Noto を使いたい場合のフォールバック
+  \setmainjfont{Noto Serif CJK JP}
+  \setsansjfont{Noto Sans CJK JP}
+}
+
+% 文字間・全角まわりの無難設定
+\ltjsetparameter{yjabaselineshift=0pt}
+\ltjsetparameter{alxspmode={`/,-1}} % 句読点前後の詰めを控えめに
 
 % ===== 基本パッケージ =====
 \usepackage{graphicx}
 \usepackage{amsmath}
-\usepackage{siunitx}
-\usepackage{hyperref}
-\usepackage{url}
-\usepackage{cite}
-\usepackage{balance}
-\usepackage{booktabs}
 \usepackage{physics}
+\usepackage{siunitx}
+\sisetup{detect-all}               % フォント/サイズを自動追従
+\usepackage{booktabs}
+\usepackage{balance}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
 
 % ===== TikZ / pgfplots =====
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,patterns}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\usetikzlibrary{arrows.meta,positioning,calc,patterns}
 
 % ===== タイトル =====
 \title{静電薄膜MEMSアクチュエータによるバイオインクジェットヘッドの構造と動作解析\\
