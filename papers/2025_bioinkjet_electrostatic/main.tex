@@ -176,43 +176,48 @@ $A$ は電極面積，$V$ は印加電圧，$d$ は電極間距離である。
 側方からインクを供給するため，流路抵抗が小さく，
 ノズル直下に安定した圧力波が形成される。
 
-% 2カラム横断（ページ上部に回りやすい）
+% 2カラム横断（幅は安全に0.96\textwidth、注記は枠内）
 \begin{figure*}[t]
 \centering
-\footnotesize % 図内フォントをやや小さめに統一
+\resizebox{0.96\textwidth}{!}{%
 \begin{tikzpicture}[x=1mm,y=1mm]
-  % --- キャビティ全体 ---
+  % --- キャビティ本体 ---
   \fill[cyan!8] (0,0) rectangle (140,16);
   \draw[thick] (0,0) rectangle (140,16);
-  \node[anchor=west] at (2,14.5) {キャビティ / Cavity};
+  \node[anchor=west,font=\footnotesize] at (2,14.9) {キャビティ / Cavity};
 
-  % --- 上部可動膜 ---
+  % --- 上部可動膜（枠内に注記） ---
   \fill[gray!40] (0,16) rectangle (140,17.5);
-  \node[anchor=west] at (142,16.8) {可動膜 (SiN$_x$, Ni) / Diaphragm};
+  \node[anchor=east,font=\footnotesize] at (139.5,16.8)
+    {可動膜 (SiN$_x$, Ni) / Diaphragm};
 
-  % --- サイド供給 ---
-  \fill[cyan!15] (-24,6) rectangle (0,10);
-  \draw[->,thick] (-18,8) -- (-1,8);
-  \node[anchor=east] at (-25,8) {インク供給 / Ink feed};
+  % --- サイド供給（負座標を使わず枠内で表現） ---
+  \fill[cyan!15] (0,6) rectangle (12,10);
+  \draw[->,thick] (2,8) -- (11,8);
+  \node[anchor=south west,font=\footnotesize] at (1,10.2)
+    {インク供給 / Ink feed};
 
-  % --- ノズル（下向き） ---
-  \fill[white] (68,0) -- (72,0) -- (70,-20) -- cycle; % 噴射チャネル
-  \draw[thick] (68,0) -- (72,0);                        % ノズルリップ
-  \draw[very thick,->] (70,-3) -- (70,-14);
-  \node[anchor=west] at (73,-11) {吐出方向 / Ejection};
+  % --- 下向きノズル（下側の張り出しは最小限） ---
+  \fill[white] (68,0) -- (72,0) -- (70,-12) -- cycle;
+  \draw[thick] (68,0) -- (72,0);
+  \draw[very thick,->] (70,-2) -- (70,-10);
+  \node[anchor=west,font=\footnotesize] at (72.5,-8.5)
+    {吐出 / Ejection};
 
-  % --- 圧力波イメージ ---
-  \draw[red,thick,->,>=Latex] (40,8) .. controls (52,10) and (62,10) .. (67,8);
-  \node[anchor=south,red] at (54,11.2) {圧力波 / Pressure wave};
+  % --- 圧力波 ---
+  \draw[red,thick,->,>=Latex] (38,8) .. controls (50,10) and (61,10) .. (67,8);
+  \node[anchor=south,font=\footnotesize,red] at (53,11.2)
+    {圧力波 / Pressure wave};
 
-  % --- 寸法感（例：任意） ---
-  \draw[<->] (0,-5) -- (140,-5);
-  \node at (70,-7) {キャビティ長（例） / Cavity length};
-\end{tikzpicture}
-\caption{側方供給型キャビティの構造モデル（2カラム図）。
+  % --- 寸法線は枠内に ---
+  \draw[<->] (4,1.0) -- (136,1.0);
+  \node[font=\footnotesize] at (70,0.2) {キャビティ長 / Cavity length};
+\end{tikzpicture}%
+}
+\caption{側方供給型キャビティの構造モデル。
 変位膜の動作により圧力波を生成し，下向きノズルから吐出する。%
-(Structure of side-fed cavity; diaphragm actuation produces a pressure wave leading to downward ejection.)}
-\label{fig:fluid_wide}
+(Structure of a side-fed cavity; diaphragm actuation produces a pressure wave leading to downward ejection.)}
+\label{fig:fluid}
 \end{figure*}
 
 静電駆動によって可動膜が下方にたわむと，
@@ -315,7 +320,7 @@ $A$ は電極面積，$V$ は印加電圧，$d$ は電極間距離である。
 
 \end{axis}
 \end{tikzpicture}
-\caption{駆動電圧・膜変位・圧力・液滴速度の時間相関モデル（2カラム図）。%
+\caption{駆動電圧・膜変位・圧力・液滴速度の時間相関モデル。%
 (Temporal correlation of driving voltage, membrane displacement, cavity pressure, and droplet velocity.)}
 \label{fig:timing}
 \end{figure*}
