@@ -176,40 +176,44 @@ $A$ は電極面積，$V$ は印加電圧，$d$ は電極間距離である。
 側方からインクを供給するため，流路抵抗が小さく，
 ノズル直下に安定した圧力波が形成される。
 
-\begin{figure}[t]
+% 2カラム横断（ページ上部に回りやすい）
+\begin{figure*}[t]
 \centering
+\footnotesize % 図内フォントをやや小さめに統一
 \begin{tikzpicture}[x=1mm,y=1mm]
-  % --- キャビティ領域 ---
-  \fill[cyan!8] (0,0) rectangle (70,10); % キャビティ
-  \draw[thick] (0,0) rectangle (70,10);
+  % --- キャビティ全体 ---
+  \fill[cyan!8] (0,0) rectangle (140,16);
+  \draw[thick] (0,0) rectangle (140,16);
+  \node[anchor=west] at (2,14.5) {キャビティ / Cavity};
 
   % --- 上部可動膜 ---
-  \fill[gray!40] (0,10) rectangle (70,11);
-  \node[anchor=west,font=\scriptsize] at (71,10.5) {可動膜 (SiN$_x$, Ni)};
+  \fill[gray!40] (0,16) rectangle (140,17.5);
+  \node[anchor=west] at (142,16.8) {可動膜 (SiN$_x$, Ni) / Diaphragm};
 
-  % --- サイド供給路 ---
-  \fill[cyan!15] (-18,4) rectangle (0,6);
-  \draw[->,thick] (-10,5) -- (-1,5);
-  \node[anchor=east,font=\scriptsize] at (-19,5) {インク供給};
+  % --- サイド供給 ---
+  \fill[cyan!15] (-24,6) rectangle (0,10);
+  \draw[->,thick] (-18,8) -- (-1,8);
+  \node[anchor=east] at (-25,8) {インク供給 / Ink feed};
 
-  % --- ノズル構造（下向き） ---
-  \fill[white] (34,0) -- (36,0) -- (35,-14) -- cycle;
-  \draw[thick] (34,0) -- (36,0);
-  \draw[very thick,->] (35,-3) -- (35,-10);
-  \node[anchor=west,font=\scriptsize] at (37,-7) {吐出方向};
+  % --- ノズル（下向き） ---
+  \fill[white] (68,0) -- (72,0) -- (70,-20) -- cycle; % 噴射チャネル
+  \draw[thick] (68,0) -- (72,0);                        % ノズルリップ
+  \draw[very thick,->] (70,-3) -- (70,-14);
+  \node[anchor=west] at (73,-11) {吐出方向 / Ejection};
 
-  % --- 圧力波のイメージ ---
-  \draw[red,thick,->,>=Latex] (20,5) .. controls (25,6) and (30,6) .. (33,5);
-  \node[anchor=south,font=\scriptsize,red] at (27,6.5) {圧力波};
+  % --- 圧力波イメージ ---
+  \draw[red,thick,->,>=Latex] (40,8) .. controls (52,10) and (62,10) .. (67,8);
+  \node[anchor=south,red] at (54,11.2) {圧力波 / Pressure wave};
 
-  % --- 注記 ---
-  \node[anchor=north west,font=\scriptsize] at (1,1) {キャビティ};
-  \node[anchor=south west,font=\scriptsize] at (0,11.1) {上部変位膜};
-  \node[anchor=south west,font=\scriptsize] at (55,9.8) {ノズル下方開口};
+  % --- 寸法感（例：任意） ---
+  \draw[<->] (0,-5) -- (140,-5);
+  \node at (70,-7) {キャビティ長（例） / Cavity length};
 \end{tikzpicture}
-\caption{側方供給型キャビティ構造モデル。変位膜の動作により圧力波が形成される。}
-\label{fig:fluid}
-\end{figure}
+\caption{側方供給型キャビティの構造モデル（2カラム図）。
+変位膜の動作により圧力波を生成し，下向きノズルから吐出する。%
+(Structure of side-fed cavity; diaphragm actuation produces a pressure wave leading to downward ejection.)}
+\label{fig:fluid_wide}
+\end{figure*}
 
 静電駆動によって可動膜が下方にたわむと，
 キャビティ体積 $\Delta V$ が減少し，圧力上昇 $\Delta P$ が生じる。
@@ -266,51 +270,55 @@ $A$ は電極面積，$V$ は印加電圧，$d$ は電極間距離である。
 ピーク時に液滴が吐出される。その後、電圧が減衰すると膜が弾性復帰し、
 キャビティ内圧が低下して再充填が行われる。
 
-\begin{figure}[t]
+% 2カラム横断：時間相関モデル（凡例は右外）
+\begin{figure*}[t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=8.0cm,
-  height=4.5cm,
+  width=0.82\textwidth,
+  height=5.2cm,
   xlabel={時間 $t$},
   ylabel={相対値},
   xmin=0, xmax=1,
-  ymin=-0.2, ymax=1.1,
+  ymin=-0.05, ymax=1.1,
   axis lines=left,
   xtick=\empty, ytick=\empty,
-  legend style={font=\scriptsize,at={(0.98,0.95)},anchor=north east},
+  clip=false,                               % 図外に凡例を出す
+  legend style={
+    font=\scriptsize,
+    at={(1.02,0.5)}, anchor=west, draw=none % 右外中央に配置
+  },
+  legend cell align=left,
   every axis plot/.append style={thick}
 ]
 
 % 駆動波形 V(t)
-\addplot[blue,smooth,domain=0:1,samples=200] 
-  {sin(deg(pi*x))^2};
+\addplot[blue, smooth, domain=0:1, samples=200] {sin(deg(pi*x))^2};
 \addlegendentry{駆動電圧 $V(t)$};
 
 % 膜変位 x(t)
-\addplot[red,dashed,smooth,domain=0:1,samples=200]
-  {0.8*sin(deg(pi*x))^2};
+\addplot[red, dashed, smooth, domain=0:1, samples=200] {0.8*sin(deg(pi*x))^2};
 \addlegendentry{膜変位 $x(t)$};
 
 % キャビティ圧力 P(t)
-\addplot[orange!80!black,dotted,domain=0:1,samples=200]
-  {0.9*sin(deg(pi*x))^3};
+\addplot[orange!80!black, dotted, domain=0:1, samples=200] {0.9*sin(deg(pi*x))^3};
 \addlegendentry{キャビティ圧力 $P(t)$};
 
-% 液滴速度 u(t)
-\addplot[green!60!black,dash pattern=on 2pt off 2pt on 4pt off 2pt,domain=0:1,samples=200]
-  { (x>0.55 && x<0.75) ? (1.0*(1 - abs(x-0.65)/0.1)) : 0 };
+% 液滴速度 u(t)（ピーク直後に最大）
+\addplot[green!60!black, dash pattern=on 2pt off 2pt on 4pt off 2pt, domain=0:1, samples=400]
+{ (x>0.55 && x<0.75) ? (1.0*(1 - abs(x-0.65)/0.10)) : 0 };
 \addlegendentry{液滴速度 $u(t)$};
 
-% 垂直線（吐出タイミング）
-\draw[dashed,gray!70] (axis cs:0.6,0) -- (axis cs:0.6,1.0);
-\node[anchor=south west,font=\scriptsize] at (axis cs:0.62,0.9) {吐出瞬間};
+% 吐出タイミングの目印
+\draw[dashed,gray!70] (axis cs:0.60,0) -- (axis cs:0.60,1.0);
+\node[anchor=south west,font=\scriptsize] at (axis cs:0.62,0.92) {吐出瞬間};
 
 \end{axis}
 \end{tikzpicture}
-\caption{駆動電圧・膜変位・圧力・液滴速度の時間相関モデル。}
+\caption{駆動電圧・膜変位・圧力・液滴速度の時間相関モデル（2カラム図）。%
+(Temporal correlation of driving voltage, membrane displacement, cavity pressure, and droplet velocity.)}
 \label{fig:timing}
-\end{figure}
+\end{figure*}
 
 駆動波形 $V(t)$ と膜変位 $x(t)$ はおおむね同位相であり，
 キャビティ圧力 $P(t)$ は変位速度に比例してピークを迎える。
