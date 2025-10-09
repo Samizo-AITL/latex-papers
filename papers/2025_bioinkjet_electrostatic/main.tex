@@ -3,27 +3,22 @@
 % ===== 日本語対応（LuaLaTeX推奨） =====
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
-
-% TeX Live 標準の HaranoAji を優先（CIで追加パッケージ不要）
 \IfFontExistsTF{HaranoAjiMincho}{
   \setmainjfont{HaranoAjiMincho}
   \setsansjfont{HaranoAjiGothic}
 }{
-  % ローカルで Noto を使いたい場合のフォールバック
   \setmainjfont{Noto Serif CJK JP}
   \setsansjfont{Noto Sans CJK JP}
 }
-
-% 文字間・全角まわりの無難設定
 \ltjsetparameter{yjabaselineshift=0pt}
-\ltjsetparameter{alxspmode={`/,-1}} % 句読点前後の詰めを控えめに
+\ltjsetparameter{alxspmode={`/,-1}}
 
 % ===== 基本パッケージ =====
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{physics}
 \usepackage{siunitx}
-\sisetup{detect-all}               % フォント/サイズを自動追従
+\sisetup{detect-all}
 \usepackage{booktabs}
 \usepackage{balance}
 \usepackage{url}
@@ -92,24 +87,15 @@ Bio液体に対応した低電圧・高耐久なインクジェットヘッド�
 % ============================================================
 \section{アクチュエータ構造（断面モデル）}
 図\ref{fig:cross}に提案する静電アクチュエータの断面構造を示す。
-本構造は以下の層で構成される。
-
-\begin{itemize}
-  \item 上部電極（Ni／Si膜上）：10–20\,µm
-  \item キャビティ膜（SiN$_x$ 膜厚 0.8\,µm）
-  \item 絶縁層（ALD-Al$_2$O$_3$ 約60\,nm）
-  \item 固定電極（Poly-Si 約0.2\,µm）
-  \item 下部支持層（Si 基板）
-\end{itemize}
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[x=1mm,y=1mm]
-  \fill[gray!25] (0,0) rectangle (50,2); % 上電極
-  \fill[gray!40] (0,-2) rectangle (50,-3); % SiN膜
-  \fill[cyan!10] (0,-3) rectangle (50,-3.5); % ALD絶縁
-  \fill[gray!60] (0,-3.5) rectangle (50,-3.7); % Poly-Si電極
-  \fill[gray!15] (0,-3.7) rectangle (50,-6); % Si基板
+  \fill[gray!25] (0,0) rectangle (50,2);
+  \fill[gray!40] (0,-2) rectangle (50,-3);
+  \fill[cyan!10] (0,-3) rectangle (50,-3.5);
+  \fill[gray!60] (0,-3.5) rectangle (50,-3.7);
+  \fill[gray!15] (0,-3.7) rectangle (50,-6);
   \node[anchor=west,font=\scriptsize] at (52,1) {上部電極 Ni/Si};
   \node[anchor=west,font=\scriptsize] at (52,-1.8) {キャビティ膜 SiN$_x$ 0.8µm};
   \node[anchor=west,font=\scriptsize] at (52,-3.2) {ALD-Al$_2$O$_3$ 60nm};
@@ -118,16 +104,43 @@ Bio液体に対応した低電圧・高耐久なインクジェットヘッド�
   \draw[<->,thick] (5,-3.7) -- (5,-2);
   \node[anchor=east,font=\scriptsize] at (4.5,-2.8) {ギャップ};
 \end{tikzpicture}
-\caption{提案する静電アクチュエータの断面構造。}
+\caption{静電アクチュエータの断面構造。}
 \label{fig:cross}
 \end{figure}
 
 静電力は
-\[
-F = \frac{1}{2}\varepsilon_0 A \frac{V^2}{d^2}
-\]
+$begin:math:display$
+F = \\frac{1}{2}\\varepsilon_0 A \\frac{V^2}{d^2}
+$end:math:display$
 で与えられ，電圧上昇に伴いキャビティ膜が下方に変位する。
 変位量はFEM解析により 0.1–0.2\,µm（60\,V印加時）と算出された。
+
+% ============================================================
+\section{製造プロセスフロー}
+図\ref{fig:process}に提案するMEMSアクチュエータの代表的な製造工程を示す。
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=5mm,>=Stealth,font=\scriptsize]
+  \tikzstyle{proc}=[draw,rounded corners,fill=gray!10,minimum width=28mm,minimum height=6mm,align=center]
+  \node[proc] (p1) {Si基板洗浄\\(RCA)};
+  \node[proc,below=of p1] (p2) {固定電極形成\\(Poly-Si 200nm)};
+  \node[proc,below=of p2] (p3) {絶縁層形成\\(ALD-Al$_2$O$_3$ 60nm)};
+  \node[proc,below=of p3] (p4) {キャビティ形成\\(SiN$_x$ 0.8µm)};
+  \node[proc,below=of p4] (p5) {可動膜形成\\(Ni 10–20µm)};
+  \node[proc,below=of p5] (p6) {ノズル開口\\(DRIE)};
+  \node[proc,below=of p6] (p7) {表面コート\\(DLC/Parylene)};
+  \node[proc,below=of p7] (p8) {裏面エッチ\\(キャビティ解放)};
+  \node[proc,below=of p8] (p9) {パッド形成\\(Au/Ni)};
+  \foreach \i/\j in {1/2,2/3,3/4,4/5,5/6,6/7,7/8,8/9}{
+    \draw[->,thick] (p\i) -- (p\j);
+  }
+\end{tikzpicture}
+\caption{静電薄膜MEMSアクチュエータの製造プロセスフロー。}
+\label{fig:process}
+\end{figure}
+
+このプロセスにより、リーク抑制とBio液適合性を両立した微細構造を形成できる。
 
 % ============================================================
 \section{流体構造（サイド供給タイプ）}
