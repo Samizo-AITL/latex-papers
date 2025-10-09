@@ -109,26 +109,26 @@ Bio液体に対応した低電圧・高耐久なインクジェットヘッド�
 
   % キャビティ膜（SiN_x）
   \fill[gray!40] (0,-8) rectangle (80,-12);
-  \node[labelbox,anchor=west] at (72,-10) {キャビティ膜 SiN$_x$（0.8\,µm）};
+  \node[labelbox,anchor=west] at (82,-10) {キャビティ膜 SiN$_x$（0.8\,µm）};
 
   % ギャップ（見やすいように間を広く）
   \draw[<->,thick] (6,-8) -- (6,-6);
   \node[anchor=east,font=\scriptsize] at (4.0,-7) {ギャップ};
 
   % 絶縁層 ALD
-  \fill[cyan!12] (0,-14) rectangle (80,-15.2);
-  \node[labelbox,anchor=west] at (72,-14.6) {ALD-Al$_2$O$_3$（60\,nm）};
+  \fill[cyan!12] (0,-14) rectangle (82,-15.2);
+  \node[labelbox,anchor=west] at (72,-14.4) {ALD-Al$_2$O$_3$（60\,nm）};
 
   % 固定電極 Poly-Si
-  \fill[gray!60] (0,-16.2) rectangle (80,-18.2);
+  \fill[gray!60] (0,-16.2) rectangle (82,-18.4);
   \node[labelbox,anchor=west] at (72,-17.2) {固定電極 Poly-Si（0.2\,µm）};
 
   % Si基板（十分に高さを取る）
-  \fill[gray!15] (0,-20) rectangle (80,-36);
+  \fill[gray!15] (0,-20) rectangle (82,-36);
   \node[labelbox,anchor=west] at (72,-28) {Si 基板};
 
   % 外枠（見栄え用）
-  \draw[thick] (0,0) rectangle (80,-36);
+  \draw[thick] (0,0) rectangle (82,-36);
 
   % 電界方向（矢印は層に被らない位置で）
   \foreach \x in {8,20,32,44,56,68} {
@@ -137,7 +137,7 @@ Bio液体に対応した低電圧・高耐久なインクジェットヘッド�
   \node[anchor=west,font=\scriptsize,blue!60] at (2,1.6) {電界方向 $E$};
 
   % 厚さガイド（例：メモ尺度。図内右上にまとめて配置）
-  \node[labelbox,anchor=east] at (78,4.0)
+  \node[labelbox,anchor=east] at (78,4.5)
    {厚さガイド：電極 6\,mm，膜 4\,mm，ALD 1.2\,mm，固定 2\,mm（図内スケール）};
 \end{tikzpicture}
 }% end resizebox
