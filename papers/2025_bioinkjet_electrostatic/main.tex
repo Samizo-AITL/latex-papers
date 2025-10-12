@@ -32,8 +32,8 @@
 \pgfplotsset{compat=1.18}
 
 % ===== タイトル =====
-\title{静電薄膜MEMSアクチュエータによるバイオ／分析向けインクジェットヘッドの構造と動作解析（現実路線 v1.0）\\
-\large Structure and Operation Analysis of Electrostatic Thin-Film MEMS Actuator for Bio/Analytical Inkjet (Pragmatic v1.0)}
+\title{静電薄膜MEMSアクチュエータによるバイオ／分析向けインクジェットヘッドの構造と動作解析\\
+\large Structure and Operation Analysis of Electrostatic Thin-Film MEMS Actuator for Bio/Analytical Inkjet }
 
 \author{%
   \IEEEauthorblockN{三溝 真一（Shinichi Samizo)}\\
@@ -140,26 +140,54 @@ $V_{\text{PI}}\!\sim\!100$--$120$\,Vを得る。
 \centering
 \resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}[x=1mm,y=1mm]
-  \tikzset{labelbox/.style={fill=white,draw=black!40,rounded corners,inner sep=1.5pt,font=\scriptsize}}
+  % ラベルボックススタイル
+  \tikzset{labelbox/.style={fill=white,draw=black!40,rounded corners,
+                            inner sep=1.5pt,font=\scriptsize}}
+
+  % ===== 層構造 =====
+  % 上部電極
   \fill[gray!25] (0,0) rectangle (80,-6);
-  \node[labelbox,anchor=west] at (82,-3) {上部電極 Ni/Si};
+  \node[labelbox,anchor=west] at (84,-3) {上部電極 Ni/Si};
+
+  % 可動膜
   \fill[gray!40] (0,-8) rectangle (80,-12);
-  \node[labelbox,anchor=west] at (82,-10) {可動膜 SiN$_x$（0.8\,µm）};
+  \node[labelbox,anchor=west] at (84,-10) {可動膜 SiN$_x$（0.8\,µm）};
+
+  % ギャップ
   \fill[white] (0,-14) rectangle (80,-18);
-  \node[labelbox,anchor=west] at (82,-16) {静電ギャップ（0.8\,µm）};
+  \node[labelbox,anchor=west] at (84,-16) {静電ギャップ（0.8\,µm）};
+
+  % 絶縁層
   \fill[orange!10] (0,-18) rectangle (80,-19);
-  \node[labelbox,anchor=west] at (82,-18.6) {絶縁層 ALD-Al$_2$O$_3$（60\,nm）};
+  \node[labelbox,anchor=west] at (84,-18.5) {絶縁層 ALD-Al$_2$O$_3$（60\,nm）};
+
+  % 固定電極
   \fill[gray!60] (0,-19) rectangle (80,-20.5);
-  \node[labelbox,anchor=west] at (82,-19.8) {固定電極 Poly-Si（0.2\,µm）};
+  \node[labelbox,anchor=west] at (84,-20.2) {固定電極 Poly-Si（0.2\,µm）};
+
+  % Si基板
   \fill[gray!15] (0,-21) rectangle (80,-40);
-  \node[labelbox,anchor=west] at (82,-30) {Si 基板};
+  \node[labelbox,anchor=west] at (84,-30) {Si 基板};
+
+  % 外枠
   \draw[thick] (0,0) rectangle (80,-40);
-  \foreach \x in {10,25,40,55,70} {\draw[->,blue!60,thick] (\x,-6.5) -- (\x,-17.5);}
+
+  % ===== 矢印 =====
+  % 電界方向
+  \foreach \x in {10,25,40,55,70} {
+    \draw[->,blue!60,thick] (\x,-6.5) -- (\x,-17.5);
+  }
   \node[anchor=west,font=\scriptsize,blue!60] at (2,2) {電界方向 $E$};
+
+  % 膜変位
   \draw[->,red!70!black,thick] (12,-8) -- (12,-13);
   \node[anchor=east,font=\scriptsize,red!70!black] at (11.5,-10.5) {膜変位 $x$};
+
+  % 吐出方向
   \draw[->,cyan!70!black,thick] (40,-25) -- (40,-38);
   \node[anchor=west,font=\scriptsize,cyan!70!black] at (41,-32) {吐出方向 / Ejection};
+
+  % ギャップ寸法
   \draw[<->,thick] (6,-14) -- (6,-18);
   \node[anchor=east,font=\scriptsize] at (5.5,-16) {ギャップ $d$};
 \end{tikzpicture}
