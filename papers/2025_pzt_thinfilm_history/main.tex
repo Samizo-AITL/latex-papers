@@ -12,25 +12,24 @@
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
 
-% ---------- English fonts (TeX Live standard) ----------
+% ---------- English fonts ----------
 \setmainfont{TeX Gyre Termes}   % Serif
 \setsansfont{TeX Gyre Heros}    % Sans-serif
 \setmonofont{TeX Gyre Cursor}   % Monospace
 
-% ---------- Japanese fonts (TeX Live stock) ----------
-\setmainjfont{HaranoAjiMincho}  % 明朝
+% ---------- Japanese fonts ----------
+\setmainjfont{HaranoAjiMincho}  % 明朝（TeX Live 標準）
 \setsansjfont{HaranoAjiGothic}  % ゴシック
-% （HaranoAji が無い環境なら Noto に変更:
+% ※ HaranoAji が無い場合は Noto に差し替え可
 %   \setmainjfont{Noto Serif CJK JP}
-%   \setsansjfont{Noto Sans CJK JP} )
+%   \setsansjfont{Noto Sans CJK JP}
 
-% ---------- Line breaking / spacing for Japanese ----------
-\ltjsetparameter{jacharrange={-2}}                % 和欧判別の安定化
+% ---------- Line breaking ----------
+\ltjsetparameter{jacharrange={-2}}
 \ltjsetparameter{xkanjiskip=0.2em plus 0.1em minus 0.05em}
 
-% ---------- Safe em-dash (U+2014) ----------
-\newcommand{\Jemdash}{—}
-% 例：タイトルのダッシュは \Jemdash を使用（U+2015は使わない）
+% ---------- Safe em-dash ----------
+\newcommand{\Jemdash}{—}  % U+2014 安全
 
 % ---------- General packages ----------
 \usepackage{graphicx}
@@ -42,7 +41,17 @@
 \usepackage{setspace}
 \usepackage{xcolor}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes,fit,calc}
+
+% TikZ 必要ライブラリ（brace装飾含む）
+\usetikzlibrary{
+  arrows.meta,
+  positioning,
+  shapes,
+  fit,
+  calc,
+  decorations.pathreplacing,
+  decorations.markings
+}
 
 % ---------- Metadata ----------
 \title{薄膜PZT技術の系譜 ― FeRAM起源からPrecisionCoreヘッドへの発展}
