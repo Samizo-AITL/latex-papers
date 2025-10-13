@@ -25,11 +25,8 @@ jobs:
           root_file: papers/2025_pzt_thinfilm_history/main.tex
           latexmk_use_xelatex: true
           work_in_root_file_dir: true
-          # 日本語フォント等（必要に応じて追加）
-          extra_system_packages: >-
-            fonts-ipafont
-            ghostscript
-            poppler-utils
+          # NOTE: TeX Live コンテナに IPAex フォント同梱。追加インストールは不要。
+          # extra_system_packages は削除。
 
       # ビルド成果物の収集（PDF とログ類）
       - name: Gather artifacts (PDF & logs)
@@ -38,16 +35,15 @@ jobs:
           cd papers/2025_pzt_thinfilm_history
           mkdir -p build_artifacts
           # PDF
-          if [ -f main.pdf ]; then cp -f main.pdf build_artifacts/; fi
-          # 代表ログ（latexmk/xeLaTeX の .log）
-          if [ -f main.log ]; then cp -f main.log build_artifacts/; fi
-          # Bib/aux 等の補助ログもまとめておくとデバッグに便利
+          [ -f main.pdf ] && cp -f main.pdf build_artifacts/
+          # 代表ログ
+          [ -f main.log ] && cp -f main.log build_artifacts/
+          # 補助ログ等
           for f in main.blg main.bbl main.fls main.fdb_latexmk main.synctex.gz main.out main.aux; do
-            if [ -f "$f" ]; then cp -f "$f" build_artifacts/; fi
+            [ -f "$f" ] && cp -f "$f" build_artifacts/
           done
-          # 追加でまとめログを生成（オプション）
-          echo "==== FILE LIST ====" > build_artifacts/build_summary.txt
-          ls -lah >> build_artifacts/build_summary.txt
+          # 簡易サマリ
+          { echo "==== FILE LIST ===="; ls -lah; } > build_artifacts/build_summary.txt
 
       # PDF を単独アーティファクトとしてアップロード
       - name: Upload PDF
@@ -65,7 +61,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: 2025_pzt_thinfilm_history_logs
-          path: |
-            papers/2025_pzt_thinfilm_history/build_artifacts/**
+          path: papers/2025_pzt_thinfilm_history/build_artifacts/**
           if-no-files-found: warn
           retention-days: 14
