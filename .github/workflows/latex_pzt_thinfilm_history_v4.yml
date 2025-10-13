@@ -17,22 +17,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 古い中間生成物の掃除（残骸で失敗するのを防ぐ）
+      - name: Clean aux files
+        run: |
+          set -e
+          find papers/2025_pzt_thinfilm_history -maxdepth 1 -type f \
+            -name 'main.*' ! -name 'main.tex' -delete || true
+
+      # LaTeX コンパイル（LuaLaTeX 固定）
       - name: Compile LaTeX (LuaLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: papers/2025_pzt_thinfilm_history/main.tex
-          latexmk_use_lualatex: true      # ← ここを lualatex 固定
+          latexmk_use_lualatex: true
           work_in_root_file_dir: true
-          # extra_system_packages は付けない（不要＆事故源）
+          # 追加パッケージ導入はしない（apk系は事故源）
 
+      # 成果物を収集（PDF が無くてもログは残す）
       - name: Gather artifacts (PDF & logs)
+        if: always()
         run: |
           set -e
           cd papers/2025_pzt_thinfilm_history
           mkdir -p build_artifacts
           [ -f main.pdf ] && cp -f main.pdf build_artifacts/
-          [ -f main.log ] && cp -f main.log build_artifacts/
-          for f in main.blg main.bbl main.fls main.fdb_latexmk main.synctex.gz main.out main.aux; do
+          for f in main.log main.blg main.bbl main.fls main.fdb_latexmk main.synctex.gz main.out main.aux; do
             [ -f "$f" ] && cp -f "$f" build_artifacts/
           done
           { echo "==== FILE LIST ===="; ls -lah; } > build_artifacts/build_summary.txt
