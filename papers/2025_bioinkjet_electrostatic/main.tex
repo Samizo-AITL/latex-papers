@@ -107,39 +107,39 @@ Parylene-HTはUV耐性および高可視透過性により観察視野を妨げ�
 \begin{figure}[t]
 \centering
 \resizebox{\columnwidth}{!}{%
-\begin{tikzpicture}[x=1mm,y=1.2mm] % ← 縦方向を少し拡大して重なり防止
+\begin{tikzpicture}[x=1mm,y=1.6mm] % ← 縦倍率を大幅に拡大
   % ===== Layers =====
-  \fill[gray!15] (0,0) rectangle (80,-14.0);        % Si substrate
-  \fill[gray!55] (0,-14.0) rectangle (80,-13.5);    % Poly-Si electrode
-  \fill[blue!20] (0,-13.5) rectangle (80,-12.9);    % ALD-Al2O3
-  \fill[white] (0,-12.9) rectangle (80,-12.0);      % Gap
-  \fill[yellow!35] (0,-12.0) rectangle (80,-11.1);  % SiNx diaphragm
-  \fill[gray!60] (0,-11.1) rectangle (80,-10.9);    % Pt/Ti
-  \fill[orange!20] (0,-10.9) rectangle (80,-9.9);   % Parylene-HT
-  \fill[green!25] (0,-9.9) rectangle (80,-9.8);     % PEG-SAM
+  \fill[gray!15] (0,0) rectangle (80,-16.0);        % Si substrate
+  \fill[gray!55] (0,-16.0) rectangle (80,-15.0);    % Poly-Si electrode
+  \fill[blue!20] (0,-15.0) rectangle (80,-14.0);    % ALD-Al2O3
+  \fill[white] (0,-14.0) rectangle (80,-12.5);      % Gap
+  \fill[yellow!35] (0,-12.5) rectangle (80,-11.0);  % SiNx diaphragm
+  \fill[gray!60] (0,-11.0) rectangle (80,-10.5);    % Pt/Ti
+  \fill[orange!20] (0,-10.5) rectangle (80,-9.0);   % Parylene-HT
+  \fill[green!25] (0,-9.0) rectangle (80,-8.5);     % PEG-SAM
 
   % Outline
-  \draw[thick] (0,0) rectangle (80,-14.0);
+  \draw[thick] (0,0) rectangle (80,-16.0);
 
-  % --- Labels (整列と重なり防止) ---
-  \node[anchor=west,font=\scriptsize] at (82,-7.0) {Si(100) substrate};
-  \node[anchor=west,font=\scriptsize] at (82,-13.7) {Poly-Si (0.2 µm)};
-  \node[anchor=west,font=\scriptsize] at (82,-13.1) {ALD-Al$_2$O$_3$ (60 nm)};
-  \node[anchor=west,font=\scriptsize] at (82,-12.4) {Gap (0.8–1.0 µm)};
-  \node[anchor=west,font=\scriptsize] at (82,-11.5) {SiN$_x$ diaphragm (0.8 µm, +150 MPa)};
-  \node[anchor=west,font=\scriptsize] at (82,-10.95) {Pt/Ti (100/20 nm)};
-  \node[anchor=west,font=\scriptsize] at (82,-10.2) {Parylene-HT (1.0 µm)};
-  \node[anchor=west,font=\scriptsize] at (82,-9.7) {PEG-SAM};
+  % --- Labels (位置調整済み) ---
+  \node[anchor=west,font=\scriptsize] at (82,-15.5) {Si(100) substrate};
+  \node[anchor=west,font=\scriptsize] at (82,-15.0) {Poly-Si (0.2 µm)};
+  \node[anchor=west,font=\scriptsize] at (82,-14.2) {ALD-Al$_2$O$_3$ (60 nm)};
+  \node[anchor=west,font=\scriptsize] at (82,-13.0) {Gap (0.8–1.0 µm)};
+  \node[anchor=west,font=\scriptsize] at (82,-11.8) {SiN$_x$ diaphragm (0.8 µm, +150 MPa)};
+  \node[anchor=west,font=\scriptsize] at (82,-10.8) {Pt/Ti (100/20 nm)};
+  \node[anchor=west,font=\scriptsize] at (82,-9.8) {Parylene-HT (1.0 µm)};
+  \node[anchor=west,font=\scriptsize] at (82,-9.0) {PEG-SAM};
 
   % --- Electric field arrows ---
   \foreach \x in {10,25,40,55,70} {
-    \draw[->,blue!60,thick] (\x,-11.3) -- (\x,-12.7);
+    \draw[->,blue!60,thick] (\x,-11.8) -- (\x,-13.5);
   }
-  \node[anchor=west,font=\scriptsize,blue!60] at (2,-9.3) {Electrostatic field $E$};
+  \node[anchor=west,font=\scriptsize,blue!60] at (2,-8.3) {Electrostatic field $E$};
 
   % --- Displacement arrow ---
-  \draw[->,red!70!black,thick] (12,-11.8) -- (12,-12.6);
-  \node[anchor=east,font=\scriptsize,red!70!black] at (11.5,-12.2) {膜変位 $\Delta x$};
+  \draw[->,red!70!black,thick] (12,-12.5) -- (12,-13.8);
+  \node[anchor=east,font=\scriptsize,red!70!black] at (11.5,-13.1) {膜変位 $\Delta x$};
 \end{tikzpicture}}
 \caption{アクチュエータ積層構造。
 ALD-Al$_2$O$_3$により端部電界集中を抑制し，
