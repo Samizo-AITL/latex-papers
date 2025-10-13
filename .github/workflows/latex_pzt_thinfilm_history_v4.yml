@@ -13,21 +13,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # LaTeX コンパイル（xeLaTeX 使用）
-      - name: Compile LaTeX (xeLaTeX)
+      - name: Compile LaTeX (LuaLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: papers/2025_pzt_thinfilm_history/main.tex
-          latexmk_use_xelatex: true
+          latexmk_use_lualatex: true      # ← ここを lualatex 固定
           work_in_root_file_dir: true
-          # NOTE: 追加パッケージ導入はしない（apkのフォント不在で失敗するため）
+          # extra_system_packages は付けない（不要＆事故源）
 
-      # ビルド成果物の収集（PDF とログ類）
       - name: Gather artifacts (PDF & logs)
         run: |
           set -e
@@ -40,7 +37,6 @@ jobs:
           done
           { echo "==== FILE LIST ===="; ls -lah; } > build_artifacts/build_summary.txt
 
-      # PDF を単独アーティファクトとしてアップロード
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
@@ -50,7 +46,6 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      # ログ類（.log ほか）をアップロード
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
