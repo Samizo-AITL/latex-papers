@@ -5,19 +5,41 @@
 
 \documentclass[conference]{IEEEtran}
 
-% ---------- Packages (fixed for XeLaTeX + CJK) ----------
-\usepackage{fontspec}           % XeLaTeXのフォント基盤
-\usepackage{xeCJK}              % 日本語
-\setmainfont{TeX Gyre Termes}   % 英文(任意)
-\setsansfont{TeX Gyre Heros}    % 英文sans(任意)
-\setmonofont{TeX Gyre Cursor}   % 英文mono(任意)
-\setCJKmainfont{HaranoAjiMincho}  % 日本語明朝（TeX Live同梱）
-\setCJKsansfont{HaranoAjiGothic}  % 日本語ゴシック（同梱）
+% ---------- Packages (robust for XeLaTeX + CJK) ----------
+\usepackage{fontspec}    % XeLaTeX font backend
+\usepackage{xeCJK}       % Japanese (CJK)
 
-% 日本語の自動改行を少し安定させる（任意）
+% --- English fonts (any TeX Live has these) ---
+\setmainfont{TeX Gyre Termes}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{TeX Gyre Cursor}
+
+% --- Japanese fonts with fallback (TeX Live stock) ---
+% Prefer HaranoAji; fall back to Noto CJK if unavailable
+\IfFontExistsTF{HaranoAjiMincho}{
+  \setCJKmainfont{HaranoAjiMincho}
+}{
+  \setCJKmainfont{Noto Serif CJK JP}
+}
+\IfFontExistsTF{HaranoAjiGothic}{
+  \setCJKsansfont{HaranoAjiGothic}
+}{
+  \setCJKsansfont{Noto Sans CJK JP}
+}
+
+% --- Line breaking / spacing for Japanese ---
+\xeCJKsetup{
+  CJKglue=\hskip 0.2em plus 0.1em minus 0.05em,
+  PunctStyle=plain
+}
 \XeTeXlinebreaklocale "ja"
-\XeTeXlinebreakskip = 0pt plus 1pt
+\XeTeXlinebreakskip=0pt plus 1pt
 
+% --- Safe dash (avoid U+2015 issues in some fonts) ---
+\newcommand{\Jemdash}{—} % use U+2014 em dash
+% 例: タイトルのダッシュは \Jemdash にする
+
+% ---------- Usual packages ----------
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
