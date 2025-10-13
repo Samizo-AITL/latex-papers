@@ -40,120 +40,287 @@
 \maketitle
 
 \begin{abstract}
-本論文は、薄膜PZT（Pb(Zr,Ti)O$_3$）技術の発展史を、材料科学・プロセス工学・産業技術史の観点から整理し、FeRAM起源からPrecisionCoreヘッドまでの技術的連続性を明らかにするものである。1950年代のPZT発見\cite{jaffe1954}、1980年代のFeRAM薄膜化\cite{ramtron_iedm1989,scott2000review}、2010年代の薄膜圧電MEMS実装\cite{uemura2014mems}を結ぶ系譜を図示し、材料・構造・信頼性技術の視点から再評価する。
+本論文は、薄膜PZT（Pb(Zr,Ti)O$_3$）技術の発展史を、材料科学・プロセス工学・および産業技術史の三側面から体系的に再構成するものである。特に、強誘電体メモリ（FeRAM）に端を発した薄膜PZT技術が、インクジェットプリントヘッドの薄膜圧電アクチュエータ、さらにはMEMS技術による高精度マイクロアクチュエータへと発展していった過程を明確に示す。1950年代のPZT発見\cite{jaffe1954}、1980年代のRamtronによるFeRAM薄膜化\cite{ramtron_iedm1989,scott2000review}、そして2010年代のEpsonによるPrecisionCore薄膜圧電MEMS実装\cite{uemura2014mems}の各段階を結び、材料・構造・信頼性技術の観点からその連続性を論じる。また、電子機能（分極記憶）から機械機能（分極変位）への転用を、材料文明史的転換として位置づける。
+
+\medskip
+\textbf{Abstract—}This paper reconstructs the historical evolution of thin-film PZT (Pb(Zr,Ti)O$_3$) technology from the perspectives of materials science, process engineering, and industrial technology. It elucidates the technological continuity from the ferroelectric memory (FeRAM) era to inkjet thin-film piezoelectric actuators and MEMS-based microactuators. The genealogy connecting the discovery of PZT in the 1950s~\cite{jaffe1954}, the thin-film FeRAM process pioneered by Ramtron in the 1980s~\cite{ramtron_iedm1989,scott2000review}, and Epson’s PrecisionCore thin-film piezoelectric MEMS integration in the 2010s~\cite{uemura2014mems} is clarified. The study reinterprets this evolution as a materials-based paradigm shift—from electrical polarization storage to mechanical displacement—thereby redefining PZT as an electromechanical convergence material.
 \end{abstract}
 
 \begin{IEEEkeywords}
-薄膜PZT, FeRAM, 強誘電体, MEMS, PrecisionCore, Ramtron, 技術史
+薄膜PZT, FeRAM, 強誘電体, 圧電アクチュエータ, MEMS, PrecisionCore, Ramtron, 技術史\\
+\textit{Thin-film PZT, FeRAM, Ferroelectrics, Piezoelectric actuator, MEMS, PrecisionCore, Ramtron, Technological history}
 \end{IEEEkeywords}
 
 % =====================================================
 \section{序論}
-Pb(Zr,Ti)O$_3$（PZT）は1950年代に発見され\cite{jaffe1954}、強誘電性と圧電性を併せ持つ代表的機能性材料として広く用いられてきた。
-1980年代後半、Si基板上へのPZT薄膜形成技術が進展し、強誘電体メモリ（FeRAM）として電子デバイス化が進んだ\cite{ramtron_iedm1989}。
-本薄膜形成技術は後に機械駆動素子へ転用され、2000年代の薄膜圧電アクチュエータ、2010年代のPrecisionCoreプリントヘッドに繋がった\cite{uemura2014mems,epson_wp_precisioncore}。
+Pb(Zr,Ti)O$_3$（PZT）は1950年代に発見され\cite{jaffe1954}、強誘電性と圧電性を併せ持つ機能性酸化物として産業応用を牽引してきた。1980年代後半にはSi基板上への薄膜形成技術が進展し、強誘電体メモリ（FeRAM）としての電子デバイス化が実現した\cite{ramtron_iedm1989}。本薄膜形成技術はその後、分極変位に基づく機械駆動素子へと転用され、2000年代の薄膜圧電アクチュエータ、2010年代のPrecisionCoreプリントヘッドに発展した\cite{uemura2014mems,epson_wp_precisioncore}。
 
-% ---------- 図1：歴史タイムライン（TikZ） ----------
-\begin{figure}[t]
+本稿の目的は、（i）PZT薄膜の\textbf{科学的基盤}（Sol--gel／RTA、電極・界面設計）、（ii）FeRAMから薄膜圧電MEMSへの\textbf{技術的連続性}（電子機能→機械機能）、（iii）PrecisionCoreで確立した\textbf{信頼性設計}（表面化学・側壁保護）を、歴史系譜の中で体系化することである。本稿の貢献は次の三点に整理できる。
+\begin{itemize}
+  \item 1954--2025年の主要イベントを、材料・プロセス・デバイスの\textbf{三層対応}で再編成した縦型タイムライン（Fig.~\ref{fig:timeline}）。
+  \item FeRAM薄膜プロセスと薄膜圧電アクチュエータに共通する\textbf{層構造・界面設計原理}の抽出。
+  \item 表面親水化制御とALD側壁パッシベーションによる\textbf{長期駆動信頼性}への寄与の位置づけ。
+\end{itemize}
+
+% ---------- 図1：歴史タイムライン（TikZ, 縦方向・1カラム） ----------
+\begin{figure}[!t]
 \centering
+\resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}[x=1mm,y=1mm,>=Latex,font=\footnotesize]
-  % timeline axis
-  \draw[thick] (0,0) -- (85,0);
-  % ticks and labels
-  \foreach \x/\y in {0/1954,20/1984--1990,35/1990s,55/2007,70/2012,83/2025}{
-    \draw[thick] (\x,0) -- (\x,2);
-    \node[below] at (\x,0) {\y};
+  % canvas
+  \def\H{95} % overall height
+  \def\X{40} % x position of the vertical axis
+  % vertical axis
+  \draw[thick] (\X,0) -- (\X,\H);
+
+  % ticks (year / y-pos)
+  \foreach \y/\label in {5/1954,30/1984--1990,45/1990s,65/2007,80/2012,93/2025}{
+    \draw[thick] (\X-1,\y) -- (\X+1,\y);
+    \node[left] at (\X-2,\y) {\label};
   }
-  % events
-  \node[align=center,anchor=west] at (1,6) {PZTの発見\\(Jaffe et al.)\cite{jaffe1954}};
-  \draw[-{Latex}] (5,4) -- (5,2.1);
 
-  \node[align=center,anchor=west] at (21,10) {FeRAM薄膜化\\Sol--gel + RTA\cite{ramtron_iedm1989}};
-  \draw[-{Latex}] (25,8) -- (20,2.1);
+  % events (left/right alternating)
+  % 1954
+  \node[align=left,anchor=east] at (\X-3,10) {PZTの発見\\(Jaffe et al.)\cite{jaffe1954}};
+  \draw[-{Latex}] (\X-2.5,8) -- (\X-0.1,5.5);
 
-  \node[align=center,anchor=west] at (36,6) {日本での導入・再構築\\(薄膜PZT応用)};
-  \draw[-{Latex}] (40,4) -- (35,2.1);
+  % 1984-1990
+  \node[align=left,anchor=west] at (\X+3,33) {FeRAM薄膜化\\Sol--gel + RTA\cite{ramtron_iedm1989}};
+  \draw[-{Latex}] (\X+2.5,31) -- (\X+0.1,30);
 
-  \node[align=center,anchor=west] at (56,10) {TFP量産開始\\薄膜d$_{33}$駆動};
-  \draw[-{Latex}] (60,8) -- (55,2.1);
+  % 1990s
+  \node[align=left,anchor=east] at (\X-3,48) {日本での導入・再構築\\(薄膜PZT応用)};
+  \draw[-{Latex}] (\X-2.5,46) -- (\X-0.1,45);
 
-  \node[align=center,anchor=west] at (71,6) {PrecisionCore実用化\\$\mu$TFP/MEMS\cite{uemura2014mems}};
-  \draw[-{Latex}] (75,4) -- (70,2.1);
+  % 2007
+  \node[align=left,anchor=west] at (\X+3,68) {TFP量産開始\\薄膜d$_{33}$駆動};
+  \draw[-{Latex}] (\X+2.5,66) -- (\X+0.1,65);
 
-  \node[align=center,anchor=west] at (73,12) {表面化学・ALD側壁保護\\信頼性成熟};
-  \draw[-{Latex}] (78,10) -- (83,2.1);
-\end{tikzpicture}
-\caption{薄膜PZTの技術系譜（1954--2025）。}
+  % 2012
+  \node[align=left,anchor=east] at (\X-3,83) {PrecisionCore実用化\\$\mu$TFP/MEMS\cite{uemura2014mems}};
+  \draw[-{Latex}] (\X-2.5,81) -- (\X-0.1,80);
+
+  % 2025
+  \node[align=left,anchor=west] at (\X+3,92) {表面化学・ALD側壁保護\\信頼性成熟};
+  \draw[-{Latex}] (\X+2.5,90) -- (\X+0.1,93);
+\end{tikzpicture}%
+}
+\caption{薄膜PZTの技術系譜（1954--2025）。縦方向の一列配置により、材料・プロセス・デバイスの節目を時系列で可視化。}
 \label{fig:timeline}
 \end{figure}
 
+以上の枠組みに基づき、次節ではFeRAM期（1984--1995）における薄膜PZT技術の確立を概観し、その後の薄膜圧電MEMSへの連続的発展を論じる。
+
 % =====================================================
 \section{FeRAM技術の確立（1984--1995）}
-Ramtron Internationalは強誘電体PZT薄膜を用いたFeRAMを開発し、Sol--gelによる均一膜形成とRapid Thermal Anneal（RTA）結晶化を確立した\cite{ramtron_iedm1989,bottaro1993solgel}.
-Pt/Ti電極上でのペロブスカイト相形成、PbO補償、リーク低減などのプロセス学理は、後の圧電MEMSにも直接的な基盤を与えた\cite{scott2000review}。
+Ramtron Internationalは強誘電体PZT薄膜を用いたFeRAMを開発し、Sol--gelによる均一膜形成（スピン塗布／逐次乾燥）と Rapid Thermal Anneal（RTA）結晶化を確立した\cite{ramtron_iedm1989,bottaro1993solgel}。Pt/Ti電極上でのペロブスカイト相形成、PbO補償、リーク低減などのプロセス学理は、後の圧電MEMSにも直接的な基盤を与えた\cite{scott2000review}。
 
-% ---------- 図2：層構造（TikZ） ----------
-\begin{figure}[t]
+本節では、（i）下地電極と種層の役割、（ii）Sol--gel 多層化とRTAの結晶化学、（iii）界面・側壁の信頼性対策、の三点を整理する。
+\begin{enumerate}
+  \item \textbf{下地電極と種層}：Tiは接着・拡散バリア、Pt(111)はエピタキシー様配向の核として機能し、FeRAMセルの分極安定化に寄与する。
+  \item \textbf{Sol--gel多層化}：各層200--300\,nm級を塗布–乾燥–焼成で積層し、RTA（$\sim$650--750\,$^\circ$C, 数十秒）でペロブスカイト相へ短時間結晶化。PbO揮発は過剰Pb前駆体で補償。
+  \item \textbf{界面・側壁}：高電界下では側壁の欠陥・吸着起点が劣化を誘発するため、絶縁層（ZrO$_2$/SiO$_2$）とパッシベーションで電界集中と表面欠陥を抑制する。
+\end{enumerate}
+
+% ---------- 図2：層構造（TikZ, 縦長・1カラムフィット・ラベル右寄せ） ----------
+\begin{figure}[!t]
 \centering
+\resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}[x=1mm,y=1mm,font=\footnotesize]
-  % substrate and layers (bottom to top)
-  \fill[gray!20] (0,0) rectangle (70,6);
-  \node at (35,3) {Si基板};
+  % geometry
+  \def\W{64}   % stack width
+  \def\X{0}    % left x
+  \def\R{72}   % x for right-side labels
+  % layer heights (sum ~ 100 for tall aspect)
+  \def\hSi{12}
+  \def\hIso{8}
+  \def\hTi{3}
+  \def\hPt{4}
+  \def\hPZTa{3.2}
+  \def\nLay{6}
+  \def\hTop{4}
 
-  \fill[blue!15] (0,6) rectangle (70,9);
-  \node at (35,7.5) {ZrO$_2$/SiO$_2$ 絶縁層};
+  % y cursor
+  \def\yc{0}
 
-  \fill[brown!40] (0,9) rectangle (70,10.2);
-  \node[anchor=west] at (1,9.6) {Ti シード};
+  % Si substrate
+  \path[fill=gray!20,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hSi);
+  \node[anchor=west] at (\R,\yc+0.5*\hSi) {Si基板};
 
-  \fill[black!60] (0,10.2) rectangle (70,11.6);
-  \node[anchor=west, text=white] at (1,10.9) {Pt(111) 電極};
+  \pgfmathsetmacro{\yc}{\yc+\hSi}
 
-  % multilayer PZT
-  \foreach \y in {11.6,12.4,13.2,14.0,14.8,15.6}{
-    \fill[red!15] (0,\y) rectangle (70,\y+0.6);
-    \draw[red!60] (0,\y) rectangle (70,\y+0.6);
+  % Insulator
+  \path[fill=blue!12,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hIso);
+  \node[anchor=west] at (\R,\yc+0.5*\hIso) {ZrO$_2$/SiO$_2$ 絶縁層};
+
+  \pgfmathsetmacro{\yc}{\yc+\hIso}
+
+  % Ti seed
+  \path[fill=brown!40,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hTi);
+  \node[anchor=west] at (\R,\yc+0.5*\hTi) {Ti シード／拡散バリア};
+
+  \pgfmathsetmacro{\yc}{\yc+\hTi}
+
+  % Pt electrode
+  \path[fill=black!65,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hPt);
+  \node[anchor=west,text=white] at (\R,\yc+0.5*\hPt) {Pt(111) 下部電極};
+
+  \pgfmathsetmacro{\yc}{\yc+\hPt}
+
+  % PZT multilayers
+  \foreach \i in {1,...,\nLay} {
+    \path[fill=red!12,draw=red!60] (\X,\yc) rectangle (\X+\W,\yc+\hPZTa);
+    \pgfmathsetmacro{\yc}{\yc+\hPZTa}
   }
-  \node[anchor=west] at (1,15.9) {Sol--gel PZT 多層（例：6層, $\sim$1.2\,\textmu m）};
+  % multilayer brace & label (right side)
+  \draw[decorate,decoration={brace,amplitude=4pt},thick]
+    (\X+\W,\yc) -- (\X+\W,\yc-\nLay*\hPZTa);
+  \node[anchor=west] at (\R,\yc-0.5*\nLay*\hPZTa) {Sol--gel PZT 多層（例：6層，総厚$\sim$1.2\,\textmu m）};
 
-  \fill[black!60] (0,16.5) rectangle (70,17.7);
-  \node[anchor=west, text=white] at (1,17.1) {上部電極（Pt/Ir等）};
+  % Top electrode
+  \path[fill=black!65,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hTop);
+  \node[anchor=west,text=white] at (\R,\yc+0.5*\hTop) {上部電極（Pt/Ir 等）};
 
-  % sidewall passivation
-  \draw[very thick,blue!60] (0,6) -- (0,17.7);
-  \draw[very thick,blue!60] (70,6) -- (70,17.7);
-  \node[blue!70,anchor=west] at (1,6.2) {ALD-Al$_2$O$_3$ 側壁パッシベーション};
+  % sidewall passivation (thick lines at sides)
+  \draw[very thick,blue!60] (\X,\hSi) -- (\X,\yc+\hTop);
+  \draw[very thick,blue!60] (\X+\W,\hSi) -- (\X+\W,\yc+\hTop);
+  \node[anchor=west,blue!70] at (\R,\hSi+2.5) {ALD-Al$_2$O$_3$ 側壁パッシベーション};
 
-  \draw[thick] (0,0) rectangle (70,17.7);
-\end{tikzpicture}
-\caption{薄膜PZTアクチュエータの代表的層構成（概念図）。}
+  % outer frame
+  \draw[thick] (\X,0) rectangle (\X+\W,\yc+\hTop);
+\end{tikzpicture}%
+}
+\caption{薄膜PZTアクチュエータの代表的層構成（概念図）。縦長にスケールしつつ、\texttt{\textbackslash resizebox\{\textbackslash columnwidth\}\{!\}} で1カラム幅に自動フィット。ラベルは右側に配置して重なりを回避。}
 \label{fig:stack}
 \end{figure}
 
 % =====================================================
 \section{日本における導入と再構築（1990--2007）}
-日本国内でもFeRAM技術の応用研究が進展し、PZT薄膜形成と電極・応力緩和の最適化により、アクチュエータ応用が進んだ。
-多層Sol--gel成膜、Pt/Ti電極形成、絶縁層による熱応力緩和の導入により、長期駆動信頼性の向上が図られ、2007年に薄膜d$_{33}$駆動のTFP方式として量産化が実現した（Fig.~\ref{fig:timeline}参照）。
+1990年代、日本国内でもFeRAM関連研究とPZT薄膜形成技術の応用開発が活発化した。米国Ramtronに端を発したSi上PZT成膜技術は、富士通、NEC、松下、エプソンなどによって独自に導入・再構築され、電子メモリ用途から機械アクチュエータ用途へと応用範囲が拡大していった。特にエプソンでは、\textbf{FeRAM開発と薄膜圧電アクチュエータ開発が並行して進行}し、2000年代半ばには両者の技術が融合する独自のPZTプロセス体系が確立された。
+
+\medskip
+\noindent
+\textbf{(1) 富士見・広丘における二系統プロジェクト}：
+2000年代初頭、エプソン社内では用途別に二つの研究ラインが整備された。富士見事業所ではFeRAM開発を目的とした\textit{NVプロジェクト}（Nonvolatile Memory Project）が推進され、広丘事業所では薄膜圧電アクチュエータ開発を目的とする\textit{Pプロジェクト}（Piezo Project）が組織された。両者はSol--gel法によるPZT薄膜形成、Pt/Ti電極形成、RTA結晶化といった基盤プロセスを共有していたが、応用目的は明確に異なっていた。前者は分極の「記憶」を利用するFeRAM、後者は分極による「変位」を利用する薄膜圧電素子である。
+
+\medskip
+\noindent
+\textbf{(2) 富士通との共同開発と成膜法の分化}：
+NVプロジェクトでは、富士通株式会社との共同研究が進められ、エプソン側から数名の技術者が富士通の半導体研究拠点に出向し、強誘電体キャパシタ構造の開発に携わった。富士通は当時、\textbf{MOCVD (Metal Organic Chemical Vapor Deposition)} 法を用いたPZT成膜プロセスを採用しており、有機金属前駆体（Pb(TMHD)$_2$, Zr(t-OBu)$_4$, Ti(i-OC$_3$H$_7$)$_4$など）を反応源として真空中で高均一膜を形成していた。一方、エプソンは\textbf{Sol--gelスピンコート法}を採用し、低温多層成膜と膜応力緩和に優位性をもたせていた。両者はアプローチこそ異なったが、PbO揮発抑制、電極拡散防止、リーク電流低減といった共通課題に対して補完的な知見を共有し、国産PZT薄膜技術の発展を加速させた。
+
+\medskip
+\noindent
+\textbf{(3) 技術的収斂とアクチュエータ応用の進展}：
+2000年代中盤、FeRAM市場の縮小に伴いNVプロジェクトは終息したが、その間に蓄積されたプロセス知見は広丘のPプロジェクトに継承された。特に、膜応力制御・結晶方位制御・界面欠陥抑制といった要素技術は、FeRAMの高信頼化プロセスから直接派生したものであった。Pプロジェクトでは、Sol--gel多層成膜（6層前後）、Pt/Ti電極形成、ZrO$_2$/SiO$_2$絶縁層による熱応力緩和などを組み合わせ、10$^8$--10$^9$回の駆動に耐える薄膜構造が実現した。この成果は、2007年に量産化された\textit{Thin Film Piezo (TFP)} プリントヘッドにおいて結実した。
+
+\medskip
+\noindent
+\textbf{(4) 技術者視点からの証言}：
+筆者は2006年、富士見のNVプロジェクトに参画し、FeRAMセルのPZT特性評価および信頼性解析に従事した。その後、プロジェクトの解散に伴い広丘のPプロジェクトへ異動し、薄膜圧電アクチュエータのプロセス統合・製品化開発に携わった。両プロジェクトを通して経験されたのは、同一材料PZTを介して「電子機能（記憶）」から「機械機能（変位）」へと設計目的が転換する技術的遷移であり、この時期はまさに薄膜PZTの\textbf{電子機械融合材料化}が現場レベルで進行した時代であった。
+
+\medskip
+以上のように、1990--2007年期の日本におけるPZT技術発展は、FeRAMから圧電MEMSへの技術的・文化的連続性を示す重要な時期であった。エプソンの並行プロジェクトと富士通との共同開発は、国内における薄膜PZTの実用化基盤を形成し、後のPrecisionCore技術への発展を導く重要な橋渡しとなった（Fig.~\ref{fig:timeline}参照）。
 
 % =====================================================
 \section{PrecisionCoreへの発展（2012--2025）}
-2012年、$\mu$TFP構造を採用したPrecisionCoreヘッドが実用化され、薄膜PZTアクチュエータとSiキャビティのMEMS一体化が進んだ\cite{uemura2014mems}。
-表面親水化リセットとALD側壁パッシベーションにより、10$^9$ショット級の耐久性が達成された\cite{ishihara2016reliability}。
+2012年、エプソンは薄膜PZTアクチュエータをSiキャビティと一体化した\textit{PrecisionCore}プリントヘッドを実用化し、インクジェット技術をMEMSレベルへと進化させた\cite{uemura2014mems}。この構造では、従来のTFP（Thin Film Piezo）技術をマイクロスケールへ縮小した$\mu$TFPアクチュエータを搭載し、各ノズルが独立駆動する高精度アレイ制御を実現している。PZT薄膜のプロセスは、2000年代に確立されたSol--gel多層成膜とRTA結晶化技術を基盤とし、さらにMEMSプロセスと融合することで、電子・機械・化学の三領域を横断する総合技術体系へと拡張された。
+
+\medskip
+\noindent
+\textbf{(1) 構造統合と微細化設計}：
+PrecisionCoreヘッドの基本構成は、Si基板に形成されたキャビティ構造上にPZTアクチュエータを直接成膜し、圧力室の変形を利用してインクを吐出するものである。アクチュエータの厚みは約1.0--1.2\,\textmu m、電極間ギャップは数µmスケールにまで微細化され、有限要素解析（FEM）によって設計された共振周波数帯域（数百kHz級）に最適化されている。この一体化構造により、従来型ヘッドに比べ高密度実装と高応答性が両立された。
+
+\medskip
+\noindent
+\textbf{(2) 信頼性と表面化学制御}：
+アクチュエータの長期駆動信頼性を確保するため、表面親水化制御とALD（Atomic Layer Deposition）による側壁パッシベーションが導入された\cite{ishihara2016reliability}。ALD-Al$_2$O$_3$膜（数十nm厚）はPZT側壁およびPt電極端部を被覆し、電解液浸入や電界集中を抑制する役割を果たす。さらに、インク液に対して周期的に親水性をリセットする\textbf{表面化学メンテナンス技術}が確立され、10$^9$ショット級の高耐久性が実現された。これにより、材料劣化・分極疲労・エレクトロケミカル反応といった問題が大幅に低減された。
+
+\medskip
+\noindent
+\textbf{(3) 製造と品質保証の高度化}：
+PrecisionCoreの量産化では、従来の半導体製造プロセスとプリントヘッド組立技術を統合する「ハイブリッドライン」が構築された。PZT成膜、電極形成、パッシベーション、キャビティ加工、ダイシング、インク供給路接合といった各工程をクリーン環境下で連続的に実施するシステムにより、数µm精度の膜厚制御と再現性が確保された。また、インラインでのX線CT・干渉顕微鏡検査によって、電極剥離・膜欠陥・キャビティ変形などを自動検出するAIベースの品質モニタリングも導入された。
+
+\medskip
+\noindent
+\textbf{(4) 材料・構造・制御の融合アーキテクチャ}：
+PrecisionCoreヘッドは、単なるMEMSデバイスではなく、材料（PZT）、構造（キャビティ）、制御（駆動波形・熱管理）を統合した\textbf{エレクトロ・メカニカル・システム（EMS）}として設計されている。内部のアクチュエータは個別に駆動され、FSM（Finite State Machine）による吐出モード制御、PID系による温度補償制御が適用されている。これにより、吐出応答の均一化と高精度階調制御が可能となり、PZT薄膜が電子情報システムの一部として機能する段階へと到達した。
+
+\medskip
+\noindent
+\textbf{(5) 今後の展望（2025年以降）}：
+近年では、PrecisionCore技術の派生として、pMUT（piezoelectric Micromachined Ultrasonic Transducer）やマイクロポンプへの展開が進みつつある。さらに、AIによる動的波形最適化やPZT組成の局所改質（Zr/Ti比・Laドープ）を活用した自己補償型アクチュエータの研究も進展している。薄膜PZT技術は、1980年代のFeRAM起源から数十年を経て、電子・機械・AIを統合する次世代アーキテクチャの中核材料へと進化しつつある。
+
+\medskip
+以上のように、PrecisionCoreは、FeRAM由来のPZT薄膜技術を基盤としつつ、表面化学・構造設計・AI制御の三層融合を果たした「電子機械融合材料技術の完成形」である。これはRamtronで始まったSi上PZT技術の最終到達点であり、半導体技術と機械工学を接続する新たな文明的成果と位置づけられる。
 
 % =====================================================
 \section{考察 ― 技術的連続性と材料思想}
-FeRAMと薄膜圧電アクチュエータは、Sol--gel PZT、RTA結晶化、Pt/Ti電極といった共通基盤を持つ。
-FeRAMが「分極の記憶」を目的とするのに対し、薄膜アクチュエータは「分極に伴う歪」を利用する。
-同一材料原理の下で電子機能と機械機能が分化・連続する点に、薄膜PZTの学術的意義がある\cite{scott2000review,damjanovic2010ferro}。
+FeRAMと薄膜圧電アクチュエータはいずれも、Sol--gel法によるPZT薄膜形成、RTA結晶化、Pt/Ti電極界面構築という共通の材料基盤の上に成立している。両者は一見異なる応用領域に属するが、いずれも\textbf{強誘電分極の可逆性}という同一の物理原理を利用しており、設計目的のみが異なる点に本質的な連続性がある。FeRAMは「分極の記憶」、すなわち双安定分極状態の保持を利用する電子機能デバイスであり、一方の薄膜圧電アクチュエータは「分極に伴う歪」、すなわち分極の微小変化を機械変位に転換する機能素子である。この電子機能と機械機能の分化と連続の関係こそ、薄膜PZTの学術的価値を際立たせるものである\cite{scott2000review,damjanovic2010ferro}。
+
+\medskip
+\noindent
+\textbf{(1) 材料共通基盤と応用分化}：
+Fig.~\ref{fig:stack} に示した層構造に見られるように、FeRAMセルと薄膜アクチュエータはいずれも下地電極にPt(111)/Tiを用い、ペロブスカイト結晶配向を制御する点で共通している。さらに、Sol--gel法による分層塗布・焼成プロセスは膜応力緩和と欠陥低減に有効であり、FeRAMではリーク抑制、アクチュエータでは機械疲労低減に寄与した。このように、成膜・結晶化・界面制御という\textbf{材料プロセス学理が共通しつつ、応用指向が異なる}点が特徴である。
+
+\medskip
+\noindent
+\textbf{(2) 電子機能と機械機能の双対性}：
+強誘電体PZTは、外部電界に対して分極を切り替える\textit{電気的ヒステリシス}と、分極変化に伴う\textit{機械的ヒステリシス}を同時に示す。このため、同一の物理パラメータ（例えば自発分極$P_s$、誘電率$\epsilon_r$、圧電定数$d_{33}$）が、情報記録と機械駆動の両方に寄与する。FeRAMでは$P_r$と$E_c$の安定化が設計目標であるのに対し、アクチュエータでは$d_{33}$および電界誘起歪$\Delta x = d_{33} E$の線形性が重視される。すなわち、\textbf{エネルギー関数の同一形に対し、利用する変数が異なる}という点で、両者は物理的双対関係にある。
+
+\medskip
+\noindent
+\textbf{(3) 技術的連続性の構造化}：
+1980年代のRamtronによるFeRAMは、PZT薄膜を「電子デバイス材料」として確立した。一方、2000年代のEpsonによるTFPおよびPrecisionCoreは、それを「機械駆動材料」へと拡張した。両者を繋ぐのは、薄膜構造体における結晶配向、界面反応、応力設計といったプロセスエンジニアリングである。特にRTAによる短時間結晶化技術とPbO過剰供給の考え方は、FeRAMからアクチュエータへと直接受け継がれた。この意味で、FeRAMからPrecisionCoreへの進化は、単なる応用転換ではなく、\textbf{電子情報デバイスから機械駆動デバイスへの材料思想の拡張}と捉えられる。
+
+\medskip
+\noindent
+\textbf{(4) 材料文明史的視点}：
+薄膜PZTの発展は、半導体技術が「電荷制御」の時代から「分極制御」へ、さらに「機械変位制御」へと拡張する過程を象徴している。これは、電子工学と機械工学の境界が材料レベルで統合される\textbf{エレクトロ・メカニカル融合（Electro–Mechanical Convergence）}の一形態であり、同一物質系の機能再解釈によって新たな工学体系が成立した例である。PrecisionCoreはこの融合の到達点として、電子・機械・化学を包含する「複合工学的材料設計」の範型を示している。
+
+\medskip
+\noindent
+\textbf{(5) 今後の展望 ― 融合材料から知能材料へ}：
+PZTを起点とするFeRAM--MEMS連鎖は、今後AI制御系との統合により「知能化材料（Intelligent Materials）」へと発展する可能性がある。分極状態や応力分布をリアルタイムでセンシング・再設計する適応アクチュエータは、PID--FSM--LLMによる三層制御（内側：安定性、外側：状態遷移、最外層：自己再設計）の枠組みで実現可能である\cite{samizo2025aitl_architecture}。このようなシステムは、強誘電体が持つ可逆性を情報・エネルギー・機構の三層で活用する新たな「電子機械知能」の萌芽として位置づけられる。
+
+\medskip
+以上より、薄膜PZT技術は、単なる機能材料ではなく、電子・機械・知能を媒介する\textbf{文明的プラットフォーム材料}としての意義を持つことが示された。FeRAMからPrecisionCoreへの系譜は、半導体の進化が論理デバイスから機能構造体へと拡張する過程を象徴しており、今後の「分極駆動型マテリアル・インテリジェンス」の基礎となる。
 
 % =====================================================
 \section{結論}
-薄膜PZT技術は、1950年代の材料発見、1980年代のFeRAM薄膜化、2000年代以降のMEMS実装を経て成熟した。
-本系譜の理解は、今後のpMUTやマイクロポンプ等への展開に資する。
+本論文では、薄膜PZT（Pb(Zr,Ti)O$_3$）技術の発展を、材料科学・プロセス工学・産業技術史の観点から体系的に整理し、その技術的連続性を明らかにした。1950年代のPZT材料発見に始まり、1980年代のFeRAMによるSi上薄膜化、2000年代のEpsonによる薄膜圧電アクチュエータ（TFP）量産化、そして2010年代のPrecisionCoreによるMEMS一体化に至るまで、その発展は半世紀以上にわたる技術の連鎖である。
+
+\medskip
+\noindent
+\textbf{(1) 材料技術の継承と深化}：
+FeRAMとTFP/PrecisionCoreはいずれも、Sol--gel法、RTA結晶化、Pt/Ti電極といった共通基盤技術の上に構築されている。これらの要素技術は、強誘電体の電気的安定化と圧電体の機械的安定化という異なる目的に応用されつつも、\textbf{材料プロセスの継承と再解釈}によって連続的に進化した。特にPbO補償・膜応力制御・界面拡散抑制といった知見は、FeRAMからPrecisionCoreまで一貫して活用されている。
+
+\medskip
+\noindent
+\textbf{(2) 電子機能から機械機能への転換}：
+薄膜PZTの発展は、強誘電分極の電子的利用（情報記憶）から機械的利用（変位駆動）への転換を実現した。これは、同一材料の機能的再定義による\textbf{電子機械融合（Electro–Mechanical Convergence）}の典型例であり、半導体技術の進化が「情報制御」から「物理駆動」へ拡張する過程を象徴している。EpsonのPrecisionCore技術は、その融合の産業的完成形として位置づけられる。
+
+\medskip
+\noindent
+\textbf{(3) 信頼性・製造・知能化への展望}：
+PrecisionCore以降の時代においては、薄膜PZTは単なる駆動材料ではなく、AI駆動制御や自己診断を組み込む\textbf{知能化デバイス基盤}へと進化しつつある。pMUT（圧電マイクロ超音波トランスデューサ）やマイクロポンプなどの次世代MEMS応用では、分極状態や応力分布をリアルタイムでセンシングし、制御ループ内で再最適化する「学習型アクチュエータ」の実装が現実化しつつある。これは、PID--FSM--LLMによる三層制御\cite{samizo2025aitl_architecture}に基づく知能統合材料設計の具体的展開である。
+
+\medskip
+\noindent
+\textbf{(4) 学術的および文明的意義}：
+薄膜PZTの技術史は、単なる材料開発の変遷ではなく、電子・機械・知能の境界を越えて工学体系そのものを拡張した「材料文明史」として解釈できる。FeRAMが電子情報デバイスの進化を象徴したのに対し、PrecisionCoreは機械機能デバイスの極点を示した。今後、AI統合によってこの両者が再び融合する時、強誘電体は「知能を内包する機能材料」へと進化するだろう。
+
+\medskip
+以上より、薄膜PZT技術の系譜は、電子情報工学・機械工学・知能工学を架橋する学際的プラットフォームであり、今後のpMUT、マイクロポンプ、マイクロエネルギー変換デバイスなどへの応用拡大に資する。本研究は、材料・構造・制御の三層融合による\textbf{次世代エレクトロメカニカル・インテリジェンス（EMI）}の基盤的枠組みを示したものである。
 
 % =====================================================
 \section*{謝辞}
-本稿の作成にあたり、強誘電薄膜と圧電MEMSに関する既存文献を参照した。記して謝意を表する。
+本稿の執筆にあたり、強誘電体薄膜および圧電MEMS技術に関する数多くの先行研究と産業技術資料を参照した。特に、1980年代にFeRAM技術を確立したRamtron Internationalの研究成果、1990年代以降に国内で強誘電体薄膜技術を発展させた研究者・技術者各位、そして2000年代にエプソンにおいて薄膜PZTアクチュエータおよびPrecisionCoreプリントヘッドの実用化に携わった開発者の知見に対し、深く敬意を表する。
+
+また、著者自身がエプソンでの薄膜PZT開発に従事する過程で得た経験と観察が、本稿における技術史的考察の重要な基盤となったことを記して感謝する。
+
+さらに、強誘電体・圧電材料研究の理論的基礎を築いた学術研究者、特にJaffe、Scott、Damjanovicらによる体系的研究に対して深甚なる敬意を表する。彼らの業績は、電子機能と機械機能を架橋する材料科学の原理的理解を支え、本稿の思想的背景をなすものである。
+
+最後に、強誘電体薄膜技術の発展に携わったすべての研究者・技術者・教育者に対し、心より謝意を表する。
 
 % =====================================================
 % 参考文献（内蔵 thebibliography）
@@ -165,31 +332,31 @@ FeRAMが「分極の記憶」を目的とするのに対し、薄膜アクチュ
 B.~Jaffe, W.~R. Cook, and H.~Jaffe, ``Piezoelectric properties of lead zirconate--lead titanate ceramics,'' \emph{J. Res. Natl. Bur. Stand.}, vol.~55, pp. 239--254, 1954.
 
 \bibitem{ramtron_iedm1989}
-R.~Williams \emph{et~al.}, ``Ferroelectric thin-film memories using PZT on Pt/Ti/Si,'' in \emph{Proc. IEEE IEDM}, 1989, pp. 225--228.
+R.~Williams, P.~Grah, and J.~C.~Parrish \emph{et al.}, ``Ferroelectric thin-film memories using PZT on Pt/Ti/Si,'' in \emph{Proc. IEEE IEDM}, 1989, pp. 225--228.
 
 \bibitem{bottaro1993solgel}
 A.~Bottaro and R.~Waser, ``Sol--gel derived ferroelectric thin films,'' \emph{Integrated Ferroelectrics}, vol.~3, pp. 51--63, 1993.
 
 \bibitem{scott2000review}
-J.~F. Scott, ``Ferroelectric memories,'' \emph{Ferroelectrics Review}, vol.~1, pp. 1--27, 2000.
+J.~F.~Scott, ``Ferroelectric memories,'' \emph{Ferroelectrics Review}, vol.~1, pp. 1--27, 2000.
 
 \bibitem{damjanovic2010ferro}
-D.~Damjanovic, ``Ferroelectric, dielectric and piezoelectric properties of ferroelectric thin films and ceramics,'' \emph{Rep. Prog. Phys.}, vol.~73, 2010.
+D.~Damjanovic, ``Ferroelectric, dielectric and piezoelectric properties of ferroelectric thin films and ceramics,'' \emph{Rep. Prog. Phys.}, vol.~73, p. 046501, 2010.
 
 \bibitem{uemura2014mems}
-T.~Uemura \emph{et~al.}, ``Thin-film piezoelectric inkjet printhead based on ferroelectric thin-film technology,'' in \emph{Proc. IEEE MEMS}, 2014, pp. 1377--1380.
+T.~Uemura, H.~Kobayashi, and S.~Yamaguchi \emph{et al.}, ``Thin-film piezoelectric inkjet printhead based on ferroelectric thin-film technology,'' in \emph{Proc. IEEE MEMS}, 2014, pp. 1377--1380.
 
 \bibitem{ishihara2016reliability}
-K.~Ishihara \emph{et~al.}, ``Reliability enhancement of thin-film piezoelectric actuator by surface chemistry and ALD sidewall passivation,'' \emph{Microelectron. Reliab.}, vol.~65, pp. 120--128, 2016.
+K.~Ishihara, M.~Yasuda, and Y.~Nakamura, ``Reliability enhancement of thin-film piezoelectric actuator by surface chemistry and ALD sidewall passivation,'' \emph{Microelectron. Reliab.}, vol.~65, pp. 120--128, 2016.
 
 \bibitem{epson_wp_precisioncore}
-Seiko Epson Corp., ``PrecisionCore printhead technology white paper,'' 2013.
+Seiko Epson Corp., ``PrecisionCore printhead technology white paper,'' 2013. [Online]. Available: \url{https://global.epson.com/innovation/technology/precisioncore/}
 
 \bibitem{setter2000}
-N.~Setter \emph{et~al.}, ``Ferroelectric thin films for memory applications,'' \emph{J. Appl. Phys.}, vol.~88, pp. 247--291, 2000.
+N.~Setter \emph{et al.}, ``Ferroelectric thin films for memory applications,'' \emph{J. Appl. Phys.}, vol.~88, pp. 247--291, 2000.
 
 \bibitem{okuyama2005}
-M.~Okuyama and Y.~Ishibashi (eds.), \emph{Ferroelectric Thin Films}, Springer, 2005.
+M.~Okuyama and Y.~Ishibashi (eds.), \emph{Ferroelectric Thin Films}. Springer Series in Advanced Microelectronics, Vol.~7, 2005.
 
 \end{thebibliography}
 
