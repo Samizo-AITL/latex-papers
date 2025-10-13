@@ -225,8 +225,58 @@ SiN$_x$成膜時の400\,\si{\celsius}以下であり，
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{process_flow.pdf}
-\caption{製造プロセス概要（全行程$\le$400\,\si{\celsius}）。ALDによる絶縁被覆と低温Parylene-HT／PEG-SAM表面改質により，BEOL整合かつ生体適合性を確保。}
+\resizebox{0.9\columnwidth}{!}{%
+\begin{tikzpicture}[
+  font=\scriptsize,
+  node distance=4.5mm and 8mm,
+  >=Latex,
+  box/.style={draw,rounded corners,inner sep=3pt,align=left,minimum width=55mm},
+  dep/.style={box,fill=blue!7},
+  etch/.style={box,fill=red!6},
+  surf/.style={box,fill=green!7},
+  meta/.style={box,fill=gray!10}
+]
+
+\node[meta, align=center, minimum width=55mm, inner sep=3pt]
+(title) {\textbf{製造プロセス概要}\\全行程 $\le$400\,\si{\celsius}};
+
+\node[dep, below=of title] (s1)
+{① Si基板洗浄\\RCA, 低温};
+\node[dep, below=of s1] (s2)
+{② 固定電極 Poly-Si\\LPCVD 0.2\,µm};
+\node[dep, below=of s2] (s3)
+{③ 絶縁 ALD-Al$_2$O$_3$\\60\,nm（側壁コンフォーマル）};
+\node[dep, below=of s3] (s4)
+{④ 犠牲層定義\\ギャップ 0.8--1.0\,µm};
+\node[dep, below=of s4] (s5)
+{⑤ SiN$_x$可動膜\\0.8\,µm, +150\,MPa};
+\node[dep, below=of s5] (s6)
+{⑥ 上部電極 Pt/Ti\\100/20\,nm（リフトオフ）};
+\node[etch, below=of s6] (s7)
+{⑦ ノズル開口\\DRIE/ICP};
+\node[etch, below=of s7] (s8)
+{⑧ 背面キャビティ開放\\XeF$_2$（選択エッチ）};
+\node[surf, below=of s8] (s9)
+{⑨ Parylene-HT\\1.0\,µm（低温CVD）};
+\node[surf, below=of s9] (s10)
+{⑩ PEG-SAM\\抗蛋白吸着};
+
+% 矢印
+\foreach \a/\b in {title/s1,s1/s2,s2/s3,s3/s4,s4/s5,s5/s6,s6/s7,s7/s8,s8/s9,s9/s10} {
+  \draw[->,thick] (\a.south) -- (\b.north);
+}
+
+\node[meta, below=7mm of s10, align=left, text width=7cm] (note) {
+\textbf{設計要点:}\\
+-- ALD Al$_2$O$_3$ 60\,nm: ピンホールリーク抑制, 端部電界集中緩和\\
+-- SiN$_x$ 応力制御: +150\,MPaで反り抑制, 再現性向上\\
+-- Parylene-HT + PEG-SAM: 可視透過, 蛋白吸着低減 (濡れ性70--85°)\\
+-- 全行程 $\le$400\,\si{\celsius}: CMOS BEOL整合／滅菌プロセス適合
+};
+
+\end{tikzpicture}%
+}
+\caption{製造プロセス概要（縦フロー表示）。ALD絶縁と低温Parylene-HT／PEG-SAM表面改質により，BEOL整合かつ生体適合性を確保。}
 \label{fig:process}
 \end{figure}
 
@@ -344,8 +394,72 @@ DAC出力（3.3\,Vロジック）を\textbf{HVドライバ（0--60\,V級）}で�
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.9\columnwidth]{drive_circuit.pdf}
-\caption{駆動電装構成（3.3\,Vロジック + 45\,V HV）。DAC出力をHVドライバでレベル変換し，各チャネルに供給。RCスナバによりリンギングを抑制。}
+\resizebox{0.9\columnwidth}{!}{%
+\begin{tikzpicture}[
+  font=\scriptsize, >=Latex,
+  node distance=6mm and 8mm,
+  blk/.style={draw, rounded corners, minimum width=18mm, minimum height=8mm, align=center, inner sep=2pt},
+  hvblk/.style={blk, fill=orange!10},
+  lgblk/.style={blk, fill=blue!8},
+  prot/.style={blk, fill=red!6},
+  note/.style={draw, rounded corners, fill=gray!10, align=left, inner sep=3pt}
+]
+
+% --- Blocks (left to right) ---
+\node[lgblk] (mcu) {MCU/FPGA\\(3.3\,V)};
+\node[lgblk, right=of mcu] (dac) {DAC\\(0--5\,V)};
+\node[lgblk, right=of dac] (buf) {BUF/OPA\\(ロジック域)};
+
+\node[hvblk, right=16mm of buf] (hvdrv) {HVドライバ\\(0--60\,V)};
+\node[prot, right=of hvdrv, minimum width=16mm] (snub) {RCスナバ\\\(\,100~\si{\ohm} + 470~\si{\pico\farad}\,\)};
+\node[blk, right=of snub, minimum width=22mm, fill=green!10] (head) {静電MEMS\\アクチュエータ\\(10--50\,pF/ch)};
+
+% --- Power rails ---
+\node[note, above=6mm of hvdrv] (hvsup) {HVレール: +45\,V\\(上限 60\,V)};
+\draw[->, thick] (hvsup.south) -- (hvdrv.north);
+
+\node[note, above=6mm of mcu] (lowsup) {3.3\,V ロジック};
+\draw[->, thick] (lowsup.south) -- (mcu.north);
+
+% --- Isolation / DC/DC annotation ---
+\node[note, below=7mm of hvdrv, align=center] (iso) {ロジック/高圧分離\\アイソレーテッド DC/DC};
+\draw[thick, dashed] ($(buf.south)!0.5!(hvdrv.south)$ -- (iso.north);
+\draw[dashed, gray] ($(buf.north east)+(1mm,6mm)$ -- ($(buf.south east)+(1mm,-10mm)$);
+\node[align=center, anchor=west, gray] at ($(buf.east)+(3mm,5mm)$) {アイソレーション境界};
+
+% --- Signal flow arrows ---
+\draw[->, thick] (mcu) -- (dac);
+\draw[->, thick] (dac) -- (buf);
+\draw[->, thick] (buf) -- (hvdrv);
+\draw[->, thick] (hvdrv) -- (snub);
+\draw[->, thick] (snub) -- (head);
+
+% --- Sense/monitor path ---
+\node[lgblk, below=12mm of dac] (adc) {ADC\\(監視)};
+\draw[->, thick] ($(snub.south)!0.6!(head.south)$ |- (adc.east) node[pos=0.25, right] {};
+\node[note, right=2mm of adc] (sense) {波形電流/温度監視\\（ドライバ近傍サーミスタ）};
+
+% --- Fanout to multi-channels (array) ---
+\coordinate (tap) at ($(snub.east)!0.6!(head.west)$);
+\draw[fill=black] (tap) circle (0.6pt);
+\foreach \dy in {5mm, -5mm} {
+  \draw[thick] (tap) -- ++(6mm,\dy) node[coordinate] (t\dy) {};
+  \draw[->, thick] (t\dy) -- ++(8mm,0) node[blk, right, minimum width=18mm, fill=green!10] {Actuator ch.};
+}
+\node[align=center] at ($(head.east)+(15mm,0mm)$) {\(\cdots\) \textit{N} ch};
+
+% --- Notes box ---
+\node[note, below=12mm of head, minimum width=74mm] (notes) {
+\textbf{設計要点}\\[-2pt]
+-- 容量性負荷ゆえ電流要求小、自己発熱低減（\(\sim 0.1\,\si{\micro J/shot}\) @45\,V)\\
+-- RCスナバでリンギング抑制、配線寄生(\(\lesssim 0.2\,\si{\pico\farad}/\)ch)を吸収\\
+-- 周波数 5--10\,kHz、台形 5/5/10\,\si{\micro s}、Duty 20--60\%\\
+-- Pull-in安全率 \(\ge 2\)（45\,V基準）、60\,V上限運用も可
+};
+
+\end{tikzpicture}%
+}
+\caption{駆動電装構成（3.3\,Vロジック + 45\,V HV）。DAC$\rightarrow$バッファ$\rightarrow$HVドライバでレベル変換し，各チャネルへ供給。RCスナバでリンギングを抑制し，容量性負荷（10--50\,pF/ch）を安定駆動。}
 \label{fig:drive}
 \end{figure}
 
