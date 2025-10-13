@@ -5,29 +5,40 @@
 
 \documentclass[conference]{IEEEtran}
 
-% ---------- Packages (robust for XeLaTeX + CJK) ----------
-\usepackage{fontspec}    % XeLaTeX font backend
-\usepackage{xeCJK}       % Japanese (CJK)
+% =====================================================
+% XeLaTeX + CJK (robust universal setup)
+% =====================================================
+\usepackage{fontspec}    % Unicode font management
+\usepackage{xeCJK}       % Japanese / Chinese / Korean typesetting
 
-% --- English fonts (any TeX Live has these) ---
-\setmainfont{TeX Gyre Termes}
-\setsansfont{TeX Gyre Heros}
-\setmonofont{TeX Gyre Cursor}
+% ---------- English fonts (TeX Live standard) ----------
+\setmainfont{TeX Gyre Termes}   % Serif
+\setsansfont{TeX Gyre Heros}    % Sans-serif
+\setmonofont{TeX Gyre Cursor}   % Monospace
 
-% --- Japanese fonts with fallback (TeX Live stock) ---
-% Prefer HaranoAji; fall back to Noto CJK if unavailable
+% ---------- Japanese fonts (robust fallback) ----------
+% Prefer HaranoAji if installed; fallback to Noto CJK JP
 \IfFontExistsTF{HaranoAjiMincho}{
   \setCJKmainfont{HaranoAjiMincho}
 }{
-  \setCJKmainfont{Noto Serif CJK JP}
+  \IfFontExistsTF{Noto Serif CJK JP}{
+    \setCJKmainfont{Noto Serif CJK JP}
+  }{
+    \setCJKmainfont{IPAMincho} % 最後の保険（IPAexでもOK）
+  }
 }
+
 \IfFontExistsTF{HaranoAjiGothic}{
   \setCJKsansfont{HaranoAjiGothic}
 }{
-  \setCJKsansfont{Noto Sans CJK JP}
+  \IfFontExistsTF{Noto Sans CJK JP}{
+    \setCJKsansfont{Noto Sans CJK JP}
+  }{
+    \setCJKsansfont{IPAGothic}
+  }
 }
 
-% --- Line breaking / spacing for Japanese ---
+% ---------- Line breaking / punctuation ----------
 \xeCJKsetup{
   CJKglue=\hskip 0.2em plus 0.1em minus 0.05em,
   PunctStyle=plain
@@ -35,11 +46,12 @@
 \XeTeXlinebreaklocale "ja"
 \XeTeXlinebreakskip=0pt plus 1pt
 
-% --- Safe dash (avoid U+2015 issues in some fonts) ---
-\newcommand{\Jemdash}{—} % use U+2014 em dash
-% 例: タイトルのダッシュは \Jemdash にする
+% ---------- Safe em-dash macro ----------
+\newcommand{\Jemdash}{—} % use U+2014 (safe em dash)
+% ※ U+2015 の「水平棒」はフォント欠落しやすいため使用禁止。
+% 例：タイトル中は "技術の系譜 \Jemdash FeRAMからPrecisionCoreへ"
 
-% ---------- Usual packages ----------
+% ---------- General packages ----------
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
