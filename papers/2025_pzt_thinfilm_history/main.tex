@@ -90,57 +90,35 @@ Pb(Zr,Ti)O$_3$（PZT）は1950年代に発見され\cite{jaffe1954}、強誘電�
 
 本稿の目的は、（i）PZT薄膜の\textbf{科学的基盤}（Sol--gel／RTA、電極・界面設計）、（ii）FeRAMから薄膜圧電MEMSへの\textbf{技術的連続性}（電子機能→機械機能）、（iii）PrecisionCoreで確立した\textbf{信頼性設計}（表面化学・側壁保護）を、歴史系譜の中で体系化することである。本稿の貢献は次の三点に整理できる。
 \begin{itemize}
-  \item 1954--2025年の主要イベントを、材料・プロセス・デバイスの\textbf{三層対応}で再編成した縦型タイムライン（Fig.~\ref{fig:timeline}）。
+  \item 1954--2025年の主要イベントを、材料・プロセス・デバイスの\textbf{三層対応}で再編成した時系列表（Table~\ref{tab:timeline}）。
   \item FeRAM薄膜プロセスと薄膜圧電アクチュエータに共通する\textbf{層構造・界面設計原理}の抽出。
   \item 表面親水化制御とALD側壁パッシベーションによる\textbf{長期駆動信頼性}への寄与の位置づけ。
 \end{itemize}
 
-% ---------- 図1：歴史タイムライン（TikZ, 縦方向・1カラム） ----------
-\begin{figure}[!t]
+% ---------- 表1：薄膜PZT技術の歴史的系譜 ----------
+\begin{table}[!t]
 \centering
-\resizebox{\columnwidth}{!}{%
-\begin{tikzpicture}[x=1mm,y=1mm,>=Latex,font=\footnotesize]
-  % canvas
-  \def\H{95} % overall height
-  \def\X{40} % x position of the vertical axis
-  % vertical axis
-  \draw[thick] (\X,0) -- (\X,\H);
-
-  % ticks (year / y-pos)
-  \foreach \y/\label in {5/1954,30/1984--1990,45/1990s,65/2007,80/2012,93/2025}{
-    \draw[thick] (\X-1,\y) -- (\X+1,\y);
-    \node[left] at (\X-2,\y) {\label};
-  }
-
-  % events (left/right alternating)
-  % 1954
-  \node[align=left,anchor=east] at (\X-3,10) {PZTの発見\\(Jaffe et al.)\cite{jaffe1954}};
-  \draw[-{Latex}] (\X-2.5,8) -- (\X-0.1,5.5);
-
-  % 1984-1990
-  \node[align=left,anchor=west] at (\X+3,33) {FeRAM薄膜化\\Sol--gel + RTA\cite{ramtron_iedm1989}};
-  \draw[-{Latex}] (\X+2.5,31) -- (\X+0.1,30);
-
-  % 1990s
-  \node[align=left,anchor=east] at (\X-3,48) {日本での導入・再構築\\(薄膜PZT応用)};
-  \draw[-{Latex}] (\X-2.5,46) -- (\X-0.1,45);
-
-  % 2007
-  \node[align=left,anchor=west] at (\X+3,68) {TFP量産開始\\薄膜d$_{33}$駆動};
-  \draw[-{Latex}] (\X+2.5,66) -- (\X+0.1,65);
-
-  % 2012
-  \node[align=left,anchor=east] at (\X-3,83) {PrecisionCore実用化\\$\mu$TFP/MEMS\cite{uemura2014mems}};
-  \draw[-{Latex}] (\X-2.5,81) -- (\X-0.1,80);
-
-  % 2025
-  \node[align=left,anchor=west] at (\X+3,92) {表面化学・ALD側壁保護\\信頼性成熟};
-  \draw[-{Latex}] (\X+2.5,90) -- (\X+0.1,93);
-\end{tikzpicture}%
-}
-\caption{薄膜PZTの技術系譜（1954--2025）。縦方向の一列配置により、材料・プロセス・デバイスの節目を時系列で可視化。}
-\label{fig:timeline}
-\end{figure}
+\caption{薄膜PZT技術の歴史的系譜（1954--2025）}
+\label{tab:timeline}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}llp{4.2cm}@{}}
+\toprule
+\textbf{時期} & \textbf{技術段階} & \textbf{主要内容・成果} \\ \midrule
+1954 & PZTの発見 &
+JaffeらによりPb(Zr,Ti)O$_3$が強誘電体として報告\cite{jaffe1954}。 \\[2pt]
+1984--1990 & FeRAM薄膜化 &
+RamtronによりSol--gel + RTA法でSi上PZT薄膜を実現\cite{ramtron_iedm1989}。\\[2pt]
+1990年代 & 日本での導入・再構築 &
+富士通・エプソン等が国内でPZT薄膜技術を展開。FeRAM・圧電応用の基盤整備。\\[2pt]
+2007 & TFP量産開始 &
+エプソンにてThin Film Piezoヘッドを量産化。PZT薄膜によるd$_{33}$駆動を確立。\\[2pt]
+2012 & PrecisionCore実用化 &
+$\mu$TFP構造をMEMS化したプリントヘッドを開発\cite{uemura2014mems}。\\[2pt]
+2025 & 信頼性成熟 &
+ALD側壁保護や表面化学制御による長期駆動信頼性向上。\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 以上の枠組みに基づき、次節ではFeRAM期（1984--1995）における薄膜PZT技術の確立を概観し、その後の薄膜圧電MEMSへの連続的発展を論じる。
 
@@ -155,75 +133,81 @@ Ramtron Internationalは強誘電体PZT薄膜を用いたFeRAMを開発し、Sol
   \item \textbf{界面・側壁}：高電界下では側壁の欠陥・吸着起点が劣化を誘発するため、絶縁層（ZrO$_2$/SiO$_2$）とパッシベーションで電界集中と表面欠陥を抑制する。
 \end{enumerate}
 
-% ---------- 図2：層構造（TikZ, 縦長・1カラムフィット・ラベル右寄せ） ----------
+% ---------- 図2：層構造（寸法固定・重なり回避・1カラムフィット） ----------
 \begin{figure}[!t]
 \centering
 \resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}[x=1mm,y=1mm,font=\footnotesize]
-  % geometry
-  \def\W{64}   % stack width
-  \def\X{0}    % left x
-  \def\R{72}   % x for right-side labels
-  % layer heights (sum ~ 100 for tall aspect)
-  \def\hSi{12}
-  \def\hIso{8}
-  \def\hTi{3}
-  \def\hPt{4}
-  \def\hPZTa{3.2}
-  \def\nLay{6}
-  \def\hTop{4}
+  % ===== Dimension budget (mm) =====
+  \def\T{90}      % total width of figure
+  \def\W{56}      % stack (drawing) width
+  \def\G{2}       % gap between stack and label pane
+  \pgfmathsetmacro{\L}{\T-\W-\G} % label pane width (=32mm)
+  % heights
+  \def\hSi{12}\def\hIso{8}\def\hTi{3}\def\hPt{4}\def\hPZTa{3.2}\def\nLay{6}\def\hTop{4}
+  \pgfmathsetmacro{\H}{\hSi+\hIso+\hTi+\hPt+\nLay*\hPZTa+\hTop+4.0} % total height ≈ 58.2mm
 
-  % y cursor
-  \def\yc{0}
+  % Fix bounding box EXACTLY to T x H
+  \useasboundingbox (0,0) rectangle (\T,\H);
 
-  % Si substrate
+  % Coordinates
+  \def\X{0}                 % left x of stack
+  \pgfmathsetmacro{\XR}{\W+\G} % left x of label pane
+  \def\yc{0}                % y cursor
+
+  % helper: right label (fixed text width = \L)
+  \newcommand{\rlabel}[2]{%
+    \node[anchor=west,align=left,text width=\L mm,
+          fill=white,rounded corners,inner sep=1.2pt,draw=black!15] at (\XR,#1){#2};}
+
+  % ===== Layers (stack width = \W) =====
+  % Si
   \path[fill=gray!20,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hSi);
-  \node[anchor=west] at (\R,\yc+0.5*\hSi) {Si基板};
-
+  \rlabel{\yc+0.5*\hSi}{Si基板};
   \pgfmathsetmacro{\yc}{\yc+\hSi}
 
   % Insulator
   \path[fill=blue!12,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hIso);
-  \node[anchor=west] at (\R,\yc+0.5*\hIso) {ZrO$_2$/SiO$_2$ 絶縁層};
-
+  \rlabel{\yc+0.5*\hIso}{ZrO$_2$/SiO$_2$ 絶縁層};
   \pgfmathsetmacro{\yc}{\yc+\hIso}
 
-  % Ti seed
-  \path[fill=brown!40,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hTi);
-  \node[anchor=west] at (\R,\yc+0.5*\hTi) {Ti シード／拡散バリア};
-
+  % Ti
+  \path[fill=brown!35,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hTi);
+  \rlabel{\yc+0.5*\hTi}{Ti シード／拡散バリア};
   \pgfmathsetmacro{\yc}{\yc+\hTi}
 
-  % Pt electrode
-  \path[fill=black!65,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hPt);
-  \node[anchor=west,text=white] at (\R,\yc+0.5*\hPt) {Pt(111) 下部電極};
-
+  % Pt
+  \path[fill=black!70,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hPt);
+  \node[anchor=west,text=white,fill=black!70,inner sep=1pt,
+        text width=\L mm] at (\XR,\yc+0.5*\hPt){Pt(111) 下部電極};
   \pgfmathsetmacro{\yc}{\yc+\hPt}
 
   % PZT multilayers
   \foreach \i in {1,...,\nLay} {
-    \path[fill=red!12,draw=red!60] (\X,\yc) rectangle (\X+\W,\yc+\hPZTa);
+    \path[fill=red!10,draw=red!50] (\X,\yc) rectangle (\X+\W,\yc+\hPZTa);
     \pgfmathsetmacro{\yc}{\yc+\hPZTa}
   }
-  % multilayer brace & label (right side)
+  % brace on LEFT to avoid right labels
   \draw[decorate,decoration={brace,amplitude=4pt},thick]
-    (\X+\W,\yc) -- (\X+\W,\yc-\nLay*\hPZTa);
-  \node[anchor=west] at (\R,\yc-0.5*\nLay*\hPZTa) {Sol--gel PZT 多層（例：6層，総厚$\sim$1.2\,\textmu m）};
+    (\X,\yc) -- (\X,\yc-\nLay*\hPZTa);
+  \pgfmathsetmacro{\yPZT}{\yc-0.5*\nLay*\hPZTa}
+  \rlabel{\yPZT}{Sol--gel PZT 多層（例：6層，総厚$\sim$1.2\,\textmu m）};
 
   % Top electrode
-  \path[fill=black!65,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hTop);
-  \node[anchor=west,text=white] at (\R,\yc+0.5*\hTop) {上部電極（Pt/Ir 等）};
+  \path[fill=black!70,draw=black] (\X,\yc) rectangle (\X+\W,\yc+\hTop);
+  \node[anchor=west,text=white,fill=black!70,inner sep=1pt,
+        text width=\L mm] at (\XR,\yc+0.5*\hTop){上部電極（Pt/Ir 等）};
 
-  % sidewall passivation (thick lines at sides)
+  % Sidewall passivation
   \draw[very thick,blue!60] (\X,\hSi) -- (\X,\yc+\hTop);
   \draw[very thick,blue!60] (\X+\W,\hSi) -- (\X+\W,\yc+\hTop);
-  \node[anchor=west,blue!70] at (\R,\hSi+2.5) {ALD-Al$_2$O$_3$ 側壁パッシベーション};
+  \rlabel{\hSi+2.0}{ALD-Al$_2$O$_3$ 側壁パッシベーション};
 
-  % outer frame
+  % Outer frame of stack (not entire drawing)
   \draw[thick] (\X,0) rectangle (\X+\W,\yc+\hTop);
 \end{tikzpicture}%
 }
-\caption{薄膜PZTアクチュエータの代表的層構成（概念図）。1カラム幅に自動フィットし、ラベルは右側配置で重なりを回避。}
+\caption{薄膜PZTアクチュエータの代表的層構成（寸法固定）。全体幅90\,mm、ラベル欄32\,mm。1カラム幅へ等比縮小。}
 \label{fig:stack}
 \end{figure}
 
