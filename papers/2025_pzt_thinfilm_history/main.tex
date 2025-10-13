@@ -5,10 +5,19 @@
 
 \documentclass[conference]{IEEEtran}
 
-% ---------- Packages ----------
-\usepackage[T1]{fontenc}
-\usepackage{xeCJK} % 日本語対応
-\setCJKmainfont{IPAexMincho}
+% ---------- Packages (fixed for XeLaTeX + CJK) ----------
+\usepackage{fontspec}           % XeLaTeXのフォント基盤
+\usepackage{xeCJK}              % 日本語
+\setmainfont{TeX Gyre Termes}   % 英文(任意)
+\setsansfont{TeX Gyre Heros}    % 英文sans(任意)
+\setmonofont{TeX Gyre Cursor}   % 英文mono(任意)
+\setCJKmainfont{HaranoAjiMincho}  % 日本語明朝（TeX Live同梱）
+\setCJKsansfont{HaranoAjiGothic}  % 日本語ゴシック（同梱）
+
+% 日本語の自動改行を少し安定させる（任意）
+\XeTeXlinebreaklocale "ja"
+\XeTeXlinebreakskip = 0pt plus 1pt
+
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
