@@ -1,0 +1,105 @@
+% =====================================================
+% 2025_pzt_thinfilm_history/main.tex
+% 薄膜PZT技術史論文 (IEEEtran format)
+% =====================================================
+
+\documentclass[conference]{IEEEtran}
+
+% ---------- Packages ----------
+\usepackage[T1]{fontenc}
+\usepackage{xeCJK} % 日本語対応
+\setCJKmainfont{IPAexMincho}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+\usepackage{setspace}
+
+% ---------- Metadata ----------
+\title{薄膜PZT技術の系譜 ― FeRAM起源からPrecisionCoreヘッドへの発展}
+
+\author{%
+  \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
+  \IEEEauthorblockA{%
+    独立系半導体研究者（元セイコーエプソン）\\%
+    Independent Semiconductor Researcher (ex-Seiko Epson)\\[2pt]%
+    Email:~\href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+    GitHub:~\url{https://github.com/Samizo-AITL}%
+  }%
+}
+
+\date{}
+
+% =====================================================
+\begin{document}
+\maketitle
+
+\begin{abstract}
+本論文は、薄膜PZT（Pb(Zr,Ti)O$_3$）技術の発展史を、材料科学・プロセス工学・産業技術史の観点から整理し、FeRAM起源からPrecisionCoreヘッドまでの技術的連続性を明らかにするものである。1980年代に米国Ramtron社が確立したSi上PZT薄膜プロセスは、後に日本企業によって内製化・再構築され、2007年のThin Film Piezo（TFP）ヘッドおよび2012年のPrecisionCoreヘッド実用化へと発展した。本研究は、この技術連鎖を材料・構造・信頼性技術の観点から再評価し、薄膜PZTを電子機械融合材料として位置づける。
+\end{abstract}
+
+\begin{IEEEkeywords}
+薄膜PZT, FeRAM, 強誘電体, MEMS, PrecisionCore, Ramtron, 技術史
+\end{IEEEkeywords}
+
+% =====================================================
+\section{序論}
+
+Pb(Zr,Ti)O$_3$（PZT）は1950年代に発見され、強誘電性と圧電性を併せ持つ代表的機能性材料として広く用いられてきた。
+1980年代後半には、Si基板上にPZTを薄膜形成する技術が開発され、強誘電体メモリ（FeRAM）として電子デバイス化が進んだ。
+この薄膜形成技術は、後に機械駆動素子として転用され、2000年代の薄膜圧電アクチュエータやPrecisionCoreプリントヘッドに繋がった。
+本論文では、この発展過程を材料技術の系譜として整理する。
+
+% =====================================================
+\section{FeRAM技術の確立（1984–1995）}
+
+1984年に設立されたRamtron Internationalは、強誘電体PZT薄膜を用いたFeRAMを開発した。
+Sol–gel法による均一膜形成とRapid Thermal Anneal（RTA）結晶化により、PbO揮発を抑えた高品質PZT薄膜を実現した。
+これが世界初のSi上PZTペロブスカイト結晶化プロセスであり、以後の薄膜圧電デバイスの基盤となった。
+
+% =====================================================
+\section{日本における技術導入と再構築（1990–2007）}
+
+1990年代初頭、日本国内でもFeRAM技術の応用研究が進展した。
+Epsonは薄膜PZT形成を独自に再構築し、インクジェットアクチュエータへの応用を進めた。
+多層Sol–gel成膜、Pt/Ti電極形成、応力緩和層の導入により、数億回の駆動に耐える薄膜構造が確立された。
+2007年にはThin Film Piezo（TFP）方式として量産化が実現した。
+
+% =====================================================
+\section{PrecisionCoreへの発展（2012–2025）}
+
+2012年、EpsonはµTFP構造を採用したPrecisionCoreヘッドを実用化した。
+薄膜PZTアクチュエータとSiキャビティ構造を一体化したMEMSプロセスが確立し、ノズル単位の独立駆動を実現した。
+さらに、ALD-Al$_2$O$_3$パッシベーションと表面親水化制御により、10$^9$ショット級の駆動耐久性が達成された。
+
+% =====================================================
+\section{考察 ― 技術的連続性と材料思想}
+
+RamtronのFeRAM技術とEpsonのTFP/PrecisionCore技術は、Sol–gel薄膜PZT、RTA結晶化、Pt/Ti電極といった共通基盤を持つ。
+FeRAMが「分極の記憶」を目的としたのに対し、TFPは「分極による変位」を目的とする。
+すなわち両者は同一の材料原理に基づく電子的・機械的機能の分化形態であり、PZT薄膜技術は電子機械融合材料として確立したといえる。
+
+% =====================================================
+\section{結論}
+
+薄膜PZT技術は、1980年代のFeRAM研究に端を発し、EpsonによるMEMS応用を経てPrecisionCoreで成熟した。
+本技術は、電子情報デバイスと機械駆動デバイスを架橋する材料科学上の転換点であり、今後もpMUTやマイクロポンプなどへの応用拡大が期待される。
+
+% =====================================================
+\section*{謝辞}
+本研究の執筆にあたり、薄膜PZTおよびFeRAM技術史に関する過去の文献および技術資料を参照した。ここに記して謝意を表する。
+
+% =====================================================
+\section*{著者略歴}
+\noindent\textbf{三溝 真一}（Shinichi Samizo）は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得。
+その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、ならびにインクジェット薄膜ピエゾアクチュエータおよび PrecisionCore プリントヘッドの製品化に従事した。
+現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、AI システム統合などに取り組んでいる。
+連絡先：\href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}．
+
+% =====================================================
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}
