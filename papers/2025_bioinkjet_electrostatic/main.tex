@@ -452,44 +452,45 @@ COF/TAB実装時の寄生容量（$\lesssim$0.2\,pF/ch）を含めても波形�
 減衰10\,\textmu sで液柱の逆流を防止する。
 FEM解析により，$V(t)$・$x(t)$・$P(t)$はほぼ同相に動作することを確認した。
 
+% --- Fig.5: 1カラム完全対応版（凡例は軸内） ---
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=\columnwidth, height=4.0cm,   % ← columnwidthに厳密合わせ
-  xlabel={時間 $t$ (\textmu s)}, ylabel={規格化値},
-  xmin=0, xmax=1, ymin=-0.05, ymax=1.1,
+  width=\columnwidth, height=3.8cm,   % ← 1カラム幅に厳密合わせ
+  scale only axis,                     % ← 外余白の影響を排除
+  xmin=0, xmax=1, ymin=-0.05, ymax=1.05,
   axis lines=left,
   xtick=\empty, ytick=\empty,
+  xlabel={時間 $t$ (\textmu s)}, ylabel={規格化値},
   legend style={
     font=\scriptsize,
-    at={(0.5,1.03)}, anchor=south,     % ← 凡例を上中央に
-    draw=none,
-    legend columns=3,
-    column sep=3mm
+    at={(0.02,0.98)}, anchor=north west,   % ← 軸内左上に固定
+    draw=none, fill=white, fill opacity=0.85, text opacity=1,
+    inner xsep=2pt, inner ysep=1pt,
+    legend columns=1
   },
   every axis plot/.append style={thick}
 ]
 
-% ---- V(t) ----
+% V(t)
 \addplot[blue,domain=0:1,samples=200]
   {(x<0.25)?(4*x):((x<0.5)?1:((x<0.9)?(1-(x-0.5)/0.4):0))};
 \addlegendentry{$V(t)$: drive voltage}
 
-% ---- x(t) ----
+% x(t)
 \addplot[red,dashed,domain=0:1,samples=200]
   {0.85*((x<0.3)?(3.0*x):((x<0.55)?0.9:((x<0.95)?(0.9-(x-0.55)/0.4):0)))};
 \addlegendentry{$x(t)$: diaphragm displacement}
 
-% ---- P(t) ----
+% P(t)
 \addplot[orange,dotted,domain=0:1,samples=200]
   {0.9*((x<0.28)?(3.2*x):((x<0.52)?0.896:((x<0.9)?(0.896-(x-0.52)/0.38):0)))};
 \addlegendentry{$P(t)$: cavity pressure}
 
 \end{axis}
 \end{tikzpicture}
-\caption{台形波駆動における$V(t)$・$x(t)$・$P(t)$の時間相関（概念図）。
-$V(t)$と$x(t)$は同相，$P(t)$はわずかに遅延。}
+\caption{台形波駆動における$V(t)$・$x(t)$・$P(t)$の時間相関（概念図）。$V(t)$と$x(t)$は同相，$P(t)$はわずかに遅延。}
 \label{fig:timing}
 \end{figure}
 
