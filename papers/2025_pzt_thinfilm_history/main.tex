@@ -6,50 +6,31 @@
 \documentclass[conference]{IEEEtran}
 
 % =====================================================
-% XeLaTeX + CJK (robust universal setup)
+% LuaLaTeX + Japanese (luatexja) — robust setup
 % =====================================================
-\usepackage{fontspec}    % Unicode font management
-\usepackage{xeCJK}       % Japanese / Chinese / Korean typesetting
+\usepackage{fontspec}
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
 
 % ---------- English fonts (TeX Live standard) ----------
 \setmainfont{TeX Gyre Termes}   % Serif
 \setsansfont{TeX Gyre Heros}    % Sans-serif
 \setmonofont{TeX Gyre Cursor}   % Monospace
 
-% ---------- Japanese fonts (robust fallback) ----------
-% Prefer HaranoAji if installed; fallback to Noto CJK JP
-\IfFontExistsTF{HaranoAjiMincho}{
-  \setCJKmainfont{HaranoAjiMincho}
-}{
-  \IfFontExistsTF{Noto Serif CJK JP}{
-    \setCJKmainfont{Noto Serif CJK JP}
-  }{
-    \setCJKmainfont{IPAMincho} % 最後の保険（IPAexでもOK）
-  }
-}
+% ---------- Japanese fonts (TeX Live stock) ----------
+\setmainjfont{HaranoAjiMincho}  % 明朝
+\setsansjfont{HaranoAjiGothic}  % ゴシック
+% （HaranoAji が無い環境なら Noto に変更:
+%   \setmainjfont{Noto Serif CJK JP}
+%   \setsansjfont{Noto Sans CJK JP} )
 
-\IfFontExistsTF{HaranoAjiGothic}{
-  \setCJKsansfont{HaranoAjiGothic}
-}{
-  \IfFontExistsTF{Noto Sans CJK JP}{
-    \setCJKsansfont{Noto Sans CJK JP}
-  }{
-    \setCJKsansfont{IPAGothic}
-  }
-}
+% ---------- Line breaking / spacing for Japanese ----------
+\ltjsetparameter{jacharrange={-2}}                % 和欧判別の安定化
+\ltjsetparameter{xkanjiskip=0.2em plus 0.1em minus 0.05em}
 
-% ---------- Line breaking / punctuation ----------
-\xeCJKsetup{
-  CJKglue=\hskip 0.2em plus 0.1em minus 0.05em,
-  PunctStyle=plain
-}
-\XeTeXlinebreaklocale "ja"
-\XeTeXlinebreakskip=0pt plus 1pt
-
-% ---------- Safe em-dash macro ----------
-\newcommand{\Jemdash}{—} % use U+2014 (safe em dash)
-% ※ U+2015 の「水平棒」はフォント欠落しやすいため使用禁止。
-% 例：タイトル中は "技術の系譜 \Jemdash FeRAMからPrecisionCoreへ"
+% ---------- Safe em-dash (U+2014) ----------
+\newcommand{\Jemdash}{—}
+% 例：タイトルのダッシュは \Jemdash を使用（U+2015は使わない）
 
 % ---------- General packages ----------
 \usepackage{graphicx}
