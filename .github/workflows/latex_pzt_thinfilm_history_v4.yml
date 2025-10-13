@@ -25,12 +25,7 @@ jobs:
           root_file: papers/2025_pzt_thinfilm_history/main.tex
           latexmk_use_xelatex: true
           work_in_root_file_dir: true
-          # Alpine 用に CJK/IPAex を明示導入（U+2015 等の欠落対策）
-          extra_system_packages: >-
-            ipaex-fonts
-            noto-fonts-cjk
-            ghostscript
-            poppler-utils
+          # NOTE: 追加パッケージ導入はしない（apkのフォント不在で失敗するため）
 
       # ビルド成果物の収集（PDF とログ類）
       - name: Gather artifacts (PDF & logs)
