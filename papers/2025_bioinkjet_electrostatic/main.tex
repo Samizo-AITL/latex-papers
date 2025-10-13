@@ -391,11 +391,11 @@ COF/TAB実装時の寄生容量（$\lesssim$0.2\,pF/ch）を含めても波形�
 
 \begin{figure}[t]
 \centering
-\resizebox{1.05\columnwidth}{!}{% ← やや横を広げつつ縦方向を強調
+\resizebox{1.02\columnwidth}{!}{%
 \begin{tikzpicture}[
-  x=1mm,y=2.2mm, % ← 縦スケール拡大で視認性Up
+  x=1mm,y=2.2mm,
   font=\scriptsize, >=Latex,
-  node distance=5.5mm and 8mm,
+  node distance=6mm and 8mm,
   blk/.style={draw, rounded corners, minimum width=34mm, minimum height=8.5mm, align=center, inner sep=3pt},
   lgblk/.style={blk, fill=blue!8},
   hvblk/.style={blk, fill=orange!10},
@@ -404,55 +404,41 @@ COF/TAB実装時の寄生容量（$\lesssim$0.2\,pF/ch）を含めても波形�
   note/.style={draw, rounded corners, fill=gray!10, align=left, inner sep=3pt}
 ]
 
-% ---- 縦フロー：上→下 ----
+% 縦フロー（上→下）
 \node[lgblk] (mcu) {MCU/FPGA\\(3.3\,V)};
 \node[lgblk, below=of mcu] (dac) {DAC\\(0--5\,V)};
 \node[lgblk, below=of dac] (buf) {BUF/OPA\\(ロジック域)};
 
-% アイソレーション境界（横線で明示）
-\node[below=7mm of buf] (sep) {};
+% アイソレーション境界
 \draw[dashed, gray, thick] ($(buf.south)+(-22mm,-2mm)$) -- ($(buf.south)+(22mm,-2mm)$);
-\node[anchor=west, gray] at ($(buf.south)+(-21mm,-4.8mm)$) {アイソレーション境界};
+\node[gray,anchor=west] at ($(buf.south)+(-21mm,-4.6mm)$) {アイソレーション境界};
 
 \node[hvblk, below=10mm of buf] (hvdrv) {HVドライバ\\(0--60\,V)};
-\node[prot, below=of hvdrv] (snub) {RCスナバ\\$100~\si{\ohm}+470~\si{\pico\farad}$};
+\node[prot, below=of hvdrv] (snub) {RCスナバ\\100\,\si{\ohm}+470\,\si{\pico\farad}};
 \node[act, below=of snub, minimum width=40mm] (head) {静電MEMSアクチュエータ\\(10--50\,pF/ch)};
 
-% ---- 信号フロー（上→下）----
-\draw[->, thick] (mcu) -- (dac);
-\draw[->, thick] (dac) -- (buf);
-\draw[->, thick] (buf) -- (hvdrv);
-\draw[->, thick] (hvdrv) -- (snub);
-\draw[->, thick] (snub) -- (head);
+% 信号フロー
+\foreach \a/\b in {mcu/dac,dac/buf,buf/hvdrv,hvdrv/snub,snub/head}{
+  \draw[->,thick] (\a) -- (\b);
+}
 
-% ---- 電源系（右側に配置）----
-\node[note, right=12mm of hvdrv, align=left] (hv) {HVレール: +45\,V\\(上限 60\,V)};
+% 電源ノート（右）
+\node[note, right=12mm of hvdrv] (hv) {HVレール: +45\,V（上限60\,V）};
 \draw[->, thick] (hv.west) -- (hvdrv.east);
-
-\node[note, right=12mm of mcu, align=left] (lv) {3.3\,V ロジック};
+\node[note, right=12mm of mcu] (lv) {3.3\,V ロジック電源};
 \draw[->, thick] (lv.west) -- (mcu.east);
 
-\node[note, below=6mm of hvdrv, align=center, minimum width=34mm] (isodc) {ロジック/高圧分離\\アイソレーテッド DC/DC};
-
-% ---- マルチチャネル分岐（横に展開）----
-\coordinate (tap) at ($(snub.south)!0.5!(head.north)$);
-\foreach \dx/\name in {-27mm/Actuator ch., 27mm/Actuator ch.} {
-  \draw[fill=black] (tap) circle (0.6pt);
-  \draw[thick] (tap) -- ++(\dx,0) node[act, right=\ifdim\dx pt>0pt 0mm\else -40mm\fi of {coordinate}, minimum width=26mm] {};
-}
-\node at ($(head.south)+(0,-2.5mm)$) {\(\cdots\) \textit{N} ch};
-
-% ---- 注記（下部に集約）----
-\node[note, below=9mm of head, minimum width=82mm] (notes) {
+% 備考
+\node[note, below=8mm of head, minimum width=82mm] (notes) {
 \textbf{設計要点}\\[-1pt]
--- 容量性負荷ゆえ電流要求が小さく、自己発熱は小 (\(\sim0.1~\si{\micro J/shot}\) @45\,V)\\
--- RCスナバでリンギング抑制、配線寄生(\(<0.2~\si{\pico\farad}/\)ch)を吸収\\
--- 周波数 5--10\,kHz、台形波 5/5/10\,\si{\micro s}、Duty 20--60\%\\
--- Pull-in安全率 \(\ge 2\)（45\,V基準）、60\,V上限運用も安定
+-- 容量性負荷のため自己発熱は小（\(\sim0.1\,\si{\micro J/shot}\) @45\,V）\\
+-- RCスナバでリンギング抑制，配線寄生(\(<0.2\,\si{\pico\farad}/\)ch)を吸収\\
+-- 周波数 5--10\,kHz，台形波 5/5/10\,\si{\micro s}，Duty 20--60\%\\
+-- Pull-in安全率 \(\ge 2\)（45\,V基準），60\,V上限運用も安定
 };
 
 \end{tikzpicture}}
-\caption{縦フローの駆動電装構成（3.3\,Vロジック $\rightarrow$ 45\,V HV）。上段から順に MCU/FPGA, DAC, BUF、アイソレーション境界を経て HVドライバ、RCスナバ、アクチュエータへ信号・電力を供給。}
+\caption{縦フローの駆動電装構成（3.3\,Vロジック $\rightarrow$ 45\,V HV）。}
 \label{fig:drive}
 \end{figure}
 
@@ -469,22 +455,29 @@ FEM解析により，$V(t)$・$x(t)$・$P(t)$はほぼ同相に動作するこ�
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
-\begin{axis}[width=0.88\columnwidth,height=4.2cm,
-xlabel={時間 $t$ (\textmu s)},ylabel={規格化値},
-xmin=0,xmax=1,ymin=-0.05,ymax=1.1,
-axis lines=left,xtick=\empty,ytick=\empty,
-legend style={font=\scriptsize,at={(1.04,0.5)},anchor=west,draw=none},
-every axis plot/.append style={thick}]
-\addplot[blue,domain=0:1,samples=200]{(x<0.25)?(4*x):((x<0.5)?1:((x<0.9)?(1-(x-0.5)/0.4):0))}; 
+\begin{axis}[
+  width=0.95\columnwidth, height=4.2cm,
+  xlabel={時間 $t$ (\textmu s)}, ylabel={規格化値},
+  xmin=0, xmax=1, ymin=-0.05, ymax=1.1,
+  axis lines=left, xtick=\empty, ytick=\empty,
+  legend style={
+    font=\scriptsize,
+    at={(0.5,1.05)}, anchor=south, draw=none,
+    legend columns=3, /tikz/every even column/.style={column sep=4mm}
+  },
+  every axis plot/.append style={thick}
+]
+\addplot[blue,domain=0:1,samples=200]{(x<0.25)?(4*x):((x<0.5)?1:((x<0.9)?(1-(x-0.5)/0.4):0))};
 \addlegendentry{$V(t)$: drive voltage}
-\addplot[red,dashed,domain=0:1,samples=200]{0.85*((x<0.3)?(3.0*x):((x<0.55)?0.9:((x<0.95)?(0.9-(x-0.55)/0.4):0)))}; 
+
+\addplot[red,dashed,domain=0:1,samples=200]{0.85*((x<0.3)?(3.0*x):((x<0.55)?0.9:((x<0.95)?(0.9-(x-0.55)/0.4):0)))};
 \addlegendentry{$x(t)$: diaphragm displacement}
-\addplot[orange,dotted,domain=0:1,samples=200]{0.9*((x<0.28)?(3.2*x):((x<0.52)?0.896:((x<0.9)?(0.896-(x-0.52)/0.38):0)))}; 
+
+\addplot[orange,dotted,domain=0:1,samples=200]{0.9*((x<0.28)?(3.2*x):((x<0.52)?0.896:((x<0.9)?(0.896-(x-0.52)/0.38):0)))};
 \addlegendentry{$P(t)$: cavity pressure}
 \end{axis}
 \end{tikzpicture}
-\caption{台形波駆動における$V(t)$・$x(t)$・$P(t)$の時間相関（概念図）。
-$V(t)$と$x(t)$は同相，$P(t)$はわずかに遅延。}
+\caption{台形波駆動における$V(t)$・$x(t)$・$P(t)$の時間相関（概念図）。}
 \label{fig:timing}
 \end{figure}
 
