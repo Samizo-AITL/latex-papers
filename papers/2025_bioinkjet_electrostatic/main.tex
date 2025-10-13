@@ -391,63 +391,68 @@ COF/TAB実装時の寄生容量（$\lesssim$0.2\,pF/ch）を含めても波形�
 
 \begin{figure}[t]
 \centering
-\resizebox{0.9\columnwidth}{!}{%
+\resizebox{1.05\columnwidth}{!}{% ← やや横を広げつつ縦方向を強調
 \begin{tikzpicture}[
+  x=1mm,y=2.2mm, % ← 縦スケール拡大で視認性Up
   font=\scriptsize, >=Latex,
-  node distance=6mm and 8mm,
-  blk/.style={draw, rounded corners, minimum width=18mm, minimum height=8mm, align=center, inner sep=2pt},
-  hvblk/.style={blk, fill=orange!10},
+  node distance=5.5mm and 8mm,
+  blk/.style={draw, rounded corners, minimum width=34mm, minimum height=8.5mm, align=center, inner sep=3pt},
   lgblk/.style={blk, fill=blue!8},
+  hvblk/.style={blk, fill=orange!10},
   prot/.style={blk, fill=red!6},
+  act/.style={blk, fill=green!10},
   note/.style={draw, rounded corners, fill=gray!10, align=left, inner sep=3pt}
 ]
 
-% Blocks
+% ---- 縦フロー：上→下 ----
 \node[lgblk] (mcu) {MCU/FPGA\\(3.3\,V)};
-\node[lgblk, right=of mcu] (dac) {DAC\\(0--5\,V)};
-\node[lgblk, right=of dac] (buf) {BUF/OPA\\(ロジック域)};
-\node[hvblk, right=16mm of buf] (hvdrv) {HVドライバ\\(0--60\,V)};
-\node[prot, right=of hvdrv, minimum width=17mm] (snub) {RCスナバ\\(100\,\si{\ohm}+470\,\si{\pico\farad})};
-\node[blk, right=of snub, fill=green!10, minimum width=22mm] (head) {静電MEMS\\アクチュエータ\\(10--50\,pF/ch)};
+\node[lgblk, below=of mcu] (dac) {DAC\\(0--5\,V)};
+\node[lgblk, below=of dac] (buf) {BUF/OPA\\(ロジック域)};
 
-% Power rails
-\node[note, above=6mm of hvdrv] (hv) {HV: +45\,V (max 60\,V)};
-\draw[->, thick] (hv.south) -- (hvdrv.north);
-\node[note, above=6mm of mcu] (lv) {3.3\,V ロジック};
-\draw[->, thick] (lv.south) -- (mcu.north);
+% アイソレーション境界（横線で明示）
+\node[below=7mm of buf] (sep) {};
+\draw[dashed, gray, thick] ($(buf.south)+(-22mm,-2mm)$) -- ($(buf.south)+(22mm,-2mm)$);
+\node[anchor=west, gray] at ($(buf.south)+(-21mm,-4.8mm)$) {アイソレーション境界};
 
-% Isolation
-\node[note, below=7mm of hvdrv, align=center] (iso) {ロジック/高圧分離\\アイソレーテッドDC/DC};
-\draw[dashed, gray] ($(buf.north east)+(1mm,6mm)$ -- ($(buf.south east)+(1mm,-10mm)$);
-\node[align=center, anchor=west, gray] at ($(buf.east)+(3mm,5mm)$) {アイソレーション境界};
+\node[hvblk, below=10mm of buf] (hvdrv) {HVドライバ\\(0--60\,V)};
+\node[prot, below=of hvdrv] (snub) {RCスナバ\\$100~\si{\ohm}+470~\si{\pico\farad}$};
+\node[act, below=of snub, minimum width=40mm] (head) {静電MEMSアクチュエータ\\(10--50\,pF/ch)};
 
-% Flow arrows
+% ---- 信号フロー（上→下）----
 \draw[->, thick] (mcu) -- (dac);
 \draw[->, thick] (dac) -- (buf);
 \draw[->, thick] (buf) -- (hvdrv);
 \draw[->, thick] (hvdrv) -- (snub);
 \draw[->, thick] (snub) -- (head);
 
-% Multi-channels
-\coordinate (tap) at ($(snub.east)!0.6!(head.west)$);
-\draw[fill=black] (tap) circle (0.5pt);
-\foreach \dy in {5mm, -5mm} {
-  \draw[thick] (tap) -- ++(6mm,\dy) node[blk, right, fill=green!10, minimum width=17mm] {Actuator ch.};
-}
-\node[align=center] at ($(head.east)+(13mm,0mm)$) {\(\cdots\) \textit{N} ch};
+% ---- 電源系（右側に配置）----
+\node[note, right=12mm of hvdrv, align=left] (hv) {HVレール: +45\,V\\(上限 60\,V)};
+\draw[->, thick] (hv.west) -- (hvdrv.east);
 
-% Notes
-\node[note, below=12mm of head, minimum width=75mm] (notes) {
-\textbf{設計要点}\\[-2pt]
--- 容量性負荷ゆえ電流要求小（$\sim$0.1\,\si{\micro J/shot}@45\,V）\\
--- RCスナバでリンギング抑制，配線寄生($<$0.2\,pF/ch)吸収\\
--- 周波数 5--10\,kHz，台形波 5/5/10\,\si{\micro s}，Duty 20--60\%\\
--- Pull-in安全率 $\ge 2$（45\,V基準），60\,V運用も安定
+\node[note, right=12mm of mcu, align=left] (lv) {3.3\,V ロジック};
+\draw[->, thick] (lv.west) -- (mcu.east);
+
+\node[note, below=6mm of hvdrv, align=center, minimum width=34mm] (isodc) {ロジック/高圧分離\\アイソレーテッド DC/DC};
+
+% ---- マルチチャネル分岐（横に展開）----
+\coordinate (tap) at ($(snub.south)!0.5!(head.north)$);
+\foreach \dx/\name in {-27mm/Actuator ch., 27mm/Actuator ch.} {
+  \draw[fill=black] (tap) circle (0.6pt);
+  \draw[thick] (tap) -- ++(\dx,0) node[act, right=\ifdim\dx pt>0pt 0mm\else -40mm\fi of {coordinate}, minimum width=26mm] {};
+}
+\node at ($(head.south)+(0,-2.5mm)$) {\(\cdots\) \textit{N} ch};
+
+% ---- 注記（下部に集約）----
+\node[note, below=9mm of head, minimum width=82mm] (notes) {
+\textbf{設計要点}\\[-1pt]
+-- 容量性負荷ゆえ電流要求が小さく、自己発熱は小 (\(\sim0.1~\si{\micro J/shot}\) @45\,V)\\
+-- RCスナバでリンギング抑制、配線寄生(\(<0.2~\si{\pico\farad}/\)ch)を吸収\\
+-- 周波数 5--10\,kHz、台形波 5/5/10\,\si{\micro s}、Duty 20--60\%\\
+-- Pull-in安全率 \(\ge 2\)（45\,V基準）、60\,V上限運用も安定
 };
+
 \end{tikzpicture}}
-\caption{駆動電装構成（3.3\,Vロジック + 45\,V HV）。
-DAC$\rightarrow$HVドライバ経由でレベル変換し，各チャネルに供給。
-RCスナバでリンギングを抑え，容量性負荷を安定駆動。}
+\caption{縦フローの駆動電装構成（3.3\,Vロジック $\rightarrow$ 45\,V HV）。上段から順に MCU/FPGA, DAC, BUF、アイソレーション境界を経て HVドライバ、RCスナバ、アクチュエータへ信号・電力を供給。}
 \label{fig:drive}
 \end{figure}
 
