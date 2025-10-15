@@ -15,15 +15,31 @@
 \setsansfont{TeX Gyre Heros}  % Helvetica相当（IEEE図表に合う）
 \setmonofont{TeX Gyre Cursor} % 等幅
 
+% ---------------- 数式まわり（\coloneqq などの未定義対策） ----------------
+\usepackage{amsmath}
+\usepackage{mathtools} % \coloneqq ほか拡張
+
 % ---------------- General packages (IEEE互換の範囲) ----------------
 \usepackage{siunitx}
-\sisetup{detect-all,mode=match,propagate-math-font=true}
+\sisetup{
+  % detect-all は非推奨なので等価設定に分解
+  mode = match,
+  propagate-math-font = true,
+  reset-math-version = false,
+  reset-text-family  = false,
+  reset-text-series  = false,
+  reset-text-shape   = false,
+  text-family-to-math = true,
+  text-series-to-math = true
+}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{cite}
 \usepackage[hidelinks]{hyperref}
 \urlstyle{same}
+% 見出しに \\ を入れたときの PDF しおり警告を抑制（必要なら）
+\pdfstringdefDisableCommands{\def\\{ }}
 
 % ---------------- TikZ（図は本文内に埋め込み）----------------
 \usepackage{tikz}
@@ -914,19 +930,19 @@ $f_a$ が低いほど変位しやすい。
 \begin{thebibliography}{99}
 
 \bibitem{Mach1985}
-T. Ando, H. Sato, and K. Yamamoto, 
-``Development of bulk piezoelectric inkjet actuators for Mach heads,'' 
-\textit{Jpn. J. Appl. Phys.}, vol. 24, no. 7, pp. 1234--1240, 1985.
+T.~Ando, H.~Sato, and K.~Yamamoto,
+``Development of bulk piezoelectric inkjet actuators for Mach heads,''
+\emph{Jpn. J. Appl. Phys.}, vol.~24, no.~7, pp.~1234--1240, 1985.
 
 \bibitem{TFP2014}
-S. Uemura, Y. Kato, and M. Tanaka, 
-``Thin-film piezoelectric MEMS technology for high-density inkjet printheads (TFP),'' 
-\textit{IEEE MEMS Conf.}, pp. 456--459, 2014.
+S.~Uemura, Y.~Kato, and M.~Tanaka,
+``Thin-film piezoelectric MEMS technology for high-density inkjet printheads,''
+in \emph{Proc. IEEE MEMS Conf.}, 2014, pp.~456--459.
 
 \bibitem{Samizo2025}
-S. Samizo, 
-``Reliability improvement of thin-film PZT actuators in PrecisionCore μTFP printheads,'' 
-unpublished technical report, 2025.
+S.~Samizo,
+``Reliability improvement of thin-film PZT actuators in PrecisionCore μTFP printheads,''
+Tech. Rep., 2025, unpublished.
 
 \end{thebibliography}
 
