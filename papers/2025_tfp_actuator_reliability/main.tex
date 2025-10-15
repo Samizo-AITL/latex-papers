@@ -812,6 +812,95 @@ PZT側壁露出部における局所電界集中と過渡電流によるジュ�
 Epsonのプリントヘッド事業を支えている。
 
 % =====================================================
+% Appendix: 列間バラツキ評価（fa/FaKT）
+% =====================================================
+\appendices
+\section{列間バラツキ評価における \texorpdfstring{$f_a$}{fa} 自動測定と FaKT ランク分類
+\\ \normalfont\small Automated Column-to-Column Variation Assessment by \texorpdfstring{$f_a$}{fa} Measurement and FaKT Ranking}
+
+\subsection{評価の目的と背景 / Purpose}
+列間バラツキの一次指標として，振動板の機械共振周波数 $f_a$ を用いる。
+$f_a$ はインピーダンスアナライザで容易に自動取得でき，
+変位量（電気機械結合）と強い相関を持つため，量産スクリーニングに適する。
+一般に $f_a$ が高いほど振動板拘束が強く（剛性が高く）変位しにくく，
+$f_a$ が低いほど変位しやすい。
+
+\subsection{測定セットアップ / Setup}
+\begin{itemize}
+  \item デバイス：$\mu$TFP アクチュエータユニット（2列，各 300 ノズル）
+  \item 計測：広帯域インピーダンススイープ（例：10～\SI{500}{kHz}，分解能 \SI{100}{Hz}）
+  \item プロービング：列方向に等間隔サンプリング（例：10 ノズルごと計 20 点/列）
+  \item 解析：各点のインピーダンス極小（または位相極大）を $f_a$ と定義
+\end{itemize}
+
+\subsection{傾き指標と正規化 / Slope and Normalization}
+列方向 $y$（上端 $y=0$，下端 $y=L$）に沿う $f_a(y)$ の一次傾きを
+\[
+  k_{f_a} \coloneqq \frac{\mathrm{d} f_a}{\mathrm{d} y}\quad[\mathrm{Hz/mm}]
+\]
+と定義し，最小二乗直線 $f_a(y)=a+by$ の回帰係数 $b$ を採用する。
+チップ間比較のため，公称値 $f_{a0}$ で正規化した無次元傾き
+\[
+  K_{f_a} \coloneqq \frac{1}{f_{a0}}\frac{\mathrm{d} f_a}{\mathrm{d} y}
+\quad[-]
+\]
+も併記する。ここで $f_{a0}$ は列内平均 $\bar f_a$ で良い。
+
+\subsection{FaKT の定義 / Definition}
+本稿では \textbf{FaKT（fa-slope based Kolumn Tolerance）} を
+\[
+  \mathrm{FaKT} \coloneqq \max\left(\left|K_{f_a}^{(1)}\right|,\ \left|K_{f_a}^{(2)}\right|\right)
+\]
+と定義する（上段・下段の2列に対する正規化傾きの絶対値の最大）。
+必要に応じて直線当てはめの信頼性として $R^2$ を併記し，
+非線形傾向が強い個体をフラグ（例：$R^2<0.90$）する。
+
+\subsection{ランク基準 / Ranking Rules}
+用途別に許容度の異なるヘッド選別を行うため，FaKT に基づきランク分けする。
+しきい値は製品/用途で最適化すべきだが，初期値の例を示す。
+
+\begin{table}[h]
+  \centering
+  \caption{FaKT ランク例（初期基準）}
+  \label{tab:fakt-rank}
+  \vspace{3pt}
+  \setlength{\tabcolsep}{6pt}
+  \renewcommand{\arraystretch}{1.15}
+  \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}} l c l @{}}
+    \toprule
+    ランク & FaKT（$|K_{f_a}|$） & 推奨用途 \\
+    \midrule
+    A（厳） & $\le 1.0\times10^{-3}$ & 列間バンディング厳格仕様 \\
+    B       & $\le 2.0\times10^{-3}$ & 標準仕様 \\
+    C（緩） & $\le 3.5\times10^{-3}$ & 許容度の高い用途 \\
+    D（除外） & $> 3.5\times10^{-3}$ & リワーク/除外 \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+\noindent
+\textit{運用指針}：列間バラツキ規格が厳しい用途には A～B ランクを，
+緩い用途には B～C ランクを優先的に割り当てる。
+
+\subsection{自動測定フロー / Automated Flow}
+\begin{enumerate}
+  \item 列ごとにサンプル点 $\{y_i\}$ を巡回し，インピーダンスから $f_a(y_i)$ を抽出。
+  \item 直線回帰で $k_{f_a}$（＝$b$）と $R^2$ を算出，$K_{f_a}=k_{f_a}/\bar f_a$ を得る。
+  \item 2 列分の $|K_{f_a}^{(1)}|,|K_{f_a}^{(2)}|$ の最大値を FaKT とする。
+  \item 表\ref{tab:fakt-rank} の基準でランクを決定し，ヘッド ID に紐づけて出荷振り分け。
+\end{enumerate}
+
+\subsection{備考 / Notes}
+\begin{itemize}
+  \item $f_a$ は変位量の代理指標として有効だが，波形条件や固定治具のばらつきが
+  系統誤差を生むため，\textbf{基準治具・温度・スイープ条件}を工程で固定する。
+  \item 工程変更（例：側壁パッシベーション導入，薄膜応力条件変更）時には，
+  ランク境界の再最適化（ROC カーブ評価など）を推奨する。
+  \item バンドパスの設定によりスプリアス共振を拾うことがある。
+  品質保証では \textbf{主モードの一貫判定規則}（最大ピーク優先＋位相検証）を設ける。
+\end{itemize}
+
+% =====================================================
 % 謝辞
 % =====================================================
 \section*{謝辞}
