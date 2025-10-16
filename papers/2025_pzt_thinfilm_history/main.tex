@@ -380,64 +380,81 @@ PZTセグメント端部に局所電界集中が発生し、
 
 \begin{figure}[!t]
 \centering
-\begin{tikzpicture}[x=1mm,y=1mm,font=\footnotesize]
+\resizebox{\columnwidth}{!}{% ← ★ 1カラムに自動最大拡大
+\begin{tikzpicture}[x=1mm,y=1mm,font=\footnotesize,baseline]
+\tikzset{
+  be/.style={fill=black!70,draw=black},
+  te/.style={fill=black!70,draw=black},
+  pzt/.style={fill=red!10,draw=red!50},
+  iso/.style={fill=gray!20,draw=black!40},
+  alox/.style={blue!50,line width=0.8pt}
+}
+\def\W{80}      % ← 横幅拡大
+\def\X{0}
+\def\gap{22}    % ← 図間隔を少し広く
 
-% ===== (a) 共通BE（ただし配線は TE=COM, BE=VBS） =====
+% ========== (a) 共通BE（TE=COM, BE=VBS） ==========
 \begin{scope}[shift={(0,0)}]
-  % ZrO2
-  \fill[gray!20] (0,0) rectangle (70,3);
-  % 分離下部電極（VBS）
-  \fill[black!70] (6,3) rectangle (21,5);
-  \fill[black!70] (39,3) rectangle (54,5);
-  \node[anchor=west] at (57,4){\scriptsize BE: VBS};
+  % 絶縁層
+  \fill[iso] (\X,0) rectangle (\X+\W,3);
+  % 共通BE (VBS)
+  \fill[be] (\X,3) rectangle (\X+\W,4);
+  \node[anchor=west] at (\X+\W+2,3.6){\scriptsize BE: VBS};
 
-  % PZT
-  \fill[red!10] (7,5) rectangle (20,9);
-  \fill[red!10] (40,5) rectangle (53,9);
-  \node[anchor=west,red!70!black] at (57,7){\scriptsize PZT};
+  % PZT islands
+  \path[pzt] (\X+10,4) -- ++(15,0) -- ++(-2,6) -- ++(-11,0) -- cycle;
+  \path[pzt] (\X+45,4) -- ++(15,0) -- ++(-2,6) -- ++(-11,0) -- cycle;
 
-  % AlOx 側壁（視覚的に）
-  \draw[thick,blue!40] (6,5) -- (7,9);
-  \draw[thick,blue!40] (20,9) -- (21,5);
-  \draw[thick,blue!40] (39,5) -- (40,9);
-  \draw[thick,blue!40] (53,9) -- (54,5);
-  \node[anchor=west,blue!60!black] at (57,9.5){\scriptsize AlO$_x$};
+  % AlOx側壁
+  \draw[alox] (\X+10,4) -- ++(2,6);
+  \draw[alox] (\X+23,10) -- ++(2,-6);
+  \draw[alox] (\X+45,4) -- ++(2,6);
+  \draw[alox] (\X+58,10) -- ++(2,-6);
 
-  % 共通上部電極（COM）
-  \fill[black!70] (0,9) rectangle (70,10);
-  \node[anchor=west] at (57,10.5){\scriptsize TE: COM};
+  % 分離TE (COM)
+  \fill[te] (\X+10,10) rectangle (\X+25,11);
+  \fill[te] (\X+45,10) rectangle (\X+60,11);
+  \node[anchor=west] at (\X+\W+2,10.4){\scriptsize TE: COM};
 
-  % 見出し
-  \node[anchor=west] at (0,12){\textbf{(a)} 共通BE（配線：TE=COM, BE=VBS）};
+  % ラベル
+  \node[anchor=west] at (\X,12.8){\textbf{(a)} 共通BE構造（TE=COM，BE=VBS）};
 \end{scope}
 
-% ===== (b) 共通TE（配線：TE=VBS, BE=COM） =====
-\begin{scope}[shift={(0,-19)}]
-  % ZrO2
-  \fill[gray!20] (0,0) rectangle (70,3);
-  % 共通下部電極（COM）
-  \fill[black!70] (0,3) rectangle (70,4);
-  \node[anchor=west] at (57,3.5){\scriptsize BE: COM};
+% ========== (b) 共通TE（TE=VBS, BE=COM） ==========
+\begin{scope}[shift={(0,-\gap)}]
+  % 絶縁層
+  \fill[iso] (\X,0) rectangle (\X+\W,3);
+
+  % 分離BE (COM)
+  \fill[be] (\X+10,3) rectangle (\X+25,5);
+  \fill[be] (\X+45,3) rectangle (\X+60,5);
+  \node[anchor=west] at (\X+\W+2,4){\scriptsize BE: COM};
 
   % PZT
-  \fill[red!10] (6,4) rectangle (21,8);
-  \fill[red!10] (39,4) rectangle (54,8);
-  \node[anchor=west,red!70!black] at (57,6.5){\scriptsize PZT};
+  \path[pzt] (\X+11,5) -- ++(13,0) -- ++(-2,5) -- ++(-9,0) -- cycle;
+  \path[pzt] (\X+46,5) -- ++(13,0) -- ++(-2,5) -- ++(-9,0) -- cycle;
 
-  % 分離上部電極（VBS）
-  \fill[black!70] (6,8) rectangle (21,9);
-  \fill[black!70] (39,8) rectangle (54,9);
-  \node[anchor=west] at (57,9){\scriptsize TE: VBS};
+  % AlOx側壁
+  \draw[alox] (\X+11,5) -- ++(2,5);
+  \draw[alox] (\X+22,10) -- ++(2,-5);
+  \draw[alox] (\X+46,5) -- ++(2,5);
+  \draw[alox] (\X+57,10) -- ++(2,-5);
 
-  % 見出し
-  \node[anchor=west] at (0,11){\textbf{(b)} 共通TE（配線：TE=VBS, BE=COM）};
+  % 共通TE (VBS)
+  \fill[te] (\X,10.5) rectangle (\X+\W,11.5);
+  \node[anchor=west] at (\X+\W+2,11){\scriptsize TE: VBS};
+
+  % ラベル
+  \node[anchor=west] at (\X,13.5){\textbf{(b)} 共通TE構造（TE=VBS，BE=COM）};
 \end{scope}
 
 \end{tikzpicture}
+}% ← resizebox end
 \caption{%
-$\mu$TFPの電極駆動構造。%
-(a) 共通BE（配線：TE=COM, BE=VBS）、%
-(b) 共通TE（配線：TE=VBS, BE=COM）。}
+$\mu$TFP の電極駆動構造。%
+(a) 共通BE（TE=COM，BE=VBS），%
+(b) 共通TE（TE=VBS，BE=COM）。%
+共通電極はVBS，分離電極がCOMとして駆動選択される。}
 \label{fig:utfp_structure}
 \end{figure}
 
