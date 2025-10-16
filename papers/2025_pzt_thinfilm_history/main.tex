@@ -143,32 +143,43 @@ Ramtron Internationalは強誘電体PZT薄膜を用いたFeRAMを開発し、Sol
 \end{itemize}
 % --- 追記ここまで ---
 
-\begin{figure}[!t]
+% =====================================================
+\begin{table}[!t]
 \centering
-\begin{tikzpicture}[x=1mm,y=1mm,font=\footnotesize]
-  % Time axis
-  \draw[->,thick] (0,0) -- (100,0) node[right]{Year};
-  \foreach \x/\y in {0/1984,25/1995,55/2007,85/2025}
-    \draw[thick] (\x,0) -- (\x,-1.5) node[below]{\y};
-  % Branches
-  \draw[thick,blue!70] (0,5) -- (25,5) node[midway,above]{FeRAM (Ramtron)};
-  \draw[thick,blue!70] (25,5) -- (55,10) node[midway,above]{FeRAM→NV Project};
-  \draw[thick,red!70] (25,5) -- (55,0) node[midway,below]{TFP (P Project)};
-  \draw[thick,red!70] (55,0) -- (85,0) node[midway,below]{μTFP / PrecisionCore};
-  % Merge arrow
-  \draw[->,thick,gray!60] (55,2.5) -- (55,0.2);
-\end{tikzpicture}
-\caption{FeRAMとTFPの並行・収束の系譜図（1984–2025）}
-\label{fig:timeline}
-\end{figure}
+\caption{FeRAMとTFPの並行・収束の系譜表（1984–2025）}
+\label{tab:timeline}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}cll@{}}
+\toprule
+\textbf{年代} & \textbf{技術系統} & \textbf{主要イベント・内容} \\ \midrule
+1984--1990 & FeRAM起源（Ramtron） &
+Sol--gel法＋RTAによるSi上PZT薄膜形成を確立。強誘電体メモリ化を実現。\\[2pt]
+
+1990--2005 & 日本導入期 &
+富士見NVプロジェクトでFeRAM開発、広丘PプロジェクトでTFP研究が並行進行。\\[2pt]
+
+2007 & TFP量産化 &
+薄膜圧電アクチュエータ（12層PZT, 3層×4焼成）を実用化。上部電極駆動構造。\\[2pt]
+
+2010--2012 & 技術転換 &
+ポーリング処理短縮を目的に下部電極駆動（共通上部電極COM）構造を採用。\\[2pt]
+
+2012--2025 & μTFP / PrecisionCore &
+MEMSキャビティ一体化。側壁保護除去・電界均一化で高信頼化・高密度化。\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{table}[!t]
 \centering
 \caption{FeRAMとTFPの技術的対比}
 \label{tab:compare}
-\begin{tabular}{lcc}
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{2.5pt} % ← カラム間隔を狭める
+\scriptsize % ← フォントを小さくして1カラムに収める
+\begin{tabular}{@{}lcc@{}}
 \toprule
-項目 & FeRAM & TFP / μTFP \\
+\textbf{項目} & \textbf{FeRAM} & \textbf{TFP / μTFP} \\
 \midrule
 配向 & (111) & (100) \\
 主目的 & 高速スイッチング／記憶 & 変位駆動／機械応答 \\
@@ -178,9 +189,10 @@ Ramtron Internationalは強誘電体PZT薄膜を用いたFeRAMを開発し、Sol
 耐水素化 & AlO$_x$二層 & 水分バリア＋ALD膜 \\
 保証方式 & ETEST（電気特性） & 画像検査／機能試験 \\
 駆動構造 & 上部電極駆動 & 下部電極駆動（共通上） \\
-ポーリング時間 & $\sim$80\,min & $\sim$90\,s \\
+ポーリング時間 & 約80\,min & 約90\,s \\
 \bottomrule
 \end{tabular}
+\normalsize % ← 戻す
 \end{table}
 
 % ---------- 図2：層構造（寸法固定・重なり回避・1カラムフィット） ----------
