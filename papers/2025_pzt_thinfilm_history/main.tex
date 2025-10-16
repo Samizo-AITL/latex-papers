@@ -381,17 +381,63 @@ PZTセグメント端部に局所電界集中が発生し、
 \begin{figure}[!t]
 \centering
 \begin{tikzpicture}[x=1mm,y=1mm,font=\footnotesize]
-  % base
-  \fill[gray!20] (0,0) rectangle (60,4); % substrate
-  \fill[blue!10] (0,4) rectangle (60,6); % lower electrode
-  \foreach \i in {6,7,8,9,10,11,12,13,14,15}
-    \fill[red!10] (0,\i) rectangle (60,\i+1); % PZT stack
-  \fill[black!70] (0,16) rectangle (60,17); % upper electrode
-  % labels
-  \node at (30,18){共通上部電極 (COM)};
-  \draw[<-] (10,5) -- (0,8) node[left]{分離下部電極 (VBS)};
+
+% ===== (a) 共通BE（ただし配線は TE=COM, BE=VBS） =====
+\begin{scope}[shift={(0,0)}]
+  % ZrO2
+  \fill[gray!20] (0,0) rectangle (70,3);
+  % 分離下部電極（VBS）
+  \fill[black!70] (6,3) rectangle (21,5);
+  \fill[black!70] (39,3) rectangle (54,5);
+  \node[anchor=west] at (57,4){\scriptsize BE: VBS};
+
+  % PZT
+  \fill[red!10] (7,5) rectangle (20,9);
+  \fill[red!10] (40,5) rectangle (53,9);
+  \node[anchor=west,red!70!black] at (57,7){\scriptsize PZT};
+
+  % AlOx 側壁（視覚的に）
+  \draw[thick,blue!40] (6,5) -- (7,9);
+  \draw[thick,blue!40] (20,9) -- (21,5);
+  \draw[thick,blue!40] (39,5) -- (40,9);
+  \draw[thick,blue!40] (53,9) -- (54,5);
+  \node[anchor=west,blue!60!black] at (57,9.5){\scriptsize AlO$_x$};
+
+  % 共通上部電極（COM）
+  \fill[black!70] (0,9) rectangle (70,10);
+  \node[anchor=west] at (57,10.5){\scriptsize TE: COM};
+
+  % 見出し
+  \node[anchor=west] at (0,12){\textbf{(a)} 共通BE（配線：TE=COM, BE=VBS）};
+\end{scope}
+
+% ===== (b) 共通TE（配線：TE=VBS, BE=COM） =====
+\begin{scope}[shift={(0,-19)}]
+  % ZrO2
+  \fill[gray!20] (0,0) rectangle (70,3);
+  % 共通下部電極（COM）
+  \fill[black!70] (0,3) rectangle (70,4);
+  \node[anchor=west] at (57,3.5){\scriptsize BE: COM};
+
+  % PZT
+  \fill[red!10] (6,4) rectangle (21,8);
+  \fill[red!10] (39,4) rectangle (54,8);
+  \node[anchor=west,red!70!black] at (57,6.5){\scriptsize PZT};
+
+  % 分離上部電極（VBS）
+  \fill[black!70] (6,8) rectangle (21,9);
+  \fill[black!70] (39,8) rectangle (54,9);
+  \node[anchor=west] at (57,9){\scriptsize TE: VBS};
+
+  % 見出し
+  \node[anchor=west] at (0,11){\textbf{(b)} 共通TE（配線：TE=VBS, BE=COM）};
+\end{scope}
+
 \end{tikzpicture}
-\caption{μTFPにおける共通上部電極／分離下部電極構造の模式図}
+\caption{%
+$\mu$TFPの電極駆動構造。%
+(a) 共通BE（配線：TE=COM, BE=VBS）、%
+(b) 共通TE（配線：TE=VBS, BE=COM）。}
 \label{fig:utfp_structure}
 \end{figure}
 
