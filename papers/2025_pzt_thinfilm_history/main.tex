@@ -104,8 +104,11 @@ Pb(Zr,Ti)O$_3$（PZT）は1950年代に発見され\cite{jaffe1954}、強誘電�
 \centering
 \caption{薄膜PZT技術の歴史的系譜（1954--2025）}
 \label{tab:timeline}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabular}{@{}llp{4.3cm}@{}}
+\renewcommand{\arraystretch}{1.1}
+
+% ▼ 修正ポイント：表幅を\columnwidthに制限して自動調整
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{lll}
 \toprule
 \textbf{時期} & \textbf{技術段階} & \textbf{主要内容・成果} \\ \midrule
 1954 & PZTの発見 &
@@ -122,6 +125,7 @@ $\mu$TFP構造をMEMS化したプリントヘッドを開発\cite{uemura2014mems
 ALD側壁保護および表面化学制御による長期駆動信頼性の確立。\\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 % =====================================================
@@ -147,48 +151,69 @@ FeRAMおよびTFPは同一材料系（PZT）を用いるが、設計思想と信
 \end{itemize}
 % --- 差分ここまで ---
 
+% ---------- 表1：FeRAMとTFPの並行・収束の系譜表 ----------
 \begin{table}[!t]
 \centering
-\caption{FeRAMとTFPの並行・収束の系譜表（1984–2025）}
+\caption{FeRAMとTFPの並行・収束の系譜表（1984--2025）}
 \label{tab:timeline}
 \renewcommand{\arraystretch}{1.15}
-\begin{tabular}{@{}cll@{}}
+
+\footnotesize % ← フォントを一段小さく（表が自然に収まる）
+\setlength{\tabcolsep}{3pt} % ← カラム間を少し詰める
+\begin{tabular}{@{}p{1.6cm}p{2.6cm}p{4.9cm}@{}} % ← 各列幅を明示指定
 \toprule
 \textbf{年代} & \textbf{技術系統} & \textbf{主要イベント・内容} \\ \midrule
 1984--1990 & FeRAM起源（Ramtron） &
-Sol--gel法＋RTAによるSi上PZT薄膜形成を確立し、強誘電体メモリ化を実現。\\[2pt]
+Sol--gel法＋RTAによるSi上PZT薄膜形成を確立し，
+強誘電体メモリ化を実現。\\[3pt]
 1990--2005 & 日本導入期 &
-富士見NVプロジェクトでFeRAM開発、広丘PプロジェクトでTFP研究が並行進行。\\[2pt]
+富士見NVプロジェクトでFeRAM開発，
+広丘PプロジェクトでTFP研究が並行進行。\\[3pt]
 2007 & TFP量産化 &
-薄膜圧電アクチュエータ（12層PZT, 3層×4焼成）を実用化。上部電極駆動構造。\\[2pt]
+薄膜圧電アクチュエータ
+（12層PZT，3層×4焼成）を実用化。
+上部電極駆動構造。\\[3pt]
 2010--2012 & 技術転換 &
-ポーリング短縮を目的に\textbf{下部電極駆動}（共通上部電極COM）構造を採用。\\[2pt]
+ポーリング短縮を目的に
+\textbf{下部電極駆動}（共通上部電極COM）構造を採用。\\[3pt]
 2012--2025 & μTFP / PrecisionCore &
-MEMSキャビティ一体化。側壁保護除去・電界均一化で高信頼化・高密度化を実現。\\
+MEMSキャビティ一体化。
+側壁保護除去・電界均一化で
+高信頼化・高密度化を実現。\\
 \bottomrule
 \end{tabular}
 \end{table}
 
+% ---------- 表2：FeRAMとTFPの技術的対比 ----------
 \begin{table}[!t]
 \centering
 \caption{FeRAMとTFPの技術的対比}
 \label{tab:compare}
 \renewcommand{\arraystretch}{1.1}
-\setlength{\tabcolsep}{2.4pt}
-\scriptsize
-\begin{tabular}{@{}lcc@{}}
+\setlength{\tabcolsep}{3pt} % ← 列間を少し詰める
+\scriptsize % ← さらに小さい文字で全幅収容
+\begin{tabular}{@{}p{2.3cm}p{3.2cm}p{3.2cm}@{}} % ← 合計幅約8.7cm（IEEE 1カラム幅に適合）
 \toprule
-\textbf{項目} & \textbf{FeRAM} & \textbf{TFP / μTFP} \\
-\midrule
-配向 & (111) & (100) \\
-主目的 & 高速スイッチング／記憶 & 変位駆動／機械応答 \\
-添加元素 & Nb添加 & 無添加（歪制御重視） \\
-膜厚 & $\sim$0.1\,µm & $\sim$1.2\,µm \\
-プロセス & Sol--gel／RTA（単層） & Sol--gel多層（12層→6層） \\
-耐水素化 & AlO$_x$二層 & 水分バリア＋ALD膜 \\
-保証方式 & ETEST（電気特性） & 画像検査／機能試験 \\
-駆動構造 & 上部電極駆動 & 下部電極駆動（共通上） \\
-ポーリング時間 & 約80\,min & 約90\,s（電界均一化効果） \\
+\textbf{項目} & \textbf{FeRAM} & \textbf{TFP / μTFP} \\ \midrule
+配向 & (111) & (100) \\[2pt]
+主目的 & 高速スイッチング／記憶 & 変位駆動／機械応答 \\[2pt]
+添加元素 & Nb添加 & 無添加（歪制御重視） \\[2pt]
+膜厚 & 約0.1\,µm & 約1.2\,µm \\[2pt]
+プロセス &
+Sol--gel／RTA（単層） &
+Sol--gel多層（12層→6層） \\[2pt]
+耐水素化 &
+AlO$_x$二層 &
+水分バリア＋ALD膜 \\[2pt]
+保証方式 &
+ETEST（電気特性） &
+画像検査／機能試験 \\[2pt]
+駆動構造 &
+上部電極駆動 &
+下部電極駆動（共通上） \\[2pt]
+ポーリング時間 &
+約80\,min &
+約90\,s（電界均一化効果） \\
 \bottomrule
 \end{tabular}
 \normalsize
