@@ -24,25 +24,22 @@
 %   \setmainjfont{Noto Serif CJK JP}
 %   \setsansjfont{Noto Sans CJK JP}
 
-% ---------- Line breaking ----------
+% ---------- Line breaking (Japanese) ----------
 \ltjsetparameter{jacharrange={-2}}
 \ltjsetparameter{xkanjiskip=0.2em plus 0.1em minus 0.05em}
 
 % ---------- Safe em-dash ----------
-\newcommand{\Jemdash}{—}  % U+2014 安全
+\newcommand{\Jemdash}{—} % U+2014
 
 % ---------- General packages ----------
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{url}
-\usepackage[hidelinks]{hyperref}
-\usepackage{cite}
+\usepackage{cite}          % ← IEEEtranではhyperrefより先に読み込む
 \usepackage{setspace}
 \usepackage{xcolor}
 \usepackage{tikz}
-
-% TikZ 必要ライブラリ（brace装飾含む）
 \usetikzlibrary{
   arrows.meta,
   positioning,
@@ -52,6 +49,16 @@
   decorations.pathreplacing,
   decorations.markings
 }
+
+% 単位表記（\SI, \si）— 表で使用するため追加
+\usepackage[per-mode=symbol,detect-all]{siunitx}
+
+% 版面あふれ緩和（長い年号や用語のはみ出し対策）
+\emergencystretch=3pt
+
+% ---------- hyperref は最後に ----------
+\usepackage[hidelinks]{hyperref}
+% \hypersetup{colorlinks=false, hidelinks} % 追加カスタムが必要なら
 
 % ---------- Metadata ----------
 \title{薄膜PZT技術の系譜 \Jemdash{} FeRAM起源からPrecisionCoreヘッドへの発展}
@@ -235,7 +242,7 @@ ETEST（電気特性） &
 \normalsize
 \end{table}
 
-% ---------- 表：μTFPアクチュエータウェハ層構成 ----------
+% ---------- 表：μTFPアクチュエータウェハ層構成（改良・折返し対応） ----------
 \begin{table*}[t]
   \centering
   \caption{%
@@ -244,57 +251,45 @@ ETEST（電気特性） &
   }
   \label{tab:layer-structure}
   \vspace{4pt}
-  \setlength{\tabcolsep}{6pt} % 列間の余白を調整
+  \setlength{\tabcolsep}{6pt}
   \renewcommand{\arraystretch}{1.15}
-  \footnotesize % 全幅表でも可読性を維持
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l l @{}}
+  \footnotesize
+
+  % 折返し可能なp列を使用（l列→p列）
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} p{3.2cm} p{2.8cm} p{8.0cm} @{}}
     \toprule
     \textbf{層構成 / Layer} & \textbf{材料 / Material} & \textbf{厚み・機能 / Thickness \& Function} \\
     \midrule
     Si基板 / Substrate & Si(111) &
     約\SI{5000}{nm}：
-    キャリア基板，キャビティ形成用／
-    Carrier wafer, cavity formation. \\[3pt]
+    キャリア基板，キャビティ形成用／Carrier wafer, cavity formation. \\[3pt]
 
     絶縁層 / Insulating layer & ZrO\textsubscript{2} &
-    約\SI{400}{nm}：
-    高耐圧絶縁膜／High-$k$ dielectric. \\[3pt]
+    約\SI{400}{nm}：高耐圧絶縁膜／High-$k$ dielectric. \\[3pt]
 
     接着層 / Bonding layer & Ti &
-    約\SI{4}{nm}：
-    下電極密着性向上／Adhesion to BE. \\[3pt]
+    約\SI{4}{nm}：下電極密着性向上／Adhesion to BE. \\[3pt]
 
     下電極 / Bottom electrode & Pt &
-    約\SI{80}{nm}：
-    (111)配向，PZT配向誘導／
-    (111)-oriented seed for PZT. \\[3pt]
+    約\SI{80}{nm}：(111)配向，PZT配向誘導／(111)-oriented seed for PZT. \\[3pt]
 
     酸化防止層 / Oxidation barrier & Ir &
-    約\SI{10}{nm}：
-    Pt酸化防止，結晶安定化／
-    Prevents Pt oxidation, stabilizes crystal. \\[3pt]
+    約\SI{10}{nm}：Pt酸化防止，結晶安定化／Prevents Pt oxidation, stabilizes crystal. \\[3pt]
 
     seed層 / Seed layer & Ti &
-    約\SI{4}{nm}：
-    初期成長制御／Initial growth control. \\[3pt]
+    約\SI{4}{nm}：初期成長制御／Initial growth control. \\[3pt]
 
     PZT初期層 / Initial PZT layer & Pb(Zr,Ti)O\textsubscript{3} &
-    約\SI{200}{nm}：
-    第1層成膜／First PZT deposition. \\[3pt]
+    約\SI{200}{nm}：第1層成膜／First PZT deposition. \\[3pt]
 
     中間層 / Mid layer & Ti &
-    約\SI{4}{nm}：
-    組成傾斜改善・応力緩和／
-    Composition grading, stress relaxation. \\[3pt]
+    約\SI{4}{nm}：組成傾斜改善・応力緩和／Composition grading, stress relaxation. \\[3pt]
 
     PZT積層 / PZT stack & Pb(Zr,Ti)O\textsubscript{3} &
-    \SI{200}{nm}×5＝約\SI{1000}{nm}：
-    5層積層／Five-layer deposition. \\[3pt]
+    \SI{200}{nm}×5＝約\SI{1000}{nm}：5層積層／Five-layer deposition. \\[3pt]
 
     上電極 / Top electrode & Ir/Ti &
-    各\SI{10}{nm}：
-    応力緩和・反応抑制／
-    Stress relief, reaction suppression. \\
+    各\SI{10}{nm}：応力緩和・反応抑制／Stress relief, reaction suppression. \\
     \bottomrule
   \end{tabular*}
   \vspace{-4pt}
