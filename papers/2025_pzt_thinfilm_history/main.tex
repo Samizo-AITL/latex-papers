@@ -104,28 +104,36 @@ Pb(Zr,Ti)O$_3$（PZT）は1950年代に発見され\cite{jaffe1954}、強誘電�
 \centering
 \caption{薄膜PZT技術の歴史的系譜（1954--2025）}
 \label{tab:timeline}
-\renewcommand{\arraystretch}{1.1}
-
-% ▼ 修正ポイント：表幅を\columnwidthに制限して自動調整
-\resizebox{\columnwidth}{!}{
-\begin{tabular}{lll}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{3pt} % 列間をやや詰める
+\footnotesize % 本文より少し小さめ（scriptsizeより可読性高）
+\begin{tabular}{@{}p{1.2cm}p{2.2cm}p{5.0cm}@{}} % ← 1カラム幅（約8.8cm）にフィット
 \toprule
 \textbf{時期} & \textbf{技術段階} & \textbf{主要内容・成果} \\ \midrule
 1954 & PZTの発見 &
-JaffeらがPb(Zr,Ti)O$_3$を強誘電体として報告\cite{jaffe1954}。 \\[2pt]
+JaffeらがPb(Zr,Ti)O$_3$を強誘電体として報告\cite{jaffe1954}。\\[3pt]
+
 1984--1990 & FeRAM薄膜化 &
-RamtronがSol--gel + RTA法によりSi上PZT薄膜を形成し、FeRAMを実現\cite{ramtron_iedm1989}。\\[2pt]
+RamtronがSol--gel＋RTA法によりSi上にPZT薄膜を形成し，
+強誘電体メモリ（FeRAM）を実現\cite{ramtron_iedm1989}。\\[3pt]
+
 1990年代 & 日本における導入・再構築 &
-富士通・エプソン等が国内でPZT薄膜技術を展開。FeRAMおよび圧電応用の基盤整備を実施。\\[2pt]
+富士通・エプソンなどが国内でPZT薄膜技術を再構築。
+FeRAMおよび圧電応用の基盤を整備。\\[3pt]
+
 2007 & TFP量産開始 &
-エプソンにてThin Film Piezoヘッドを量産化。PZT薄膜による$d_{33}$駆動を確立。\\[2pt]
+エプソンにてThin Film Piezoヘッドを量産化。
+PZT薄膜による$d_{33}$駆動を確立。\\[3pt]
+
 2012 & PrecisionCore実用化 &
-$\mu$TFP構造をMEMS化したプリントヘッドを開発\cite{uemura2014mems}。\\[2pt]
+$\mu$TFP構造をMEMS化したプリントヘッドを開発\cite{uemura2014mems}。\\[3pt]
+
 2025 & 信頼性成熟 &
-ALD側壁保護および表面化学制御による長期駆動信頼性の確立。\\
+ALD側壁保護および表面化学制御により，
+長期駆動信頼性を確立。\\
 \bottomrule
 \end{tabular}
-}
+\normalsize
 \end{table}
 
 % =====================================================
@@ -151,37 +159,45 @@ FeRAMおよびTFPは同一材料系（PZT）を用いるが、設計思想と信
 \end{itemize}
 % --- 差分ここまで ---
 
-% ---------- 表1：FeRAMとTFPの並行・収束の系譜表 ----------
+% ---------- 表2：FeRAMとTFPの並行・収束の系譜表 ----------
 \begin{table}[!t]
 \centering
 \caption{FeRAMとTFPの並行・収束の系譜表（1984--2025）}
 \label{tab:timeline}
 \renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2.5pt} % カラム間をさらに微調整
+\scriptsize % IEEE二段組に確実収まる最小安全サイズ
 
-\footnotesize % ← フォントを一段小さく（表が自然に収まる）
-\setlength{\tabcolsep}{3pt} % ← カラム間を少し詰める
-\begin{tabular}{@{}p{1.6cm}p{2.6cm}p{4.9cm}@{}} % ← 各列幅を明示指定
+\begin{tabular}{@{}p{1.3cm}p{2.3cm}p{5.0cm}@{}} % 合計 ≒ 8.6cm：IEEE 1カラム幅に適合
 \toprule
 \textbf{年代} & \textbf{技術系統} & \textbf{主要イベント・内容} \\ \midrule
+
 1984--1990 & FeRAM起源（Ramtron） &
-Sol--gel法＋RTAによるSi上PZT薄膜形成を確立し，
-強誘電体メモリ化を実現。\\[3pt]
+Sol--gel法＋RTAによりSi上PZT薄膜形成を確立。
+強誘電体メモリ（FeRAM）を実現。\\[3pt]
+
 1990--2005 & 日本導入期 &
-富士見NVプロジェクトでFeRAM開発，
+富士見NVプロジェクトでFeRAM開発を推進。
 広丘PプロジェクトでTFP研究が並行進行。\\[3pt]
+
 2007 & TFP量産化 &
 薄膜圧電アクチュエータ
 （12層PZT，3層×4焼成）を実用化。
-上部電極駆動構造。\\[3pt]
+上部電極駆動構造を確立。\\[3pt]
+
 2010--2012 & 技術転換 &
 ポーリング短縮を目的に
-\textbf{下部電極駆動}（共通上部電極COM）構造を採用。\\[3pt]
-2012--2025 & μTFP / PrecisionCore &
+\textbf{下部電極駆動}
+（共通上部電極COM）構造を採用。\\[3pt]
+
+2012--2025 & μTFP／PrecisionCore &
 MEMSキャビティ一体化。
-側壁保護除去・電界均一化で
+側壁保護除去と電界均一化により
 高信頼化・高密度化を実現。\\
 \bottomrule
 \end{tabular}
+
+\normalsize
 \end{table}
 
 % ---------- 表2：FeRAMとTFPの技術的対比 ----------
