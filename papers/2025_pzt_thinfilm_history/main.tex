@@ -143,6 +143,46 @@ Ramtron Internationalは強誘電体PZT薄膜を用いたFeRAMを開発し、Sol
 \end{itemize}
 % --- 追記ここまで ---
 
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[x=1mm,y=1mm,font=\footnotesize]
+  % Time axis
+  \draw[->,thick] (0,0) -- (100,0) node[right]{Year};
+  \foreach \x/\y in {0/1984,25/1995,55/2007,85/2025}
+    \draw[thick] (\x,0) -- (\x,-1.5) node[below]{\y};
+  % Branches
+  \draw[thick,blue!70] (0,5) -- (25,5) node[midway,above]{FeRAM (Ramtron)};
+  \draw[thick,blue!70] (25,5) -- (55,10) node[midway,above]{FeRAM→NV Project};
+  \draw[thick,red!70] (25,5) -- (55,0) node[midway,below]{TFP (P Project)};
+  \draw[thick,red!70] (55,0) -- (85,0) node[midway,below]{μTFP / PrecisionCore};
+  % Merge arrow
+  \draw[->,thick,gray!60] (55,2.5) -- (55,0.2);
+\end{tikzpicture}
+\caption{FeRAMとTFPの並行・収束の系譜図（1984–2025）}
+\label{fig:timeline}
+\end{figure}
+
+\begin{table}[!t]
+\centering
+\caption{FeRAMとTFPの技術的対比}
+\label{tab:compare}
+\begin{tabular}{lcc}
+\toprule
+項目 & FeRAM & TFP / μTFP \\
+\midrule
+配向 & (111) & (100) \\
+主目的 & 高速スイッチング／記憶 & 変位駆動／機械応答 \\
+添加元素 & Nb添加 & 無添加（歪制御重視） \\
+膜厚 & $\sim$0.1\,µm & $\sim$1.2\,µm \\
+プロセス & Sol--gel／RTA（単層） & Sol--gel多層（12層→6層） \\
+耐水素化 & AlO$_x$二層 & 水分バリア＋ALD膜 \\
+保証方式 & ETEST（電気特性） & 画像検査／機能試験 \\
+駆動構造 & 上部電極駆動 & 下部電極駆動（共通上） \\
+ポーリング時間 & $\sim$80\,min & $\sim$90\,s \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 % ---------- 図2：層構造（寸法固定・重なり回避・1カラムフィット） ----------
 \begin{figure}[!t]
 \centering
@@ -295,6 +335,21 @@ PbO揮発と層間応力の蓄積を抑制した。
 ただし、COM駆動配線が下部電極にコンタクトする近傍では、
 PZTセグメント端部の局所電界集中により新たな焼損が発生し、
 駆動方式転換に伴う課題として記録された。
+
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[x=1mm,y=1mm,font=\footnotesize]
+  \fill[gray!20] (0,0) rectangle (60,4); % substrate
+  \fill[blue!10] (0,4) rectangle (60,6); % lower electrode
+  \foreach \i in {6,7,8,9,10,11,12,13,14,15}
+    \fill[red!10] (0,\i) rectangle (60,\i+1); % PZT stack
+  \fill[black!70] (0,16) rectangle (60,17); % upper electrode
+  \node at (30,18){共通上部電極 (COM)};
+  \draw[<-] (10,5) -- (0,8) node[left]{分離下部電極 (VBS)};
+\end{tikzpicture}
+\caption{μTFPにおける共通上部電極／分離下部電極構造模式図}
+\label{fig:utfp_structure}
+\end{figure}
 
 \medskip
 \noindent
