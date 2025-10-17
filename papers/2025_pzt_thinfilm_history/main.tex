@@ -378,12 +378,12 @@ PbO揮発および層間応力の蓄積を抑制した。
 PZTセグメント端部に局所電界集中が発生し，
 新たな焼損モードとして記録された。
 
-% ---------- TABLE V（最終修正版）：μTFP 電極駆動構造比較 ----------
+% ---------- TABLE V（完全安定版）：μTFP 電極駆動構造比較 ----------
 \begin{table}[!t]
 \centering
 \caption{%
-$\mu$TFP$^\ast$ の電極駆動構造の並列比較\\
-Parallel comparison of electrode configurations in $\mu$TFP actuators
+$\mu$TFP$^\ast$ の電極駆動構造の比較\\
+Comparison of electrode configurations in $\mu$TFP actuators
 }
 \label{tab:utfp_structure}
 \renewcommand{\arraystretch}{1.12}
@@ -392,41 +392,39 @@ Parallel comparison of electrode configurations in $\mu$TFP actuators
 \begin{tabular}{@{}p{2.7cm}p{3.25cm}p{3.25cm}@{}}
 \toprule
  & \textbf{(a) 共通BE構造} & \textbf{(b) 共通TE構造} \\ \midrule
-\textbf{共通／駆動電極} &
-\textbf{共通}：BE = VBS\\
-\textbf{駆動}：TE = COM &
-\textbf{共通}：TE = VBS\\
-\textbf{駆動}：BE = COM \\[2pt]
+\textbf{電極構成} &
+共通BE (VBS)，駆動TE (COM) &
+共通TE (VBS)，駆動BE (COM) \\[2pt]
 
-\textbf{PZT層の構造} &
+\textbf{PZT層構造} &
 台形島（縁露出）・上部電極は島状分離 &
 PZTとTEが上面で一体化（縁露出なし） \\[2pt]
 
 \textbf{AlO$_x$側壁保護} &
-側壁に形成，\textbf{頂部は開口}（拘束解放） &
+側壁に形成し，\textbf{頂部開口}で拘束解放 &
 不要（TEが連続膜で覆う） \\[2pt]
 
 \textbf{機械的拘束条件} &
-頂部開口で縦変位の自由度を確保 &
+頂部開口により縦変位の自由度を確保 &
 全面覆いで封止・拘束一体化 \\[2pt]
 
 \textbf{電界分布・駆動特性} &
 COM選択駆動，縁部電界集中を抑制 &
-VBS共通で電界均一，ポーリング短縮 \\[2pt]
+VBS共通駆動，電界均一でポーリング短縮 \\[2pt]
 
 \textbf{信頼性特徴} &
-AlO$_x$依存で劣化リスクあり &
-側壁露出なし，高信頼・長寿命（$\ge 10^9$ cycles） \\[2pt]
+AlO$_x$依存で長期劣化リスクあり &
+側壁露出なし，高信頼・長寿命（$\ge10^9$ cycles） \\[2pt]
 
 \textbf{設計意図} &
-圧電変位制御重視 &
-封止・信頼性重視（μTFP採用） \\
+圧電変位制御型（応答重視） &
+封止・信頼性統合型（μTFP採用） \\
 \bottomrule
 \end{tabular}
 \vspace{-3pt}
 \begin{flushleft}
 \footnotesize
-$\ast$~$\mu$TFP：Micro Thin-Film Piezoelectric actuator。
+$\ast$ $\mu$TFP：Micro Thin-Film Piezoelectric actuator。
 \end{flushleft}
 \end{table}
 
