@@ -378,83 +378,59 @@ PbO揮発および層間応力の蓄積を抑制した。
 PZTセグメント端部に局所電界集中が発生し、
 新たな焼損モードとして記録された。
 
-\begin{figure}[!t]
+% ---------- 表：μTFP 電極構造比較（図\ref{fig:utfp_structure} 対応） ----------
+\begin{table}[!t]
 \centering
-\resizebox{\columnwidth}{!}{
-\begin{tikzpicture}[x=1mm,y=1mm,font=\footnotesize,baseline]
-\tikzset{
-  be/.style={fill=black!75,draw=black},
-  te/.style={fill=black!75,draw=black},
-  pzt/.style={fill=red!10,draw=red!50},
-  iso/.style={fill=gray!20,draw=black!40},
-  alox/.style={blue!70,line width=0.9pt}
-}
-\def\W{84}
-\def\X{0}
-\def\gap{25}
-
-% ===== (a) 共通BE（TE=COM, BE=VBS）— PZT縁露出＋側壁AlOx（頂部開口で拘束解放） =====
-\begin{scope}[shift={(0,0)}]
-  % ZrO2
-  \fill[iso] (\X,0) rectangle (\X+\W,3.2);
-  % 共通BE (VBS)
-  \fill[be] (\X,3.2) rectangle (\X+\W,4.0);
-  \node[anchor=west] at (\X+\W+2,3.6){\scriptsize BE: VBS};
-
-  % PZT islands（台形）
-  \path[pzt] (\X+10,4.0) -- ++(14,0) -- ++(-2,6.6) -- ++(-10,0) -- cycle;
-  \path[pzt] (\X+46,4.0) -- ++(14,0) -- ++(-2,6.6) -- ++(-10,0) -- cycle;
-
-  % 側壁AlOx（頂部“開口”＝拘束解放）
-  % 左島
-  \draw[alox] (\X+10,4.0) -- ++(2,6.2);           % 左側壁
-  \draw[alox] (\X+22,10.2) -- ++(1.2,0);          % 上部左リップ
-  \draw[alox] (\X+23.6,10.2) -- ++(0.4,-1.0);     % リップ先端を下向きに切って開口を示す
-  % 右島
-  \draw[alox] (\X+46,4.0) -- ++(2,6.2);           % 右側壁
-  \draw[alox] (\X+58,10.2) -- ++(-1.2,0);         % 上部右リップ
-  \draw[alox] (\X+56.8,10.2) -- ++(-0.4,-1.0);    % リップ先端下向き
-  % 開口注記
-  \draw[->,alox] (\X+32,12.0) -- (\X+24.6,10.1);
-  \node[anchor=west,blue!70] at (\X+32.5,12.0){\scriptsize AlO$_x$ 側壁（頂部開口：拘束解放）};
-
-  % 分離TE (COM)
-  \fill[te] (\X+10,10.6) rectangle (\X+25,11.3);
-  \fill[te] (\X+45,10.6) rectangle (\X+60,11.3);
-  \node[anchor=west] at (\X+\W+2,10.8){\scriptsize TE: COM};
-
-  % 小見出し
-  \node[anchor=west] at (\X,13.2){\textbf{(a)} 共通BE（TE=COM，BE=VBS）：PZT縁露出＋AlO$_x$側壁，頂部開口で拘束解放};
-\end{scope}
-
-% ===== (b) 共通TE（TE=VBS, BE=COM）— PZT/TE一体で側壁露出なし（AlOx不要） =====
-\begin{scope}[shift={(0,-\gap)}]
-  % ZrO2
-  \fill[iso] (\X,0) rectangle (\X+\W,3.2);
-  % 分離BE (COM)
-  \fill[be] (\X+10,3.2) rectangle (\X+24,5.0);
-  \fill[be] (\X+46,3.2) rectangle (\X+60,5.0);
-  \node[anchor=west] at (\X+\W+2,4.1){\scriptsize BE: COM};
-
-  % PZT islands（上面でTEと一体）
-  \path[pzt] (\X+11,5.0) -- ++(12,0) -- ++(-1.5,5.0) -- ++(-9,0) -- cycle;
-  \path[pzt] (\X+47,5.0) -- ++(12,0) -- ++(-1.5,5.0) -- ++(-9,0) -- cycle;
-
-  % 共通TE (VBS) — PZT上面に密着（AlOxなし）
-  \fill[te] (\X,10.0) rectangle (\X+\W,11.0);
-  \node[anchor=west] at (\X+\W+2,10.4){\scriptsize TE: VBS};
-
-  % 小見出し
-  \node[anchor=west] at (\X,13.0){\textbf{(b)} 共通TE（TE=VBS，BE=COM）：PZT/TE一体で側壁露出なし→AlO$_x$不要};
-\end{scope}
-\end{tikzpicture}
-}
 \caption{%
-$\mu$TFP の電極駆動構造。%
-(a) 共通BE（TE=COM，BE=VBS）：PZT縁露出。側壁AlO$_x$は**頂部開口**とし機械的拘束を解放。%
-(b) 共通TE（TE=VBS，BE=COM）：PZTとTEが一体で側壁露出なし（AlO$_x$不要）。}
-\label{fig:utfp_structure}
-\end{figure}
+$\mu$TFP$^\ast$ の電極駆動構造比較（図\ref{fig:utfp_structure}に対応）\\
+Comparison of electrode configurations in $\mu$TFP actuators (corresponding to Fig.~\ref{fig:utfp_structure})
+}
+\label{tab:utfp_structure}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2.4pt}
+\footnotesize
+\begin{tabular}{@{}p{2.8cm}p{3.2cm}p{3.2cm}@{}}
+\toprule
+ & \textbf{(a) 共通BE構造} & \textbf{(b) 共通TE構造} \\ \midrule
+\textbf{共通／駆動電極} &
+BE = VBS（共通）\\
+TE = COM（分離） &
+TE = VBS（共通）\\
+BE = COM（分離） \\[3pt]
+
+\textbf{PZT層の構造} &
+独立した台形島。縁が露出し、上部電極は島状に分離。 &
+PZTと上部電極（TE）が上面で一体化し、縁露出なし。 \\[3pt]
+
+\textbf{AlO$_x$側壁保護} &
+側壁に形成し、\textbf{頂部を開口}して拘束を解放。 &
+不要（PZT上をTEが連続的に覆う）。 \\[3pt]
+
+\textbf{機械的拘束条件} &
+頂部開口により縦方向変位の自由度を確保。 &
+全面覆いにより封止・拘束一体化。 \\[3pt]
+
+\textbf{電界分布・駆動特性} &
+COM選択駆動。縁部電界集中を抑制。 &
+VBS共通駆動。電界分布が均一でポーリング短縮。 \\[3pt]
+
+\textbf{信頼性特徴} &
+側壁保護依存。長期でAlO$_x$劣化リスクあり。 &
+側壁露出なし。封止効果により高信頼・長寿命（$\ge 10^9$ cycles）。 \\[3pt]
+
+\textbf{設計意図} &
+機械変位制御型（圧電応答重視）。 &
+信頼性・封止統合型（μTFP採用構造）。 \\
+\bottomrule
+\end{tabular}
+\vspace{-3pt}
+\begin{flushleft}
+\footnotesize
+$\ast$~$\mu$TFP：Micro Thin-Film Piezoelectric actuator。\\
+(a)はPZT縁露出に対しAlO$_x$で側壁保護し、頂部開口で応力拘束を緩和。\\
+(b)はPZT/TE一体化による封止構造で、信頼性・寿命が1--2桁向上。
+\end{flushleft}
+\end{table}
 
 \medskip
 \noindent
