@@ -380,32 +380,33 @@ PZTセグメント端部に局所電界集中が発生し、
 
 \begin{figure}[!t]
 \centering
-\resizebox{\columnwidth}{!}{% ← ★ 1カラムに自動最大拡大
+\resizebox{\columnwidth}{!}{
 \begin{tikzpicture}[x=1mm,y=1mm,font=\footnotesize,baseline]
 \tikzset{
   be/.style={fill=black!70,draw=black},
   te/.style={fill=black!70,draw=black},
   pzt/.style={fill=red!10,draw=red!50},
   iso/.style={fill=gray!20,draw=black!40},
-  alox/.style={blue!50,line width=0.8pt}
+  alox/.style={blue!60,line width=0.9pt}
 }
-\def\W{80}      % ← 横幅拡大
+\def\W{80}
 \def\X{0}
-\def\gap{22}    % ← 図間隔を少し広く
+\def\gap{22}
 
-% ========== (a) 共通BE（TE=COM, BE=VBS） ==========
+% ===== (a) 共通BE（TE=COM, BE=VBS）— PZT縁露出 → AlOxあり =====
 \begin{scope}[shift={(0,0)}]
   % 絶縁層
   \fill[iso] (\X,0) rectangle (\X+\W,3);
+
   % 共通BE (VBS)
   \fill[be] (\X,3) rectangle (\X+\W,4);
   \node[anchor=west] at (\X+\W+2,3.6){\scriptsize BE: VBS};
 
-  % PZT islands
+  % PZT島（台形：縁が露出）
   \path[pzt] (\X+10,4) -- ++(15,0) -- ++(-2,6) -- ++(-11,0) -- cycle;
   \path[pzt] (\X+45,4) -- ++(15,0) -- ++(-2,6) -- ++(-11,0) -- cycle;
 
-  % AlOx側壁
+  % AlOx 側壁（保護あり）
   \draw[alox] (\X+10,4) -- ++(2,6);
   \draw[alox] (\X+23,10) -- ++(2,-6);
   \draw[alox] (\X+45,4) -- ++(2,6);
@@ -417,10 +418,10 @@ PZTセグメント端部に局所電界集中が発生し、
   \node[anchor=west] at (\X+\W+2,10.4){\scriptsize TE: COM};
 
   % ラベル
-  \node[anchor=west] at (\X,12.8){\textbf{(a)} 共通BE構造（TE=COM，BE=VBS）};
+  \node[anchor=west] at (\X,12.8){\textbf{(a)} 共通BE（TE=COM，BE=VBS）— PZT縁露出のため AlO$_x$ 保護あり};
 \end{scope}
 
-% ========== (b) 共通TE（TE=VBS, BE=COM） ==========
+% ===== (b) 共通TE（TE=VBS, BE=COM）— PZT/TE一体 → AlOxなし =====
 \begin{scope}[shift={(0,-\gap)}]
   % 絶縁層
   \fill[iso] (\X,0) rectangle (\X+\W,3);
@@ -430,31 +431,25 @@ PZTセグメント端部に局所電界集中が発生し、
   \fill[be] (\X+45,3) rectangle (\X+60,5);
   \node[anchor=west] at (\X+\W+2,4){\scriptsize BE: COM};
 
-  % PZT
+  % PZT島（上面でTEと接続：側壁保護不要）
   \path[pzt] (\X+11,5) -- ++(13,0) -- ++(-2,5) -- ++(-9,0) -- cycle;
   \path[pzt] (\X+46,5) -- ++(13,0) -- ++(-2,5) -- ++(-9,0) -- cycle;
 
-  % AlOx側壁
-  \draw[alox] (\X+11,5) -- ++(2,5);
-  \draw[alox] (\X+22,10) -- ++(2,-5);
-  \draw[alox] (\X+46,5) -- ++(2,5);
-  \draw[alox] (\X+57,10) -- ++(2,-5);
-
-  % 共通TE (VBS)
-  \fill[te] (\X,10.5) rectangle (\X+\W,11.5);
-  \node[anchor=west] at (\X+\W+2,11){\scriptsize TE: VBS};
+  % 共通TE (VBS) — 連続バーでPZT上面に接続
+  \fill[te] (\X,10) rectangle (\X+\W,11);
+  % ※ AlOx は描かない（PZT/TEが繋がっており側壁露出領域がないため）
+  \node[anchor=west] at (\X+\W+2,10.5){\scriptsize TE: VBS};
 
   % ラベル
-  \node[anchor=west] at (\X,13.5){\textbf{(b)} 共通TE構造（TE=VBS，BE=COM）};
+  \node[anchor=west] at (\X,13.2){\textbf{(b)} 共通TE（TE=VBS，BE=COM）— PZT/TE 接続のため AlO$_x$ なし};
 \end{scope}
 
 \end{tikzpicture}
-}% ← resizebox end
+}
 \caption{%
 $\mu$TFP の電極駆動構造。%
-(a) 共通BE（TE=COM，BE=VBS），%
-(b) 共通TE（TE=VBS，BE=COM）。%
-共通電極はVBS，分離電極がCOMとして駆動選択される。}
+(a) 共通BE（TE=COM，BE=VBS）：PZT縁が露出するため AlO$_x$ 側壁保護が必要。%
+(b) 共通TE（TE=VBS，BE=COM）：PZT と TE が上面で接続され側壁露出が無く、AlO$_x$ は不要。}
 \label{fig:utfp_structure}
 \end{figure}
 
