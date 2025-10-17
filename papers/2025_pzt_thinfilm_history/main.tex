@@ -357,66 +357,67 @@ PbO揮発および層間応力の蓄積を抑制した。
 \medskip
 \noindent
 \textbf{(3) 電極構造と駆動方式の転換}：
-初期TFPでは、上部電極をCOM（共通電極）、下部電極をVBS（セグメント電極）として構成し、
+初期TFPでは，上部電極をCOM（共通電極），下部電極をVBS（セグメント電極）として構成し，
 上部電極がセグメントごとに分離されていた。
-この構造ではPZT側壁に電界集中が生じ、縁面焼損が発生しやすかったため、
+この構造ではPZT側壁に電界集中が生じ，縁面焼損が発生しやすかったため，
 側壁保護膜としてAlO$_x$を形成した。
-しかしAlO$_x$が機械的拘束として作用し、変位量を低下させたため、
-上部電極内側に開口を設け、変位確保との両立を図った。
+しかしAlO$_x$が機械的拘束として作用し，変位量を低下させたため，
+上部電極内側に開口を設け，変位確保との両立を図った。
 
-一方、上部電極駆動方式ではユニットスクリーニング時のポーリング処理に
-約80分を要し、量産性が課題であった。
-これを解決するため、後期では\textbf{下部電極駆動（上部共通電極）方式}に転換した。
-この構成では、電界分布が一様化して全領域を同時分極できるため、
+一方，上部電極駆動方式ではユニットスクリーニング時のポーリング処理に
+約80分を要し，量産性が課題であった。
+これを解決するため，後期では\textbf{下部電極駆動（上部共通電極）方式}に転換した。
+この構成では，電界分布が一様化して全領域を同時分極できるため，
 ポーリング時間が\textbf{約90秒}に短縮された。
-さらに、下部電極分離によりPZT側壁が排除され、
+さらに，下部電極分離によりPZT側壁が排除され，
 縁面焼損防止用AlO$_x$膜が不要となった。
-この共通上部電極構造は、次世代\textit{μTFP}に正式採用され、
+この共通上部電極構造は，次世代\textit{μTFP}に正式採用され，
 \textbf{製造性・信頼性・変位性能の三要素を同時に向上}させた。
 
-ただし、COM駆動配線が下部電極にコンタクトする近傍では、
-PZTセグメント端部に局所電界集中が発生し、
+ただし，COM駆動配線が下部電極にコンタクトする近傍では，
+PZTセグメント端部に局所電界集中が発生し，
 新たな焼損モードとして記録された。
 
-% ---------- 表：μTFP 電極構造比較（図\ref{fig:utfp_structure} 対応） ----------
+% ---------- 表：μTFP 電極構造比較（図\ref{fig:utfp_structure}対応） ----------
 \begin{table}[!t]
 \centering
 \caption{%
 $\mu$TFP$^\ast$ の電極駆動構造比較（図\ref{fig:utfp_structure}に対応）\\
-Comparison of electrode configurations in $\mu$TFP actuators (corresponding to Fig.~\ref{fig:utfp_structure})
+Comparison of electrode configurations in $\mu$TFP actuators
+(corresponding to Fig.~\ref{fig:utfp_structure})
 }
 \label{tab:utfp_structure}
-\renewcommand{\arraystretch}{1.15}
-\setlength{\tabcolsep}{2.4pt}
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{2.2pt}
 \footnotesize
-\begin{tabular}{@{}p{2.8cm}p{3.2cm}p{3.2cm}@{}}
+\begin{tabular}{@{}p{2.7cm}p{3.25cm}p{3.25cm}@{}}
 \toprule
  & \textbf{(a) 共通BE構造} & \textbf{(b) 共通TE構造} \\ \midrule
 \textbf{共通／駆動電極} &
 BE = VBS（共通）\\
 TE = COM（分離） &
 TE = VBS（共通）\\
-BE = COM（分離） \\[3pt]
+BE = COM（分離） \\[2pt]
 
 \textbf{PZT層の構造} &
-独立した台形島。縁が露出し、上部電極は島状に分離。 &
-PZTと上部電極（TE）が上面で一体化し、縁露出なし。 \\[3pt]
+独立した台形島。縁が露出し，上部電極は島状に分離。 &
+PZTと上部電極（TE）が上面で一体化し，縁露出なし。 \\[2pt]
 
 \textbf{AlO$_x$側壁保護} &
-側壁に形成し、\textbf{頂部を開口}して拘束を解放。 &
-不要（PZT上をTEが連続的に覆う）。 \\[3pt]
+側壁に形成し，\textbf{頂部を開口}して拘束を解放。 &
+不要（PZT上をTEが連続的に覆う）。 \\[2pt]
 
 \textbf{機械的拘束条件} &
 頂部開口により縦方向変位の自由度を確保。 &
-全面覆いにより封止・拘束一体化。 \\[3pt]
+全面覆いにより封止・拘束一体化。 \\[2pt]
 
 \textbf{電界分布・駆動特性} &
 COM選択駆動。縁部電界集中を抑制。 &
-VBS共通駆動。電界分布が均一でポーリング短縮。 \\[3pt]
+VBS共通駆動。電界分布が均一でポーリング短縮。 \\[2pt]
 
 \textbf{信頼性特徴} &
 側壁保護依存。長期でAlO$_x$劣化リスクあり。 &
-側壁露出なし。封止効果により高信頼・長寿命（$\ge 10^9$ cycles）。 \\[3pt]
+側壁露出なし。封止効果により高信頼・長寿命（$\ge 10^9$ cycles）。 \\[2pt]
 
 \textbf{設計意図} &
 機械変位制御型（圧電応答重視）。 &
@@ -427,8 +428,8 @@ VBS共通駆動。電界分布が均一でポーリング短縮。 \\[3pt]
 \begin{flushleft}
 \footnotesize
 $\ast$~$\mu$TFP：Micro Thin-Film Piezoelectric actuator。\\
-(a)はPZT縁露出に対しAlO$_x$で側壁保護し、頂部開口で応力拘束を緩和。\\
-(b)はPZT/TE一体化による封止構造で、信頼性・寿命が1--2桁向上。
+(a)はPZT縁露出に対しAlO$_x$で側壁保護し，頂部開口で応力拘束を緩和。\\
+(b)はPZT/TE一体化による封止構造で，信頼性・寿命が1--2桁向上。
 \end{flushleft}
 \end{table}
 
