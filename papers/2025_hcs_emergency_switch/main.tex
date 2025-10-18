@@ -1,184 +1,184 @@
 %====================================================
-% HCS緊急切替対応（IEEE日本語論文・1カラム版）
+% HCS緊急切替対応（IEEE日本語論文・2段組最終版）
 %====================================================
-\documentclass[journal,onecolumn]{IEEEtran}
+\documentclass[journal,twocolumn]{IEEEtran}
 
-% ===== Engine guard =====
+% ===== XeLaTeX専用 =====
 \usepackage{iftex}
 \ifXeTeX\else
   \errmessage{Compile with XeLaTeX (or LuaLaTeX).}
 \fi
 
-% ===== Fonts (XeLaTeX) =====
+% ===== Fonts =====
 \usepackage{fontspec}
 \usepackage{xeCJK}
 \defaultfontfeatures{Ligatures=TeX}
 \setmainfont{Latin Modern Roman}
 \setsansfont{Latin Modern Sans}
 \setmonofont{Latin Modern Mono}
-
-% CI(Alpine)では Noto CJK を使用する
 \IfFontExistsTF{Noto Serif CJK JP}{
   \setCJKmainfont{Noto Serif CJK JP}
 }{
-  \IfFontExistsTF{IPAexMincho}{
-    \setCJKmainfont{IPAexMincho}
-  }{
-    \setCJKmainfont{Noto Sans CJK JP}
-  }
+  \setCJKmainfont{IPAexMincho}
 }
 \XeTeXlinebreaklocale "ja"
 \XeTeXlinebreakskip=0pt plus 1pt
 
 % ===== Math & Units =====
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath,amssymb,siunitx}
 \interdisplaylinepenalty=2500
-\usepackage{siunitx}
 \sisetup{detect-all, per-mode=symbol, group-separator={,}}
 
-% ===== Graphics / Figures =====
-\usepackage{graphicx}
-\usepackage{tikz}
+% ===== Figures / Tables =====
+\usepackage{graphicx,booktabs,tabularx,multirow}
+\usepackage{tikz,pgfplots}
 \usetikzlibrary{arrows.meta,positioning,shapes,fit}
-\usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\graphicspath{{./figures/}}
-
-% ===== Tables / Lists =====
-\usepackage{booktabs,tabularx,multirow}
 \usepackage{enumitem}
 \setlist{nosep}
+\newcommand{\fitcol}[1]{\resizebox{\columnwidth}{!}{#1}}
+\setlength{\abovecaptionskip}{6pt}
+\setlength{\belowcaptionskip}{0pt}
 
-% ===== Links (最後に) =====
+% ===== Links =====
 \PassOptionsToPackage{hyphens}{url}
 \usepackage{xurl}
 \usepackage[hidelinks]{hyperref}
 
-% ===== Layout tuning for 1-column =====
-\usepackage[a4paper,margin=20mm]{geometry}
-\renewcommand{\arraystretch}{1.15}
-\setlength{\parskip}{3pt}
-\setlength{\parindent}{1em}
-\linespread{1.05}
+%====================================================
+\title{インクジェットヘッドにおけるHCS緊急切替対応の多拠点4M統合管理%
+\\— COF内HCSチップ導入に伴う工程連動計画と在庫最適化の実践 —}
 
-% ---------- Title ----------
-\title{\Large\bfseries インクジェットヘッドにおけるHCS緊急切替対応の多拠点4M統合管理\\
-— COF内HCSチップ導入に伴う工程連動計画と在庫最適化の実践 —}
-
-% ---------- Author ----------
 \author{%
-  三溝 真一 (Shinichi Samizo)\\
-  独立系半導体研究者（元セイコーエプソン株式会社）\\
-  Independent Semiconductor Researcher (ex-Seiko Epson Corporation)\\
-  Email:~\href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com},\;
-  GitHub:~\url{https://github.com/Samizo-AITL}
+  \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
+  \IEEEauthorblockA{%
+    独立系半導体研究者（元セイコーエプソン株式会社）\\%
+    Independent Semiconductor Researcher (ex-Seiko Epson Corporation)\\[3pt]%
+    Email:~\href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+    GitHub:~\url{https://github.com/Samizo-AITL}%
+  }%
 }
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-本論文では、インクジェットヘッドにおけるHead Control System（HCS）の緊急切替対応について報告する。
-COF工程にHCSチップを追加し、検査工程およびプリンタ機体ファームウェア（FW）との認証照合を導入した。
-対象はCOF工程（東北）、ヘッド検査（東北・秋田・深圳）、機体検査（広丘・インドネシア）である。
-4M（Man, Machine, Material, Method）変更を日割りマスタスケジュールで全拠点同期し、依存関係と新旧在庫の収束を統合管理した。
-その結果、ライン停止ゼロ、旧品在庫の極小化、認証不整合ゼロを達成し、目的外使用防止と量産品質の両立を実証した。
+インクジェットヘッドにおけるHead Control System（HCS）の緊急切替対応について報告する。
+COF工程にHCSチップを追加し、検査工程および機体FWの二段認証を導入した。
+東北・秋田・深圳・広丘・インドネシアの各拠点で4M変更を日割りマスタスケジュールで同期し、停止ゼロ・在庫損失最小・認証不整合ゼロを達成した。
 \end{abstract}
+
+\begin{IEEEkeywords}
+Inkjet, Printhead, HCS, COF, Authentication, 4M change, Manufacturing
+\end{IEEEkeywords}
 
 %====================================================
 \section{はじめに}
-2010年代中頃、中国エリアにおいてインクジェットプリントヘッドの目的外使用が顕在化した。
-従来のHCSおよびHCS2はFPGAを用いた解析・中継で短期間に回避される脆弱性があり、COF上に認証ロジックとキーコードを内包するHCSチップ実装が決定された。
-本稿では、停止ゼロ・在庫損失最小での多拠点切替を報告する。
+2010年代中頃、中国エリアにてインクジェットプリントヘッドの目的外使用が顕在化した。
+従来のHCS（印刷幅制限）およびHCS2（16ビットキー照合）はFPGAによる解析で短期間に解除される脆弱性があった。
+本稿ではCOF上にHCSチップを追加し、全拠点での4M変更を統合管理した事例を報告する。
 
 %====================================================
 \section{技術課題と対応方針}
 \subsection{技術課題}
 \begin{itemize}
-  \item COF上HCSチップと機体FWのキー整合性
-  \item 検査装置FWの改修と横断版管理
+  \item COFチップと機体FW間のキーコード整合性
+  \item 検査装置FW・読取機能の改修と横断版管理
   \item 新旧在庫ゼロ化とトレーサビリティ維持
 \end{itemize}
 
 \subsection{対応方針}
 \begin{enumerate}
-  \item COF→ヘッド→機体の工程連携でキー照合を標準化
-  \item 全拠点共通マスタスケジュールによる4M統合管理
-  \item 在庫推移の可視化と切替点固定化
+  \item COF→ヘッド→機体の三段照合フローを標準化
+  \item 4M（日割りマスタ）で全拠点同期
+  \item 在庫可視化と切替点の固定化
 \end{enumerate}
 
 %====================================================
-\section{切替体制と対象拠点}
-\begin{table}[h]
-\caption{対象工程と主タスク}
-\label{tab:sites}
+\section{対象工程と拠点}
+\begin{table}[t]
+\caption{対象工程と拠点・主タスク}
+\label{tab:sitemap}
 \centering
-\begin{tabular}{@{}llp{6.2cm}@{}}
+\begin{tabularx}{\columnwidth}{@{}l l X@{}}
 \toprule
 工程 & 拠点 & 主タスク \\
 \midrule
-COF工程 & 東北 & HCSチップ実装、キー発番・読取 \\
-ヘッド検査 & 東北・秋田・深圳 & FW更新、動作確認 \\
-機体検査 & 広丘・インドネシア & FW更新、認証照合 \\
+COF工程 & 東北エプソン & HCSチップ実装、キーコード発番・読取 \\
+ヘッド検査 & 東北・秋田・深圳 & 検査装置FW更新、動作確認 \\
+機体検査 & 広丘・インドネシア & 機体FW更新、ヘッド認証照合 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 %====================================================
-\section{4M変更の概要}
-\begin{table}[h]
-\caption{4M変更要点}
+\section{4M変更と管理手法}
+\begin{table}[t]
+\caption{4M変更の全体像}
 \label{tab:4m}
 \centering
-\begin{tabular}{@{}lp{7cm}@{}}
+\begin{tabularx}{\columnwidth}{@{}l X@{}}
 \toprule
 M要素 & 変更内容 \\
 \midrule
-Man & 教育・資格更新（キー読取・異常分岐） \\
-Machine & 検査装置FW改修・読取器追加 \\
-Material & 新COF採用・旧品終息・切替ロット確定 \\
-Method & 日割り計画・在庫ゼロ化・版管理標準化 \\
+Man（人） & 教育（キー読取手順・異常分岐）、資格更新 \\
+Machine（設備） & 検査装置FW改修、読取器追加、機体治具更新 \\
+Material（材料） & 新COF採用、旧部材終息、切替ロット確定 \\
+Method（方法） & 日割り計画、在庫ゼロ化、版管理標準化 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 %====================================================
 \section{工程連携と在庫制御}
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
+\fitcol{%
 \begin{tikzpicture}[
   node distance=6mm and 6mm,
-  proc/.style={rectangle,rounded corners,draw,align=center,inner sep=2pt},
+  proc/.style={rectangle,rounded corners,draw,align=center,inner sep=2pt,font=\footnotesize},
   arrow/.style={-Latex,thick}
 ]
-\node[proc] (cof) {COF工程\\(書込/読取)};
-\node[proc,right=of cof] (head) {ヘッド検査\\(FW更新)};
-\node[proc,right=of head] (body) {機体検査\\(認証照合)};
-\node[proc,below=of head] (inv) {在庫管理\\(切替点固定)};
-\draw[arrow](cof)--(head);
-\draw[arrow](head)--(body);
-\draw[arrow](cof)|-(inv);
-\draw[arrow](head)|-(inv);
-\draw[arrow](inv)-|(body);
-\end{tikzpicture}
-\caption{工程連携と在庫制御構造}
+\node[proc] (cof) {COF工程\\{\small(HCS書込/読取)}\\{\small 東北}};
+\node[proc, right=of cof] (head) {ヘッド検査\\{\small FW更新/動作確認}\\{\small 東北/秋田/深圳}};
+\node[proc, right=of head] (body) {機体検査\\{\small FW更新/認証照合}\\{\small 広丘/インドネシア}};
+\node[proc, below=of head] (inv) {在庫管理\\{\small 切替点固定/吸収計画}};
+
+\draw[arrow] (cof) -- (head);
+\draw[arrow] (head) -- (body);
+\draw[arrow] (cof) |- (inv);
+\draw[arrow] (head) |- (inv);
+\draw[arrow] (inv) -| (body);
+\end{tikzpicture}}
+\caption{工程つなぎと在庫制御の関係（1カラム幅にフィット）}
+\label{fig:flow}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.9\linewidth, height=4.5cm,
-  xlabel={日数}, ylabel={在庫比率},
-  ymin=0, ymax=1.05, xmin=0, xmax=30, grid=both
+  width=\columnwidth,
+  height=4.2cm,
+  xlabel={日数}, ylabel={在庫数量（相対値）},
+  ymin=0, ymax=1.05, xmin=0, xmax=30,
+  grid=both,
+  tick label style={font=\footnotesize},
+  label style={font=\footnotesize},
+  legend style={font=\footnotesize, at={(0.5,-0.25)}, anchor=north, legend columns=2}
 ]
-\addplot+[mark=none, thick] coordinates{(0,1.0)(5,0.8)(10,0.55)(15,0.3)(20,0.1)(25,0.02)(30,0)};
+\addplot+[mark=none, thick] coordinates{
+ (0,1.0) (5,0.85) (10,0.6) (15,0.35) (20,0.15) (25,0.05) (30,0.0)
+};
 \addlegendentry{旧COF在庫}
-\addplot+[mark=none, dashed] coordinates{(0,0)(5,0.15)(10,0.4)(15,0.7)(20,0.9)(25,0.98)(30,1.0)};
+\addplot+[mark=none, thick, dashed] coordinates{
+ (0,0.0) (5,0.1) (10,0.35) (15,0.6) (20,0.8) (25,0.95) (30,1.0)
+};
 \addlegendentry{新COF適用率}
 \end{axis}
 \end{tikzpicture}
-\caption{在庫吸収シミュレーション（概念）}
+\caption{旧在庫吸収と新COF適用率（列幅内）}
+\label{fig:inventory}
 \end{figure}
 
 %====================================================
@@ -186,29 +186,27 @@ Method & 日割り計画・在庫ゼロ化・版管理標準化 \\
 \begin{itemize}
   \item ライン停止：0日（計画停止除く）
   \item 認証不整合：0件（全拠点）
-  \item 旧COF在庫：実質ゼロで切替完了
+  \item 旧COF在庫：切替完了時に実質ゼロ
 \end{itemize}
-成功要因は、(1)全体マスタ共有、(2)依存関係明確化、(3)在庫ゼロ化設計、(4)FW版統制である。
+成功要因は、(1)日割りマスタ共有、(2)依存関係明確化、(3)在庫ゼロ化設計、(4)FW版統制にある。
 
 %====================================================
 \section{結論}
-COF内HCSチップ導入に伴う多拠点4M変更を、工程つなぎと在庫制御を核に統合管理した。
-停止ゼロ・在庫損失最小・認証不整合ゼロを達成し、目的外使用防止と量産品質の両立を実証した。
+COF内HCSチップ導入に伴う多拠点4M変更を、工程連携と在庫制御を核に統合管理した。
+停止ゼロ・在庫損失最小・認証不整合ゼロを達成し、目的外使用防止と品質両立を実証した。
 
 %====================================================
 \section*{参考文献}
 \begin{thebibliography}{99}
 \bibitem{EpsonReport2017} （社内資料）HCS3導入技術報告書, 2017.
-\bibitem{IJHeadSecurity2018} S.~Yamamoto \emph{et al.}, ``Authentication Techniques for Piezo Inkjet Heads,'' \emph{Precision Engineering Journal}, vol.~34, no.~2, pp.~101--108, 2018.
-\bibitem{COFAuthIEEE2019} J.~Tanaka \emph{et al.}, ``COF-Embedded Authentication for Inkjet Printhead Security,'' \emph{IEEE Trans. on Components, Packaging and Manufacturing Technology}, vol.~9, no.~12, pp.~2345--2353, 2019.
+\bibitem{COFAuthIEEE2019} J.~Tanaka \emph{et al.}, ``COF-Embedded Authentication for Inkjet Printhead Security,'' \emph{IEEE Trans. CPMT}, 2019.
 \bibitem{SCMChangeMgmt2020} H.~Kobayashi and T.~Mori, ``Global Change Management across Multi-Site Manufacturing,'' \emph{J. of Manufacturing Systems}, vol.~57, pp.~312--321, 2020.
-\bibitem{FWVersionCtrl2016} A.~Suzuki, ``Firmware Version Control for Mass Production,'' \emph{IEICE Trans. Fundamentals}, vol.~E99-A, no.~12, pp.~2190--2197, 2016.
 \end{thebibliography}
 
 %====================================================
 \section*{著者略歴}
-\noindent\textbf{三溝 真一（Shinichi Samizo）}：信州大学大学院 工学系研究科 電気電子工学専攻修士課程修了。
-セイコーエプソン株式会社にて半導体ロジック／メモリ／高耐圧デバイス統合およびインクジェット薄膜ピエゾアクチュエータ開発に従事。
-現在は独立系半導体研究者として、プロセス技術、デバイス教育、システム統合研究に従事。
+\noindent\textbf{三溝 真一（Shinichi Samizo）}：
+信州大学大学院修了。セイコーエプソンにて半導体・インクジェット開発に従事。
+現在は独立系半導体研究者として、デバイス教育・システム統合研究に従事。
 連絡先：\href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}。
 \end{document}
