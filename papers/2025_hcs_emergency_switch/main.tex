@@ -6,19 +6,40 @@
 %====================================================
 \documentclass[journal,twocolumn]{IEEEtran}
 
-% ---------- Packages ----------
+% ---------- Engine: XeLaTeX ----------
+\usepackage{fontspec}    % xeCJKの前でOK（xeCJK内部でも読み込むが明示）
 \usepackage{xeCJK}
-\setCJKmainfont{IPAexMincho} % 適宜変更可（Noto Serif CJK等）
-\usepackage{amsmath,amssymb,siunitx}
+\setCJKmainfont{IPAexMincho} % CIにIPAフォントを入れてあれば通る
+\defaultfontfeatures{Ligatures=TeX}
+% 日本語の禁則・行分割
+\XeTeXlinebreaklocale "ja"
+\XeTeXlinebreakskip = 0pt plus 1pt
+
+% ---------- Math & Units ----------
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\sisetup{
+  detect-all,
+  per-mode=symbol,
+  group-separator={,}
+}
+
+% ---------- Graphics / Figures ----------
 \usepackage{graphicx}
-\usepackage{booktabs,tabularx,multirow}
-\usepackage{hyperref,url}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes,fit}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\graphicspath{{./figures/}}
+
+% ---------- Tables / Lists ----------
+\usepackage{booktabs,tabularx,multirow}
 \usepackage{enumitem}
 \setlist{nosep}
+
+% ---------- Links (最後に) ----------
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
 
 % ---------- Title ----------
 \title{インクジェットヘッドにおけるHCS緊急切替対応の多拠点4M統合管理%
