@@ -6,17 +6,32 @@
 %====================================================
 \documentclass[journal,twocolumn]{IEEEtran}
 
-% ---------- Engine: XeLaTeX ----------
-\usepackage{fontspec}    % xeCJKの前でOK（xeCJK内部でも読み込むが明示）
-\usepackage{xeCJK}
-\setCJKmainfont{IPAexMincho} % CIにIPAフォントを入れてあれば通る
-\defaultfontfeatures{Ligatures=TeX}
-% 日本語の禁則・行分割
-\XeTeXlinebreaklocale "ja"
-\XeTeXlinebreakskip = 0pt plus 1pt
+% ===== Engine guard =====
+\usepackage{iftex}
+\ifPDFTeX
+  \errmessage{This document must be compiled with XeLaTeX (or LuaLaTeX).}
+\fi
 
-% ---------- Math & Units ----------
+% ===== Fonts (XeLaTeX) =====
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\defaultfontfeatures{Ligatures=TeX}
+% IPAex が無いCI対策でフォールバック
+\newif\ifHaveIPA
+\IfFontExistsTF{IPAexMincho}{\HaveIPAtrue}{\HaveIPAfalse}
+\ifHaveIPA
+  \setCJKmainfont{IPAexMincho}
+\else
+  \IfFontExistsTF{Noto Serif CJK JP}{\setCJKmainfont{Noto Serif CJK JP}}{\setCJKmainfont{IPAMincho}}
+\fi
+% 日本語行分割
+\XeTeXlinebreaklocale "ja"
+\XeTeXlinebreakskip=0pt plus 1pt
+
+% ===== Math & Units =====
 \usepackage{amsmath,amssymb}
+% IEEEtran推奨：多段数式の罰則緩和
+\interdisplaylinepenalty=2500
 \usepackage{siunitx}
 \sisetup{
   detect-all,
@@ -24,20 +39,21 @@
   group-separator={,}
 }
 
-% ---------- Graphics / Figures ----------
+% ===== Graphics / Figures =====
 \usepackage{graphicx}
+\graphicspath{{./figures/}}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes,fit}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\graphicspath{{./figures/}}
 
-% ---------- Tables / Lists ----------
+% ===== Tables / Lists =====
 \usepackage{booktabs,tabularx,multirow}
 \usepackage{enumitem}
 \setlist{nosep}
 
-% ---------- Links (最後に) ----------
+% ===== Links (最後に) =====
+\PassOptionsToPackage{hyphens}{url} % 長いURLの自動改行
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 
