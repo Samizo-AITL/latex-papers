@@ -1,0 +1,50 @@
+name: latex_hcs_emergency_switch
+
+on:
+  push:
+    paths:
+      - 'papers/2025_hcs_emergency_switch/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX (XeLaTeX)
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: papers/2025_hcs_emergency_switch
+          root_file: main.tex
+          latexmk_use_xelatex: true
+          # 日本語用フォント（必要に応じて変更可）
+          extra_system_packages: >-
+            fonts-ipafont-gothic
+            fonts-ipafont-mincho
+
+      # PDFをアップロード
+      - name: Upload PDF artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hcs_emergency_switch-pdf-${{ github.run_number }}
+          path: papers/2025_hcs_emergency_switch/main.pdf
+          if-no-files-found: error
+          retention-days: 30
+
+      # ビルドログ一式をアップロード
+      - name: Upload LaTeX logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hcs_emergency_switch-logs-${{ github.run_number }}
+          path: |
+            papers/2025_hcs_emergency_switch/*.log
+            papers/2025_hcs_emergency_switch/*.fls
+            papers/2025_hcs_emergency_switch/*.fdb_latexmk
+            papers/2025_hcs_emergency_switch/*.synctex.gz
+            papers/2025_hcs_emergency_switch/*.aux
+            papers/2025_hcs_emergency_switch/*.toc
+          retention-days: 30
