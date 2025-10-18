@@ -9,33 +9,45 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # まず状況確認（パス/ファイル）
+      - name: List working dir
+        run: |
+          echo "PWD=$(pwd)"
+          ls -la
+          echo "---- papers dir ----"
+          ls -la papers/2025_hcs_emergency_switch || true
+
+      # XeLaTeX でビルド。追加apkは "font-noto-cjk" のみ（Alpineで確実）
       - name: Compile LaTeX (XeLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: papers/2025_hcs_emergency_switch
           root_file: main.tex
           latexmk_use_xelatex: true
-          # ✅ Alpineではこの2行だけで十分
-          extra_system_packages: >-
-            font-noto-cjk
-            texlive-langjapanese
+          latexmk_args: -interaction=nonstopmode -halt-on-error -file-line-error
+          # ❗Alpineで存在が確実なのはこれだけ。texlive関連はfullイメージに入っています
+          extra_system_packages: font-noto-cjk
 
-      - name: Show log tail
+      # 生成物/ログを必ず見える化
+      - name: Show outputs
         if: always()
         run: |
-          set +e
-          LOG=$(ls -1 papers/2025_hcs_emergency_switch/*.log | head -n 1 || true)
+          echo "---- generated files ----"
+          ls -la papers/2025_hcs_emergency_switch || true
+          echo "---- log tail ----"
+          LOG=$(ls -1 papers/2025_hcs_emergency_switch/*.log 2>/dev/null | head -n 1 || true)
           if [ -n "$LOG" ]; then
-            echo "==== Tail of $LOG ===="
             tail -n 200 "$LOG"
           else
-            echo "No .log found"
+            echo "No .log found (compilation may have failed before LaTeX ran)"
           fi
 
+      # PDF（存在するものを全部）をアップロード
       - name: Upload PDF artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -45,6 +57,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      # ログ一式をアップロード
       - name: Upload LaTeX logs
         if: always()
         uses: actions/upload-artifact@v4
