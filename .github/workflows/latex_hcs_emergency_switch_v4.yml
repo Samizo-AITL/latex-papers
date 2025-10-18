@@ -19,11 +19,10 @@ jobs:
           working_directory: papers/2025_hcs_emergency_switch
           root_file: main.tex
           latexmk_use_xelatex: true
-          # Alpine用：Noto CJKフォントを利用
+          # ✅ Alpineではこの2行だけで十分
           extra_system_packages: >-
             font-noto-cjk
-            texlive-fonts-recommended
-            texlive-lang-japanese
+            texlive-langjapanese
 
       - name: Show log tail
         if: always()
