@@ -8,35 +8,47 @@
 
 % ===== Engine guard =====
 \usepackage{iftex}
-\ifPDFTeX
-  \errmessage{This document must be compiled with XeLaTeX (or LuaLaTeX).}
+\ifXeTeX\else
+  \errmessage{Compile with XeLaTeX (or LuaLaTeX).}
 \fi
 
 % ===== Fonts (XeLaTeX) =====
 \usepackage{fontspec}
 \usepackage{xeCJK}
 \defaultfontfeatures{Ligatures=TeX}
-% IPAex が無いCI対策でフォールバック
-\newif\ifHaveIPA
-\IfFontExistsTF{IPAexMincho}{\HaveIPAtrue}{\HaveIPAfalse}
-\ifHaveIPA
-  \setCJKmainfont{IPAexMincho}
-\else
-  \IfFontExistsTF{Noto Serif CJK JP}{\setCJKmainfont{Noto Serif CJK JP}}{\setCJKmainfont{IPAMincho}}
-\fi
+
+% --- Latin fonts (safe defaults) ---
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+% --- CJK font (prefer Noto on CI/Alpine; fallback to IPAex/IPA) ---
+\IfFontExistsTF{Noto Serif CJK JP}{
+  \setCJKmainfont{Noto Serif CJK JP}
+}{
+  \IfFontExistsTF{IPAexMincho}{
+    \setCJKmainfont{IPAexMincho}
+  }{
+    \IfFontExistsTF{IPAMincho}{
+      \setCJKmainfont{IPAMincho}
+    }{
+      \setCJKmainfont{Noto Sans CJK JP} % 最終フォールバック
+    }
+  }
+}
+
 % 日本語行分割
 \XeTeXlinebreaklocale "ja"
 \XeTeXlinebreakskip=0pt plus 1pt
 
 % ===== Math & Units =====
 \usepackage{amsmath,amssymb}
-% IEEEtran推奨：多段数式の罰則緩和
 \interdisplaylinepenalty=2500
 \usepackage{siunitx}
 \sisetup{
   detect-all,
-  per-mode=symbol,
-  group-separator={,}
+  per-mode = symbol,
+  group-separator = {,}
 }
 
 % ===== Graphics / Figures =====
@@ -53,8 +65,8 @@
 \setlist{nosep}
 
 % ===== Links (最後に) =====
-\PassOptionsToPackage{hyphens}{url} % 長いURLの自動改行
-\usepackage{url}
+\PassOptionsToPackage{hyphens}{url} % 長URLの改行
+\usepackage{xurl}                   % urlより改行に強い
 \usepackage[hidelinks]{hyperref}
 
 % ---------- Title ----------
