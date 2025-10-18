@@ -1,3 +1,4 @@
+# .github/workflows/latex_hcs_emergency_switch_v4.yml
 name: latex_hcs_emergency_switch
 
 on:
@@ -19,18 +20,30 @@ jobs:
           working_directory: papers/2025_hcs_emergency_switch
           root_file: main.tex
           latexmk_use_xelatex: true
-          # 日本語用フォント（必要に応じて変更可）
           extra_system_packages: >-
             fonts-ipafont-gothic
             fonts-ipafont-mincho
 
-      # PDFをアップロード
+      # 失敗時の原因特定を早くするため、log末尾を出力
+      - name: Show log tail
+        if: always()
+        run: |
+          set +e
+          LOG=$(ls -1 papers/2025_hcs_emergency_switch/*.log | head -n 1 || true)
+          if [ -n "$LOG" ]; then
+            echo "==== Tail of $LOG ===="
+            tail -n 200 "$LOG"
+          else
+            echo "No .log found"
+          fi
+
+      # PDFをアップロード（ワイルドカードで拾う）
       - name: Upload PDF artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: hcs_emergency_switch-pdf-${{ github.run_number }}
-          path: papers/2025_hcs_emergency_switch/main.pdf
+          path: papers/2025_hcs_emergency_switch/*.pdf
           if-no-files-found: error
           retention-days: 30
 
