@@ -12,29 +12,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Ubuntu 側に TeX/latexmk/IEEEtran/日本語フォントを導入
-      - name: Install TeX Live + latexmk + Japanese fonts (host)
+      # IEEEtran クラスを論文フォルダに直接配置
+      - name: Fetch IEEEtran class locally
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            latexmk \
-            texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-publishers \        # ← IEEEtran を含む
-            texlive-fonts-recommended \
-            texlive-fonts-extra \
-            texlive-lang-japanese \
-            fonts-noto-cjk
+          mkdir -p papers/2025_hv_screening_optimization
+          cd papers/2025_hv_screening_optimization
+          curl -L -o ieeetran.cls https://mirrors.ctan.org/macros/latex/contrib/IEEEtran/IEEEtran.cls
+          echo "✅ Installed ieeetran.cls in working directory"
 
-      - name: Compile Japanese IEEE paper (no Docker)
+      # XeLaTeX で日本語論文をコンパイル
+      - name: Compile Japanese IEEE paper
         uses: xu-cheng/latex-action@v4
         with:
-          use_docker: false             # ← ホストの TeX Live を使用
           root_file: papers/2025_hv_screening_optimization/main.tex
-          latexmk_use_xelatex: true     # ← あなたのプレアンブルに合わせて XeLaTeX
+          latexmk_use_xelatex: true
           latexmk_shell_escape: true
 
-      # 失敗してもログを必ず回収
+      # PDF と LOG をアップロード
       - name: Upload PDF and LOG artifacts
         if: always()
         uses: actions/upload-artifact@v4
