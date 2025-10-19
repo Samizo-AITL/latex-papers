@@ -15,10 +15,8 @@ jobs:
         uses: xu-cheng/latex-action@v4
         with:
           root_file: papers/2025_hv_screening_optimization/main.tex
+          latexmk_use_xelatex: true
           latexmk_shell_escape: true
-          latexmk_use_lualatex: false
-          latexmk_use_xelatex: false
-          extra_system_packages: "latexmk"
 
       - name: Upload PDF and LOG artifacts
         uses: actions/upload-artifact@v4
