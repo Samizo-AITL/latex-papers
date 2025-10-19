@@ -1,34 +1,48 @@
 \documentclass[twocolumn]{ieeetran}
 
-% ==== XeLaTeX 必須（Actionsでは latexmk_use_xelatex:true に）====
+% ======================================================
+% XeLaTeX を必須にする（CI側では latexmk_use_xelatex:true）
+% ======================================================
 \usepackage{iftex}
 \ifXeTeX\else
   \errmessage{This template requires XeLaTeX. Set latexmk_use_xelatex:true in your CI.}
 \fi
 
-% ---- 日本語フォント設定（XeLaTeX） ----
+% ======================================================
+% 日本語フォント設定（XeLaTeX 用）
+% ======================================================
 \usepackage{fontspec}
 \usepackage{xeCJK}
+% 欧文
 \setmainfont{Times New Roman}
 \setsansfont{Arial}
 \setmonofont{Courier New}
-% GitHub Actions で apt: fonts-noto-cjk を入れる前提
+% 和文（fonts-noto-cjk が Actions に入っている前提）
 \setCJKmainfont{Noto Serif CJK JP}
 \setCJKsansfont{Noto Sans CJK JP}
 \setCJKmonofont{Noto Sans Mono CJK JP}
 
-% ---- 図・数式・表 ----
-\usepackage{graphicx}                % dvipdfmx オプションは付けない（XeLaTeX）
-\graphicspath{{./}{figures/}}        % 図の既定パス
+% ======================================================
+% 数式・図・表
+% ======================================================
+\usepackage{graphicx}            % dvipdfmx オプションは不要（XeLaTeX）
+\graphicspath{{./}{figures/}}    % 図のパス
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \usepackage{amsmath,amssymb,bm}
 \usepackage{booktabs}
 \usepackage{multirow}
 
-% ---- URL/ハイパーリンク（日本語・長URLの改行に対応）----
+% ======================================================
+% URL / ハイパーリンク（日本語 OK、長 URL 改行対応）
+% ======================================================
 \usepackage{url}
 \def\UrlBreaks{\do\/\do-\do\_\do\&\do\?}
 \usepackage[unicode,breaklinks=true]{hyperref}
+
+% ======================================================
+% ページマージン調整（必要なら）
+% ======================================================
+% \usepackage[top=19mm,bottom=19mm,left=19mm,right=19mm]{geometry}
 
 \title{uTEPヘッド用HVドライバICにおけるウエハ酸素濃度変動を考慮したスクリーニング条件最適化}
 
