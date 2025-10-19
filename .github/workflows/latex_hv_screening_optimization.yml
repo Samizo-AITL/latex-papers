@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install full TeX Live (includes IEEEtran)
+        run: sudo apt-get update && sudo apt-get install -y texlive-full
+
       - name: Compile Japanese IEEE paper
         uses: xu-cheng/latex-action@v4
         with:
