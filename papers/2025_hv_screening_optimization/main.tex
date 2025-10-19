@@ -1,7 +1,7 @@
 \documentclass[twocolumn]{ieeetran}
 
 % =========================
-% XeLaTeX 必須（CIでは latexmk_use_xelatex:true）
+% XeLaTeX 必須
 % =========================
 \usepackage{iftex}
 \ifXeTeX\else
@@ -9,7 +9,7 @@
 \fi
 
 % =========================
-% 日本語フォント設定（XeLaTeX／内蔵フォントのみ）
+% 日本語フォント（内蔵のみ）
 % =========================
 \usepackage{fontspec}
 \usepackage{xeCJK}
@@ -26,7 +26,8 @@
 % =========================
 % 数式・図・表
 % =========================
-\PassOptionsToPackage{draft}{graphicx} % 図未投入でも停止しない
+% （図未投入でも停止しない：本提出時はこの1行をコメントアウト）
+\PassOptionsToPackage{draft}{graphicx}
 \usepackage{graphicx}
 \graphicspath{{./}{figures/}}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
@@ -42,18 +43,20 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 
-% --- プリアンブルに追加 ---
+% --- TikZ / pgfplots ---
 \usepackage{tikz}
+\usetikzlibrary{plotmarks,positioning,calc,decorations.pathmorphing}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots} % ← 必須：\begin{groupplot} 用
 
 % =========================
-% URL/ハイパーリンクと _ 対策
+% URL/ハイパーリンク と '_' 対策
 % =========================
 \usepackage{url}
 \def\UrlBreaks{\do\/\do-\do\_\do\&\do\?}
 
-% ← 追加：本文・キャプション内の '_' を許可（必ず hyperref より前）
+% '_' を本文・キャプションで安全化（必ず hyperref より前）
 \usepackage[strings]{underscore}
 
 % hyperref は最後に
@@ -64,7 +67,7 @@
   pdfborder={0 0 0}
 }
 
-% \usepackage[top=19mm,bottom=19mm,left=19mm,right=19mm]{geometry}
+% \usepackage[top=19mm,bottom=19mm,left=19mm,right=19mm]{geometry} % 必要時のみ
 
 \title{uTEPヘッド用HVドライバICにおけるウエハ酸素濃度変動を考慮したスクリーニング条件最適化}
 
@@ -142,13 +145,11 @@ uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合ア�
 
 \begin{figure}[t]
   \centering
-  % 列幅に強制フィット（高さは自動スケール）
-  \resizebox{\linewidth}{!}{%
   \begin{tikzpicture}
-    % 2枚並列のグループプロット（左：通常ロット／右：高酸素ロット）
+    % 2枚並列（左右）のグループプロット。列幅に収まるよう各軸幅を調整
     \begin{groupplot}[
-      group style={group size=2 by 1, horizontal sep=12mm},
-      width=0.48\linewidth, height=0.48\linewidth,
+      group style={group size=2 by 1, horizontal sep=10mm},
+      width=0.45\columnwidth, height=0.45\columnwidth, % ← 列幅ベースで安定
       ymin=0,
       ymajorgrids,
       xmajorgrids,
@@ -159,13 +160,12 @@ uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合ア�
       xtick={0,1,2,3,4,5},
       xticklabel style={/pgf/number format/fixed},
       yticklabel style={/pgf/number format/fixed},
-      title style={yshift=-2pt},
-      % 文字が大きくなり過ぎないように
+      title style={yshift=-2pt,font=\scriptsize},
       label style={font=\scriptsize},
       tick label style={font=\scriptsize},
-      title style={font=\scriptsize},
-      legend style={font=\scriptsize, draw=none, fill=none},
+      legend style={font=\scriptsize, draw=none, fill=white, fill opacity=0.8},
       legend cell align=left,
+      enlarge x limits=0.05,   % 端の棒が切れないように少し余白
     ]
 
     % --- 左：通常ロット ---
@@ -173,7 +173,6 @@ uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合ア�
       title={通常ロット（代表）},
       legend pos=north east,
     ]
-      % 疑似ヒストグラム（棒グラフで表現）
       \addplot[ybar, bar width=6pt]
         coordinates {
           (0.5,  15)
@@ -210,8 +209,7 @@ uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合ア�
       \addlegendentry{LPD密度}
 
     \end{groupplot}
-  \end{tikzpicture}%
-  }% \resizebox
+  \end{tikzpicture}
   \caption{ウエハLPD分布比較（高酸素ロットと通常ロットの代表例）}
   \label{fig_lpd}
 \end{figure}
@@ -271,38 +269,42 @@ uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合ア�
 
 \begin{figure}[t]
   \centering
-  % TikZ版（はみ出し防止済）
-  \resizebox{\linewidth}{!}{%
   \begin{tikzpicture}
     \begin{axis}[
-      width=\linewidth,
-      height=0.55\linewidth,
+      width=\columnwidth,            % ← 列幅にフィット
+      height=0.58\columnwidth,       % 比率で高さ調整
+      xmin=1, xmax=8.02,
+      ymin=0, ymax=500,
+      xtick={1,2,3,4,5,6,7,8},
+      ytick={0,100,200,300,400,500},
       xlabel={スクリーニング回数},
       ylabel={残存不良率 [ppm]},
-      xmin=0, xmax=8,
-      ymin=0, ymax=500,
-      xtick={0,1,2,3,4,5,6,7,8},
       ymajorgrids,
+      xmajorgrids,
       grid style={dashed,gray!40},
-      line width=0.6pt,
-      mark size=2.0pt,
+      line width=0.7pt,
+      mark size=2.2pt,
+      enlargelimits=false,            % 余白の自動拡張を抑止
+      clip=false,                     % マーカー端の切れを防止
+      legend style={font=\scriptsize,draw=none,fill=white,fill opacity=0.8},
+      legend cell align=left,
       tick label style={font=\scriptsize},
       label style={font=\scriptsize},
     ]
-      \addplot[color=blue, mark=*] coordinates {
-        (1,420)
-        (2,125)
-        (3,52)
-        (4,30)
-        (5,25)
-        (6,24)
-        (7,23)
-        (8,23)
-      };
+      \addplot[mark=*, color=blue]
+        coordinates {
+          (1,420)
+          (2,125)
+          (3,52)
+          (4,30)
+          (5,25)
+          (6,24)
+          (7,23)
+          (8,23)
+        };
       \addlegendentry{残存不良率（代表ロット）}
     \end{axis}
-  \end{tikzpicture}%
-  }
+  \end{tikzpicture}
   \caption{回数に対する不良収束曲線（uTEP対象、代表ロット）}
   \label{fig_convergence}
 \end{figure}
