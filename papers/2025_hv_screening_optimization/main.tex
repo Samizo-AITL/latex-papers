@@ -1,10 +1,21 @@
 \documentclass[twocolumn]{ieeetran}
-\usepackage[dvipdfmx]{graphicx}
+
+% --- XeLaTeX対応: dvipdfmx指定を外す ---
+\usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{url}
-\usepackage{hyperref}
+\usepackage[unicode]{hyperref}
 \usepackage{booktabs}
 \usepackage{multirow}
+
+% --- 日本語フォント設定（XeLaTeX用） ---
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\setmainfont{Times New Roman}
+\setCJKmainfont{Noto Serif CJK JP}
+
+% --- ページマージン調整(IEEE準拠のままで十分なら不要) ---
+%\usepackage[top=19mm,bottom=19mm,left=19mm,right=19mm]{geometry}
 
 \title{uTEPヘッド用HVドライバICにおけるウエハ酸素濃度変動を考慮したスクリーニング条件最適化}
 
