@@ -446,6 +446,49 @@ C49相残留の発生を抑制することを狙った。
 このWSiプロセスは，インクジェットヘッド用ドライバICとして展開され，Machシリーズおよび$\mu$TFP\,PrecisionCore世代の駆動デバイスに適用されることとなった。  
 なお，筆者は入社1年目に0.35\,\textmu m\,WSiゲートプロセスの社内ロジック開発に携わっており，その後この技術に45\,V高耐圧素子を統合する取り組みが別担当者により進められた。  
 
+\section*{Appendix — 多電源対応CMOSプロセスの背景}
+
+筆者は、0.25\,\textmu m HV CMOS ドライバ開発に先立ち、%
+0.35\,\textmu m Ti サリサイド技術を基盤とする%
+\textbf{3.3\,V／5\,V／20\,V の多電源対応 CMOS プロセス}の開発を担当した。%
+本プロセスは、酒田 8\,インチ ラインの 0.35\,\textmu m モノクロ LCD ドライバ プロセスをベースに、%
+\textbf{LTPS パネル向け LCD ドライバ}を想定して設計した。
+
+\paragraph*{Well 構成}
+\begin{itemize}\itemsep0.2em
+  \item \textbf{20\,V 領域}: Twin-Well（N-Well / P-Well）
+  \item \textbf{5\,V／3.3\,V 領域}: Twin-Well（N-Well / P-Well）
+\end{itemize}
+20\,V 領域と 5\,V／3.3\,V 領域は \textbf{ウェル工程で区分}し、%
+素子分離は \textbf{フィールド酸化（LOCOS）}で形成した。
+
+\paragraph*{ゲート酸化膜（重ね酸化）}
+多電圧素子を同一ウェーハ上で実現するため、%
+\textbf{G1 $\rightarrow$ G2 $\rightarrow$ G3 の重ね酸化}を採用。%
+各酸化ステップ後に不要領域をマスクで除去し、残存領域に次酸化を積層する。
+
+\begin{table}[H]
+\centering
+\caption{電圧と酸化スタックの対応（重ね酸化）}
+\label{tab:mv_oxide_stack}
+\begin{tabularx}{\columnwidth}{l l l X}
+\toprule
+電圧 & 構成 & 最終膜厚 & 主用途 \\
+\midrule
+20\,V   & \textbf{G1 + G2 + G3} & $\approx$\,800\,\AA{} & 高耐圧 I/O \\
+5\,V    & \textbf{G2 + G3}      & $\approx$\,150\,\AA{} & アナログ／I/O \\
+3.3\,V  & \textbf{G3}           & $\approx$\, 80\,\AA{} & ロジック／SRAM コア \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+以上の方法により、%
+\textbf{20\,V = G1+G2+G3}、\textbf{5\,V = G2+G3}、\textbf{3.3\,V = G3} の%
+多電源ゲート絶縁膜構造を一連の酸化工程で形成した。%
+当該 LTPS 向けプロセスは製品化には至らなかったが、%
+\textbf{Twin-Well 構成}と\textbf{重ね酸化による膜厚分離}は、%
+後続の 0.25\,\textmu m HV CMOS／aTFT ドライバ プロセスへ継承された。
+
 % ===== 参考文献（直書き・IEEE整形） =====
 \begin{thebibliography}{99}
 
