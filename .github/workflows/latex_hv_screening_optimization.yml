@@ -9,11 +9,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      # TeX + 日本語 + 必要フォント
-      - name: Install TeX Live (lite) + CJK fonts
+      - name: Install TeX Live + Japanese fonts
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -23,16 +23,21 @@ jobs:
             texlive-fonts-recommended \
             texlive-fonts-extra \
             texlive-lang-japanese \
-            fonts-noto-cjk
+            fonts-noto-cjk \
+            wget unzip
 
-      # IEEEtran を CTAN から取得して "小文字名" でローカルツリーに配置
-      - name: Install IEEEtran class & bst (force lowercase filename)
+      - name: Install IEEEtran manually (lowercase filename)
         run: |
-          mkdir -p "$HOME/texmf/tex/latex/ieeetran"
-          mkdir -p "$HOME/texmf/bibtex/bst/ieeetran"
-          curl -L -o "$HOME/texmf/tex/latex/ieeetran/ieeetran.cls" https://mirrors.ctan.org/macros/latex/contrib/IEEEtran/IEEEtran.cls
-          curl -L -o "$HOME/texmf/bibtex/bst/ieeetran/ieeetran.bst" https://mirrors.ctan.org/macros/latex/contrib/IEEEtran/IEEEtran.bst
-          texhash "$HOME/texmf"
+          mkdir -p ~/texmf/tex/latex/ieeetran
+          cd ~/texmf/tex/latex/ieeetran
+          wget -q https://mirrors.ctan.org/macros/latex/contrib/IEEEtran.zip
+          unzip -o IEEEtran.zip
+          # rename uppercase -> lowercase to satisfy XeLaTeX search
+          if [ -f IEEEtran.cls ]; then mv IEEEtran.cls ieeetran.cls; fi
+          texhash ~/texmf
+
+      - name: Verify IEEEtran installation
+        run: kpsewhich ieeetran.cls || (echo "IEEEtran not found!" && exit 1)
 
       - name: Compile Japanese IEEE paper
         uses: xu-cheng/latex-action@v4
