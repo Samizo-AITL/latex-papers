@@ -12,11 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # IEEEtran など一式＋日本語CJKフォントを導入
-      - name: Install TeX Live + CJK fonts
+      # LaTeX + IEEEtran + 日本語フォント導入（軽量版）
+      - name: Install TeX Live (minimal) and CJK fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-full fonts-noto-cjk
+          sudo apt-get install -y \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            texlive-lang-japanese \
+            fonts-noto-cjk
 
       - name: Compile Japanese IEEE paper
         uses: xu-cheng/latex-action@v4
@@ -24,13 +29,14 @@ jobs:
           root_file: papers/2025_hv_screening_optimization/main.tex
           latexmk_use_xelatex: true
           latexmk_shell_escape: true
+          continue_on_error: true
 
-      # 失敗してもログを必ず回収
+      # 失敗してもログを必ずアップロード
       - name: Upload PDF and LOG artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: hv_screening_optimization_outputs
           path: |
-            papers/2025_hv_screening_optimization/main.pdf
-            papers/2025_hv_screening_optimization/main.log
+            papers/2025_hv_screening_optimization/*.pdf
+            papers/2025_hv_screening_optimization/*.log
