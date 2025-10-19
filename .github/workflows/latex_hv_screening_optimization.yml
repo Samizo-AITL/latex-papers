@@ -6,9 +6,15 @@ on:
       - '.github/workflows/latex_hv_screening_optimization.yml'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     steps:
       - uses: actions/checkout@v4
 
@@ -22,19 +28,24 @@ jobs:
       # XeLaTeXでビルド（main.tex のあるディレクトリで動かす）
       - name: Compile Japanese IEEE paper (XeLaTeX)
         uses: xu-cheng/latex-action@v4
-        continue-on-error: true                # ← 失敗しても次へ進めてログ回収
         with:
           root_file: papers/2025_hv_screening_optimization/main.tex
-          work_in_root_file_dir: true          # ← これが肝。出力が同フォルダに出る
+          work_in_root_file_dir: true          # 出力が同フォルダに出る
           latexmk_use_xelatex: true
           latexmk_shell_escape: true
 
-      # どこに出力されたか可視化（デバッグ用）
-      - name: List build outputs
+      # どこに出力されたか可視化（デバッグ用）＋ログ末尾を出力
+      - name: List build outputs and show log tail
         if: always()
         run: |
           echo "== repo root ==" && ls -la
           echo "== paper dir ==" && ls -la papers/2025_hv_screening_optimization || true
+          echo "== log tail (if exists) =="
+          if [ -f papers/2025_hv_screening_optimization/main.log ]; then
+            tail -n 200 papers/2025_hv_screening_optimization/main.log
+          else
+            echo "main.log not found"
+          fi
 
       # PDF/LOG を必ずアップロード（どちらの場所にも対応）
       - name: Upload PDF and LOG artifacts
@@ -47,3 +58,5 @@ jobs:
             papers/2025_hv_screening_optimization/*.log
             *.pdf
             *.log
+          if-no-files-found: warn           # ← 無かったら警告（失敗にしない）
+          retention-days: 14
