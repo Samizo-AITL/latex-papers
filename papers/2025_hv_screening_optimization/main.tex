@@ -197,12 +197,16 @@ COP欠陥が部分的に残存しても初期ストレス下で顕在化しに�
   \centering
   \begin{tikzpicture}
     \begin{groupplot}[
-      group style={group size=1 by 2, vertical sep=8mm}, % ←縦2枚に変更
-      width=0.9\columnwidth, height=0.45\columnwidth,
-      ymin=0, ymax=45, % ←両グラフで縦軸合わせ
+      group style={
+        group size=1 by 2,     % ← 縦2段
+        vertical sep=10mm      % ← 図の間隔を広げる
+      },
+      width=0.9\columnwidth,
+      height=0.45\columnwidth,
+      ymin=0, ymax=40,         % ← 縦軸上限を40に固定
       ymajorgrids,
       xmajorgrids,
-      tick align=inside, % ←目盛内側
+      tick align=inside,       % ← 目盛りを内側に
       tick style={thin},
       xlabel={LPDサイズ [$\mu$m]},
       ylabel={密度 [cm$^{-2}$]},
