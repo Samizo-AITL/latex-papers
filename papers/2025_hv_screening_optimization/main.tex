@@ -19,8 +19,8 @@
 \setmonofont{DejaVu Sans Mono}
 % 和文（TeX Live 同梱 IPAex 系：太字フォールバックを指定）
 \setCJKmainfont[
-  BoldFont   = IPAexGothic,  % 明朝に太字が無い問題を解決
-  ItalicFont = IPAexMincho   % 斜体リクエスト時も明朝で処理
+  BoldFont   = IPAexGothic,   % 明朝に太字が無い問題を解決
+  ItalicFont = IPAexMincho    % 斜体要求も明朝で処理
 ]{IPAexMincho}
 \setCJKsansfont{IPAexGothic}
 \setCJKmonofont{IPAexGothic}
@@ -28,17 +28,19 @@
 % =========================
 % 数式・図・表
 % =========================
-% ★ 図欠落で止めない（枠だけ出す）。本物の図が揃ったら下行を削除。
+% 図が無くても枠だけでビルド継続（本物の図が揃ったら次の1行は削除可）
 \PassOptionsToPackage{draft}{graphicx}
 \usepackage{graphicx}            % dvipdfmxオプション不要（XeLaTeX）
 \graphicspath{{./}{figures/}}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 
-% ★ 図ファイルが無くてもビルド継続する安全版 include（draft解除後も有効）
+% 図ファイルが無くてもビルド継続する安全版 include
 \newcommand{\safeincludegraphics}[2][]{%
   \IfFileExists{#2}{\includegraphics[#1]{#2}}{%
     \fbox{\parbox[c][0.45\linewidth][c]{0.9\linewidth}{\centering
     \textit{[Missing image: #2]}}}}}
+% ★ ここが肝：既存の \includegraphics を安全版に完全置換
+\let\includegraphics\safeincludegraphics
 
 \usepackage{amsmath,amssymb,bm}
 \usepackage{booktabs}
@@ -50,7 +52,7 @@
 \usepackage{url}
 \def\UrlBreaks{\do\/\do-\do\_\do\&\do\?}
 
-% ★ hyperref は最後に
+% hyperref は最後に
 \usepackage[unicode,breaklinks=true]{hyperref}
 \hypersetup{
   pdfauthor={Shinichi Samizo},
