@@ -17,8 +17,11 @@
 \setmainfont{TeX Gyre Termes}
 \setsansfont{TeX Gyre Heros}
 \setmonofont{DejaVu Sans Mono}
-% 和文（TeX Live 同梱 IPAex 系：追加apt不要）
-\setCJKmainfont{IPAexMincho}
+% 和文（TeX Live 同梱 IPAex 系：太字フォールバックを指定）
+\setCJKmainfont[
+  BoldFont = IPAexGothic,   % 明朝に太字が無い問題を解決
+  ItalicFont = IPAexMincho  % 斜体リクエスト時も明朝で処理
+]{IPAexMincho}
 \setCJKsansfont{IPAexGothic}
 \setCJKmonofont{IPAexGothic}
 
@@ -28,6 +31,12 @@
 \usepackage{graphicx}            % dvipdfmxオプション不要（XeLaTeX）
 \graphicspath{{./}{figures/}}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
+% 図が無くてもビルド継続する安全版 include
+\newcommand{\safeincludegraphics}[2][]{%
+  \IfFileExists{#2}{\includegraphics[#1]{#2}}{%
+    \fbox{\parbox[c][0.45\linewidth][c]{0.9\linewidth}{\centering
+    \textit{[Missing image: #2]}}}}}
+
 \usepackage{amsmath,amssymb,bm}
 \usepackage{booktabs}
 \usepackage{multirow}
