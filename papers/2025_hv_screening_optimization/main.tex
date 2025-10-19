@@ -19,8 +19,8 @@
 \setmonofont{DejaVu Sans Mono}
 % 和文（TeX Live 同梱 IPAex 系：太字フォールバックを指定）
 \setCJKmainfont[
-  BoldFont = IPAexGothic,   % 明朝に太字が無い問題を解決
-  ItalicFont = IPAexMincho  % 斜体リクエスト時も明朝で処理
+  BoldFont   = IPAexGothic,  % 明朝に太字が無い問題を解決
+  ItalicFont = IPAexMincho   % 斜体リクエスト時も明朝で処理
 ]{IPAexMincho}
 \setCJKsansfont{IPAexGothic}
 \setCJKmonofont{IPAexGothic}
@@ -28,10 +28,13 @@
 % =========================
 % 数式・図・表
 % =========================
+% ★ 図欠落で止めない（枠だけ出す）。本物の図が揃ったら下行を削除。
+\PassOptionsToPackage{draft}{graphicx}
 \usepackage{graphicx}            % dvipdfmxオプション不要（XeLaTeX）
 \graphicspath{{./}{figures/}}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
-% 図が無くてもビルド継続する安全版 include
+
+% ★ 図ファイルが無くてもビルド継続する安全版 include（draft解除後も有効）
 \newcommand{\safeincludegraphics}[2][]{%
   \IfFileExists{#2}{\includegraphics[#1]{#2}}{%
     \fbox{\parbox[c][0.45\linewidth][c]{0.9\linewidth}{\centering
@@ -46,7 +49,14 @@
 % =========================
 \usepackage{url}
 \def\UrlBreaks{\do\/\do-\do\_\do\&\do\?}
+
+% ★ hyperref は最後に
 \usepackage[unicode,breaklinks=true]{hyperref}
+\hypersetup{
+  pdfauthor={Shinichi Samizo},
+  pdftitle={uTEPヘッド用HVドライバICにおけるウエハ酸素濃度変動を考慮したスクリーニング条件最適化},
+  pdfborder={0 0 0}
+}
 
 % \usepackage[top=19mm,bottom=19mm,left=19mm,right=19mm]{geometry} % 必要なら有効化
 
