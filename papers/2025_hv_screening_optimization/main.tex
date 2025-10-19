@@ -269,32 +269,31 @@ COP欠陥が部分的に残存しても初期ストレス下で顕在化しに�
 
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[x=1mm,y=1.5mm] % ← 縦方向を1.5倍に
+  \begin{tikzpicture}[x=1mm,y=1.5mm]
     % --- Poly ゲート電極 ---
-    \draw[thick] (0,24) -- (70,24) node[right,font=\scriptsize]{Poly ゲート電極};
+    \draw[thick] (0,24) -- (70,24)
+      node[right,font=\scriptsize]{Poly ゲート電極};
 
     % --- HV ゲート酸化膜 ---
-    \draw[thick] (0,18) -- (70,18) node[right,font=\scriptsize]{HV ゲート酸化膜};
+    \draw[thick] (0,18) -- (70,18)
+      node[right,font=\scriptsize]{HV ゲート酸化膜};
 
     % --- Si 基板 ---
-    \draw[thick] (0,10) -- (70,10) node[right,font=\scriptsize]{Si 基板};
+    \draw[thick] (0,10) -- (70,10)
+      node[right,font=\scriptsize]{Si 基板};
 
     % --- COP：菱形（内部ボイド） ---
     \draw[thick] (30,10) -- (31,12) -- (32,10) -- (31,8) -- cycle;
-    \node[right,font=\scriptsize] at (33,10.5) {COP（析出＋ボイド）};
 
-    % --- 接触位置を示す矢印（酸化膜界面） ---
-    \draw[->,thin] (31,14.5) -- (31,12);
-    \node[left,font=\scriptsize] at (27.5,14.5) {界面接触部};
+    % --- ラベル（矢印は最小限） ---
+    \draw[->,thin] (46,16) -- (31,11.9);
+    \node[right,font=\scriptsize] at (46,16) {COP（析出＋ボイド）};
 
+    \draw[->,thin] (24,15) -- (31,12);
+    \node[left,font=\scriptsize] at (24,15) {界面接触部};
   \end{tikzpicture}
-  \caption{MOSキャパ構造におけるHVゲート酸化膜とCOP欠陥（模式図）。%
-COPはSi結晶中の酸素析出起点に形成される菱形ボイドであり、界面に接触すると局所電界集中を生じる。}
+  \caption{MOSキャパ構造におけるHVゲート酸化膜とCOP欠陥（模式図）。COPはSi結晶中の酸素析出起点に形成される菱形ボイドであり、界面に接触すると局所電界集中を生じる。}
   \label{fig:moscap_cop_diamond}
-\end{figure}
-
-... 
-\label{fig:moscap_cop_diamond}
 \end{figure}
 
 \subsection*{発生要因（ウエハ供給切替の経緯）}
