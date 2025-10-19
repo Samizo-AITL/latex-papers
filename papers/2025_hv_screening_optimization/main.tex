@@ -269,27 +269,28 @@ COP欠陥が部分的に残存しても初期ストレス下で顕在化しに�
 
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[scale=1.0]
+  \begin{tikzpicture}[x=1mm,y=1.5mm] % ← 縦方向を1.5倍に
+    % --- Poly ゲート電極 ---
+    \draw[thick] (0,24) -- (70,24) node[right,font=\scriptsize]{Poly ゲート電極};
 
-    % --- 層構造 ---
-    \draw[thick] (-2.5, 0) -- (2.5, 0) node[right, font=\scriptsize]{Polyゲート電極};
-    \draw[thick] (-2.5, -0.6) -- (2.5, -0.6) node[right, font=\scriptsize]{HVゲート酸化膜};
-    \draw[thick] (-2.5, -1.2) -- (2.5, -1.2) node[right, font=\scriptsize]{Si基板};
+    % --- HV ゲート酸化膜 ---
+    \draw[thick] (0,18) -- (70,18) node[right,font=\scriptsize]{HV ゲート酸化膜};
 
-    % --- COP欠陥（くぼみ形状） ---
-    \draw[thick] (-0.4, -1.2) .. controls (-0.2, -0.9) and (0.2, -0.9) .. (0.4, -1.2);
-    \node[right, font=\scriptsize] at (0.45, -1.0) {COP（析出＋ボイド）};
+    % --- Si 基板 ---
+    \draw[thick] (0,10) -- (70,10) node[right,font=\scriptsize]{Si 基板};
 
-    % --- 電界線（模式） ---
-    \draw[->, very thin] (-0.2, -0.6) -- (-0.2, -1.0);
-    \draw[->, very thin] (0.0, -0.6) -- (0.0, -1.05);
-    \draw[->, very thin] (0.2, -0.6) -- (0.2, -1.1);
-    \node[left, font=\scriptsize] at (-0.8, -0.9) {局所電界集中};
+    % --- COP：菱形（内部ボイド） ---
+    \draw[thick] (30,10) -- (31,12) -- (32,10) -- (31,8) -- cycle;
+    \node[right,font=\scriptsize] at (33,10.5) {COP（析出＋ボイド）};
+
+    % --- 接触位置を示す矢印（酸化膜界面） ---
+    \draw[->,thin] (31,14.5) -- (31,12);
+    \node[left,font=\scriptsize] at (27.5,14.5) {界面接触部};
 
   \end{tikzpicture}
-  \caption{MOSキャパ構造におけるHVゲート酸化膜とCOP欠陥（模式図）。
-COPが酸化膜界面に接すると、局所的な電界集中が生じる。}
-  \label{fig_cop_crosssection}
+  \caption{MOSキャパ構造におけるHVゲート酸化膜とCOP欠陥（模式図）。%
+COPはSi結晶中の酸素析出起点に形成される菱形ボイドであり、界面に接触すると局所電界集中を生じる。}
+  \label{fig:moscap_cop_diamond}
 \end{figure}
 
 \subsection{CZ結晶成長と酸素析出機構（II-A）}\label{sec:CZ}
