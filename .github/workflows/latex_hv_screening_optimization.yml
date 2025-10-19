@@ -12,8 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # IEEEtranを手動で取得＋LaTeX環境と日本語フォントを導入
-      - name: Setup TeX Live + IEEEtran + CJK fonts
+      # TeX + 日本語 + 必要フォント
+      - name: Install TeX Live (lite) + CJK fonts
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -24,10 +24,15 @@ jobs:
             texlive-fonts-extra \
             texlive-lang-japanese \
             fonts-noto-cjk
-          # IEEEtran.clsをCTANから取得
-          mkdir -p ~/texmf/tex/latex/ieeetran
-          wget -q https://mirrors.ctan.org/macros/latex/contrib/IEEEtran/IEEEtran.cls -O ~/texmf/tex/latex/ieeetran/IEEEtran.cls
-          texhash ~/texmf
+
+      # IEEEtran を CTAN から取得して "小文字名" でローカルツリーに配置
+      - name: Install IEEEtran class & bst (force lowercase filename)
+        run: |
+          mkdir -p "$HOME/texmf/tex/latex/ieeetran"
+          mkdir -p "$HOME/texmf/bibtex/bst/ieeetran"
+          curl -L -o "$HOME/texmf/tex/latex/ieeetran/ieeetran.cls" https://mirrors.ctan.org/macros/latex/contrib/IEEEtran/IEEEtran.cls
+          curl -L -o "$HOME/texmf/bibtex/bst/ieeetran/ieeetran.bst" https://mirrors.ctan.org/macros/latex/contrib/IEEEtran/IEEEtran.bst
+          texhash "$HOME/texmf"
 
       - name: Compile Japanese IEEE paper
         uses: xu-cheng/latex-action@v4
