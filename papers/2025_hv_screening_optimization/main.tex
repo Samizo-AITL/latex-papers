@@ -48,28 +48,30 @@
 \usetikzlibrary{plotmarks,positioning,calc,decorations.pathmorphing}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\usepgfplotslibrary{groupplots} % ← 必須：\begin{groupplot} 用
+\usepgfplotslibrary{groupplots} % \begin{groupplot} 用
 
 % =========================
 % URL/ハイパーリンク と '_' 対策
 % =========================
 \usepackage{url}
 \def\UrlBreaks{\do\/\do-\do\_\do\&\do\?}
-
-% '_' を本文・キャプションで安全化（必ず hyperref より前）
-\usepackage[strings]{underscore}
+\usepackage[strings]{underscore} % ← 必ず hyperref より前
 
 % hyperref は最後に
 \usepackage[unicode,breaklinks=true]{hyperref}
 \hypersetup{
   pdfauthor={Shinichi Samizo},
-  pdftitle={uTEPヘッド用HVドライバICにおけるウエハ酸素濃度変動を考慮したスクリーニング条件最適化},
+  pdftitle={uTEPヘッド用ドライバICにおけるウエハ酸素濃度変動起因の品質問題対応：酸素規格・ベンダー管理・スクリーニング工程再設計},
   pdfborder={0 0 0}
 }
 
 % \usepackage[top=19mm,bottom=19mm,left=19mm,right=19mm]{geometry} % 必要時のみ
 
-\title{uTEPヘッド用HVドライバICにおけるウエハ酸素濃度変動を考慮したスクリーニング条件最適化}
+% =========================
+% タイトル／著者
+% =========================
+\title{uTEPヘッド用ドライバICにおけるウエハ酸素濃度変動起因の品質問題対応：\\
+酸素規格・ベンダー管理・スクリーニング工程再設計}
 
 \author{%
   \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
@@ -86,20 +88,39 @@
 % ============================================================
 \IEEEtitleabstractindextext{%
 \begin{abstract}
-\textbf{和文概要}—本論文は、uTEPプリントヘッドを駆動するHVドライバICにおいて、ウエハ酸素濃度変動を考慮した量産スクリーニング条件の最適化手法を報告する。  
-ウエハ供給元変更に伴う酸素濃度上昇により、結晶起因欠陥（COP: Crystal-Originated Particle）に起因したHVゲートリークが顕在化し、従来の単回スクリーニングでは取り残しが発生した。  
-本研究では、電圧・温度・繰返し回数を変数とする工程条件を再設計し、uTEPヘッド適用において動作保証範囲内（85℃以下）で不良収束を達成する方法を示す。
+\textbf{和文概要}—
+本報告は、uTEPプリントヘッドを駆動する高耐圧ドライバICにおいて、
+ウエハ酸素濃度変動を起因とする品質問題に対し、
+量産スクリーニング条件を再設計した事例を示す。
+ウエハ供給元変更により酸素濃度が上昇し、
+結晶起因欠陥（COP: Crystal-Originated Particle）を起点とする
+ゲート酸化膜リークが顕在化した。
+従来の単回スクリーニングでは潜在欠陥の取り残しが発生し、
+ヘッド工程およびプリンタ組立段階で不良が顕在化した。
+本報告では、電圧・温度・印加回数を変数とする工程条件を再設計し、
+動作保証範囲内（85℃以下）で不良収束を実現した。
+あわせて、ウエハ酸素濃度規格化およびベンダー管理強化を提言する。
 
 \bigskip
 \noindent
-\textbf{Abstract}—This paper presents the optimization of high-voltage (HV) driver IC screening conditions for uTEP printhead applications, considering wafer oxygen concentration variations.  
-A supplier change increased wafer oxygen content, leading to the emergence of crystal-originated particle (COP) defects that cause HV gate leakage.  
-Conventional single-pass screening failed to eliminate residual defects.  
-By redesigning the process parameters—voltage, temperature, and repetition count—the proposed screening achieves defect convergence within the guaranteed operating range (below 85 °C), improving reliability and production stability.
+\textbf{Abstract}—
+This report presents a case study on redesigning the mass-production screening process
+for a high-voltage driver IC used in uTEP printhead applications,
+addressing quality issues induced by wafer oxygen concentration variation.
+Following a wafer supplier change, an increase in oxygen concentration
+led to the emergence of crystal-originated particle (COP) defects,
+causing localized gate oxide leakage.
+The conventional single-pass screening failed to capture latent defects,
+resulting in escapes that propagated through head assembly
+and printer integration stages.
+By redesigning the screening parameters—voltage, temperature, and repetition count—
+the revised process achieved defect convergence within the guaranteed temperature limit (below 85 °C).
+Additionally, establishing wafer oxygen concentration specifications
+and strengthening vendor management were found essential for recurrence prevention.
 \end{abstract}
 
 \begin{IEEEkeywords}
-uTEP head, Inkjet, Driver IC, High-Voltage Screening, Wafer Oxygen, COP Defect, Reliability Engineering, Process Optimization
+uTEP head, Inkjet, Driver IC, Gate Oxide Leakage, Wafer Oxygen, COP Defect, Quality Control, Screening Process Redesign, Reliability Engineering, Process Optimization
 \end{IEEEkeywords}
 }
 
@@ -113,43 +134,56 @@ uTEP head, Inkjet, Driver IC, High-Voltage Screening, Wafer Oxygen, COP Defect, 
 \section{はじめに}
 uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合アーキテクチャ）プリントヘッドは、
 高電圧（HV）駆動によりインク液柱を微細ノズルから高精度に射出する構造を有している。
-このヘッドを駆動するHVドライバICは、数百～数千チャネルのアクチュエータ電極を並列制御するため、
-高集積化と高信頼性の両立が求められる重要な要素である。
+これを駆動するドライバICは、数百～数千チャネルのアクチュエータ電極を並列制御するため、
+高集積化と高信頼性を同時に満たす必要がある重要部品である。
 
-当該ドライバICは、CMOS 0.35\,$\mu$mプロセスを用い、3.3\,Vロジック動作および45\,V高耐圧出力を同一チップ上で実現している。
-しかし、ウエハ供給元の切替後、ウエハ中の酸素濃度が上昇したロットにおいて、
-結晶起因欠陥（COP: Crystal-Originated Particle）由来の微小ボイドがデバイス活性層中に析出した。
-これにより、HVゲート酸化膜で局所的な電界集中が発生し、
-アクチュエータユニットやヘッド電気特性検査工程においてゲートリーク不良が多発する事象が確認された。
+当該ドライバICは、CMOS 0.35\,$\mu$mプロセスをベースとし、
+3.3\,Vロジック動作と45\,Vクラスの高耐圧出力を単一チップ上で統合している。
+しかし、ウエハ供給元の追加・切替後に一部ロットでウエハ中酸素濃度が上昇し、
+結晶起因欠陥（COP: Crystal-Originated Particle）由来の微小ボイドが活性層内に析出した。
+この結晶欠陥がゲート酸化膜下に残存することで局所的な電界集中が生じ、
+高電圧印加時にゲート酸化膜リーク（局所絶縁破壊）を誘発することが確認された。
 
-従来のスクリーニング条件では、これら潜在的リーク欠陥を完全に除去できず、
-特にHV絶縁膜の応力緩和挙動に起因する初期劣化モードが工程内で検出されないケースがあった。
-本研究では、ウエハ酸素濃度変動を前提としてHVデバイスの特性ばらつきを解析し、
-電圧・温度・繰返し回数をパラメータとするスクリーニング条件を再設計することにより、
-量産工程における不良収束性の向上と、プリントヘッドとしての長期信頼性確保を両立する手法について報告する。
+従来の量産スクリーニング条件（48\,V単回印加）では、
+これらの潜在欠陥を十分に顕在化させることができず、
+ヘッド電気特性検査やプリンタ組立後の最終検査で不良が顕在化する事例が発生した。
+一部はプリンタ本体への組込み後に検出されたため、
+工程内回収によって市場流出は防止したものの、歩留低下および損害は甚大であった。
 
+本報告では、ウエハ酸素濃度変動を前提としたデバイス特性解析結果をもとに、
+電圧・温度・印加回数を変数とするスクリーニング条件を再設計し、
+量産工程での不良収束性を改善するとともに、
+ウエハ酸素濃度の規格化およびベンダー管理の強化によって、
+再発防止と品質安定化を図った取り組みについて述べる。
+
+%------------------------------------------------------
 \section{問題の概要（uTEP適用での観測）}
 
 図\ref{fig_lpd}にウエハLPD（Laser Particle Defect）分布の代表例を示す。
-高酸素ロットではLPD密度が高く、結晶起因欠陥（COP: Crystal-Originated Particle）に由来する局所欠陥の増加が確認される。
-これらの欠陥は、HVデバイスのゲート酸化膜下部に微小ボイドとして存在し、通電時の電界集中によって局所リークを誘発する。
+高酸素ロットではLPD密度が著しく高く、結晶起因欠陥（COP: Crystal-Originated Particle）に由来する
+局所欠陥の増加が確認された。
+これらの欠陥はHVデバイスのゲート酸化膜下部に微小ボイドとして存在し、
+通電時に局所的な電界集中を生じてゲート酸化膜リークを誘発する。
 
-従来のスクリーニング条件（48\,V・単回通電）では、これら潜在欠陥の取り残しが発生した。
-結果として、uTEPヘッド組立後の電気特性検査やプリンタ実装後の量産評価において、
-ゲートリーク起因の不良が顕在化する事象が確認された。
-特に、HVゲートの初期劣化モードは低電圧通電では顕在化しにくく、スクリーニング初期段階での除去が不十分であったことが判明した。
+従来のスクリーニング条件（48\,V単回印加）では、
+これら潜在欠陥の顕在化が不十分であり、取り残しが発生した。
+その結果、uTEPヘッド組立後の電気特性検査や、
+プリンタ組込み後の量産信頼性試験においてゲートリーク起因の不良が再現した。
+特に、HVゲートの初期劣化モードは低電圧印加では顕在化しにくく、
+スクリーニング初期段階での除去が不完全であったことが確認された。
 
-本事象は、ウエハ酸素濃度変動によりHV絶縁膜の電界分布特性が変化した結果であり、
-単純な電圧マージン拡大では再現性が得られないことが確認されている。
-したがって、量産スクリーニングにおける電圧・温度・繰返し条件の最適化が必要である。
+本事象は、ウエハ酸素濃度の上昇により結晶欠陥サイズおよび分布密度が変化し、
+結果としてHV絶縁膜の電界分布特性が不均一化したことに起因する。
+単純な電圧マージン拡大では再現性が得られず、
+酸素濃度を変動要因として考慮した電圧・温度・印加回数の最適化が必要である。
 
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}
-    % 2枚並列（左右）のグループプロット。列幅に収まるよう各軸幅を調整
+    % --- 2枚並列のグループプロット（列幅内フィット済み）---
     \begin{groupplot}[
       group style={group size=2 by 1, horizontal sep=10mm},
-      width=0.45\columnwidth, height=0.45\columnwidth, % ← 列幅ベースで安定
+      width=0.45\columnwidth, height=0.45\columnwidth,
       ymin=0,
       ymajorgrids,
       xmajorgrids,
@@ -165,7 +199,7 @@ uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合ア�
       tick label style={font=\scriptsize},
       legend style={font=\scriptsize, draw=none, fill=white, fill opacity=0.8},
       legend cell align=left,
-      enlarge x limits=0.05,   % 端の棒が切れないように少し余白
+      enlarge x limits=0.05
     ]
 
     % --- 左：通常ロット ---
@@ -210,19 +244,24 @@ uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合ア�
 
     \end{groupplot}
   \end{tikzpicture}
-  \caption{ウエハLPD分布比較（高酸素ロットと通常ロットの代表例）}
+  \caption{ウエハLPD分布比較（通常ロットと高酸素ロットの代表例）}
   \label{fig_lpd}
 \end{figure}
 
+%------------------------------------------------------
 \section{スクリーニング条件最適化（量産仕様内）}
-本章では、uTEPヘッド適用を前提としたHVドライバICの量産スクリーニング条件の最適化について述べる。
-目的は、\textbf{仕様範囲内（温度85\,℃以下）}で不良除去率を最大化しつつ、
-良品への影響を最小化する工程条件を確立することである。
+
+本章では、uTEPヘッド適用を前提とした高耐圧ドライバICにおける
+量産スクリーニング条件の最適化検討について述べる。
+目的は、\textbf{仕様範囲内（温度85\,℃以下）}において
+不良除去率を最大化しつつ、良品への影響を最小化する工程条件を確立することである。
 
 \subsection{評価パラメータ}
-表\ref{tab_param}に本評価で用いたパラメータ設定を示す。
-評価は、量産実績ロット（高酸素ロット・通常ロット）を対象に実施した。
-印加条件の主変数は、電圧・温度・印加回数の3因子とし、各回の通電後にゲートリーク電流および絶縁破壊電圧を測定した。
+
+表\ref{tab_param}に評価に用いた主要パラメータを示す。
+試験は、量産実績を持つ通常ロットおよび高酸素ロットを対象とした。
+印加条件の主変数は電圧・温度・印加回数の3因子とし、
+各回の通電後にゲートリーク電流および絶縁破壊電圧を常温下で評価した。
 
 \begin{table}[t]
 \centering
@@ -232,27 +271,28 @@ uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合ア�
 \toprule
 項目 & 条件設定 \\
 \midrule
-電圧 & 48\,V（絶対最大定格内、電流コンプライアンス付） \\
-温度 & 85\,℃（動作保証上限） \\
-印加回数 & 1～8回（繰返し通電） \\
+印加電圧 & 48\,V（絶対最大定格内、電流コンプライアンス付） \\
+印加温度 & 85\,℃（動作保証上限） \\
+印加回数 & 1～8回（繰返し印加） \\
 印加時間 & 各回30\,分 \\
-測定項目 & $\Delta I_\mathrm{GATE}$, $\Delta BV_\mathrm{G}$, d$I$/d$V$（常温後測定） \\
+測定項目 & $\Delta I_\mathrm{GATE}$, $\Delta BV_\mathrm{G}$, d$I$/d$V$（常温測定） \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{結果（uTEPロットでの代表値）}
-表\ref{tab_results}に、スクリーニング回数別の新規検出率と残存不良率を示す。
-初回で約60\,\%の不良が除去され、2～3回目で大部分の潜在欠陥が顕在化した。
+\subsection{結果と収束挙動（代表ロット）}
+
+表\ref{tab_results}に、スクリーニング回数ごとの新規検出率および残存不良率を示す。
+初回印加で約60\,\%の不良を除去し、2～3回目で大部分の潜在欠陥が顕在化した。
 4回目以降では新規検出がほぼ停止し、高酸素ロットにおいても残存不良率は30\,ppm以下に収束した。
 
-このことから、48\,V・85\,℃条件で4回印加することで、
-良品劣化を伴わずに不良収束性を確保できることが確認された。
-図\ref{fig_convergence}に代表ロットでの収束挙動を示す。
+この結果より、48\,V・85\,℃条件下で4回印加を行うことで、
+良品への劣化影響を伴わずに不良収束性を確保できることが確認された。
+図\ref{fig_convergence}に代表ロットでの不良収束曲線を示す。
 
 \begin{table}[t]
 \centering
-\caption{スクリーニング回数と不良収束率（uTEPヘッド用HVドライバIC、代表ロット）}
+\caption{スクリーニング回数と不良収束率（代表ロット）}
 \label{tab_results}
 \begin{tabular}{ccc}
 \toprule
@@ -271,8 +311,8 @@ uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合ア�
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=\columnwidth,            % ← 列幅にフィット
-      height=0.58\columnwidth,       % 比率で高さ調整
+      width=\columnwidth,
+      height=0.58\columnwidth,
       xmin=1, xmax=8.02,
       ymin=0, ymax=500,
       xtick={1,2,3,4,5,6,7,8},
@@ -283,9 +323,9 @@ uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合ア�
       xmajorgrids,
       grid style={dashed,gray!40},
       line width=0.7pt,
-      mark size=2.2pt,
-      enlargelimits=false,            % 余白の自動拡張を抑止
-      clip=false,                     % マーカー端の切れを防止
+      mark size=2.0pt,
+      enlargelimits=false,
+      clip=false,
       legend style={font=\scriptsize,draw=none,fill=white,fill opacity=0.8},
       legend cell align=left,
       tick label style={font=\scriptsize},
@@ -305,45 +345,60 @@ uTEP（\textit{micro Thin-film Electrostatic / Piezo} 系列を含む統合ア�
       \addlegendentry{残存不良率（代表ロット）}
     \end{axis}
   \end{tikzpicture}
-  \caption{回数に対する不良収束曲線（uTEP対象、代表ロット）}
+  \caption{回数に対する不良収束曲線（uTEP適用HVドライバIC、代表ロット）}
   \label{fig_convergence}
 \end{figure}
 
+%------------------------------------------------------
 \section{考察}
-uTEPヘッド適用においては、温度上限を越えることなく、
-\textbf{繰返し回数の最適化}によってCOP起因の潜在欠陥を早期に顕在化させることが可能である。
+
+uTEPヘッド適用においては、温度上限を超えることなく、
+\textbf{繰返し印加回数の最適化}によって
+COP（Crystal-Originated Particle）起因の潜在欠陥を早期に顕在化させることが可能である。
 これは、通電応力によりゲート絶縁膜内部の電界集中部が段階的に活性化し、
-微小リーク経路が成長・開通する過程を利用している。
+微小リーク経路が成長・開通する過程を利用しているためである。
 
-各回の通電後に常温で$\Delta I_\mathrm{GATE}$および$\Delta BV_\mathrm{G}$を逐次計測することで、
+各回の印加後に常温で$\Delta I_\mathrm{GATE}$および$\Delta BV_\mathrm{G}$を逐次計測することにより、
 欠陥進展挙動をモニタしつつ、良品の酸化膜疲労を抑制できる。
-特に、$\Delta BV_\mathrm{G}$の漸減と$\Delta I_\mathrm{GATE}$の急増を同時に検出したデバイスは、
-初期的なリーク成長モードに入ったと判断でき、量産工程において高い再現性で不良抽出が可能であった。
+特に、$\Delta BV_\mathrm{G}$の漸減と$\Delta I_\mathrm{GATE}$の急増が同時に観測されたデバイスは、
+初期リーク経路の形成段階にあると判断でき、
+量産スクリーニング工程において高い再現性で不良抽出が可能であった。
 
-本手法は、電圧・温度を仕様範囲内に保持しながら欠陥顕在化を促進する点で、
-従来の単回スクリーニングに比べて良品影響が著しく少ない。
-また、ウエハ酸素濃度や結晶成長履歴など、材料起因のばらつきを吸収できるため、
-ロット間安定性の向上にも寄与する。
+本手法は、電圧・温度をいずれも仕様範囲内に保持したまま欠陥顕在化を促進できる点で、
+従来の単回スクリーニングと比較して良品影響が極めて小さい。
+また、ウエハ酸素濃度や結晶成長履歴といった材料起因ばらつきを吸収できるため、
+ロット間での品質安定性向上にも寄与する。
 
-さらに、HVデバイス一般に共通する酸化膜ストレス緩和挙動に基づく設計であることから、
-uTEP専用ICのみならず、インクジェット駆動系の他HV品種への水平展開が可能である。
-特に、温度制約の厳しい小型プリンタ向けデバイスや、高信頼用途（産業機器・車載）への応用においても、
+さらに、本設計手法はHVデバイス一般に共通する
+酸化膜ストレス緩和挙動と電界劣化モデルに基づいており、
+uTEP専用ICに限らず、インクジェット駆動系の他高耐圧品種や
+温度制約の厳しい小型プリンタ向けデバイスにも水平展開が可能である。
+特に、高信頼性を要求される産業機器・車載用途においても、
 本スクリーニング設計指針は有効であると考えられる。
 
+%------------------------------------------------------
 \section{結論}
-本研究では、uTEPヘッド用HVドライバICを対象に、ウエハ酸素濃度変動を考慮した量産スクリーニング条件の最適化を行った。
-電圧48\,V・温度85\,℃という仕様範囲内の条件下で、複数回印加による逐次スクリーニングを導入した結果、
-高酸素ロットにおいても不良率を30\,ppm以下に収束させることができた。
-同時に、良品デバイスへの影響は測定誤差レベル以下に抑えられ、信頼性低下は認められなかった。
 
-本手法は、COP（Crystal-Originated Particle）に起因する潜在欠陥を早期に顕在化させることで、
-ウエハ品質のばらつきを工程内で吸収し、量産品質の安定化に寄与するものである。
-また、温度上限を超えない制約下で高い除去効率を達成できるため、
-他のHVデバイス群（アクチュエータ駆動用・車載用IC等）への適用拡張も期待できる。
+本研究では、uTEPヘッド用高耐圧ドライバICを対象として、
+ウエハ酸素濃度変動を考慮した量産スクリーニング条件の最適化を実施した。
+電圧48\,V・温度85\,℃という仕様範囲内で複数回印加を行う逐次スクリーニング方式を導入した結果、
+高酸素ロットにおいても残存不良率を30\,ppm以下に収束させることができた。
+同時に、良品デバイスへの影響は測定誤差レベル以下に抑えられ、
+信頼性劣化は認められなかった。
+
+本手法は、COP（Crystal-Originated Particle）起因の潜在欠陥を
+初期段階で顕在化させることで、ウエハ材料ばらつきを工程内で吸収し、
+量産品質の安定化に寄与するものである。
+また、温度上限を超えない条件で高い除去効率を達成できるため、
+他の高耐圧デバイス（アクチュエータ駆動用IC、車載用IC等）への適用拡張が期待できる。
 
 今後は、$\Delta I_\mathrm{GATE}$および$\Delta BV_\mathrm{G}$の時間依存解析を組み合わせ、
-デバイス個体ごとの劣化モデル化を進めることで、より短時間かつ自動化されたスクリーニングプロセスの構築を目指す。
+デバイス個体ごとの劣化進展モデルを構築することで、
+より短時間かつ自動化されたスクリーニングプロセスの実現を目指す。
+さらに、ウエハベンダー追加時の酸素濃度規格化や材料認定手順と組み合わせることで、
+品質変動の早期検知および再発防止に資する包括的な管理体系の確立を進める。
 
+%------------------------------------------------------
 \section*{謝辞}
 本研究の遂行にあたり、ご協力を賜ったデバイス技術部ならびに信頼性評価チーム、
 およびuTEPヘッド量産に携わる関係各位に深く感謝の意を表する。
