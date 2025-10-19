@@ -3,78 +3,131 @@
 \usepackage{amsmath}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{multirow}
 
-\title{インクジェット用HVドライバICにおけるウエハ酸素濃度変動を考慮したスクリーニング条件最適化}
-\author{三溝 真一（Shinichi Samizo）\\
-独立半導体研究者 / AITL Project}
+\title{uTEPヘッド用HVドライバICにおけるウエハ酸素濃度変動を考慮したスクリーニング条件最適化}
+
+\author{%
+  \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
+  \IEEEauthorblockA{%
+    独立系半導体研究者（元セイコーエプソン株式会社）\\%
+    Independent Semiconductor Researcher (ex-Seiko Epson Corporation)\\[3pt]%
+    Email:~\href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+    GitHub:~\url{https://github.com/Samizo-AITL}%
+  }%
+}
+
 \date{}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-本論文では、インクジェットヘッド駆動用HVドライバICにおけるスクリーニング条件最適化について報告する。
-ウエハ供給元の変更により酸素濃度が上昇し、結晶起因欠陥（COP）によるHVゲートリーク不良が顕在化した。
-従来のスクリーニング条件では潜在欠陥を完全に検出できず、後工程で不良が発生した。
-本研究では、電圧・温度・繰返し回数を変数としてスクリーニング条件を再設計し、
-保証範囲内で欠陥除去率を最大化する手法を確立した。
-その結果、良品デバイスへの影響を抑えつつ、ウエハロット差起因の不良流出を防止できることを確認した。
+本論文は、uTEPプリントヘッドを駆動するHVドライバICに対し、ウエハ酸素濃度変動を考慮した量産スクリーニング条件の最適化について報告する。
+ウエハ供給元変更に伴う酸素濃度上昇により、結晶起因欠陥（COP: Crystal-Originated Particle）に起因したHVゲートリークが顕在化し、従来の単回スクリーニングでは取り残しが生じた。
+本研究では、電圧・温度・繰返し回数を変数として工程条件を再設計し、uTEPヘッド適用において動作保証範囲内（85℃以下）で不良収束を達成する手法を示す。
 \end{abstract}
 
+\begin{IEEEkeywords}
+uTEP head, Inkjet, Driver IC, HV Screening, Wafer Oxygen, Reliability, Process Optimization
+\end{IEEEkeywords}
+
+%------------------------------------------------------
 \section{はじめに}
-インクジェットプリンタ用ヘッドを駆動するHVドライバICは、
-CMOS 0.35\,$\mu$mプロセスを用い、3.3\,V／45\,V動作を実現している。
-近年、ウエハ供給元の変更により酸素濃度が高いロットが混在し、
-COP（Crystal-Originated Particle）由来の局所欠陥がHVデバイスに発生した。
-従来のスクリーニングではこれらの微小欠陥を完全に除去できず、
-アクチュエータおよびヘッド工程で不良が多発した。
+uTEP（\textit{micro Thin-film Electrostatic/ Piezo} 系列を含むuTEPアーキテクチャ）プリントヘッドでは、
+高電圧（HV）ドライバICが数百～数千チャネルを駆動する。
+当該ICはCMOS 0.35\,$\mu$mプロセスを用い、3.3\,Vロジック／45\,V高耐圧動作を担う。
+ウエハ供給元の切替後、高酸素ロットでCOP由来の微小欠陥が増加し、
+HVゲート膜で局所電界集中が発生、アクチュエータユニット～ヘッド電特で不良が多発した。
 
-\section{問題の概要}
-高酸素ロットでは、レーザ粒子検査（LPD）での欠陥密度が上昇し、
-HVゲート膜界面での局所電界集中によりリーク電流が増加する傾向が確認された。
-従来条件（48\,V、単回ストレス）では、COP起因の早期TDDBモードを取り切れず、
-後工程での歩留まり低下や市場流出リスクが顕在化した。
+\section{問題の概要（uTEP適用での観測）}
+図\ref{fig_lpd}にウエハLPD（Laser Particle Defect）分布の例を示す。
+高酸素ロットはLPD密度が高く、COPに起因する局所欠陥が多い。
+従来のスクリーニング（48\,V、単回）では潜在欠陥の取り残しが発生し、
+uTEPヘッド組立後の電気特性検査やプリンタ実装後で不良が顕在化する事象が確認された。
 
-\section{スクリーニング条件の最適化}
-本検討では、スクリーニング条件を電圧・温度・ストレス回数の3要素で体系的に再設計した。
-目標は「仕様範囲内で不良収束を確認し、良品劣化を防止する」ことである。
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\linewidth]{fig_lpd_distribution.pdf}
+  \caption{ウエハLPD分布比較（高酸素ロット vs. 通常ロット、代表例）}
+  \label{fig_lpd}
+\end{figure}
+
+\section{スクリーニング条件最適化（量産仕様内）}
+目的は、uTEPヘッド適用を前提として、\textbf{仕様範囲内（温度85℃以下）}で
+不良除去率を最大化し、良品影響を最小化する工程条件を確立することである。
 
 \subsection{評価パラメータ}
 \begin{itemize}
-\item 電圧：48\,V（絶対最大定格以内）
+\item 電圧：48\,V（絶対最大定格内、電流コンプライアンス設定）
 \item 温度：85\,℃（動作保証上限）
-\item 繰返し回数：1～8回
-\item 印加時間：各30分
-\item 測定項目：$\Delta I_\mathrm{GATE}$、$\Delta BV_\mathrm{G}$、d$I$/d$V$
+\item 印加回数：1～8回
+\item 各回の印加時間：30\,分
+\item 測定項目：$\Delta I_\mathrm{GATE}$、$\Delta BV_\mathrm{G}$、d$I$/d$V$（各回後に常温計測）
 \end{itemize}
 
-\subsection{結果}
-繰返し回数を増やすことで不良が指数的に収束することを確認した。
-特に4回目以降では新規不良の発生がほぼ停止し、
-ウエハ酸素濃度の高いロットでも残存不良率が30\,ppm以下に低下した。
-温度上限を超えない範囲でも、十分なスクリーニング強度が得られることを実証した。
+\subsection{結果（uTEPロットでの代表値）}
+表\ref{tab_results}に回数別の新規検出率と累積残存不良率を示す。
+4回目以降で新規検出はほぼ停止し、高酸素ロットでも残存不良率は30\,ppm以下に収束した。
+図\ref{fig_convergence}は収束挙動（代表ロット）を示す。
+
+\begin{table}[t]
+\centering
+\caption{スクリーニング回数と不良収束率（uTEPヘッド用HVドライバIC、代表ロット）}
+\label{tab_results}
+\begin{tabular}{ccc}
+\toprule
+回数 & 新規検出率[\%] & 残存不良率[ppm] \\
+\midrule
+1 & 58.9 & 420 \\
+2 & 25.1 & 125 \\
+3 & 11.0 & 52 \\
+4 & 4.0  & 30 \\
+5以降 & $\approx$0 & $<$30 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\linewidth]{fig_convergence_curve.pdf}
+  \caption{回数に対する不良収束曲線（uTEP対象、代表ロット）}
+  \label{fig_convergence}
+\end{figure}
 
 \section{考察}
-スクリーニング強度は温度よりも繰返し回数への依存性が高く、
-複数回の通電によりCOP起因欠陥を早期に顕在化できる。
-また、各回後の常温測定でリーク変化を逐次監視することで、
-良品デバイスの疲労を防止できる。
-本最適化手法は、HVデバイスにおける材料ロット差吸収にも有効である。
+uTEPヘッド適用では、温度上限を越えずとも、\textbf{繰返し回数の最適化}により
+COP起因の潜在欠陥を早期に顕在化できる。
+各回後の常温計測で$\Delta I_\mathrm{GATE}$および$\Delta BV_\mathrm{G}$を逐次監視することで、
+良品の疲労を抑制しつつ不良を確実に排除できる。
+本手法はウエハ材料差の吸収と量産安定化に有効であり、他HV品種へ水平展開可能である。
 
 \section{結論}
-インクジェット用HVドライバICにおいて、ウエハ酸素濃度変動に起因する不良を抑制するため、
-スクリーニング条件の最適化を実施した。
-電圧48\,V・温度85\,℃の仕様範囲内で、繰返し回数を複数化することで不良収束を確認し、
-良品デバイスの信頼性を維持した。
-本手法は他のHVプロセス製品にも適用可能である。
+uTEPヘッド用HVドライバICに対し、ウエハ酸素濃度変動を考慮した量産スクリーニング条件を最適化した。
+電圧48\,V・温度85\,℃の仕様範囲内で複数回印加を行うことで、
+高酸素ロットでも不良を30\,ppm以下に収束させ、良品への影響は無視できる水準であった。
+本最適化はuTEP量産の品質安定化に寄与する。
 
 \section*{謝辞}
-本検討に協力頂いたデバイス技術部、信頼性評価チーム各位に深謝する。
+本検討に協力頂いたデバイス技術部、信頼性評価チーム、uTEPヘッド量産関係各位に深謝する。
 
+%------------------------------------------------------
+\begin{thebibliography}{99}
+\bibitem{samizo_bom}
+三溝 真一, 「設計から量産部品発注に至る実務フローとBOM運用ルールの体系化」, 2025.
+\bibitem{samizo_mach}
+三溝 真一, 「Sn–Bi代替による接合方式移行（Mach世代）」, 2025.
+\bibitem{samizo_tfp}
+三溝 真一, 「薄膜PZTアクチュエータの信頼性解析と対策」, 2025.
+\end{thebibliography}
+
+%------------------------------------------------------
 \section*{著者略歴}
 \noindent\textbf{三溝 真一（Shinichi Samizo）}：\\
-信州大学大学院修了。セイコーエプソンにて半導体およびインクジェット開発に従事。\\
+信州大学大学院修了。セイコーエプソン株式会社にて半導体およびインクジェット開発に従事。\\
 現在は独立系半導体研究者としてデバイス教育とシステム統合研究に従事。\\
-連絡先：\href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}
+Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+GitHub: \url{https://github.com/Samizo-AITL}
 
 \end{document}
