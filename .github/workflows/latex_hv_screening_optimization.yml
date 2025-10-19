@@ -12,24 +12,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # IEEEtran.cls を取得して、ビルド対象フォルダにコピー
-      - name: Prepare IEEEtran class
+      # ieeetran.cls を main.tex と同じ場所に配置（小文字名で保存）
+      - name: Fetch IEEEtran class locally
         run: |
           mkdir -p papers/2025_hv_screening_optimization
-          wget -q https://mirrors.ctan.org/macros/latex/contrib/IEEEtran/IEEEtran.cls -O ieeetran.cls
-          cp ieeetran.cls papers/2025_hv_screening_optimization/ieeetran.cls
-          echo "✅ Copied IEEEtran.cls into papers/2025_hv_screening_optimization/"
+          curl -L -o papers/2025_hv_screening_optimization/ieeetran.cls \
+            https://mirrors.ctan.org/macros/latex/contrib/IEEEtran/IEEEtran.cls
 
-      # XeLaTeX に対応した LaTeX コンパイル
+      # XeLaTeXでビルド（main.tex のあるディレクトリで動かす）
       - name: Compile Japanese IEEE paper (XeLaTeX)
         uses: xu-cheng/latex-action@v4
+        continue-on-error: true                # ← 失敗しても次へ進めてログ回収
         with:
           root_file: papers/2025_hv_screening_optimization/main.tex
+          work_in_root_file_dir: true          # ← これが肝。出力が同フォルダに出る
           latexmk_use_xelatex: true
           latexmk_shell_escape: true
-          use_docker: true
 
-      # 成功・失敗にかかわらずログとPDFを出力
+      # どこに出力されたか可視化（デバッグ用）
+      - name: List build outputs
+        if: always()
+        run: |
+          echo "== repo root ==" && ls -la
+          echo "== paper dir ==" && ls -la papers/2025_hv_screening_optimization || true
+
+      # PDF/LOG を必ずアップロード（どちらの場所にも対応）
       - name: Upload PDF and LOG artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -38,3 +45,5 @@ jobs:
           path: |
             papers/2025_hv_screening_optimization/*.pdf
             papers/2025_hv_screening_optimization/*.log
+            *.pdf
+            *.log
