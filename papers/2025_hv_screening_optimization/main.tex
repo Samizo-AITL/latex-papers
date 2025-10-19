@@ -13,14 +13,12 @@
 % =========================
 \usepackage{fontspec}
 \usepackage{xeCJK}
-% 欧文（TeX Live 同梱）
 \setmainfont{TeX Gyre Termes}
 \setsansfont{TeX Gyre Heros}
 \setmonofont{DejaVu Sans Mono}
-% 和文（TeX Live 同梱 IPAex 系：太字フォールバックを指定）
 \setCJKmainfont[
-  BoldFont   = IPAexGothic,   % 明朝に太字が無い問題を解決
-  ItalicFont = IPAexMincho    % 斜体要求も明朝で処理
+  BoldFont   = IPAexGothic,
+  ItalicFont = IPAexMincho
 ]{IPAexMincho}
 \setCJKsansfont{IPAexGothic}
 \setCJKmonofont{IPAexGothic}
@@ -28,18 +26,16 @@
 % =========================
 % 数式・図・表
 % =========================
-% 図が無くても枠だけでビルド継続（本物の図が揃ったら次の1行は削除可）
-\PassOptionsToPackage{draft}{graphicx}
-\usepackage{graphicx}            % dvipdfmxオプション不要（XeLaTeX）
+\PassOptionsToPackage{draft}{graphicx} % 図未投入でも停止しない
+\usepackage{graphicx}
 \graphicspath{{./}{figures/}}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 
-% 図ファイルが無くてもビルド継続する安全版 include
+% 図欠落でもビルド継続（\includegraphics を安全版に置換）
 \newcommand{\safeincludegraphics}[2][]{%
   \IfFileExists{#2}{\includegraphics[#1]{#2}}{%
     \fbox{\parbox[c][0.45\linewidth][c]{0.9\linewidth}{\centering
     \textit{[Missing image: #2]}}}}}
-% ★ ここが肝：既存の \includegraphics を安全版に完全置換
 \let\includegraphics\safeincludegraphics
 
 \usepackage{amsmath,amssymb,bm}
@@ -47,10 +43,13 @@
 \usepackage{multirow}
 
 % =========================
-% URL / ハイパーリンク（日本語OK・長URL改行）
+% URL/ハイパーリンクと _ 対策
 % =========================
 \usepackage{url}
 \def\UrlBreaks{\do\/\do-\do\_\do\&\do\?}
+
+% ← 追加：本文・キャプション内の '_' を許可（必ず hyperref より前）
+\usepackage[strings]{underscore}
 
 % hyperref は最後に
 \usepackage[unicode,breaklinks=true]{hyperref}
@@ -60,7 +59,7 @@
   pdfborder={0 0 0}
 }
 
-% \usepackage[top=19mm,bottom=19mm,left=19mm,right=19mm]{geometry} % 必要なら有効化
+% \usepackage[top=19mm,bottom=19mm,left=19mm,right=19mm]{geometry}
 
 \title{uTEPヘッド用HVドライバICにおけるウエハ酸素濃度変動を考慮したスクリーニング条件最適化}
 
