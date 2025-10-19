@@ -4,6 +4,7 @@ on:
     paths:
       - 'papers/2025_hv_screening_optimization/**'
       - '.github/workflows/latex_hv_screening_optimization.yml'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,8 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install full TeX Live (includes IEEEtran)
-        run: sudo apt-get update && sudo apt-get install -y texlive-full
+      # IEEEtran など一式＋日本語CJKフォントを導入
+      - name: Install TeX Live + CJK fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-full fonts-noto-cjk
 
       - name: Compile Japanese IEEE paper
         uses: xu-cheng/latex-action@v4
@@ -21,7 +25,9 @@ jobs:
           latexmk_use_xelatex: true
           latexmk_shell_escape: true
 
+      # 失敗してもログを必ず回収
       - name: Upload PDF and LOG artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: hv_screening_optimization_outputs
