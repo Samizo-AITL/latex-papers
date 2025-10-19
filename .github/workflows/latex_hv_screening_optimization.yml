@@ -12,12 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # LaTeX + IEEEtran + 日本語フォント導入（軽量版）
-      - name: Install TeX Live (minimal) and CJK fonts
+      # IEEEtran + XeLaTeX + 日本語フォント環境を確実に導入
+      - name: Install TeX Live with IEEEtran and CJK fonts
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            texlive-latex-recommended \
             texlive-latex-extra \
+            texlive-publishers \
             texlive-fonts-recommended \
             texlive-fonts-extra \
             texlive-lang-japanese \
@@ -29,7 +31,6 @@ jobs:
           root_file: papers/2025_hv_screening_optimization/main.tex
           latexmk_use_xelatex: true
           latexmk_shell_escape: true
-          continue_on_error: true
 
       # 失敗してもログを必ずアップロード
       - name: Upload PDF and LOG artifacts
