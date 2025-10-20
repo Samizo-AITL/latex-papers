@@ -134,89 +134,101 @@ BOM 通知、関係部署配布（BOM） &
 \end{table*}
 
 % ===============================
-\section{Case Study: HCS2搭載COFの実務フロー}
-本節では、HCS2チップをCOF（Chip on Film）上に実装して量産展開した事例を、教育・監査対応の観点から具体化する。要点は(1) ベンダー仕様から始まる段階的な評価\,$\rightarrow$\,設計通知の厳格運用、(2) BOM／属性（環境・コスト・輸出）の並列付与、(3) 量産前DRのゲート管理である。
+\section{Case Study: HCS2搭載COFにおけるBOMワークフロー適用}
+本節は、HCS2チップをCOF（Chip on Film）に実装した量産立上げを
+\emph{BOMワークフローの適用事例}として最小限に記述する。
+要点は (1) ベンダー仕様→段階評価→設計通知のゲート運用、
+(2) BOMと属性（環境・コスト・輸出）の\emph{並列付与}、
+(3) 量産前DRの確実化である。
 
-\subsection{構成写真と要素}
+\subsection{構成写真（参考）}
 \begin{figure}[t]
   \centering
-  % 画像をプロジェクト直下の figures/ に置く運用を推奨
-  % \graphicspath{{figures/}}
-  % \includegraphics[width=\linewidth]{hcs2_cof.jpg}
-  % ↑あなたの環境では上記のファイル名に置き換えてください
-  \includegraphics[width=\linewidth]{8D310B63-19D6-4A74-8E02-5BBC7FE66CF8.jpeg}
-  \caption{HCS2搭載COFの外観。左：ドライバIC，右：HCS2チップ，中央下楕円：テストパッド樹脂封止。}
+  \includegraphics[width=\columnwidth]{8D310B63-19D6-4A74-8E02-5BBC7FE66CF8.jpeg}
+  \caption{HCS2搭載COF外観（左：ドライバIC，右：HCS2，中央下：テストパッド封止）。}
   \label{fig:hcs2cof_photo}
 \end{figure}
 
 \subsection{端点からの工程フロー（概要）}
 \begin{enumerate}
-  \item \textbf{COFベンダー：仕様書発行}（電気・構造・実装条件）
-  \item \textbf{ヘッドエレキ設計：ヘッドエレキ仕様書作成}（ベンダー仕様を反映）
-  \item \textbf{メカ設計：COF設計図面／アセンブリ図面作成}
-  \item \textbf{試作評価：}ヘッドエレキ評価，COF実装の組立評価（電気特性・組立性）
-  \item \textbf{DR1（設計レビュー）：} 仕様・図面・評価の妥当性確認，修正反映
-  \item \textbf{属性収集と登録：}
-  \begin{itemize}
-    \item 環境：COFベンダー提供情報を \textbf{EChemSkip} 登録，積み上げ判定
-    \item コスト：ヘッド原価の積上げ計算
-    \item 輸出：用途説明書作成，\textbf{該非判定（ECCN/HS）} 実施（IC機能部品として）
-  \end{itemize}
-  \item \textbf{DR2（量産前レビュー）：} 計測器情報・品質特性・製造条件の最終確認
-  \item \textbf{設計通知：} ヘッドエレキ仕様書，COF設計図面，アセンブリ図面を発行
-  \item \textbf{コード付番・BOM接続：} COF部品コード（\textbf{第1桁=2：電子部品}）新規発行，アセンブリコード改訂，BOM連結
-  \item \textbf{技術受領と展開：} COFベンダー，各組立現法，調達部が受領
-  \item \textbf{発注～生産開始：} HCS2 COF正式発注，各拠点でCOF受領後に組立開始
+  \item \textbf{COFベンダー：仕様書発行}（電気・構造・実装条件）。
+  \item \textbf{ヘッドエレキ設計：} 仕様反映し、ヘッドエレキ仕様書作成。
+  \item \textbf{メカ設計：} COF設計図面／アセンブリ図面作成。
+  \item \textbf{試作評価：} エレキ評価とCOF実装の組立評価（電気特性・組立性）。
+  \item \textbf{DR1：} 仕様・図面・評価の妥当性確認、修正反映。
+  \item \textbf{属性収集・登録：}
+    \begin{itemize}
+      \item 環境：ベンダー情報を \textbf{EChemSkip} 登録、積上げ判定。
+      \item コスト：ヘッド原価の積上げ計算。
+      \item 輸出：用途説明書作成、\textbf{該非判定（ECCN/HS）}（IC機能部品）。
+    \end{itemize}
+  \item \textbf{DR2（量産前）：} 計測器情報・品質特性・製造条件を最終確認。
+  \item \textbf{設計通知：} ヘッドエレキ仕様書／COF設計図面／アセンブリ図面を発行。
+  \item \textbf{付番・BOM接続：} COF部品コード（\textbf{第1桁=2：電子部品}）新規発行、
+        アセンブリコード改訂、BOM連結。
+  \item \textbf{受領・展開：} ベンダー／各組立現法／調達部へ技術受領。
+  \item \textbf{発注～量産開始：} HCS2 COF正式発注、各拠点で組立開始。
 \end{enumerate}
 
-\subsection{ゲート管理（DR/通知と成果物）}
+\subsection{ゲート管理（DR／通知と成果物）}
 \begin{table}[t]
 \centering
-\caption{ゲート別の主査点と発行物}
+\caption{ゲート別主査点と発行物（2カラム収まる体裁）}
 \label{tab:hcs2_gates}
 \footnotesize
-\begin{tabular}{@{}p{10mm}p{30mm}p{35mm}@{}}
+\begin{tabular}{@{}p{8mm}p{28mm}p{36mm}@{}}
 \toprule
 \textbf{Gate} & \textbf{主査点} & \textbf{主な発行物} \\
 \midrule
-DR1 & 評価妥当性／図面整合 & 修正版 仕様書・図面 \\
-属性 & 環境・コスト・輸出整合 & EChemSkip登録\;/\;積上げ, 用途説明書, 該非判定書 \\
-DR2 & 品質特性\&計測器\,/\,製造条件 & 設計通知準備完 \\
-通知 & BOM整合\,/\,付番 & 設計通知, COF部品コード(2番), アセンブリ改訂 \\
-量産 & 展開・発注 & 発注書, 生産開始連絡 \\
+DR1 & 評価妥当性／図面整合 & 修正版仕様書・図面 \\
+属性 & 環境・コスト・輸出整合 & EChemSkip登録／積上げ，用途説明書，該非判定書 \\
+DR2 & 品質特性・計測器／製造条件 & 設計通知準備完了 \\
+通知 & BOM整合／付番 & 設計通知，COF部品コード(2番)，アセンブリ改訂 \\
+量産 & 展開・発注 & 発注書，生産開始連絡 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{BOMと属性の並列運用（実務ポイント）}
 \begin{itemize}
-  \item \textbf{COF図面に計測器情報と品質特性を明記}（例：測定機種，測定条件，重要特性の管理値）
-  \item \textbf{材料コード（第1桁=6）に連鎖する環境再評価}：SDS更新時はRoll-up再実行
-  \item \textbf{輸出属性は部品単位で保持}：ECCN/HSと用途説明書をBOMに紐づけ，製品レベル判定に反映
+  \item \textbf{COF図面に計測器と品質特性を明記}（測定機種・条件・管理値）。
+  \item \textbf{材料コード（第1桁=6）の連鎖再評価}：SDS更新時はRoll-up再実行。
+  \item \textbf{輸出属性は部品単位保持}：ECCN/HSと用途説明書をBOM紐付け、製品判定へ反映。
 \end{itemize}
 
-\subsection{プロセスの可視化（TikZフロー）}
+\subsection{プロセス可視化（2カラム対応TikZフロー）}
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[node distance=6mm and 5mm, >=Stealth, font=\small]
-\tikzstyle{b}=[rectangle, rounded corners, draw, align=center, inner sep=3pt]
-\node[b] (s0) {COFベンダー\\仕様書};
-\node[b, right=of s0] (s1) {ヘッドエレキ\\仕様書};
-\node[b, right=of s1] (s2) {COF設計図面\\アセンブリ図面};
-\node[b, right=of s2] (s3) {エレキ評価\\組立評価};
-\node[b, below=of s2, xshift=8mm] (s4) {DR1};
-\node[b, right=22mm of s3] (s5) {環境/コスト/輸出\\登録・判定};
-\node[b, below=of s5] (s6) {DR2(量産前)};
-\node[b, left=of s6] (s7) {設計通知\\(図面・仕様書)};
-\node[b, left=of s7] (s8) {BOM接続\\2番コード付番};
-\node[b, left=of s8] (s9) {受領・展開\\発注～生産};
+\begin{tikzpicture}[
+  font=\footnotesize, >=Stealth,
+  node distance=2mm and 2mm,
+  box/.style={draw, rounded corners, align=center,
+              inner sep=2pt, minimum height=6mm,
+              text width=.42\columnwidth}
+]
+\node[box] (s0) {COFベンダー\\仕様書};
+\node[box, right=of s0] (s1) {ヘッドエレキ\\仕様書};
+\node[box, below=of s0] (s2) {COF設計図面\\アセンブリ図面};
+\node[box, right=of s2] (s3) {エレキ評価\\組立評価};
+\node[box, below=of s2] (s4) {DR1};
+\node[box, right=of s4] (s5) {環境／コスト／輸出\\登録・判定};
+\node[box, below=of s4] (s6) {DR2（量産前）};
+\node[box, right=of s6] (s7) {設計通知\\（図面・仕様）};
+\node[box, below=of s6] (s8) {BOM接続\\2番コード付番};
+\node[box, right=of s8] (s9) {受領・展開\\発注～生産};
 
-\draw[->] (s0) -- (s1) -- (s2) -- (s3);
-\draw[->] (s3) |- (s4);
-\draw[->] (s4) -| (s5);
-\draw[->] (s5) -- (s6) -- (s7) -- (s8) -- (s9);
+\draw[->] (s0)--(s1);
+\draw[->] (s0)--(s2);
+\draw[->] (s1)--(s3);
+\draw[->] (s2)--(s3);
+\draw[->] (s3)--(s4);
+\draw[->] (s4)--(s5);
+\draw[->] (s5)--(s6);
+\draw[->] (s6)--(s7);
+\draw[->] (s7)--(s8);
+\draw[->] (s8)--(s9);
 \end{tikzpicture}
-\caption{HCS2搭載COFの設計～通知～量産フロー}
+\caption{HCS2搭載COFにおけるBOMワークフロー適用（2カラム対応）。}
 \label{fig:hcs2_flow}
 \end{figure}
 
