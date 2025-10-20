@@ -3,13 +3,21 @@
 % =====================================================
 \documentclass[conference]{IEEEtran}
 
-% ---------- LuaLaTeX 日本語・記号（μ）対応：決定版 ----------
+% ---------- LuaLaTeX 日本語・μ対応（IPAexを手動登録） ----------
 \usepackage{iftex}
 \ifLuaTeX
   \usepackage{luatexja}
-  \usepackage{luatexja-fontspec}      % ← presetでなくfontspecで明示指定
-  \setmainjfont{IPAexMincho}          % 和文本文（明朝）
-  \setsansjfont{IPAexGothic}          % 和文サンセリフ
+  \usepackage{luatexja-fontspec}
+  % IPAexフォントのパスを明示（Ubuntu標準位置）
+  \setmainjfont[
+    Path = /usr/share/fonts/opentype/ipaexfont/,
+    UprightFont = *mincho,
+    BoldFont = *gothic
+  ]{ipaex}
+  \setsansjfont[
+    Path = /usr/share/fonts/opentype/ipaexfont/,
+    UprightFont = *gothic
+  ]{ipaex}
   \ltjsetparameter{jacharrange={-2,-3}}
 \else
   \usepackage[utf8]{inputenc}
@@ -18,25 +26,15 @@
 
 % --- Unicode直打ちの安全化（μなどを確実に通す） ---
 \usepackage{newunicodechar}
-\newcommand{\micro}{\ensuremath{\mu}}
-\newunicodechar{μ}{\micro}            % 生“μ”→\mu に自動置換
-\newunicodechar{¥}{\textbackslash}    % 日本語KB対策（任意）
+\newcommand{\micro}{\ensuremath{\mu}} % 既存マクロを先に定義
+\newunicodechar{μ}{\micro}
+\newunicodechar{¥}{\textbackslash}
 
-% ---------- 便利パッケージ群（IEEEtran互換構成） ----------
+% ---------- 以下は従来通り ----------
 \usepackage{graphicx}
-% \graphicspath{{./figs/}}
-
 \usepackage[table]{xcolor}
-\usepackage{array}
-\usepackage{tabularx}
-\usepackage{booktabs}
-\usepackage{threeparttable}
-\usepackage{makecell}
-\usepackage{multirow}
-
+\usepackage{array,tabularx,booktabs,threeparttable,makecell,multirow}
 \usepackage{amsmath,amssymb,mathtools,bm}
-% \usepackage{physics}
-
 \usepackage{siunitx}
 \sisetup{
   detect-all,
@@ -45,20 +43,14 @@
   range-phrase=--,
   group-separator={,}
 }
-
 \usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{cite}
-
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,calc,shapes,decorations.pathmorphing}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-
-% ハイパーリンク→cleveref（この順が安定）
 \usepackage[hidelinks]{hyperref}
 \usepackage[capitalise,noabbrev]{cleveref}
-
-% ---------- よく使う自作マクロ ----------
 \renewcommand{\figurename}{Fig.}
 \renewcommand{\tablename}{Table}
 \newcommand{\ohm}{\ensuremath{\Omega}}
