@@ -1,11 +1,15 @@
 name: Build μTFP Driver BCP Paper
 
 on:
+  workflow_dispatch: {}            # 手動実行ボタンを出す
   push:
-    branches:
-      - main
+    branches: ["**"]              # どのブランチでも
     paths:
-      - 'papers/2025_driver_bcp_equivalence/**'
+      - 'papers/**'               # 論文配下なら全部
+      - '.github/workflows/**'    # ワークフロー変更時も起動
+  pull_request:
+    paths:
+      - 'papers/**'
 
 jobs:
   build:
@@ -16,7 +20,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install LaTeX and Japanese fonts
+      - name: Install LaTeX + Japanese fonts
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive texlive-luatex texlive-lang-japanese fonts-ipaexfont fonts-ipafont
@@ -24,7 +28,8 @@ jobs:
       - name: Compile LaTeX document (LuaLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: papers/2025_driver_bcp_equivalence/main.tex
+          root_file: |
+            papers/2025_driver_bcp_equivalence/main.tex
           latexmk_use_lualatex: true
           continue_on_error: true
 
