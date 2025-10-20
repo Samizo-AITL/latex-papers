@@ -11,19 +11,30 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Compile LaTeX document
+      - name: Install Japanese fonts (IPAex)
+        run: sudo apt-get update && sudo apt-get install -y fonts-ipafont fonts-ipaexfont
+
+      - name: Compile LaTeX document (LuaLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: papers/2025_driver_bcp_equivalence/main.tex
-          # ログ出力を確実に残す
           latexmk_use_lualatex: true
+          # エラー時もログを残す
           continue_on_error: true
+          # 必要なら追加: extra_system_packages: "ghostscript"
 
+      # 失敗しても成果物を回収
       - name: Archive LaTeX build outputs (PDF + LOG)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: driver_bcp_equivalence_outputs
           path: |
             papers/2025_driver_bcp_equivalence/*.pdf
             papers/2025_driver_bcp_equivalence/*.log
+            papers/2025_driver_bcp_equivalence/*.aux
+            papers/2025_driver_bcp_equivalence/*.blg
+            papers/2025_driver_bcp_equivalence/*.bbl
