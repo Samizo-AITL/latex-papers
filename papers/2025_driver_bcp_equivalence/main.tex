@@ -1,5 +1,5 @@
 % =====================================================
-% μTFP Driver IC BCP論文（Process Equivalence）
+% μTFP Driver IC BCP論文（Process Porting / Process Equivalence 強調版）
 % =====================================================
 \documentclass[conference]{IEEEtran}
 
@@ -19,39 +19,25 @@
   \usepackage[T1]{fontenc}
 \fi
 
-% --- Unicode直打ちの安全化（μ/¥を確実に通す） ---
+% --- Unicode安全化 ---
 \usepackage{newunicodechar}
 \newcommand{\micro}{\ensuremath{\mu}}
 \newunicodechar{μ}{\micro}
 \newunicodechar{¥}{\textbackslash}
 
-% ---------- 便利パッケージ群 ----------
+% ---------- 便利パッケージ ----------
 \usepackage{graphicx}
 \usepackage[table]{xcolor}
 \usepackage{array,tabularx,booktabs,threeparttable,makecell,multirow}
 \usepackage{amsmath,amssymb,mathtools,bm}
 \usepackage{siunitx}
-\sisetup{
-  mode = match,
-  propagate-math-font = true,
-  reset-math-version = false,
-  reset-text-family = false,
-  reset-text-series = false,
-  reset-text-shape = false,
-  text-family-to-math = true,
-  text-series-to-math = true,
-  per-mode = symbol,
-  uncertainty-mode = separate,
-  range-phrase = --,
-  group-separator = {,}
-}
-% □（per square）を単位として登録
+\sisetup{mode=match, per-mode=symbol, range-phrase=--, group-separator={,}}
 \DeclareSIUnit{\sq}{\text{\ensuremath{\square}}}
 
 \usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{cite}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes,decorations.pathmorphing}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usepackage[hidelinks]{hyperref}
@@ -69,7 +55,7 @@
 
 \title{%
 μTFPヘッド用ドライバICのBCP対応:\\
-プロセス同等化による二拠点生産体制の確立
+\textbf{プロセス移植型による完全互換二拠点生産体制の確立}
 }
 
 \author{%
@@ -83,24 +69,24 @@ GitHub: \url{https://github.com/Samizo-AITL}
 
 \begin{abstract}
 \textbf{和文概要：}
-本研究は，東日本大震災を契機に，μTFPプリントヘッド用ドライバICの生産リスク低減を目的として実施した事業継続計画（BCP: Business Continuity Planning）対応事例を報告する。
-エプソン酒田工場で製造されていた0.35\,μm CMOS（3.3\,V／45\,V, WSiゲート）ドライバICについて，ファンドリとして宮城県のラピスセミコンダクタを追加した。
-従来の「パラメータ合わせ（Parameter Matching）」ではなく，「プロセス同等化（Process Equivalence）」により酒田工場と同一仕様をラピスライン上に再現する手法を採用した。
-立上げにはプロセス条件の逐次マッピングと統計的検証を要したが，結果として，電気特性・吐出特性・EMCのいずれも酒田品と同等であり，ヘッド設計の再評価を不要とする完全互換を実現した。
-本事例は，設計資産を改変せずに冗長化を達成する「Process-Identical BCP」の有効性を実証するものである。
+本研究は，東日本大震災を契機に，μTFPプリントヘッド用ドライバICの生産リスク低減を目的として実施したBCP（Business Continuity Planning）対応事例を報告する。
+従来の\textbf{再設計型（Re-Design-Based / Parameter Matching）}ではなく，
+\textbf{プロセス移植型（Process-Porting-Based / Process Equivalence）}を採用し，
+酒田工場と同一仕様をラピスライン上に再現した。
+製造をラピスで行い，ウエハテスト（EWS）を酒田で実施する\emph{製造分散・保証集中}の体制により，
+設計資産を改変せずに完全互換を達成した。
+この事例は，設計資産保護と供給リスク分散を両立する「Process-Identical BCP」アプローチの有効性を実証するものである。
 
 \medskip
 \textbf{Abstract:}
-This paper reports a Business Continuity Planning (BCP) implementation for the μTFP printhead driver IC, initiated in response to the Great East Japan Earthquake.
-To mitigate production risk, Lapis Semiconductor (Miyagi, Japan) was introduced as an additional foundry to complement the original Epson Sakata factory.
-The target device was a 0.35\,μm CMOS driver IC (3.3 V / 45 V WSi-gate process). 
-Instead of redesigning the circuit to match the Lapis process parameters, a full \textit{process equivalence} approach was adopted—reproducing the Sakata process using identical masks and matched fabrication conditions.
-Although the process alignment required extensive parameter mapping and verification, the resulting electrical characteristics, ink ejection performance, and EMC behavior were indistinguishable from the Sakata production.
-This work demonstrates the feasibility of a “Process-Identical BCP” approach that ensures design compatibility and product redundancy without sacrificing existing design assets.
+This paper presents a Business Continuity Planning (BCP) implementation for the μTFP printhead driver IC, initiated after the Great East Japan Earthquake.
+Instead of a \textit{re-design-based (parameter-matching)} approach, a full \textit{process-porting (process equivalence)} strategy was adopted, reproducing the Sakata process at Lapis Semiconductor.
+Manufacturing was carried out at Lapis, while Electrical Wafer Sort (EWS) testing was performed at Epson’s Sakata factory under centralized quality governance.
+This “distributed manufacturing with centralized quality” framework enabled full compatibility without modifying any design assets, demonstrating the effectiveness of a “Process-Identical BCP” approach for design-preserving redundancy.
 \end{abstract}
 
 \begin{IEEEkeywords}
-BCP, μTFP, Driver IC, Process Equivalence, Lapis Semiconductor, Sakata Factory, Reliability, Inkjet Head
+BCP, μTFP, Driver IC, Process Porting, Process Equivalence, Full Compatibility, Lapis Semiconductor, Sakata Factory, Reliability, Inkjet Head
 \end{IEEEkeywords}
 
 \section{序論}
@@ -117,12 +103,12 @@ BCP, μTFP, Driver IC, Process Equivalence, Lapis Semiconductor, Sakata Factory,
 
 本研究では，宮城県に拠点を有するラピスセミコンダクタを新たな製造ファンドリとして追加し，
 酒田工場で用いていた0.35\,μm CMOS（3.3\,V／45\,V WSiゲート）高耐圧プロセスを対象に，
-マスク・プロセス条件・評価基準を完全に一致させた「プロセス同等化（Process Equivalence）」を実施した。
+マスク・プロセス条件・評価基準を完全に一致させた\textbf{プロセス移植型（Process Porting / Process Equivalence）}を実施した。
 この手法は，ファンドリ側のパラメータに合わせて回路を再設計する一般的な方式とは異なり，
 ヘッド側の設計資産を変更せずに，製造ライン側を合わせ込むことで互換性を確保する点に特徴がある。
 
 本論文では，このBCP対応の背景および実施方針を述べるとともに，
-プロセス同等化の立上げ手法，評価結果，および得られた知見について報告する。
+プロセス移植の立上げ手法，評価結果，および得られた知見について報告する。
 
 \section{BCP対応方針}
 本BCP対応では，μTFPヘッド用ドライバICの生産冗長化を目的として，
@@ -131,11 +117,12 @@ BCP, μTFP, Driver IC, Process Equivalence, Lapis Semiconductor, Sakata Factory,
 
 検討した方針は次の2方式である：
 \begin{enumerate}
-\item \textbf{Parameter Matching方式}：\\
+\item \textbf{再設計型（Re-Design-Based / Parameter Matching）}：\\
 ラピス側のプロセスパラメータ（酸化膜厚・しきい値電圧・金属抵抗値など）に合わせて回路設計を再調整する方法。
 既存設計を一部修正することで短期間での立上げが可能であるが，
 ヘッド電気特性やCOF（Chip On Film）制御コード，さらにはプリンタ本体のファームウェアを含む一連のシステム再評価が必要となる。
-\item \textbf{Process Matching方式}：\\
+
+\item \textbf{プロセス移植型（Process-Porting-Based / Process Equivalence）}：\\
 酒田工場で使用していたマスクをそのまま流用し，
 ラピス製造ライン側のプロセス条件（熱処理・成膜・エッチング・金属配線など）を酒田仕様に合わせ込む方法。
 立上げには多くの工程パラメータ調整と評価工数を要するが，
@@ -143,17 +130,38 @@ BCP, μTFP, Driver IC, Process Equivalence, Lapis Semiconductor, Sakata Factory,
 \end{enumerate}
 
 両方式を比較すると，
-Parameter Matchingは初期投入コストが低い一方で，
-長期的には設計資産の分断や評価負荷の増大を招くリスクがある。
-一方のProcess Matchingは初期立上げに時間を要するものの，
+再設計型は初期投入コストが低い一方で，長期的には設計資産の分断や評価負荷の増大を招くリスクがある。
+一方のプロセス移植型は初期立上げに時間を要するものの，
 設計・テスト・製造のすべてを既存資産で統一でき，
 製品互換性と品質保証の両立が可能である。
 
 本研究では，ヘッド側の電気特性・制御コード・吐出波形を一切変更せずに冗長化を実現することを最優先とし，
-後者の\textbf{「プロセス同等化（Process Equivalence）」}方針を採用した。
-この決定により，設計資産の保護とサプライチェーンの耐災害性を同時に確保することを狙った。
+後者の\textbf{プロセス移植型}方針を採用した。
+この決定により，\textbf{完全互換（Full Compatibility）}と\textbf{設計資産の保護}，
+および\textbf{品質保証の一元化}を同時に確保した。
 
-\section{プロセス同等化手法}
+% ---- 比較表 ----
+\begin{table}[t]
+\centering
+\caption{再設計型とプロセス移植型の比較}
+\label{tab:approach_compare}
+\begin{tabular}{p{25mm}p{31mm}p{31mm}}
+\toprule
+項目 & 再設計型 (Re-Design-Based) & プロセス移植型 (Process-Porting-Based) \\
+\midrule
+基本方針 & 新プロセスに設計を再調整 & 既存プロセスを他拠点へ移植 \\
+立上げ期間 & 短期 & 長期 \\
+初期コスト & 低 & 高 \\
+設計資産への影響 & 大（再評価必要） & 無（設計・FW共通） \\
+互換性 & 部分互換 & \textbf{完全互換} \\
+BCP適合性 & 暫定対応に有効 & 恒久対応に最適 \\
+品質保証 & 拠点別評価になりがち & \textbf{酒田EWSで一元保証} \\
+適用分野 & ノード移行・小改版 & 高信頼・長期供給品 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{プロセス移植手法}
 
 \subsection{対象デバイス}
 対象は，\SI{0.35}{\micro\meter} CMOS技術をベースとした
@@ -169,7 +177,7 @@ Parameter Matchingは初期投入コストが低い一方で，
 膜厚・抵抗・臨界電圧など主要パラメータの統計分布を一致させることを目標とした。
 
 \subsection{立上げフロー}
-プロセス同等化の立上げは，以下の4段階で構成した。
+プロセス移植の立上げは，以下の4段階で構成した。
 
 \begin{enumerate}
   \item \textbf{酒田レシピの共有と装置パラメータ変換}\\
@@ -200,7 +208,7 @@ Parameter Matchingは初期投入コストが低い一方で，
 \section{評価結果}
 
 \subsection{電気特性}
-プロセス同等化後のラピス製デバイスについて，出力ドライバ段および高耐圧MOSトランジスタの
+プロセス移植後のラピス製デバイスについて，出力ドライバ段および高耐圧MOSトランジスタの
 IV特性を測定した。
 その結果，酒田製デバイスとのしきい値電圧偏差は$\pm\SI{1.5}{\percent}$以内，
 オン抵抗は$\pm\SI{2}{\percent}$以内に収まり，電気的にほぼ完全一致を示した。
@@ -228,32 +236,34 @@ IV特性を測定した。
 ラピス生産デバイスは電気的・機能的に酒田品と完全同等であり，
 ヘッド設計・COFコード・プリンタファームウェアに対する修正を必要としないことが確認された。
 
+% ---- 図：方式比較 ----
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[>=Stealth, node distance=10mm, font=\footnotesize]
   \node[draw, rounded corners, align=center, minimum width=35mm, minimum height=7mm, fill=gray!10] (pm)
-    {Parameter\\Matching\\(再設計)};
+    {Re-Design-Based\\(再設計型)};
   \node[draw, rounded corners, align=center, minimum width=35mm, minimum height=7mm, right=22mm of pm, fill=gray!10] (pe)
-    {Process\\Matching\\(本研究)};
+    {Process-Porting-Based\\(本研究)};
   \node[below=12mm of pm, align=left, text width=35mm] (pm_bullets) {
     \begin{itemize}\itemsep2pt
       \item 立上げ短期
-      \item ヘッド側再評価必要
+      \item 設計再評価必要
       \item 部分互換
     \end{itemize}
   };
   \node[below=12mm of pe, align=left, text width=35mm] (pe_bullets) {
     \begin{itemize}\itemsep2pt
       \item 工数・期間大
-      \item ヘッド側影響ゼロ
-      \item 完全互換
+      \item 設計側影響ゼロ
+      \item \textbf{完全互換}
     \end{itemize}
   };
 \end{tikzpicture}
-\caption{BCP対応方式の比較（Parameter Matching vs Process Matching）}
+\caption{BCP方式の比較（再設計型 vs プロセス移植型）}
 \label{fig:bcp_compare}
 \end{figure}
 
+% ---- 表：プロセス比較 ----
 \begin{table}[t]
 \centering
 \caption{ラピス・酒田プロセスの主要特性比較}
@@ -265,71 +275,71 @@ IV特性を測定した。
 ゲート酸化膜厚 (Å) & 800 & 805 \\
 WSi抵抗値 (\si{\ohm\per\sq}) & 2.3 & 2.4 \\
 リーク電流 (\si{\ampere\per\centi\metre\squared}) & $<1\times10^{-9}$ & $<1\times10^{-9}$ \\
-臨界電圧 V\textsubscript{bd} (V) & 48.2 & 47.9 \\
+臨界電圧 $V_{\mathrm{bd}}$ (V) & 48.2 & 47.9 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \section{品質保証とトレーサビリティ}
-本BCP体制下における品質保証スキームを図\ref{fig:qa_flow}に示す。
-製造工程はラピスセミコンダクタが担当し，
-ウエハテスト（EWS: Electrical Wafer Sort）は酒田工場で実施する分業構成とした。
-出荷判定および最終保証はエプソン本体による集中管理とし，
-単一基準での品質認証を維持した。
+本BCP体制下における品質保証スキームを\cref{fig:qa_flow}に示す。
+\textbf{製造工程はラピスセミコンダクタが担当し，ウエハテスト（EWS: Electrical Wafer Sort）は酒田工場で実施}する分業構成とした。
+出荷判定および最終保証はエプソン本体による集中管理とし，単一基準での品質認証を維持した。
 
 COFコード（Chip On Film制御コード）は酒田・ラピス間で共通化し，
 製品ロット単位での管理番号を付与することでトレーサビリティを確保した。
-これにより，個々のICがどの拠点・ロットで生産されたかを即時に追跡でき，
+これにより，各ICがどの拠点・ロットで生産されたかを即時に追跡でき，
 品質問題発生時にも出荷停止・切替判断を迅速に行える構造とした。
 
-また，プロセス同等化の維持を目的として，
-四半期ごとに相互モニタリングロットを製造し，
-酸化膜厚・リーク電流・Vbd等の主要パラメータを定点測定する。
-このデータを酒田側のリファレンスと比較し，
-偏差が管理限界値（$\pm3\sigma$）を超えた場合には即時是正を行う。
-これにより，二拠点体制下でも長期的なプロセス同等性を維持する体制を確立した。
+また，プロセス同等性の維持を目的として，四半期ごとに相互モニタリングロットを製造し，
+酸化膜厚・リーク電流・$V_{\mathrm{bd}}$等の主要パラメータを定点測定する。
+このデータを酒田側リファレンスと比較し，偏差が管理限界値（$\pm3\sigma$）を超えた場合には即時是正を行う。
+\textbf{この「製造分散・保証集中」構造により，物理的製造拠点は異なっても，酒田EWSの共通基準を通じて全ロットが同一品質ゲートで判定される。}
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[node distance=10mm, font=\footnotesize]
-  \node[draw, rounded corners, align=center, fill=gray!10, minimum width=32mm, minimum height=6mm] (lapis)
-    {製造：ラピスセミコンダクタ};
-  \node[draw, rounded corners, below=8mm of lapis, fill=gray!10, minimum width=32mm, minimum height=6mm, align=center] (sakata)
-    {ウエハテスト：酒田工場};
-  \node[draw, rounded corners, below=8mm of sakata, fill=gray!10, minimum width=32mm, minimum height=6mm, align=center] (epson)
-    {出荷保証：エプソン本体};
+  \node[draw, rounded corners, align=center, fill=gray!10, minimum width=38mm, minimum height=6mm] (lapis)
+    {製造：ラピスセミコンダクタ（宮城）};
+  \node[draw, rounded corners, below=8mm of lapis, fill=gray!10, minimum width=38mm, minimum height=6mm, align=center] (sakata)
+    {ウエハテスト（EWS）：酒田工場（山形）};
+  \node[draw, rounded corners, below=8mm of sakata, fill=gray!10, minimum width=38mm, minimum height=6mm, align=center] (epson)
+    {出荷保証・承認：エプソン本体};
 
   \draw[->, thick] (lapis) -- (sakata);
   \draw[->, thick] (sakata) -- (epson);
 \end{tikzpicture}
-\caption{品質保証・トレーサビリティ体制の構成}
+\caption{品質保証・トレーサビリティ体制（製造分散・保証集中）}
 \label{fig:qa_flow}
 \end{figure}
 
 \section{考察}
-プロセス同等化方式は，短期的には工程マッピング・信頼性評価など多大な工数を要するが，
-一度確立すれば製品設計の再認証や評価系統の分断を避けられ，
-結果として長期的なトータルコストを低減できる利点がある。
-本研究の結果，酒田・ラピス両拠点における製造条件の完全同等化が実証され，
+プロセス移植型方式は，短期的には工程マッピング・信頼性評価など多大な工数を要するが，
+一度確立すれば設計再認証や評価系統の分断を回避でき，
+結果として長期的トータルコストを低減できる利点がある。
+本研究の結果，酒田・ラピス両拠点での完全同等製造が実証され，
 「プロセスを再現することで設計資産を守る」アプローチの有効性が確認された。
 
-また，この手法はμTFPドライバICに限定されず，
-将来的にはMEMSアクチュエータ，ミックスドシグナルSoC，
-さらにはAIアクセラレータなど，
-高信頼性と長期供給が求められるデバイス群にも適用可能である。
-すなわち，「設計資産保護型BCP（Design Preservation-Oriented BCP）」として
+特に，本研究で採用した\textbf{プロセス移植型BCP}は，
+「\textbf{設計資産を改変せずに完全互換を維持}できる」点で従来の\textbf{再設計型BCP}と本質的に異なる。
+製造を分散しつつ，品質保証を酒田EWSに集中させる構造により，
+長期供給リスクと設計分断リスクの双方を排除する新しいBCPアーキテクチャを実現した。
+
+また，本手法はμTFPドライバICに限らず，
+MEMSアクチュエータ，ミックスドシグナルSoC，
+AIアクセラレータなど高信頼・長期供給デバイスにも適用可能である。
+すなわち，「設計資産保護型BCP（Design Preservation-Oriented BCP）」として，
 半導体サプライチェーン強靭化の共通モデルとなり得る。
 
 \section{結論}
 本報では，μTFPプリントヘッド用ドライバICのBCP対応事例として，
 酒田工場とラピスセミコンダクタにおける
 \textbf{同一マスク・同一プロセス条件の再現（Process Equivalence）}を実現した。
-電気特性，吐出特性，および信頼性試験のいずれにおいても
-両拠点品は完全同等であり，製品設計・制御コード・ファームウェアの再評価を要しなかった。
+電気特性，吐出特性，信頼性試験のいずれにおいても
+両拠点品は\textbf{完全同等}であり，設計・制御コード・ファームウェア再評価を要しなかった。
 
 本成果は，災害リスク分散と設計資産保全を同時に達成する
-「Design Preservation through Process Reproduction」アプローチの実用的成功例であり，
-今後の国内半導体BCP構築における技術的ベースラインとなる。
+「Design Preservation through Process Reproduction」アプローチの成功例であり，
+今後の国内半導体BCP構築の技術的ベースラインとなる。
 
 \section*{謝辞}
 本研究の実施にあたり，酒田工場および宮城ラピスセミコンダクタの各位，
@@ -337,28 +347,27 @@ COFコード（Chip On Film制御コード）は酒田・ラピス間で共通�
 
 \section*{参考文献}
 \begin{thebibliography}{99}
-
 \bibitem{Samizo2024_uTEP}
 S.~Samizo, 
-``uTEPヘッド用ドライバICにおけるウエハ酸素濃度変動起因の品質問題対応
-[Quality issue mitigation in uTEP driver IC caused by wafer oxygen concentration fluctuation],'' 
+``uTEPヘッド用ドライバICにおけるウエハ酸素濃度変動起因の品質問題対応,'' 
 \textit{Epson Semiconductor Technical Report}, 2024.
 
 \bibitem{Samizo2023_TFP}
 S.~Samizo, 
-``薄膜PZTアクチュエータにおける振動板クラックと端部焼損の原因解析
-[Failure analysis of diaphragm cracking and edge burn in thin-film PZT actuators],'' 
+``薄膜PZTアクチュエータにおける振動板クラックと端部焼損の原因解析,'' 
 \textit{Journal of Precision Mechatronics}, 2023.
 
 \bibitem{Samizo2022_PZT}
 S.~Samizo, 
-``薄膜PZT技術の系譜
-[Historical evolution of thin-film PZT technology],'' 
+``薄膜PZT技術の系譜,'' 
 \textit{Proceedings of the Japan Society of Applied Physics}, 2022.
-
 \end{thebibliography}
 
 \section*{著者略歴}
-\textbf{三溝 真一}（Shinichi Samizo）は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得した。その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、そして、インクジェット薄膜ピエゾアクチュエータ及びPrecisionCoreプリントヘッドの製品化に従事した。現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、AIシステム統合などに取り組んでいる。連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}．
+\textbf{三溝 真一}（Shinichi Samizo）は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得。
+セイコーエプソン株式会社に勤務し、半導体ロジック／高耐圧統合、インクジェット薄膜PZTアクチュエータ、
+PrecisionCore プリントヘッド製品化に従事。
+現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、
+AIシステム統合に取り組む。連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}．
 
 \end{document}
