@@ -16,35 +16,30 @@ jobs:
         uses: actions/checkout@v4
 
       # ---- TeX Live & 日本語フォント ----
-      - name: Install TeX Live & Fonts
+      - name: Install TeX Live & HaranoAji
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive-full fonts-haranoaji
 
-      # ---- Debug: ディレクトリ構造確認 ----
-      - name: Show directory tree
-        run: |
-          tree papers/2025_bioinkjet_electrostatic || true
-
-      # ---- LuaLaTeX ビルド ----
+      # ---- ビルド ----
       - name: Compile with LuaLaTeX
         working-directory: papers/2025_bioinkjet_electrostatic
         run: |
           lualatex -interaction=nonstopmode -file-line-error main.tex | tee build.log
-          bibtex main.aux || true
+          # bibtex は不要（thebibliography を使用）
           lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
           lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
 
-      # ---- 成果物アップロード ----
-      - name: Upload PDF and logs
+      # ---- 成否に関わらずログを回収 ----
+      - name: Upload PDF and logs (always)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: 2025_bioinkjet_electrostatic_build
           path: |
             papers/2025_bioinkjet_electrostatic/main.pdf
-            papers/2025_bioinkjet_electrostatic/*.log
+            papers/2025_bioinkjet_electrostatic/main.log
             papers/2025_bioinkjet_electrostatic/build.log
             papers/2025_bioinkjet_electrostatic/*.bbl
             papers/2025_bioinkjet_electrostatic/*.blg
-          if-no-files-found: error
           retention-days: 14
