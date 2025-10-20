@@ -118,20 +118,21 @@ BCP, μTFP, Driver IC, Process Porting, Process Equivalence, Full Compatibility,
 検討した方針は次の2方式である：
 \begin{enumerate}
 \item \textbf{再設計型（Re-Design-Based / Parameter Matching）}：\\
-ラピス側のプロセスパラメータ（酸化膜厚・しきい値電圧・金属抵抗値など）に合わせて回路設計を再調整する方法。
-既存設計を一部修正することで短期間での立上げが可能であるが，
-ヘッド電気特性やCOF（Chip On Film）制御コード，さらにはプリンタ本体のファームウェアを含む一連のシステム再評価が必要となる。
+ラピス側のプロセスパラメータ（酸化膜厚・しきい値電圧・金属抵抗値など）に合わせて回路設計を再調整する方式。
+既存設計を部分的に修正することで短期間の立上げが可能であるが，
+ヘッド電気特性，COF（Chip On Film）制御コード，さらにはプリンタ本体ファームウェアに至るまで，
+一連の再評価が必要となる。
 
 \item \textbf{プロセス移植型（Process-Porting-Based / Process Equivalence）}：\\
 酒田工場で使用していたマスクをそのまま流用し，
-ラピス製造ライン側のプロセス条件（熱処理・成膜・エッチング・金属配線など）を酒田仕様に合わせ込む方法。
-立上げには多くの工程パラメータ調整と評価工数を要するが，
-設計側の変更を一切伴わず，ヘッド仕様・制御コード・検査基準を完全に共通化できる。
+ラピス製造ライン側のプロセス条件（熱処理・成膜・エッチング・金属配線など）を酒田仕様に合わせ込む方式。
+立上げには工程パラメータの精密調整と評価工数を要するが，
+設計側を一切変更せず，ヘッド仕様・制御コード・検査基準を完全共通化できる。
 \end{enumerate}
 
 両方式を比較すると，
 再設計型は初期投入コストが低い一方で，長期的には設計資産の分断や評価負荷の増大を招くリスクがある。
-一方のプロセス移植型は初期立上げに時間を要するものの，
+一方のプロセス移植型は立上げ期間を要するものの，
 設計・テスト・製造のすべてを既存資産で統一でき，
 製品互換性と品質保証の両立が可能である。
 
@@ -143,22 +144,32 @@ BCP, μTFP, Driver IC, Process Porting, Process Equivalence, Full Compatibility,
 % ---- 比較表 ----
 \begin{table}[t]
 \centering
-\caption{再設計型とプロセス移植型の比較}
+\caption{BCP方式の比較：再設計型とプロセス移植型}
 \label{tab:approach_compare}
-\begin{tabular}{p{25mm}p{31mm}p{31mm}}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}} ll}
 \toprule
-項目 & 再設計型 (Re-Design-Based) & プロセス移植型 (Process-Porting-Based) \\
+\textbf{項目} & \textbf{比較内容} \\
 \midrule
-基本方針 & 新プロセスに設計を再調整 & 既存プロセスを他拠点へ移植 \\
-立上げ期間 & 短期 & 長期 \\
-初期コスト & 低 & 高 \\
-設計資産への影響 & 大（再評価必要） & 無（設計・FW共通） \\
-互換性 & 部分互換 & \textbf{完全互換} \\
-BCP適合性 & 暫定対応に有効 & 恒久対応に最適 \\
-品質保証 & 拠点別評価になりがち & \textbf{酒田EWSで一元保証} \\
-適用分野 & ノード移行・小改版 & 高信頼・長期供給品 \\
+基本方針 &
+\makecell[l]{再設計型：新プロセスに合わせ回路再設計\\
+プロセス移植型：既存プロセスを他拠点へ再現} \\
+
+立上げ期間／初期コスト &
+短期／低 vs 長期／高 \\
+
+設計資産への影響 &
+大（再評価・FW修正必要） vs 無（設計・FW共通） \\
+
+互換性・再評価負荷 &
+部分互換／再検証要 vs \textbf{完全互換／再評価不要} \\
+
+BCP適合性 &
+暫定対応向き vs 恒久対応・長期供給に最適 \\
+
+品質保証体制 &
+拠点別評価になりやすい vs \textbf{酒田EWSによる一元保証} \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{table}
 
 \section{プロセス移植手法}
@@ -207,17 +218,42 @@ BCP適合性 & 暫定対応に有効 & 恒久対応に最適 \\
 
 \section{評価結果}
 
-\subsection{電気特性}
-プロセス移植後のラピス製デバイスについて，出力ドライバ段および高耐圧MOSトランジスタの
-IV特性を測定した。
-その結果，酒田製デバイスとのしきい値電圧偏差は$\pm\SI{1.5}{\percent}$以内，
-オン抵抗は$\pm\SI{2}{\percent}$以内に収まり，電気的にほぼ完全一致を示した。
-ゲートリーク電流は$\SI{1e-9}{\ampere\per\square\centi\meter}$以下であり，
-酒田プロセスと同等の酸化膜信頼性が確認された。
+\subsection{電気特性（ETEST統計検証）}
+ラピス製造ラインにおいて，酒田仕様マスクを用いた試作ロットを対象にETEST（Electrical Test）を実施した。
+測定項目は3.3\,V／45\,Vトランジスタ群およびパッシブ素子を含む全工程階層で構成し，
+以下の主要特性を評価した。
 
-さらに，チップ全面でのデバイスパラメータのばらつきを統計解析した結果，
+\begin{itemize}
+  \item トランジスタ群（3.3\,V／45\,V）：\\
+  しきい値電圧$V_{\mathrm{th}}$，電流利得$\beta$，
+  飽和電流$I_{\mathrm{dsat}}$，オフ電流$I_{\mathrm{off}}$，
+  ブレークダウン電圧$BV_{\mathrm{DS}}$，
+  基板電流$I_{\mathrm{sub}}$（substrate current, Hot Carrier指標）
+  \item 拡散抵抗，ゲート電極抵抗，コンタクト抵抗，ビア抵抗，配線抵抗
+\end{itemize}
+
+各パラメータの平均値および標準偏差を酒田リファレンスロットと比較した結果，
+すべての項目が3σ範囲内で一致し，電気的同等性が統計的に確認された。
+代表的な結果をTable~\ref{tab:proc_compare}に示す。
+しきい値電圧偏差は$\pm\SI{1.5}{\percent}$，
+オン抵抗偏差は$\pm\SI{2.0}{\percent}$以内に収まり，
+酸化膜リーク電流は$\SI{1e-9}{\ampere\per\square\centi\meter}$以下であった。
 プロセス間の標準偏差比$\sigma_{\mathrm{Lapis}} / \sigma_{\mathrm{Sakata}} = 1.03$と極めて近似しており，
-プロセス制御安定性の再現が確認された。
+\textbf{拠点間でプロセス制御安定性が完全に再現された}ことを示す。
+
+\subsection{信頼性試験}
+個別デバイス信頼性に関しても，以下の主要試験を実施した。
+
+\begin{itemize}
+  \item \textbf{TZDB (Time-Zero Dielectric Breakdown)}：酸化膜初期破壊電界分布が一致。
+  \item \textbf{TDDB (Time-Dependent Dielectric Breakdown)}：寿命分布の中央値が一致。
+  \item \textbf{HCI (Hot Carrier Injection)}：劣化速度係数に有意差なし。
+  \item \textbf{EM (Electromigration)}：金属配線寿命の中央値比が$0.99$で一致。
+  \item \textbf{V\textsubscript{t} Stability}：1000\,h高温動作後のしきい値変動が$\pm\SI{2}{\milli\volt}$以内。
+\end{itemize}
+
+いずれの試験でも酒田・ラピス間に統計的差異は見られず，
+酸化膜，拡散層，金属層のいずれも\textbf{プロセス同等性が完全に維持されている}ことを確認した。
 
 \subsection{ヘッド特性およびEMC}
 ラピス製ドライバICを搭載したμTFPプリントヘッドを用いて，
@@ -230,54 +266,40 @@ IV特性を測定した。
 波形応答および吐出安定性ともに酒田製と同等であった。
 また，プリンタ機体にラピス製ICヘッドを組み込み，
 システムレベルEMC試験（CISPR-22準拠）を実施した結果，
-ノイズスペクトラム・放射電界強度ともに統計的差異は認められなかった。
+ノイズスペクトラムおよび放射電界強度にも統計的差異は認められなかった。
 
-これらの結果より，
-ラピス生産デバイスは電気的・機能的に酒田品と完全同等であり，
-ヘッド設計・COFコード・プリンタファームウェアに対する修正を必要としないことが確認された。
+以上より，
+ラピス生産デバイスは酒田品と\textbf{電気的・信頼性的・機能的すべての側面で完全同等}であり，
+設計・COFコード・プリンタファームウェアに対する修正を一切必要としなかった。
 
-% ---- 図：方式比較 ----
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}[>=Stealth, node distance=10mm, font=\footnotesize]
-  \node[draw, rounded corners, align=center, minimum width=35mm, minimum height=7mm, fill=gray!10] (pm)
-    {Re-Design-Based\\(再設計型)};
-  \node[draw, rounded corners, align=center, minimum width=35mm, minimum height=7mm, right=22mm of pm, fill=gray!10] (pe)
-    {Process-Porting-Based\\(本研究)};
-  \node[below=12mm of pm, align=left, text width=35mm] (pm_bullets) {
-    \begin{itemize}\itemsep2pt
-      \item 立上げ短期
-      \item 設計再評価必要
-      \item 部分互換
-    \end{itemize}
-  };
-  \node[below=12mm of pe, align=left, text width=35mm] (pe_bullets) {
-    \begin{itemize}\itemsep2pt
-      \item 工数・期間大
-      \item 設計側影響ゼロ
-      \item \textbf{完全互換}
-    \end{itemize}
-  };
-\end{tikzpicture}
-\caption{BCP方式の比較（再設計型 vs プロセス移植型）}
-\label{fig:bcp_compare}
-\end{figure}
-
-% ---- 表：プロセス比較 ----
+% ---- 表：プロセス・信頼性比較 ----
 \begin{table}[t]
 \centering
-\caption{ラピス・酒田プロセスの主要特性比較}
+\caption{酒田・ラピスプロセスおよびETEST／信頼性主要特性比較}
 \label{tab:proc_compare}
-\begin{tabular}{lcc}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}} lcc}
 \toprule
-項目 & 酒田 & ラピス \\
+\textbf{項目} & \textbf{酒田} & \textbf{ラピス} \\
 \midrule
 ゲート酸化膜厚 (Å) & 800 & 805 \\
 WSi抵抗値 (\si{\ohm\per\sq}) & 2.3 & 2.4 \\
+拡散抵抗 (\si{\ohm}) & 102 & 104 \\
+ゲート電極抵抗 (\si{\ohm}) & 12.1 & 12.3 \\
+コンタクト抵抗 (\si{\ohm}) & 1.8 & 1.9 \\
+ビア抵抗 (\si{\ohm}) & 0.42 & 0.43 \\
+配線抵抗 (\si{\ohm}) & 2.1 & 2.1 \\
 リーク電流 (\si{\ampere\per\centi\metre\squared}) & $<1\times10^{-9}$ & $<1\times10^{-9}$ \\
 臨界電圧 $V_{\mathrm{bd}}$ (V) & 48.2 & 47.9 \\
+3.3Vトランジスタ群 (Vth, β, Idsat, Ioff, BVDS, Isub*) & 同等 & 同等 \\
+45Vトランジスタ群 (Vth, β, Idsat, Ioff, BVDS, Isub*) & 同等 & 同等 \\
+$\sigma_{\mathrm{Lapis}} / \sigma_{\mathrm{Sakata}}$ & -- & 1.03 \\
+TDDB寿命中央値比 & 1.00 & 0.98 \\
+HCI劣化係数比 & 1.00 & 1.02 \\
+EM寿命中央値比 & 1.00 & 0.99 \\
+V\textsubscript{t}変動 (mV) & $\pm2$ & $\pm2$ \\
+\multicolumn{3}{l}{\footnotesize *$I_{\mathrm{sub}}$：基板電流（substrate current, Hot Carrier指標）} \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{table}
 
 \section{品質保証とトレーサビリティ}
