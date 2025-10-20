@@ -1,12 +1,12 @@
 name: Build μTFP Driver BCP Paper
 
 on:
-  workflow_dispatch: {}            # 手動実行ボタンを出す
+  workflow_dispatch: {}            # 手動実行
   push:
-    branches: ["**"]              # どのブランチでも
+    branches: ["**"]
     paths:
-      - 'papers/**'               # 論文配下なら全部
-      - '.github/workflows/**'    # ワークフロー変更時も起動
+      - 'papers/**'
+      - '.github/workflows/**'
   pull_request:
     paths:
       - 'papers/**'
@@ -20,19 +20,44 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install LaTeX + Japanese fonts
+      # 日本語フォントだけaptで導入（LaTeX本体はlatex-actionに任せる）
+      - name: Install Japanese fonts (IPAex)
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive texlive-luatex texlive-lang-japanese fonts-ipaexfont fonts-ipafont
+          sudo apt-get install -y fonts-ipaexfont fonts-ipafont
 
-      - name: Compile LaTeX document (LuaLaTeX)
+      - name: Compile LaTeX document (LuaLaTeX + tlmgr packages)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: |
-            papers/2025_driver_bcp_equivalence/main.tex
+          root_file: papers/2025_driver_bcp_equivalence/main.tex
           latexmk_use_lualatex: true
           continue_on_error: true
+          # エラーでもlogを詳細に残す
+          latexmk_args: "-interaction=nonstopmode -halt-on-error -file-line-error"
+          # tlmgrで入れる追加パッケージ（不足分はここに足せます）
+          extra_packages: >-
+            luatexja
+            luatexja-preset
+            siunitx
+            amsmath
+            amssymb
+            mathtools
+            bm
+            xcolor
+            array
+            tabularx
+            booktabs
+            threeparttable
+            makecell
+            multirow
+            subfig
+            cite
+            cleveref
+            tikz
+            pgfplots
+            hyperref
 
+      # 失敗しても成果物(.log等)を回収
       - name: Archive LaTeX build outputs (PDF + LOG)
         if: always()
         uses: actions/upload-artifact@v4
