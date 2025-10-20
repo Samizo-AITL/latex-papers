@@ -45,7 +45,9 @@
 \maketitle
 
 \begin{abstract}
-本研究は、製造業における「設計図面検討～量産部品発注」に至る一般的な実務プロセスを教育的観点から抽象化し、部品表（BOM: Bill of Materials）を中核に据えた体系的なフレームワークを提示するものである。本稿では、(1) 部品コード体系（6桁コード＋枝番）による機能識別と改版管理、(2) 環境・コスト・輸出関連情報（RoHS/REACH, SDS, ECCN/HSコード, 用途説明書）の統合属性管理、(3) 部品レベルから製品レベルへの積み上げ（Roll-up）判定を一体的に扱う仕組みを提案する。これにより、設計変更時の影響範囲を迅速に把握し、環境規制や輸出管理に対する確実なコンプライアンスを保証するとともに、教育現場における俯瞰的理解を支援する枠組みを構築できる。さらに、実務適用においてはERP/PLMとの接続により監査対応力を高め、トレーサビリティ確保と業務効率化に寄与する点に新規性がある。今後は、AI技術を用いた属性自動付与や国際標準フォーマットとの接続により、より高度な自動化と国際展開を目指す。
+本研究は、製造業における「設計図面検討から量産部品発注」に至る業務プロセスを教育的観点から体系化し、部品表（BOM: Bill of Materials）を中核とした統合フレームワークを提案する。提案手法は、(1) 6桁コード＋枝番による部品識別と改版管理、(2) 環境・コスト・輸出関連情報（RoHS/REACH, SDS, ECCN/HSコード, 用途説明書）の属性統合、(3) 部品から製品への積上げ（Roll-up）評価を組み合わせたものである。これにより、設計変更の影響を迅速に把握し、環境法規および輸出管理への確実な適合を実現するとともに、教育現場での俯瞰的理解を支援する。さらに、ERP/PLMとの連携によりトレーサビリティと監査対応力を強化できる点に新規性がある。
+
+\textbf{Abstract (English)}—This study systematizes the workflow from design review to mass-production ordering in manufacturing from an educational perspective and proposes an integrated framework centered on the Bill of Materials (BOM). The proposed method combines (1) part identification and revision control using a six-digit code with suffixes, (2) integrated management of environmental, cost, and export attributes (RoHS/REACH, SDS, ECCN/HS code, and end-use statement), and (3) roll-up evaluation from part-level to product-level aggregation. This framework enables rapid assessment of design-change impacts, ensures compliance with environmental and export regulations, and supports comprehensive understanding in educational contexts. Furthermore, its linkage with ERP/PLM systems enhances traceability and audit readiness, representing a novel contribution to the integration of design and compliance education.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -482,13 +484,15 @@ DR2 & 品質特性・計測器／製造条件 & 設計通知準備完了 \\
 \appendix
 \section*{Appendix: HCS2搭載COF構造の参考図}
 
-\begin{figure}[h]
+\begin{figure}[t]
   \centering
   \begin{tikzpicture}[
-    font=\footnotesize,
+    font=\scriptsize,
+    line width=0.5pt,
     line cap=round, line join=round,
     film/.style={draw=black!60, fill=black!5, rounded corners=1pt},
-    chip/.style={draw=black, fill=black!15, rounded corners=1pt, minimum width=11mm, minimum height=6mm, align=center},
+    chip/.style={draw=black, fill=black!15, rounded corners=1pt, 
+                 minimum width=11mm, minimum height=6mm, align=center},
     pad/.style={draw=black!70, fill=black!30},
     note/.style={align=left}
   ]
@@ -510,15 +514,15 @@ DR2 & 品質特性・計測器／製造条件 & 設計通知準備完了 \\
     \draw[black] (3.6,0.8) ellipse (0.75 and 0.25);
     \node[note, anchor=west] at (4.5,0.8) {テストパッド（樹脂封止）};
 
-    % --- A few symbolic traces ---
-    \draw[very thin] (drv.south) -- ++(0,-0.9) -- (1.7,0);
-    \draw[very thin] (hcs2.south) -- ++(0,-0.9) -- (6.2,0);
+    % --- Symbolic traces ---
+    \draw[thin] (drv.south) -- ++(0,-0.9) -- (1.7,0);
+    \draw[thin] (hcs2.south) -- ++(0,-0.9) -- (6.2,0);
 
     % --- Labels ---
     \node[note, anchor=west] at (0.1,3.05) {ポリイミド基材（COF）};
     \node[note, anchor=west] at (0.1,-0.75) {端子列（TAB/AOF接続）};
   \end{tikzpicture}
-  \caption{HCS2搭載COFの模式構造（Appendix用）。}
+  \caption{HCS2搭載COFの簡易模式構造（Appendix用）。}
   \label{fig:cof_appendix}
 \end{figure}
 
@@ -572,7 +576,7 @@ H.~Kitano, ``AI for systems design and integration,'' \emph{Commun. ACM}, vol.~6
 
 \bibitem{hcs2_switch}
 S.~Samizo, ``Multi-site 4M Integration for Emergency HCS Changeover
-with On-COF HCS2 Chip,'' Tech. Report, 2024. (日本語: 「インクジェットヘッドにおける HCS 緊急切替対応の多拠点 4M 統合管理」)
+with On-COF HCS2 Chip,'' \emph{Tech. Report}, 2024. (in Japanese: 「インクジェットヘッドにおける HCS 緊急切替対応の多拠点 4M 統合管理」)
 
 \end{thebibliography}
 
