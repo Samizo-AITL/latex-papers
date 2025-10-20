@@ -1,10 +1,10 @@
-name: Build 2025 BioInkjet Electrostatic (LuaLaTeX)
+name: Build 2025 BOM Workflow (LuaLaTeX)
 
 on:
   push:
     paths:
-      - 'papers/2025_bioinkjet_electrostatic/**'
-      - '.github/workflows/latex_bioinkjet_electrostatic.yml'
+      - 'papers/2025_bom_workflow/**'
+      - '.github/workflows/latex_bom_workflow.yml'
   workflow_dispatch:
 
 jobs:
@@ -15,31 +15,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ---- TeX Live & 日本語フォント ----
-      - name: Install TeX Live & HaranoAji
+      # ---- TeX Live & フォント ----
+      - name: Install TeX Live & HaranoAji Fonts
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive-full fonts-haranoaji
 
-      # ---- ビルド ----
+      # ---- LuaLaTeX コンパイル ----
       - name: Compile with LuaLaTeX
-        working-directory: papers/2025_bioinkjet_electrostatic
+        working-directory: papers/2025_bom_workflow
         run: |
           lualatex -interaction=nonstopmode -file-line-error main.tex | tee build.log
-          # bibtex は不要（thebibliography を使用）
           lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
           lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
 
-      # ---- 成否に関わらずログを回収 ----
+      # ---- 成果物アップロード（失敗時もログ保存）----
       - name: Upload PDF and logs (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: 2025_bioinkjet_electrostatic_build
+          name: 2025_bom_workflow_build
           path: |
-            papers/2025_bioinkjet_electrostatic/main.pdf
-            papers/2025_bioinkjet_electrostatic/main.log
-            papers/2025_bioinkjet_electrostatic/build.log
-            papers/2025_bioinkjet_electrostatic/*.bbl
-            papers/2025_bioinkjet_electrostatic/*.blg
+            papers/2025_bom_workflow/main.pdf
+            papers/2025_bom_workflow/*.log
+            papers/2025_bom_workflow/build.log
           retention-days: 14
