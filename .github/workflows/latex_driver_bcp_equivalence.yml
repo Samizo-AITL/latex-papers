@@ -21,14 +21,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # IPAexフォントを手動で取得して配置（Alpineにパッケージがないため）
-      - name: Install IPAex fonts manually
-        run: |
-          wget -O /tmp/ipaex.zip https://moji.or.jp/wp-content/ipafont/IPAexfont/IPAexfont00401.zip
-          unzip -o /tmp/ipaex.zip -d /usr/share/fonts/opentype/ipaex
-          fc-cache -fv || true
-
-      # LuaLaTeXビルド（出力は build/ にまとめる）
       - name: Compile LaTeX document (LuaLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
@@ -37,13 +29,21 @@ jobs:
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
           latexmk_args: "-interaction=nonstopmode -halt-on-error -file-line-error -outdir=build"
+          # ここがポイント：コンテナ内でIPAexを入れる
+          pre_compile: |
+            apk add --no-cache wget unzip fontconfig
+            mkdir -p /usr/share/fonts/opentype/ipaex
+            wget -O /tmp/ipaex.zip https://moji.or.jp/wp-content/ipafont/IPAexfont/IPAexfont00401.zip
+            unzip -o /tmp/ipaex.zip -d /usr/share/fonts/opentype/ipaex
+            fc-cache -fv
 
-      # ビルド成果物をアップロード
-      - name: Upload build directory (PDF + LOG + aux)
+      - name: Upload build directory (PDF + LOG)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: driver_bcp_equivalence_build
-          path: papers/2025_driver_bcp_equivalence/build/**
-          if-no-files-found: warn
+          path: |
+            papers/2025_driver_bcp_equivalence/build/*.pdf
+            papers/2025_driver_bcp_equivalence/build/*.log
+          if-no-files-found: error
           retention-days: 14
