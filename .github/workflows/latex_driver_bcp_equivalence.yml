@@ -28,14 +28,23 @@ jobs:
           root_file: main.tex
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
-          latexmk_args: "-interaction=nonstopmode -halt-on-error -file-line-error -outdir=build"
-          # ここがポイント：コンテナ内でIPAexを入れる
+          # ← ここは latexmk_args ではなく args！！
+          args: "-interaction=nonstopmode -halt-on-error -file-line-error -outdir=build"
           pre_compile: |
             apk add --no-cache wget unzip fontconfig
             mkdir -p /usr/share/fonts/opentype/ipaex
             wget -O /tmp/ipaex.zip https://moji.or.jp/wp-content/ipafont/IPAexfont/IPAexfont00401.zip
             unzip -o /tmp/ipaex.zip -d /usr/share/fonts/opentype/ipaex
             fc-cache -fv
+
+      # どこに出ても拾えるように場所を表示
+      - name: List outputs
+        if: always()
+        run: |
+          echo "::group::tree papers/2025_driver_bcp_equivalence"
+          ls -al papers/2025_driver_bcp_equivalence || true
+          ls -al papers/2025_driver_bcp_equivalence/build || true
+          echo "::endgroup::"
 
       - name: Upload build directory (PDF + LOG)
         if: always()
@@ -45,5 +54,7 @@ jobs:
           path: |
             papers/2025_driver_bcp_equivalence/build/*.pdf
             papers/2025_driver_bcp_equivalence/build/*.log
+            papers/2025_driver_bcp_equivalence/main.pdf
+            papers/2025_driver_bcp_equivalence/main.log
           if-no-files-found: error
           retention-days: 14
