@@ -15,11 +15,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ---- TeX Live & フォント ----
-      - name: Install TeX Live & HaranoAji Fonts
+      # ---- TeX Live 環境（日本語対応）----
+      - name: Install TeX Live (full)
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-full fonts-haranoaji
+          sudo apt-get install -y texlive-full
+          # 確認：HaranoAjiフォントが含まれている
+          fc-list | grep -E "Harano|IPA|Noto" || true
 
       # ---- LuaLaTeX コンパイル ----
       - name: Compile with LuaLaTeX
