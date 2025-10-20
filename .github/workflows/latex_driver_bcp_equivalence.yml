@@ -1,0 +1,29 @@
+name: Build μTFP Driver BCP Paper
+
+on:
+  push:
+    paths:
+      - 'papers/2025_driver_bcp_equivalence/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: papers/2025_driver_bcp_equivalence/main.tex
+          # ログ出力を確実に残す
+          latexmk_use_lualatex: true
+          continue_on_error: true
+
+      - name: Archive LaTeX build outputs (PDF + LOG)
+        uses: actions/upload-artifact@v4
+        with:
+          name: driver_bcp_equivalence_outputs
+          path: |
+            papers/2025_driver_bcp_equivalence/*.pdf
+            papers/2025_driver_bcp_equivalence/*.log
