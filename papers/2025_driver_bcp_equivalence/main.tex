@@ -1,0 +1,161 @@
+% =====================================================
+% μTFP Driver IC BCP論文（Process Equivalence）
+% =====================================================
+\documentclass[conference]{IEEEtran}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{multirow}
+
+\begin{document}
+
+% -----------------------------------------------------
+% タイトル・著者情報
+% -----------------------------------------------------
+\title{%
+μTFPヘッド用ドライバICのBCP対応:\\
+プロセス同等化による二拠点生産体制の確立\\[2mm]
+\textit{Business Continuity Implementation for μTFP Printhead Driver IC\\
+via Process Equivalence at Sakata and Lapis Semiconductor}
+}
+
+\author{%
+三溝 真一（Shinichi Samizo）\\
+独立系半導体研究者（元セイコーエプソン株式会社）\\
+Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com} \\
+GitHub: \url{https://github.com/Samizo-AITL}
+}
+
+\maketitle
+
+% -----------------------------------------------------
+% Abstract
+% -----------------------------------------------------
+\begin{abstract}
+本研究は，東日本大震災を契機に，μTFPプリントヘッド用
+ドライバICの生産リスク低減を目的として実施したBCP対応事例を報告する。
+ファンドリとしてラピスセミコンダクタを追加し，
+0.35 µm CMOS（3.3V／45V WSiゲート）プロセスを対象に，
+従来の「パラメータ合わせ」ではなく「プロセス同等化」により
+酒田工場と同一仕様を再現した。
+その結果，電気特性・吐出特性・EMCいずれも酒田品と同等であり，
+ヘッド側設計変更を要しない完全互換体制を確立した。
+本事例は，設計資産を保護しつつ冗長化を実現する
+「Process-Identical BCP」の有効性を示すものである。
+\end{abstract}
+
+\begin{IEEEkeywords}
+BCP, μTFP, Driver IC, Process Equivalence, Lapis Semiconductor, Sakata Factory, Reliability, Inkjet Head
+\end{IEEEkeywords}
+
+% -----------------------------------------------------
+\section{序論}
+2011年の東日本大震災は，半導体製造拠点の地理的集中リスクを顕在化させた。
+エプソン酒田工場ではμTFPヘッド用ドライバICを一拠点で生産していたが，
+事業継続性の観点から，宮城県のラピスセミコンダクタに
+代替パスを構築することが急務となった。
+
+\section{BCP対応方針}
+本BCP対応では，ファンドリ追加に際し次の2方式を検討した：
+\begin{enumerate}
+\item ラピス側のプロセスパラメータに合わせて再設計する（Parameter Matching）
+\item 酒田工場のマスクとプロセス条件をそのままラピスで再現する（Process Matching）
+\end{enumerate}
+短期的には前者が容易であるが，ヘッド電特・COFコード・ファームウェアの再評価が必要となる。
+本研究では，ヘッド仕様維持を最優先し，後者の「プロセス同等化」を採用した。
+
+\section{プロセス同等化手法}
+\subsection{対象デバイス}
+0.35 µm CMOS, 3.3V／45V WSiゲート構造を有する高耐圧ドライバIC。
+酒田マスクをラピス製造ラインに流用し，
+熱酸化・RTA・金属膜堆積条件を逐次マッピングした。
+
+\subsection{立上げフロー}
+\begin{enumerate}
+\item 酒田レシピの提供と装置パラメータ変換
+\item 試作ロット評価：膜厚・CD・シート抵抗比較
+\item Parametric Test：酒田ロットとの統計照合（3σ内合格）
+\item 信頼性評価：HTOL・TDDB・EM試験
+\end{enumerate}
+
+\section{評価結果}
+\subsection{電気特性}
+出力ドライバのIV特性、ゲートリーク電流ともに
+酒田品との偏差は±2\%以内であった。
+
+\subsection{ヘッド特性およびEMC}
+ラピス製ICを搭載したプリントヘッドで吐出試験を実施。
+波形・速度・安定性いずれも同等であり、
+システムレベルEMC試験でも差異を確認しなかった。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.45\textwidth]{figs/fig1_bcp_options.pdf}
+\caption{BCP対応方式の比較（Parameter Matching vs Process Matching）}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{ラピス・酒田プロセスの主要特性比較}
+\begin{tabular}{lcc}
+\hline
+項目 & 酒田 & ラピス \\
+\hline
+ゲート酸化膜厚 (Å) & 800 & 805 \\
+WSi抵抗値 (Ω/□) & 2.3 & 2.4 \\
+リーク電流 (A/cm$^2$) & $<1\times10^{-9}$ & $<1\times10^{-9}$ \\
+臨界電圧Vbd (V) & 48.2 & 47.9 \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{品質保証とトレーサビリティ}
+製造：ラピスセミコンダクタ，
+ウエハテスト：酒田工場，
+出荷保証：エプソン本体。
+COFコードは共通運用としつつ，
+ロット別管理によるトレーサビリティを確保した。
+
+\section{考察}
+プロセス同等化は、短期的には高工数・長期間を要するが、
+製品側再設計を不要とし、結果的に全体工数を最小化する。
+本方式は「設計資産保護型BCP」として有効であり、
+今後のMEMS・混載IC製造にも応用可能である。
+
+\section{結論}
+本報では，μTFPドライバICのBCP対応として，
+酒田工場とラピスセミコンダクタにおける
+同一マスク・同一プロセス立上げを実現した。
+電気特性・ヘッド性能とも完全同等であり，
+高信頼な二拠点供給体制を確立した。
+この手法は「Design Preservation through Process Reproduction」
+の有効事例として位置づけられる。
+
+% -----------------------------------------------------
+\section*{謝辞}
+本研究の実施にあたり，酒田工場，宮城ラピスセミコンダクタの各位に感謝する。
+
+% -----------------------------------------------------
+\section*{参考文献}
+\begin{thebibliography}{99}
+\bibitem{Samizo2024_uTEP}
+S.~Samizo, ``uTEPヘッド用ドライバICにおけるウエハ酸素濃度変動起因の品質問題対応,'' 2024.
+
+\bibitem{Samizo2023_TFP}
+S.~Samizo, ``薄膜PZTアクチュエータにおける振動板クラックと端部焼損の原因解析,'' 2023.
+
+\bibitem{Samizo2022_PZT}
+S.~Samizo, ``薄膜PZT技術の系譜,'' 2022.
+\end{thebibliography}
+
+% -----------------------------------------------------
+% 著者略歴
+% -----------------------------------------------------
+\section*{著者略歴}
+\textbf{三溝 真一}（Shinichi Samizo）は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得した。  
+その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、そして、インクジェット薄膜ピエゾアクチュエータ及びPrecisionCoreプリントヘッドの製品化に従事した。  
+現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、AIシステム統合などに取り組んでいる。  
+連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}．
+
+\end{document}
