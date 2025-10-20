@@ -3,30 +3,26 @@
 % =====================================================
 \documentclass[conference]{IEEEtran}
 
-% ---------- LuaLaTeX 日本語・μ対応（IPAexを手動登録） ----------
+% ---------- LuaLaTeX 日本語・μ対応（決定版） ----------
 \usepackage{iftex}
 \ifLuaTeX
   \usepackage{luatexja}
-  \usepackage{luatexja-fontspec}
-  % IPAexフォントのパスを明示（Ubuntu標準位置）
-  \setmainjfont[
-    Path = /usr/share/fonts/opentype/ipaexfont/,
-    UprightFont = *mincho,
-    BoldFont = *gothic
-  ]{ipaex}
-  \setsansjfont[
-    Path = /usr/share/fonts/opentype/ipaexfont/,
-    UprightFont = *gothic
-  ]{ipaex}
+  \usepackage{luatexja-fontspec}      % 日本語フォントをfontspecで指定
+  \setmainjfont{IPAexMincho}          % 和文明朝（fonts-ipaexfont 提供名）
+  \setsansjfont{IPAexGothic}          % 和文ゴシック
+  % （必要なら）欧文も明示：省略可
+  \usepackage{fontspec}
+  \setmainfont{Latin Modern Roman}
+  \setsansfont{Latin Modern Sans}
   \ltjsetparameter{jacharrange={-2,-3}}
 \else
   \usepackage[utf8]{inputenc}
   \usepackage[T1]{fontenc}
 \fi
 
-% --- Unicode直打ちの安全化（μなどを確実に通す） ---
+% --- Unicode直打ちの安全化（μ/¥を確実に通す） ---
 \usepackage{newunicodechar}
-\newcommand{\micro}{\ensuremath{\mu}} % 既存マクロを先に定義
+\newcommand{\micro}{\ensuremath{\mu}}
 \newunicodechar{μ}{\micro}
 \newunicodechar{¥}{\textbackslash}
 
@@ -36,13 +32,7 @@
 \usepackage{array,tabularx,booktabs,threeparttable,makecell,multirow}
 \usepackage{amsmath,amssymb,mathtools,bm}
 \usepackage{siunitx}
-\sisetup{
-  detect-all,
-  per-mode=symbol,
-  separate-uncertainty=true,
-  range-phrase=--,
-  group-separator={,}
-}
+\sisetup{detect-all,per-mode=symbol,separate-uncertainty=true,range-phrase=--,group-separator={,}}
 \usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{cite}
 \usepackage{tikz}
