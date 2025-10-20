@@ -484,6 +484,37 @@ MM & 装置—デバイス接触 & 一部寄与するが、帯電主体がデバ
 \subsection*{補足メモ}
 自動化とは、人が担っていた安全放電動作（除電・接地）を装置に移植する行為である。したがってESD管理は、教育（Man）だけでなく、設備／治具（Machine）、材料（Material）、手順（Method）の4M全体で設計されねばならない。
 
+%================= 〈図：COF写真＋注釈（型抜き前）〉 =================
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+  \node[anchor=south west,inner sep=0] (img)
+    {\includegraphics[width=\columnwidth]{cof_photo.jpg}};
+  \begin{scope}[x={(img.south east)},y={(img.north west)},
+               line width=0.8pt,-{Latex[length=2mm]}]
+    % 左上の長方形：ドライバIC
+    \draw (0.28,0.63) -- +(-0.18,0.12)
+      node[above left,align=left,font=\footnotesize]
+      {Driver IC\\（ドライバIC）};
+    % 右側：HCS2
+    \draw (0.62,0.47) -- +(0.20,0.10)
+      node[above right,align=left,font=\footnotesize]
+      {HCS2 chip\\（HCS2チップ）};
+    % 楕円：テストパッド封止
+    \draw (0.36,0.38) ellipse [x radius=0.11, y radius=0.05];
+    \draw (0.36,0.38) -- +(0.24,-0.12)
+      node[below right,align=left,font=\footnotesize]
+      {Resin-sealed test pad\\（テストパッド樹脂封止）};
+  \end{scope}
+\end{tikzpicture}
+
+\caption{COF photograph \textbf{(before die-cutting)}.
+Left rectangle: driver IC; right rectangle: HCS2 chip; oval below the driver IC: resin-sealed test pad.\\
+\footnotesize 日本語：\textbf{型抜き前}のCOF写真。左側上の長方形はドライバIC，右側がHCS2チップ，
+ドライバIC下の楕円はテストパッドの樹脂封止部。}
+\label{fig:cof_photo}
+\end{figure}
+%======================================================================
 %====================================================
 \section*{参考文献}
 \begin{thebibliography}{99}
