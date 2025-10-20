@@ -20,8 +20,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 日本語フォント導入＋TeXパッケージ整備
-      - name: Install TeX dependencies
+      - name: Install TeX with Japanese fonts
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive-full fonts-ipaexfont fonts-ipafont
@@ -34,14 +33,20 @@ jobs:
           continue_on_error: true
           latexmk_args: "-interaction=nonstopmode -halt-on-error -file-line-error"
 
-      - name: Archive LaTeX build outputs (PDF + LOG)
+      # 生成物がどこにあっても拾う（logが必ず取れる）
+      - name: Collect build outputs
+        if: always()
+        run: |
+          mkdir -p artifacts
+          echo "::group::Locate outputs"
+          find . -maxdepth 4 -type f \( -name "*.log" -o -name "*.pdf" -o -name "*.aux" -o -name "*.bbl" -o -name "*.blg" \) -print
+          echo "::endgroup::"
+          find . -maxdepth 4 -type f \( -name "*.log" -o -name "*.pdf" -o -name "*.aux" -o -name "*.bbl" -o -name "*.blg" \) -exec cp {} artifacts/ \; || true
+          ls -al artifacts || true
+
+      - name: Upload artifacts (PDF + LOG)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: driver_bcp_equivalence_outputs
-          path: |
-            papers/2025_driver_bcp_equivalence/*.pdf
-            papers/2025_driver_bcp_equivalence/*.log
-            papers/2025_driver_bcp_equivalence/*.aux
-            papers/2025_driver_bcp_equivalence/*.bbl
-            papers/2025_driver_bcp_equivalence/*.blg
+          path: artifacts/**
