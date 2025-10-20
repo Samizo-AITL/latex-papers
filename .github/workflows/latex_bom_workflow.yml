@@ -15,28 +15,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ---- TeX Live 環境セットアップ ----
-      - name: Install TeX Live & Noto CJK Fonts
+      # ---- TeX Live & 日本語フォント ----
+      - name: Install TeX Live & Fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-full fonts-noto-cjk
+          sudo apt-get install -y texlive-full fonts-haranoaji
 
-      # ---- コンパイル ----
+      # ---- Debug: ディレクトリ構造確認 ----
+      - name: Show directory tree
+        run: |
+          tree papers/2025_bioinkjet_electrostatic || true
+
+      # ---- LuaLaTeX ビルド ----
       - name: Compile with LuaLaTeX
         working-directory: papers/2025_bioinkjet_electrostatic
         run: |
           lualatex -interaction=nonstopmode -file-line-error main.tex | tee build.log
-          bibtex main || true
+          bibtex main.aux || true
           lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
           lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
 
-      # ---- 成果物のアップロード ----
+      # ---- 成果物アップロード ----
       - name: Upload PDF and logs
         uses: actions/upload-artifact@v4
         with:
           name: 2025_bioinkjet_electrostatic_build
           path: |
-            papers/2025_bioinkjet_electrostatic/*.pdf
+            papers/2025_bioinkjet_electrostatic/main.pdf
             papers/2025_bioinkjet_electrostatic/*.log
             papers/2025_bioinkjet_electrostatic/build.log
             papers/2025_bioinkjet_electrostatic/*.bbl
