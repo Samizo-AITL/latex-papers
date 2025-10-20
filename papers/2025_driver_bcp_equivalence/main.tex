@@ -14,9 +14,15 @@
   \usepackage[T1]{fontenc}
 \fi
 
+% --- Unicode直打ちの安全化（μなどを確実に通す） ---
+\usepackage{newunicodechar}
+\newcommand{\micro}{\ensuremath{\mu}} % 既存マクロを先に定義
+\newunicodechar{μ}{\micro}            % 生の“μ”を \micro に自動置換
+\newunicodechar{¥}{\textbackslash}    % 日本語キーボードの「¥」対策（任意）
+
 % ---------- 便利パッケージ群（IEEEtran互換構成） ----------
 \usepackage{graphicx}
-% \graphicspath{{./figs/}}           % 外部図は使わない（TikZで内製）
+% \graphicspath{{./figs/}}           % 外部図を使うなら有効化
 
 \usepackage[table]{xcolor}
 \usepackage{array}
@@ -27,7 +33,7 @@
 \usepackage{multirow}
 
 \usepackage{amsmath,amssymb,mathtools,bm}
-% \usepackage{physics}               % 必要なら戻す
+% \usepackage{physics}               % 競合する場合はコメントアウトのまま
 
 \usepackage{siunitx}
 \sisetup{
@@ -50,15 +56,14 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
-% ハイパーリンクは最後に、cleverefはその直後が安定
+% ハイパーリンクは最後、cleverefはその直後が安定（IEEEtran推奨順）
 \usepackage[hidelinks]{hyperref}
 \usepackage[capitalise,noabbrev]{cleveref}
 
 % ---------- よく使う自作マクロ ----------
-\newcommand{\micro}{\ensuremath{\mu}}
-\newcommand{\ohm}{\ensuremath{\Omega}}
 \renewcommand{\figurename}{Fig.}
 \renewcommand{\tablename}{Table}
+\newcommand{\ohm}{\ensuremath{\Omega}}
 
 \makeatletter
 \def\@makefnmark{\hbox{\textsuperscript{\normalfont\@thefnmark}}}
