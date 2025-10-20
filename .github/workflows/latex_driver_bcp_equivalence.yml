@@ -20,39 +20,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      # フォントは tlmgr 管理の ipaex を使う（apt に頼らない）
-      - name: Compile LaTeX document (LuaLaTeX + tlmgr packages)
+      # 日本語フォント導入＋TeXパッケージ整備
+      - name: Install TeX dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-full fonts-ipaexfont fonts-ipafont
+
+      - name: Compile LaTeX document (LuaLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: papers/2025_driver_bcp_equivalence/main.tex
           latexmk_use_lualatex: true
           continue_on_error: true
-          # 強制的に詳細ログを出す
           latexmk_args: "-interaction=nonstopmode -halt-on-error -file-line-error"
-          # ここが重要：日本語＋IPAexフォントを tlmgr で導入
-          extra_packages: >-
-            collection-langjapanese
-            luatexja
-            luatexja-preset
-            ipaex
-            siunitx
-            amsmath
-            amssymb
-            mathtools
-            bm
-            xcolor
-            array
-            tabularx
-            booktabs
-            threeparttable
-            makecell
-            multirow
-            subfig
-            cite
-            cleveref
-            tikz
-            pgfplots
-            hyperref
 
       - name: Archive LaTeX build outputs (PDF + LOG)
         if: always()
