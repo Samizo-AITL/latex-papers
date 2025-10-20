@@ -142,35 +142,25 @@ BCP, μTFP, Driver IC, Process Porting, Process Equivalence, Full Compatibility,
 および\textbf{品質保証の一元化}を同時に確保した。
 
 % ---- 比較表 ----
-\begin{table}[t]
+\begin{table*}[t]
 \centering
-\caption{BCP方式の比較：再設計型とプロセス移植型}
+\caption{再設計型とプロセス移植型の比較（BCP方式比較）}
 \label{tab:approach_compare}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}} ll}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} lll}
 \toprule
-\textbf{項目} & \textbf{比較内容} \\
+\textbf{項目} & \textbf{再設計型 (Re-Design-Based)} & \textbf{プロセス移植型 (Process-Porting-Based)} \\
 \midrule
-基本方針 &
-\makecell[l]{再設計型：新プロセスに合わせ回路再設計\\
-プロセス移植型：既存プロセスを他拠点へ再現} \\
-
-立上げ期間／初期コスト &
-短期／低 vs 長期／高 \\
-
-設計資産への影響 &
-大（再評価・FW修正必要） vs 無（設計・FW共通） \\
-
-互換性・再評価負荷 &
-部分互換／再検証要 vs \textbf{完全互換／再評価不要} \\
-
-BCP適合性 &
-暫定対応向き vs 恒久対応・長期供給に最適 \\
-
-品質保証体制 &
-拠点別評価になりやすい vs \textbf{酒田EWSによる一元保証} \\
+基本方針 & 新プロセスに設計を再調整 & 既存プロセスを他拠点へ移植 \\
+立上げ期間 & 短期 & 長期 \\
+初期コスト & 低 & 高 \\
+設計資産への影響 & 大（再評価必要） & 無（設計・FW共通） \\
+互換性 & 部分互換 & \textbf{完全互換} \\
+BCP適合性 & 暫定対応に有効 & 恒久対応に最適 \\
+品質保証 & 拠点別評価になりがち & \textbf{酒田EWSで一元保証} \\
+適用分野 & ノード移行・小改版 & 高信頼・長期供給品 \\
 \bottomrule
 \end{tabular*}
-\end{table}
+\end{table*}
 
 \section{プロセス移植手法}
 
@@ -273,11 +263,11 @@ BCP適合性 &
 設計・COFコード・プリンタファームウェアに対する修正を一切必要としなかった。
 
 % ---- 表：プロセス・信頼性比較 ----
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \caption{酒田・ラピスプロセスおよびETEST／信頼性主要特性比較}
 \label{tab:proc_compare}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}} lcc}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} lcc}
 \toprule
 \textbf{項目} & \textbf{酒田} & \textbf{ラピス} \\
 \midrule
@@ -290,8 +280,8 @@ WSi抵抗値 (\si{\ohm\per\sq}) & 2.3 & 2.4 \\
 配線抵抗 (\si{\ohm}) & 2.1 & 2.1 \\
 リーク電流 (\si{\ampere\per\centi\metre\squared}) & $<1\times10^{-9}$ & $<1\times10^{-9}$ \\
 臨界電圧 $V_{\mathrm{bd}}$ (V) & 48.2 & 47.9 \\
-3.3Vトランジスタ群 (Vth, β, Idsat, Ioff, BVDS, Isub*) & 同等 & 同等 \\
-45Vトランジスタ群 (Vth, β, Idsat, Ioff, BVDS, Isub*) & 同等 & 同等 \\
+3.3Vトランジスタ群 (Vth, β, Idsat, Ioff, BVDS, Isub) & 同等 & 同等 \\
+45Vトランジスタ群 (Vth, β, Idsat, Ioff, BVDS, Isub) & 同等 & 同等 \\
 $\sigma_{\mathrm{Lapis}} / \sigma_{\mathrm{Sakata}}$ & -- & 1.03 \\
 TDDB寿命中央値比 & 1.00 & 0.98 \\
 HCI劣化係数比 & 1.00 & 1.02 \\
@@ -300,7 +290,7 @@ V\textsubscript{t}変動 (mV) & $\pm2$ & $\pm2$ \\
 \multicolumn{3}{l}{\footnotesize *$I_{\mathrm{sub}}$：基板電流（substrate current, Hot Carrier指標）} \\
 \bottomrule
 \end{tabular*}
-\end{table}
+\end{table*}
 
 \section{品質保証とトレーサビリティ}
 本BCP体制下における品質保証スキームを\cref{fig:qa_flow}に示す。
