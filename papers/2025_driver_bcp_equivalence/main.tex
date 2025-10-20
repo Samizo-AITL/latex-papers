@@ -45,6 +45,9 @@
 \renewcommand{\tablename}{Table}
 \newcommand{\ohm}{\ensuremath{\Omega}}
 
+% siunitx: 「□（per square）」を単位として登録
+\DeclareSIUnit{\sq}{\text{\ensuremath{\square}}}
+
 \makeatletter
 \def\@makefnmark{\hbox{\textsuperscript{\normalfont\@thefnmark}}}
 \makeatother
@@ -153,7 +156,10 @@ BCP, μTFP, Driver IC, Process Equivalence, Lapis Semiconductor, Sakata Factory,
 項目 & 酒田 & ラピス \\
 \midrule
 ゲート酸化膜厚 (Å) & 800 & 805 \\
-WSi抵抗値 (\si{\ohm\per\square}) & 2.3 & 2.4 \\
+% 旧:
+% WSi抵抗値 (\si{\ohm\per\square}) & 2.3 & 2.4 \\
+% 新:
+WSi抵抗値 (\si{\ohm\per\sq}) & 2.3 & 2.4 \\
 リーク電流 (A/cm$^2$) & $<1\times10^{-9}$ & $<1\times10^{-9}$ \\
 臨界電圧 V\textsubscript{bd} (V) & 48.2 & 47.9 \\
 \bottomrule
