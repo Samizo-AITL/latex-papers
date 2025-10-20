@@ -21,7 +21,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # フォントはコンテナ内に入れる（ここが重要）
+      # IPAexフォントはAlpine用パッケージを指定
       - name: Compile LaTeX document (LuaLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
@@ -30,9 +30,9 @@ jobs:
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
           latexmk_args: "-interaction=nonstopmode -halt-on-error -file-line-error -outdir=build"
-          extra_system_packages: "fonts-ipaexfont"   # IPAex Mincho/Gothic をDocker内に
+          extra_system_packages: "ttf-ipaexfont"   # ← Alpineではこの名前！
 
-      # 成否に関わらず build/ を丸ごと回収
+      # 成否に関係なく build/ をアップロード（PDF + LOG + aux 含む）
       - name: Upload build directory (PDF + LOG + aux)
         if: always()
         uses: actions/upload-artifact@v4
