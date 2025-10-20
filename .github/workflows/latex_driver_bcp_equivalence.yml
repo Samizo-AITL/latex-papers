@@ -14,34 +14,44 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Install TeX with Japanese fonts
+      # 日本語フォントだけ入れる（TeX本体はlatex-actionの環境を使用）
+      - name: Install Japanese fonts (IPAex)
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-full fonts-ipaexfont fonts-ipafont
+          sudo apt-get install -y fonts-ipaexfont
 
+      # ルート・作業ディレクトリを明示し、出力は build/ に集約
       - name: Compile LaTeX document (LuaLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: papers/2025_driver_bcp_equivalence/main.tex
+          root_file: main.tex
+          working_directory: papers/2025_driver_bcp_equivalence
           latexmk_use_lualatex: true
-          continue_on_error: true
-          latexmk_args: "-interaction=nonstopmode -halt-on-error -file-line-error"
+          latexmk_shell_escape: true              # epstopdf等の自動変換を許可
+          # 生成物は build/ に。エラーでジョブを失敗にする（ログ回収は次ステップで行う）
+          latexmk_args: "-interaction=nonstopmode -halt-on-error -file-line-error -outdir=build"
 
-      # 生成物がどこにあっても拾う（logが必ず取れる）
+      # 成否に関わらず、PDFとログを回収
       - name: Collect build outputs
         if: always()
+        working-directory: papers/2025_driver_bcp_equivalence
         run: |
           mkdir -p artifacts
           echo "::group::Locate outputs"
-          find . -maxdepth 4 -type f \( -name "*.log" -o -name "*.pdf" -o -name "*.aux" -o -name "*.bbl" -o -name "*.blg" \) -print
+          find build -type f -maxdepth 1 -print || true
           echo "::endgroup::"
-          find . -maxdepth 4 -type f \( -name "*.log" -o -name "*.pdf" -o -name "*.aux" -o -name "*.bbl" -o -name "*.blg" \) -exec cp {} artifacts/ \; || true
+          # 最終成果物と主要ログを収集
+          cp -f build/*.pdf artifacts/ 2>/dev/null || true
+          cp -f build/*.log artifacts/ 2>/dev/null || true
+          cp -f build/*.aux artifacts/ 2>/dev/null || true
+          cp -f build/*.out artifacts/ 2>/dev/null || true
           ls -al artifacts || true
 
       - name: Upload artifacts (PDF + LOG)
@@ -49,4 +59,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: driver_bcp_equivalence_outputs
-          path: artifacts/**
+          path: papers/2025_driver_bcp_equivalence/artifacts/**
