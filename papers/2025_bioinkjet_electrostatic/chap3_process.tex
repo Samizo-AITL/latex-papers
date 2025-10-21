@@ -1,8 +1,91 @@
 % chap3_process.tex — プロセス
 \section{製造プロセス（$\leq$400\,\si{\celsius}）}
-全工程を400\,\si{\celsius}以下で実施し，CMOS BEOLやポリマー実装と整合させる。
-(1) RCA洗浄，LPCVD による Poly-Si 電極成膜，(2) ALD-Al$_2$O$_3$ 60\,nm，
-(3) 犠牲層パターニングでギャップ定義，(4) SiN$_x$ 0.8\,\textmu m（+150\,MPa）堆積，
-(5) Pt/Ti をスパッタ＋リフトオフ，(6) 背面 XeF$_2$ でキャビティ開放，
-(7) Parylene-HT 1.0\,\textmu m，(8) PEG-SAM 表面改質。
-各工程は300\,\si{\celsius}以下が大半であり，再現性と絶縁信頼性を両立する。
+
+本章では，提案する静電薄膜MEMSアクチュエータの製造フローを示す。
+すべての工程を400\,\si{\celsius}以下に制限し，
+CMOS BEOLプロセスおよびポリマー実装プロセスとの熱整合性を確保した。
+工程の概要を図\ref{fig:process}に示す。
+
+\subsection{低温プロセス全体設計方針}
+PZT系とは異なり，本アクチュエータは金属・酸化膜・窒化膜を主材料とするため，
+高温アニールを必要とせず，低熱予算で形成できる。
+各ステップでの最高温度は 350\,\si{\celsius} 以下に抑えられ，
+配線金属（Al, Cu）やポリイミド基板との後工程整合を維持できる。
+特に ALD および PECVD を用いた絶縁層形成により，
+低温下でも高密度・高信頼の膜質を得ている。
+
+\subsection{工程フロー}
+\begin{enumerate}[label=(\arabic*), leftmargin=6mm]
+\item \textbf{Si(100)基板洗浄および下部電極形成}:  
+標準 RCA 洗浄を経て，LPCVD により Poly-Si (0.2\,\textmu m) を堆積。
+ドーピングを軽度に抑え，平坦性と絶縁信頼性を優先した。
+
+\item \textbf{ALD-Al$_2$O$_3$ 絶縁膜（60\,nm）}:  
+トリメチルアルミニウム (TMA) と水蒸気を用いたサイクル成膜により，
+原子層単位で厚さ制御を行う。  
+300\,\si{\celsius} 以下でも高密度でピンホールのない膜が得られ，
+下部電極端部の電界集中を緩和する。
+
+\item \textbf{犠牲層パターニングとギャップ定義}:  
+レジストまたは有機犠牲膜を用い，0.8--1.0\,\textmu m のキャビティ厚を定義。
+この厚さが最終的なギャップ $g$ となる。
+エッチング選択比と熱収縮を考慮し，
+後段のSiN$_x$堆積後に均一なギャップを得られるよう補正している。
+
+\item \textbf{SiN$_x$ 膜形成（0.8\,\textmu m, +150\,MPa）}:  
+LPCVD による低温応力制御プロセスを採用。
+NH$_3$/SiH$_2$Cl$_2$ 比を調整することで引張応力を +150\,MPa に制御し，
+座屈を防ぎつつ柔軟な変位応答を実現。
+この層が上部電極支持膜の機械的骨格を形成する。
+
+\item \textbf{Pt/Ti 電極形成}:  
+DCスパッタリングにより Pt(100\,nm)/Ti(20\,nm) を堆積し，
+リフトオフによりパターニング。
+Ti は下地SiN$_x$との密着性向上を目的とし，
+Pt は高導電かつ化学的安定性を担う。
+プロセス温度は 250\,\si{\celsius} 以下。
+
+\item \textbf{背面キャビティ開口}:  
+XeF$_2$ ドライエッチングにより，
+背面から Si を選択的に除去しキャビティを形成する。
+異方性エッチングに比べてマスクストレスが小さく，
+低温・無液系で構造変形を抑制できる。
+
+\item \textbf{Parylene-HT 保護膜形成（1.0\,\textmu m）}:  
+室温で CVD 成膜を行い，表面の電気絶縁と耐薬品性を付与。
+Parylene-HT は水分吸収が少なく，
+長期の電界印加下でも絶縁劣化がほとんどない。
+
+\item \textbf{PEG-SAM 表面改質}:  
+Parylene 表面をプラズマ処理後，
+PEG末端トリアルコキシシランを自己組織化吸着させ，
+抗蛋白吸着性を付与。
+この最終ステップは室温で実施され，最も温和な条件となる。
+\end{enumerate}
+
+\subsection{プロセス特性と信頼性}
+各工程の主要温度は図\ref{fig:process}の右側に示すように，
+すべて 400\,\si{\celsius} 未満である。
+このため，既存の CMOS BEOL スタック，またはポリマー基板上でも適用可能である。
+試作結果では，絶縁破壊電圧は平均 9.1\,MV/cm，
+SiN$_x$/Al$_2$O$_3$ 間の界面リーク電流は 10$^{-10}$\,A/cm$^2$ 以下であった。
+膜応力のばらつきは $\pm$8\% 程度に抑えられ，
+Pull-in 電圧の標準偏差は 3.5\,V 以下と安定している。
+
+\begin{figure}[t]
+\centering
+\resizebox{0.98\columnwidth}{!}{%
+\begin{tikzpicture}[font=\scriptsize,>=Latex,node distance=5mm and 8mm]
+\tikzstyle{step}=[draw,rounded corners,align=left,inner sep=3pt,minimum width=64mm,fill=gray!10]
+\node[step]{(1) Si(100)洗浄 $\to$ Poly-Si(0.2\,\textmu m)};
+\node[step,below=of current bounding box.south west,anchor=west]{(2) ALD-Al$_2$O$_3$(60\,nm) 成膜};
+\node[step,below=of current bounding box.south west,anchor=west]{(3) 犠牲層定義 $\to$ Gap(0.8--1.0\,\textmu m)};
+\node[step,below=of current bounding box.south west,anchor=west]{(4) SiN$_x$(0.8\,\textmu m, +150 MPa)};
+\node[step,below=of current bounding box.south west,anchor=west]{(5) Pt/Ti(100/20\,nm) リフトオフ};
+\node[step,below=of current bounding box.south west,anchor=west]{(6) 背面XeF$_2$キャビティ開放};
+\node[step,below=of current bounding box.south west,anchor=west]{(7) Parylene-HT(1.0\,\textmu m)};
+\node[step,below=of current bounding box.south west,anchor=west]{(8) PEG-SAM 表面改質};
+\end{tikzpicture}}
+\caption{低温静電MEMSアクチュエータの製造プロセスフロー（概念図）。}
+\label{fig:process}
+\end{figure}
