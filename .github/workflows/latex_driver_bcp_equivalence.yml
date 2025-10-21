@@ -1,15 +1,23 @@
 name: Build μTFP Driver BCP Paper
 
 on:
-  workflow_dispatch: {}
   push:
-    branches: ["**"]
+    # ← BCP のソースとこのワークフロー自身に限定
     paths:
-      - 'papers/**'
-      - '.github/workflows/**'
+      - 'papers/2025_driver_bcp_equivalence/**'
+      - '.github/workflows/latex_driver_bcp_equivalence.yml'
+    # ← BioInkjet 等は明示的に無視
+    paths-ignore:
+      - 'papers/2025_bioinkjet_electrostatic/**'
+      - '.github/workflows/latex_bioinkjet_electrostatic.yml'
   pull_request:
     paths:
-      - 'papers/**'
+      - 'papers/2025_driver_bcp_equivalence/**'
+  workflow_dispatch:
+
+concurrency:
+  group: bcp-build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -21,15 +29,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Compile LaTeX document (LuaLaTeX)
+      - name: Compile LaTeX document (LuaLaTeX, single-PDF)
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: papers/2025_driver_bcp_equivalence
           root_file: main.tex
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
-          # ← ここは latexmk_args ではなく args！！
-          args: "-interaction=nonstopmode -halt-on-error -file-line-error -outdir=build"
+          # latexmk の引数（jobname と outdir を固定化して PDF を一意に）
+          args: "-interaction=nonstopmode -halt-on-error -file-line-error -outdir=build -jobname=2025_driver_bcp_equivalence"
+          # 日本語フォント（IPAex）導入。latex-actionはAlpineなので apk でOK
           pre_compile: |
             apk add --no-cache wget unzip fontconfig
             mkdir -p /usr/share/fonts/opentype/ipaex
@@ -37,24 +46,20 @@ jobs:
             unzip -o /tmp/ipaex.zip -d /usr/share/fonts/opentype/ipaex
             fc-cache -fv
 
-      # どこに出ても拾えるように場所を表示
-      - name: List outputs
+      - name: List outputs (debug)
         if: always()
         run: |
-          echo "::group::tree papers/2025_driver_bcp_equivalence"
-          ls -al papers/2025_driver_bcp_equivalence || true
+          echo "::group::tree papers/2025_driver_bcp_equivalence/build"
           ls -al papers/2025_driver_bcp_equivalence/build || true
           echo "::endgroup::"
 
-      - name: Upload build directory (PDF + LOG)
+      - name: Upload PDF and log (BCP only, single file)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: driver_bcp_equivalence_build
+          name: 2025_driver_bcp_equivalence_build
           path: |
-            papers/2025_driver_bcp_equivalence/build/*.pdf
-            papers/2025_driver_bcp_equivalence/build/*.log
-            papers/2025_driver_bcp_equivalence/main.pdf
-            papers/2025_driver_bcp_equivalence/main.log
+            papers/2025_driver_bcp_equivalence/build/2025_driver_bcp_equivalence.pdf
+            papers/2025_driver_bcp_equivalence/build/2025_driver_bcp_equivalence.log
           if-no-files-found: error
           retention-days: 14
