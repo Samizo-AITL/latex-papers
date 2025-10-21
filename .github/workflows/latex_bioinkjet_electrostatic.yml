@@ -30,21 +30,44 @@ jobs:
         working-directory: papers/2025_bioinkjet_electrostatic
         shell: bash
         run: |
-          set -eux
+          set -euxo pipefail
           rm -rf build && mkdir -p build
           latexmk -C -outdir=build || true
-          for i in {1..3}; do
-            echo "===== PASS $i ====="
+
+          # 3パス回して cross-ref を確定
+          for i in 1 2 3; do
+            echo "===== PASS $i =====" | tee -a build/build.log
             latexmk -lualatex -interaction=nonstopmode -file-line-error -halt-on-error \
-              -outdir=build -jobname=2025_bioinkjet_electrostatic main.tex | tee -a build/build.log
+              -outdir=build -jobname=2025_bioinkjet_electrostatic main.tex \
+              2>&1 | tee -a build/build.log
           done
 
-      - name: Upload PDF and log (BioInkjet only)
+      # 失敗時でもログの末尾をその場で出す（UIに見えるように）
+      - name: Show tail of logs (always)
+        if: always()
+        working-directory: papers/2025_bioinkjet_electrostatic/build
+        run: |
+          echo "::group::tree build"
+          ls -al .
+          echo "::endgroup::"
+          echo "::group::tail build.log"
+          tail -n 200 build.log || true
+          echo "::endgroup::"
+          echo "::group::tail engine log"
+          tail -n 200 2025_bioinkjet_electrostatic.log || true
+          echo "::endgroup::"
+
+      - name: Upload PDF and all logs (always)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: 2025_bioinkjet_electrostatic_build
           path: |
             papers/2025_bioinkjet_electrostatic/build/2025_bioinkjet_electrostatic.pdf
+            papers/2025_bioinkjet_electrostatic/build/2025_bioinkjet_electrostatic.log
             papers/2025_bioinkjet_electrostatic/build/build.log
-          if-no-files-found: error
+            papers/2025_bioinkjet_electrostatic/build/*.aux
+            papers/2025_bioinkjet_electrostatic/build/*.fls
+            papers/2025_bioinkjet_electrostatic/build/*.fdb_latexmk
+          if-no-files-found: warn
           retention-days: 14
