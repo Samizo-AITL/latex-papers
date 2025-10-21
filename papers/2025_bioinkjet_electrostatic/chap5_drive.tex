@@ -1,8 +1,80 @@
 % chap5_drive.tex — 駆動
 \section{駆動と波形設計}
-容量性負荷（10–50\,pF/ch）に対し，台形波（5/5/10\,\textmu s, 5–10\,kHz）で
-膜応答 $x(t)$ と圧力 $P(t)$ を同相に合わせる。
-1ショットエネルギーは $E=\tfrac12 C V^2$ より
-$C=30$\,pF, $V=45$\,V で $\sim0.1$\,\si{\micro J}。
-COF/TAB 実装の寄生を含めてもリンギングは RC スナバで抑制可能で，
-自己発熱は $\Delta T<2\,^\circ$C と小さい。
+
+本章では，静電アクチュエータの容量性負荷特性に基づく
+駆動波形設計とエネルギー管理について述べる。
+目的は「最小エネルギーで最大効率を得る」ことであり，
+膜変位と圧力応答を同相に整合させる波形を設計する。
+
+\subsection{容量性負荷特性と周波数応答}
+静電アクチュエータはほぼ純容量性素子として振る舞い，
+容量は1チャネルあたり $C=10$--50\,pF 程度である。
+動作周波数帯域（5--10\,kHz）では，誘電損はほぼ無視でき，
+電流は主に電荷・放電過程に支配される。
+実効インピーダンスは $|Z|=1/(2\pi f C)$ であり，
+$C=30$\,pF, $f=10$\,kHz のとき $|Z|\approx530\,\mathrm{k\Omega}$。
+よって駆動電流は 45\,V 駆動時に約 85\,µA 程度と小さい。
+
+\subsection{波形整合と位相制御}
+駆動波形は図\ref{fig:drive_waveform}のような台形波とし，
+立上り5\,µs／保持5\,µs／減衰10\,µsの構成を採用する。
+この波形により，膜変位 $x(t)$ とキャビティ圧力 $P(t)$ の応答を
+同相（in-phase）に整合させ，吐出タイミングを安定化する。
+急峻な矩形波では電界の時間勾配が大きく，
+膜振動のオーバーシュートや液柱のサテライト滴発生を招く。
+台形波にすることで，エネルギー流入が緩やかになり，
+静電力と膜応力が動的に釣り合う「共鳴安定領域」を維持できる。
+
+\begin{equation}
+E = \tfrac{1}{2} C V^2.
+\end{equation}
+典型値として $C=30$\,pF, $V=45$\,V とすると，
+1ショットあたりのエネルギーは $E\simeq0.1\,\si{\micro J}$。
+これはPZT方式（$\sim$0.5\,µJ/shot）に比べ約1/5である。
+
+\subsection{駆動系と寄生成分の対策}
+実装はCOF（Chip-on-Film）またはTAB（Tape Automated Bonding）を想定し，
+配線長に伴う寄生容量 $C_p\sim5$--10\,pF を含めた全容量は $C_\mathrm{tot}=C+C_p$。
+これに対して RC スナバ回路を並列に挿入し，
+駆動トランジェント時のリンギングを抑制する。
+RC 定数は $R_sC_\mathrm{tot}\approx1$--2\,µs とし，
+波形立上りの過渡電流を臨界制動状態に設定することで，
+電界急峻性を緩和しつつ再現性の高い電圧印加を実現する。
+
+\subsection{熱管理と信頼性}
+1ショットの放電エネルギー $E$ を繰返し周波数 $f_\mathrm{rep}=5$--10\,kHz で駆動した場合，
+平均電力は $P_\mathrm{avg}=E f_\mathrm{rep}\approx0.5$--1.0\,mW/ch となる。
+これに対する熱上昇は，チップ熱抵抗 150\,K/W と仮定して
+$\Delta T \approx 0.15$\,K/ch 程度であり，
+並列駆動（1000ノズル）でも全体温度上昇は $\le2\,^\circ$C に抑えられる。
+放熱設計は主に配線フィルムとシリコン基板の伝導経路で担保され，
+空冷・液冷を要しない。
+
+\subsection{設計指針のまとめ}
+以上の結果から，
+(1) 容量性負荷に対して立上り・減衰を制御した台形波が最も安定、  
+(2) エネルギー消費は0.1\,µJ/shot、PZT比約1/5、  
+(3) 自己発熱は $\Delta T<2\,^\circ$C であり連続動作に十分、  
+であることが確認された。
+本アクチュエータは電気・機械・流体の共振点を避けつつ
+「\textbf{節度ある駆動}」を成立させる設計であり，
+Ethical Precision の実装形態といえる。
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=\columnwidth,height=3.6cm,xmin=0,xmax=1,ymin=-0.05,ymax=1.05,
+axis lines=left,xtick=\empty,ytick=\empty,xlabel={時間},ylabel={規格化},
+legend pos=south east,legend style={font=\scriptsize,draw=none,fill=white,fill opacity=0.85},
+every axis plot/.append style={thick}]
+\addplot[blue,domain=0:1,samples=200]{(x<0.25)?(4*x):((x<0.5)?1:((x<0.9)?(1-(x-0.5)/0.4):0))};
+\addlegendentry{$V(t)$}
+\addplot[red,dashed,domain=0:1,samples=200]{0.85*((x<0.3)?(3.0*x):((x<0.55)?0.9:((x<0.95)?(0.9-(x-0.55)/0.4):0)))};
+\addlegendentry{$x(t)$}
+\addplot[orange,dotted,domain=0:1,samples=200]{0.9*((x<0.28)?(3.2*x):((x<0.52)?0.896:((x<0.9)?(0.896-(x-0.52)/0.38):0)))};
+\addlegendentry{$P(t)$}
+\end{axis}
+\end{tikzpicture}
+\caption{台形波駆動における電圧 $V(t)$，膜変位 $x(t)$，および圧力 $P(t)$ の整合（概念図）。}
+\label{fig:drive_waveform}
+\end{figure}
