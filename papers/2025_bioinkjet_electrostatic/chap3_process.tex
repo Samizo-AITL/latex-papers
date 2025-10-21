@@ -1,5 +1,5 @@
-% chap3_process.tex — プロセス（改訂版）
-\section{製造プロセス（$\leq$\SI{400}{\celsius})}
+% chap3_process.tex — プロセス（改訂版・確定）
+\section{製造プロセス（\texorpdfstring{$\leq$}{≤}\,\SI{400}{\celsius})}
 
 本章では，提案する静電薄膜MEMSアクチュエータの製造フローを示す。
 全工程を\SI{400}{\celsius}以下に制限し，
@@ -35,7 +35,7 @@ LPCVD により引張応力を制御し，座屈を防ぎつつ柔軟な変位�
 この層が上部電極支持膜の骨格を形成する。
 
 \item \textbf{Pt/Ti 電極形成}:  
-DC スパッタにより Pt(\SI{100}{\nano\meter}) / Ti(\SI{20}{\nano\meter}) を堆積。
+DC スパッタにより Pt(\SI{100}{\nano\meter})／Ti(\SI{20}{\nano\meter}) を堆積。
 リフトオフによりパターニングを行う。
 Ti は密着層，Pt は高導電・耐食性層として機能する。
 プロセス温度は \SI{250}{\celsius} 以下。
@@ -66,22 +66,24 @@ SiN$_x$/Al$_2$O$_3$ 界面リーク電流は \SI{1e-10}{\ampere\per\centi\meter\
   \centering
   \resizebox{0.98\columnwidth}{!}{%
   \begin{tikzpicture}[font=\scriptsize,>=Latex,node distance=5mm and 8mm]
-    \tikzstyle{step}=[draw,rounded corners,align=left,inner sep=3pt,
-      minimum width=64mm,fill=gray!10]
-    \node[step]{(1) Si(100) 洗浄 $\to$ Poly-Si (\SI{0.2}{\micro\meter})};
-    \node[step,below=of current bounding box.south west,anchor=west]
+    % ← TikZの予約キー 'step' と衝突しないように名称変更
+    \tikzset{procstep/.style={
+      draw,rounded corners,align=left,inner sep=3pt,
+      minimum width=64mm,fill=gray!10}}
+    \node[procstep]{(1) Si(100) 洗浄 $\to$ Poly-Si (\SI{0.2}{\micro\meter})};
+    \node[procstep,below=of current bounding box.south west,anchor=west]
       {(2) ALD-Al$_2$O$_3$ (\SI{60}{\nano\meter}) 成膜};
-    \node[step,below=of current bounding box.south west,anchor=west]
+    \node[procstep,below=of current bounding box.south west,anchor=west]
       {(3) 犠牲層定義 $\to$ Gap (\SIrange{0.8}{1.0}{\micro\meter})};
-    \node[step,below=of current bounding box.south west,anchor=west]
+    \node[procstep,below=of current bounding box.south west,anchor=west]
       {(4) SiN$_x$ (\SI{0.8}{\micro\meter}, +\SI{150}{\mega\pascal})};
-    \node[step,below=of current bounding box.south west,anchor=west]
+    \node[procstep,below=of current bounding box.south west,anchor=west]
       {(5) Pt/Ti (\SI{100}{\nano\meter}/\SI{20}{\nano\meter}) リフトオフ};
-    \node[step,below=of current bounding box.south west,anchor=west]
+    \node[procstep,below=of current bounding box.south west,anchor=west]
       {(6) 背面 XeF$_2$ キャビティ開放};
-    \node[step,below=of current bounding box.south west,anchor=west]
+    \node[procstep,below=of current bounding box.south west,anchor=west]
       {(7) Parylene-HT (\SI{1.0}{\micro\meter})};
-    \node[step,below=of current bounding box.south west,anchor=west]
+    \node[procstep,below=of current bounding box.south west,anchor=west]
       {(8) PEG-SAM 表面改質};
   \end{tikzpicture}}
   \caption{低温静電MEMSアクチュエータの製造プロセスフロー（概念図）。}
