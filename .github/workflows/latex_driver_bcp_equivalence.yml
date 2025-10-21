@@ -2,14 +2,10 @@ name: Build μTFP Driver BCP Paper
 
 on:
   push:
-    # ← BCP のソースとこのワークフロー自身に限定
+    # BCP のソースとこのワークフロー自身に限定
     paths:
       - 'papers/2025_driver_bcp_equivalence/**'
       - '.github/workflows/latex_driver_bcp_equivalence.yml'
-    # ← BioInkjet 等は明示的に無視
-    paths-ignore:
-      - 'papers/2025_bioinkjet_electrostatic/**'
-      - '.github/workflows/latex_bioinkjet_electrostatic.yml'
   pull_request:
     paths:
       - 'papers/2025_driver_bcp_equivalence/**'
@@ -36,9 +32,9 @@ jobs:
           root_file: main.tex
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
-          # latexmk の引数（jobname と outdir を固定化して PDF を一意に）
+          # 一意のPDF名で出力（重複防止）
           args: "-interaction=nonstopmode -halt-on-error -file-line-error -outdir=build -jobname=2025_driver_bcp_equivalence"
-          # 日本語フォント（IPAex）導入。latex-actionはAlpineなので apk でOK
+          # 日本語フォント（IPAex）
           pre_compile: |
             apk add --no-cache wget unzip fontconfig
             mkdir -p /usr/share/fonts/opentype/ipaex
