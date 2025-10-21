@@ -5,10 +5,9 @@ on:
     paths:
       - 'papers/2025_bioinkjet_electrostatic/**'
       - '.github/workflows/latex_bioinkjet_electrostatic.yml'
-    paths-ignore:
-      - 'papers/**/bcp/**'
-      - 'papers/**/BCP/**'
-      - 'papers/2025_bcp*/**'
+  pull_request:
+    paths:
+      - 'papers/2025_bioinkjet_electrostatic/**'
   workflow_dispatch:
 
 concurrency:
@@ -36,7 +35,6 @@ jobs:
           rm -rf build && mkdir -p build
           latexmk -lualatex -interaction=nonstopmode -file-line-error -halt-on-error \
                   -outdir=build -jobname=2025_bioinkjet_electrostatic main.tex | tee build/build.log
-          # 中間ファイルは掃除（PDFとログは残す）
           latexmk -c -outdir=build || true
 
       - name: Upload PDF and log (BioInkjet only)
