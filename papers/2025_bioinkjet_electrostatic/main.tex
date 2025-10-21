@@ -11,8 +11,11 @@
   \setsansjfont{Noto Sans CJK JP}
 }
 \ltjsetparameter{yjabaselineshift=0pt}
-% スラッシュ「/」前後の空きを抑制（3）。ASCII指定で安全。
-\ltjsetparameter{alxspmode={"\2F,3}}
+% NOTE: CI環境の luatexja で互換性問題が出るため全体設定は無効化。
+% \ltjsetparameter{alxspmode={`/,3}}
+
+% 日本語直前直後のスペースを局所的に抑止するスラッシュ
+\newcommand{\JPSlash}{\inhibitglue/\inhibitglue}
 
 % ================= 基本パッケージ =================
 \usepackage{graphicx,amsmath,siunitx,booktabs,balance,url,cite}
