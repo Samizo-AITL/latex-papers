@@ -1,0 +1,27 @@
+name: latex_finfet_gaa_cfet
+on:
+  push:
+    paths:
+      - 'papers/2025_finfet_gaa_cfet_evolution/**'
+      - '.github/workflows/latex_finfet_gaa_cfet.yml'
+
+jobs:
+  build_pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: papers/2025_finfet_gaa_cfet_evolution
+          latexmk_shell_escape: true
+          extra_system_packages: "ghostscript"
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: finfet_gaa_cfet_evolution
+          path: papers/2025_finfet_gaa_cfet_evolution/main.pdf
