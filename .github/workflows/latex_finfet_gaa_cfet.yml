@@ -14,6 +14,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Japanese fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-ipafont fonts-ipaexfont
+
       - name: Compile LaTeX document (XeLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
@@ -21,8 +26,8 @@ jobs:
           working_directory: papers/2025_finfet_gaa_cfet_evolution
           latexmk_use_xelatex: true
           latexmk_shell_escape: true
-          latexmk_args: "-f"   # ← 強制リビルド指定
-          extra_system_packages: "ghostscript fontconfig fonts-ipafont"
+          latexmk_args: "-f"  # 再ビルド強制
+          extra_system_packages: "ghostscript fontconfig"
 
       - name: List generated files
         run: ls -lh papers/2025_finfet_gaa_cfet_evolution
