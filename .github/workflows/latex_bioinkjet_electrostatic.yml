@@ -27,14 +27,20 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y texlive-full fonts-noto-cjk latexmk
 
-      - name: Compile (latexmk -lualatex, single step)
+      # ★ 2パスで確実に参照を解決。-jobname でPDF名を固定
+      - name: Compile (latexmk -lualatex, double pass)
         working-directory: papers/2025_bioinkjet_electrostatic
         shell: bash
         run: |
           set -eux
           rm -rf build && mkdir -p build
+          # 1st pass
           latexmk -lualatex -interaction=nonstopmode -file-line-error -halt-on-error \
-                  -outdir=build -jobname=2025_bioinkjet_electrostatic main.tex | tee build/build.log
+            -outdir=build -jobname=2025_bioinkjet_electrostatic main.tex | tee build/build.log
+          # 2nd pass（cross-ref安定化）
+          latexmk -lualatex -interaction=nonstopmode -file-line-error -halt-on-error \
+            -outdir=build -jobname=2025_bioinkjet_electrostatic main.tex | tee -a build/build.log
+          # 中間ファイル掃除（PDFとlogは残す）
           latexmk -c -outdir=build || true
 
       - name: Upload PDF and log (BioInkjet only)
