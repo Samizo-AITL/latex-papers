@@ -15,31 +15,41 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Ubuntu に TeX Live と日本語フォントを入れる
+      # TeX Live と日本語フォント
       - name: Install TeX Live & Noto CJK fonts
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive-full fonts-noto-cjk
 
-      # LuaLaTeX でビルド（PDF と build.log を生成）
-      - name: Compile (LuaLaTeX)
+      # latexmk（LuaLaTeX）で1回のビルドフローに集約
+      - name: Compile (latexmk -lualatex)
         working-directory: papers/2025_bioinkjet_electrostatic
+        shell: bash
         run: |
-          lualatex -interaction=nonstopmode -file-line-error main.tex | tee build.log
-          bibtex main || true
-          lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
-          lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
+          # ログをクリア
+          rm -f build.log
 
-      # PDF とログを成果物に
-      - name: Upload PDF and logs
+          # BibTeXが必要かを簡易判定（.aux に \bibdata が出るかどうか）
+          # まず1回だけ lualatex を回して .aux を作る（エラー時は停止）
+          lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
+          if grep -q '\\bibdata' main.aux 2>/dev/null; then
+            # BibTeXが必要な場合は latexmk に任せる（-bibtex）
+            latexmk -lualatex -bibtex -interaction=nonstopmode -file-line-error -halt-on-error main.tex | tee -a build.log
+          else
+            # thebibliography等でBibTeX不要の場合は latexmk でLuaLaTeXのみ
+            latexmk -lualatex -interaction=nonstopmode -file-line-error -halt-on-error main.tex | tee -a build.log
+          fi
+
+          # 出力PDFの名前を明示（論文PDF名に統一）
+          mv -f main.pdf 2025_bioinkjet_electrostatic.pdf
+
+      # PDF とログだけを成果物に
+      - name: Upload PDF and log
         uses: actions/upload-artifact@v4
         with:
           name: 2025_bioinkjet_electrostatic_build
           path: |
-            papers/2025_bioinkjet_electrostatic/*.pdf
-            papers/2025_bioinkjet_electrostatic/*.log
-            papers/2025_bioinkjet_electrostatic/*.bbl
-            papers/2025_bioinkjet_electrostatic/*.blg
+            papers/2025_bioinkjet_electrostatic/2025_bioinkjet_electrostatic.pdf
             papers/2025_bioinkjet_electrostatic/build.log
           if-no-files-found: error
           retention-days: 14
