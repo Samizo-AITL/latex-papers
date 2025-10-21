@@ -14,28 +14,53 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 日本語フォント（IPA/IPAex）を入れる
       - name: Install Japanese fonts
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-ipafont fonts-ipaexfont
 
+      # XeLaTeX でビルド（警告で止まらないように -f / nonstopmode）
       - name: Compile LaTeX document (XeLaTeX)
+        id: latex
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: main.tex
           working_directory: papers/2025_finfet_gaa_cfet_evolution
+          root_file: main.tex
           latexmk_use_xelatex: true
           latexmk_shell_escape: true
-          latexmk_args: "-f"  # 再ビルド強制
+          args: -f -interaction=nonstopmode
           extra_system_packages: "ghostscript fontconfig"
 
+      # 生成物を確認（成功・失敗に関わらず実行）
       - name: List generated files
-        run: ls -lh papers/2025_finfet_gaa_cfet_evolution
+        if: always()
+        run: ls -lah papers/2025_finfet_gaa_cfet_evolution || true
 
+      # main.log をコンソールにも出す（デバッグ用）
+      - name: Print LaTeX log to console
+        if: always()
+        run: |
+          LOG="papers/2025_finfet_gaa_cfet_evolution/main.log"
+          if [ -f "$LOG" ]; then
+            echo "----- BEGIN main.log (tail) -----"
+            tail -n 200 "$LOG"
+            echo "----- END main.log -----"
+          else
+            echo "main.log not found (build may have stopped before log write)."
+          fi
+
+      # PDF と LOG を成果物に保存（存在しなくてもワーニングで継続）
       - name: Upload build artifacts (PDF + LOG)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: finfet_gaa_cfet_build
+          if-no-files-found: warn
           path: |
             papers/2025_finfet_gaa_cfet_evolution/main.pdf
             papers/2025_finfet_gaa_cfet_evolution/main.log
+            papers/2025_finfet_gaa_cfet_evolution/*.aux
+            papers/2025_finfet_gaa_cfet_evolution/*.bbl
+            papers/2025_finfet_gaa_cfet_evolution/*.blg
+          retention-days: 14
