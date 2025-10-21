@@ -1,27 +1,51 @@
-% abs.tex  — Abstract + (任意で) Keywords
 \begin{abstract}
 \textbf{和文要旨}:~
 本稿は，Pbフリー・低温プロセス整合の\emph{静電薄膜MEMSアクチュエータ}を用いた
-Bioインクジェットヘッドの設計指針を示す。
-焦点は電圧の大きさではなく，\emph{壊さないための精密＝節度ある制御}である。
-Si(100)上の SiN$_x$/ALD-Al$_2$O$_3$/Pt/Ti 積層と $\leq$400\,\si{\celsius}の低温フローにより，
-膜変位 $\sim$0.1\,\textmu m と圧力 $\sim$50\,kPa で，\textbf{$\sim$1.3\,pL} 滴の
-\textbf{2–5\,m/s} 低衝撃吐出を実現する。
-Parylene-HT/PEG-SAM により蛋白吸着を低減し，DNA/BSA 活性保持 $\ge$90\% を確認した。
-配列は\textbf{約800\,dpi（31.75\,µmピッチ）}が電気・機械・流体の整合から自然に導かれる。
-\medskip
+バイオインクジェットヘッドの設計・評価を通じて，
+「壊さない精密制御（Ethical Precision）」の実装指針を提示するものである。
+従来のPZT方式に対し，高電流・高温・Pb含有という制約を排除しつつ，
+生体分子を損なわない\emph{穏やかな駆動}を実現した。
 
+提案構成は，Si(100)基板上に
+SiN$_x$(0.8\,µm)/ALD-Al$_2$O$_3$(60\,nm)/Pt-Ti(100/20\,nm)
+を積層した静電アクチュエータであり，
+$\leq$400\,\si{\celsius} の低温プロセスにより CMOS BEOL との整合性を確保した。
+3.3\,Vロジック＋45\,V高電圧ドライバ構成下で，
+膜変位 $\sim$0.1\,µm，圧力 $\sim$50\,kPa にて
+1.3\,pL滴を 2–5\,m/s の速度で低衝撃吐出できることを示した。
+さらに，Parylene-HT および PEG-SAM 表面処理により
+蛋白吸着を抑制し，DNAおよびBSA活性保持率が $\ge$90\% であることを確認した。
+FEM解析と実測結果の整合から，
+\textbf{約800\,dpi（31.75\,µmピッチ）}が
+電場・膜変位・寄生容量・熱・流体の多領域設計から自然に導かれる
+合理設計点であることを明らかにした。
+本成果は，Pbフリー・非熱・非接触・生体適合を同時に満たす
+新たな精密駆動技術の枠組みを提示するものである。
+
+\medskip
 \noindent\textbf{Abstract}:~
-We present a lead-free, low-temperature \emph{electrostatic thin-film MEMS} inkjet head for biofluids.
-Rather than pursuing higher drive levels, we emphasize \emph{moderated control}.
-A Si(100)-based stack of SiN$_x$/ALD-Al$_2$O$_3$/Pt/Ti processed at $\leq$400\,\si{\celsius}
-enables $\sim$0.1\,µm diaphragm motion and $\sim$50\,kPa pressure, yielding
-\textbf{$\sim$1.3\,pL} droplets at \textbf{2–5\,m/s}.
-Parylene-HT and PEG-SAM reduce protein adsorption, maintaining DNA/BSA viability $\ge$90\%.
-A \textbf{$\sim$800\,dpi (31.75\,µm)} array naturally emerges from co-design across
-electric, mechanical, and fluidic domains.
+This paper presents a \emph{lead-free, low-temperature electrostatic thin-film MEMS actuator}
+for bio-inkjet applications, establishing a design methodology for \emph{Ethical Precision}—
+precision that minimizes physical and biological stress.
+Unlike PZT-based systems constrained by high current, high-temperature sintering, and lead toxicity,
+the proposed electrostatic approach enables gentle actuation suitable for biomolecule handling.
+
+The actuator consists of a Si(100) substrate with
+a SiN$_x$(0.8\,µm)/ALD-Al$_2$O$_3$(60\,nm)/Pt-Ti(100/20\,nm) stack,
+fabricated through a $\leq$400\,\si{\celsius} CMOS-compatible process.
+Under a 3.3\,V logic + 45\,V high-voltage driver configuration,
+a diaphragm displacement of $\sim$0.1\,µm and pressure of $\sim$50\,kPa
+enable \textbf{$\sim$1.3\,pL} droplets to be ejected at 2–5\,m/s with minimal impulse.
+Surface coatings of Parylene-HT and PEG-SAM suppress protein adsorption,
+maintaining DNA/BSA activity above 90\%.
+Finite element analysis and experimental validation reveal
+an optimal \textbf{$\sim$800\,dpi (31.75\,µm pitch)} design point,
+emerging naturally from the co-optimization of electric field,
+mechanical compliance, capacitance, and fluid dynamics.
+The results demonstrate a Pb-free, non-thermal, non-contact, and bio-compatible
+MEMS actuation platform representing a shift toward sustainable precision engineering.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Electrostatic MEMS actuator, Bio-inkjet, Si(100), ALD-Al$_2$O$_3$, SiN$_x$, Parylene-HT, PEG-SAM, Ethical Precision
+Electrostatic MEMS actuator, Bio-inkjet, Si(100), ALD-Al$_2$O$_3$, SiN$_x$, Parylene-HT, PEG-SAM, Lead-free, CMOS-compatible, Ethical Precision
 \end{IEEEkeywords}
