@@ -1,20 +1,74 @@
+% =====================================================
+%  FinFET〜CFET構造進化論文（IEEEtran日本語併記版）
+% =====================================================
+
 \documentclass[conference]{IEEEtran}
+
+% -----------------------------------------------------
+% パッケージ設定（日本語対応＋数式＋図表）
+% -----------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{xeCJK}  % 日本語対応
 \usepackage{graphicx}
-\usepackage{amsmath}
+\usepackage{amsmath, amssymb}
 \usepackage{siunitx}
 \usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{titlesec}
+\usepackage{geometry}
 
-\title{Structural Paradigm Shift in Scaled CMOS:
-From Planar Limit (130 nm) to Complementary Stacking (CFET)}
+% -----------------------------------------------------
+% ページ設定
+% -----------------------------------------------------
+\geometry{left=18mm,right=18mm,top=25mm,bottom=25mm}
+\setlength{\columnsep}{0.25in}
 
-\author{
-  Shinichi Samizo, AITL Project Design Hub\\
-  \textit{Samizo-AITL / Edusemi-Plus / Inkjet-Arch}
+% -----------------------------------------------------
+% タイトル・著者情報
+% -----------------------------------------------------
+\title{ナノトランジスタ構造進化と信頼性パラダイムの転換\\
+{\large Structural Paradigm Shift in Scaled CMOS: From Planar Limit (130 nm) to Complementary Stacking (CFET)}}
+
+\author{%
+  \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
+  \IEEEauthorblockA{独立系半導体研究者（元セイコーエプソン） / Independent Semiconductor Researcher (ex-Seiko Epson)\\%
+  Email: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}\quad
+  GitHub: \url{https://github.com/Samizo-AITL}}%
 }
 
+% -----------------------------------------------------
+% ドキュメント開始
+% -----------------------------------------------------
 \begin{document}
 \maketitle
 
+% -----------------------------------------------------
+% Abstract（日英併記）
+% -----------------------------------------------------
+\begin{abstract}
+\textbf{要旨 —}
+本稿では、130nm以降のCMOSスケーリングにおける臨界的構造変化を体系的に整理する。
+プレーナーMOSからFinFET、GAA（Nanosheet）、そしてCFET（Complementary FET）に至る進化を、
+電界制御・熱対称性・電源分離・再現性設計の観点から再定義する。
+HKMG、BEOL（Low-k/Dual Damascene/BPR）、およびBSIM-CMGモデリングを統合し、
+「構造で信頼性を設計する時代」の到来を論じる。
+
+\medskip
+\textbf{Abstract —}
+This paper systematically organizes the structural evolution of CMOS scaling beyond the 130 nm node.
+The transition from planar MOS to FinFET, GAA (nanosheet), and finally CFET (complementary FET)
+is redefined from the viewpoints of electrostatics, thermal symmetry, power delivery, and reproducibility design.
+The integration of HKMG, BEOL (Low-k / Dual Damascene / BPR), and BSIM-CMG modeling
+highlights the paradigm shift toward a new era in which reliability is engineered through structure.
+\end{abstract}
+
+% -----------------------------------------------------
+% 章構成（別ファイル読込）
+% -----------------------------------------------------
 \input{chap1_intro}
 \input{chap2_planar_limit}
 \input{chap3_finfet}
@@ -27,7 +81,19 @@ From Planar Limit (130 nm) to Complementary Stacking (CFET)}
 \input{chap10_lithography}
 \input{chap11_conclusion}
 
+% -----------------------------------------------------
+% 参考文献
+% -----------------------------------------------------
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
+
+% =====================================================
+% 著者略歴
+% =====================================================
+\section*{著者略歴}
+\textbf{三溝 真一}（Shinichi Samizo）は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得した。  
+その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、そして、インクジェット薄膜ピエゾアクチュエータ及びPrecisionCoreプリントヘッドの製品化に従事した。  
+現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、AIシステム統合などに取り組んでいる。  
+連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}．
 
 \end{document}
