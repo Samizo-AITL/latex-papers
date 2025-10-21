@@ -1,4 +1,5 @@
 name: latex_finfet_gaa_cfet
+
 on:
   push:
     paths:
@@ -8,20 +9,27 @@ on:
 jobs:
   build_pdf:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Compile LaTeX document
+      - name: Set up TeX Live environment
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: papers/2025_finfet_gaa_cfet_evolution
           latexmk_shell_escape: true
-          extra_system_packages: "ghostscript"
+          # Ghostscriptなど外部PDF処理を含む環境
+          extra_system_packages: "ghostscript fontconfig"
 
-      - name: Upload PDF artifact
-        uses: actions/upload-artifact@v3
+      - name: List generated files (for debug)
+        run: ls -lh papers/2025_finfet_gaa_cfet_evolution
+
+      - name: Upload build artifacts (PDF + LOG)
+        uses: actions/upload-artifact@v4
         with:
-          name: finfet_gaa_cfet_evolution
-          path: papers/2025_finfet_gaa_cfet_evolution/main.pdf
+          name: finfet_gaa_cfet_build
+          path: |
+            papers/2025_finfet_gaa_cfet_evolution/main.pdf
+            papers/2025_finfet_gaa_cfet_evolution/main.log
