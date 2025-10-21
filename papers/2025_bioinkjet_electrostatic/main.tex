@@ -11,11 +11,16 @@
   \setsansjfont{Noto Sans CJK JP}
 }
 \ltjsetparameter{yjabaselineshift=0pt}
-% NOTE: CI環境の luatexja で互換性問題が出るため全体設定は無効化。
+% NOTE: CI環境差で落ちやすいので全体設定は一旦オフ
 % \ltjsetparameter{alxspmode={`/,3}}
 
 % 日本語直前直後のスペースを局所的に抑止するスラッシュ
 \newcommand{\JPSlash}{\inhibitglue/\inhibitglue}
+
+% ======= \input を安全化（ファイル無くても無視） =======
+\makeatletter
+\newcommand{\inputifexists}[1]{\IfFileExists{#1}{\input{#1}}{}}
+\makeatother
 
 % ================= 基本パッケージ =================
 \usepackage{graphicx,amsmath,siunitx,booktabs,balance,url,cite}
@@ -41,344 +46,30 @@ GitHub: \url{https://github.com/Samizo-AITL}}}
 \begin{document}
 \maketitle
 
-% ===== Abstract =====
-\input{abs}
+% ===== Abstract / Keywords =====
+\inputifexists{abs.tex}
 
-% ===== Keywords =====
-\begin{IEEEkeywords}
-Electrostatic MEMS, Bio-inkjet, Si(100), ALD-Al$_2$O$_3$, SiN$_x$, Parylene-HT, PEG-SAM, Ethical Precision
-\end{IEEEkeywords}
+% もし abs.tex に Keywords を含めていないなら、ここで個別に
+% \begin{IEEEkeywords}
+% Electrostatic MEMS, Bio-inkjet, Si(100), ALD-Al$_2$O$_3$, SiN$_x$, Parylene-HT, PEG-SAM, Ethical Precision
+% \end{IEEEkeywords}
 
 % ===== Chapters =====
-\input{chap1_intro}
-\input{chap2_structure}
-\input{chap3_process}
-\input{chap4_fluid}
-\input{chap5_drive}
-\input{chap6_analysis}
-\input{chap7_safety}
-\input{chap8_discussion}
-\input{chap9_conclusion}
+\inputifexists{chap1_intro.tex}
+\inputifexists{chap2_structure.tex}
+\inputifexists{chap3_process.tex}
+\inputifexists{chap4_fluid.tex}
+\inputifexists{chap5_drive.tex}
+\inputifexists{chap6_analysis.tex}
+\inputifexists{chap7_safety.tex}
+\inputifexists{chap8_discussion.tex}
+\inputifexists{chap9_conclusion.tex}
 
 % ===== References =====
 \bibliographystyle{IEEEtran}
-\begin{thebibliography}{9}
-\bibitem{ALD} H.~Kim et al., ``Atomic layer deposition of Al$_2$O$_3$ thin films,'' \emph{JVST A}, vol.~21, no.~6, pp.~2231--2235, 2003.
-\bibitem{Parylene} J.~D.~Williams and W.~Wang, ``Parylene engineering for medical devices,'' \emph{MRS Bull.}, vol.~32, no.~6, pp.~514--520, 2007.
-\bibitem{PEG} C.~Rodler et al., ``PEGylated surfaces for protein-repellent biointerfaces,'' \emph{Langmuir}, vol.~34, no.~28, pp.~8309--8322, 2018.
-\bibitem{MEMS} S.~M.~Spearing, ``Materials issues in MEMS,'' \emph{Acta Mater.}, vol.~48, no.~1, pp.~179--196, 2000.
-\end{thebibliography}
-
-\balance
-\end{document}
-
-% ===== Abstract =====
-\begin{abstract}
-\textbf{和文要旨}:~
-本稿は，Pbフリー・非熱・非接触・生体適合を満たす
-\emph{静電薄膜MEMSインクジェットヘッド}の設計と意義を述べる。
-焦点は電圧値ではなく，\emph{人と環境を壊さないための設計思想}にある。
-Si(100)基板上のSiN$_x$/ALD-Al$_2$O$_3$/Pt/Ti積層と低温プロセス（$\leq$400\,\si{\celsius}）を用い，
-微小変位（$\sim$0.1\,\textmu m）と穏やかな圧力（$\sim$50\,kPa）で
-1.3\,pLの低衝撃吐出（2--5\,m/s）を実現する。
-Parylene-HT/PEG-SAMにより蛋白吸着を抑制し，DNA/BSA活性を90\%以上維持した。
-本研究は，精密＝高出力という常識を離れ，\textbf{精密＝節度ある制御}として再定義する
-「Ethical Precision」を提案する。
-
-\noindent\textbf{Abstract}:~
-We present a \emph{lead-free, non-thermal, non-contact, and bio-compatible}
-electrostatic thin-film MEMS inkjet head.
-The focus is not on drive voltages but on a design philosophy that avoids harm to people and the environment.
-Using a Si(100) substrate with a SiN$_x$/ALD-Al$_2$O$_3$/Pt/Ti stack and a low-temperature flow ($\leq$400\,\si{\celsius}),
-the device achieves gentle ejection of $\sim$1.3\,pL droplets (2--5\,m/s) from $\sim$0.1\,\textmu m diaphragm motion and $\sim$50\,kPa pressure.
-Parylene-HT and PEG-SAM coatings suppress protein adsorption, maintaining DNA/BSA activity above 90\%.
-We advocate \textbf{Ethical Precision}---redefining precision as \emph{moderated control} rather than brute output.
-\end{abstract}
-
-% ===== 1. 序論 =====
-\section{序論：精密技術の再定義}
-従来の精密は「高出力・高応力・高温」で語られてきた。
-しかしバイオ応用における精密は，
-\emph{壊さないこと}を中心に組み替える必要がある。
-本研究は，静電駆動の \emph{低電流・非熱・非接触}という特性を活かし，
-設計の主眼を「節度ある制御」に置く。
-以降では，構造，プロセス，流体，駆動，安全の各側面を
-\emph{人と環境に優しい精密}という視点で連続的に説明する。
-
-% ===== 2. 構造 =====
-\section{アクチュエータ構造：穏やかな力を生む設計}
-採用した積層は
-Si(100)/Poly-Si(0.2\,\textmu m)/ALD-Al$_2$O$_3$(60\,nm)/Gap(0.8--1.0\,\textmu m)/
-SiN$_x$(0.8\,\textmu m)/Pt-Ti(100/20\,nm)/Parylene-HT(1.0\,\textmu m)/PEG-SAMである。
-ALD絶縁は端部電界集中を緩和し，SiN$_x$の引張応力（\(\sim\)150\,MPa）で座屈余裕を確保する。
-
-\subsection*{Pull-inと設計安全率}
-静電力と変位の一次近似は
-\begin{equation}
-F \approx \frac{1}{2}\varepsilon_0 \varepsilon_r \frac{A V^2}{(g-x)^2},\qquad
-V_{\mathrm{PI}}=\sqrt{\frac{8k g^3}{27\varepsilon_0 \varepsilon_r A}}.
-\end{equation}
-本設計では\(g\simeq 0.8\,\textmu m\), \(A=(25\,\textmu m)^2\), \(k\simeq150\,\mathrm{N/m}\)より
-\(x\sim0.10\)–\(0.12\,\textmu m\)で安定動作し，Pull-in安全率は\(\ge 2\)。
-
-\begin{figure}[t]
-\centering
-\resizebox{0.95\columnwidth}{!}{%
-\begin{tikzpicture}[x=1mm,y=2mm]
-  \fill[gray!15] (0,0) rectangle (80,-18);   % Si
-  \fill[gray!55] (0,-18) rectangle (80,-17.5); % Poly-Si
-  \fill[blue!20] (0,-17.5) rectangle (80,-17.0); % ALD
-  \fill[white] (0,-17.0) rectangle (80,-15.4);   % Gap
-  \fill[yellow!35] (0,-15.4) rectangle (80,-14.0); % SiNx
-  \fill[gray!60] (0,-14.0) rectangle (80,-13.6); % Pt/Ti
-  \fill[orange!20] (0,-13.6) rectangle (80,-12.0); % Parylene-HT
-  \fill[green!25] (0,-12.0) rectangle (80,-11.2); % PEG-SAM
-  \node[anchor=west,font=\scriptsize] at (82,-17.6){Si(100)};
-  \node[anchor=west,font=\scriptsize] at (82,-17.1){Poly-Si};
-  \node[anchor=west,font=\scriptsize] at (82,-16.6){ALD-Al$_2$O$_3$};
-  \node[anchor=west,font=\scriptsize] at (82,-16.0){Gap};
-  \node[anchor=west,font=\scriptsize] at (82,-14.7){SiN$_x$（+150 MPa）};
-  \node[anchor=west,font=\scriptsize] at (82,-13.3){Pt/Ti};
-  \node[anchor=west,font=\scriptsize] at (82,-12.2){Parylene-HT};
-  \node[anchor=west,font=\scriptsize] at (82,-11.4){PEG-SAM};
-  \foreach \x in {10,25,40,55,70}{
-    \draw[->,blue!60,thick] (\x,-14.6)--(\x,-16.6);
-  }
-\end{tikzpicture}}
-\caption{積層断面の概念図（電界線を併記）。}
-\label{fig:stack}
-\end{figure}
-
-% ===== 3. プロセス =====
-\section{製造プロセス（$\leq$400\,\si{\celsius}）}
-全工程を400\,\si{\celsius}以下で完結させ，CMOS BEOL整合を保つ。
-RCA洗浄後，Poly-Si固定電極をLPCVD，ALD-Al$_2$O$_3$を成膜し，
-犠牲層パターニングでギャップを定義。
-SiN$_x$を応力制御条件で堆積し，Pt/Tiをリフトオフで形成する。
-背面はXeF$_2$でキャビティ開放し，
-表面にParylene-HTとPEG-SAMを形成して抗蛋白性と濡れ性を調整する。
-
-\begin{figure}[t]
-\centering
-\resizebox{0.98\columnwidth}{!}{%
-\begin{tikzpicture}[font=\scriptsize,>=Latex,node distance=5mm and 8mm]
-\tikzstyle{step}=[draw,rounded corners,align=left,inner sep=3pt,minimum width=64mm,fill=gray!10]
-\node[step]{(1) Si(100)洗浄 $\to$ Poly-Si(0.2\,\textmu m)};
-\node[step,below=of current bounding box.south west,anchor=west]{(2) ALD-Al$_2$O$_3$(60\,nm) 成膜};
-\node[step,below=of current bounding box.south west,anchor=west]{(3) 犠牲層定義 $\to$ Gap(0.8--1.0\,\textmu m)};
-\node[step,below=of current bounding box.south west,anchor=west]{(4) SiN$_x$(0.8\,\textmu m, +150 MPa)};
-\node[step,below=of current bounding box.south west,anchor=west]{(5) Pt/Ti(100/20\,nm) リフトオフ};
-\node[step,below=of current bounding box.south west,anchor=west]{(6) 背面XeF$_2$キャビティ開放};
-\node[step,below=of current bounding box.south west,anchor=west]{(7) Parylene-HT(1.0\,\textmu m) + PEG-SAM};
-\end{tikzpicture}}
-\caption{低温プロセスのフロー（概念）。}
-\label{fig:process}
-\end{figure}
-
-% ===== 4. 流体 =====
-\section{流体設計：穏やかな吐出}
-側方供給キャビティにより軸対称圧力場を形成し，
-小変位でも有効な圧力を得る。
-ポリトロープ近似により
-\begin{equation}
-\Delta P \simeq \gamma P_0 \frac{\Delta V}{V_0},\qquad \gamma\approx 1.05.
-\end{equation}
-代表寸法（ノズル径25\,\textmu m，キャビティ2.5\,pL）で
-\(\Delta V\sim 0.3\,\text{pL}\) とすれば \(\Delta P\sim 50\,\text{kPa}\) を得る。
-無次元数は
-\(\mathrm{Re}=\rho v D/\mu \in [1,12]\),
-\(\mathrm{Oh}=\mu/\sqrt{\rho \sigma D}\in[0.28,1.41]\),
-\(\mathrm{We}=\rho v^2 D/\sigma \in [2,12]\) で，
-高粘度・低衝撃域に入る。
-
-\begin{figure}[t]
-\centering
-\resizebox{0.92\columnwidth}{!}{%
-\begin{tikzpicture}[x=1mm,y=1mm]
-  \draw[thick] (0,0) rectangle (70,-28);
-  \fill[blue!6] (5,-6) rectangle (65,-20);
-  \draw[thick] (34.5,-20)--(35.5,-20);
-  \draw[very thick,->,blue!70] (35,-20)--(35,-28);
-  \foreach \x in {12,24,35,46,58}{
-    \draw[->,thick,red!70] (\x,-8)--(\x,-12);
-    \draw[->,thick,red!70] (\x,-12)--(35,-18);
-  }
-\end{tikzpicture}}
-\caption{側方供給キャビティ（概念）。}
-\label{fig:fluid}
-\end{figure}
-
-% ===== 5. 駆動 =====
-\section{駆動原理：過剰駆動を避ける波形設計}
-制御の主眼は「必要最小限の力」。
-台形波（立上り/保持/減衰 = 5/5/10\,\textmu s）を用い，
-膜応答と圧力応答を同相に合わせる。
-エネルギー/shotは \(E=\tfrac{1}{2}CV^2\) より
-\(C=30\,\text{pF},V=45\,\text{V}\) で \(\sim 0.1\,\text{\textmu J}\)。
-自己発熱は連続運転でも\(\Delta T<2\,^\circ\mathrm{C}\)。
-
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}
-\begin{axis}[width=\columnwidth,height=3.6cm,xmin=0,xmax=1,ymin=-0.05,ymax=1.05,
-axis lines=left,xtick=\empty,ytick=\empty,xlabel={時間},ylabel={規格化},
-legend pos=south east,legend style={font=\scriptsize,draw=none,fill=white,fill opacity=0.85},
-every axis plot/.append style={thick}]
-\addplot[blue,domain=0:1,samples=200]{(x<0.25)?(4*x):((x<0.5)?1:((x<0.9)?(1-(x-0.5)/0.4):0))};\addlegendentry{$V(t)$}
-\addplot[red,dashed,domain=0:1,samples=200]{0.85*((x<0.3)?(3.0*x):((x<0.55)?0.9:((x<0.95)?(0.9-(x-0.55)/0.4):0)))};\addlegendentry{$x(t)$}
-\addplot[orange,dotted,domain=0:1,samples=200]{0.9*((x<0.28)?(3.2*x):((x<0.52)?0.896:((x<0.9)?(0.896-(x-0.52)/0.38):0)))};\addlegendentry{$P(t)$}
-\end{axis}
-\end{tikzpicture}
-\caption{台形波駆動における電圧・変位・圧力の整合（概念）。}
-\label{fig:timing}
-\end{figure}
-
-% ===== 6. 解析 =====
-\section{解析と設計合理性}
-静電力は
-\begin{equation}
-F=\frac{1}{2}\varepsilon_0\varepsilon_r\frac{A V^2}{d^2},
-\qquad
-V_{\mathrm{PI}}=\sqrt{\frac{8kg_0^3}{27\varepsilon_0\varepsilon_rA}}.
-\end{equation}
-設計値 $A=(25\,\textmu\mathrm{m})^2$, $g_0=0.8\,\textmu$m, $k=150\,\mathrm{N/m}$ から
-$V_{\mathrm{PI}}\simeq100$\,V。
-45\,V駆動では安全率2以上を確保し，
-膜変位は 0.10--0.12\,µm，60\,Vで 0.18\,µm に達する。
-FEM解析により応力・電界・流速の整合性を確認した。
-
-\begin{figure}[t]
-\centering
-\resizebox{0.9\columnwidth}{!}{%
-\begin{tikzpicture}
-\shade[left color=red!40,right color=blue!40](0,0)rectangle(6,1.2);
-\draw[thick](0,0)rectangle(6,1.2);
-\foreach\x in{0.5,1.5,2.5,3.5,4.5,5.5}{\draw[->,blue!60,thick](\x,0)--(\x,-0.8);}
-\draw[very thick,->,gray!60](3,-1)--(3,-2.0);
-\end{tikzpicture}}
-\caption{応力・電界・流速の整合イメージ（定性的）。}
-\label{fig:viz}
-\end{figure}
-
-結果として，
-\textbf{800\,dpi（31.75\,µmピッチ）}が
-電場強度・寄生容量・Pull-in安全率・流体干渉を同時に満たす
-自然な設計点として導かれた。
-これは「高密度を狙う」のではなく，
-\textbf{電気・機械・流体のバランスが生む帰結値}である。
-
-% ===== 7. 評価結果 =====
-\section{評価結果と比較}
-45\,V駆動で膜変位0.10--0.12\,µm，
-吐出速度2--4.8\,m/s（粘度10--50\,mPa·s）を得た。
-60\,Vでは0.18\,µmに達し，
-安定領域内で線形応答を維持した。
-DNA・BSA溶液の非接触吐出では
-活性保持率がそれぞれ92\%, 90\%に達し，
-熱的・機械的ストレスの小ささを裏付けた。
-
-\begin{table}[t]
-\centering
-\caption{主要性能比較（代表値）}
-\begin{tabular}{@{}lll@{}}
-\toprule
-項目 & PZT圧電 & 静電薄膜MEMS \\ \midrule
-駆動電圧 & 90\,V typ & 45\,V typ \\
-消費エネルギー/shot & $\sim$0.5\,µJ & $\sim$0.1\,µJ \\
-膜変位 & 0.15\,µm & 0.12\,µm \\
-吐出速度 & 4–6\,m/s & 2–4.8\,m/s \\
-動作温度上昇 & 5–10\,°C & $<2$\,°C \\
-材質 & PZT（Pb含有） & SiN$_x$/Al$_2$O$_3$（Pbフリー） \\
-生体適合性 & 不可 & 可 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-従来PZTに対し，本静電方式は
-駆動電圧を半減しながら同等の変位・吐出性能を維持する。
-エネルギー効率は約5倍向上し，
-かつPbフリー・低温プロセス・CMOS整合を同時に満たす。
-これにより，\emph{医療・創薬・再生医療など非接触精密分注分野}への
-拡張可能性を示した。
-
-% ===== 8. 安全性 =====
-\section{安全性と倫理的配慮}
-本研究は臨床適用を直接の目的とせず，
-\emph{非接触・前臨床段階での安全設計指針}を提示するものである。
-吐出は常にスタンドオフ5\,mm以上の非接触条件で行い，
-局所温度上昇は2\,°C未満に制御した。
-使用材料（SiN$_x$, Al$_2$O$_3$, Pt/Ti, Parylene-HT, PEG-SAM）は
-ISO~10993および11137に準拠する生体適合性を有する。
-
-また，設計・解析支援にAI環境を利用したが，
-\emph{判断は常に人間の責任で行われた}。
-AIは波形設計や図面整形の補助に限定され，
-倫理的意思決定や被験者情報の処理には関与していない。
-これにより，研究過程全体を「透明かつ可監査」とした。
-
-本研究の根底にあるのは，
-\textbf{“Precision with Empathy”}——
-精密を通じて人を守るという哲学である。
-静電アクチュエータの導入は，
-Pbフリーや低発熱といった技術的意義にとどまらず，
-精密技術の倫理的方向性を具現化する行為である。
-
-% ===== 9. 結論 =====
-\section{結論：静電MEMSが導く倫理的精密の確立}
-本研究では，Pbフリーかつ低温プロセス整合な静電薄膜MEMSアクチュエータを提案し，
-3.3\,Vロジック＋45\,V高電圧構成のもとで，
-電気・機械・流体・熱設計の整合により約800\,dpiが自然に導かれることを示した。
-この設計点は，単なる高密度化ではなく，
-\textbf{「電気的節度と機械的均衡が生む結果」}として位置づけられる。
-
-また，PZT方式に比べ駆動電圧1/2・エネルギー1/5を達成し，
-Pbフリー・低発熱・非接触・生体適合という次元で
-精密技術の価値軸を再定義した。
-すなわち，精密とは「より小さく，より穏やかに，より倫理的に」行う営みである。
-
-静電MEMSによるBioインクジェットは，
-プリンタ技術の延長ではなく，
-\textbf{人と地球の調和に資する精密}の象徴である。
-この流れを通じて，
-エプソンが培った\emph{精密駆動の系譜}は
-新たに “Eco-Precision for Life” という形で再生される。
-
-今後は，
-(1) 多ノズル並列化とAI支援設計による波形最適化，  
-(2) MEMS-SoC統合による省電力・自律駆動，  
-(3) 医療・創薬・再生医療分野への応用展開，  
-を通じて，
-\textbf{静電MEMSアクチュエータを中核とする倫理的精密プラットフォーム}の実用化を目指す。
-
-% ===== 謝辞 =====
-\section*{謝辞}
-本研究は著者による独立研究として実施されたものであり，
-いかなる企業・大学・公的機関からの資金提供も受けていない。
-MEMS設計，薄膜応力解析，流体数値解析，および表面化学評価に関して
-技術的助言と討論の機会をいただいた多くの技術者・研究者に深く感謝する。
-
-特に，SiN$_x$/Al$_2$O$_3$積層膜の成膜条件と
-静電駆動解析に関して助言を賜ったMEMS技術コミュニティ諸氏，
-およびBio液評価と表面改質に関して知見を共有いただいた
-バイオマテリアル研究者の方々に謝意を表する。
-
-また，本稿の一部で文献整理・数式整形・図面生成の補助として
-生成AI（OpenAI GPT-5, 2025）を使用した。
-AIは研究判断や結論決定には関与せず，
-\emph{人による設計思考を補助するツール}として限定的に用いられた。
-
-最後に，本研究の発想と方法論は，
-著者がセイコーエプソン在職中に培った
-精密駆動技術・プロセス知見の上に成り立っており，
-同社が築いた「精密とは、信頼の積層である」という哲学に
-深く敬意を表する。
-
-% ===== 参考文献 =====
-\bibliographystyle{IEEEtran}
 \begin{thebibliography}{99}
-
 \bibitem{Kim2003}
-H. Kim, P. C. McIntyre, and K. C. Saraswat,
+H.~Kim, P. C. McIntyre, and K. C. Saraswat,
 “Atomic layer deposition of Al$_2$O$_3$ thin films for MEMS,”
 \emph{J. Vac. Sci. Technol. A}, vol.~21, no.~6, pp.~2231–2235, 2003.
 
@@ -431,18 +122,7 @@ S. M. Spearing,
 J. H. Lau,
 “Chip-on-Flex (COF) and System-in-Package (SiP) technologies for microsystems,”
 \emph{IEEE Trans. Adv. Packag.}, vol.~27, no.~4, pp.~702–708, 2004.
-
 \end{thebibliography}
-
-% ===== 著者経歴 =====
-\section*{著者経歴}
-\textbf{三溝 真一（Shinichi Samizo）}  
-信州大学大学院 工学系研究科 電気電子工学専攻 修士課程修了。  
-セイコーエプソン株式会社にて，半導体ロジック・高耐圧インテグレーション，
-薄膜ピエゾアクチュエータ（μTFP）およびPrecisionCoreヘッド開発に従事。  
-MEMS設計，半導体プロセス，インクジェット制御アーキテクチャの融合研究を推進。  
-現在は独立系半導体研究者として，プロセス・デバイス教育，AI制御，バイオMEMS応用を中心に活動。  
-GitHub: \href{https://github.com/Samizo-AITL}{github.com/Samizo-AITL}
 
 \balance
 \end{document}
