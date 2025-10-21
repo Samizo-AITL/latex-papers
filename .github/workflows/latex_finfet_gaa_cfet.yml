@@ -14,16 +14,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up TeX Live environment
+      - name: Compile LaTeX document (XeLaTeX)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: papers/2025_finfet_gaa_cfet_evolution
           latexmk_shell_escape: true
-          # Ghostscriptなど外部PDF処理を含む環境
+          latexmk_use_xelatex: true    # ← これを追加！
           extra_system_packages: "ghostscript fontconfig"
 
-      - name: List generated files (for debug)
+      - name: List generated files
         run: ls -lh papers/2025_finfet_gaa_cfet_evolution
 
       - name: Upload build artifacts (PDF + LOG)
