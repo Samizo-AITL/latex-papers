@@ -8,23 +8,21 @@ on:
     paths-ignore:
       - 'papers/**/bcp/**'
       - 'papers/**/BCP/**'
-      - 'papers/2025_bcp_*/**'
-      - 'papers/**/bcp*.tex'
+      - 'papers/2025_bcp*/**'
   workflow_dispatch:
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+concurrency:
+  group: bioinkjet-build-${{ github.ref }}
+  cancel-in-progress: true
 
-    defaults:
-      run:
-        shell: bash
+jobs:
+  build_bioinkjet:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 必要最小でもOKだが、簡便のため texlive-full
       - name: Install TeX Live & Noto CJK
         run: |
           sudo apt-get update
@@ -32,24 +30,34 @@ jobs:
 
       - name: Compile (latexmk -lualatex, outdir=build)
         working-directory: papers/2025_bioinkjet_electrostatic
+        shell: bash
         run: |
+          set -eux
           rm -rf build && mkdir -p build
-          # まず1回だけ .aux 生成（BibTeX要否の判定用）
-          lualatex -interaction=nonstopmode -file-line-error -output-directory=build main.tex | tee build/build.log
+
+          # 1st pass to generate .aux (BibTeX要否の判定)
+          lualatex -interaction=nonstopmode -file-line-error \
+                   -output-directory=build main.tex | tee build/build.log
 
           if grep -q '\\bibdata' build/main.aux 2>/dev/null; then
-            latexmk -lualatex -bibtex -interaction=nonstopmode -file-line-error -halt-on-error -outdir=build main.tex | tee -a build/build.log
+            latexmk -lualatex -bibtex -interaction=nonstopmode -file-line-error -halt-on-error \
+                    -outdir=build main.tex | tee -a build/build.log
           else
-            latexmk -lualatex -interaction=nonstopmode -file-line-error -halt-on-error -outdir=build main.tex | tee -a build/build.log
+            latexmk -lualatex -interaction=nonstopmode -file-line-error -halt-on-error \
+                    -outdir=build main.tex | tee -a build/build.log
           fi
 
-          # 出力PDFを固有名に
+          # 出力PDFを固有名に（BioInkjetのみ）
           mv -f build/main.pdf build/2025_bioinkjet_electrostatic.pdf
+          # 余計な main.pdf が残っていないか保険で削除
+          find build -maxdepth 1 -name 'main.pdf' -delete || true
+          # 中間ファイルは掃除（PDFとログは残す）
+          latexmk -c -outdir=build || true
 
       - name: Upload PDF and log (BioInkjet only)
         uses: actions/upload-artifact@v4
         with:
-          name: 2025_bioinkjet_electrostatic_build
+          name: 2025_bioinkjet_electrostatic_build   # ← ★ アーティファクト名もBioInkjetに統一
           path: |
             papers/2025_bioinkjet_electrostatic/build/2025_bioinkjet_electrostatic.pdf
             papers/2025_bioinkjet_electrostatic/build/build.log
