@@ -1,37 +1,29 @@
 % =====================================================
-%  FinFET〜CFET構造進化論文（IEEEtran日本語併記版）
+%  FinFET〜CFET構造進化チュートリアル論文（日本語版 / IEEEスタイル）
 % =====================================================
 
 \documentclass[conference]{IEEEtran}
 
 % -----------------------------------------------------
-% パッケージ設定（日本語対応＋数式＋図表）
+% パッケージ設定
 % -----------------------------------------------------
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{xeCJK}  % 日本語対応
+\usepackage{xeCJK}            % 日本語対応
+\setCJKmainfont{IPAexMincho}  % 明朝体
 \usepackage{graphicx}
-\usepackage{amsmath, amssymb}
+\usepackage{amsmath,amssymb}
 \usepackage{siunitx}
 \usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{url}
-\usepackage{caption}
-\usepackage{subcaption}
-\usepackage{titlesec}
-\usepackage{geometry}
+\usepackage{cite}
 
 % -----------------------------------------------------
-% ページ設定
+% タイトルと著者情報
 % -----------------------------------------------------
-\geometry{left=18mm,right=18mm,top=25mm,bottom=25mm}
-\setlength{\columnsep}{0.25in}
-
-% -----------------------------------------------------
-% タイトル・著者情報
-% -----------------------------------------------------
-\title{ナノトランジスタ構造進化と信頼性パラダイムの転換\\
-{\large Structural Paradigm Shift in Scaled CMOS: From Planar Limit (130 nm) to Complementary Stacking (CFET)}}
+\title{FinFET〜CFET構造進化チュートリアル：\\
+スケーリング臨界と構造信頼性設計}
 
 \author{%
   \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
@@ -47,27 +39,25 @@
 \maketitle
 
 % -----------------------------------------------------
-% Abstract（日英併記）
+% 要旨
 % -----------------------------------------------------
 \begin{abstract}
-\textbf{要旨 —}
-本稿では、130nm以降のCMOSスケーリングにおける臨界的構造変化を体系的に整理する。
-プレーナーMOSからFinFET、GAA（Nanosheet）、そしてCFET（Complementary FET）に至る進化を、
-電界制御・熱対称性・電源分離・再現性設計の観点から再定義する。
-HKMG、BEOL（Low-k/Dual Damascene/BPR）、およびBSIM-CMGモデリングを統合し、
-「構造で信頼性を設計する時代」の到来を論じる。
-
-\medskip
-\textbf{Abstract —}
-This paper systematically organizes the structural evolution of CMOS scaling beyond the 130 nm node.
-The transition from planar MOS to FinFET, GAA (nanosheet), and finally CFET (complementary FET)
-is redefined from the viewpoints of electrostatics, thermal symmetry, power delivery, and reproducibility design.
-The integration of HKMG, BEOL (Low-k / Dual Damascene / BPR), and BSIM-CMG modeling
-highlights the paradigm shift toward a new era in which reliability is engineered through structure.
+本稿は、130\,nm以降におけるCMOSスケーリング技術の構造的進化を体系的に整理したチュートリアル論文である。  
+プレーナーCMOSの限界からFinFET、GAA（Nanosheet）、そしてCFET（Complementary FET）へと至る構造変遷を、  
+電界制御・熱対称性・電源分離・再現性設計の観点から俯瞰する。  
+さらに、High-k/Metal Gate（HKMG）技術、BEOL配線スケーリング（Low-k、Dual Damascene、Backside Power Rail）およびBSIM-CMGモデリングを統合し、  
+「構造によって信頼性を設計する時代」の到来を示す。
 \end{abstract}
 
 % -----------------------------------------------------
-% 章構成（別ファイル読込）
+% キーワード
+% -----------------------------------------------------
+\begin{IEEEkeywords}
+FinFET, GAA, CFET, HKMG, BEOL, Backside Power Rail, BSIM-CMG, 熱対称性, 構造信頼性, CMOSスケーリング
+\end{IEEEkeywords}
+
+% -----------------------------------------------------
+% 本文章構成
 % -----------------------------------------------------
 \input{chap1_intro}
 \input{chap2_planar_limit}
@@ -82,17 +72,25 @@ highlights the paradigm shift toward a new era in which reliability is engineere
 \input{chap11_conclusion}
 
 % -----------------------------------------------------
+% 謝辞
+% -----------------------------------------------------
+\section*{謝辞}
+本稿の作成にあたり、半導体デバイススケーリング・信頼性・プロセス統合に関して示唆に富む議論を行ってくださった
+産業界および学術界の関係各位に深く感謝する。
+
+% -----------------------------------------------------
 % 参考文献
 % -----------------------------------------------------
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 
-% =====================================================
+% -----------------------------------------------------
 % 著者略歴
-% =====================================================
+% -----------------------------------------------------
 \section*{著者略歴}
 \textbf{三溝 真一}（Shinichi Samizo）は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得した。  
-その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、そして、インクジェット薄膜ピエゾアクチュエータ及びPrecisionCoreプリントヘッドの製品化に従事した。  
+その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、  
+およびインクジェット薄膜ピエゾアクチュエータならびにPrecisionCoreプリントヘッドの製品化に従事した。  
 現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、AIシステム統合などに取り組んでいる。  
 連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}．
 
