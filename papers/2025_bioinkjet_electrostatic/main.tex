@@ -11,7 +11,8 @@
   \setsansjfont{Noto Sans CJK JP}
 }
 \ltjsetparameter{yjabaselineshift=0pt}
-\ltjsetparameter{alxspmode={`/,3}}
+% スラッシュ「/」前後の空きを抑制（3）。ASCII指定で安全。
+\ltjsetparameter{alxspmode={"\2F,3}}
 
 % ================= 基本パッケージ =================
 \usepackage{graphicx,amsmath,siunitx,booktabs,balance,url,cite}
