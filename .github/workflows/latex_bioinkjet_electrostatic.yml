@@ -5,51 +5,53 @@ on:
     paths:
       - 'papers/2025_bioinkjet_electrostatic/**'
       - '.github/workflows/latex_bioinkjet_electrostatic.yml'
+    paths-ignore:
+      - 'papers/**/bcp/**'
+      - 'papers/**/BCP/**'
+      - 'papers/2025_bcp_*/**'
+      - 'papers/**/bcp*.tex'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        shell: bash
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # TeX Live と日本語フォント
-      - name: Install TeX Live & Noto CJK fonts
+      # 必要最小でもOKだが、簡便のため texlive-full
+      - name: Install TeX Live & Noto CJK
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-full fonts-noto-cjk
+          sudo apt-get install -y texlive-full fonts-noto-cjk latexmk
 
-      # latexmk（LuaLaTeX）で1回のビルドフローに集約
-      - name: Compile (latexmk -lualatex)
+      - name: Compile (latexmk -lualatex, outdir=build)
         working-directory: papers/2025_bioinkjet_electrostatic
-        shell: bash
         run: |
-          # ログをクリア
-          rm -f build.log
+          rm -rf build && mkdir -p build
+          # まず1回だけ .aux 生成（BibTeX要否の判定用）
+          lualatex -interaction=nonstopmode -file-line-error -output-directory=build main.tex | tee build/build.log
 
-          # BibTeXが必要かを簡易判定（.aux に \bibdata が出るかどうか）
-          # まず1回だけ lualatex を回して .aux を作る（エラー時は停止）
-          lualatex -interaction=nonstopmode -file-line-error main.tex | tee -a build.log
-          if grep -q '\\bibdata' main.aux 2>/dev/null; then
-            # BibTeXが必要な場合は latexmk に任せる（-bibtex）
-            latexmk -lualatex -bibtex -interaction=nonstopmode -file-line-error -halt-on-error main.tex | tee -a build.log
+          if grep -q '\\bibdata' build/main.aux 2>/dev/null; then
+            latexmk -lualatex -bibtex -interaction=nonstopmode -file-line-error -halt-on-error -outdir=build main.tex | tee -a build/build.log
           else
-            # thebibliography等でBibTeX不要の場合は latexmk でLuaLaTeXのみ
-            latexmk -lualatex -interaction=nonstopmode -file-line-error -halt-on-error main.tex | tee -a build.log
+            latexmk -lualatex -interaction=nonstopmode -file-line-error -halt-on-error -outdir=build main.tex | tee -a build/build.log
           fi
 
-          # 出力PDFの名前を明示（論文PDF名に統一）
-          mv -f main.pdf 2025_bioinkjet_electrostatic.pdf
+          # 出力PDFを固有名に
+          mv -f build/main.pdf build/2025_bioinkjet_electrostatic.pdf
 
-      # PDF とログだけを成果物に
-      - name: Upload PDF and log
+      - name: Upload PDF and log (BioInkjet only)
         uses: actions/upload-artifact@v4
         with:
           name: 2025_bioinkjet_electrostatic_build
           path: |
-            papers/2025_bioinkjet_electrostatic/2025_bioinkjet_electrostatic.pdf
-            papers/2025_bioinkjet_electrostatic/build.log
+            papers/2025_bioinkjet_electrostatic/build/2025_bioinkjet_electrostatic.pdf
+            papers/2025_bioinkjet_electrostatic/build/build.log
           if-no-files-found: error
           retention-days: 14
