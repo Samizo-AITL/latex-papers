@@ -19,9 +19,10 @@ jobs:
         with:
           root_file: main.tex
           working_directory: papers/2025_finfet_gaa_cfet_evolution
+          latexmk_use_xelatex: true
           latexmk_shell_escape: true
-          latexmk_use_xelatex: true    # ← これを追加！
-          extra_system_packages: "ghostscript fontconfig"
+          latexmk_args: "-f"   # ← 強制リビルド指定
+          extra_system_packages: "ghostscript fontconfig fonts-ipafont"
 
       - name: List generated files
         run: ls -lh papers/2025_finfet_gaa_cfet_evolution
