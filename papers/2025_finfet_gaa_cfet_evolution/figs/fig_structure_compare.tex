@@ -1,108 +1,108 @@
+% =====================================================
+% Fig. 9 : FinFET, GAA, CFET 構造比較（改訂版・💯）
+% =====================================================
 \begin{figure}[t]
   \centering
   \tikzset{
     gate/.style   ={pattern=north east lines, pattern color=black, draw=black},
-    oxide/.style  ={fill=black!5, draw=black},
+    oxide/.style  ={fill=black!7, draw=black},
     si/.style     ={fill=white, draw=black},
     sd/.style     ={fill=black!25, draw=black},
-    metal/.style  ={fill=black!40, draw=black},
+    metal/.style  ={fill=black!45, draw=black},
     label/.style  ={font=\footnotesize},
     dim/.style    ={-{Latex[length=2mm]}, line width=0.3pt}
   }
 
-  %=== 1) FinFET ===
+  %==================== (a) FinFET ====================
   \begin{tikzpicture}[scale=0.9]
-    \node[label, anchor=west] at (-0.2,3.4) {\textbf{(a) FinFET}};
-    % substrate & STI
+    \node[label, anchor=west] at (-0.2,3.3) {\textbf{(a) FinFET}};
+    % substrate
     \draw[fill=black!10, draw=black] (-0.5,0) rectangle (4.5,-0.6);
-    \node[label] at (2,-0.8) {Substrate};
-    \draw[oxide] (0,0) rectangle (4,1.6); % BOX/STI領域
+    \node[label] at (2.0,-0.8) {Si Substrate};
+    % STI region
+    \draw[oxide] (0,0) rectangle (4,1.5);
     % fin
-    \draw[si] (1.7,0) rectangle (2.3,1.4);
-    % gate oxide wrapper (薄層表示)
-    \draw[oxide, line width=0.4pt] (1.6,-0.02) rectangle (2.4,1.42);
-    % gate metal (3面ラップ)
-    \draw[gate] (1.35,0.2) rectangle (2.65,1.25);
+    \draw[si] (1.7,0) rectangle (2.3,1.3);
+    % gate oxide
+    \draw[oxide,line width=0.4pt] (1.6,-0.02) rectangle (2.4,1.32);
+    % gate metal (tri-gate)
+    \draw[gate] (1.35,0.15) rectangle (2.65,1.20);
     % source/drain
-    \draw[sd] (0.25,0.2) rectangle (1.35,1.25);
-    \draw[sd] (2.65,0.2) rectangle (3.75,1.25);
-    \node[label] at (0.8,1.45) {S};
-    \node[label] at (3.2,1.45) {D};
-    \node[label] at (2.0,1.55) {Fin (Si)};
-    \node[label] at (2.0,0.95) {Gate};
-    % dimensions (H, W)
-    \draw[dim] (2.3,0.1) -- ++(0.6,0) node[right,label] {$H$};
-    \draw[dim] (1.7,0.05) -- ++(-0.6,0) node[left,label] {$H$};
-    \draw[dim] (1.7,1.4) -- ++(0.6,0) node[right,label] {$W$};
+    \draw[sd] (0.25,0.15) rectangle (1.35,1.20);
+    \draw[sd] (2.65,0.15) rectangle (3.75,1.20);
+    % labels
+    \node[label] at (0.8,1.4) {S};
+    \node[label] at (3.2,1.4) {D};
+    \node[label] at (2.0,1.45) {Fin (Si)};
+    \node[label] at (2.0,0.9) {Gate};
+    % dimensions
+    \draw[dim] (1.7,0.0) -- ++(0,1.3) node[midway,left=2pt] {$H$};
+    \draw[dim] (1.7,1.35) -- ++(0.6,0) node[midway,above=1pt] {$W$};
   \end{tikzpicture}
 
-  \vspace{1.2ex}
+  \vspace{1.5ex}
 
-  %=== 2) GAA (Nanosheet) ===
+  %==================== (b) GAA ====================
   \begin{tikzpicture}[scale=0.9]
     \node[label, anchor=west] at (-0.2,3.4) {\textbf{(b) GAA (Nanosheet)}};
+    % substrate
     \draw[fill=black!10, draw=black] (-0.5,0) rectangle (4.5,-0.6);
-    \node[label] at (2,-0.8) {Substrate};
+    \node[label] at (2,-0.8) {Si Substrate};
+    % oxide box
     \draw[oxide] (0,0) rectangle (4,1.9);
-    % three sheets with gate-all-around
-    \foreach \y in {0.4,0.95,1.5}{
-      \draw[oxide] (1.1,\y-0.22) rectangle (2.9,\y+0.22); % spacer
-      \draw[si] (1.2,\y-0.12) rectangle (2.8,\y+0.12);    % sheet
-      \draw[gate] (1.0,\y-0.34) rectangle (3.0,\y+0.34);  % 4面ゲート
+    % nanosheets (3層)
+    \foreach \y in {0.5,1.0,1.5}{
+      \draw[gate] (1.0,\y-0.25) rectangle (3.0,\y+0.25);
+      \draw[oxide] (1.1,\y-0.15) rectangle (2.9,\y+0.15);
+      \draw[si] (1.2,\y-0.07) rectangle (2.8,\y+0.07);
     }
     % S/D
-    \draw[sd] (0.25,0.25) rectangle (1.0,1.65);
-    \draw[sd] (3.0,0.25) rectangle (3.75,1.65);
-    \node[label] at (0.7,1.85) {S};
-    \node[label] at (3.3,1.85) {D};
-    \node[label] at (2.0,1.95) {Gate-All-Around};
-    % dims for one sheet
-    \draw[-{Latex[length=2mm]}] (2.8,0.95) -- ++(0.5,0) node[right,label] {$W$};
-    \draw[-{Latex[length=2mm]}] (2.6,0.83) -- ++(0, -0.35) node[below,label] {$H$};
+    \draw[sd] (0.25,0.3) rectangle (1.0,1.7);
+    \draw[sd] (3.0,0.3) rectangle (3.75,1.7);
+    \node[label] at (0.7,1.9) {S};
+    \node[label] at (3.3,1.9) {D};
+    % label
+    \node[label] at (2.0,2.0) {Gate-All-Around};
+    % dims
+    \draw[dim] (2.8,0.9) -- ++(0.6,0) node[right] {$W$};
+    \draw[dim] (2.6,0.7) -- ++(0,-0.35) node[below] {$H$};
   \end{tikzpicture}
 
-  \vspace{1.2ex}
+  \vspace{1.5ex}
 
-  %=== 3) CFET (n/p stacked) ===
+  %==================== (c) CFET ====================
   \begin{tikzpicture}[scale=0.9]
     \node[label, anchor=west] at (-0.2,3.6) {\textbf{(c) CFET (n/p 垂直積層)}};
-    % BPR (backside rails)
+    % BPR rails
     \draw[metal] (-0.5,-0.9) rectangle (1.6,-1.3);
     \draw[metal] (2.4,-0.9) rectangle (4.5,-1.3);
     \node[label] at (0.55,-1.45) {BPR-VDD};
     \node[label] at (3.45,-1.45) {BPR-VSS};
-
-    % substrate and window
+    % substrate
     \draw[fill=black!10, draw=black] (-0.5,0) rectangle (4.5,-0.6);
-    \node[label] at (2,-0.8) {Substrate};
-    \draw[oxide] (0,0) rectangle (4,2.6);
-
-    % lower nFET (GAA)
-    \foreach \y in {0.55}{
-      \draw[gate] (1.0,\y-0.3) rectangle (3.0,\y+0.3);
-      \draw[oxide] (1.1,\y-0.2) rectangle (2.9,\y+0.2);
-      \draw[si] (1.2,\y-0.1) rectangle (2.8,\y+0.1);
-    }
-    \node[label] at (3.25,0.55) {\footnotesize nFET (GAA)};
-
+    \node[label] at (2.0,-0.8) {Substrate};
+    % oxide bulk
+    \draw[oxide] (0,0) rectangle (4,2.5);
+    % lower nFET
+    \draw[gate] (1.0,0.4) rectangle (3.0,1.0);
+    \draw[oxide] (1.1,0.5) rectangle (2.9,0.9);
+    \draw[si] (1.2,0.6) rectangle (2.8,0.8);
+    \node[label] at (3.25,0.7) {n-FET};
     % ILD spacer
     \draw[oxide, fill=black!12] (0,1.05) rectangle (4,1.25);
-
-    % upper pFET (GAA)
-    \foreach \y in {1.8}{
-      \draw[gate] (1.0,\y-0.3) rectangle (3.0,\y+0.3);
-      \draw[oxide] (1.1,\y-0.2) rectangle (2.9,\y+0.2);
-      \draw[si] (1.2,\y-0.1) rectangle (2.8,\y+0.1);
-    }
-    \node[label] at (3.25,1.8) {\footnotesize pFET (GAA)};
-
-    % shared S/D towers
+    % upper pFET
+    \draw[gate] (1.0,1.4) rectangle (3.0,2.0);
+    \draw[oxide] (1.1,1.5) rectangle (2.9,1.9);
+    \draw[si] (1.2,1.6) rectangle (2.8,1.8);
+    \node[label] at (3.25,1.7) {p-FET};
+    % shared S/D pillars
     \draw[sd] (0.3,0.25) rectangle (1.0,2.15);
     \draw[sd] (3.0,0.25) rectangle (3.7,2.15);
     \node[label] at (0.65,2.35) {S/D};
     \node[label] at (3.35,2.35) {S/D};
   \end{tikzpicture}
 
-  \caption{構造比較（モノクロ模式図）：(a) FinFET（三面ゲート），(b) GAA（ナノシート多層），(c) CFET（n/p垂直積層＋BPR整合）。灰色は誘電体，斜線はゲート金属，濃灰はソース／ドレイン。}
+  \caption{CMOS構造の比較模式図（モノクロ対応）。\\
+  \footnotesize (a) FinFET: 三面ゲート構造。 (b) GAA: 多層ナノシートの全包囲ゲート構造。 (c) CFET: n/p積層構造とBPR電源分離の統合。灰色＝誘電体、斜線＝ゲート金属、濃灰＝ソース／ドレイン。}
   \label{fig:structure_compare}
 \end{figure}
