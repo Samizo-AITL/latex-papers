@@ -13,13 +13,42 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up LaTeX
+      # （任意）必要に応じて日本語フォント/パッケージを追加
+      # まずは軽量で試し、通らない場合はコメントアウト解除してください。
+      - name: Add Japanese TeX packages (optional)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-lang-japanese fonts-ipafont fonts-ipaexfont
+
+      - name: Set up LaTeX and build
         uses: xu-cheng/latex-action@v3
         with:
           root_file: papers/2025_systemdk_aitl_core/main.tex
+          # 既定は pdflatex（CJKutf8 でも動作可）。
+          # もしここで失敗する場合は下の1行を有効化して lualatex に切替してください。
+          # latexmk_use_lualatex: true
+          # ログを詳しくする場合は -interaction=nonstopmode などを args で追加可能
+          # args: -interaction=nonstopmode
 
+      # PDF を成果物化
       - name: Upload PDF artifact
+        if: always()   # 成功時はもちろん、失敗時に途中生成があれば拾う
         uses: actions/upload-artifact@v4
         with:
           name: SystemDK_AITL_Core_Paper
-          path: papers/2025_systemdk_aitl_core/main.pdf
+          path: |
+            papers/2025_systemdk_aitl_core/main.pdf
+
+      # ログ・補助ファイルを成果物化（失敗時デバッグ用）
+      - name: Upload LaTeX logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SystemDK_AITL_Core_Logs
+          path: |
+            papers/2025_systemdk_aitl_core/*.log
+            papers/2025_systemdk_aitl_core/*.blg
+            papers/2025_systemdk_aitl_core/*.bbl
+            papers/2025_systemdk_aitl_core/*.aux
+            papers/2025_systemdk_aitl_core/*.out
+            papers/2025_systemdk_aitl_core/*.synctex.gz
