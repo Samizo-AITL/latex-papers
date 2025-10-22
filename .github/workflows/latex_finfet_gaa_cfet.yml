@@ -9,18 +9,15 @@ on:
 jobs:
   build_pdf:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 日本語フォント（IPA/IPAex）
       - name: Install Japanese fonts
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-ipafont fonts-ipaexfont
 
-      # XeLaTeX でビルド（クリーン → 強制再ビルド）
       - name: Compile LaTeX document (XeLaTeX)
         id: latex
         uses: xu-cheng/latex-action@v3
@@ -29,29 +26,20 @@ jobs:
           root_file: main.tex
           latexmk_use_xelatex: true
           latexmk_shell_escape: true
-          pre_compile: latexmk -C                 # 生成物を全消去（.aux .bbl 等）
-          args: -C -f -interaction=nonstopmode    # 参照未解決でも続行
+          pre_compile: latexmk -C                 # ここでだけクリーン
+          args: -f -interaction=nonstopmode      # ← -C を外す！（PDF消さない）
           extra_system_packages: "ghostscript fontconfig"
 
-      # 生成物の一覧（失敗でも必ず実行）
       - name: List generated files
         if: always()
         run: ls -lah papers/2025_finfet_gaa_cfet_evolution || true
 
-      # main.log をコンソールにも出力（失敗時の原因特定用）
       - name: Print LaTeX log to console
         if: always()
         run: |
           LOG="papers/2025_finfet_gaa_cfet_evolution/main.log"
-          if [ -f "$LOG" ]; then
-            echo "----- BEGIN main.log (tail) -----"
-            tail -n 200 "$LOG"
-            echo "----- END main.log -----"
-          else
-            echo "main.log not found (build may have stopped before log write)."
-          fi
+          [ -f "$LOG" ] && { echo "----- BEGIN main.log (tail) -----"; tail -n 200 "$LOG"; echo "----- END main.log -----"; } || echo "main.log not found."
 
-      # PDF / LOG / 中間ファイルをArtifacts保存（存在しなくても警告に留める）
       - name: Upload build artifacts (PDF + LOG)
         if: always()
         uses: actions/upload-artifact@v4
