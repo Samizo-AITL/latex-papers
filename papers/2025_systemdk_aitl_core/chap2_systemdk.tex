@@ -1,0 +1,13 @@
+% ============================================================
+% 2. SystemDKの構造
+% ============================================================
+\section{SystemDKの構造}
+SystemDK（System Design Kernel）は，
+設計情報を「構造・挙動・制御」の三層に再定義する。
+\begin{itemize}
+  \item \textbf{構造層 (Structure Layer)}：材料・形状・配線などの物理構造定義
+  \item \textbf{挙動層 (Behavior Layer)}：熱・応力・電磁・信頼性特性の解析結果
+  \item \textbf{制御層 (Control Layer)}：PIDおよびFSMによる制御論理
+\end{itemize}
+これらは共通スキーマ（JSON/YAML形式）で接続され，
+構造変更が制御設計へ即時反映される。
