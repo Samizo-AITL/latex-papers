@@ -1,54 +1,104 @@
+% =====================================================
+% Fig. X : Self-Heating & Thermal Symmetry (💯版)
+% 必要: \usetikzlibrary{patterns,arrows.meta,positioning}
+% =====================================================
 \begin{figure}[t]
   \centering
   \tikzset{
     box/.style   ={draw=black, fill=black!5},
-    hot/.style   ={draw=black, fill=black!60},
-    warm/.style  ={draw=black, fill=black!35},
-    cool/.style  ={draw=black, fill=black!15},
-    gate/.style  ={pattern=north east lines, pattern color=black, draw=black},
-    sd/.style    ={fill=black!25, draw=black},
-    label/.style ={font=\footnotesize}
+    % 温度レベルはモノクロ印刷を想定してパターンで区別
+    hot/.style   ={draw=black, pattern=north east lines, pattern color=black},
+    warm/.style  ={draw=black, pattern=crosshatch,     pattern color=black},
+    cool/.style  ={draw=black, pattern=dots,           pattern color=black},
+    gate/.style  ={draw=black, pattern=horizontal lines, pattern color=black},
+    sd/.style    ={draw=black, fill=black!25},
+    label/.style ={font=\footnotesize},
+    note/.style  ={font=\scriptsize, align=center},
+    dim/.style   ={-{Latex[length=1.8mm]}, line width=0.3pt}
   }
 
-  %=== (a) FinFET thermal map ===
-  \begin{tikzpicture}[scale=0.9]
-    \node[label, anchor=west] at (-0.2,2.7) {\textbf{(a) FinFET: Self-Heating}};
-    \draw[box] (0,0) rectangle (4,2.4);    % frame
-    \draw[sd] (0.2,0.4) rectangle (0.9,2.0);
-    \draw[sd] (3.1,0.4) rectangle (3.8,2.0);
-    % fin thermal core
-    \draw[cool] (1.8,0.4) rectangle (2.2,2.0);
-    \draw[warm] (1.75,0.6) rectangle (2.25,1.8);
-    \draw[hot]  (1.7,0.9) rectangle (2.3,1.5);
-    % gate wrap
-    \draw[gate] (1.3,0.5) rectangle (2.7,1.9);
-    \node[label] at (2,2.2) {高温域がチャネル中央に集中};
+  %======================== (a) FinFET ========================
+  \begin{tikzpicture}[scale=0.95]
+    \node[label, anchor=west] at (-0.15,2.85) {\textbf{(a) FinFET: Self-Heating}};
+    % フレーム
+    \draw[box] (0,0) rectangle (4,2.6);
+    % S/D タワー
+    \draw[sd] (0.25,0.45) rectangle (0.95,2.15);
+    \draw[sd] (3.05,0.45) rectangle (3.75,2.15);
+    \node[label] at (0.60,2.32) {S};
+    \node[label] at (3.40,2.32) {D};
+
+    % Fin 領域（等温パターン三層：外=Cool → 中=Warm → 内=Hot）
+    \draw[cool] (1.80,0.45) rectangle (2.20,2.15);
+    \draw[warm] (1.72,0.70) rectangle (2.28,1.90);
+    \draw[hot]  (1.64,1.00) rectangle (2.36,1.60);
+
+    % ゲート三面ラップ表示（薄い枠＋パターン）
+    \draw[gate] (1.30,0.55) rectangle (2.70,2.05);
+
+    % 注記（図外側に出す）
+    \node[note] at (2.00,2.45) {高温域がチャネル中央に集中\\Hotspot centered in channel};
+    % 矢印でホットスポット指示
+    \draw[dim] (2.36,1.60) -- ++(0.45,0.25);
   \end{tikzpicture}
 
   \vspace{1.2ex}
 
-  %=== (b) CFET thermal coupling ===
-  \begin{tikzpicture}[scale=0.9]
-    \node[label, anchor=west] at (-0.2,3.2) {\textbf{(b) CFET: Vertical Thermal Coupling}};
-    \draw[box] (0,0) rectangle (4,2.9);    % frame
-    \draw[sd] (0.2,0.4) rectangle (0.9,2.5);
-    \draw[sd] (3.1,0.4) rectangle (3.8,2.5);
-    % lower device hotspot
-    \draw[cool] (1.2,0.4) rectangle (2.8,1.2);
-    \draw[warm] (1.4,0.55) rectangle (2.6,1.05);
-    \draw[hot]  (1.6,0.7) rectangle (2.4,0.9);
+  %======================== (b) CFET ==========================
+  \begin{tikzpicture}[scale=0.95]
+    \node[label, anchor=west] at (-0.15,3.15) {\textbf{(b) CFET: Vertical Thermal Coupling}};
+    % フレーム
+    \draw[box] (0,0) rectangle (4,3.0);
+    % 共有 S/D ピラー
+    \draw[sd] (0.25,0.45) rectangle (0.95,2.55);
+    \draw[sd] (3.05,0.45) rectangle (3.75,2.55);
+    \node[label] at (0.60,2.72) {S/D};
+    \node[label] at (3.40,2.72) {S/D};
+
+    % 下段デバイス等温パターン
+    \draw[cool] (1.15,0.50) rectangle (2.85,1.20);
+    \draw[warm] (1.35,0.65) rectangle (2.65,1.05);
+    \draw[hot]  (1.55,0.80) rectangle (2.45,0.95);
+
     % ILD spacer
-    \draw[box, fill=black!12] (0,1.25) rectangle (4,1.45);
-    % upper device hotspot
-    \draw[cool] (1.2,1.5) rectangle (2.8,2.3);
-    \draw[warm] (1.4,1.65) rectangle (2.6,2.15);
-    \draw[hot]  (1.6,1.8) rectangle (2.4,2.0);
-    % gates (輪郭のみ)
-    \draw[gate] (1.1,0.5) rectangle (2.9,1.1);
-    \draw[gate] (1.1,1.6) rectangle (2.9,2.2);
-    \node[label] at (2,2.7) {上下FET間で熱干渉（対称設計が鍵）};
+    \draw[box, fill=black!12] (0,1.30) rectangle (4,1.50);
+    \node[note] at (3.65,1.40) {ILD};
+
+    % 上段デバイス等温パターン
+    \draw[cool] (1.15,1.60) rectangle (2.85,2.30);
+    \draw[warm] (1.35,1.75) rectangle (2.65,2.15);
+    \draw[hot]  (1.55,1.90) rectangle (2.45,2.05);
+
+    % ゲート（輪郭）
+    \draw[gate] (1.05,0.55) rectangle (2.95,1.10); % lower gate
+    \draw[gate] (1.05,1.70) rectangle (2.95,2.25); % upper gate
+
+    % 注記（熱干渉）
+    \node[note] at (2.00,2.82) {上下FET間で熱干渉\\Vertical thermal coupling};
+    % 矢印（上下ホットスポット間）
+    \draw[dim] (2.45,2.05) -- (2.70,2.35);
+    \draw[dim] (2.45,0.95) -- (2.70,0.65);
   \end{tikzpicture}
 
-  \caption{自己発熱と熱対称性の概念図：FinFETではチャネル中央に高温域、CFETでは上下FET間の熱干渉が顕在化。熱対称性の最適化が信頼性の鍵となる。}
+  \vspace{1.2ex}
+
+  %======================== 凡例（モノクロ対応） =========================
+  \begin{tikzpicture}[scale=0.95, every node/.style={label}]
+    % Hot
+    \draw[hot] (0,0) rectangle (0.5,0.3); \node[right] at (0.6,0.15) {高温 / Hotspot};
+    % Warm
+    \draw[warm] (3.2,0) rectangle (3.7,0.3); \node[right] at (3.8,0.15) {準高温 / Warm};
+    % Cool
+    \draw[cool] (6.4,0) rectangle (6.9,0.3); \node[right] at (7.0,0.15) {低温 / Cool};
+    % Gate
+    \draw[gate] (0,-0.55) rectangle (0.5,-0.25); \node[right] at (0.6,-0.40) {ゲート / Gate};
+    % S/D
+    \draw[sd] (3.2,-0.55) rectangle (3.7,-0.25); \node[right] at (3.8,-0.40) {ソース・ドレイン / S/D};
+    % ILD
+    \draw[box, fill=black!12] (6.4,-0.55) rectangle (6.9,-0.25); \node[right] at (7.0,-0.40) {層間絶縁 / ILD};
+  \end{tikzpicture}
+
+  \caption{自己発熱と熱対称性の概念図。左 (a) FinFET はチャネル中央にホットスポットが集中し、右 (b) CFET は上下FET間で熱が結合する。パターン化によりモノクロ印刷でも温度領域が識別可能。%
+  \newline\footnotesize Concept of self-heating and thermal symmetry. (a) FinFET shows a centered hotspot; (b) CFET exhibits vertical thermal coupling between stacked FETs. Pattern fills ensure readability in grayscale.}
   \label{fig:thermal_symmetry}
 \end{figure}
