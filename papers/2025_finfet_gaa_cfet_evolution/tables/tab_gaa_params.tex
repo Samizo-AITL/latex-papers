@@ -1,18 +1,21 @@
 \begin{table}[t]
   \centering
-  \caption{GAA（Gate-All-Around）ナノシート構造の代表パラメータ}
+  \caption{GAA（Gate-All-Around）ナノシート構造の代表パラメータ（1カラム版）}
   \label{tab:gaa_params}
+  \setlength{\tabcolsep}{2.2pt}     % ← 列間を狭く
+  \renewcommand{\arraystretch}{1.05} % ← 行間を微調整
+  \footnotesize                     % ← 表全体を縮小
   \begin{tabular}{lccc}
     \toprule
     パラメータ & 記号 & 代表値 & 備考 \\
     \midrule
-    ナノシート層数 & $n$ & 3–5 & 積層により$W_\mathrm{eff}$増大 \\
-    シート厚 & $T_s$ & 5–8\,nm & チャネル厚制御が性能支配 \\
-    シート間距離 & $S$ & 10–12\,nm & 熱干渉と寄生容量に影響 \\
+    ナノシート層数 & $n$ & 3--5 & 積層により$W_\mathrm{eff}$増大 \\
+    シート厚 & $T_s$ & 5--8\,nm & チャネル厚制御が性能支配 \\
+    シート間距離 & $S$ & 10--12\,nm & 熱干渉と寄生容量に影響 \\
     有効チャネル幅 & $W_\mathrm{eff}$ & $2n(H+W)$ & 全包囲ゲート寄与 \\
-    しきい値電圧 & $V_\mathrm{th}$ & 0.35–0.4\,V & 対称制御が容易 \\
-    サブスレッショルドスイング & $SS$ & 60–65\,mV/dec & 理想スイングに近似 \\
-    電流駆動比（Fin比） & $I_\mathrm{ON}/I_\mathrm{OFF}$ & 2–3× & FinFET比 \\
+    しきい値電圧 & $V_\mathrm{th}$ & 0.35--0.40\,V & 対称制御が容易 \\
+    サブスレッショルド & $SS$ & 60--65\,mV/dec & 理想スイング近似 \\
+    電流駆動比 & $I_\mathrm{ON}/I_\mathrm{OFF}$ & 2--3× & FinFET比 \\
     \bottomrule
   \end{tabular}
 \end{table}
