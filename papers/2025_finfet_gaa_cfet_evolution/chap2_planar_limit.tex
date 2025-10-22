@@ -7,38 +7,40 @@
 本章では、プレーナーMOSの電界制御限界を出発点に、FinFET、GAA、CFETへ至る立体化の系譜を整理する。構造スケーリングは、単なる寸法縮小ではなく「電界制御を立体化する」設計転換である。
 
 \subsection{プレーナーMOS構造の限界}
-プレーナーMOSFETでは、短チャネル化に伴いドレイン電界がチャネルへ侵入し、SCEやDIBLが顕著となる。130\,nm世代以降、ゲート酸化膜厚が数\si{\nano\meter}に達するとトンネルリークが支配的となり、Dennard則は破綻した。この限界を超えるため、ゲートを立体的に包み込む構造が模索され、FinFETが登場した。
+プレーナーMOSFETでは、短チャネル化に伴いドレイン電界がチャネルへ侵入し、SCEやDIBLが顕著となる。\SI{130}{\nano\meter}世代以降、ゲート酸化膜厚が数\si{\nano\meter}に達するとトンネルリークが支配的となり、Dennard則は破綻した。この限界を超えるため、ゲートを立体的に包み込む構造が模索され、FinFETが登場した。
 
-\begin{figure}[t]
+\begin{figure}[!t]
   \centering
   \input{figs/fig_planar_sce}%
-  \caption{プレーナーMOSFETの短チャネル効果（SCE）模式図。ドレイン電界の侵入により$V_\mathrm{th}$低下とDIBLが発生。}
+  \caption{プレーナーMOSFETの短チャネル効果（SCE）模式図。ドレイン電界の侵入により $V_\mathrm{th}$ 低下とDIBLが発生。}
   \label{fig:planar_sce}
 \end{figure}
 
 \subsection{FinFET：三面ゲートによる制御強化}
-FinFETは、シリコンFinをゲートが三面から包囲するTri-Gate構造により、体積的な電位制御を実現する。Finの高さ$H$、幅$W$、本数$n$に対して有効チャネル幅は
-\[
-W_{\mathrm{eff}} = n(2H + W)
-\]
-で与えられ、側面電流が支配的となる。高Fin化で$I_\mathrm{ON}$を高められる一方、LERや段差被覆性が信頼性を制約する。
+FinFETは、シリコンFinをゲートが三面から包囲するTri\,$\!$-Gate構造により、体積的な電位制御を実現する。Finの高さ $H$、幅 $W$、本数 $n$ に対して有効チャネル幅は
+\begin{equation}
+  W_{\mathrm{eff}} = n\,(2H + W)
+  \label{eq:weff_finfet}
+\end{equation}
+で与えられ、側面電流が支配的となる。高Fin化で $I_\mathrm{ON}$ を高められる一方、LERや段差被覆性が信頼性を制約する。
 
 \subsection{GAA：全包囲ゲートへの発展}
 GAAはチャネルを上下左右から完全包囲し、静電制御を極限化する。ナノシート多層化により上下両面の電流経路が追加され、同一フットプリントでの駆動力が増す：
-\[
-W_{\mathrm{eff}} = 2n(H + W).
-\]
-SEGとALDによる選択成長・膜厚制御が鍵であり、5\,nm以降の主流技術となっている。
+\begin{equation}
+  W_{\mathrm{eff}} = 2n\,(H + W).
+  \label{eq:weff_gaa}
+\end{equation}
+選択エピタキシ（SEG）とALDによる膜厚制御が鍵であり、\SI{5}{\nano\meter}以降の主流技術となっている。
 
 \subsection{CFET：垂直積層と電源分離}
-CFETはn/pトランジスタの垂直積層によりセル面積を大幅に削減し、BPRと統合して信号・電源の物理分離を実現する。上下FET間の熱干渉と電気的アイソレーション、$\!<\!400^\circ$C級の低温プロセスが設計・量産の要件となる。
+CFETはn/pトランジスタの垂直積層によりセル面積を大幅に削減し、BPRと統合して信号・電源の物理分離を実現する。上下FET間の熱干渉と電気的アイソレーション、$\!<\!\SI{400}{\celsius}$級の低温プロセスが設計・量産の要件となる。
 
 \subsection{構造比較と設計軸}
 FinFET（3面制御）→GAA（全周制御）→CFET（上下分離＋BPR）の流れは、
 「電界制御の立体化」→「空間効率化」→「電源分離」の深化を示す。構造そのものが性能と信頼性を同時に規定する段階に到達した。
 
-% 必要に応じて比較図
-\begin{figure}[t]
+% 比較図（1カラム）
+\begin{figure}[!t]
   \centering
   \input{figs/fig_structure_compare}
   \caption{FinFET / GAA / CFET の比較模式図（1カラム収録）。}
