@@ -1,31 +1,42 @@
 % figs/fig_bsim_cmg_model.tex
 % BSIM-CMG モデル構成図（モノクロ／外側のfigure環境は書かない）
-\begin{tikzpicture}[font=\scriptsize, node distance=6mm]
+% 2カラム対応：transform shape で縮尺、ノード幅は固定値でオーバー防止
+\begin{tikzpicture}[
+  font=\scriptsize,
+  node distance=6mm,
+  scale=0.95,                      % ← 過大なら 0.9, 0.85 に下げる
+  every node/.style={transform shape} % ← scaleで文字も一緒に縮む
+]
   % styles
   \tikzset{
-    blk/.style={draw=black, fill=black!5, rounded corners, minimum width=30mm, minimum height=7mm, align=center},
-    io/.style ={draw=black, fill=black!15, rounded corners, minimum width=22mm, minimum height=7mm, align=center},
+    blk/.style={draw=black, fill=black!5, rounded corners,
+                minimum width=36mm, minimum height=7mm, align=center},
+    io/.style ={draw=black, fill=black!15, rounded corners,
+                minimum width=28mm, minimum height=7mm, align=center},
     grp/.style={draw=black, dashed, inner sep=3mm, rounded corners},
     arrow/.style={-Latex, line width=0.3pt}
   }
 
   % Inputs
-  \node[io] (geom) {Geometry \\ (Fin/GAA params)};
-  \node[io, right=of geom] (mat) {Materials \\ (EOT, $\mu$, HKMG)};
-  \node[io, right=of mat] (bias) {Bias/Temp \\ ($V_G, V_D, T$)};
+  \node[io] (geom) {Geometry\\(Fin/GAA params)};
+  \node[io, right=of geom] (mat) {Materials\\(EOT, $\mu$, HKMG)};
+  \node[io, right=of mat] (bias) {Bias/Temp\\($V_G, V_D, T$)};
 
   % Solvers / kernels
-  \node[blk, below=12mm of mat] (elec) {Electrostatics \\ (Core potential / Poisson approx.)};
-  \node[blk, below=of elec] (mob) {Mobility \& Scattering \\ (phonon, surface, impurity)};
+  \node[blk, below=12mm of mat] (elec) {Electrostatics\\(core potential / Poisson approx.)};
+  \node[blk, below=of elec] (mob) {Mobility \& Scattering\\(phonon, surface, impurity)};
   \node[blk, below left=6mm and 7mm of mob] (sdr) {Series $R$ (S/D, contact)};
-  \node[blk, below right=6mm and 7mm of mob] (sh) {Self-Heating \\ (thermal coupling)};
+  \node[blk, below right=6mm and 7mm of mob] (sh) {Self-heating\\(thermal coupling)};
 
   % Outputs
-  \node[blk, below=18mm of mob, minimum width=36mm] (charge) {Charge/Capacitance \\ ($Q$, $C_{gg}, C_{gd}, \dots$)};
-  \node[blk, below=8mm of charge, minimum width=36mm] (ids) {$I_D$ Model \\ (sat. func. $f_\mathrm{sat}(E_\mathrm{ch},T)$)};
+  \node[blk, below=18mm of mob, minimum width=42mm] (charge)
+        {Charge/Capacitance\\($Q$, $C_{gg}$, $C_{gd}$, \dots)};
+  \node[blk, below=8mm of charge, minimum width=42mm] (ids)
+        {$I_D$ model\\(sat. func. $f_\mathrm{sat}(E_\mathrm{ch},T)$)};
 
   % Group box
-  \node[grp, fit=(elec) (mob) (sdr) (sh) (charge) (ids), label={[font=\footnotesize]above:BSIM-CMG Core}] (core) {};
+  \node[grp, fit=(elec) (mob) (sdr) (sh) (charge) (ids),
+        label={[font=\footnotesize]above:BSIM-CMG Core}] (core) {};
 
   % Arrows: inputs -> core
   \draw[arrow] (geom.south) -- (elec.north -| geom.south);
@@ -43,7 +54,8 @@
   \draw[arrow, dashed] (ids.west) |- ($(elec.south west)!0.6!(elec.north west)$);
   \draw[arrow, dashed] (sh.east)  |- ($(mob.east)+(8pt,0)$) -| (mob.east);
 
-  % Notes
-  \node[font=\scriptsize, align=left, anchor=west] at ($(core.south west)+(0, -5mm)$)
-    {出力: $I_D(V_G,V_D,T)$, $Q$, 各種$C$（SPICE互換）};
+  % Note
+  \node[font=\scriptsize, align=left, anchor=west]
+        at ($(core.south west)+(0,-5mm)$)
+        {出力: $I_D(V_G,V_D,T)$, $Q$, 各種$C$（SPICE互換）};
 \end{tikzpicture}
