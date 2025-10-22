@@ -1,5 +1,5 @@
 % ============================================================
-% 2025 SystemDK with AITL Core 日本語版 (純粋工学理論稿)
+% 2025 SystemDK with AITL Core 日本語版 (純粋工学理論稿) - Modular
 % ============================================================
 
 \documentclass[conference]{IEEEtran}
@@ -39,147 +39,24 @@
 \begin{CJK}{UTF8}{min}
 \maketitle
 
-% ============================================================
-% 要旨
-% ============================================================
-\begin{abstract}
-本論文は，設計と信頼性を統一的に扱う新しい工学アーキテクチャ
-\textbf{SystemDK with AITL Core}を提案する。
-SystemDKは，設計構造・解析データ・制御モデルを統合し，
-全階層の設計情報を動的に接続する知識構造である。
-AITL（Adaptive Intelligent Tri-Layer）はPID・FSM・LLMの三層で構成され，
-PID層が物理的安定性を，FSM層が動作状態の一貫性を，
-LLM層が設計情報の形式的整合を担う。
-本体系は，設計空間の安定性と情報的整合性を同時に保証する。
-\end{abstract}
+% --- abstract & keywords (本文は分割、要旨は main に置くのが安定) ---
+\input{chap0_abstract}
 
-\begin{IEEEkeywords}
-System Design, Reliability, PID Control, FSM, LLM, Autonomous Architecture
-\end{IEEEkeywords}
+% --- chapter inputs ---
+\input{chap1_intro}
+\input{chap2_systemdk}
+\input{chap3_aitl}
+\input{chap4_flow}
+\input{chap5_reliability}
+\input{chap6_discussion}
+\input{chap7_conclusion}
 
-% ============================================================
-% 1. はじめに
-% ============================================================
-\section{はじめに}
-現代の複合設計では，物理現象の階層構造と制御設計が分離しており，
-情報の不整合や再設計による遅延が信頼性劣化の要因となっている。
-本研究では，設計構造・解析モデル・制御ロジックを
-統一的に表現するための\textbf{SystemDK with AITL Core}を提案する。
-教育・運用・BCPなどの外的要素を排除し，
-純粋に工学的整合と安定性に焦点を当てる。
+% --- biography ---
+\input{biography}
 
-% ============================================================
-% 2. SystemDKの構造
-% ============================================================
-\section{SystemDKの構造}
-SystemDK（System Design Kernel）は，
-設計情報を「構造・挙動・制御」の三層に再定義する。
-\begin{itemize}
-  \item \textbf{構造層 (Structure Layer)}：材料・形状・配線などの物理構造定義
-  \item \textbf{挙動層 (Behavior Layer)}：熱・応力・電磁・信頼性特性の解析結果
-  \item \textbf{制御層 (Control Layer)}：PIDおよびFSMによる制御論理
-\end{itemize}
-これらは共通スキーマ（JSON/YAML形式）で接続され，
-構造変更が制御設計へ即時反映される。
-
-% ============================================================
-% 3. AITL：三層制御構造
-% ============================================================
-\section{AITL：三層制御構造}
-AITL (Adaptive Intelligent Tri-Layer) は，
-SystemDKを動的に安定化させるための知的制御構造である。
-
-\subsection{PID層}
-物理量（温度・応力・電流など）のフィードバック制御を行う：
-\begin{equation}
-u(t) = K_P e(t) + K_I \int e(t) dt + K_D \frac{de(t)}{dt}
-\end{equation}
-
-\subsection{FSM層}
-状態遷移を管理し，PIDの安定領域を維持する：
-\begin{center}
-\texttt{NORMAL → SATURATE → COOLDOWN → NORMAL}
-\end{center}
-
-\subsection{LLM層}
-LLM層は，構造・挙動・制御モデルの形式的整合を検証する。
-自然言語処理ではなく，論理整合チェック機能に限定する。
-
-% ============================================================
-% 4. 統合設計フロー
-% ============================================================
-\section{統合設計フロー}
-SystemDK with AITL Core の設計フローを以下に示す。
-
-\begin{verbatim}
-仕様策定 → FEM解析(熱/応力/ノイズ)
-        → PID制御設計
-        → FSM状態遷移定義
-        → LLM整合検証
-        → SystemDK統合
-\end{verbatim}
-
-各段階が同一スキーマで接続され，
-信頼性と制御安定性の整合が保証される。
-
-% ============================================================
-% 5. 信頼性統合
-% ============================================================
-\section{信頼性統合}
-PID層に信頼性モデル（NBTI, HCI, 熱劣化など）を組み込み，
-FSM層が閾値を監視してモード切替を行う。
-これにより，物理信頼性と制御安定性を同一ループで保証する。
-
-% ============================================================
-% 6. 実装例
-% ============================================================
-\section{実装例}
-AITL制御構造の簡易モデルを以下に示す。
-
-\begin{lstlisting}[language=Python]
-class PID:
-    def __init__(self, kp, ki, kd):
-        self.kp, self.ki, self.kd = kp, ki, kd
-    def update(self, ref, meas, dt):
-        e = ref - meas
-        return self.kp*e + self.ki*dt*e + self.kd*(e/dt)
-
-class FSM:
-    def __init__(self):
-        self.state = "NORMAL"
-    def transition(self, event):
-        if event == "SATURATE": self.state = "COOLDOWN"
-        elif event == "STABLE": self.state = "NORMAL"
-\end{lstlisting}
-
-% ============================================================
-% 7. 考察
-% ============================================================
-\section{考察}
-SystemDK with AITL Coreは，
-構造・挙動・制御の3要素を統合することで，
-設計の一貫性と動的安定性を両立させる。
-外的要素を排除した純工学的枠組みとして，
-自律設計系理論の基盤を形成する。
-
-% ============================================================
-% 8. 結論
-% ============================================================
-\section{結論}
-本論文では，設計・信頼性・制御を統合する
-\textbf{SystemDK with AITL Core}を提案した。
-PID・FSM・LLMの三層制御構造により，
-物理的安定性と論理的整合性を同時に保証できることを示した。
-本体系は，自律的設計理論の中核をなす工学的基盤である。
-
-% ============================================================
-% 著者略歴
-% ============================================================
-\section*{著者略歴}
-\textbf{三溝 真一}（Shinichi Samizo）は、信州大学大学院 工学系研究科 電気電子工学専攻にて修士号を取得した。  
-その後、セイコーエプソン株式会社に勤務し、半導体ロジック／メモリ／高耐圧インテグレーション、そして、インクジェット薄膜ピエゾアクチュエータ及びPrecisionCoreプリントヘッドの製品化に従事した。  
-現在は独立系半導体研究者として、プロセス／デバイス教育、メモリアーキテクチャ、AIシステム統合などに取り組んでいる。  
-連絡先: \href{mailto:shin3t72@gmail.com}{shin3t72@gmail.com}．
+% 参考文献を使う場合のみ
+% \bibliographystyle{IEEEtran}
+% \bibliography{references}
 
 \end{CJK}
 \end{document}
