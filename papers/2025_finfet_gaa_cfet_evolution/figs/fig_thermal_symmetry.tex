@@ -1,0 +1,54 @@
+\begin{figure}[t]
+  \centering
+  \tikzset{
+    box/.style   ={draw=black, fill=black!5},
+    hot/.style   ={draw=black, fill=black!60},
+    warm/.style  ={draw=black, fill=black!35},
+    cool/.style  ={draw=black, fill=black!15},
+    gate/.style  ={pattern=north east lines, pattern color=black, draw=black},
+    sd/.style    ={fill=black!25, draw=black},
+    label/.style ={font=\footnotesize}
+  }
+
+  %=== (a) FinFET thermal map ===
+  \begin{tikzpicture}[scale=0.9]
+    \node[label, anchor=west] at (-0.2,2.7) {\textbf{(a) FinFET: Self-Heating}};
+    \draw[box] (0,0) rectangle (4,2.4);    % frame
+    \draw[sd] (0.2,0.4) rectangle (0.9,2.0);
+    \draw[sd] (3.1,0.4) rectangle (3.8,2.0);
+    % fin thermal core
+    \draw[cool] (1.8,0.4) rectangle (2.2,2.0);
+    \draw[warm] (1.75,0.6) rectangle (2.25,1.8);
+    \draw[hot]  (1.7,0.9) rectangle (2.3,1.5);
+    % gate wrap
+    \draw[gate] (1.3,0.5) rectangle (2.7,1.9);
+    \node[label] at (2,2.2) {高温域がチャネル中央に集中};
+  \end{tikzpicture}
+
+  \vspace{1.2ex}
+
+  %=== (b) CFET thermal coupling ===
+  \begin{tikzpicture}[scale=0.9]
+    \node[label, anchor=west] at (-0.2,3.2) {\textbf{(b) CFET: Vertical Thermal Coupling}};
+    \draw[box] (0,0) rectangle (4,2.9);    % frame
+    \draw[sd] (0.2,0.4) rectangle (0.9,2.5);
+    \draw[sd] (3.1,0.4) rectangle (3.8,2.5);
+    % lower device hotspot
+    \draw[cool] (1.2,0.4) rectangle (2.8,1.2);
+    \draw[warm] (1.4,0.55) rectangle (2.6,1.05);
+    \draw[hot]  (1.6,0.7) rectangle (2.4,0.9);
+    % ILD spacer
+    \draw[box, fill=black!12] (0,1.25) rectangle (4,1.45);
+    % upper device hotspot
+    \draw[cool] (1.2,1.5) rectangle (2.8,2.3);
+    \draw[warm] (1.4,1.65) rectangle (2.6,2.15);
+    \draw[hot]  (1.6,1.8) rectangle (2.4,2.0);
+    % gates (輪郭のみ)
+    \draw[gate] (1.1,0.5) rectangle (2.9,1.1);
+    \draw[gate] (1.1,1.6) rectangle (2.9,2.2);
+    \node[label] at (2,2.7) {上下FET間で熱干渉（対称設計が鍵）};
+  \end{tikzpicture}
+
+  \caption{自己発熱と熱対称性の概念図：FinFETではチャネル中央に高温域、CFETでは上下FET間の熱干渉が顕在化。熱対称性の最適化が信頼性の鍵となる。}
+  \label{fig:thermal_symmetry}
+\end{figure}
