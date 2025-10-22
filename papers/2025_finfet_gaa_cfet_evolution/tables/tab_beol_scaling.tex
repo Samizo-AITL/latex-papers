@@ -2,23 +2,19 @@
   \centering
   \caption{BEOL（配線層）技術のスケーリング推移（Scaling Trend of BEOL Interconnect Technology）}
   \label{tab:beol_scaling}
-  \setlength{\tabcolsep}{1.5pt}      % 列間を圧縮
-  \renewcommand{\arraystretch}{1.05} % 行間を調整
-  \footnotesize                      % 小さめフォント（IEEE標準）
-  % 列幅調整を自動で行い1カラムに収める
-  \resizebox{\columnwidth}{!}{%
+  \footnotesize
+  \setlength{\tabcolsep}{2pt}
+  \renewcommand{\arraystretch}{1.1}
   \begin{tabular}{lcccc}
     \toprule
-    ノード / \textbf{Node} & 配線材 / \textbf{Metal} &
-    絶縁材 / \textbf{Dielectric} & 最小ピッチ (nm) / \textbf{Pitch} &
-    電源構造 / \textbf{Power Structure} \\
+    ノード & 配線材 & 絶縁材 & ピッチ[nm] & 電源構造 \\
+    Node & Metal & Dielectric & Pitch[nm] & Power Structure \\
     \midrule
-    65\,nm  & Cu & SiO$_2$ & 200 & Frontside Power \\
-    28\,nm  & Cu & Low-k & 100 & Dual Damascene \\
-    7\,nm   & Cu & Low-k+Co Liner & 40 & Power Grid \\
-    3\,nm   & Ru/Cu & Porous Low-k & 28 & Backside Power Rail \\
-    2\,nm   & Ru & Airgap Low-k & 24 & BPR + TSV Feed \\
+    65\,nm & Cu & SiO$_2$ & 200 & Frontside Power \\
+    28\,nm & Cu & Low-k & 100 & Dual Damascene \\
+    7\,nm  & Cu & Low-k+Co liner & 40 & Power Grid \\
+    3\,nm  & Ru/Cu & Porous Low-k & 28 & Backside Power Rail \\
+    2\,nm  & Ru & Airgap Low-k & 24 & BPR + TSV Feed \\
     \bottomrule
   \end{tabular}
-  } % end resizebox
 \end{table}
