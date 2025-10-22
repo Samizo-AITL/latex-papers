@@ -1,31 +1,47 @@
 % =====================================================
-% Fig. 6 : GAA（Gate-All-Around）ナノシート構造 断面図
+% Fig. 6 : GAA（Gate-All-Around）ナノシート構造 断面図（改訂版・💯）
 % =====================================================
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[scale=0.9, every node/.style={font=\scriptsize}]
-    % substrate
-    \fill[gray!20] (0,0) rectangle (4,0.4);
-    \node[below] at (2,0) {Si substrate};
+  \begin{tikzpicture}[scale=1.0, every node/.style={font=\footnotesize}]
+    % ----- Substrate -----
+    \fill[gray!25] (0,0) rectangle (4.0,0.4);
+    \draw[black] (0,0) rectangle (4.0,0.4);
+    \node[below] at (2.0,0) {Si Substrate};
 
-    % nanosheets (3層)
-    \foreach \y in {0.6,1.0,1.4} {
-      \fill[orange!30] (0.8,\y) rectangle (3.2,\y+0.2);
-      \draw[black!50] (0.8,\y) rectangle (3.2,\y+0.2);
+    % ----- Gate stack (outer boundary) -----
+    \draw[thick,fill=cyan!15] (0.5,0.5) rectangle (3.5,1.9);
+    \node[right] at (3.55,1.2) {Gate-All-Around};
+
+    % ----- Nanosheet channels (3層) -----
+    \foreach \y in {0.65,1.05,1.45} {
+      \fill[orange!35] (0.9,\y) rectangle (3.1,\y+0.18);
+      \draw[black!60] (0.9,\y) rectangle (3.1,\y+0.18);
     }
 
-    % gate stack
-    \draw[thick,fill=cyan!20] (0.5,0.5) rectangle (3.5,1.8);
-    \node[right] at (3.55,1.15) {Gate-All-Around};
+    % ----- Gate oxide (thin layer hint) -----
+    \draw[gray!60,densely dashed,line width=0.3pt] (0.85,0.6) rectangle (3.15,1.68);
+    \node at (2.0,1.75) {Gate dielectric (SiO$_2$/High-$k$)};
 
-    % source/drain
-    \fill[gray!60] (0,0.6) rectangle (0.5,1.8);
+    % ----- Source / Drain regions -----
+    \fill[gray!60] (0.0,0.6) rectangle (0.5,1.8);
     \fill[gray!60] (3.5,0.6) rectangle (4.0,1.8);
-    \node[left] at (0,1.2) {Source};
-    \node[right] at (4,1.2) {Drain};
+    \draw[black] (0.0,0.6) rectangle (0.5,1.8);
+    \draw[black] (3.5,0.6) rectangle (4.0,1.8);
+    \node[left]  at (0.0,1.2) {Source};
+    \node[right] at (4.0,1.2) {Drain};
+
+    % ----- Dimension arrows -----
+    \draw[-{Latex[length=2mm]}, line width=0.3pt] (0.9,0.55) -- (0.9,1.65)
+      node[midway,left=2pt] {$T_s$};
+    \draw[-{Latex[length=2mm]}, line width=0.3pt] (0.9,1.85) -- (3.1,1.85)
+      node[midway,above=2pt] {$W$};
+
+    % ----- Annotation for nanosheet stack -----
+    \node at (2.0,0.9) {Nanosheet Channels ($n=3$)};
   \end{tikzpicture}
 
-  \caption{GAAナノシート構造の模式断面図（S/D領域とゲート包囲面を示す）\\
-  \footnotesize Schematic cross-section of GAA nanosheet structure showing gate wrapping around multiple stacked channels.}
+  \caption{GAAナノシート構造の模式断面図（S/D領域とゲート包囲構造を示す）\\
+  \footnotesize Schematic cross-section of a GAA nanosheet FET showing gate wrapping around vertically stacked channels.}
   \label{fig:gaa_cross}
 \end{figure}
