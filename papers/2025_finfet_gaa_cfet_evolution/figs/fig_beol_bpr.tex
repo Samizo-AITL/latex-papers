@@ -1,0 +1,58 @@
+\begin{figure}[t]
+  \centering
+  \tikzset{
+    diel/.style   ={fill=black!5, draw=black},
+    metal/.style  ={fill=black!35, draw=black},
+    barrier/.style={fill=black!60, draw=black},
+    label/.style  ={font=\footnotesize}
+  }
+
+  %=== (a) Dual Damascene (frontside power) ===
+  \begin{tikzpicture}[scale=0.9]
+    \node[label, anchor=west] at (-0.2,3.3) {\textbf{(a) Dual Damascene（従来前面配線）}};
+    % dielectric stack
+    \draw[diel] (0,0) rectangle (4,3.0);
+    % lines (Cu) with barrier
+    \foreach \x in {0.4,1.8,3.2}{
+      \draw[barrier] (\x,1.8) rectangle (\x+0.4,2.6);
+      \draw[metal]   (\x+0.05,1.85) rectangle (\x+0.35,2.55);
+    }
+    % vias
+    \draw[barrier] (0.55,0.6) rectangle (0.85,1.8);
+    \draw[metal]   (0.6,0.65) rectangle (0.8,1.75);
+    \draw[barrier] (3.35,0.6) rectangle (3.65,1.8);
+    \draw[metal]   (3.4,0.65) rectangle (3.6,1.75);
+    % cell area note
+    \node[label] at (2,0.3) {信号・電源が同一面で競合 → 配線混雑};
+  \end{tikzpicture}
+
+  \vspace{1.2ex}
+
+  %=== (b) Backside Power Rail (BPR) ===
+  \begin{tikzpicture}[scale=0.9]
+    \node[label, anchor=west] at (-0.2,3.6) {\textbf{(b) Backside Power Rail（裏面電源分離）}};
+    % frontside dielectric (signal)
+    \draw[diel] (0,0.8) rectangle (4,3.2);
+    % frontside signal lines
+    \foreach \x in {0.7,2.0,3.3}{
+      \draw[metal] (\x,2.2) rectangle (\x+0.35,3.0);
+    }
+    \node[label] at (3.3,3.25) {信号配線};
+    % substrate slab
+    \draw[fill=black!10, draw=black] (0,0.2) rectangle (4,0.8);
+    \node[label] at (2,0.05) {Si Substrate};
+    % backside rails
+    \draw[metal] (0.2,-0.2) rectangle (1.9,0.2);
+    \draw[metal] (2.1,-0.2) rectangle (3.8,0.2);
+    \node[label] at (1.05,-0.35) {BPR-VDD};
+    \node[label] at (2.95,-0.35) {BPR-VSS};
+    % backside vias (power TSV-like)
+    \foreach \x in {0.5,3.5}{
+      \draw[metal] (\x,0.2) rectangle (\x+0.25,0.8);
+    }
+    \node[label] at (2,0.45) {裏面電源でセル上面が空き → 配線自由度↑};
+  \end{tikzpicture}
+
+  \caption{BEOL配線の概念図：Dual Damascene（前面）では信号と電源が競合、BPRでは電源を裏面に再配置し配線混雑を緩和。}
+  \label{fig:beol_bpr}
+\end{figure}
