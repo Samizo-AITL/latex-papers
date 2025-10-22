@@ -1,47 +1,53 @@
 \begin{figure}[t]
   \centering
 
+  % ---------- TikZ Styles ----------
   \tikzset{
-    gate/.style   ={pattern=north east lines, pattern color=black, draw=black},
-    oxide/.style  ={fill=black!8, draw=black},
-    si/.style     ={fill=white, draw=black},
-    sd/.style     ={fill=black!25, draw=black},
+    gate/.style   ={pattern=north east lines, pattern color=black, draw=black, line width=0.3pt},
+    oxide/.style  ={fill=black!8, draw=black, line width=0.3pt},
+    si/.style     ={fill=white, draw=black, line width=0.4pt},
+    sd/.style     ={fill=black!25, draw=black, line width=0.3pt},
+    substrate/.style={fill=black!15, draw=black, line width=0.3pt},
     label/.style  ={font=\footnotesize},
     dim/.style    ={-{Latex[length=2mm]}, line width=0.3pt}
   }
 
-  \begin{tikzpicture}[scale=1.0]
+  % ---------- Drawing ----------
+  \begin{tikzpicture}[scale=1.05]
+
     % Substrate
-    \draw[fill=black!12, draw=black] (-0.5,0) rectangle (4.5,-0.5);
-    \node[label] at (2.0,-0.75) {Substrate};
+    \draw[substrate] (-0.5,0) rectangle (4.5,-0.5);
+    \node[label] at (2.0,-0.8) {Substrate};
 
     % STI / isolation background
-    \draw[oxide] (0,0) rectangle (4,1.6);
+    \draw[oxide] (0,0) rectangle (4,1.5);
 
     % Fin (Si)
-    \draw[si] (1.7,0) rectangle (2.3,1.4);
+    \draw[si] (1.75,0) rectangle (2.25,1.2);
 
-    % Thin gate dielectric hint
-    \draw[oxide, line width=0.4pt] (1.6,-0.02) rectangle (2.4,1.42);
+    % Gate oxide (thin)
+    \draw[oxide] (1.65,0) rectangle (2.35,1.22);
 
-    % Gate wrapping three faces
-    \draw[gate] (1.35,0.2) rectangle (2.65,1.25);
+    % Gate electrode (3 sides)
+    \draw[gate] (1.35,0.2) rectangle (2.65,1.15);
 
     % Source / Drain
-    \draw[sd] (0.25,0.2) rectangle (1.35,1.25);
-    \draw[sd] (2.65,0.2) rectangle (3.75,1.25);
+    \draw[sd] (0.25,0.2) rectangle (1.35,1.15);
+    \draw[sd] (2.65,0.2) rectangle (3.75,1.15);
 
-    % Labels
-    \node[label] at (0.8,1.4) {S};
-    \node[label] at (3.2,1.4) {D};
-    \node[label] at (2.0,1.5) {Fin (Si)};
-    \node[label] at (2.0,0.95) {Gate};
+    % Labels (non-overlapping)
+    \node[label] at (0.8,1.35) {Source (S)};
+    \node[label] at (3.2,1.35) {Drain (D)};
+    \node[label,align=center] at (2.0,1.4) {Gate};
+    \node[label] at (2.0,0.6) {Fin (Si)};
 
-    % Dimensions (H, W)
-    \draw[dim] (1.7,0.0) -- ++(0,1.4) node[midway,left=2pt,label] {$H$};
-    \draw[dim] (1.7,1.45) -- ++(0.6,0) node[midway,above=2pt,label] {$W$};
+    % Dimension arrows
+    \draw[dim] (1.75,0.0) -- ++(0,1.2) node[midway,left=2pt,label] {$H$};
+    \draw[dim] (1.75,1.25) -- ++(0.5,0) node[midway,above=2pt,label] {$W$};
+
   \end{tikzpicture}
 
-  \caption{FinFETの断面模式図（モノクロ）。ゲートは三面をラップし、幾何パラメータ $H,\,W$ は $W_{\mathrm{eff}}=n(2H+W)$ に寄与する。}
+  % ---------- Caption ----------
+  \caption{FinFETの断面模式図（高精細版）。ゲート電極は三面を包囲し、Finの幾何パラメータ $H,\,W$ は有効チャネル幅 $W_{\mathrm{eff}} = n(2H + W)$ に寄与する。}
   \label{fig:finfet_detail}
 \end{figure}
