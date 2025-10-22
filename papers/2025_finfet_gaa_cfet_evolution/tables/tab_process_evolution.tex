@@ -2,13 +2,16 @@
   \centering
   \caption{CMOSスケーリングにおけるプロセス構造の進化（Process Evolution of CMOS Scaling）}
   \label{tab:process_evolution}
-  \setlength{\tabcolsep}{3pt}        % 列間を詰めて全体幅調整
-  \renewcommand{\arraystretch}{1.05} % 行間微調整
-  \scriptsize                       % フォントサイズ調整（1段階小）
+  % フォントと列間調整
+  \scriptsize
+  \setlength{\tabcolsep}{2pt}
+  \renewcommand{\arraystretch}{1.05}
+  % カラム幅にリサイズ
+  \resizebox{\textwidth}{!}{%
   \begin{tabular}{ccccccc}
     \toprule
-    ノード / \textbf{Node} & 構造 / \textbf{Structure} & 電源電圧 / \textbf{$V_\mathrm{DD}$} &
-    \textbf{$T_\mathrm{ox}$ [nm]} & 最小L / \textbf{Min L [nm]} &
+    ノード / \textbf{Node} & 構造 / \textbf{Structure} & \textbf{$V_\mathrm{DD}$ [V]} &
+    \textbf{$T_\mathrm{ox}$ [nm]} & \textbf{Min L [nm]} &
     主な特徴 / \textbf{Key Features} & 技術課題 / \textbf{Challenges} \\
     \midrule
     90\,nm & プレーナMOS / Planar MOS & 1.2 & $\sim$2.0 & $\sim$65 &
@@ -43,4 +46,5 @@
     熱干渉、電源・配線分離難 / Thermal interference, power-routing split \\
     \bottomrule
   \end{tabular}
+  }% end resizebox
 \end{table*}
