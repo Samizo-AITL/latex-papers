@@ -46,4 +46,15 @@ BSIM-CMGの導入により、デバイス物理と回路設計の整合が飛躍
 ポストFinFET世代における設計基盤として、構造最適化から回路レベル信頼性解析に至るまで  
 広範に応用されている。  
 
-\input{figs/fig_bsim_cmg_model}
+% ---- 2カラム全幅の図（IEEEtran）----
+\begin{figure*}[!t]
+  \centering
+  % 大きい場合は \resizebox{\textwidth}{!}{...} を使う
+  \resizebox{\textwidth}{!}{\input{figs/fig_bsim_cmg_model}}
+  \caption{BSIM-CMGモデルの構成要素と依存関係。
+  幾何（Geometry）・材料（Materials）・バイアス／温度（Bias/Temp）から
+  電気静特性→移動度／散乱→容量／電荷→$I_D$モデルへと流れ、
+  直列抵抗と自己発熱のフィードバックを含む。}
+  \label{fig:bsim_cmg_model}
+\end{figure*}
+
