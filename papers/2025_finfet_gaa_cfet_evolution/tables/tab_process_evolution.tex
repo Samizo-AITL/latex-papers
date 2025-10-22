@@ -1,0 +1,46 @@
+\begin{table*}[t]
+  \centering
+  \caption{CMOSスケーリングにおけるプロセス構造の進化（Process Evolution of CMOS Scaling）}
+  \label{tab:process_evolution}
+  \setlength{\tabcolsep}{3pt}        % 列間を詰めて全体幅調整
+  \renewcommand{\arraystretch}{1.05} % 行間微調整
+  \scriptsize                       % フォントサイズ調整（1段階小）
+  \begin{tabular}{ccccccc}
+    \toprule
+    ノード / \textbf{Node} & 構造 / \textbf{Structure} & 電源電圧 / \textbf{$V_\mathrm{DD}$} &
+    \textbf{$T_\mathrm{ox}$ [nm]} & 最小L / \textbf{Min L [nm]} &
+    主な特徴 / \textbf{Key Features} & 技術課題 / \textbf{Challenges} \\
+    \midrule
+    90\,nm & プレーナMOS / Planar MOS & 1.2 & $\sim$2.0 & $\sim$65 &
+    NiSi導入、Strained-Si、LDD最適化 / NiSi, strained-Si, optimized LDD &
+    リーク電流、寄生容量、リソグラフィ限界 / Leakage, parasitics, lithography \\
+    65\,nm & プレーナMOS / Planar MOS & 1.1 & $\sim$1.7 & $\sim$50 &
+    高濃度チャネル、Low-k導入 / Heavily doped channel, Low-k ILD &
+    短チャネル効果、配線遅延 / SCE, interconnect delay \\
+    45\,nm & プレーナMOS / Planar MOS & 1.0 & $\sim$1.3 & $\sim$35 &
+    HKMG導入準備、ULK試験導入 / HKMG prep, ULK intro &
+    ゲート制御限界、ばらつき拡大 / Gate control limit, variability \\
+    32\,nm & HKMGプレーナ / HKMG Planar & 0.9 & $\sim$1.0 & $\sim$28 &
+    High-k / Metal Gate正式採用 / HK/MG full adoption &
+    $V_\mathrm{t}$ばらつき、$T_\mathrm{inv}$制御困難 / $V_\mathrm{t}$ variation, $T_\mathrm{inv}$ control \\
+    22\,nm & FinFET（初代） / 1st Gen FinFET & 0.85 & $\sim$0.9 & $\sim$20 &
+    Tri-Gate構造、3Dチャネル化 / Tri-Gate, 3D channel &
+    Finばらつき、設計難度増加 / Fin variation, design complexity \\
+    14/10\,nm & 主流FinFET / Mainstream FinFET & 0.75--0.80 & $\sim$0.8 & $\sim$16 &
+    マルチパターニング化、BEOL低誘電率化 / Multi-patterning, low-k BEOL &
+    SRAM縮小限界、配線混雑 / SRAM scaling limit, routing congestion \\
+    7\,nm & FinFET＋EUV / FinFET + EUV & 0.65--0.70 & $\sim$0.7 & $\sim$12 &
+    EUV導入開始、LELELE形成 / EUV intro, LELELE patterning &
+    遮光膜設計、熱分布管理 / Mask design, thermal issues \\
+    5\,nm & GAA試験導入 / GAA Pilot & 0.60--0.65 & $\sim$0.6 & $\sim$8 &
+    Nanosheet構造試験導入 / Nanosheet trials &
+    シート幅制御、Routing困難 / Sheet width control, poor routability \\
+    3\,nm & GAA主流化 / GAA Mainstream & 0.55--0.60 & $\sim$0.5 & $\sim$5 &
+    TSMC/Samsungで本格導入 / Adopted by TSMC \& Samsung &
+    高密度寄生、ばらつき管理 / Parasitics, process variability \\
+    $<$2\,nm & CFET構造開発中 / CFET in R\&D & $\lesssim$0.5 & $\sim$0.4 & $\sim$4 &
+    NMOS・PMOS縦積層化 / Complementary FET stacking &
+    熱干渉、電源・配線分離難 / Thermal interference, power-routing split \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
