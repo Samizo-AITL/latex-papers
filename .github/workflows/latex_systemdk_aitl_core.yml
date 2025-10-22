@@ -13,33 +13,45 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # （任意）必要に応じて日本語フォント/パッケージを追加
-      # まずは軽量で試し、通らない場合はコメントアウト解除してください。
-      - name: Add Japanese TeX packages (optional)
+      # 日本語TeX環境（必要十分）
+      - name: Install Japanese TeX packages
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive-lang-japanese fonts-ipafont fonts-ipaexfont
 
-      - name: Set up LaTeX and build
+      # どこに何があるか可視化（デバッグ用）
+      - name: List paper tree (before build)
+        run: |
+          ls -la
+          ls -la papers
+          ls -la papers/2025_systemdk_aitl_core || true
+
+      # サブディレクトリを作業ディレクトリに固定してビルド
+      - name: Build with latex-action (fixed working dir)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: papers/2025_systemdk_aitl_core/main.tex
-          # 既定は pdflatex（CJKutf8 でも動作可）。
-          # もしここで失敗する場合は下の1行を有効化して lualatex に切替してください。
+          root_file: main.tex
+          working_directory: papers/2025_systemdk_aitl_core
+          # もし pdflatex で失敗する場合は下の1行を有効化
           # latexmk_use_lualatex: true
-          # ログを詳しくする場合は -interaction=nonstopmode などを args で追加可能
           # args: -interaction=nonstopmode
 
-      # PDF を成果物化
+      # ビルド後のファイル確認（PDF が本当にそこにあるか）
+      - name: List outputs (after build)
+        if: always()
+        run: |
+          ls -la papers/2025_systemdk_aitl_core || true
+          echo "PDF path should be: papers/2025_systemdk_aitl_core/main.pdf"
+
+      # PDF成果物（失敗しても拾う）
       - name: Upload PDF artifact
-        if: always()   # 成功時はもちろん、失敗時に途中生成があれば拾う
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: SystemDK_AITL_Core_Paper
-          path: |
-            papers/2025_systemdk_aitl_core/main.pdf
+          path: papers/2025_systemdk_aitl_core/main.pdf
 
-      # ログ・補助ファイルを成果物化（失敗時デバッグ用）
+      # ログ一式（失敗原因の特定用）
       - name: Upload LaTeX logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -47,8 +59,8 @@ jobs:
           name: SystemDK_AITL_Core_Logs
           path: |
             papers/2025_systemdk_aitl_core/*.log
+            papers/2025_systemdk_aitl_core/*.aux
             papers/2025_systemdk_aitl_core/*.blg
             papers/2025_systemdk_aitl_core/*.bbl
-            papers/2025_systemdk_aitl_core/*.aux
             papers/2025_systemdk_aitl_core/*.out
             papers/2025_systemdk_aitl_core/*.synctex.gz
