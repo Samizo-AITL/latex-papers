@@ -1,21 +1,39 @@
 \begin{table}[t]
   \centering
-  \caption{GAA（Gate-All-Around）ナノシート構造の代表パラメータ（1カラム版）}
+  \caption{GAA（Gate-All-Around）ナノシート構造の代表パラメータ\\
+  Representative Parameters of GAA Nanosheet Structure}
   \label{tab:gaa_params}
-  \setlength{\tabcolsep}{2.2pt}     % ← 列間を狭く
-  \renewcommand{\arraystretch}{1.05} % ← 行間を微調整
-  \footnotesize                     % ← 表全体を縮小
+  \setlength{\tabcolsep}{3pt}       % 列間やや広く
+  \renewcommand{\arraystretch}{1.15}% 行間ゆとり
+  \small                            % 通常より少し小さめ（視認性確保）
+  \resizebox{\columnwidth}{!}{      % 幅は自動で調整
   \begin{tabular}{lccc}
     \toprule
-    パラメータ & 記号 & 代表値 & 備考 \\
+    パラメータ & 記号 & 代表値 & 備考 \\[-3pt]
+    Parameter & Symbol & Typical Value & Remarks \\
     \midrule
-    ナノシート層数 & $n$ & 3--5 & 積層により$W_\mathrm{eff}$増大 \\
-    シート厚 & $T_s$ & 5--8\,nm & チャネル厚制御が性能支配 \\
-    シート間距離 & $S$ & 10--12\,nm & 熱干渉と寄生容量に影響 \\
-    有効チャネル幅 & $W_\mathrm{eff}$ & $2n(H+W)$ & 全包囲ゲート寄与 \\
-    しきい値電圧 & $V_\mathrm{th}$ & 0.35--0.40\,V & 対称制御が容易 \\
-    サブスレッショルド & $SS$ & 60--65\,mV/dec & 理想スイング近似 \\
-    電流駆動比 & $I_\mathrm{ON}/I_\mathrm{OFF}$ & 2--3× & FinFET比 \\
+    ナノシート層数 & $n$ & 3--5 &
+      \begin{tabular}[c]{@{}l@{}}積層により有効チャネル幅$W_\mathrm{eff}$が増大\\
+      Stacking increases $W_\mathrm{eff}$\end{tabular} \\
+    シート厚 & $T_s$ & 5--8\,nm &
+      \begin{tabular}[c]{@{}l@{}}チャネル厚制御が性能を支配\\
+      Channel thickness dominates performance\end{tabular} \\
+    シート間距離 & $S$ & 10--12\,nm &
+      \begin{tabular}[c]{@{}l@{}}熱干渉と寄生容量に影響\\
+      Affects thermal and parasitic coupling\end{tabular} \\
+    有効チャネル幅 & $W_\mathrm{eff}$ & $2n(H+W)$ &
+      \begin{tabular}[c]{@{}l@{}}全包囲ゲート寄与を反映\\
+      Reflects all-around gate contribution\end{tabular} \\
+    しきい値電圧 & $V_\mathrm{th}$ & 0.35--0.40\,V &
+      \begin{tabular}[c]{@{}l@{}}対称構造で制御容易\\
+      Symmetric structure allows easy control\end{tabular} \\
+    サブスレッショルド特性 & $SS$ & 60--65\,mV/dec &
+      \begin{tabular}[c]{@{}l@{}}理想スイングに近似\\
+      Near-ideal subthreshold swing\end{tabular} \\
+    電流駆動比 & $I_\mathrm{ON}/I_\mathrm{OFF}$ & 2--3× &
+      \begin{tabular}[c]{@{}l@{}}FinFET比で高駆動効率\\
+      2–3× drive gain over FinFET\end{tabular} \\
     \bottomrule
   \end{tabular}
+  } % end resizebox
 \end{table}
