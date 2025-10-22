@@ -1,0 +1,22 @@
+% ============================================================
+% 3. AITL：三層制御構造
+% ============================================================
+\section{AITL：三層制御構造}
+AITL (Adaptive Intelligent Tri-Layer) は，
+SystemDKを動的に安定化させるための知的制御構造である。
+
+\subsection{PID層}
+物理量（温度・応力・電流など）のフィードバック制御を行う：
+\begin{equation}
+u(t) = K_P e(t) + K_I \int e(t)\,dt + K_D \frac{de(t)}{dt}
+\end{equation}
+
+\subsection{FSM層}
+状態遷移を管理し，PIDの安定領域を維持する：
+\begin{center}
+\texttt{NORMAL → SATURATE → COOLDOWN → NORMAL}
+\end{center}
+
+\subsection{LLM層}
+LLM層は，構造・挙動・制御モデルの形式的整合を検証する。
+自然言語処理ではなく，論理整合チェック機能に限定する。
