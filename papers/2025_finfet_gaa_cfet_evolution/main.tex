@@ -7,21 +7,33 @@
 % -----------------------------------------------------
 % パッケージ設定
 % -----------------------------------------------------
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+\usepackage{fontspec}         % XeLaTeX用（inputenc不要）
 \usepackage{xeCJK}            % 日本語対応
-\setCJKmainfont{IPAexMincho}  % 明朝体
+\setCJKmainfont{IPAexMincho}  % 日本語本文フォント（明朝体）
+\setmainfont{TeX Gyre Termes} % 欧文フォント（Times系）
+
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{siunitx}
 \usepackage{booktabs}
+\usepackage{tabularx}         % 表の自動幅調整
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{cite}
 
+% --- TikZ (図表描画用) ---
 \usepackage{tikz}
-\usetikzlibrary{patterns,arrows.meta,positioning,fit}
-\usepackage{tabularx}   % 表の自動幅調整
+\usetikzlibrary{patterns,arrows.meta,positioning,fit,calc}
+
+% --- ハイパーリンク設定（PDF出力最適化） ---
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue,
+  pdfauthor={Shinichi Samizo},
+  pdftitle={Semiconductor Device Scaling Report}
+}
 
 % -----------------------------------------------------
 % タイトルと著者情報
