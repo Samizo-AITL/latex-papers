@@ -17,22 +17,7 @@
 チャネル形状の三次元化とキャリア移動度改善によって補償されている。  
 これらの構造的最適化が、物理限界に接近するスケーリングを可能にしている。
 
-\begin{table}[htbp]
-\centering
-\caption{スケーリングパラメータの推移}
-\label{tab:scaling}
-\begin{tabular}{lccc}
-\toprule
-ノード & 電源電圧 (V) & $T_\text{ox}$ (nm) & 構造 \\
-\midrule
-130\,nm & 1.2 & 2.5 & Planar \\
-65\,nm  & 1.0 & 1.8 & Planar / HKMG \\
-28\,nm  & 0.9 & 1.2 & FinFET \\
-5\,nm   & 0.7 & 0.9 & GAA \\
-2\,nm   & 0.6 & 0.7 & CFET \\
-\bottomrule
-\end{tabular}
-\end{table}
+\input{tables/tab_process_evolution}
 
 図示されるように、$V_{DD}$の低下と$T_\text{ox}$の薄膜化はもはや線形関係を持たず、  
 熱雑音限界およびトンネルリーク限界がスケーリングの支配要因となっている。  
