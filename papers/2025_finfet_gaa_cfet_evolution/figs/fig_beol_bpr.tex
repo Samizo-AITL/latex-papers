@@ -1,58 +1,84 @@
+% =====================================================
+% Fig. 8 : BEOL構造比較（Dual Damascene vs BPR）💯版
+% =====================================================
 \begin{figure}[t]
   \centering
   \tikzset{
-    diel/.style   ={fill=black!5, draw=black},
-    metal/.style  ={fill=black!35, draw=black},
-    barrier/.style={fill=black!60, draw=black},
+    diel/.style   ={fill=black!5, draw=black, line width=0.3pt},
+    metal/.style  ={fill=black!35, draw=black, line width=0.3pt},
+    barrier/.style={fill=black!55, draw=black, line width=0.3pt},
+    note/.style   ={font=\footnotesize, align=center},
     label/.style  ={font=\footnotesize}
   }
 
-  %=== (a) Dual Damascene (frontside power) ===
+  %==============================
+  % (a) Dual Damascene - Frontside Power
+  %==============================
   \begin{tikzpicture}[scale=0.9]
-    \node[label, anchor=west] at (-0.2,3.3) {\textbf{(a) Dual Damascene（従来前面配線）}};
-    % dielectric stack
-    \draw[diel] (0,0) rectangle (4,3.0);
-    % lines (Cu) with barrier
+    \node[label, anchor=west] at (-0.1,3.35) {\textbf{(a) Dual Damascene（前面電源配線）}};
+    
+    % Dielectric stack
+    \draw[diel] (0,0) rectangle (4.0,3.0);
+    
+    % Cu lines with barrier
     \foreach \x in {0.4,1.8,3.2}{
       \draw[barrier] (\x,1.8) rectangle (\x+0.4,2.6);
       \draw[metal]   (\x+0.05,1.85) rectangle (\x+0.35,2.55);
     }
-    % vias
+
+    % Vias connecting layers
     \draw[barrier] (0.55,0.6) rectangle (0.85,1.8);
     \draw[metal]   (0.6,0.65) rectangle (0.8,1.75);
     \draw[barrier] (3.35,0.6) rectangle (3.65,1.8);
     \draw[metal]   (3.4,0.65) rectangle (3.6,1.75);
-    % cell area note
-    \node[label] at (2,0.3) {信号・電源が同一面で競合 → 配線混雑};
+
+    % Substrate (context hint)
+    \fill[black!15] (0,0) rectangle (4.0,0.4);
+    \draw[black] (0,0) rectangle (4.0,0.4);
+    \node[label] at (2,0.2) {Si Substrate};
+
+    % Note text
+    \node[note] at (2,0.0) {信号と電源が同層で競合 → 配線混雑};
   \end{tikzpicture}
 
-  \vspace{1.2ex}
+  \vspace{1.5ex}
 
-  %=== (b) Backside Power Rail (BPR) ===
+  %==============================
+  % (b) Backside Power Rail (BPR)
+  %==============================
   \begin{tikzpicture}[scale=0.9]
-    \node[label, anchor=west] at (-0.2,3.6) {\textbf{(b) Backside Power Rail（裏面電源分離）}};
-    % frontside dielectric (signal)
-    \draw[diel] (0,0.8) rectangle (4,3.2);
-    % frontside signal lines
+    \node[label, anchor=west] at (-0.1,3.6) {\textbf{(b) Backside Power Rail（裏面電源分離）}};
+
+    % Signal dielectric (frontside)
+    \draw[diel] (0,0.8) rectangle (4.0,3.2);
+
+    % Frontside signal lines
     \foreach \x in {0.7,2.0,3.3}{
       \draw[metal] (\x,2.2) rectangle (\x+0.35,3.0);
     }
-    \node[label] at (3.3,3.25) {信号配線};
-    % substrate slab
-    \draw[fill=black!10, draw=black] (0,0.2) rectangle (4,0.8);
+    \node[label, anchor=west] at (3.5,2.7) {信号配線};
+
+    % Substrate
+    \draw[fill=black!10, draw=black, line width=0.3pt] (0,0.2) rectangle (4.0,0.8);
     \node[label] at (2,0.05) {Si Substrate};
-    % backside rails
-    \draw[metal] (0.2,-0.2) rectangle (1.9,0.2);
-    \draw[metal] (2.1,-0.2) rectangle (3.8,0.2);
-    \node[label] at (1.05,-0.35) {BPR-VDD};
-    \node[label] at (2.95,-0.35) {BPR-VSS};
-    % backside vias (power TSV-like)
-    \foreach \x in {0.5,3.5}{
+
+    % Backside Power Rails
+    \draw[metal] (0.3,-0.2) rectangle (1.9,0.2);
+    \draw[metal] (2.1,-0.2) rectangle (3.7,0.2);
+    \node[label] at (1.1,-0.35) {BPR-VDD};
+    \node[label] at (2.9,-0.35) {BPR-VSS};
+
+    % TSV-like power vias
+    \foreach \x in {0.6,3.4}{
       \draw[metal] (\x,0.2) rectangle (\x+0.25,0.8);
     }
-    \node[label] at (2,0.45) {裏面電源でセル上面が空き → 配線自由度↑};
+
+    % Note text
+    \node[note] at (2.0,0.45) {裏面電源でセル上面が空き\\配線自由度・性能が向上};
   \end{tikzpicture}
 
-  \caption{BEOL配線の概念図：Dual Damascene（前面）では信号と電源が競合、BPRでは電源を裏面に再配置し配線混雑を緩和。}
+  \caption{BEOL配線技術の概念比較図。\\
+  \footnotesize (a) Dual Damasceneでは電源・信号が同一面に配置され配線混雑が発生。\\
+  (b) BPR構造では電源を裏面に再配置し、セル上部の配線密度と設計自由度を向上させる。}
   \label{fig:beol_bpr}
 \end{figure}
