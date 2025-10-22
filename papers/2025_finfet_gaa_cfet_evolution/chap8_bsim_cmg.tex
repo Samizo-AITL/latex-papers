@@ -1,42 +1,49 @@
 \section{BSIM-CMGモデリング}
 BSIM-CMG（Berkeley Short-channel IGFET Model – Common Multi-Gate）は、  
-FinFETやGAA（Gate-All-Around）などの非平面デバイスに対応する統一SPICEモデルである。  
-従来のBSIM4モデルがプレーナーMOSFETの電界分布を前提としていたのに対し、  
-BSIM-CMGはチャネルの三次元的電界分布と多ゲート構造による電位結合効果を厳密に取り扱う。
+FinFETおよびGAA（Gate-All-Around）などの非平面構造デバイスを統一的に表現するために開発された  
+物理ベースSPICEコンパクトモデルである。  
+従来のBSIM4モデルがプレーナーMOSFETの二次元電界分布を前提としていたのに対し、  
+BSIM-CMGは三次元チャネル電位分布および多ゲート構造における電位結合（electrostatic coupling）を厳密に扱うことが可能である。
 
-本モデルでは、チャネル電位$\psi(x,y,z)$を多変数ポアソン方程式として近似的に解き、  
-有効電荷密度$Q_\text{inv}$およびドレイン電流$I_\text{D}$をゲート電圧$V_\text{G}$、ドレイン電圧$V_\text{D}$の関数として定式化する：  
+本モデルでは、チャネル電位$\psi(x,y,z)$を多変数ポアソン方程式に基づき近似的に解き、  
+有効電荷密度$Q_\mathrm{inv}$およびドレイン電流$I_\mathrm{D}$をゲート電圧$V_\mathrm{G}$およびドレイン電圧$V_\mathrm{D}$の関数として定式化する：
 \begin{equation}
-I_\text{D} = \mu_\text{eff} C_\text{inv} \frac{W_\text{eff}}{L_\text{g}} (V_\text{G} - V_\text{th}) V_\text{D} \, f_\text{sat}(E_\text{ch},T)
+I_\mathrm{D} =
+\mu_\mathrm{eff} \, C_\mathrm{inv} \,
+\frac{W_\mathrm{eff}}{L_\mathrm{g}}
+(V_\mathrm{G} - V_\mathrm{th}) V_\mathrm{D}
+\, f_\mathrm{sat}(E_\mathrm{ch}, T),
 \end{equation}
-ここで、$\mu_\text{eff}$は実効移動度、$C_\text{inv}$はチャネル反転層容量、  
-$f_\text{sat}$はチャネル電界および温度$T$に依存する飽和関数である。  
-FinFET構造では$W_\text{eff}=n(2H+W)$、GAA構造では$W_\text{eff}=2n(H+W)$と定義され、  
-この形態パラメータが電流駆動力を直接決定する。
+ここで、$\mu_\mathrm{eff}$は実効キャリア移動度、$C_\mathrm{inv}$は反転層容量、  
+$f_\mathrm{sat}(E_\mathrm{ch},T)$はチャネル電界および温度依存性を表す飽和関数である。  
+FinFET構造では$W_\mathrm{eff}=n(2H+W)$、GAA構造では$W_\mathrm{eff}=2n(H+W)$と定義され、  
+形態パラメータが直接的に電流駆動力を支配する。
 
-BSIM-CMGは、これらの幾何学パラメータを抽象化してモデル化するため、  
-異なる構造（FinFET、Nanowire、Nanosheet）間でパラメータ再利用が可能である。  
-主要な制御パラメータとして、  
+BSIM-CMGはこれらの幾何学パラメータを抽象化してモデル化するため、  
+FinFET、Nanosheet、Nanowireといった異なる構造間でのパラメータ再利用が可能である。  
+主な制御パラメータは以下の通りである：
 \begin{itemize}
-    \item ゲート絶縁膜の実効酸化膜厚（EOT）、  
-    \item チャネル高さ$H_\text{fin}$および幅$W_\text{fin}$、  
-    \item ソース／ドレイン接合抵抗、  
-    \item サブスレッショルド・スロープ因子$n$,  
-    \item キャリア散乱係数および温度依存項、  
+    \item 実効酸化膜厚（EOT: Equivalent Oxide Thickness）  
+    \item チャネル高さ$H_\mathrm{fin}$および幅$W_\mathrm{fin}$  
+    \item ソース／ドレイン接合抵抗  
+    \item サブスレッショルド係数$n$およびキャリア散乱係数  
+    \item 温度依存項および熱ノイズ係数  
 \end{itemize}
-などが定義されており、物理的パラメータと回路設計変数を統一的に結びつけることができる。
+これにより、物理パラメータと回路設計変数を単一フレームで統合し、デバイス–回路協調設計（co-design）が実現される。
 
-また、BSIM-CMGは、チャネル内部の電位カップリングを解くために「中心軸法（Core Potential Method）」を導入しており、  
-チャネル電位を単一代表点で近似することで、非平面構造においても数値安定性と計算効率を確保している。  
-これにより、GAAやCFETのような多層チャネルデバイスでもSPICEレベルでの解析が可能となった。
+さらに、BSIM-CMGはチャネル内部電位を代表値で近似する「中心軸法（Core Potential Method）」を採用しており、  
+非平面構造においても数値安定性と高速収束性を両立している。  
+これにより、GAAやCFETのような多層チャネル構造においてもSPICEレベルの解析が安定して実行可能である。
 
-さらに、CFETにおいては、上下のトランジスタ間での電熱結合（self-heating coupling）や  
-相互寄生容量を含めた拡張モデルが提案されつつある。  
-この拡張では、各トランジスタを独立のBSIM-CMGサブモデルとして扱い、  
-電流・温度・電位の相互干渉を双方向結合することで、  
+CFETに対しては、上下トランジスタ間の電熱結合（self-heating coupling）および  
+相互寄生容量を考慮した拡張モデルが提案されている。  
+このモデルでは各トランジスタを独立したBSIM-CMGサブブロックとして構築し、  
+電流・温度・電位の相互干渉を双方向結合させることで、  
 垂直積層構造に特有の熱非対称性を高精度に再現できる。
 
-BSIM-CMGの導入により、デバイス物理と回路設計の連携が一層強化され、  
-トランジスタ寸法・材料・温度・信頼性パラメータを同一フレームで評価可能となった。  
-このモデルは、ポストFinFET時代の設計基盤として、  
-構造最適化から回路レベルの信頼性評価に至るまで広範に適用されている。
+BSIM-CMGの導入により、デバイス物理と回路設計の整合が飛躍的に向上した。  
+寸法スケーリング、材料特性、熱劣化、信頼性パラメータを統一的に評価できる本モデルは、  
+ポストFinFET世代における設計基盤として、構造最適化から回路レベル信頼性解析に至るまで  
+広範に応用されている。  
+
+\input{figs/fig_bsim_cmg_model}
