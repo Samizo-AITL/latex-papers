@@ -6,22 +6,27 @@
 
 % --- packages ---
 \usepackage{CJKutf8}
+\usepackage[T1]{fontenc}% 欧文フォントのエンコーディング明示（警告低減）
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{url}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{listings}
 \usepackage{color}
 \usepackage{cite}
 
-% --- code style ---
+% --- code style (日本語は listings に入れない) ---
 \definecolor{lightgray}{gray}{0.95}
 \lstset{
   backgroundcolor=\color{lightgray},
   basicstyle=\ttfamily\footnotesize,
   frame=single,
-  breaklines=true
+  breaklines=true,
+  tabsize=2,
+  keepspaces=true,
+  columns=fullflexible,
+  extendedchars=false        % ← 日本語を入れない前提で安全化
 }
 
 % --- title ---
@@ -36,17 +41,21 @@
 }
 
 \begin{document}
-\begin{CJK}{UTF8}{min}
+
+% ===== CJK開始：フォントは IPAex 明朝(ipxm) に変更 =====
+%   ※ 和田研(min)は TFM 分割で verbatim/記号と相性が悪く落ちやすい
+\begin{CJK}{UTF8}{ipxm}
+
 \maketitle
 
-% --- abstract & keywords (本文は分割、要旨は main に置くのが安定) ---
+% --- abstract & keywords (要旨は main に置くほうが安定) ---
 \input{chap0_abstract}
 
 % --- chapter inputs ---
 \input{chap1_intro}
 \input{chap2_systemdk}
 \input{chap3_aitl}
-\input{chap4_flow}
+\input{chap4_flow}        % ← 日本語や矢印は verbatim に入れないこと（下記メモ）
 \input{chap5_reliability}
 \input{chap6_discussion}
 \input{chap7_conclusion}
@@ -54,7 +63,7 @@
 % --- biography ---
 \input{biography}
 
-% 参考文献を使う場合のみ
+% --- references (使うときだけ有効化) ---
 % \bibliographystyle{IEEEtran}
 % \bibliography{references}
 
