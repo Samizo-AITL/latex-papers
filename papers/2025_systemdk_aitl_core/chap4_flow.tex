@@ -150,21 +150,35 @@ FSM安全性は不変条件で与える：
 \end{itemize}
 
 \begin{table}[t]
-\caption{評価指標の提出フォーマット（例）}
-\label{tab:kpi}
-\centering
-\begin{tabular}{lccc}
-\toprule
-指標 & 従来MBD & SystemDK & 改善率[\%] \\
-\midrule
-$t_{\mathrm{settle}}$ [s] &  &  &  \\
-$M_p$ [\%] &  &  &  \\
-$\Delta T_{\mathrm{pk}}$ [°C] &  &  &  \\
-$\sigma_{\mathrm{pk}}$ [MPa] &  &  &  \\
-$e_{\mathrm{rms}}$ &  &  &  \\
-$R(t)$ [--] &  &  &  \\
-\bottomrule
-\end{tabular}
+  \centering
+  \caption{評価指標（例：アクチュエータM2，ステップ応答と物理量）}
+  \label{tab:kpi}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{
+      l
+      >{\raggedleft\arraybackslash}p{11mm}
+      >{\raggedleft\arraybackslash}p{12mm}
+      >{\raggedleft\arraybackslash}p{9mm}
+  }
+    \toprule
+    指標 & 従来MBD & SystemDK & 改善率 [\%] \\
+    \midrule
+    $t_{\mathrm{settle}}$ [s] (2\%帯域)       & 0.82 & 0.56 & 31.7 \\
+    $M_p$ [\%]                                 & 18.4 & 9.7  & 47.3 \\
+    $\Delta T_{\mathrm{pk}}$ [\si{\celsius}]   & 23.1 & 17.5 & 24.2 \\
+    $\sigma_{\mathrm{pk}}$ [\si{\mega\pascal}] & 182  & 151  & 17.0 \\
+    $e_{\mathrm{rms}}$ [–]                      & 0.044 & 0.026 & 40.9 \\
+    $R(1{,}000~\mathrm{h})$ [–]                & 0.962 & 0.985 & +2.4 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{1pt}
+  \begin{minipage}{0.98\columnwidth}
+    \raggedright
+    \emph{注：}数値はテンプレート例。実験／HIL／FEMの実値に置換。
+    改善率は $(\text{従来}-\text{SystemDK})/\text{従来}\times100$（$R$のみ差分）。
+  \end{minipage}
 \end{table}
 
 % ------------------------------------------------------------
