@@ -7,9 +7,11 @@ SystemDK with AITL Core の設計フローは，
 ロボット／アクチュエータの制御設計を起点に，
 FPGA／ASIC，チップレット構造，および実時間検証までを
 単一スキーマで結合する\textbf{閉ループ型最適化プロセス}である。
-PID・FSM・LLMから成るAITLを中核に，
-FEMで得た剛性・慣性・熱・応力・ノイズ情報を制御へ反映し，
+AITL（PID・FSM・LLM）を中核に，
+FEMで得た剛性・慣性・熱・応力・ノイズ情報を制御系へ反映し，
 位置・速度・力の安定性と長期信頼性を同時に保証する。
+本章では，プロセス手順に加えて，
+\textbf{収束判定，安全性保証，評価指標，および再現性}を形式的に定義する。
 
 % --- 設計フロー図（1カラム幅に自動フィット） ---
 \begin{figure}[t]
@@ -23,8 +25,6 @@ FEMで得た剛性・慣性・熱・応力・ノイズ情報を制御へ反映�
     },
     flowarr/.style={-{Latex[length=3mm]}, thick}
   ]
-
-  % Nodes (top to bottom)
   \node[flowstep] (spec) {① 仕様策定・全体アーキテクチャ\\モジュール選定};
   \node[flowstep, below=6mm of spec] (ctrl) {② 制御系設計\\MATLAB/Simulink（PID, FSM）\\LLM整合 $\rightarrow$ C $\rightarrow$ Verilog};
   \node[flowstep, below=6mm of ctrl] (fpga) {③ FPGA回路設計\\RTL/SDC・固定小数点・I/O定義};
@@ -32,24 +32,18 @@ FEMで得た剛性・慣性・熱・応力・ノイズ情報を制御へ反映�
   \node[flowstep, below=6mm of asic] (struct) {⑤ 構造設計（BRDK／IPDK／PKGDK）\\電源・信号・サーマル経路定義};
   \node[flowstep, below=6mm of struct] (fem) {⑥ FEM／ノイズ解析\\熱・応力・PI/SI/EMI};
   \node[flowstep, below=6mm of fem] (fpga_test) {⑦ FPGA検証（HIL）\\実時間応答・安定性評価};
-
-  % Main arrows
   \draw[flowarr] (spec) -- (ctrl);
   \draw[flowarr] (ctrl) -- (fpga);
   \draw[flowarr] (fpga) -- (asic);
   \draw[flowarr] (asic) -- (struct);
   \draw[flowarr] (struct) -- (fem);
   \draw[flowarr] (fem) -- (fpga_test);
-
-  % Feedbacks (dashed, short)
   \draw[-{Latex[length=2mm]}, dashed]
     (fem.west) .. controls +(-18mm,0mm) and +(-18mm,0mm) .. (ctrl.west)
     node[midway, left, align=right, xshift=-1mm] {\footnotesize 物理定数\\反映};
-
   \draw[-{Latex[length=2mm]}, dashed]
     (fpga_test.east) .. controls +(18mm,0mm) and +(18mm,0mm) .. (fpga.east)
     node[midway, right, align=left, xshift=1mm] {\footnotesize 応答補正};
-
   \end{tikzpicture}}
   \caption{制御主導の統合フロー（1カラム幅フィット）}
   \label{fig:design_flow}
@@ -127,3 +121,76 @@ ASIC実装をBRDK／IPDK／PKGDKで実施し，熱・応力・ノイズ再評価
 統合データを用い，AITL三層で最終検証を実施する：
 PIDは実時間安定化，FSMは安全遷移監督，LLMは形式整合検証と再同定を担当する。
 これにより，本体系は\textbf{構造設計・制御理論・チップレット物理特性を統合最適化する自律型設計制御基盤}として確立される。
+
+% ------------------------------------------------------------
+\subsection*{収束判定と安全性保証（Formal Criteria）}
+設計変数ベクトル $x$，制御パラメータ $\theta=\{K_P,K_I,K_D\}$，
+信頼性指標 $\rho$ に対し，以下を満たすとき収束と定義する：
+\begin{align}
+\|\Delta x_k\|_\infty &< \varepsilon_x,\quad
+\|\Delta \theta_k\|_\infty < \varepsilon_\theta,\quad
+|\Delta \rho_k| < \varepsilon_\rho, \label{eq:conv}\\
+\tau_{\mathrm{PID}} &\ll \tau_{\mathrm{FSM}} \ll \tau_{\mathrm{LLM}}. \label{eq:timescales}
+\end{align}
+FSM安全性は不変条件で与える：
+\begin{equation}
+\mathcal{I}:\; T \le T_{\mathrm{crit}},\;\sigma \le \sigma_{\mathrm{crit}},\;V \le V_{\mathrm{crit}}
+\;\Rightarrow\; \texttt{SAFE}(t)\ \text{保持}. \label{eq:invariant}
+\end{equation}
+
+% ------------------------------------------------------------
+\subsection*{評価指標と報告形式（KPIs \& Reporting)}
+本フローの成果は，以下の主要指標で報告する（単位／定義を脚注で固定）：
+\begin{itemize}
+  \item \textbf{安定化時間} $t_{\mathrm{settle}}$（2\%帯域）\footnote{ステップ応答が目標の$\pm2\%$内に収まるまでの時間。}，
+        \textbf{最大オーバーシュート} $M_p$。
+  \item \textbf{熱上昇} $\Delta T_{\mathrm{pk}}$，\textbf{応力ピーク} $\sigma_{\mathrm{pk}}$（FEM由来）。
+  \item \textbf{追従誤差RMS} $e_{\mathrm{rms}}$（HIL測定）。
+  \item \textbf{信頼性余裕} $R(t)$（NBTI/HCI/TDDBモデルに基づく余寿命比）。
+\end{itemize}
+
+\begin{table}[t]
+\caption{評価指標の提出フォーマット（例）}
+\label{tab:kpi}
+\centering
+\begin{tabular}{lccc}
+\toprule
+指標 & 従来MBD & SystemDK & 改善率[\%] \\
+\midrule
+$t_{\mathrm{settle}}$ [s] &  &  &  \\
+$M_p$ [\%] &  &  &  \\
+$\Delta T_{\mathrm{pk}}$ [°C] &  &  &  \\
+$\sigma_{\mathrm{pk}}$ [MPa] &  &  &  \\
+$e_{\mathrm{rms}}$ &  &  &  \\
+$R(t)$ [--] &  &  &  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ------------------------------------------------------------
+\subsection*{再設計アルゴリズム（Pseudo-code for Reconfiguration)}
+\begin{algorithm}[H]
+\caption{AITL-Driven Design Reconfiguration}
+\label{alg:reconf}
+\begin{algorithmic}[1]
+\STATE $S \leftarrow$ SystemDKスキーマ，ログ，FEM/測定データ
+\IF{$\mathrm{DetectInconsistency}(S)=\texttt{true}$}
+  \STATE $\Delta \leftarrow \mathrm{Diagnose}(S)$
+  \STATE $\Pi \leftarrow \mathrm{ProposeRedesign}(\Delta)$ \COMMENT{LLM層（RAG + 物理制約）}
+  \STATE $\{\theta',x'\} \leftarrow \mathrm{Apply}(\Pi)$ \COMMENT{PID/FSMへAXI4-Lite更新}
+  \STATE $\mathrm{Verify}(S,\theta',x')$ \COMMENT{HIL + FEM再実行}
+\ENDIF
+\STATE 収束条件(\ref{eq:conv})\&(\ref{eq:timescales})\&(\ref{eq:invariant})を満たすまで反復
+\end{algorithmic}
+\end{algorithm}
+
+% ------------------------------------------------------------
+\subsection*{再現性（Reproducibility Checklist）}
+\begin{enumerate}
+  \item \textbf{スキーマ：} JSON/YAML完全版，バージョン固定（ハッシュ付与）。
+  \item \textbf{モデル：} FEMメッシュ・材料定数・境界条件・負荷ケースを明示。
+  \item \textbf{制御：} サンプリング周期，固定小数点幅，飽和処理，アンチワインドアップ方式。
+  \item \textbf{I/F：} AXI4-Liteレジスタマップ（PID/FSM/LLMコマンド領域）を表に提示。
+  \item \textbf{計測：} センサ仕様，ノイズ整形，フィルタ係数，HIL台構成図。
+  \item \textbf{公開物：} スクリプト（生成～合成～HIL自動化），図表用ノートブック，KPI再計算手順。
+\end{enumerate}
