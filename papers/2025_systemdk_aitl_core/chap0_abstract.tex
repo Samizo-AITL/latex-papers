@@ -1,36 +1,39 @@
 % ============================================================
-% 要旨・キーワード（日本語・英語併記／IEEEスタイル準拠）
+% 要旨・キーワード（日本語・英語併記／IEEEスタイル準拠：Final）
 % ============================================================
 \begin{abstract}
-本論文は，設計，信頼性，および制御を統一的に扱う新しい工学アーキテクチャ
+本論文では，設計・信頼性・制御を統合的に扱う新しい工学アーキテクチャ
 \textbf{SystemDK with AITL Core}を提案する。
-SystemDK（System Design Kernel）は，設計構造・解析データ・制御モデルを統合し，
-設計の全階層を一貫的に接続する知識基盤である。
-AITL（Adaptive Intelligent Tri-Layer）はPID，FSM，およびLLMの三層から構成され，
-PID層は物理的安定性を，FSM層は動作状態の一貫性を，
-LLM層は設計情報の論理的整合性をそれぞれ保証する。
-本体系は，物理モデルと論理制御モデルの動的結合により，
-設計空間の安定性と情報的整合性を同時に実現することを目的とする。
-最終的には，SystemDK with AITL Coreを
-自律的設計システム（Autonomous Design System）の基盤として確立することを目指す。
+SystemDK（System Design Kernel）は，設計構造，解析データ，および制御モデルを
+共通スキーマ上で統合し，全設計階層を一貫的に接続する知識基盤である。
+AITL（Adaptive Intelligent Tri-Layer）はPID，FSM，LLMの三層から構成され，
+PID層は物理的安定性を維持し，FSM層は動作モード遷移の一貫性を保証し，
+LLM層は設計情報の論理的整合性を検証する。
+SystemDK with AITL Coreは，
+これらの層を動的に結合することで，
+設計構造と制御論理の整合をリアルタイムに最適化することを可能にする。
+本体系は，制御対象（ロボット・アクチュエータなど）の物理安定化と，
+チップレットを含む電子構造設計の整合管理を同時に扱うことができ，
+自律的かつ自己整合的な設計システムの基盤を形成する。
 
 \bigskip
 \textbf{Abstract (English):}
 This paper proposes a new engineering architecture,
 \textbf{SystemDK with AITL Core}, which unifies design, reliability, and control
-within a single formal framework.
+within a single formalized framework.
 SystemDK (System Design Kernel) integrates design structure, analysis data,
-and control models into a coherent knowledge base that connects all layers of design.
+and control models on a shared schema, providing consistent connectivity
+across all levels of design.
 AITL (Adaptive Intelligent Tri-Layer) consists of three functional layers:
 a PID layer ensuring physical stability, an FSM layer supervising operational consistency,
 and an LLM layer verifying logical integrity of design information.
-By dynamically coupling physical and logical models,
-the framework achieves simultaneous stability and informational coherence
-across the design hierarchy.
-This study aims to establish SystemDK with AITL Core as
-a foundational architecture for autonomous and self-consistent engineering systems.
+By dynamically coupling these layers,
+the framework enables real-time optimization between physical structures and control logic.
+The proposed system can be applied to both robotic and actuator motion control
+and chiplet-based electronic design,
+establishing a foundation for autonomous and self-consistent engineering systems.
 \end{abstract}
 
 \begin{IEEEkeywords}
-System Design, Reliability, Control Integration, PID, FSM, LLM, Autonomous Architecture, Integrated Framework, Self-consistent Engineering
+System Design, Reliability, Control Integration, PID Control, FSM, LLM, Chiplet Design, Autonomous Architecture, Self-consistent Engineering
 \end{IEEEkeywords}
