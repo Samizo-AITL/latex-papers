@@ -43,17 +43,10 @@ LLM層はこのスキーマを直接参照し，
 
 % listings は ASCII のみ。日本語は外に書くこと。
 \lstset{
-  language=json,
-  breaklines=true,
-  breakatwhitespace=false,
-  columns=fullflexible,
-  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},
-  basicstyle=\ttfamily\scriptsize,
-  backgroundcolor=\color{lightgray},
-  frame=single,
-  xleftmargin=2pt,
-  xrightmargin=2pt
+  style=ieee-tight,         % ← 2段用タイト枠（はみ出し防止・キャプション下）
+  language=json
 }
+\vspace{0.25\baselineskip}  % ← 見出しとの衝突をわずかに回避
 \begin{lstlisting}[caption={SystemDK schema example},label={lst:sdk_schema}]
 {
   "SystemDK": {
@@ -99,17 +92,10 @@ LLM層はSystemDKスキーマ全体を監視し，
 （※ listings は ASCII のみ。日本語コメントは外に書く。）
 
 \lstset{
-  language={},                  % 明示的に言語なし（装飾最小）
-  breaklines=true,
-  breakatwhitespace=false,
-  columns=fullflexible,
-  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},
-  basicstyle=\ttfamily\scriptsize,
-  backgroundcolor=\color{lightgray},
-  frame=single,
-  xleftmargin=2pt,
-  xrightmargin=2pt
+  style=ieee-tight,         % ← タイト枠を再利用
+  language={}               % ← 言語なし（装飾最小）
 }
+\vspace{0.25\baselineskip}
 \begin{lstlisting}[caption={LLM-driven redesign procedure},label={lst:llm_proc}]
 procedure LLM_Reconfiguration(SystemDK):
     input: current SystemDK schema S
