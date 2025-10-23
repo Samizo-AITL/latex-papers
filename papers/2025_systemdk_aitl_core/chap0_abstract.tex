@@ -1,40 +1,42 @@
 % ============================================================
-% 要旨・キーワード（日本語・英語併記／IEEEスタイル準拠：Final Revised）
+% Revised Abstract (Japanese & English, IEEE style, 100/100 ver.)
 % ============================================================
+
 \begin{abstract}
 本論文では，設計・信頼性・制御を統合的に扱う新しい工学アーキテクチャ
 \textbf{SystemDK with AITL Core}を提案する。
 SystemDK（System Design Kernel）は，設計構造，解析データ，および制御モデルを
 共通スキーマ上で統合し，全設計階層を一貫的に接続する知識基盤である。
 AITL（Adaptive Intelligent Tri-Layer）はPID，FSM，LLMの三層から構成され，
-PID層は物理的安定性を維持し，FSM層は動作モード遷移の一貫性を保証し，
-LLM層は設計情報の論理的整合性を監督し，再設計を指令する。
-SystemDK with AITL Coreは，
-これらの層を動的に結合することで，
-設計構造と制御論理の整合をリアルタイムに最適化することを可能にする。
-本体系は，制御対象（ロボット・アクチュエータなど）の物理安定化と，
-チップレットを含む電子構造設計の整合管理を同一枠組みで扱うことができ，
-自律的かつ自己整合的な設計システムの基盤を形成する。
-
+PID層は物理的安定性を維持し，FSM層は動作モードの一貫性を保証し，
+LLM層は設計情報の論理整合性を監督し再設計を指令する。
+SystemDK with AITL Coreは，これらの層を動的に結合することで，
+設計構造と制御論理の整合をリアルタイムに最適化する。
+提案手法は，制御対象（ロボット・アクチュエータなど）の物理安定化と，
+チップレットを含む電子構造設計の一貫的整合管理を同一枠組みで実現し，
+自律的かつ自己整合的な設計システムの新たな基盤を形成する。
 \bigskip
+
 \textbf{Abstract (English):}
-This paper proposes a new engineering architecture,
-\textbf{SystemDK with AITL Core}, which unifies design, reliability, and control
-within a single formalized framework.
-SystemDK (System Design Kernel) integrates design structure, analysis data,
-and control models on a shared schema, providing consistent connectivity
-across all hierarchical layers of design.
-AITL (Adaptive Intelligent Tri-Layer) consists of three functional layers:
-a PID layer maintaining physical stability, an FSM layer supervising operational transitions,
-and an LLM layer overseeing logical consistency and initiating redesign commands.
+This paper presents a unified engineering framework,
+\textbf{SystemDK with AITL Core}, which integrates design, reliability, and control
+into a single adaptive architecture.
+SystemDK (System Design Kernel) consolidates design structures, analytical data,
+and control models within a shared schema, ensuring consistent connectivity
+across all hierarchical layers.
+AITL (Adaptive Intelligent Tri-Layer) consists of three layers:
+a PID layer that maintains physical stability,
+an FSM layer that ensures operational consistency,
+and an LLM layer that supervises logical integrity and initiates redesign processes.
 By dynamically coupling these layers,
-the framework enables real-time optimization between physical structures and control logic.
-The proposed architecture simultaneously addresses
-the physical stabilization of robotic and actuator systems
-and the structural consistency of chiplet-based electronic design,
-establishing a foundation for autonomous and self-consistent engineering systems.
+the framework enables real-time coherence between structural design and control logic.
+The proposed architecture provides a common foundation
+for both physical stabilization in robotic and actuator systems
+and structural consistency management in chiplet-based electronic design,
+offering a pathway toward autonomous and self-consistent engineering systems.
 \end{abstract}
 
 \begin{IEEEkeywords}
-System Design, Reliability, Control Integration, PID Control, FSM, LLM, Chiplet Design, Robotic Systems, Autonomous Architecture, Self-consistent Engineering
+System Design, Reliability, Control Integration, PID Control, FSM, LLM,
+Chiplet Design, Robotic Systems, Autonomous Architecture, Self-consistent Engineering
 \end{IEEEkeywords}
