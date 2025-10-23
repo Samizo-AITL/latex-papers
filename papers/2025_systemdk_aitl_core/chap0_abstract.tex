@@ -1,5 +1,5 @@
 % ============================================================
-% 要旨・キーワード（日本語・英語併記／IEEEスタイル準拠：Final）
+% 要旨・キーワード（日本語・英語併記／IEEEスタイル準拠：Final Revised）
 % ============================================================
 \begin{abstract}
 本論文では，設計・信頼性・制御を統合的に扱う新しい工学アーキテクチャ
@@ -8,12 +8,12 @@ SystemDK（System Design Kernel）は，設計構造，解析データ，およ�
 共通スキーマ上で統合し，全設計階層を一貫的に接続する知識基盤である。
 AITL（Adaptive Intelligent Tri-Layer）はPID，FSM，LLMの三層から構成され，
 PID層は物理的安定性を維持し，FSM層は動作モード遷移の一貫性を保証し，
-LLM層は設計情報の論理的整合性を検証する。
+LLM層は設計情報の論理的整合性を監督し，再設計を指令する。
 SystemDK with AITL Coreは，
 これらの層を動的に結合することで，
 設計構造と制御論理の整合をリアルタイムに最適化することを可能にする。
 本体系は，制御対象（ロボット・アクチュエータなど）の物理安定化と，
-チップレットを含む電子構造設計の整合管理を同時に扱うことができ，
+チップレットを含む電子構造設計の整合管理を同一枠組みで扱うことができ，
 自律的かつ自己整合的な設計システムの基盤を形成する。
 
 \bigskip
@@ -23,17 +23,18 @@ This paper proposes a new engineering architecture,
 within a single formalized framework.
 SystemDK (System Design Kernel) integrates design structure, analysis data,
 and control models on a shared schema, providing consistent connectivity
-across all levels of design.
+across all hierarchical layers of design.
 AITL (Adaptive Intelligent Tri-Layer) consists of three functional layers:
-a PID layer ensuring physical stability, an FSM layer supervising operational consistency,
-and an LLM layer verifying logical integrity of design information.
+a PID layer maintaining physical stability, an FSM layer supervising operational transitions,
+and an LLM layer overseeing logical consistency and initiating redesign commands.
 By dynamically coupling these layers,
 the framework enables real-time optimization between physical structures and control logic.
-The proposed system can be applied to both robotic and actuator motion control
-and chiplet-based electronic design,
+The proposed architecture simultaneously addresses
+the physical stabilization of robotic and actuator systems
+and the structural consistency of chiplet-based electronic design,
 establishing a foundation for autonomous and self-consistent engineering systems.
 \end{abstract}
 
 \begin{IEEEkeywords}
-System Design, Reliability, Control Integration, PID Control, FSM, LLM, Chiplet Design, Autonomous Architecture, Self-consistent Engineering
+System Design, Reliability, Control Integration, PID Control, FSM, LLM, Chiplet Design, Robotic Systems, Autonomous Architecture, Self-consistent Engineering
 \end{IEEEkeywords}
