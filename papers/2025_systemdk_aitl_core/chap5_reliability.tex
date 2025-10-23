@@ -5,94 +5,141 @@
 
 SystemDK with AITL Core における信頼性統合とは，
 物理的劣化現象を制御ループ内に組み込み，
-設計・解析・制御の三要素を動的に連携させることで，
-長期安定性と自律補償性を同時に保証する仕組みである。
+設計・解析・制御を単一スキーマで同時最適化することで，
+長期安定性と自律補償性を保証する仕組みである。
+従来は設計完了後の「後工程解析」であり制御設計と非同期であったが，
+本体系はAITL（三層：PID・FSM・LLM）により
+\textbf{Reliability-Control Loop} を閉じる。
 
-従来の信頼性解析は，設計完了後に独立して実施される「後工程解析」であり，
-制御設計との整合が取れず，劣化進行に伴う制御性能の劣化を補償できなかった。
-本体系では，AITLの三層構造（PID・FSM・LLM）が協調し，
-信頼性パラメータを監視・補償・再定義することで，
-**信頼性制御ループ（Reliability-Control Loop）** を閉じる構造を実現する。
-
-% ------------------------------------------------------------
-\subsection{PID層：物理劣化への実時間補償}
-PID層は最内層として物理量（温度・電流・応力など）の
-閉ループ制御を担うとともに，
-時間依存の劣化現象を制御対象に含める。
-
-代表的な信頼性劣化要因は以下の通りである：
-\begin{itemize}
-  \item NBTI（Negative Bias Temperature Instability）
-  \item HCI（Hot Carrier Injection）
-  \item TDDB（Time Dependent Dielectric Breakdown）
-  \item 熱劣化および機械的疲労
-\end{itemize}
-
-これらは温度 $T$，電圧 $V$，応力 $\sigma$，時間 $t$ の関数として，
-劣化進行量 $\Delta P(t)$ を次式で表す：
+\subsection{PID層：劣化を考慮した実時間補償}
+代表的な劣化要因（NBTI, HCI, TDDB, 熱・機械疲労）を
+温度 $T$，電圧 $V$，応力 $\sigma$，時間 $t$ の関数として
+\emph{健康状態} $h(t)$ に集約する：
 \begin{equation}
-\Delta P(t) = f(T, V, \sigma, t)
+h(t) = f(T,V,\sigma,t),\quad 0 \le h < 1,
+\label{eq:health}
+\end{equation}
+ここで $h \!\uparrow$ は性能劣化の進行を表す。
+例として，NBTIのしきい値シフトは
+\begin{equation}
+\Delta V_{th}(t) = A_{\mathrm{NBTI}}\,
+\exp\!\left(-\frac{E_a}{k T}\right)\!
+\left(\frac{V}{V_0}\right)^{m} t^{n},
+\label{eq:nbti}
+\end{equation}
+HCIの劣化量は
+\begin{equation}
+\Delta g_m(t) = A_{\mathrm{HCI}}\,
+\left(\frac{I_d}{I_0}\right)^{p}
+\exp\!\left(-\frac{E_a}{k T}\right) t^{n},
+\label{eq:hci}
+\end{equation}
+TDDBの破壊確率（Weibull）は
+\begin{equation}
+F_{\mathrm{TDDB}}(t)=1-\exp\!\left[-\left(\frac{t}{\eta(V,T)}\right)^{\beta}\right],
+\quad \eta(V,T)=\eta_0 \exp\!\left(\frac{\gamma}{E}\right),
+\label{eq:tddb}
+\end{equation}
+を用いる（$E$は酸化膜電界，$\beta$形状，$\eta$尺度）。
+これらを正規化し $h(t)$ に写像する。
+
+劣化はプラントゲイン $G$・時定数 $\tau$ 等へ反映され，
+周波数特性に影響する。PIDゲインは $h$ の関数として適応：
+\begin{align}
+K_P(t) &= K_{P0}\bigl(1 - \alpha_P\,h(t)\bigr),\quad
+K_I(t) = K_{I0}\bigl(1 - \alpha_I\,h(t)\bigr), \label{eq:gain_sched}\\
+K_D(t) &= K_{D0}\bigl(1 - \alpha_D\,h(t)\bigr),
+\end{align}
+ただし $\alpha_{\{\cdot\}}\!\ge 0$ はスケジューリング感度。
+位相余裕 $\phi_m(t)$ が安全余裕 $\phi_{\min}$ を常に満たすよう
+\begin{equation}
+\phi_m\bigl(K_P(t),K_I(t),K_D(t);\,G(h)\bigr) \ge \phi_{\min}.
+\label{eq:pm}
+\end{equation}
+アンチワインドアップとアクチュエータ飽和制限も $h$ 連動で更新する。
+
+\subsection{FSM層：信頼性状態監督と安全モード制御}
+信頼性監視変数 $\theta(t)$（例：$T_{\max},\,\sigma_{\max},\,I_{\mathrm{RMS}}$）から
+統合指標 $\Theta(t)$ を構成し，統計的に設定した閾値で遷移：
+\begin{equation}
+\Theta(t)=w_T\frac{T}{T_{\mathrm{crit}}}+w_\sigma\frac{\sigma}{\sigma_{\mathrm{crit}}}
++w_V\frac{V}{V_{\mathrm{crit}}},\quad \sum w_i=1.
+\end{equation}
+\[
+\texttt{NORMAL}\xrightarrow{\Theta>\Theta_{\mathrm{warn}}}\texttt{DEGRADE}
+\xrightarrow{\Theta>\Theta_{\mathrm{crit}}}\texttt{SAFE\_SHUTDOWN}.
+\]
+閾値は実運転分布 $\mathcal{N}(\mu,\sigma)$ から
+$\Theta_{\mathrm{warn}}\!=\mu+2\sigma$，
+$\Theta_{\mathrm{crit}}\!=\mu+3\sigma$ 等で初期化し，
+運用で逐次更新する。
+安全不変条件は
+\begin{equation}
+\mathcal{I}:\; T\!\le\!T_{\mathrm{crit}},\ \sigma\!\le\!\sigma_{\mathrm{crit}},\ V\!\le\!V_{\mathrm{crit}}
+\Rightarrow \texttt{SAFE}(t)\ \text{保持}.
+\label{eq:invariant}
 \end{equation}
 
-PID制御器はこの $\Delta P(t)$ を実時間で参照し，
-ゲイン $K_P, K_I, K_D$ を適応的に再設定することで，
-劣化進行に伴う制御性能低下を補償する。
-すなわちPID層は，
-\textbf{物理量と時間変動を同時に制御する動的安定化層}
-として機能する。
+\subsection{LLM層：長期整合・再同定・再設計}
+LLM層は SystemDK スキーマとログ（FEM/HIL/製造試験）に対し
+\emph{整合性検査} $\mathrm{ConsistencyCheck}(\cdot)$ を実施し，
+劣化モデルの同定・入替え・ハイブリダイズを提案する。
+RAG（スキーマ＋物理モデル）を用いて
+\[
+\mathrm{ProposeRedesign}:\ \{f,\,G,\,\theta\}\ \mapsto\ \{f',\,G',\,\theta'\}
+\]
+を生成し，AXI4-Lite 経由で PID/FSM に反映する。
+リアルタイム性は要求せず（$\tau_{\mathrm{PID}}\!\ll\!\tau_{\mathrm{FSM}}\!\ll\!\tau_{\mathrm{LLM}}$），
+オフライン〜準オンラインで運用する。
 
-% ------------------------------------------------------------
-\subsection{FSM層：信頼性状態の監督とモード制御}
-FSM層は，PID層が出力する信頼性指標を監視し，
-閾値超過や異常傾向を検出した場合に，
-安全動作モードへ遷移させる監督層である。
+\subsection{ヘルス推定と同定（Observer/Estimator）}
+$h$ は不可観測であるため拡張カルマン／UKFで同定する。
+状態ベクトル $\xi=[x^\top\ h]^\top$，入力 $u$，観測 $y$ とすると
+\begin{align}
+\dot{x} &= f_x(x,u,h,t) + w,\qquad
+\dot{h} = f_h(T,V,\sigma,t) + \nu, \\
+y &= g(x,u,h,t) + v,
+\end{align}
+$w,\nu,v$ は雑音。推定 $\hat{h}$ を用いて
+(\ref{eq:gain_sched}) をオンライン更新し，
+(\ref{eq:pm}) と (\ref{eq:invariant}) を満たすようゲインを制約付き最適化する：
+\begin{equation}
+\min_{\theta} J = \int_0^{T_f}\!\!\left(q_e e^2 + q_u u^2 + q_h \hat{h}^2\right)dt
+\quad \text{s.t.}\ \ (\ref{eq:pm}),(\ref{eq:invariant}).
+\end{equation}
 
-信頼性監視変数を $\theta(t)$ とすると，
-典型的な状態遷移は以下で表される：
-\begin{center}
-\texttt{NORMAL}
-$\xrightarrow{\theta > \theta_{\text{warn}}}$
-\texttt{DEGRADE}
-$\xrightarrow{\theta > \theta_{\text{crit}}}$
-\texttt{SAFE\_SHUTDOWN}
-\end{center}
+\subsection{信頼性関数と余寿命（RUL）}
+要素寿命分布を Weibull とし，システムは直列構成の保守的近似：
+\begin{align}
+R_i(t) &= \exp\!\left[-\left(\frac{t}{\eta_i(T,V,\sigma)}\right)^{\beta_i}\right],\\
+R_{\mathrm{sys}}(t) &= \prod_i R_i(t),\quad
+\mathrm{RUL} = \inf\{t: R_{\mathrm{sys}}(t)\le R_{\min}\}.
+\end{align}
+$\eta_i$ には Arrhenius/E-model 等の加速を含める。
+LLM層は $R_{\mathrm{sys}}$ が閾値 $R_{\min}$ を下回る予兆で
+\texttt{DEGRADE} への遷移と設計変更案（熱経路改善，駆動電圧デレーティング等）を提示する。
 
-\begin{itemize}
-  \item \texttt{NORMAL}：信頼性指標が設計範囲内で安定。
-  \item \texttt{DEGRADE}：劣化傾向を検出し，PIDゲイン再調整を指令。
-  \item \texttt{SAFE\_SHUTDOWN}：物理破壊リスクを検出し，安全モードへ遷移。
-\end{itemize}
+\subsection{統合ループ：制御×信頼性の閉結合}
+三層協調により，
+PIDは実時間補償，FSMは安全監督，LLMは長期整合と再設計を担い，
+SystemDK上で「制御安定化」と「信頼性解析」が同一スキーマ内で結合される。
+Lyapunov 関数 $V(x)$ に対し
+\[
+\dot{V} \le -\lambda V + \gamma\,h(t)
+\]
+を満たすようゲインと操作を更新し，$h\!\downarrow$（補償）で
+漸近安定性余裕を維持する。
 
-FSM層はこの遷移ロジックをSystemDKスキーマ上に形式定義し，
-PID層の動作を安全側へ導く。
-これにより，FSM層は\textbf{信頼性監督の中間層}として
-実時間監視とモード制御を統合する。
+\subsection*{パラメータ校正と再現性（実務テンプレ）}
+\begin{enumerate}
+\item \textbf{モデル校正：} $E_a,n,m,p,\beta,\eta_0,\gamma$ をベンチ試験で回帰。
+\item \textbf{観測設計：} $T,\sigma,V,I_{\mathrm{RMS}}$ の計測系を仕様化（帯域・量子化・校正）。
+\item \textbf{同定：} EKF/UKF の雑音共分散と初期化（$\hat{h}(0)=0$ 等）。
+\item \textbf{安全値：} $T_{\mathrm{crit}},\sigma_{\mathrm{crit}},V_{\mathrm{crit}},\phi_{\min}$ を設計審査で承認。
+\item \textbf{I/F：} AXI4-Lite レジスタに $K_P,K_I,K_D,\Theta_{\mathrm{warn/crit}}$ を割当（表で公開）。
+\item \textbf{報告：} KPI（$t_{\mathrm{settle}},M_p,\Delta T_{\mathrm{pk}},\sigma_{\mathrm{pk}},e_{\mathrm{rms}},R(t)$）と改善率を表\&図で提示。
+\end{enumerate}
 
-% ------------------------------------------------------------
-\subsection{LLM層：長期信頼性整合と設計再帰}
-LLM層は，SystemDK全体を監督する外層知能として，
-設計・構造・制御データの長期整合性を維持する。
-FEM解析や実運転データから新しい劣化モデルが得られた場合，
-LLM層はSystemDKスキーマ全体を再評価し，
-設計パラメータ・制御条件・信頼性境界を再同定する。
-
-LLM層はまた，信頼性履歴を「知識ノード」として保存し，
-条件付き信頼性関数 $R(T, \sigma, V)$ を
-逐次再学習データとして蓄積する。
-これにより，未知の環境条件下でも自律的な設計修正が可能となり，
-長期運用時の信頼性モデルが進化的に更新される。
-
-% ------------------------------------------------------------
-\subsection{統合ループ：信頼性と制御の自律結合}
-三層が協調することで，
-信頼性と制御が一体化した動的ループが形成される。
-PID層は実時間補償，FSM層は安全監督，
-LLM層は設計整合と再構成を担い，
-SystemDK上で「制御安定化」と「信頼性解析」が
-同一スキーマ内で結合される。
-
-この統合ループにより，
-SystemDK with AITL Core は
-時間軸に沿った劣化進行を制御ループ内で補償し，
-設計寿命・安定性・安全性を同時最適化する
-\textbf{自律信頼性設計理論体系}を実現する。
+\subsection*{記号一覧（抜粋）}
+$T$: 温度,\ $V$: 電圧,\ $\sigma$: 応力,\ $h$: 健康状態,\ $R$: 信頼性関数,\
+$\beta$: Weibull形状,\ $\eta$: 尺度,\ $\phi_m$: 位相余裕.
