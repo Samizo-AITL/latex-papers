@@ -69,21 +69,26 @@ MBSE（Model-Based Systems Engineering），
 LLMによる論理再設計機構により，
 従来法を超えるスケーラビリティと自律性を実現する。
 
+% --- Table II: Comparison (fits in one column) ---
 \begin{table}[t]
-\caption{従来設計手法との比較}
-\label{tab:compare}
-\centering
-\begin{tabular}{lccc}
-\toprule
-項目 & MBD & MBSE & SystemDK+A I T L \\
-\midrule
-統合基盤 & モデル個別 & ドメイン連携 & \textbf{共通スキーマ統合} \\
-制御結合 & 弱 & 構造連携のみ & \textbf{実時間PID閉ループ} \\
-信頼性統合 & 無 & オフライン解析 & \textbf{制御内リアルタイム補償} \\
-再設計機構 & 手動更新 & SysML再生成 & \textbf{LLM自律再構成} \\
-学習・適応 & 無 & 限定的 & \textbf{オンライン最適化} \\
-\bottomrule
-\end{tabular}
+  \centering
+  \caption{従来設計手法との比較（MBD/MBSE vs. SystemDK + AITL）}
+  \label{tab:compare}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.12}
+  % 列幅合計 < \columnwidth を厳守
+  \begin{tabular}{p{18mm} p{16mm} p{16mm} p{25mm}}
+    \toprule
+    項目 & MBD & MBSE & SystemDK+A I T L \\
+    \midrule
+    統合基盤 & モデル個別 & ドメイン連携 & 共通スキーマ統合 \\
+    制御結合 & 弱 & 構造連携のみ & 実時間PID閉ループ \\
+    信頼性統合 & 無 & オフライン解析 & 制御内リアルタイム補償 \\
+    再設計機構 & 手動更新 & SysML再生成 & LLM自律再構成 \\
+    学習・適応 & 無 & 限定的 & オンライン最適化 \\
+    \bottomrule
+  \end{tabular}
 \end{table}
 
 提案手法の特徴は，設計全体を閉ループで制御可能な「安定系」として扱う点にあり，
