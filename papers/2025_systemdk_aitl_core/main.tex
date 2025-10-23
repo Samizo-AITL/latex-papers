@@ -7,35 +7,50 @@
 % ----------------------
 % Core packages (order)
 % ----------------------
-\usepackage[T1]{fontenc}        % 欧文フォントのエンコーディング（警告低減）
+\usepackage[T1]{fontenc}        % 欧文エンコーディング
 \usepackage{CJKutf8}            % 日本語（CJK）
+
 \usepackage{graphicx}           % 図
-\usepackage{amsmath}            % 数式
-\usepackage{amssymb}            % 追加記号
-\usepackage{bm}                 % 太字ベクトルなど（必要に応じて）
-\usepackage{cite}               % 参考文献の圧縮
-\usepackage{color}              % 色（listings等で使用）
-\usepackage{listings}           % ソースコード
-\usepackage{booktabs}           % 表の罫線（\toprule \midrule \bottomrule）
-\usepackage{textcomp}           % \textrightarrow 等（Courier併用時の記号警告対策）
-\usepackage{microtype}          % 組版の見栄え・Underfull緩和（pdfTeX対応）
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{cite}
+
+\usepackage{color}
+\usepackage{listings}           % ソースコードは英数のみ
+\usepackage{booktabs}           % \toprule \midrule \bottomrule
+\usepackage{textcomp}           % 矢印等の記号（Courier警告対策）
+\usepackage{array}              % p{..}列や >{\raggedleft} 等
+\usepackage{siunitx}            % 単位・桁揃え（表の数値）
+\sisetup{
+  detect-all,
+  detect-weight=true,
+  mode=text,
+  table-format=3.2
+}
+
+\usepackage{microtype}          % はみ出し/アンダーフル緩和
 
 % --- TikZ（図用） ---
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes,fit,calc}
 
-% --- algorithms（第4章の擬似コードで使用） ---
+% --- algorithms（使う場合のみ） ---
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
 % ----------------------
-% hyperref は最後に近い位置で
+% hyperref は最後に近い位置で（トラブル回避）
 % ----------------------
 \usepackage[hidelinks]{hyperref}
 
 % ----------------------
-% Listings の安全設定（日本語は入れない）
+% “はみ出し”対策の実用設定
 % ----------------------
+\emergencystretch=2em
+\sloppy
+\def\UrlBreaks{\do\/\do-\do_\do.\do:\do?\do&}
+% listings: 日本語を入れない（CJK外で）
 \definecolor{lightgray}{gray}{0.95}
 \lstset{
   backgroundcolor=\color{lightgray},
@@ -45,7 +60,7 @@
   tabsize=2,
   keepspaces=true,
   columns=fullflexible,
-  extendedchars=false,      % ← 日本語を listings に入れない
+  extendedchars=false,   % 日本語を listings に入れない
   inputencoding=ascii
 }
 
