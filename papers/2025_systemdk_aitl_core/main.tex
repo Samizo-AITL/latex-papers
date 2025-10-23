@@ -60,64 +60,49 @@
 \frenchspacing
 \def\UrlBreaks{\do\/\do-\do_\do.\do:\do?\do&}
 
-% --- colors (listings背景で使用) ---
-\usepackage{xcolor}
-\definecolor{lightgray}{gray}{0.95}
-
-% --- listings: 日本語は入れない（ASCII のみ） ---
+% =====================================================
+% listings: 白背景・枠なし・はみ出し防止（IEEE 2段向け）
+% =====================================================
 \usepackage{listings}
+\usepackage{xcolor}
 
-% ← postbreak で使う安全なマクロ（カンマ等を含めない）
 \newcommand{\ListingPostbreak}{\textcolor{gray}{\ensuremath{\hookrightarrow}}\ }
 
-% ---- IEEE 2段用タイトスタイル（安全版）----
 \lstdefinestyle{ieee-tight}{
   columns=fullflexible,
   keepspaces=true,
   breaklines=true,
   breakatwhitespace=false,
   basicstyle=\ttfamily\scriptsize,
-  frame=single,
-  backgroundcolor=\color{lightgray},
-  % 枠内余白（詰め気味）
-  framexleftmargin=0.6ex,
-  framexrightmargin=0.6ex,
-  framextopmargin=0.4ex,
-  framexbottommargin=0.4ex,
-  % 行幅は常に段幅
-  linewidth=\linewidth,
-  xleftmargin=0pt,
-  xrightmargin=0pt,
-  % 行番号（必要なら）
+  % --- 背景と枠を消す ---
+  frame=none,
+  backgroundcolor=\color{white},
+  % --- 行番号（必要なら ON） ---
   numbers=left,
   numberstyle=\tiny,
   numbersep=4pt,
-  % キャプションを下に（見出し重なり防止）
+  % --- 段幅に合わせる ---
+  linewidth=\linewidth,
+  xleftmargin=0pt,
+  xrightmargin=0pt,
   captionpos=b,
-  % 周囲の上下間隔（見出し衝突回避）
   aboveskip=0.5\baselineskip,
   belowskip=0.6\baselineskip,
-  % 折り返し記号（安全なマクロを使用）
   postbreak=\mbox{\ListingPostbreak}
 }
 
-% --- 既定の \lstset（最小限・安全）
-\lstset{
-  style=ieee-tight,
-  inputencoding=ascii,
-  extendedchars=false
-}
-
-% --- JSON 言語定義（1個だけに統一） ---
+% --- JSON言語定義（背景・枠なしバージョン）---
 \lstdefinelanguage{json}{
   basicstyle=\ttfamily\scriptsize,
   showstringspaces=false,
   breaklines=true,
   breakatwhitespace=false,
-  frame=single,
+  frame=none,
   morestring=[b]",
   stringstyle=\color{black},
-  numbers=left, numberstyle=\tiny, numbersep=4pt,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=4pt,
   literate=
    *{0}{{0}}1 {1}{{1}}1 {2}{{2}}1 {3}{{3}}1 {4}{{4}}1
     {5}{{5}}1 {6}{{6}}1 {7}{{7}}1 {8}{{8}}1 {9}{{9}}1
