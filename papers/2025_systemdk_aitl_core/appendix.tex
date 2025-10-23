@@ -1,5 +1,5 @@
 % ============================================================
-% Appendix A: FPGA実装インタフェース仕様（AITL結合 / Final++ 💯）
+% Appendix A: FPGA実装インタフェース仕様（AITL結合 / 💯修正版）
 % ============================================================
 \appendix
 \section*{付録A：AITL–FPGAインタフェース仕様}
@@ -9,34 +9,50 @@ SystemDKスキーマを通じてLLM層および解析系と同期する。
 SystemDKはVerilog自動生成時に以下のインタフェース構造を定義する。
 
 \begin{itemize}
-  \item \textbf{Clock Domain:} 100 MHz／200 MHz選択式。全制御ロジックはシステムクロック信号 \texttt{clk\_sys} に同期。
-  \item \textbf{Latency:} PIDループは1クロック周期遅延（10 ns @ 100 MHz）。
-        FSM監督信号は非同期割込み（event-driven interrupt）により伝達。
-  \item \textbf{Memory Map:} 制御ゲイン，FSM閾値，LLM指令値をそれぞれ
-        \texttt{0x0000–0x00FF}，\texttt{0x0100–0x01FF}，\texttt{0x0200–0x02FF}に割当。
-  \item \textbf{Communication:} AITL–FPGA間通信はAXI4-Liteバスを介して実装。
-        SystemDKホストが制御・更新命令を送信し，FPGAは即時反映する。
+  \setlength{\itemsep}{1pt}
+  \item \textbf{Clock Domain:} 100\,MHz／200\,MHz選択式。全制御ロジックは
+        システムクロック信号 \texttt{clk\_sys} に同期。
+  \item \textbf{Latency:} PIDループは1クロック周期遅延（10\,ns @ 100\,MHz）。
+        FSM監督信号は非同期割込み（event-driven interrupt）で伝達。
+  \item \textbf{Memory Map:} 制御ゲイン・FSM閾値・LLM指令値を
+        \texttt{0x0000--0x00FF}，
+        \texttt{0x0100--0x01FF}，
+        \texttt{0x0200--0x02FF} に割当。
+  \item \textbf{Communication:} AITL--FPGA間通信は
+        AXI4\-/Lite バスを介して実装。
+        SystemDKホストが制御・更新命令を送信し，
+        FPGAは即時反映する。
 \end{itemize}
 
 この構成により，
 LLM層が生成する再設計指令はFPGA上のPID／FSMパラメータに
 リアルタイムで反映され，
 SystemDK全体の閉ループ更新が動的に成立する。
-すなわち，FPGAはAITL三層を具現化する「物理的制御核（physical control kernel）」として機能する。
-
----
+FPGAはAITL三層を具現化する
+「物理的制御核（physical control kernel）」として機能する。
 
 % ============================================================
-% Appendix B: SystemDKスキーマ定義例（JSON形式 / Final++ 💯）
+% Appendix B: SystemDKスキーマ定義例（JSON形式 / 💯修正版）
 % ============================================================
 \section*{付録B：SystemDKスキーマ定義例（JSON形式）}
 
 以下にSystemDKのコアスキーマ定義例を示す。
-全ての設計・解析・制御データはこの階層構造上で同期管理される。
+全設計・解析・制御データはこの階層構造上で同期管理される。
 LLM層はこのスキーマを直接参照し，
 設計・解析・制御間の依存関係を動的に推論する。
 
-\begin{verbatim}
+\lstset{
+  language=json,
+  breaklines=true,
+  breakatwhitespace=false,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},
+  basicstyle=\ttfamily\scriptsize,
+  backgroundcolor=\color{lightgray},
+  frame=single,
+  xleftmargin=2pt,
+  xrightmargin=2pt
+}
+\begin{lstlisting}[caption={SystemDKスキーマ例},label={lst:sdk_schema}]
 {
   "SystemDK": {
     "Spec": {
@@ -47,35 +63,31 @@ LLM層はこのスキーマを直接参照し，
     "Control": {
       "PID": {"Kp": 2.4, "Ki": 0.05, "Kd": 0.01},
       "FSM": {
-        "states": ["NORMAL", "HOLD", "FAULT"],
+        "states": ["NORMAL","HOLD","FAULT"],
         "thresholds": {"temp_warn": 85, "temp_crit": 95}
       },
-      "LLM": {
-        "model": "GPT-5-engineering",
-        "mode": "analysis"
-      }
+      "LLM": {"model": "GPT-5-engineering","mode": "analysis"}
     },
     "Structure": {
-      "BRDK": {"material": "Cu", "thickness": "1.2 mm"},
-      "IPDK": {"interposer": "Si", "vias": "TSV-3D"}
+      "BRDK": {"material": "Cu","thickness": "1.2 mm"},
+      "IPDK": {"interposer": "Si","vias": "TSV-3D"}
     },
     "Analysis": {
-      "FEM": {"mesh": 2e6, "max_stress": "180 MPa"},
-      "Noise": {"PI": "stable", "SI": "good"}
+      "FEM": {"mesh": 2e6,"max_stress": "180 MPa"},
+      "Noise": {"PI": "stable","SI": "good"}
     }
   }
 }
-\end{verbatim}
+\end{lstlisting}
 
 SystemDKはこのスキーマを実行時に自律更新し，
 設計変更・解析結果・制御指令を常時整合化する。
 これにより，設計情報が静的ファイルではなく，
-\textbf{「動的に制御可能な知識グラフ（Dynamic Knowledge Graph）」}として扱われる。
-
----
+\textbf{「動的に制御可能な知識グラフ
+（Dynamic Knowledge Graph）」}として扱われる。
 
 % ============================================================
-% Appendix C: LLM層による再設計指令生成プロセス（擬似コード / Final++ 💯）
+% Appendix C: LLM層による再設計指令生成プロセス（擬似コード / 💯修正版）
 % ============================================================
 \section*{付録C：LLM層による再設計指令生成プロセス（擬似コード）}
 
@@ -83,20 +95,30 @@ LLM層はSystemDKスキーマ全体を監視し，
 不整合が発生した場合に再設計指令を生成・反映する。
 以下にその抽象化されたプロセスを示す。
 
-\begin{verbatim}
+\lstset{
+  language=Python,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},
+  basicstyle=\ttfamily\scriptsize,
+  backgroundcolor=\color{lightgray},
+  frame=single,
+  xleftmargin=2pt,
+  xrightmargin=2pt
+}
+\begin{lstlisting}[caption={LLM層の再設計指令生成プロセス},label={lst:llm_proc}]
 procedure LLM_Reconfiguration(SystemDK):
     Input: Current SystemDK schema S
     Δ = AnalyzeConsistency(S)             // 整合性解析
-    if Δ ≠ 0 then
-        cause     = Diagnose(Δ)           // 不整合要因推定
-        proposal  = GenerateRedesign(cause) // 再設計案生成
+    if Δ != 0:
+        cause    = Diagnose(Δ)            // 不整合要因推定
+        proposal = GenerateRedesign(cause) // 再設計案生成
         UpdateSchema(S, proposal)         // スキーマ更新
-        Notify(PID, FSM)                  // FPGAパラメータ即時更新
-        Re-run Verification()             // 再検証実行
-    else
+        Notify(PID, FSM)                  // FPGAパラメータ更新
+        ReRunVerification()               // 再検証実行
+    else:
         MaintainStableState()             // 安定状態維持
 end procedure
-\end{verbatim}
+\end{lstlisting}
 
 このプロセスにより，
 SystemDKは設計・解析・制御データの整合を常時確認し，
@@ -108,7 +130,7 @@ SystemDKは設計・解析・制御データの整合を常時確認し，
 ---
 
 \noindent
-以上の3付録により，
+以上3付録により，
 SystemDK with AITL Core の全階層構造，
 ハードウェア実装仕様，
 および知的再設計アルゴリズムの全体像が
