@@ -41,10 +41,12 @@ FPGAはAITL三層を具現化する
 LLM層はこのスキーマを直接参照し，
 設計・解析・制御間の依存関係を動的に推論する。
 
+% listings は ASCII のみ。日本語は外に書くこと。
 \lstset{
   language=json,
   breaklines=true,
   breakatwhitespace=false,
+  columns=fullflexible,
   postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},
   basicstyle=\ttfamily\scriptsize,
   backgroundcolor=\color{lightgray},
@@ -52,7 +54,7 @@ LLM層はこのスキーマを直接参照し，
   xleftmargin=2pt,
   xrightmargin=2pt
 }
-\begin{lstlisting}[caption={SystemDKスキーマ例},label={lst:sdk_schema}]
+\begin{lstlisting}[caption={SystemDK schema example},label={lst:sdk_schema}]
 {
   "SystemDK": {
     "Spec": {
@@ -73,7 +75,7 @@ LLM層はこのスキーマを直接参照し，
       "IPDK": {"interposer": "Si","vias": "TSV-3D"}
     },
     "Analysis": {
-      "FEM": {"mesh": 2e6,"max_stress": "180 MPa"},
+      "FEM": {"mesh": 2000000,"max_stress": "180 MPa"},
       "Noise": {"PI": "stable","SI": "good"}
     }
   }
@@ -94,10 +96,13 @@ SystemDKはこのスキーマを実行時に自律更新し，
 LLM層はSystemDKスキーマ全体を監視し，
 不整合が発生した場合に再設計指令を生成・反映する。
 以下にその抽象化されたプロセスを示す。
+（※ listings は ASCII のみ。日本語コメントは外に書く。）
 
 \lstset{
-  language=Python,
+  language={},                  % 明示的に言語なし（装飾最小）
   breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
   postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},
   basicstyle=\ttfamily\scriptsize,
   backgroundcolor=\color{lightgray},
@@ -105,18 +110,18 @@ LLM層はSystemDKスキーマ全体を監視し，
   xleftmargin=2pt,
   xrightmargin=2pt
 }
-\begin{lstlisting}[caption={LLM層の再設計指令生成プロセス},label={lst:llm_proc}]
+\begin{lstlisting}[caption={LLM-driven redesign procedure},label={lst:llm_proc}]
 procedure LLM_Reconfiguration(SystemDK):
-    Input: Current SystemDK schema S
-    Δ = AnalyzeConsistency(S)             // 整合性解析
-    if Δ != 0:
-        cause    = Diagnose(Δ)            // 不整合要因推定
-        proposal = GenerateRedesign(cause) // 再設計案生成
-        UpdateSchema(S, proposal)         // スキーマ更新
-        Notify(PID, FSM)                  // FPGAパラメータ更新
-        ReRunVerification()               // 再検証実行
+    input: current SystemDK schema S
+    delta = AnalyzeConsistency(S)                // consistency analysis
+    if delta != 0:
+        cause    = Diagnose(delta)               // root-cause estimation
+        proposal = GenerateRedesign(cause)       // redesign proposal
+        UpdateSchema(S, proposal)                // apply to schema
+        Notify(PID, FSM)                         // update FPGA parameters
+        ReRunVerification()                      // re-verify
     else:
-        MaintainStableState()             // 安定状態維持
+        MaintainStableState()                    // keep stable
 end procedure
 \end{lstlisting}
 
@@ -126,12 +131,3 @@ SystemDKは設計・解析・制御データの整合を常時確認し，
 これが本研究の中核である
 \textbf{「設計そのものを制御対象とする自律再設計ループ」}
 を構成する。
-
----
-
-\noindent
-以上3付録により，
-SystemDK with AITL Core の全階層構造，
-ハードウェア実装仕様，
-および知的再設計アルゴリズムの全体像が
-学術的・実装的に完全定義された。
