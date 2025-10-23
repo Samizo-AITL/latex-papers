@@ -98,3 +98,55 @@ AITLによる知的制御機構を通じて
 すなわちSystemDKは，
 \textbf{「設計そのものを制御対象とみなし，知能的に再構成する自律設計基盤」}
 として定義される。
+
+% ------------------------------------------------------------
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[
+    font=\small,
+    box/.style={rounded corners, draw, thick, align=center, minimum width=33mm, minimum height=7mm},
+    group/.style={rounded corners, draw, dashed, inner sep=2mm},
+    arr/.style={-{Latex[length=3mm]}, thick}
+  ]
+
+  % Physical stack group (left)
+  \node[box] (brdk) {BRDK\\（基板）};
+  \node[box, above=5mm of brdk] (ipdk) {IPDK\\（インターポーザ）};
+  \node[box, above=5mm of ipdk] (pkgdk) {PKGDK\\（パッケージ）};
+
+  \node[group, fit=(brdk)(ipdk)(pkgdk), label={[align=left]above:\textbf{物理／実装階層}}] (phys) {};
+
+  % SystemDK kernel (center)
+  \node[box, right=13mm of ipdk, minimum width=40mm] (sdk) {\textbf{SystemDK Kernel}\\（統合スキーマ／設計知識基盤）};
+
+  % Analysis (top right)
+  \node[box, above=8mm of sdk, minimum width=40mm] (analysis) {解析モデル\\FEM／PI・SI・EMI／信頼性};
+
+  % Control (bottom right)
+  \node[box, below=8mm of sdk, minimum width=40mm] (control) {制御ロジック\\PID（閉ループ）／FSM（モード）／LLM（整合）};
+
+  % Arrows between physical and SystemDK
+  \draw[arr] (pkgdk.east) -- ($(sdk.west)+(0,4mm)$);
+  \draw[arr] (ipdk.east) -- (sdk.west);
+  \draw[arr] (brdk.east) -- ($(sdk.west)+(0,-4mm)$);
+
+  % Arrows to analysis/control
+  \draw[arr] (sdk.north) -- (analysis.south);
+  \draw[arr] (sdk.south) -- (control.north);
+
+  % Feedback from analysis/control
+  \draw[arr] (analysis.west) .. controls +(-10mm,6mm) and +(10mm,6mm) .. (sdk.west);
+  \draw[arr] (control.west) .. controls +(-10mm,-6mm) and +(10mm,-6mm) .. (sdk.west);
+
+  % Legend (right small)
+  \node[align=left, anchor=west, right=8mm of analysis.east] (legend) {%
+    \textbf{連携の意味}\\
+    \(\triangleright\) 物理設計 \(\to\) SystemDK：構造・幾何・配線\\
+    \(\triangleright\) SystemDK \(\leftrightarrow\) 解析：FEM/ノイズ/信頼性\\
+    \(\triangleright\) SystemDK \(\leftrightarrow\) 制御：PID/FSM/LLM
+  };
+
+  \end{tikzpicture}
+  \caption{SystemDK with AITL の統合階層：BRDK／IPDK／PKGDK と設計知識基盤（SystemDK）、解析・制御の結合}
+  \label{fig:systemdk_stack}
+\end{figure}
