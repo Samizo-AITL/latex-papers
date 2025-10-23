@@ -11,34 +11,41 @@ FPGA／ASIC／チップレット構造／実時間検証までを統合的に結
 構造解析で得られた剛性・慣性・応力情報を制御系へ反映させることで，
 位置・速度・力の安定性と信頼性を同時に保証する。
 
-\begin{verbatim}
-① 仕様策定・全体アーキテクチャ定義
-   ↓
-② 制御系設計（MATLAB/Simulink: PID/FSM/LLM統合）
-   └ 統合Cコード生成 → Verilog変換
-   ↓
-③ FPGA設計・実時間制御検証（HIL）
-   ↓
-④ 仮構造定義（Pre-BRDK／IPDK／PKGDK）
-   ↓
-⑤ FEM／ノイズ解析（チップレット単位）
-   ↓
-⑥ 制御・構造・解析の再設計ループ
-   ↓
-⑦ 構造確定設計（BRDK／IPDK／PKGDK Fix）
-   ↓
-⑧ 最終FEM／FPGA再検証（閉ループ収束確認）
-   ↓
-⑨ SystemDK整合収束判定（AITL三層で整合）
-   ↓
-⑩ ASIC設計（RTL→合成→配置配線→GDS）
-   ↓
-⑪ マスク作成 → IC製造 → ウエハテスト
-   ↓
-⑫ BR／IP／PKG製造・組立
-   ↓
-⑬ SystemDK最終検証（AITLによる自律運動安定制御確認）
-\end{verbatim}
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[
+    font=\small,
+    step/.style={rounded corners, draw, thick, align=center, minimum width=38mm, minimum height=7mm},
+    arr/.style={-{Latex[length=3mm]}, thick}
+  ]
+
+  % Nodes (top to bottom)
+  \node[step] (spec) {① 仕様策定・全体アーキテクチャ\\モジュール選定};
+  \node[step, below=6mm of spec] (ctrl) {② 制御系設計\\MATLAB/Simulink（PID, FSM）\\LLM整合 \(\to\) C \(\to\) Verilog};
+  \node[step, below=6mm of ctrl] (fpga) {③ 回路設計（FPGA）\\RTL/SDC・固定小数点・I/O定義};
+  \node[step, below=6mm of fpga] (asic) {④ 回路設計（ASIC）\\PDK適用／合成・P\&R・CTS};
+  \node[step, below=6mm of asic] (struct) {⑤ 構造設計（BRDK／IPDK／PKGDK）\\電源・信号・サーマル経路定義};
+  \node[step, below=6mm of struct] (fem) {⑥ FEM／ノイズ解析\\熱・応力・PI/SI/EMI};
+  \node[step, below=6mm of fem] (fpga_test) {⑦ FPGA検証\\実時間応答・安定性評価};
+
+  % Main arrows
+  \draw[arr] (spec) -- (ctrl);
+  \draw[arr] (ctrl) -- (fpga);
+  \draw[arr] (fpga) -- (asic);
+  \draw[arr] (asic) -- (struct);
+  \draw[arr] (struct) -- (fem);
+  \draw[arr] (fem) -- (fpga_test);
+
+  % Optional short feedbacks (thin, no loops)
+  \draw[-{Latex[length=2mm]}, dashed] (fem.west) .. controls +(-18mm,0mm) and +(-18mm,0mm) .. (ctrl.west)
+    node[midway, left, align=right, xshift=-1mm] {\footnotesize 物理定数\\反映};
+  \draw[-{Latex[length=2mm]}, dashed] (fpga_test.east) .. controls +(18mm,0mm) and +(18mm,0mm) .. (fpga.east)
+    node[midway, right, align=left, xshift=1mm] {\footnotesize 応答補正};
+
+  \end{tikzpicture}
+  \caption{制御主導・一方向統合フロー（確定版）：②で制御仕様を確定し、③→④→⑤の実装定義を経て、⑥物理解析→⑦実機検証で完結}
+  \label{fig:design_flow}
+\end{figure}
 
 % ------------------------------------------------------------
 \subsection{1) 仕様策定}
