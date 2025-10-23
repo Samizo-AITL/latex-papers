@@ -10,23 +10,32 @@
 \usepackage[T1]{fontenc}        % 欧文エンコーディング
 \usepackage{CJKutf8}            % 日本語（CJK）
 
-\usepackage{graphicx}           % 図
+\usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{bm}
 \usepackage{cite}
 
-\usepackage{color}
+\usepackage{xcolor}             % ← color より xcolor 推奨（listings背景用）
 \usepackage{listings}           % ソースコードは英数のみ
-\usepackage{booktabs}           % \toprule \midrule \bottomrule
-\usepackage{textcomp}           % 矢印等の記号（Courier警告対策）
-\usepackage{array}              % p{..}列や >{\raggedleft} 等
-\usepackage{siunitx}            % 単位・桁揃え（表の数値）
-\sisetup{
-  detect-all,
-  detect-weight=true,
-  mode=text,
-  table-format=3.2
+\usepackage{booktabs}
+\usepackage{textcomp}
+\usepackage{array}
+\usepackage{tabularx}           % ← 表の可変幅
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{Z}{>{\centering\arraybackslash}X}
+
+\usepackage{siunitx}
+\sisetup{                        % ← detect-* の非推奨を回避
+  mode = match,
+  propagate-math-font = true,
+  reset-math-version = false,
+  reset-text-family  = false,
+  reset-text-series  = false,
+  reset-text-shape   = false,
+  text-family-to-math = true,
+  text-series-to-math = true,
+  table-format = 3.2
 }
 
 \usepackage{microtype}          % はみ出し/アンダーフル緩和
@@ -40,28 +49,46 @@
 \usepackage{algorithmic}
 
 % ----------------------
-% hyperref は最後に近い位置で（トラブル回避）
+% hyperref は最後に近い位置で
 % ----------------------
 \usepackage[hidelinks]{hyperref}
 
 % ----------------------
-% “はみ出し”対策の実用設定
+% はみ出し対策（実用設定）
 % ----------------------
-\emergencystretch=2em
-\sloppy
+\emergencystretch=3em          % 行末の融通を増やす
+\frenchspacing                 % 句点後の余白を詰める（欧文）
 \def\UrlBreaks{\do\/\do-\do_\do.\do:\do?\do&}
-% listings: 日本語を入れない（CJK外で）
+
+% --- listings: 日本語は入れない（CJK外） ---
 \definecolor{lightgray}{gray}{0.95}
 \lstset{
   backgroundcolor=\color{lightgray},
   basicstyle=\ttfamily\footnotesize,
   frame=single,
   breaklines=true,
+  breakatwhitespace=false,
   tabsize=2,
   keepspaces=true,
   columns=fullflexible,
   extendedchars=false,   % 日本語を listings に入れない
-  inputencoding=ascii
+  inputencoding=ascii,
+  postbreak=\mbox{$\hookrightarrow$\space}
+}
+
+% --- listings: JSON 言語定義（Appendix B 用） ---
+\lstdefinelanguage{json}{
+  basicstyle=\ttfamily\footnotesize,
+  numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=6pt,
+  showstringspaces=false,
+  breaklines=true, breakatwhitespace=false,
+  frame=single,
+  morestring=[b]",
+  stringstyle=\color{black},
+  literate=
+   *{0}{{0}}1 {1}{{1}}1 {2}{{2}}1 {3}{{3}}1 {4}{{4}}1
+    {5}{{5}}1 {6}{{6}}1 {7}{{7}}1 {8}{{8}}1 {9}{{9}}1
+    {:}{{:}}1 {,}{{,}}1 {\{}{{\{}}1 {\}}{{\}}}1 {[}{{[}}1 {]}{{]}}1
 }
 
 % ----------------------
