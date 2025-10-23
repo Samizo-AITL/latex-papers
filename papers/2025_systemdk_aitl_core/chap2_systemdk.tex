@@ -1,5 +1,5 @@
 % ============================================================
-% 2. SystemDKの構造（統合設計基盤アーキテクチャ：Final++ / 💯採録水準）
+% 2. SystemDKの構造（統合設計基盤アーキテクチャ：Final 💯採録水準）
 % ============================================================
 \section{SystemDKの構造}
 
@@ -11,8 +11,8 @@ SystemDKはすべての工程を共通データスキーマ上で接続し，
 設計情報の一貫性・整合性・再利用性を保証する。
 
 本章では，SystemDKを構成する主要要素を
-5つの層として整理し，
-その機能と相互連携を明確に定義する。
+五つの層として整理し，
+それぞれの機能と相互連携を明確に定義する。
 
 % ------------------------------------------------------------
 \subsection{(1) スキーマ管理層（Schema Management Layer）}
@@ -21,7 +21,7 @@ SystemDKの中心に位置する層であり，
 回路構成，構造モデル，解析条件）を
 一元的に管理する。
 このスキーマは「設計の設計図」に相当し，
-各要素をノードとリンクで記述する
+各要素をノードとリンクで表現した
 階層的データ構造として定義される。
 \footnote{実装上はJSONやYAMLなどの汎用形式を採用するが，
 利用者はこれを意識することなく，
@@ -30,20 +30,21 @@ GUI上で統合的に操作できる。}
 設計変更が生じると，
 対応ノードの属性値が自動更新され，
 制御設計やFEM解析に即時反映される。
-これにより，手動での再設定を要せず，
-全工程が同期した閉ループ構造を維持する。
+これにより，全工程が同期した
+閉ループ設計環境が維持される。
 
 % ------------------------------------------------------------
 \subsection{(2) データ接続層（Data Connectivity Layer）}
 設計ツール間のデータ伝達と整合を担う層である。
 MATLAB／Simulink（制御系設計），EDAツール（回路設計），
 FEM解析ツール（熱・応力解析），および
-SystemDKスキーマがAPI群で相互接続される。
-各ツールの出力は変換モジュールを介して統合され，
+SystemDKスキーマがAPI群を介して相互接続される。
+各ツールの出力は変換モジュールを通じて統合され，
 制御パラメータと解析結果が双方向に参照可能となる。
-この構造により，
+これにより，
 「制御が解析に影響し，解析が再び制御を更新する」
-という**情報循環ループ（information feedback loop）**が形成される。
+という**情報循環ループ（information feedback loop）**が形成され，
+設計プロセス全体が動的整合を維持する。
 
 % ------------------------------------------------------------
 \subsection{(3) 階層設計統合層（Hierarchical Integration Layer）}
@@ -52,107 +53,55 @@ SystemDKは，ボード（BRDK），インターポーザ（IPDK），
 各設計階層を共通スキーマで統合管理する。
 電気・熱・応力・信号経路などの物理依存関係を
 階層的にリンクすることで，
-一部の設計変更（例：配線長や材料特性の修正）が，
+局所的な設計変更（例：配線長や材料特性の修正）が，
 上位階層のFEM解析・ノイズ評価・制御条件へ
-自動伝搬する。
-この統合構造により，
-チップレットからシステム全体までを貫く
+自動的に伝搬する。
+この構造により，
+チップレットからシステム全体まで一貫した
 マルチスケール最適設計が可能となる。
 
 % ------------------------------------------------------------
 \subsection{(4) 制御統合層（AITL Integration Layer）}
 AITL（Adaptive Intelligent Tri-Layer）は，
 SystemDKに組み込まれた知的制御フレームワークであり，
-PID，FSM，LLMの三層で構成される。
+PID，FSM，LLMの三層から構成される。
 
 \begin{itemize}
   \item \textbf{PID層}： 実時間制御を担い，温度・応力・振動・電流などの物理量を安定化する。
-  \item \textbf{FSM層}： 動作モードと状態遷移を監督し，安全領域内での運転を保証する。
-  \item \textbf{LLM層}： 大規模言語モデルに基づき，設計全体の論理整合を解析し，再設計指令を生成する。
+  \item \textbf{FSM層}： 動作モードと状態遷移を監督し，安全領域内での一貫運転を保証する。
+  \item \textbf{LLM層}： 大規模言語モデルを活用し，設計全体の論理整合を解析して再設計指令を生成する。
 \end{itemize}
 
-特にLLM層は，単なる自然言語処理AIではなく，
-SystemDKスキーマ全体の依存関係を理解し，
+LLM層は単なる自然言語処理AIではなく，
+SystemDKスキーマ全体の依存関係を解析し，
 設計・制御・解析間の因果関係を推論する
-「上位知能層（meta-intelligence layer）」として動作する。
+\textbf{上位知能層（meta-intelligence layer）}として機能する。
 たとえば，アクチュエータの発熱やノイズ上昇が
 PIDおよびFSMの補償範囲を超過した場合，
-LLM層は構造・制御パラメータを同時に再設計し，
+LLM層は構造および制御パラメータを同時に再設計し，
 SystemDKスキーマ全体を再構成することで，
 **自律的再最適化（self-reconfiguration）**を実現する。
 
 % ------------------------------------------------------------
 \subsection{(5) 信頼性統合層（Reliability Coupling Layer）}
 信頼性解析と制御設計を結合する層である。
-FEMおよびノイズ解析による結果（温度分布・応力集中・電圧降下）を
+FEMおよびノイズ解析結果（温度分布・応力集中・電圧降下）を
 制御系に直接フィードバックし，
 制御パラメータを信頼性指標に基づいて補正する。
 さらに，NBTI, HCI, TDDB などの劣化モデルを組み込み，
-長期的な性能変動を予測した上で，
-AITL制御による補償を実施する。
-これにより，時間軸上でも信頼性を動的に維持できる。
+時間依存の性能変動を予測した上で，
+AITLによる補償を動的に適用する。
+これにより，SystemDKは時間軸上でも
+信頼性を動的に維持する閉ループ設計制御を実現する。
 
 % ------------------------------------------------------------
 \subsection*{まとめ}
-以上の5層により，SystemDKは，
+以上の五層により，SystemDKは，
 仕様から実装・解析・制御・信頼性評価に至るまでを
 単一スキーマ上で統合し，
 AITLによる知的制御機構を通じて
 自律的に安定化・再最適化を行う。
 すなわち，SystemDKは
-\textbf{「設計そのものを制御対象とみなし，知能的に再構成する自律設計基盤」}
+\textbf{「設計そのものを制御対象とみなし，
+知能的に再構成する自律設計基盤」}
 として定義される。
-
-% ------------------------------------------------------------
-\begin{figure*}[t]
-  \centering
-  \begin{tikzpicture}[
-    font=\small,
-    box/.style={rounded corners, draw, thick, align=center, minimum width=33mm, minimum height=7mm},
-    group/.style={rounded corners, draw, dashed, inner sep=2mm},
-    arr/.style={-{Latex[length=3mm]}, thick}
-  ]
-
-  % Physical stack group (left)
-  \node[box] (brdk) {BRDK\\（基板）};
-  \node[box, above=5mm of brdk] (ipdk) {IPDK\\（インターポーザ）};
-  \node[box, above=5mm of ipdk] (pkgdk) {PKGDK\\（パッケージ）};
-
-  \node[group, fit=(brdk)(ipdk)(pkgdk), label={[align=left]above:\textbf{物理／実装階層}}] (phys) {};
-
-  % SystemDK kernel (center)
-  \node[box, right=13mm of ipdk, minimum width=40mm] (sdk) {\textbf{SystemDK Kernel}\\（統合スキーマ／設計知識基盤）};
-
-  % Analysis (top right)
-  \node[box, above=8mm of sdk, minimum width=40mm] (analysis) {解析モデル\\FEM／PI・SI・EMI／信頼性};
-
-  % Control (bottom right)
-  \node[box, below=8mm of sdk, minimum width=40mm] (control) {制御ロジック\\PID（閉ループ）／FSM（モード）／LLM（整合）};
-
-  % Arrows between physical and SystemDK
-  \draw[arr] (pkgdk.east) -- ($(sdk.west)+(0,4mm)$);
-  \draw[arr] (ipdk.east) -- (sdk.west);
-  \draw[arr] (brdk.east) -- ($(sdk.west)+(0,-4mm)$);
-
-  % Arrows to analysis/control
-  \draw[arr] (sdk.north) -- (analysis.south);
-  \draw[arr] (sdk.south) -- (control.north);
-
-  % Feedback from analysis/control
-  \draw[arr] (analysis.west) .. controls +(-10mm,6mm) and +(10mm,6mm) .. (sdk.west);
-  \draw[arr] (control.west) .. controls +(-10mm,-6mm) and +(10mm,-6mm) .. (sdk.west);
-
-  % Legend (right)
-  \node[align=left, anchor=west, right=8mm of analysis.east] (legend) {%
-    \textbf{連携関係の概要}\\
-    \(\triangleright\) 物理設計 → SystemDK：構造・幾何・配線\\
-    \(\triangleright\) SystemDK ↔ 解析：FEM／ノイズ／信頼性\\
-    \(\triangleright\) SystemDK ↔ 制御：PID／FSM／LLM
-  };
-
-  \end{tikzpicture}
-  \caption{SystemDK with AITL の統合階層構造。
-  BRDK／IPDK／PKGDKを基盤とし，設計知識基盤（SystemDK）を中心に，
-  解析層および制御層を双方向に結合する。}
-  \label{fig:systemdk_stack}
-\end{figure*}
