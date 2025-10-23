@@ -76,41 +76,48 @@
   postbreak=\mbox{$\hookrightarrow$\space}
 }
 
-% ---- IEEE 2段用タイトスタイル（枠内余白/上下間隔/キャプション位置 調整）----
+% ---- IEEE 2段用タイトスタイル（枠内余白/上下間隔/キャプション位置 調整・完全修正版）----
 \lstdefinestyle{ieee-tight}{
   columns=fullflexible,
   keepspaces=true,
   breaklines=true,
   breakatwhitespace=false,
-  basicstyle=\ttfamily\scriptsize,        % ← 幅優先で scriptsize
+  basicstyle=\ttfamily\scriptsize,        % 幅優先で scriptsize
   frame=single,
   backgroundcolor=\color{lightgray},
+
   % --- 枠内余白（詰め気味） ---
   framexleftmargin=0.6ex,
   framexrightmargin=0.6ex,
   framextopmargin=0.4ex,
   framexbottommargin=0.4ex,
-  % --- 行幅は段幅に合わせる ---
-  linewidth=\linewidth,
+
+  % --- ★IEEE 2段ではみ出しを完全防止（段幅−枠線−余白ぶん控える） ---
+  linewidth=\dimexpr\columnwidth - 2\fboxsep - 2\fboxrule\relax,
   xleftmargin=0pt,
   xrightmargin=0pt,
-  % --- 行番号（必要なら ON。幅節約のため詰める） ---
+
+  % --- 行番号（必要なら） ---
   numbers=left,
   numberstyle=\tiny,
   numbersep=4pt,
-  % --- キャプションを下に（見出し重なり防止） ---
+
+  % --- キャプションを下に（見出しとの干渉回避） ---
   captionpos=b,
+
   % --- 周囲の上下間隔（見出し衝突回避） ---
-  aboveskip=0.5\baselineskip,
-  belowskip=0.6\baselineskip,
-  % --- フロート挙動（段内で安定配置） ---
+  aboveskip=0.65\baselineskip,
+  belowskip=0.65\baselineskip,
+
+  % --- フロート挙動（段内安定配置） ---
   float,
   floatplacement=tbp,
+
   % --- 折り返し記号（細め） ---
   postbreak=\mbox{\(\hookrightarrow\)\,},
 }
 
-% --- JSON 言語定義（1個に統一） ---
+% --- JSON 言語定義（統一） ---
 \lstdefinelanguage{json}{
   basicstyle=\ttfamily\scriptsize,
   showstringspaces=false,
@@ -119,7 +126,9 @@
   frame=single,
   morestring=[b]",
   stringstyle=\color{black},
-  numbers=left, numberstyle=\tiny, numbersep=4pt,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=4pt,
   literate=
    *{0}{{0}}1 {1}{{1}}1 {2}{{2}}1 {3}{{3}}1 {4}{{4}}1
     {5}{{5}}1 {6}{{6}}1 {7}{{7}}1 {8}{{8}}1 {9}{{9}}1
