@@ -4,23 +4,38 @@
 
 \documentclass[conference]{IEEEtran}
 
-% --- packages ---
-\usepackage{CJKutf8}
-\usepackage[T1]{fontenc}% 欧文フォントのエンコーディング明示（警告低減）
-\usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{url}
-\usepackage[hidelinks]{hyperref}
-\usepackage{listings}
-\usepackage{color}
-\usepackage{cite}
+% ----------------------
+% Core packages (order)
+% ----------------------
+\usepackage[T1]{fontenc}        % 欧文フォントのエンコーディング（警告低減）
+\usepackage{CJKutf8}            % 日本語（CJK）
+\usepackage{graphicx}           % 図
+\usepackage{amsmath}            % 数式
+\usepackage{amssymb}            % 追加記号
+\usepackage{bm}                 % 太字ベクトルなど（必要に応じて）
+\usepackage{cite}               % 参考文献の圧縮
+\usepackage{color}              % 色（listings等で使用）
+\usepackage{listings}           % ソースコード
+\usepackage{booktabs}           % 表の罫線（\toprule \midrule \bottomrule）
+\usepackage{textcomp}           % \textrightarrow 等（Courier併用時の記号警告対策）
+\usepackage{microtype}          % 組版の見栄え・Underfull緩和（pdfTeX対応）
 
-% 追加：TikZ（図用）
+% --- TikZ（図用） ---
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes,fit,calc}
 
-% --- code style (日本語は listings に入れない) ---
+% --- algorithms（第4章の擬似コードで使用） ---
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% ----------------------
+% hyperref は最後に近い位置で
+% ----------------------
+\usepackage[hidelinks]{hyperref}
+
+% ----------------------
+% Listings の安全設定（日本語は入れない）
+% ----------------------
 \definecolor{lightgray}{gray}{0.95}
 \lstset{
   backgroundcolor=\color{lightgray},
@@ -30,13 +45,15 @@
   tabsize=2,
   keepspaces=true,
   columns=fullflexible,
-  extendedchars=false        % ← 日本語を入れない前提で安全化
+  extendedchars=false,      % ← 日本語を listings に入れない
+  inputencoding=ascii
 }
 
-% --- title ---
+% ----------------------
+% タイトル・著者
+% ----------------------
 \title{SystemDK with AITL Core：設計・信頼性・制御を統合する自律的アーキテクチャ}
 
-% --- author ---
 \author{%
   \IEEEauthorblockN{三溝 真一 (Shinichi Samizo)}%
   \IEEEauthorblockA{独立系半導体研究者（元セイコーエプソン） / Independent Semiconductor Researcher (ex-Seiko Epson)\\%
@@ -46,20 +63,20 @@
 
 \begin{document}
 
-% ===== CJK開始：フォントは IPAex 明朝(ipxm) に変更 =====
-%   ※ 和田研(min)は TFM 分割で verbatim/記号と相性が悪く落ちやすい
+% ===== CJK開始：IPAex 明朝(ipxm) =====
+%   ※ 日本語は CJK 環境内、欧文は通常のままでOK
 \begin{CJK}{UTF8}{ipxm}
 
 \maketitle
 
-% --- abstract & keywords (要旨は main に置くほうが安定) ---
+% --- abstract & keywords ---
 \input{chap0_abstract}
 
-% --- chapter inputs ---
+% --- chapters ---
 \input{chap1_intro}
 \input{chap2_systemdk}
 \input{chap3_aitl}
-\input{chap4_flow}        % ← 日本語や矢印は verbatim に入れないこと（下記メモ）
+\input{chap4_flow}        % ← 日本語や矢印は listings に入れないこと
 \input{chap5_reliability}
 \input{chap6_discussion}
 \input{chap7_conclusion}
@@ -67,7 +84,7 @@
 % --- appendix ---
 \input{appendix}
 
-% --- references (使うときだけ有効化) ---
+% --- references（使うときだけ有効化） ---
 % \bibliographystyle{IEEEtran}
 % \bibliography{references}
 
