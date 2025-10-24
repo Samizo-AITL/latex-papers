@@ -3,30 +3,42 @@
 %==========================================
 \documentclass[11pt]{bxjsarticle}
 
-% --- 重要: GitHub Actionsで必ず通るフォント設定 ---
+% --- GitHub Actions (Ubuntu + TeX Live) で確実に通る最小・安定構成 ---
+\usepackage{fontspec}            % 先に fontspec
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
-\usepackage{fontspec}
-\setmainjfont{HaranoAji Mincho}   % 日本語明朝
-\setsansjfont{HaranoAji Gothic}   % 日本語ゴシック
-\setmainfont{TeX Gyre Termes}     % 欧文
-\setsansfont{TeX Gyre Heros}      % 欧文
+
+% 日本語/欧文フォント（TeX Live 標準）
+\setmainjfont{HaranoAji Mincho}
+\setsansjfont{HaranoAji Gothic}
+\setmainfont{TeX Gyre Termes}
+\setsansfont{TeX Gyre Heros}
 \renewcommand{\familydefault}{\sfdefault}
 
+% 版面・見出し・箇条書き
 \usepackage[margin=18mm]{geometry}
 \usepackage{titlesec}
 \usepackage{enumitem}
-\usepackage{hyperref}
-\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
-\usepackage{xcolor}
-\usepackage{tabularx}
-\usepackage{array}
-
 \setlist[itemize]{left=0pt .. 1em, itemsep=1.5pt, topsep=2pt}
 \titleformat{\section}{\Large\bfseries}{\thesection}{6pt}{}
 \titleformat{\subsection}{\bfseries}{\thesubsection}{6pt}{}
 
+% 表・色・単位
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{siunitx}             % μm 等は \SI{0.25}{\micro\metre} で安全
+\sisetup{detect-all=true}
+
+% リンク（最後に読む）
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
+
+% 共通マクロ
 \newcommand{\cvsection}[1]{\section*{#1}\vspace{-0.3em}\hrule\vspace{0.5em}}
+
+% （必要なら）μm の短縮表記
+\newcommand{\um}{\SI{}{\micro\metre}} % 例: 0.25\,\um → \SI{0.25}{\micro\metre} 推奨
 
 \begin{document}
 
