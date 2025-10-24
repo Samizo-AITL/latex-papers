@@ -2,12 +2,17 @@
 % 三溝 真一 職務経歴書（日本語版）
 %==========================================
 \documentclass[11pt]{bxjsarticle}
+
+% --- 日本語/欧文フォントを Actions で確実に通る設定に変更 ---
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
 \usepackage{fontspec}
-\setmainfont{Noto Serif CJK JP}
-\setsansfont{Noto Sans CJK JP}
+\setmainjfont{HaranoAji Mincho}   % TeX Live 同梱（Ubuntu Actionsで常備）
+\setsansjfont{HaranoAji Gothic}   % 同上
+\setmainfont{TeX Gyre Termes}     % 欧文
+\setsansfont{TeX Gyre Heros}      % 欧文
 \renewcommand{\familydefault}{\sfdefault}
+
 \usepackage[margin=18mm]{geometry}
 \usepackage{titlesec}
 \usepackage{enumitem}
@@ -43,7 +48,7 @@ GitHub：\href{https://samizo-aitl.github.io/}{https://samizo-aitl.github.io/}
 
 %------------------------------------------
 \cvsection{職務要約}
-半導体プロセス（DRAM/VSRAM, HV-CMOS, TiSi₂）、インクジェットMEMS（薄膜PZT）、電装BOM運用、品質保証の一連業務で27年以上の実績。量産トラブルの根因解析から工程最適化・歩留まり改善（例：DRAM 65\%→80\%台後半、VSRAM 30\%台→80\%超）を主導。近年はBOM電子化、BCP二拠点生産、コスト合理化（Auめっき厚最適化で年約10億円削減）を推進。2024年以降は独立し、教育教材（Edusemi, EduController, AITL-H）をGitHubで公開。
+半導体プロセス（DRAM/VSRAM, HV-CMOS, TiSi$_2$）、インクジェットMEMS（薄膜PZT）、電装BOM運用、品質保証の一連業務で27年以上の実績。量産トラブルの根因解析から工程最適化・歩留まり改善（例：DRAM 65\%→80\%台後半、VSRAM 30\%台→80\%超）を主導。近年はBOM電子化、BCP二拠点生産、コスト合理化（Auめっき厚最適化で年約10億円削減）を推進。2024年以降は独立し、教育教材（Edusemi, EduController, AITL-H）をGitHubで公開。
 
 %------------------------------------------
 \cvsection{学歴}
@@ -54,11 +59,11 @@ GitHub：\href{https://samizo-aitl.github.io/}{https://samizo-aitl.github.io/}
 \textbf{セイコーエプソン株式会社（1997–2024）}
 
 \begin{itemize}
-  \item \textbf{IC基盤技術部（1997–2001）}：酒田8inchライン立上げ、0.35/0.25 µm配線／DRAM評価。Pause Refresh不良のn⁺/p⁻リーク（プラズマダメージ）特定、歩留まり65\%→80\%台後半。
-  \item \textbf{IC技術開発部（2002–2006）}：0.25 µm高耐圧統合、aTFT製品化。SRAM単ビット不良をTiSi₂ C49→C54相転移不完全・B拡散で解明しRTA最適化。
-  \item \textbf{NVプロジェクト（2007）}：FeRAM特性・信頼性解析。水素還元起因インプリント特定、N₂パージ保管運用導入。
+  \item \textbf{IC基盤技術部（1997–2001）}：酒田8inchライン立上げ、0.35/0.25 \textmu m配線／DRAM評価。Pause Refresh不良のn$^+$/p$^-$リーク（プラズマダメージ）特定、歩留まり65\%→80\%台後半。
+  \item \textbf{IC技術開発部（2002–2006）}：0.25 \textmu m高耐圧統合、aTFT製品化。SRAM単ビット不良をTiSi$_2$ C49→C54相転移不完全・B拡散で解明しRTA最適化。
+  \item \textbf{NVプロジェクト（2007）}：FeRAM特性・信頼性解析。水素還元起因インプリント特定、N$_2$パージ保管運用導入。
   \item \textbf{Pプロジェクト（2008–2011）}：薄膜PZTアクチュエータ評価。クラック要因特定、酢酸プレウェットで恒久対策。
-  \item \textbf{IJ要素技術（2012–2020）}：PrecisionCore向け新規COF、ACF+Sn–Ag二重接合導入、ドライバIC BCP（完全互換二拠点）、AuめっきCpk設計（0.425±0.125 µm）。HCS緊急対応・BOM電子化・ISO教育。
+  \item \textbf{IJ要素技術（2012–2020）}：PrecisionCore向け新規COF、ACF+Sn–Ag二重接合導入、ドライバIC BCP（完全互換二拠点）、AuめっきCpk設計（0.425±0.125 \textmu m）。HCS緊急対応・BOM電子化・ISO教育。
   \item \textbf{IJS品質保証（2021–2024）}：Fコスト低減、品質教育、計測器管理。
 \end{itemize}
 
@@ -66,7 +71,7 @@ GitHub：\href{https://samizo-aitl.github.io/}{https://samizo-aitl.github.io/}
 \cvsection{主要実績}
 \begin{itemize}
   \item DRAM/VSRAM歩留まり改善：65\%→80\%台後半、30\%台→80\%超
-  \item Auめっき厚のCpk設計（0.425±0.125 µm）で年約10億円コスト削減
+  \item Auめっき厚のCpk設計（0.425±0.125 \textmu m）で年約10億円コスト削減
   \item ACF+Sn–Ag二重接合で鉛フリー化と事業継続を確保
   \item ドライバIC BCP（プロセス移植型）で完全互換の二拠点量産
   \item HCSチップ実装と多拠点4M統合で目的外使用防止
@@ -75,7 +80,7 @@ GitHub：\href{https://samizo-aitl.github.io/}{https://samizo-aitl.github.io/}
 %------------------------------------------
 \cvsection{スキル}
 \begin{itemize}
-  \item 半導体プロセス：DRAM/VSRAM, HV-CMOS, FeRAM, TiSi₂, RTA最適化, 高耐圧統合
+  \item 半導体プロセス：DRAM/VSRAM, HV-CMOS, FeRAM, TiSi$_2$, RTA最適化, 高耐圧統合
   \item MEMS／インクジェット：薄膜PZT, 静電アクチュエータ, COF/ACF実装
   \item 品質・信頼性：不良解析, スクリーニング設計, 統計的工程管理（Cpk設計）
   \item 組織運用：BOM/図面/4M統合、BCP二拠点、ISO教育・内部監査
