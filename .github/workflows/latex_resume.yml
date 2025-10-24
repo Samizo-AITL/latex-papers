@@ -1,0 +1,26 @@
+name: Build Japanese LaTeX Resume
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Compile 職務経歴書 (LuaLaTeX)
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile with LuaLaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          # ← サブフォルダにある .tex を指定
+          root_file: samizo-aitl-resume/main_resume.tex
+          latexmk_use_lualatex: true
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 職務経歴書_PDF
+          path: samizo-aitl-resume/main_resume.pdf
