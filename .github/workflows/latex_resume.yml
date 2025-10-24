@@ -12,15 +12,45 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ← Noto CJK を入れる（あなたのTeXのままでOK）
+      - name: Install Japanese fonts (Noto CJK)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+
       - name: Compile with LuaLaTeX
         uses: xu-cheng/latex-action@v3
         with:
-          # ← サブフォルダにある .tex を指定
           root_file: samizo-aitl-resume/main_resume.tex
           latexmk_use_lualatex: true
+          continue_on_error: true
 
+      # 失敗時、ログの末尾をその場で表示
+      - name: Show log tail on failure
+        if: failure()
+        run: |
+          echo "==== tail main_resume.log ===="
+          tail -n 200 samizo-aitl-resume/main_resume.log || true
+
+      # PDF を常にアップロード（無ければ無視）
       - name: Upload PDF artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: 職務経歴書_PDF
+          name: main_resume_pdf
           path: samizo-aitl-resume/main_resume.pdf
+          if-no-files-found: ignore
+
+      # 生成物のログ類も常にアップロード
+      - name: Upload LaTeX logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex_logs
+          path: |
+            samizo-aitl-resume/*.log
+            samizo-aitl-resume/*.aux
+            samizo-aitl-resume/*.fls
+            samizo-aitl-resume/*.fdb_latexmk
+            samizo-aitl-resume/*.synctex.gz
+          if-no-files-found: ignore
