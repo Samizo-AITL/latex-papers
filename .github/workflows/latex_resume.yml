@@ -16,14 +16,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2) TeX Live (full) をAPTで導入（HaranoAji/luatexja等を含む）
+      # 2) TeX Live (full) — 日本語・luatexja・HaranoAji まで全部入る
       - name: Install TeX Live (full)
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      # 3) どちらのパスに .tex があるか検出
-      - name: Detect location
+      # 3) どこに main_resume.tex があるか検出（A/BどちらでもOK）
+      - name: Detect resume directory
         id: detect
         shell: bash
         run: |
@@ -35,21 +35,32 @@ jobs:
             echo "::error::main_resume.tex が見つかりません"
             exit 1
           fi
-          echo "==> DIR is ${{ steps.detect.outputs.dir }}"
+          echo "Using dir: ${{ steps.detect.outputs.dir }}"
+          echo "Tree:"
+          ls -la "${{ steps.detect.outputs.dir }}"
 
-      # 4) LuaLaTeX でビルド（2回回して目次等も安定化）
-      - name: Build with lualatex
+      # 4) 確実コンパイル（エラー時は直ちに失敗 & ログを表示）
+      - name: Build with latexmk (LuaLaTeX)
         shell: bash
         working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           set -e
-          lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
-          lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
-          # 参考: latexmk 版（必要なら切替）
-          # latexmk -lualatex -interaction=nonstopmode -halt-on-error -pdf main_resume.tex
-          ls -la
+          # 一発で固めたいなら latexmk を使う
+          latexmk -lualatex -halt-on-error -interaction=nonstopmode -file-line-error main_resume.tex
+          # 念のため出来上がりを確認
+          test -f main_resume.pdf
+          echo "===== Generated files ====="
+          ls -lh
 
-      # 5) PDF をアップロード
+      # 5) 失敗時のログをその場で出力（上の step が落ちたら自動実行）
+      - name: Show log tail on failure
+        if: failure()
+        shell: bash
+        run: |
+          echo "==== tail main_resume.log ===="
+          tail -n 200 "${{ steps.detect.outputs.dir }}/main_resume.log" || true
+
+      # 6) PDF をアップロード（存在しなければ無視）
       - name: Upload PDF artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -60,13 +71,18 @@ jobs:
             latex-papers/samizo-aitl-resume/main_resume.pdf
           if-no-files-found: ignore
 
-      # 6) ログ・中間ファイルを保存
+      # 7) ログ・中間ファイルも保存（追跡しやすくする）
       - name: Upload logs and intermediates
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: latex_logs
           path: |
-            samizo-aitl-resume/*.{log,aux,fls,fdb_latexmk,synctex.gz,toc,out}
-            latex-papers/samizo-aitl-resume/*.{log,aux,fls,fdb_latexmk,synctex.gz,toc,out}
+            ${{ steps.detect.outputs.dir }}/*.log
+            ${{ steps.detect.outputs.dir }}/*.aux
+            ${{ steps.detect.outputs.dir }}/*.fls
+            ${{ steps.detect.outputs.dir }}/*.fdb_latexmk
+            ${{ steps.detect.outputs.dir }}/*.synctex.gz
+            ${{ steps.detect.outputs.dir }}/*.toc
+            ${{ steps.detect.outputs.dir }}/*.out
           if-no-files-found: ignore
