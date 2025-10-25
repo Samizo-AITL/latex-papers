@@ -14,12 +14,14 @@ jobs:
 
       - name: Install TeX Live (full)
         run: |
+          set -euxo pipefail
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
       - name: Detect resume directory
         id: detect
         run: |
+          set -euo pipefail
           found=$(find . -type f -name "main_resume.tex" | head -n 1)
           if [ -z "$found" ]; then
             echo "::error::main_resume.tex not found anywhere in repo"
@@ -28,15 +30,47 @@ jobs:
           dir=$(dirname "$found")
           echo "dir=$dir" >> $GITHUB_OUTPUT
           echo "Found main_resume.tex in: $dir"
-          nl -ba "$found" | head -n 20
+          nl -ba "$found" | sed -n '1,30p'
 
-      - name: Build with LuaLaTeX
+      - name: Ensure engine=luatex in \documentclass
         run: |
+          set -euo pipefail
           cd "${{ steps.detect.outputs.dir }}"
-          echo "=== Compiling with LuaLaTeX ==="
-          lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
-          lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
+          # すでに明記されていれば何もしない
+          if grep -Eq '^[[:space:]]*\\documentclass\\[[^]]*engine=luatex' main_resume.tex; then
+            echo "engine=luatex already present."
+          else
+            echo "Injecting engine=luatex into \\documentclass..."
+            # オプション有り/無しの両方に対応して安全に挿入
+            awk '
+              /^[[:space:]]*\\documentclass/ && $0 ~ /{bxjsarticle}/ {
+                if ($0 ~ /engine=luatex/) { print; next }
+                if ($0 ~ /\\documentclass\\[[^]]*\\]/) {
+                  sub(/\\documentclass\\[/,"\\documentclass[engine=luatex,"); print; next
+                }
+                sub(/\\documentclass\{/,"\\documentclass[engine=luatex]{"); print; next
+              }
+              { print }
+            ' main_resume.tex > main_resume.tex.tmp
+            mv main_resume.tex.tmp main_resume.tex
+          fi
+          echo "---- \documentclass line now ----"
+          grep -n '^[[:space:]]*\\documentclass' main_resume.tex
+
+      - name: Build with LuaLaTeX (latexmk, twice)
+        run: |
+          set -euo pipefail
+          cd "${{ steps.detect.outputs.dir }}"
+          latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
+          latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
           ls -lh
+
+      - name: Tail log on failure
+        if: failure()
+        run: |
+          DIR="${{ steps.detect.outputs.dir }}"
+          echo "==== tail ${DIR}/main_resume.log ===="
+          tail -n 200 "${DIR}/main_resume.log" || true
 
       - name: Upload PDF
         if: always()
@@ -57,4 +91,6 @@ jobs:
             ${{ steps.detect.outputs.dir }}/*.fls
             ${{ steps.detect.outputs.dir }}/*.fdb_latexmk
             ${{ steps.detect.outputs.dir }}/*.synctex.gz
+            ${{ steps.detect.outputs.dir }}/*.toc
+            ${{ steps.detect.outputs.dir }}/*.out
           if-no-files-found: ignore
