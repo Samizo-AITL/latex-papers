@@ -7,7 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -17,28 +16,58 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      - name: Detect resume directory
+      # ==== 対象ファイルの厳密検出（engine=luatex を含むものを優先）====
+      - name: Detect resume directory (must contain engine=luatex)
         id: detect
+        shell: bash
         run: |
-          echo "=== Searching for main_resume.tex ==="
-          found=$(find . -type f -name "main_resume.tex" | head -n 1)
-          if [ -z "$found" ]; then
-            echo "::error::main_resume.tex not found anywhere in repo"
+          set -e
+          candidates=()
+          # 優先順を明示
+          [ -f latex-papers/samizo-aitl-resume/main_resume.tex ] && candidates+=("latex-papers/samizo-aitl-resume")
+          [ -f samizo-aitl-resume/main_resume.tex ] && candidates+=("samizo-aitl-resume")
+          # それ以外に main_resume.tex があれば追加
+          mapfile -t others < <(find . -type f -name main_resume.tex -printf '%h\n' | sort -u)
+          for d in "${others[@]}"; do
+            [[ " ${candidates[*]} " == *" $d "* ]] || candidates+=("$d")
+          done
+
+          if [ ${#candidates[@]} -eq 0 ]; then
+            echo "::error::main_resume.tex not found in repository"
             exit 1
           fi
-          dir=$(dirname "$found")
-          echo "Found in: $dir"
-          echo "dir=$dir" >> $GITHUB_OUTPUT
 
-      - name: Build with LuaLaTeX
+          picked=""
+          echo "=== Candidates ==="
+          printf ' - %s\n' "${candidates[@]}"
+
+          for d in "${candidates[@]}"; do
+            echo "----- HEAD of $d/main_resume.tex -----"
+            nl -ba "$d/main_resume.tex" | sed -n '1,30p'
+            if grep -Eq '^\s*\\documentclass\[[^]]*engine=luatex' "$d/main_resume.tex"; then
+              picked="$d"; break
+            fi
+          done
+
+          if [ -z "$picked" ]; then
+            echo "::error::No candidate main_resume.tex contains 'engine=luatex' in \\documentclass[...]"
+            echo "Add: \\documentclass[...,engine=luatex]{bxjsarticle}"
+            exit 1
+          fi
+
+          echo "Picked: $picked"
+          echo "dir=$picked" >> "$GITHUB_OUTPUT"
+
+      - name: Build with latexmk (LuaLaTeX)
         run: |
+          set -e
           cd "${{ steps.detect.outputs.dir }}"
-          echo "=== HEAD of main_resume.tex ==="
-          head -n 20 main_resume.tex
+          echo "=== Building in $(pwd) ==="
+          # 1st pass
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
+          # 2nd pass (目次/相互参照安定化のため)
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
           ls -lh
-        continue-on-error: false
 
       - name: Upload PDF artifact
         if: always()
