@@ -2,22 +2,26 @@
 % 三溝 真一 職務経歴書（日本語版）
 %==========================================
 \PassOptionsToPackage{margin=18mm}{geometry}
-\documentclass[11pt,ja=standard,engine=luatex]{bxjsarticle} % ← 決定打
+% ------------------------------------------------
+% ⚠ エンジン指定を "ja=standard,engine=luatex" にする！
+% ⚠ BOM（﻿）や全角スペースがファイル先頭にあると失敗する
+% ------------------------------------------------
+\documentclass[11pt,ja=standard,engine=luatex]{bxjsarticle}
 
 % --- LuaLaTeX + 日本語フォント ---
 \usepackage{fontspec}
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
-\setmainjfont{HaranoAji Mincho}  % TeX Live 同梱
+
+\setmainjfont{HaranoAji Mincho}
 \setsansjfont{HaranoAji Gothic}
 \setmainfont{TeX Gyre Termes}
 \setsansfont{TeX Gyre Heros}
 \renewcommand{\familydefault}{\sfdefault}
 
-% --- 体裁 ---
+% --- 書式 ---
 \usepackage{titlesec}
 \usepackage{enumitem}
-% enumitemの左インデント指定はこれが無難（競合しにくい）
 \setlist[itemize]{leftmargin=*, itemsep=1.5pt, topsep=2pt}
 \titleformat{\section}{\Large\bfseries}{\thesection}{6pt}{}
 \titleformat{\subsection}{\bfseries}{\thesubsection}{6pt}{}
@@ -28,7 +32,7 @@
 \usepackage{siunitx}
 \sisetup{detect-all=true}
 
-% --- リンクは最後に ---
+% --- リンク ---
 \usepackage{hyperref}
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
 
