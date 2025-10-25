@@ -7,8 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      DIR: latex-papers/samizo-aitl-resume   # ← 対象ディレクトリを固定
 
     steps:
       - name: Checkout repository
@@ -19,48 +17,35 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      - name: Show repository tree (top)
+      - name: Detect resume directory
+        id: detect
         run: |
-          echo "==== TREE (top 300 lines) ===="
-          ls -R | head -n 300
-
-      # ここが“not found”で落ちていたので、shでも安全な書き方に
-      - name: Detect resume directory & header check
-        run: |
-          echo "DIR=$DIR"
-          if [ ! -f "$DIR/main_resume.tex" ]; then
-            echo "::error file=$DIR/main_resume.tex::not found"
+          echo "=== Searching for main_resume.tex ==="
+          found=$(find . -type f -name "main_resume.tex" | head -n 1)
+          if [ -z "$found" ]; then
+            echo "::error::main_resume.tex not found anywhere in repo"
             exit 1
           fi
+          dir=$(dirname "$found")
+          echo "Found in: $dir"
+          echo "dir=$dir" >> $GITHUB_OUTPUT
 
-          echo "=== HEAD of $DIR/main_resume.tex ==="
-          head -n 30 "$DIR/main_resume.tex"
-
-          # engine=luatex を強制確認
-          if ! grep -q 'engine=luatex' "$DIR/main_resume.tex"; then
-            echo "::error file=$DIR/main_resume.tex::\\documentclass に engine=luatex がありません"
-            exit 1
-          fi
-
-      - name: Build with latexmk (LuaLaTeX)
+      - name: Build with LuaLaTeX
         run: |
-          cd "$DIR"
+          cd "${{ steps.detect.outputs.dir }}"
+          echo "=== HEAD of main_resume.tex ==="
+          head -n 20 main_resume.tex
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
           ls -lh
-
-      - name: Show log tail on failure
-        if: failure()
-        run: |
-          echo "==== tail $DIR/main_resume.log ===="
-          tail -n 200 "$DIR/main_resume.log" || true
+        continue-on-error: false
 
       - name: Upload PDF artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: resume-pdf
-          path: ${{ env.DIR }}/main_resume.pdf
+          path: ${{ steps.detect.outputs.dir }}/main_resume.pdf
           if-no-files-found: error
 
       - name: Upload logs and intermediates
@@ -69,11 +54,11 @@ jobs:
         with:
           name: latex_logs
           path: |
-            ${{ env.DIR }}/*.log
-            ${{ env.DIR }}/*.aux
-            ${{ env.DIR }}/*.fls
-            ${{ env.DIR }}/*.fdb_latexmk
-            ${{ env.DIR }}/*.synctex.gz
-            ${{ env.DIR }}/*.toc
-            ${{ env.DIR }}/*.out
+            ${{ steps.detect.outputs.dir }}/*.log
+            ${{ steps.detect.outputs.dir }}/*.aux
+            ${{ steps.detect.outputs.dir }}/*.fls
+            ${{ steps.detect.outputs.dir }}/*.fdb_latexmk
+            ${{ steps.detect.outputs.dir }}/*.synctex.gz
+            ${{ steps.detect.outputs.dir }}/*.toc
+            ${{ steps.detect.outputs.dir }}/*.out
           if-no-files-found: ignore
