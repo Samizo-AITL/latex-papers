@@ -8,18 +8,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # 1) 取得
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2) TeX Live (full) インストール
       - name: Install TeX Live (full)
         run: |
           set -euxo pipefail
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      # 3) main_resume.tex を検出（既知パス優先）
       - name: Detect main_resume.tex
         id: detect
         shell: bash
@@ -27,7 +24,7 @@ jobs:
           set -euxo pipefail
           mapfile -t files < <(find . -type f -name 'main_resume.tex' | sort)
           if [ ${#files[@]} -eq 0 ]; then
-            echo "::error::main_resume.tex not found anywhere in repo"; exit 1
+            echo "::error::main_resume.tex not found"; exit 1
           fi
           picked=""
           for pref in "latex-papers/samizo-aitl-resume/main_resume.tex" "samizo-aitl-resume/main_resume.tex"; do
@@ -42,21 +39,19 @@ jobs:
           echo "---- HEAD of $picked ----"
           nl -ba "$picked" | sed -n '1,40p'
 
-      # 4) ラッパー作成：クラスへ engine=luatex を事前付与して本体を \input
       - name: Create wrapper (force engine=luatex)
         run: |
           set -euxo pipefail
           DIR="${{ steps.detect.outputs.dir }}"
           cat > "$DIR/build_wrapper.tex" <<'EOF'
-\RequirePackage{ifluatex}
-\ifluatex\else\errmessage{Use LuaLaTeX (lualatex).}\fi
+\RequirePackage{iftex}
+\ifluatex\else\errmessage{Use LuaLaTeX (run: lualatex).}\fi
 \PassOptionsToClass{engine=luatex}{bxjsarticle}
 \input{main_resume.tex}
 EOF
           echo "---- wrapper ----"
           cat "$DIR/build_wrapper.tex"
 
-      # 5) LuaLaTeX で 2 回ビルド（ジョブ名を main_resume に固定）
       - name: Build with LuaLaTeX
         run: |
           set -euxo pipefail
@@ -66,7 +61,6 @@ EOF
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode -jobname=main_resume build_wrapper.tex
           ls -lh
 
-      # 6) 失敗時はログ末尾を即表示
       - name: Tail log on failure
         if: failure()
         run: |
@@ -74,7 +68,6 @@ EOF
           echo "==== tail ${DIR}/main_resume.log ===="
           tail -n 200 "${DIR}/main_resume.log" || true
 
-      # 7) PDF をアップロード
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
@@ -83,7 +76,6 @@ EOF
           path: ${{ steps.detect.outputs.dir }}/main_resume.pdf
           if-no-files-found: error
 
-      # 8) すべてのログ・中間物も保存
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
