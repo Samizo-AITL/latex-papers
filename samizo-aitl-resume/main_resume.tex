@@ -1,10 +1,10 @@
 %==========================================
 % 三溝 真一 職務経歴書（日本語版）
 %==========================================
-%==== 必須: まず margin を geometry に渡す（あとから \usepackage{geometry} は不要）====
+%==== margin は PassOptionsToPackage で渡す ====
 \PassOptionsToPackage{margin=18mm}{geometry}
 
-%==== 必須: LuaLaTeX 以外なら即エラーにする（間違いビルド防止）====
+%==== LuaLaTeX 強制（間違いビルドは即停止）====
 \RequirePackage{iftex}
 \ifluatex\else
   \errmessage{This resume must be built with LuaLaTeX.}
@@ -13,7 +13,7 @@
 %==== 最重要: engine=luatex を明示 ====
 \documentclass[engine=luatex,ja=standard,11pt]{bxjsarticle}
 
-%==== LuaLaTeX 用の日本語/欧文フォント ====
+%==== 日本語/欧文フォント ====
 \usepackage{fontspec}
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
