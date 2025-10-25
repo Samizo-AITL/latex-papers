@@ -16,11 +16,13 @@ jobs:
       - name: Compile with LuaLaTeX
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: samizo-aitl-resume/main_resume.tex
+          # サブフォルダ内でビルド（相対パスが事故りにくくなる）
+          working_directory: samizo-aitl-resume
+          root_file: main_resume.tex
           latexmk_use_lualatex: true
-          continue_on_error: true   # 失敗でも後続に進ませてログ/成果物アップ
+        continue-on-error: true   # ← これは step のプロパティ。with: に入れない
 
-      # 失敗時にログ末尾をコンソールに表示
+      # 失敗時にログ末尾をコンソールに出す
       - name: Show log tail on failure
         if: failure()
         run: |
@@ -36,7 +38,7 @@ jobs:
           path: samizo-aitl-resume/main_resume.pdf
           if-no-files-found: ignore
 
-      # 生成されたログ類を常にアップロード
+      # ログ類も常にアップロード
       - name: Upload LaTeX logs
         if: always()
         uses: actions/upload-artifact@v4
