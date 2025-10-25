@@ -12,21 +12,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Ubuntu 24.04 向け HaranoAji + Noto CJK フォント
-      - name: Install Japanese fonts
+      # ★ TeX Live full install（フォントも含まれる）
+      - name: Install TeX Live (full)
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            fonts-haranoaji-mincho \
-            fonts-haranoaji-gothic \
-            fonts-noto-cjk
+          sudo apt-get install -y texlive-full latexmk
 
-      - name: Show tree (top)
+      - name: Show repo tree
         run: |
-          echo "==== Repository tree (top 300 lines) ===="
+          echo "==== Repository tree ===="
           ls -R | head -n 300
 
-      # ====== パスA ======
+      # ====== Aパス ======
       - name: Compile (A = samizo-aitl-resume)
         if: ${{ hashFiles('samizo-aitl-resume/main_resume.tex') != '' }}
         uses: xu-cheng/latex-action@v3
@@ -35,7 +32,7 @@ jobs:
           root_file: main_resume.tex
           latexmk_use_lualatex: true
 
-      # ====== パスB ======
+      # ====== Bパス ======
       - name: Compile (B = latex-papers/samizo-aitl-resume)
         if: ${{ hashFiles('latex-papers/samizo-aitl-resume/main_resume.tex') != '' }}
         uses: xu-cheng/latex-action@v3
@@ -44,13 +41,13 @@ jobs:
           root_file: main_resume.tex
           latexmk_use_lualatex: true
 
-      # ====== ログ出力 ======
+      # ====== ログ ======
       - name: Tail logs if failed
         if: failure()
         run: |
-          echo "==== LOG samizo-aitl-resume/main_resume.log ===="
+          echo "==== tail samizo-aitl-resume/main_resume.log ===="
           tail -n 200 samizo-aitl-resume/main_resume.log || true
-          echo "==== LOG latex-papers/samizo-aitl-resume/main_resume.log ===="
+          echo "==== tail latex-papers/samizo-aitl-resume/main_resume.log ===="
           tail -n 200 latex-papers/samizo-aitl-resume/main_resume.log || true
 
       # ====== PDF出力 ======
@@ -64,7 +61,7 @@ jobs:
             latex-papers/samizo-aitl-resume/main_resume.pdf
           if-no-files-found: ignore
 
-      # ====== ログ類出力 ======
+      # ====== ログアップロード ======
       - name: Upload logs and intermediates
         if: always()
         uses: actions/upload-artifact@v4
