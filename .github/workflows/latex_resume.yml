@@ -15,45 +15,45 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      - name: Detect resume (prefer latex-papers/samizo-aitl-resume, then samizo-aitl-resume)
+      - name: Locate main_resume.tex and inject engine=luatex if missing
         id: detect
         shell: bash
         run: |
-          set -e
-          candidates=()
-          [ -f latex-papers/samizo-aitl-resume/main_resume.tex ] && candidates+=("latex-papers/samizo-aitl-resume")
-          [ -f samizo-aitl-resume/main_resume.tex ] && candidates+=("samizo-aitl-resume")
-          mapfile -t others < <(find . -type f -name main_resume.tex -printf '%h\n' | sort -u)
-          for d in "${others[@]}"; do
-            [[ " ${candidates[*]} " == *" $d "* ]] || candidates+=("$d")
+          set -euo pipefail
+          mapfile -t files < <(find . -type f -name 'main_resume.tex' | sort)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "::error::main_resume.tex not found"; exit 1
+          fi
+          # 先に既知パスを優先
+          for pref in "latex-papers/samizo-aitl-resume/main_resume.tex" "samizo-aitl-resume/main_resume.tex"; do
+            for f in "${files[@]}"; do
+              if [ "$f" = "./$pref" ]; then picked="$f"; break 2; fi
+            done
           done
-          [ ${#candidates[@]} -gt 0 ] || { echo "::error::main_resume.tex not found"; exit 1; }
+          # 無ければ最初の候補
+          picked="${picked:-${files[0]}}"
+          echo "picked=$picked" >> "$GITHUB_OUTPUT"
 
-          picked=""
-          for d in "${candidates[@]}"; do
-            echo "----- HEAD of $d/main_resume.tex -----"
-            nl -ba "$d/main_resume.tex" | sed -n '1,30p'
-            if grep -Eq '^\s*\\documentclass\[[^]]*engine=luatex' "$d/main_resume.tex"; then
-              picked="$d"; break
-            fi
-          done
+          echo "----- HEAD of $picked -----"
+          nl -ba "$picked" | sed -n '1,30p'
 
-          if [ -z "$picked" ]; then
-            d="${candidates[0]}"
-            echo "No engine=luatex found. Injecting into $d/main_resume.tex"
-            sed -i -E '0,/^\\documentclass\\[/{s/^\\(\\documentclass\\)\\[([^]]*)\\]/\\1[engine=luatex,\\2]/}' "$d/main_resume.tex"
-            nl -ba "$d/main_resume.tex" | sed -n '1,30p'
-            grep -Eq '^\s*\\documentclass\[[^]]*engine=luatex' "$d/main_resume.tex" || { echo "::error::failed to inject"; exit 1; }
-            picked="$d"
+          # engine=luatex が無いなら注入（\documentclass[...] の先頭へ）
+          if ! grep -Eq '^\s*\\documentclass\[[^]]*engine=luatex' "$picked"; then
+            echo "Injecting engine=luatex into $picked"
+            sed -i -E '0,/^\\documentclass\\[/{s/^\\(\\documentclass\\)\\[([^]]*)\\]/\\1[engine=luatex,\\2]/}' "$picked"
           fi
 
-          echo "dir=$picked" >> "$GITHUB_OUTPUT"
-          echo "Picked: $picked"
+          echo "----- HEAD after possible injection -----"
+          nl -ba "$picked" | sed -n '1,30p'
+          grep -Eq '^\s*\\documentclass\[[^]]*engine=luatex' "$picked" || { echo "::error::engine injection failed"; exit 1; }
 
       - name: Build with LuaLaTeX (twice)
         run: |
           set -e
-          cd "${{ steps.detect.outputs.dir }}"
+          TEX="${{ steps.detect.outputs.picked }}"
+          DIR="$(dirname "$TEX")"
+          cd "$DIR"
+          echo "Compiling in: $DIR"
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
           ls -lh
@@ -63,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: resume-pdf
-          path: ${{ steps.detect.outputs.dir }}/main_resume.pdf
+          path: ${{ steps.detect.outputs.picked }}/../main_resume.pdf
           if-no-files-found: error
 
       - name: Upload logs
@@ -72,11 +72,11 @@ jobs:
         with:
           name: latex_logs
           path: |
-            ${{ steps.detect.outputs.dir }}/*.log
-            ${{ steps.detect.outputs.dir }}/*.aux
-            ${{ steps.detect.outputs.dir }}/*.fls
-            ${{ steps.detect.outputs.dir }}/*.fdb_latexmk
-            ${{ steps.detect.outputs.dir }}/*.synctex.gz
-            ${{ steps.detect.outputs.dir }}/*.toc
-            ${{ steps.detect.outputs.dir }}/*.out
+            ${{ steps.detect.outputs.picked }}/../*.log
+            ${{ steps.detect.outputs.picked }}/../*.aux
+            ${{ steps.detect.outputs.picked }}/../*.fls
+            ${{ steps.detect.outputs.picked }}/../*.fdb_latexmk
+            ${{ steps.detect.outputs.picked }}/../*.synctex.gz
+            ${{ steps.detect.outputs.picked }}/../*.toc
+            ${{ steps.detect.outputs.picked }}/../*.out
           if-no-files-found: ignore
