@@ -1,34 +1,27 @@
 %==========================================
 % 三溝 真一 職務経歴書（日本語版）
 %==========================================
+%==== 必須: まず margin を geometry に渡す（あとから \usepackage{geometry} は不要）====
 \PassOptionsToPackage{margin=18mm}{geometry}
-\documentclass[11pt,ja=standard,engine=luatex]{bxjsarticle} % ← これ必須（TeX Live 2023）
 
+%==== 必須: LuaLaTeX 以外なら即エラーにする（間違いビルド防止）====
+\RequirePackage{iftex}
+\ifluatex\else
+  \errmessage{This resume must be built with LuaLaTeX.}
+\fi
+
+%==== 最重要: engine=luatex を明示 ====
+\documentclass[engine=luatex,ja=standard,11pt]{bxjsarticle}
+
+%==== LuaLaTeX 用の日本語/欧文フォント ====
 \usepackage{fontspec}
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
-
 \setmainjfont{HaranoAji Mincho}
 \setsansjfont{HaranoAji Gothic}
 \setmainfont{TeX Gyre Termes}
 \setsansfont{TeX Gyre Heros}
 \renewcommand{\familydefault}{\sfdefault}
-
-\usepackage{titlesec}
-\usepackage{enumitem}
-\setlist[itemize]{leftmargin=*, itemsep=1.5pt, topsep=2pt}
-\titleformat{\section}{\Large\bfseries}{\thesection}{6pt}{}
-\titleformat{\subsection}{\bfseries}{\thesubsection}{6pt}{}
-
-\usepackage{tabularx}
-\usepackage{array}
-\usepackage{xcolor}
-\usepackage{siunitx}
-\sisetup{detect-all=true}
-\usepackage{hyperref}
-\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
-
-\newcommand{\cvsection}[1]{\section*{#1}\vspace{-0.3em}\hrule\vspace{0.5em}}
 
 \begin{document}
 
