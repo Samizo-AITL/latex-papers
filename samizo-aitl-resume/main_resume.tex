@@ -4,7 +4,7 @@
 
 %==== ページ設定 ====
 \PassOptionsToPackage{margin=18mm}{geometry}
-\PassOptionsToClass{engine=luatex}{bxjsarticle} % ← ここを修正（luatex → engine=luatex）
+\PassOptionsToClass{engine=luatex}{bxjsarticle} % ← 正しい指定
 
 %==== LuaLaTeX 強制チェック ====
 \RequirePackage{iftex}
@@ -15,7 +15,7 @@
 \fi
 
 %==== クラス指定 ====
-\documentclass[ja=standard,11pt]{bxjsarticle}  % ← ここはこのままでOK
+\documentclass[ja=standard,11pt]{bxjsarticle}  % engine=luatex は PassOptionsToClass で渡したので不要
 
 %==== 日本語／欧文フォント設定 ====
 \usepackage{fontspec}
