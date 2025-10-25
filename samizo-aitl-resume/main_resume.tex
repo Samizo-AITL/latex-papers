@@ -1,19 +1,22 @@
 %==========================================
 % 三溝 真一 職務経歴書（日本語版）
 %==========================================
-%==== margin は PassOptionsToPackage で渡す ====
+
+%==== ページ設定 ====
 \PassOptionsToPackage{margin=18mm}{geometry}
 
-%==== LuaLaTeX 強制（間違いビルドは即停止）====
+%==== LuaLaTeX 強制チェック ====
 \RequirePackage{iftex}
-\ifluatex\else
-  \errmessage{This resume must be built with LuaLaTeX.}
+\ifluatex
+  \typeout{>> LuaLaTeX detected. Build continues.}
+\else
+  \errmessage{This document must be built with LuaLaTeX. (lualatex main_resume.tex)}
 \fi
 
-%==== 最重要: engine=luatex を明示 ====
-\documentclass[engine=luatex,ja=standard,11pt]{bxjsarticle}
+%==== クラス指定（engine=luatex は不要：古いTeXLive対策） ====
+\documentclass[ja=standard,11pt]{bxjsarticle}
 
-%==== 日本語/欧文フォント ====
+%==== 日本語／欧文フォント設定 ====
 \usepackage{fontspec}
 \usepackage{luatexja}
 \usepackage{luatexja-fontspec}
@@ -23,11 +26,34 @@
 \setsansfont{TeX Gyre Heros}
 \renewcommand{\familydefault}{\sfdefault}
 
+%==== 書式関連 ====
+\usepackage{titlesec}
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=*, itemsep=1.5pt, topsep=2pt}
+\titleformat{\section}{\Large\bfseries}{\thesection}{6pt}{}
+\titleformat{\subsection}{\bfseries}{\thesubsection}{6pt}{}
+
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{siunitx}
+\sisetup{detect-all=true}
+
+%==== リンク設定 ====
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
+
+%==== カスタムセクション ====
+\newcommand{\cvsection}[1]{\section*{#1}\vspace{-0.3em}\hrule\vspace{0.5em}}
+
+%==========================================
+% 本文
+%==========================================
 \begin{document}
 
 \begin{center}
 {\Huge \textbf{職務経歴書}} \\[1.2em]
-{\Large 三溝 真一（みみぞ しんいち）} \\[0.5em]
+{\Large 三溝 真一（さみぞ しんいち）} \\[0.5em]
 1972年4月23日生（53歳） \\[0.3em]
 〒390-0221 長野県松本市里山辺1729 \\[0.3em]
 Tel：090-4316-8054　Email：\href{mailto:sin3t72@gmail.com}{sin3t72@gmail.com} \\[0.3em]
@@ -48,7 +74,7 @@ GitHub：\href{https://samizo-aitl.github.io/}{https://samizo-aitl.github.io/}
 \textbf{セイコーエプソン株式会社（1997–2024）}
 
 \begin{itemize}
-  \item \textbf{IC基盤技術部（1997–2001）}：酒田8inchライン立上げ、0.35/0.25 µm配線／DRAM評価。Pause Refresh不良のn$^+$/p$^-$リーク（プラズマダメージ）特定、歩留まり65\%→80\%台後半。
+  \item \textbf{IC基盤技術部/Tプロジェクト/IC製品技術部（1997–2001）}：酒田8inchライン立上げ、0.35/0.25 µm配線／DRAM評価。Pause Refresh不良のn$^+$/p$^-$リーク（プラズマダメージ）特定、歩留まり65\%→80\%台後半。
   \item \textbf{IC技術開発部（2002–2006）}：0.25 µm高耐圧統合、aTFT製品化。SRAM単ビット不良をTiSi$_2$ C49→C54相転移不完全・B拡散で解明しRTA最適化。
   \item \textbf{NVプロジェクト（2007）}：FeRAM特性・信頼性解析。水素還元起因インプリント特定、N$_2$パージ保管運用導入。
   \item \textbf{Pプロジェクト（2008–2011）}：薄膜PZTアクチュエータ評価。クラック要因特定、酢酸プレウェットで恒久対策。
