@@ -1,4 +1,6 @@
-# .github/workflows/latex_resume.yml
+# ===============================================
+# 📄 Build Japanese LaTeX Resume (LuaLaTeX)
+# ===============================================
 name: Build Japanese LaTeX Resume
 on:
   push:
@@ -10,26 +12,32 @@ jobs:
     runs-on: ubuntu-latest
     name: Compile 職務経歴書 (LuaLaTeX)
     steps:
+      # --- 1. リポジトリをチェックアウト ---
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # --- 2. LaTeXコンパイル ---
+      #   - working_directory を指定（subfolder内で安全に実行）
+      #   - LuaLaTeX指定
+      #   - 失敗しても止めずに後続を走らせる
       - name: Compile with LuaLaTeX
         uses: xu-cheng/latex-action@v3
         with:
-          # サブフォルダ内でビルド（相対パスが事故りにくくなる）
-          working_directory: samizo-aitl-resume
+          working_directory: samizo-aitl-resume     # ← main_resume.tex のあるフォルダ
           root_file: main_resume.tex
           latexmk_use_lualatex: true
-        continue-on-error: true   # ← これは step のプロパティ。with: に入れない
+      continue-on-error: true
 
-      # 失敗時にログ末尾をコンソールに出す
+      # --- 3. ビルド失敗時：ログ末尾をコンソール出力 ---
       - name: Show log tail on failure
         if: failure()
         run: |
           echo "==== tail main_resume.log ===="
           tail -n 200 samizo-aitl-resume/main_resume.log || true
+          echo "==== directory listing (samizo-aitl-resume) ===="
+          ls -la samizo-aitl-resume || true
 
-      # PDF を常にアップロード（無ければ無視）
+      # --- 4. 成功時：生成PDFをアーティファクトにアップロード ---
       - name: Upload PDF artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -38,8 +46,8 @@ jobs:
           path: samizo-aitl-resume/main_resume.pdf
           if-no-files-found: ignore
 
-      # ログ類も常にアップロード
-      - name: Upload LaTeX logs
+      # --- 5. 成功・失敗に関わらず：すべての生成ログをアップロード ---
+      - name: Upload all LaTeX logs and intermediates
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -50,4 +58,7 @@ jobs:
             samizo-aitl-resume/*.fls
             samizo-aitl-resume/*.fdb_latexmk
             samizo-aitl-resume/*.synctex.gz
-          if-no-files-found: ignore
+            samizo-aitl-resume/*.toc
+            samizo-aitl-resume/*.out
+            samizo-aitl-resume/*.pdf
+          if-no-files-found: warn
