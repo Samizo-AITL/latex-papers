@@ -1,4 +1,6 @@
+# .github/workflows/latex_resume.yml
 name: Build Japanese LaTeX Resume
+
 on:
   push:
     branches: [ "main" ]
@@ -10,99 +12,61 @@ jobs:
     name: Compile 職務経歴書 (LuaLaTeX)
 
     steps:
-      # ----------------------------
-      # ① GitHubリポジトリのチェックアウト
-      # ----------------------------
+      # 1) 取得
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ----------------------------
-      # ② TeX Live (full) + LuaLaTeX 環境セットアップ
-      # ----------------------------
+      # 2) TeX Live (full) をAPTで導入（HaranoAji/luatexja等を含む）
       - name: Install TeX Live (full)
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      # ----------------------------
-      # ③ 構成確認用ツリー出力
-      # ----------------------------
-      - name: Show repository tree
+      # 3) どちらのパスに .tex があるか検出
+      - name: Detect location
+        id: detect
+        shell: bash
         run: |
-          echo "==== Repository Tree ===="
-          pwd && ls -la
-          echo "---- recursive ----"
-          ls -R | head -n 300
+          if [ -f samizo-aitl-resume/main_resume.tex ]; then
+            echo "dir=samizo-aitl-resume" >> "$GITHUB_OUTPUT"
+          elif [ -f latex-papers/samizo-aitl-resume/main_resume.tex ]; then
+            echo "dir=latex-papers/samizo-aitl-resume" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::main_resume.tex が見つかりません"
+            exit 1
+          fi
+          echo "==> DIR is ${{ steps.detect.outputs.dir }}"
 
-      # ----------------------------
-      # ④ Aパス (root直下の samizo-aitl-resume/)
-      # ----------------------------
-      - name: Compile (A = samizo-aitl-resume)
-        if: ${{ hashFiles('samizo-aitl-resume/main_resume.tex') != '' }}
-        uses: xu-cheng/latex-action@v3
-        with:
-          working_directory: samizo-aitl-resume
-          root_file: main_resume.tex
-          latexmk_use_lualatex: true
-        continue-on-error: true
-
-      # ----------------------------
-      # ⑤ Bパス (latex-papers/samizo-aitl-resume/)
-      # ----------------------------
-      - name: Compile (B = latex-papers/samizo-aitl-resume)
-        if: ${{ hashFiles('latex-papers/samizo-aitl-resume/main_resume.tex') != '' }}
-        uses: xu-cheng/latex-action@v3
-        with:
-          working_directory: latex-papers/samizo-aitl-resume
-          root_file: main_resume.tex
-          latexmk_use_lualatex: true
-        continue-on-error: true
-
-      # ----------------------------
-      # ⑥ ビルド失敗時のログ末尾表示
-      # ----------------------------
-      - name: Tail logs if failed
-        if: failure()
+      # 4) LuaLaTeX でビルド（2回回して目次等も安定化）
+      - name: Build with lualatex
+        shell: bash
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
-          echo "==== tail samizo-aitl-resume/main_resume.log ===="
-          tail -n 200 samizo-aitl-resume/main_resume.log || true
-          echo "==== tail latex-papers/samizo-aitl-resume/main_resume.log ===="
-          tail -n 200 latex-papers/samizo-aitl-resume/main_resume.log || true
+          set -e
+          lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
+          lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
+          # 参考: latexmk 版（必要なら切替）
+          # latexmk -lualatex -interaction=nonstopmode -halt-on-error -pdf main_resume.tex
+          ls -la
 
-      # ----------------------------
-      # ⑦ PDF成果物のアップロード
-      # ----------------------------
-      - name: Upload PDF artifacts
+      # 5) PDF をアップロード
+      - name: Upload PDF artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: resume-pdf
+          name: main_resume_pdf
           path: |
             samizo-aitl-resume/main_resume.pdf
             latex-papers/samizo-aitl-resume/main_resume.pdf
           if-no-files-found: ignore
 
-      # ----------------------------
-      # ⑧ すべてのログ・中間ファイルを保存
-      # ----------------------------
+      # 6) ログ・中間ファイルを保存
       - name: Upload logs and intermediates
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: latex_logs
           path: |
-            samizo-aitl-resume/*.log
-            samizo-aitl-resume/*.aux
-            samizo-aitl-resume/*.fls
-            samizo-aitl-resume/*.fdb_latexmk
-            samizo-aitl-resume/*.synctex.gz
-            samizo-aitl-resume/*.toc
-            samizo-aitl-resume/*.out
-            latex-papers/samizo-aitl-resume/*.log
-            latex-papers/samizo-aitl-resume/*.aux
-            latex-papers/samizo-aitl-resume/*.fls
-            latex-papers/samizo-aitl-resume/*.fdb_latexmk
-            latex-papers/samizo-aitl-resume/*.synctex.gz
-            latex-papers/samizo-aitl-resume/*.toc
-            latex-papers/samizo-aitl-resume/*.out
+            samizo-aitl-resume/*.{log,aux,fls,fdb_latexmk,synctex.gz,toc,out}
+            latex-papers/samizo-aitl-resume/*.{log,aux,fls,fdb_latexmk,synctex.gz,toc,out}
           if-no-files-found: ignore
