@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DIR: latex-papers/samizo-aitl-resume   # ← ここに固定
+      DIR: latex-papers/samizo-aitl-resume   # ← 対象ディレクトリを固定
 
     steps:
       - name: Checkout repository
@@ -19,30 +19,39 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      - name: Show target & header
+      - name: Show repository tree (top)
+        run: |
+          echo "==== TREE (top 300 lines) ===="
+          ls -R | head -n 300
+
+      # ここが“not found”で落ちていたので、shでも安全な書き方に
+      - name: Detect resume directory & header check
         run: |
           echo "DIR=$DIR"
-          test -f "$DIR/main_resume.tex" || { echo "::error file=$DIR/main_resume.tex::not found"; exit 1; }
-          echo "=== HEAD ==="
+          if [ ! -f "$DIR/main_resume.tex" ]; then
+            echo "::error file=$DIR/main_resume.tex::not found"
+            exit 1
+          fi
+
+          echo "=== HEAD of $DIR/main_resume.tex ==="
           head -n 30 "$DIR/main_resume.tex"
 
-          # engine=luatex が無ければ即停止（原因を明示）
-          grep -q 'engine=luatex' "$DIR/main_resume.tex" || { \
-            echo "::error file=$DIR/main_resume.tex,line=2::\\documentclass に engine=luatex がありません"; exit 1; }
+          # engine=luatex を強制確認
+          if ! grep -q 'engine=luatex' "$DIR/main_resume.tex"; then
+            echo "::error file=$DIR/main_resume.tex::\\documentclass に engine=luatex がありません"
+            exit 1
+          fi
 
       - name: Build with latexmk (LuaLaTeX)
         run: |
           cd "$DIR"
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
-          # 参照更新のためもう一回（必要なら）
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
           ls -lh
 
       - name: Show log tail on failure
         if: failure()
         run: |
-          echo "==== HEAD of $DIR/main_resume.tex ===="
-          head -n 30 "$DIR/main_resume.tex" || true
           echo "==== tail $DIR/main_resume.log ===="
           tail -n 200 "$DIR/main_resume.log" || true
 
@@ -54,7 +63,7 @@ jobs:
           path: ${{ env.DIR }}/main_resume.pdf
           if-no-files-found: error
 
-      - name: Upload logs
+      - name: Upload logs and intermediates
         if: always()
         uses: actions/upload-artifact@v4
         with:
