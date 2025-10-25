@@ -1,6 +1,4 @@
-# .github/workflows/latex_resume.yml
 name: Build Japanese LaTeX Resume
-
 on:
   push:
     branches: [ "main" ]
@@ -9,77 +7,64 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Compile 職務経歴書 (LuaLaTeX)
+    env:
+      DIR: latex-papers/samizo-aitl-resume   # ← ここに固定
 
     steps:
-      # ① チェックアウト
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ② TeX Live full
       - name: Install TeX Live (full)
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      # ③ main_resume.tex の存在チェック
-      - name: Detect resume directory
-        id: detect
+      - name: Show target & header
         run: |
-          if [ -f "latex-papers/samizo-aitl-resume/main_resume.tex" ]; then
-            echo "dir=latex-papers/samizo-aitl-resume" >> $GITHUB_ENV
-          elif [ -f "samizo-aitl-resume/main_resume.tex" ]; then
-            echo "dir=samizo-aitl-resume" >> $GITHUB_ENV
-          elif [ -f "main_resume.tex" ]; then
-            echo "dir=." >> $GITHUB_ENV
-          else
-            echo "::error::main_resume.tex が見つかりません"
-            find . -type f | grep main_resume.tex || true
-            exit 1
-          fi
-          echo "✅ Found TeX directory: $dir"
-          ls -la $dir
+          echo "DIR=$DIR"
+          test -f "$DIR/main_resume.tex" || { echo "::error file=$DIR/main_resume.tex::not found"; exit 1; }
+          echo "=== HEAD ==="
+          head -n 30 "$DIR/main_resume.tex"
 
-      # ④ LuaLaTeXビルド
-      - name: Build with LuaLaTeX
+          # engine=luatex が無ければ即停止（原因を明示）
+          grep -q 'engine=luatex' "$DIR/main_resume.tex" || { \
+            echo "::error file=$DIR/main_resume.tex,line=2::\\documentclass に engine=luatex がありません"; exit 1; }
+
+      - name: Build with latexmk (LuaLaTeX)
         run: |
-          cd $dir
-          echo "=== Building with LuaLaTeX ==="
-          lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
-          lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
-          echo "=== Output files ==="
+          cd "$DIR"
+          latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
+          # 参照更新のためもう一回（必要なら）
+          latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
           ls -lh
-        continue-on-error: false
 
-      # ⑤ 失敗時のログ出力
       - name: Show log tail on failure
         if: failure()
         run: |
-          echo "==== tail $dir/main_resume.log ===="
-          tail -n 200 $dir/main_resume.log || true
+          echo "==== HEAD of $DIR/main_resume.tex ===="
+          head -n 30 "$DIR/main_resume.tex" || true
+          echo "==== tail $DIR/main_resume.log ===="
+          tail -n 200 "$DIR/main_resume.log" || true
 
-      # ⑥ PDF アップロード
-      - name: Upload PDF
+      - name: Upload PDF artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: main_resume_pdf
-          path: |
-            $dir/main_resume.pdf
-          if-no-files-found: ignore
+          name: resume-pdf
+          path: ${{ env.DIR }}/main_resume.pdf
+          if-no-files-found: error
 
-      # ⑦ ログアップロード
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: latex_logs
           path: |
-            $dir/*.log
-            $dir/*.aux
-            $dir/*.fls
-            $dir/*.fdb_latexmk
-            $dir/*.synctex.gz
-            $dir/*.toc
-            $dir/*.out
+            ${{ env.DIR }}/*.log
+            ${{ env.DIR }}/*.aux
+            ${{ env.DIR }}/*.fls
+            ${{ env.DIR }}/*.fdb_latexmk
+            ${{ env.DIR }}/*.synctex.gz
+            ${{ env.DIR }}/*.toc
+            ${{ env.DIR }}/*.out
           if-no-files-found: ignore
