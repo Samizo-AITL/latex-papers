@@ -1,7 +1,8 @@
 %==========================================
 % 三溝 真一 職務経歴書（日本語版）
 %==========================================
-\documentclass[11pt]{bxjsarticle}
+\PassOptionsToPackage{margin=18mm}{geometry} % ← 先に渡す
+\documentclass[11pt,ja=standard]{bxjsarticle}
 
 \usepackage{fontspec}
 \usepackage{luatexja}
@@ -12,7 +13,7 @@
 \setsansfont{TeX Gyre Heros}
 \renewcommand{\familydefault}{\sfdefault}
 
-\usepackage[margin=18mm]{geometry}
+% \usepackage[margin=18mm]{geometry}  % ← 削除！(クラスが既に読んでいるため)
 \usepackage{titlesec}
 \usepackage{enumitem}
 \setlist[itemize]{left=0pt .. 1em, itemsep=1.5pt, topsep=2pt}
@@ -35,7 +36,7 @@
 
 \begin{center}
 {\Huge \textbf{職務経歴書}} \\[1.2em]
-{\Large 三溝 真一（さみぞ しんいち）} \\[0.5em]
+{\Large 三溝 真一（みみぞ しんいち）} \\[0.5em]
 1972年4月23日生（53歳） \\[0.3em]
 〒390-0221 長野県松本市里山辺1729 \\[0.3em]
 Tel：090-4316-8054　Email：\href{mailto:sin3t72@gmail.com}{sin3t72@gmail.com} \\[0.3em]
