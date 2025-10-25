@@ -8,22 +8,35 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Compile 職務経歴書 (LuaLaTeX)
+
     steps:
+      # ----------------------------
+      # ① GitHubリポジトリのチェックアウト
+      # ----------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ★ TeX Live full install（フォントも含まれる）
+      # ----------------------------
+      # ② TeX Live (full) + LuaLaTeX 環境セットアップ
+      # ----------------------------
       - name: Install TeX Live (full)
         run: |
-          sudo apt-get update
+          sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      - name: Show repo tree
+      # ----------------------------
+      # ③ 構成確認用ツリー出力
+      # ----------------------------
+      - name: Show repository tree
         run: |
-          echo "==== Repository tree ===="
+          echo "==== Repository Tree ===="
+          pwd && ls -la
+          echo "---- recursive ----"
           ls -R | head -n 300
 
-      # ====== Aパス ======
+      # ----------------------------
+      # ④ Aパス (root直下の samizo-aitl-resume/)
+      # ----------------------------
       - name: Compile (A = samizo-aitl-resume)
         if: ${{ hashFiles('samizo-aitl-resume/main_resume.tex') != '' }}
         uses: xu-cheng/latex-action@v3
@@ -31,8 +44,11 @@ jobs:
           working_directory: samizo-aitl-resume
           root_file: main_resume.tex
           latexmk_use_lualatex: true
+        continue-on-error: true
 
-      # ====== Bパス ======
+      # ----------------------------
+      # ⑤ Bパス (latex-papers/samizo-aitl-resume/)
+      # ----------------------------
       - name: Compile (B = latex-papers/samizo-aitl-resume)
         if: ${{ hashFiles('latex-papers/samizo-aitl-resume/main_resume.tex') != '' }}
         uses: xu-cheng/latex-action@v3
@@ -40,8 +56,11 @@ jobs:
           working_directory: latex-papers/samizo-aitl-resume
           root_file: main_resume.tex
           latexmk_use_lualatex: true
+        continue-on-error: true
 
-      # ====== ログ ======
+      # ----------------------------
+      # ⑥ ビルド失敗時のログ末尾表示
+      # ----------------------------
       - name: Tail logs if failed
         if: failure()
         run: |
@@ -50,7 +69,9 @@ jobs:
           echo "==== tail latex-papers/samizo-aitl-resume/main_resume.log ===="
           tail -n 200 latex-papers/samizo-aitl-resume/main_resume.log || true
 
-      # ====== PDF出力 ======
+      # ----------------------------
+      # ⑦ PDF成果物のアップロード
+      # ----------------------------
       - name: Upload PDF artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -61,13 +82,27 @@ jobs:
             latex-papers/samizo-aitl-resume/main_resume.pdf
           if-no-files-found: ignore
 
-      # ====== ログアップロード ======
+      # ----------------------------
+      # ⑧ すべてのログ・中間ファイルを保存
+      # ----------------------------
       - name: Upload logs and intermediates
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: latex_logs
           path: |
-            samizo-aitl-resume/*.{log,aux,fls,fdb_latexmk,synctex.gz,toc,out}
-            latex-papers/samizo-aitl-resume/*.{log,aux,fls,fdb_latexmk,synctex.gz,toc,out}
+            samizo-aitl-resume/*.log
+            samizo-aitl-resume/*.aux
+            samizo-aitl-resume/*.fls
+            samizo-aitl-resume/*.fdb_latexmk
+            samizo-aitl-resume/*.synctex.gz
+            samizo-aitl-resume/*.toc
+            samizo-aitl-resume/*.out
+            latex-papers/samizo-aitl-resume/*.log
+            latex-papers/samizo-aitl-resume/*.aux
+            latex-papers/samizo-aitl-resume/*.fls
+            latex-papers/samizo-aitl-resume/*.fdb_latexmk
+            latex-papers/samizo-aitl-resume/*.synctex.gz
+            latex-papers/samizo-aitl-resume/*.toc
+            latex-papers/samizo-aitl-resume/*.out
           if-no-files-found: ignore
