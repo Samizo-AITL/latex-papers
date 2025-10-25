@@ -12,77 +12,74 @@ jobs:
     name: Compile 職務経歴書 (LuaLaTeX)
 
     steps:
-      # 1) 取得
+      # ① チェックアウト
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2) TeX Live (full) — 日本語・luatexja・HaranoAji まで全部入る
+      # ② TeX Live full
       - name: Install TeX Live (full)
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      # 3) どこに main_resume.tex があるか検出（A/BどちらでもOK）
+      # ③ main_resume.tex の存在チェック
       - name: Detect resume directory
         id: detect
-        shell: bash
         run: |
-          if [ -f samizo-aitl-resume/main_resume.tex ]; then
-            echo "dir=samizo-aitl-resume" >> "$GITHUB_OUTPUT"
-          elif [ -f latex-papers/samizo-aitl-resume/main_resume.tex ]; then
-            echo "dir=latex-papers/samizo-aitl-resume" >> "$GITHUB_OUTPUT"
+          if [ -f "latex-papers/samizo-aitl-resume/main_resume.tex" ]; then
+            echo "dir=latex-papers/samizo-aitl-resume" >> $GITHUB_ENV
+          elif [ -f "samizo-aitl-resume/main_resume.tex" ]; then
+            echo "dir=samizo-aitl-resume" >> $GITHUB_ENV
+          elif [ -f "main_resume.tex" ]; then
+            echo "dir=." >> $GITHUB_ENV
           else
             echo "::error::main_resume.tex が見つかりません"
+            find . -type f | grep main_resume.tex || true
             exit 1
           fi
-          echo "Using dir: ${{ steps.detect.outputs.dir }}"
-          echo "Tree:"
-          ls -la "${{ steps.detect.outputs.dir }}"
+          echo "✅ Found TeX directory: $dir"
+          ls -la $dir
 
-      # 4) 確実コンパイル（エラー時は直ちに失敗 & ログを表示）
-      - name: Build with latexmk (LuaLaTeX)
-        shell: bash
-        working-directory: ${{ steps.detect.outputs.dir }}
+      # ④ LuaLaTeXビルド
+      - name: Build with LuaLaTeX
         run: |
-          set -e
-          # 一発で固めたいなら latexmk を使う
-          latexmk -lualatex -halt-on-error -interaction=nonstopmode -file-line-error main_resume.tex
-          # 念のため出来上がりを確認
-          test -f main_resume.pdf
-          echo "===== Generated files ====="
+          cd $dir
+          echo "=== Building with LuaLaTeX ==="
+          lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
+          lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
+          echo "=== Output files ==="
           ls -lh
+        continue-on-error: false
 
-      # 5) 失敗時のログをその場で出力（上の step が落ちたら自動実行）
+      # ⑤ 失敗時のログ出力
       - name: Show log tail on failure
         if: failure()
-        shell: bash
         run: |
-          echo "==== tail main_resume.log ===="
-          tail -n 200 "${{ steps.detect.outputs.dir }}/main_resume.log" || true
+          echo "==== tail $dir/main_resume.log ===="
+          tail -n 200 $dir/main_resume.log || true
 
-      # 6) PDF をアップロード（存在しなければ無視）
-      - name: Upload PDF artifact
+      # ⑥ PDF アップロード
+      - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: main_resume_pdf
           path: |
-            samizo-aitl-resume/main_resume.pdf
-            latex-papers/samizo-aitl-resume/main_resume.pdf
+            $dir/main_resume.pdf
           if-no-files-found: ignore
 
-      # 7) ログ・中間ファイルも保存（追跡しやすくする）
-      - name: Upload logs and intermediates
+      # ⑦ ログアップロード
+      - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: latex_logs
           path: |
-            ${{ steps.detect.outputs.dir }}/*.log
-            ${{ steps.detect.outputs.dir }}/*.aux
-            ${{ steps.detect.outputs.dir }}/*.fls
-            ${{ steps.detect.outputs.dir }}/*.fdb_latexmk
-            ${{ steps.detect.outputs.dir }}/*.synctex.gz
-            ${{ steps.detect.outputs.dir }}/*.toc
-            ${{ steps.detect.outputs.dir }}/*.out
+            $dir/*.log
+            $dir/*.aux
+            $dir/*.fls
+            $dir/*.fdb_latexmk
+            $dir/*.synctex.gz
+            $dir/*.toc
+            $dir/*.out
           if-no-files-found: ignore
