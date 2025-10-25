@@ -7,18 +7,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Install TeX Live (full)
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      # ==== 対象の main_resume.tex を厳密に特定 ====
-      - name: Detect resume directory (must contain engine=luatex)
+      - name: Detect resume (prefer latex-papers/samizo-aitl-resume, then samizo-aitl-resume)
         id: detect
         shell: bash
         run: |
@@ -26,16 +23,11 @@ jobs:
           candidates=()
           [ -f latex-papers/samizo-aitl-resume/main_resume.tex ] && candidates+=("latex-papers/samizo-aitl-resume")
           [ -f samizo-aitl-resume/main_resume.tex ] && candidates+=("samizo-aitl-resume")
-          # その他も拾う（重複除外）
           mapfile -t others < <(find . -type f -name main_resume.tex -printf '%h\n' | sort -u)
           for d in "${others[@]}"; do
             [[ " ${candidates[*]} " == *" $d "* ]] || candidates+=("$d")
           done
-          if [ ${#candidates[@]} -eq 0 ]; then
-            echo "::error::main_resume.tex not found in repository"
-            exit 1
-          fi
-          echo "=== Candidates ==="; printf ' - %s\n' "${candidates[@]}"
+          [ ${#candidates[@]} -gt 0 ] || { echo "::error::main_resume.tex not found"; exit 1; }
 
           picked=""
           for d in "${candidates[@]}"; do
@@ -46,31 +38,27 @@ jobs:
             fi
           done
 
-          # どれにも engine=luatex が無いなら、最優先候補に自動注入
           if [ -z "$picked" ]; then
             d="${candidates[0]}"
-            echo "No engine=luatex found. Inject into: $d/main_resume.tex"
-            # documentclass[...] に engine=luatex, を先頭に挿入（既存option保持）
+            echo "No engine=luatex found. Injecting into $d/main_resume.tex"
             sed -i -E '0,/^\\documentclass\\[/{s/^\\(\\documentclass\\)\\[([^]]*)\\]/\\1[engine=luatex,\\2]/}' "$d/main_resume.tex"
-            echo "----- HEAD after inject -----"
             nl -ba "$d/main_resume.tex" | sed -n '1,30p'
-            grep -Eq '^\s*\\documentclass\[[^]]*engine=luatex' "$d/main_resume.tex" || { echo "::error::failed to inject engine=luatex"; exit 1; }
+            grep -Eq '^\s*\\documentclass\[[^]]*engine=luatex' "$d/main_resume.tex" || { echo "::error::failed to inject"; exit 1; }
             picked="$d"
           fi
 
           echo "dir=$picked" >> "$GITHUB_OUTPUT"
           echo "Picked: $picked"
 
-      - name: Build with latexmk (LuaLaTeX x2)
+      - name: Build with LuaLaTeX (twice)
         run: |
           set -e
           cd "${{ steps.detect.outputs.dir }}"
-          echo "=== Building in $(pwd) ==="
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
           ls -lh
 
-      - name: Upload PDF artifact
+      - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -78,7 +66,7 @@ jobs:
           path: ${{ steps.detect.outputs.dir }}/main_resume.pdf
           if-no-files-found: error
 
-      - name: Upload logs and intermediates
+      - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
