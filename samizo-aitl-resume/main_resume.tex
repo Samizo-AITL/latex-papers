@@ -1,7 +1,7 @@
 %==========================================
 % 三溝 真一 職務経歴書（日本語版）
 %==========================================
-\PassOptionsToPackage{margin=18mm}{geometry} % ← 先に渡す
+\PassOptionsToPackage{margin=18mm}{geometry}
 \documentclass[11pt,ja=standard]{bxjsarticle}
 
 \usepackage{fontspec}
@@ -13,7 +13,7 @@
 \setsansfont{TeX Gyre Heros}
 \renewcommand{\familydefault}{\sfdefault}
 
-% \usepackage[margin=18mm]{geometry}  % ← 削除！(クラスが既に読んでいるため)
+% \usepackage[margin=18mm]{geometry}  % ← 読まない
 \usepackage{titlesec}
 \usepackage{enumitem}
 \setlist[itemize]{left=0pt .. 1em, itemsep=1.5pt, topsep=2pt}
@@ -25,12 +25,11 @@
 \usepackage{xcolor}
 \usepackage{siunitx}
 \sisetup{detect-all=true}
-
 \usepackage{hyperref}
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
 
 \newcommand{\cvsection}[1]{\section*{#1}\vspace{-0.3em}\hrule\vspace{0.5em}}
-\newcommand{\um}{\SI{}{\micro\metre}} % 例: 0.25\,\um → \SI{0.25}{\micro\metre}
+% \newcommand{\um}{\SI{}{\micro\metre}} % ← 削除（空の \SI は危険）
 
 \begin{document}
 
