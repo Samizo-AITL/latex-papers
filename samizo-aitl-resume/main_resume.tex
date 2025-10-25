@@ -3,9 +3,8 @@
 %==========================================
 
 %==== ページ設定 ====
-%\PassOptionsToPackage{margin=18mm}{geometry}
-\PassOptionsToClass{engine=luatex}{bxjsarticle}
-\PassOptionsToClass{luatex}{bxjsarticle}
+\PassOptionsToPackage{margin=18mm}{geometry}
+\PassOptionsToClass{luatex}{bxjsarticle}  % ← これだけでOK！
 
 %==== LuaLaTeX 強制チェック ====
 \RequirePackage{iftex}
@@ -15,9 +14,8 @@
   \errmessage{This document must be built with LuaLaTeX. (lualatex main_resume.tex)}
 \fi
 
-%==== クラス指定（engine=luatex は不要：古いTeXLive対策） ====
-%\documentclass[ja=standard,11pt]{bxjsarticle}
-\documentclass[engine=luatex,ja=standard,11pt]{bxjsarticle}
+%==== クラス指定 ====
+\documentclass[ja=standard,11pt]{bxjsarticle}  % ← engine=luatex は削除
 
 %==== 日本語／欧文フォント設定 ====
 \usepackage{fontspec}
