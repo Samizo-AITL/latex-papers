@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,31 +17,27 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      # ==== 対象ファイルの厳密検出（engine=luatex を含むものを優先）====
+      # ==== 対象の main_resume.tex を厳密に特定 ====
       - name: Detect resume directory (must contain engine=luatex)
         id: detect
         shell: bash
         run: |
           set -e
           candidates=()
-          # 優先順を明示
           [ -f latex-papers/samizo-aitl-resume/main_resume.tex ] && candidates+=("latex-papers/samizo-aitl-resume")
           [ -f samizo-aitl-resume/main_resume.tex ] && candidates+=("samizo-aitl-resume")
-          # それ以外に main_resume.tex があれば追加
+          # その他も拾う（重複除外）
           mapfile -t others < <(find . -type f -name main_resume.tex -printf '%h\n' | sort -u)
           for d in "${others[@]}"; do
             [[ " ${candidates[*]} " == *" $d "* ]] || candidates+=("$d")
           done
-
           if [ ${#candidates[@]} -eq 0 ]; then
             echo "::error::main_resume.tex not found in repository"
             exit 1
           fi
+          echo "=== Candidates ==="; printf ' - %s\n' "${candidates[@]}"
 
           picked=""
-          echo "=== Candidates ==="
-          printf ' - %s\n' "${candidates[@]}"
-
           for d in "${candidates[@]}"; do
             echo "----- HEAD of $d/main_resume.tex -----"
             nl -ba "$d/main_resume.tex" | sed -n '1,30p'
@@ -49,23 +46,27 @@ jobs:
             fi
           done
 
+          # どれにも engine=luatex が無いなら、最優先候補に自動注入
           if [ -z "$picked" ]; then
-            echo "::error::No candidate main_resume.tex contains 'engine=luatex' in \\documentclass[...]"
-            echo "Add: \\documentclass[...,engine=luatex]{bxjsarticle}"
-            exit 1
+            d="${candidates[0]}"
+            echo "No engine=luatex found. Inject into: $d/main_resume.tex"
+            # documentclass[...] に engine=luatex, を先頭に挿入（既存option保持）
+            sed -i -E '0,/^\\documentclass\\[/{s/^\\(\\documentclass\\)\\[([^]]*)\\]/\\1[engine=luatex,\\2]/}' "$d/main_resume.tex"
+            echo "----- HEAD after inject -----"
+            nl -ba "$d/main_resume.tex" | sed -n '1,30p'
+            grep -Eq '^\s*\\documentclass\[[^]]*engine=luatex' "$d/main_resume.tex" || { echo "::error::failed to inject engine=luatex"; exit 1; }
+            picked="$d"
           fi
 
-          echo "Picked: $picked"
           echo "dir=$picked" >> "$GITHUB_OUTPUT"
+          echo "Picked: $picked"
 
-      - name: Build with latexmk (LuaLaTeX)
+      - name: Build with latexmk (LuaLaTeX x2)
         run: |
           set -e
           cd "${{ steps.detect.outputs.dir }}"
           echo "=== Building in $(pwd) ==="
-          # 1st pass
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
-          # 2nd pass (目次/相互参照安定化のため)
           latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
           ls -lh
 
