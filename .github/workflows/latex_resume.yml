@@ -8,75 +8,93 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # 1) 取得
+      - name: Checkout
+        uses: actions/checkout@v4
 
+      # 2) TeX Live (full) インストール
       - name: Install TeX Live (full)
         run: |
+          set -euxo pipefail
           sudo apt-get update -qq
           sudo apt-get install -y texlive-full latexmk
 
-      - name: Locate main_resume.tex and inject engine=luatex if missing
+      # 3) main_resume.tex を検出（既知パス優先）
+      - name: Detect main_resume.tex
         id: detect
         shell: bash
         run: |
-          set -euo pipefail
+          set -euxo pipefail
           mapfile -t files < <(find . -type f -name 'main_resume.tex' | sort)
           if [ ${#files[@]} -eq 0 ]; then
-            echo "::error::main_resume.tex not found"; exit 1
+            echo "::error::main_resume.tex not found anywhere in repo"; exit 1
           fi
-          # 先に既知パスを優先
+          picked=""
           for pref in "latex-papers/samizo-aitl-resume/main_resume.tex" "samizo-aitl-resume/main_resume.tex"; do
             for f in "${files[@]}"; do
               if [ "$f" = "./$pref" ]; then picked="$f"; break 2; fi
             done
           done
-          # 無ければ最初の候補
           picked="${picked:-${files[0]}}"
+          dir="$(dirname "$picked")"
           echo "picked=$picked" >> "$GITHUB_OUTPUT"
+          echo "dir=$dir"       >> "$GITHUB_OUTPUT"
+          echo "---- HEAD of $picked ----"
+          nl -ba "$picked" | sed -n '1,40p'
 
-          echo "----- HEAD of $picked -----"
-          nl -ba "$picked" | sed -n '1,30p'
-
-          # engine=luatex が無いなら注入（\documentclass[...] の先頭へ）
-          if ! grep -Eq '^\s*\\documentclass\[[^]]*engine=luatex' "$picked"; then
-            echo "Injecting engine=luatex into $picked"
-            sed -i -E '0,/^\\documentclass\\[/{s/^\\(\\documentclass\\)\\[([^]]*)\\]/\\1[engine=luatex,\\2]/}' "$picked"
-          fi
-
-          echo "----- HEAD after possible injection -----"
-          nl -ba "$picked" | sed -n '1,30p'
-          grep -Eq '^\s*\\documentclass\[[^]]*engine=luatex' "$picked" || { echo "::error::engine injection failed"; exit 1; }
-
-      - name: Build with LuaLaTeX (twice)
+      # 4) ラッパー作成：クラスへ engine=luatex を事前付与して本体を \input
+      - name: Create wrapper (force engine=luatex)
         run: |
-          set -e
-          TEX="${{ steps.detect.outputs.picked }}"
-          DIR="$(dirname "$TEX")"
+          set -euxo pipefail
+          DIR="${{ steps.detect.outputs.dir }}"
+          cat > "$DIR/build_wrapper.tex" <<'EOF'
+\RequirePackage{ifluatex}
+\ifluatex\else\errmessage{Use LuaLaTeX (lualatex).}\fi
+\PassOptionsToClass{engine=luatex}{bxjsarticle}
+\input{main_resume.tex}
+EOF
+          echo "---- wrapper ----"
+          cat "$DIR/build_wrapper.tex"
+
+      # 5) LuaLaTeX で 2 回ビルド（ジョブ名を main_resume に固定）
+      - name: Build with LuaLaTeX
+        run: |
+          set -euxo pipefail
+          DIR="${{ steps.detect.outputs.dir }}"
           cd "$DIR"
-          echo "Compiling in: $DIR"
-          latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
-          latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
+          latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode -jobname=main_resume build_wrapper.tex
+          latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode -jobname=main_resume build_wrapper.tex
           ls -lh
 
+      # 6) 失敗時はログ末尾を即表示
+      - name: Tail log on failure
+        if: failure()
+        run: |
+          DIR="${{ steps.detect.outputs.dir }}"
+          echo "==== tail ${DIR}/main_resume.log ===="
+          tail -n 200 "${DIR}/main_resume.log" || true
+
+      # 7) PDF をアップロード
       - name: Upload PDF
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: resume-pdf
-          path: ${{ steps.detect.outputs.picked }}/../main_resume.pdf
+          path: ${{ steps.detect.outputs.dir }}/main_resume.pdf
           if-no-files-found: error
 
+      # 8) すべてのログ・中間物も保存
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: latex_logs
           path: |
-            ${{ steps.detect.outputs.picked }}/../*.log
-            ${{ steps.detect.outputs.picked }}/../*.aux
-            ${{ steps.detect.outputs.picked }}/../*.fls
-            ${{ steps.detect.outputs.picked }}/../*.fdb_latexmk
-            ${{ steps.detect.outputs.picked }}/../*.synctex.gz
-            ${{ steps.detect.outputs.picked }}/../*.toc
-            ${{ steps.detect.outputs.picked }}/../*.out
+            ${{ steps.detect.outputs.dir }}/*.log
+            ${{ steps.detect.outputs.dir }}/*.aux
+            ${{ steps.detect.outputs.dir }}/*.fls
+            ${{ steps.detect.outputs.dir }}/*.fdb_latexmk
+            ${{ steps.detect.outputs.dir }}/*.synctex.gz
+            ${{ steps.detect.outputs.dir }}/*.toc
+            ${{ steps.detect.outputs.dir }}/*.out
           if-no-files-found: ignore
