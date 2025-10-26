@@ -32,18 +32,17 @@ jobs:
           echo "Found main_resume.tex in: $dir"
           nl -ba "$found" | sed -n '1,30p'
 
-      - name: Create wrapper (force engine=luatex + geometry)
+      # wrapper は engine=luatex を前置き & ただ本文を \input するだけ
+      - name: Create wrapper (force engine=luatex)
         run: |
           set -euo pipefail
           cd "${{ steps.detect.outputs.dir }}"
           cat > build_wrapper.tex <<'EOF'
 \PassOptionsToClass{engine=luatex}{bxjsarticle}
 \RequirePackage{iftex}\ifluatex\else\errmessage{Use LuaLaTeX}\fi
-\PassOptionsToPackage{margin=18mm}{geometry}
-\AtBeginDocument{\RequirePackage{geometry}}
 \input{main_resume.tex}
 EOF
-          sed -n '1,50p' build_wrapper.tex
+          sed -n '1,30p' build_wrapper.tex
 
       - name: Build with LuaLaTeX (via wrapper, twice)
         run: |
