@@ -16,12 +16,11 @@
 
 %==== クラス指定 ====
 \documentclass[ja=standard,11pt]{bxjsarticle}  % engine=luatex は PassOptionsToClass で渡したので不要
-\usepackage{geometry} % ← これが必要（余白18mmを有効化）
+\usepackage{geometry} % ← 余白18mmを有効化（本文で読み込む）
 
 %==== 日本語／欧文フォント設定 ====
-\usepackage{fontspec}
 \usepackage{luatexja}
-\usepackage{luatexja-fontspec}
+\usepackage{luatexja-fontspec} % fontspec を内包
 \setmainjfont{HaranoAji Mincho}
 \setsansjfont{HaranoAji Gothic}
 \setmainfont{TeX Gyre Termes}
@@ -38,8 +37,10 @@
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{xcolor}
-\usepackage{siunitx}
-\sisetup{detect-all=true}
+
+% （★）siunitx は未使用なので外します。使う場合は v3 互換で：
+% \usepackage{siunitx}
+% \sisetup{detect-family=true, detect-weight=true}
 
 %==== リンク設定 ====
 \usepackage{hyperref}
