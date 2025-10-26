@@ -4,7 +4,6 @@
 
 %==== ページ設定 ====
 \PassOptionsToPackage{margin=18mm}{geometry}
-\PassOptionsToClass{engine=luatex}{bxjsarticle} % ← 正しい指定
 
 %==== LuaLaTeX 強制チェック ====
 \RequirePackage{iftex}
@@ -14,13 +13,14 @@
   \errmessage{This document must be built with LuaLaTeX. (lualatex main_resume.tex)}
 \fi
 
-%==== クラス指定 ====
-\documentclass[ja=standard,11pt]{bxjsarticle}  % engine=luatex は PassOptionsToClass で渡したので不要
-\usepackage{geometry} % ← 余白18mmを有効化（本文で読み込む）
+%==== クラス指定（← ここで lualatex を明示）====
+\documentclass[lualatex,ja=standard,11pt]{bxjsarticle}
+
+\usepackage{geometry} % ← 余白18mmを有効化
 
 %==== 日本語／欧文フォント設定 ====
 \usepackage{luatexja}
-\usepackage{luatexja-fontspec} % fontspec を内包
+\usepackage{luatexja-fontspec} % fontspecを内包
 \setmainjfont{HaranoAji Mincho}
 \setsansjfont{HaranoAji Gothic}
 \setmainfont{TeX Gyre Termes}
@@ -38,7 +38,7 @@
 \usepackage{array}
 \usepackage{xcolor}
 
-% （★）siunitx は未使用なので外します。使う場合は v3 互換で：
+% siunitx は未使用のため外す（使うなら v3 設定で再度追加）
 % \usepackage{siunitx}
 % \sisetup{detect-family=true, detect-weight=true}
 
