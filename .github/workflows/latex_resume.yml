@@ -7,15 +7,25 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install TeX Live (full)
+      # ← texlive-full は使わない。日本語＋LuaLaTeXに必要な最小だけ入れる
+      - name: Install TeX Live (minimal for LuaLaTeX + Japanese)
         run: |
           set -euxo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y texlive-full latexmk
+          sudo apt-get install -y \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-luatex \
+            texlive-lang-japanese \
+            texlive-fonts-recommended \
+            latexmk \
+            fonts-haranoaji
 
       - name: Detect resume file
         id: detect
@@ -31,34 +41,21 @@ jobs:
           echo "Found main_resume.tex in: $dir"
           nl -ba "$found" | sed -n '1,40p'
 
-      - name: Build with LuaLaTeX (latexmk x2)
+      - name: Build with LuaLaTeX (latexmk)
         run: |
           set -euo pipefail
           cd "${{ steps.detect.outputs.dir }}"
-          latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
-          latexmk -lualatex -halt-on-error -file-line-error -interaction=nonstopmode main_resume.tex
+          latexmk -lualatex -interaction=nonstopmode -halt-on-error -file-line-error main_resume.tex
           ls -lh
 
-      - name: Show first errors if failed
-        if: failure()
-        run: |
-          DIR="${{ steps.detect.outputs.dir }}"
-          echo "==== head/tail of log ===="
-          sed -n '1,120p'   "${DIR}/main_resume.log" || true
-          echo "---- errors ----"
-          grep -n '^!' "${DIR}/main_resume.log" || true
-          echo "---- last 200 lines ----"
-          tail -n 200 "${DIR}/main_resume.log" || true
-
       - name: Upload PDF
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: resume-pdf
           path: ${{ steps.detect.outputs.dir }}/main_resume.pdf
           if-no-files-found: error
 
-      - name: Upload logs
+      - name: Upload logs (for debugging)
         if: always()
         uses: actions/upload-artifact@v4
         with:
