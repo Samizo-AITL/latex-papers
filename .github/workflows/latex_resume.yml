@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install TeX Live (minimal for LuaLaTeX + Japanese)
+      - name: Install TeX Live (minimal for LuaLaTeX + Japanese fonts that exist)
         run: |
           set -euxo pipefail
           sudo apt-get update -qq
@@ -24,8 +24,9 @@ jobs:
             texlive-lang-japanese \
             texlive-fonts-recommended \
             latexmk \
-            fonts-haranoaji-mincho \
-            fonts-haranoaji-gothic
+            fonts-noto-cjk \
+            fonts-ipafont-mincho \
+            fonts-ipafont-gothic
 
       - name: Detect resume file
         id: detect
@@ -44,6 +45,7 @@ jobs:
         run: |
           set -euo pipefail
           cd "${{ steps.detect.outputs.dir }}"
+          # 1回で済ませる。エラー出たらログで確認。
           latexmk -lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
           ls -lh
 
