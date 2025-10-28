@@ -1,11 +1,9 @@
 %==========================================
-% 三溝 真一 職務経歴書（日本語版）
+% 三溝 真一 職務経歴書（全般用）
 %==========================================
 
-%==== ページ設定 ====
 \PassOptionsToPackage{margin=18mm}{geometry}
 
-%==== LuaLaTeX 強制チェック ====
 \RequirePackage{iftex}
 \ifluatex
   \typeout{>> LuaLaTeX detected. Build continues.}
@@ -13,21 +11,17 @@
   \errmessage{This document must be built with LuaLaTeX. (lualatex main_resume.tex)}
 \fi
 
-%==== クラス指定（← ここで lualatex を明示）====
 \documentclass[lualatex,ja=standard,11pt]{bxjsarticle}
 
-\usepackage{geometry} % ← 余白18mmを有効化
-
-%==== 日本語／欧文フォント設定 ====
+\usepackage{geometry}
 \usepackage{luatexja}
-\usepackage{luatexja-fontspec} % fontspecを内包
+\usepackage{luatexja-fontspec}
 \setmainjfont{HaranoAji Mincho}
 \setsansjfont{HaranoAji Gothic}
 \setmainfont{TeX Gyre Termes}
 \setsansfont{TeX Gyre Heros}
 \renewcommand{\familydefault}{\sfdefault}
 
-%==== 書式関連 ====
 \usepackage{titlesec}
 \usepackage{enumitem}
 \setlist[itemize]{leftmargin=*, itemsep=1.5pt, topsep=2pt}
@@ -37,21 +31,11 @@
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{xcolor}
-
-% siunitx は未使用のため外す（使うなら v3 設定で再度追加）
-% \usepackage{siunitx}
-% \sisetup{detect-family=true, detect-weight=true}
-
-%==== リンク設定 ====
 \usepackage{hyperref}
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
 
-%==== カスタムセクション ====
 \newcommand{\cvsection}[1]{\section*{#1}\vspace{-0.3em}\hrule\vspace{0.5em}}
 
-%==========================================
-% 本文
-%==========================================
 \begin{document}
 
 \begin{center}
@@ -68,7 +52,7 @@ GitHub：\href{https://samizo-aitl.github.io/}{https://samizo-aitl.github.io/}
 \vspace{1em}
 
 \cvsection{職務要約}
-半導体プロセス・デバイス（CMOSロジック/メモリ/高耐圧インテグレーション）、インクジェットMEMS（薄膜ピエゾ）、プリントヘッド電装部品、BOM運用、品質保証の一連業務で25年以上の実績。量産トラブルの根因解析から工程最適化・歩留まり改善を主導。近年はBOM電子化、BCP二拠点生産、コスト合理化（Auめっき厚最適化で年約10億円削減）を推進。2024年以降は独立し、教育教材（Edusemi, EduController, AITL-H）をGitHubで公開。
+半導体プロセス・デバイス（CMOSロジック／メモリ／高耐圧インテグレーション）、インクジェットMEMS（薄膜ピエゾ）、プリントヘッド電装部品、BOM運用、品質保証の一連業務で25年以上の実績。量産トラブルの根因解析から工程最適化・歩留まり改善を主導。近年はBOM電子化、BCP二拠点生産、コスト合理化（Auめっき厚最適化で年約10億円削減）を推進。2024年以降は独立し、教育教材（Edusemi, EduController, AITL-H）をGitHubで公開。
 
 \cvsection{学歴}
 信州大学 工学部 電気電子工学専攻 修士（工学修士）
@@ -77,7 +61,7 @@ GitHub：\href{https://samizo-aitl.github.io/}{https://samizo-aitl.github.io/}
 \textbf{セイコーエプソン株式会社（1997–2024）}
 
 \begin{itemize}
-  \item \textbf{IC基盤技術部/Tプロジェクト/IC製品技術部（1997–2001）}：酒田8inchライン立上げ、0.35µm配線モジュール開発／0.35-0.25μmDRAM立ち上げ量産化、VSRAM(擬似SRAM)品質向上。0.25μDRAMでは、立ち上げの最初から参画し、試作流動環境構築、量産化量産対応まで全て行った。Pause Refresh不良のn$^+$/p$^-$リーク（プラズマダメージ）特定、歩留まり65\%→80\%台後半。
+  \item \textbf{IC基盤技術部/Tプロジェクト/IC製品技術部（1997–2001）}：酒田8inchライン立上げ、0.35µm配線モジュール開発／0.35–0.25µm DRAM立ち上げ量産化、VSRAM(擬似SRAM)品質向上。0.25µm DRAMでは試作から量産まで一貫して担当。Pause Refresh不良のn$^+$/p$^-$リーク（プラズマダメージ）特定、歩留まり65\%→80\%台後半。
   \item \textbf{IC技術開発部（2002–2006）}：0.25µm高耐圧統合、aTFT製品化。SRAM単ビット不良をTiSi$_2$ C49→C54相転移不完全・B拡散で解明しRTA最適化。
   \item \textbf{研究開発本部 NVプロジェクト（2007）}：FeRAM特性・信頼性解析。水素還元起因インプリント特定、N$_2$パージ保管運用導入。
   \item \textbf{研究開発本部 Pプロジェクト（2008–2011）}：薄膜PZTアクチュエータ評価。クラック要因特定、酢酸プレウェットで恒久対策。
@@ -87,11 +71,11 @@ GitHub：\href{https://samizo-aitl.github.io/}{https://samizo-aitl.github.io/}
 
 \cvsection{スキル}
 \begin{itemize}
-  \item 半導体プロセス・デバイス：0.35-0.18μm CMOSロジック、0.35-0.25μm DRAM/擬似SRAM, 高耐圧インテグレーション、FeRAM
-  \item MEMS／インクジェット：薄膜ピエゾアクチュエータ、プリントヘッド電装部品(新規,合理化,品質問題,4M,BCP,セキュリティ)
-  \item 品質・信頼性：不良解析, 統計的工程管理
-  \item 組織運用：BOM/図面、ISO教育訓練/計測器管理・内部監査
-  \item 教育・公開：ヘッド技術部門教育訓練項目策定・講師、教育訓練サイト公開
+  \item 半導体プロセス・デバイス：0.35–0.18µm CMOSロジック、DRAM/VSRAM、高耐圧インテグレーション、FeRAM
+  \item MEMS／インクジェット：薄膜PZTアクチュエータ、静電アクチュエータ、プリントヘッド電装合理化
+  \item 品質・信頼性：不良解析、統計的工程管理、スクリーニング設計、ISO教育・内部監査
+  \item 組織運用：BOM/図面/4M統合、BCP二拠点運用、教育訓練体系設計
+  \item 教育・公開：Markdown／LaTeX／Mermaid教材開発、GitHub Pages運用
 \end{itemize}
 
 \cvsection{現在の活動（2024–）}
@@ -103,6 +87,15 @@ GitHub：\href{https://samizo-aitl.github.io/}{https://samizo-aitl.github.io/}
   \item 先端半導体構造進化（FinFET～GAA～CFETのスケーリング臨界と信頼性設計）
   \item SystemDK with AITL Core（PID×FSM×LLMの自律制御アーキテクチャ）
 \end{enumerate}
+
+\cvsection{研究業績・学会発表}
+\begin{itemize}
+  \item 三溝 真一, 池田 慎治, 佐藤 敏郎, 山沢 清人：\\
+  「積層マイクロリアクトルの磁性膜とコイル導体の抵抗率に関する一考察」,\\
+  電気学会マグネティックス研究会資料, MAG-97-14–27, pp.41–46 (1997年1月31日).\\
+  J-GLOBAL ID: \href{https://jglobal.jst.go.jp/detail?JGLOBAL_ID=200902109670399960}{200902109670399960}.\\
+  \textit{※本発表は電気学会 MAG研究会（1997年）にて報告。信州大学工学部における磁性薄膜マイクロリアクトル研究成果。}
+\end{itemize}
 
 \cvsection{希望条件}
 勤務形態：常勤／非常勤／リモートいずれも可  
