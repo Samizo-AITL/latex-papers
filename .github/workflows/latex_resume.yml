@@ -13,7 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ← texlive-full は使わない。日本語＋LuaLaTeXに必要な最小だけ入れる
       - name: Install TeX Live (minimal for LuaLaTeX + Japanese)
         run: |
           set -euxo pipefail
@@ -25,7 +24,8 @@ jobs:
             texlive-lang-japanese \
             texlive-fonts-recommended \
             latexmk \
-            fonts-haranoaji
+            fonts-haranoaji-mincho \
+            fonts-haranoaji-gothic
 
       - name: Detect resume file
         id: detect
@@ -39,13 +39,12 @@ jobs:
           dir=$(dirname "$found")
           echo "dir=$dir" >> $GITHUB_OUTPUT
           echo "Found main_resume.tex in: $dir"
-          nl -ba "$found" | sed -n '1,40p'
 
       - name: Build with LuaLaTeX (latexmk)
         run: |
           set -euo pipefail
           cd "${{ steps.detect.outputs.dir }}"
-          latexmk -lualatex -interaction=nonstopmode -halt-on-error -file-line-error main_resume.tex
+          latexmk -lualatex -interaction=nonstopmode -halt-on-error main_resume.tex
           ls -lh
 
       - name: Upload PDF
@@ -63,9 +62,8 @@ jobs:
           path: |
             ${{ steps.detect.outputs.dir }}/*.log
             ${{ steps.detect.outputs.dir }}/*.aux
-            ${{ steps.detect.outputs.dir }}/*.fls
             ${{ steps.detect.outputs.dir }}/*.fdb_latexmk
-            ${{ steps.detect.outputs.dir }}/*.synctex.gz
-            ${{ steps.detect.outputs.dir }}/*.toc
+            ${{ steps.detect.outputs.dir }}/*.fls
             ${{ steps.detect.outputs.dir }}/*.out
+            ${{ steps.detect.outputs.dir }}/*.synctex.gz
           if-no-files-found: ignore
